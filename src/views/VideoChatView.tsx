@@ -5,8 +5,8 @@ import { AppButton } from '../components/AppButton';
 
 export const VideoChatView: React.FC<{
   dilemma: Dilemma;
-  onClose: () => void;
-}> = ({ onClose }) => {
+  onClose: () => void
+  }> = ({ onClose }) => {
   const [isMicMuted, setIsMicMuted] = useState(false);
   const [isCameraOff, setIsCameraOff] = useState(false);
   const localVideoRef = useRef<HTMLVideoElement>(null);
@@ -20,14 +20,14 @@ export const VideoChatView: React.FC<{
         const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         localStreamRef.current = stream;
         if (localVideoRef.current) {
-          localVideoRef.current.srcObject = stream;
-        }
-        setupPeerConnection(stream);
-      } catch (error) {
+          localVideoRef.current.srcObject = stream
+  }
+        setupPeerConnection(stream)
+  } catch (error) {
         console.error('Error accessing media devices.', error);
         alert('Could not access camera and microphone. Please check permissions.');
-        onClose();
-      }
+        onClose()
+  }
     };
 
     const setupPeerConnection = (stream: MediaStream) => {
@@ -41,8 +41,8 @@ export const VideoChatView: React.FC<{
       peerConnectionRef.current = pc;
 
       stream.getTracks().forEach(track => {
-        pc.addTrack(track, stream);
-      });
+        pc.addTrack(track, stream)
+  });
 
       pc.onicecandidate = event => {
         if (event.candidate) {
@@ -53,8 +53,8 @@ export const VideoChatView: React.FC<{
 
       pc.ontrack = event => {
         if (remoteVideoRef.current) {
-          remoteVideoRef.current.srcObject = event.streams[0];
-        }
+          remoteVideoRef.current.srcObject = event.streams[0]
+  }
       };
 
       // --- Signaling Simulation ---
@@ -70,19 +70,19 @@ export const VideoChatView: React.FC<{
         .then(() => {
           // Offer created and set as local description
           // In a real app, you would send pc.localDescription to the other peer.
-        });
-    };
+        })
+  };
 
     startMedia();
 
     return () => {
       // Cleanup on unmount
       if (localStreamRef.current) {
-        localStreamRef.current.getTracks().forEach(track => track.stop());
-      }
+        localStreamRef.current.getTracks().forEach(track => track.stop())
+  }
       if (peerConnectionRef.current) {
-        peerConnectionRef.current.close();
-      }
+        peerConnectionRef.current.close()
+  }
     };
   }, [onClose]);
 
@@ -90,18 +90,18 @@ export const VideoChatView: React.FC<{
     if (localStreamRef.current) {
       localStreamRef.current.getAudioTracks().forEach(track => {
         track.enabled = !track.enabled;
-        setIsMicMuted(!track.enabled);
-      });
-    }
+        setIsMicMuted(!track.enabled)
+  })
+  }
   };
 
   const toggleCamera = () => {
     if (localStreamRef.current) {
       localStreamRef.current.getVideoTracks().forEach(track => {
         track.enabled = !track.enabled;
-        setIsCameraOff(!track.enabled);
-      });
-    }
+        setIsCameraOff(!track.enabled)
+  })
+  }
   };
 
   return (
@@ -124,7 +124,7 @@ export const VideoChatView: React.FC<{
         </AppButton>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export default VideoChatView;

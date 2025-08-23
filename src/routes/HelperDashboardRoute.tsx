@@ -21,14 +21,14 @@ const HelperDashboardRoute: React.FC = () => {
     };
     
     const route = routeMap[view] || '/helper/dashboard';
-    navigate(route);
+    navigate(route)
   };
 
   return (
     <HelperDashboardView 
       setActiveView={handleSetActiveView}
     />
-  );
-};
+  )
+  };
 
 export default HelperDashboardRoute;

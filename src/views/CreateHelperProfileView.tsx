@@ -6,7 +6,7 @@ import { AppInput, AppTextArea } from '../components/AppInput';
 import { View } from '../types';
 import { isError } from '../types/common';
 
-const EXPERTISE_OPTIONS = [;
+const EXPERTISE_OPTIONS = [;;
     'Anxiety & Stress',
     'Depression',
     'Grief & Loss',
@@ -19,8 +19,8 @@ const EXPERTISE_OPTIONS = [;
 
 export const CreateHelperProfileView: React.FC<{ 
     onProfileCreated: () => void; 
-    setActiveView: (view: View) => void;
-}> = ({ onProfileCreated, setActiveView }) => {
+    setActiveView: (view: View) => void
+  }> = ({ onProfileCreated, setActiveView }) => {
     const { user } = useAuth();
     const [displayName, setDisplayName] = useState('');
     const [expertise, setExpertise] = useState<string[]>([]);
@@ -32,8 +32,8 @@ export const CreateHelperProfileView: React.FC<{
     const handleExpertiseChange = (option: string) => {
         setExpertise(prev => 
             prev.includes(option) ? prev.filter(item => item !== option) : [...prev, option]
-        );
-    };
+        )
+  };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -43,37 +43,37 @@ export const CreateHelperProfileView: React.FC<{
         if (!displayName.trim()) {
             setError('Display name cannot be empty.');
             document.getElementById('displayName')?.focus();
-            return;
-        }
+            return
+  }
         if (displayName.trim().length < 3) {
             setError('Display name must be at least 3 characters long.');
             document.getElementById('displayName')?.focus();
-            return;
-        }
+            return
+  }
         if (!bio.trim()) {
             setError('Bio is required to help seekers understand how you can help.');
             document.getElementById('bio')?.focus();
-            return;
-        }
+            return
+  }
         if (bio.length > 500) {
             setError('Bio must be under 500 characters.');
             document.getElementById('bio')?.focus();
-            return;
-        }
+            return
+  }
         if (bio.trim().length < 20) {
             setError('Bio must be at least 20 characters to provide meaningful information.');
             document.getElementById('bio')?.focus();
-            return;
-        }
+            return
+  }
         if (expertise.length === 0) {
             setError('Please select at least one area of expertise.');
-            return;
-        }
+            return
+  }
         if (!agreedToTerms) {
             setError('You must agree to the Helper Community Guidelines.');
             document.getElementById('agree-terms')?.focus();
-            return;
-        }
+            return
+  }
 
         setIsSubmitting(true);
         
@@ -86,8 +86,8 @@ export const CreateHelperProfileView: React.FC<{
             });
             
             // Profile is created, trigger a reload in the parent component
-            onProfileCreated();
-        } catch (err) {
+            onProfileCreated()
+  } catch (err) {
             console.error("Profile creation error:", err);
             
             // Provide specific error messages based on error type;
@@ -96,16 +96,16 @@ export const CreateHelperProfileView: React.FC<{
             if (isError(err)) {
                 if (err.message?.includes('duplicate') || err.message?.includes('exists')) {
                     errorMessage = 'This display name is already taken. Please choose a different one.';
-                    document.getElementById('displayName')?.focus();;
+                    document.getElementById('displayName')?.focus()
   } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
-                    errorMessage = 'Network error. Please check your connection and try again.';;
+                    errorMessage = 'Network error. Please check your connection and try again.'
   } else if (err.message?.includes('unauthorized') || err.message?.includes('401')) {
-                    errorMessage = 'Your session has expired. Please log in again.';;
+                    errorMessage = 'Your session has expired. Please log in again.'
   } else if (err.message?.includes('rate') || err.message?.includes('429')) {
-                    errorMessage = 'Too many attempts. Please wait a moment and try again.';;
+                    errorMessage = 'Too many attempts. Please wait a moment and try again.'
   } else if (err.message) {
-                    errorMessage = err.message;
-                }
+                    errorMessage = err.message
+  }
             }
             
             setError(errorMessage);
@@ -113,9 +113,9 @@ export const CreateHelperProfileView: React.FC<{
             
             // Scroll to error message for visibility
             setTimeout(() => {
-                document.querySelector('.api-error')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
-        }
+                document.querySelector('.api-error')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }, 100)
+  }
     };
 
     return (
@@ -156,8 +156,7 @@ export const CreateHelperProfileView: React.FC<{
                         <div className="expertise-options" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
                             {EXPERTISE_OPTIONS.map(option => (
                                 <div key={option} className="radio-group">
-                                    <input;
-                                        type="checkbox"
+                                    <input type="checkbox"
                                         id={`expertise-${option}`}
                                         name="expertise"
                                         value={option}
@@ -171,8 +170,7 @@ export const CreateHelperProfileView: React.FC<{
                     </div>
 
                     <div className="form-group-checkbox">
-                        <input;
-                            type="checkbox"
+                        <input type="checkbox"
                             id="agree-terms"
                             checked={agreedToTerms}
                             onChange={(e) => setAgreedToTerms(e.target.checked)}
@@ -192,7 +190,7 @@ export const CreateHelperProfileView: React.FC<{
                 </form>
             </div>
         </>
-    );
-};
+    )
+  };
 
 export default CreateHelperProfileView;

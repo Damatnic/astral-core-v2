@@ -6,16 +6,16 @@ interface Location {
   search: string;
   hash: string;
   state: unknown;
-  key: string;
-}
+  key: string
+  }
 
 const fallbackLocation: Location = {
   pathname: '/',
   search: '',
   hash: '',
   state: null,
-  key: 'default';
-};
+  key: 'default'
+  };
 
 /**
  * Safe wrapper for useLocation that provides a fallback when no Router context exists
@@ -29,15 +29,15 @@ export const useSafeLocation = (): Location => {
     
     if (context && typeof context === 'object' && 'location' in context) {
       // If we have a location in context (from test mocks), use it
-      return context.location;
-    }
+      return context.location
+  }
     
     // Otherwise, try to use the regular useLocation hook;
     const location = useRouterLocation();
-    return location;
+    return location
   } catch (error) {
     // If useLocation throws (no Router context), return fallback
     // This can happen in tests or when components are rendered outside a Router
-    return fallbackLocation;
+    return fallbackLocation
   }
 };

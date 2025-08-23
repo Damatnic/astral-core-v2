@@ -12,7 +12,7 @@ export const UIShowcaseView: React.FC = () => {
 
   const handleLoadingDemo = () => {
     setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 3000);
+    setTimeout(() => setIsLoading(false), 3000)
   };
 
   const handleButtonClick = () => {
@@ -26,64 +26,64 @@ export const UIShowcaseView: React.FC = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 2rem;
-          min-height: 100vh;
-        }
+          min-height: 100vh
+  }
         
         .showcase-section {
-          margin-bottom: 3rem;
-        }
+          margin-bottom: 3rem
+  }
         
         .showcase-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
           gap: 1.5rem;
-          margin-bottom: 2rem;
-        }
+          margin-bottom: 2rem
+  }
         
         .component-demo {
           display: flex;
           flex-direction: column;
-          gap: 1rem;
-        }
+          gap: 1rem
+  }
         
         .button-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-          gap: 1rem;
-        }
+          gap: 1rem
+  }
         
         .size-demo {
           display: flex;
           gap: 1rem;
           align-items: center;
-          flex-wrap: wrap;
-        }
+          flex-wrap: wrap
+  }
         
         .toast-demo {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-          gap: 1rem;
-        }
+          gap: 1rem
+  }
         
         .color-palette {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 1rem;
-        }
+          gap: 1rem
+  }
         
         .color-swatch {
           padding: 1rem;
           border-radius: var(--border-radius-md);
           color: white;
           text-align: center;
-          font-weight: 500;
-        }
+          font-weight: 500
+  }
         
         .shadow-demo {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-          gap: 1rem;
-        }
+          gap: 1rem
+  }
         
         .shadow-box {
           height: 80px;
@@ -93,14 +93,14 @@ export const UIShowcaseView: React.FC = () => {
           align-items: center;
           justify-content: center;
           font-size: 0.875rem;
-          font-weight: 500;
-        }
+          font-weight: 500
+  }
         
         .animation-demo {
           display: flex;
           gap: 1rem;
-          flex-wrap: wrap;
-        }
+          flex-wrap: wrap
+  }
         
         .animated-box {
           width: 100px;
@@ -112,8 +112,8 @@ export const UIShowcaseView: React.FC = () => {
           justify-content: center;
           color: white;
           font-weight: 500;
-          cursor: pointer;
-        }
+          cursor: pointer
+  }
         
         .bounce { animation: bounce 1s infinite; }
         .pulse { animation: pulse 2s infinite; }
@@ -347,7 +347,7 @@ export const UIShowcaseView: React.FC = () => {
         </ul>
       </Card>
     </div>
-  );
-};
+  )
+  };
 
 export default UIShowcaseView;

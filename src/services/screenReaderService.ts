@@ -37,7 +37,7 @@ class ScreenReaderService {
   private crisisContext = {
     isActive: false,
     severity: 'low' as 'low' | 'medium' | 'high',
-    interventionType: 'none' as 'none' | 'helper' | 'ai' | 'emergency';
+    interventionType: 'none' as 'none' | 'helper' | 'ai' | 'emergency'
   };
 
   /**
@@ -60,49 +60,49 @@ class ScreenReaderService {
         message: 'Screen reader enhanced. Mental health support features are active.',
         priority: 'medium',
         type: 'status',
-        delay: 1000;
-      });
-    } catch (error) {
+        delay: 1000
+  })
+  } catch (error) {
       console.error('[ScreenReader] Initialization failed:', error);
-      throw error;
-    }
+      throw error
+  }
   }
 
   /**
    * Setup enhanced live regions for different announcement types
    */
   private setupLiveRegions(): void {
-    const regions = [;
+    const regions = [;;
       {
         id: 'sr-navigation',
         politeness: 'polite',
         label: 'Navigation announcements',
-        description: 'Page navigation and location updates';
-      },
+        description: 'Page navigation and location updates'
+  },
       {
         id: 'sr-status',
         politeness: 'polite',
         label: 'Status updates',
-        description: 'General status and progress information';
-      },
+        description: 'General status and progress information'
+  },
       {
         id: 'sr-alerts',
         politeness: 'assertive',
         label: 'Important alerts',
-        description: 'Important notifications and warnings';
-      },
+        description: 'Important notifications and warnings'
+  },
       {
         id: 'sr-crisis',
         politeness: 'assertive',
         label: 'Crisis notifications',
-        description: 'Emergency and crisis-related announcements';
-      },
+        description: 'Emergency and crisis-related announcements'
+  },
       {
         id: 'sr-forms',
         politeness: 'polite',
         label: 'Form assistance',
-        description: 'Form validation and input assistance';
-      }
+        description: 'Form validation and input assistance'
+  }
     ];
 
     regions.forEach(region => {
@@ -125,10 +125,10 @@ class ScreenReaderService {
           white-space: nowrap;
           border: 0;
         `;
-        document.body.appendChild(element);
-      }
-      this.liveRegions.set(region.id, element);
-    });
+        document.body.appendChild(element)
+  }
+      this.liveRegions.set(region.id, element)
+  })
   }
 
   /**
@@ -144,17 +144,17 @@ class ScreenReaderService {
         if (mutation.type === 'childList') {
           mutation.addedNodes.forEach((node) => {
             if (node.nodeType === Node.ELEMENT_NODE) {
-              this.enhanceElementWithDescription(node as HTMLElement);
-            }
-          });
-        }
-      });
-    });
+              this.enhanceElementWithDescription(node as HTMLElement)
+  }
+          })
+  }
+      })
+  });
 
     observer.observe(document.body, {
       childList: true,
-      subtree: true;
-    });
+      subtree: true
+  })
   }
 
   /**
@@ -167,9 +167,9 @@ class ScreenReaderService {
       this.enhanceElementWithDescription(button as HTMLElement, {
         role: 'button',
         context: 'crisis',
-        urgency: 'high';
-      });
-    });
+        urgency: 'high'
+  })
+  });
 
     // Helper chat elements;
     const chatElements = document.querySelectorAll('[data-chat], .chat-message, .helper-message');
@@ -177,24 +177,24 @@ class ScreenReaderService {
       this.enhanceElementWithDescription(element as HTMLElement, {
         role: 'chat',
         context: 'support',
-        dynamic: true;
-      });
-    });
+        dynamic: true
+  })
+  });
 
     // Navigation elements;
     const navElements = document.querySelectorAll('nav, [role="navigation"], .sidebar, .menu');
     navElements.forEach((element) => {
       this.enhanceElementWithDescription(element as HTMLElement, {
         role: 'navigation',
-        context: 'main';
-      });
-    });
+        context: 'main'
+  })
+  });
 
     // Form elements;
     const formElements = document.querySelectorAll('input, textarea, select, button[type="submit"]');
     formElements.forEach((element) => {
-      this.enhanceFormElement(element as HTMLElement);
-    });
+      this.enhanceFormElement(element as HTMLElement)
+  })
   }
 
   /**
@@ -206,8 +206,8 @@ class ScreenReaderService {
       role?: string;
       context?: string;
       urgency?: 'low' | 'medium' | 'high';
-      dynamic?: boolean;
-    } = {}
+      dynamic?: boolean
+  } = {}
   ): void {
     if (!element || element.hasAttribute('aria-description')) return;
 
@@ -226,21 +226,21 @@ class ScreenReaderService {
         description = this.generateNavigationDescription(element);
         break;
       default:
-        description = this.generateGeneralDescription(element, role);
-    }
+        description = this.generateGeneralDescription(element, role)
+  }
 
     if (description) {
       element.setAttribute('aria-description', description);
       
       // Add role if not present
       if (role && !element.getAttribute('role')) {
-        element.setAttribute('role', role);
-      }
+        element.setAttribute('role', role)
+  }
 
       // Mark dynamic content
       if (dynamic) {
-        element.setAttribute('aria-live', 'polite');
-      }
+        element.setAttribute('aria-live', 'polite')
+  }
     }
   }
 
@@ -252,14 +252,14 @@ class ScreenReaderService {
     const urgencyText = urgency === 'high' ? 'Emergency action: ' : 'Crisis support: ';
     
     if (element.classList.contains('crisis-button') || element.dataset.crisis) {
-      return `${urgencyText}${baseText}. Provides immediate access to crisis resources and emergency support.`;
-    }
+      return `${urgencyText}${baseText}. Provides immediate access to crisis resources and emergency support.`
+  }
     
     if (element.classList.contains('emergency-button')) {
-      return `Emergency action: ${baseText}. Connects you directly to emergency services and crisis counselors.`;
-    }
+      return `Emergency action: ${baseText}. Connects you directly to emergency services and crisis counselors.`
+  }
     
-    return `${urgencyText}${baseText}. Part of the crisis support system.`;
+    return `${urgencyText}${baseText}. Part of the crisis support system.`
   }
 
   /**
@@ -269,18 +269,18 @@ class ScreenReaderService {
     const baseText = element.textContent?.trim() || '';
     
     if (element.classList.contains('helper-message')) {
-      return `Helper message: ${baseText}. From a trained peer support specialist.`;
-    }
+      return `Helper message: ${baseText}. From a trained peer support specialist.`
+  }
     
     if (element.classList.contains('ai-message')) {
-      return `AI assistant: ${baseText}. Supportive guidance from our mental health AI.`;
-    }
+      return `AI assistant: ${baseText}. Supportive guidance from our mental health AI.`
+  }
     
     if (element.classList.contains('chat-message')) {
-      return `Support message: ${baseText}. Part of your ongoing conversation.`;
-    }
+      return `Support message: ${baseText}. Part of your ongoing conversation.`
+  }
     
-    return `Support element: ${baseText}. Provides mental health assistance.`;
+    return `Support element: ${baseText}. Provides mental health assistance.`
   }
 
   /**
@@ -288,14 +288,14 @@ class ScreenReaderService {
    */
   private generateNavigationDescription(element: HTMLElement): string {
     if (element.tagName === 'NAV' || element.getAttribute('role') === 'navigation') {
-      return 'Main navigation menu. Use arrow keys to navigate between options.';
-    }
+      return 'Main navigation menu. Use arrow keys to navigate between options.'
+  }
     
     if (element.classList.contains('sidebar')) {
-      return 'Sidebar navigation. Contains main application features and crisis resources.';
-    }
+      return 'Sidebar navigation. Contains main application features and crisis resources.'
+  }
     
-    return 'Navigation element. Use Tab and arrow keys to navigate.';
+    return 'Navigation element. Use Tab and arrow keys to navigate.'
   }
 
   /**
@@ -318,8 +318,8 @@ class ScreenReaderService {
       case 'alert':
         return `Alert: ${text}. Important information.`;
       default:
-        return text ? `${actualRole}: ${text}` : '';
-    }
+        return text ? `${actualRole}: ${text}` : ''
+  }
   }
 
   /**
@@ -356,25 +356,25 @@ class ScreenReaderService {
         break;
       case 'submit':
         instructions = 'Press Enter or Space to submit the form.';
-        break;
-    }
+        break
+  }
 
     // Add crisis-specific form guidance
     if (element.closest('.crisis-form, .emergency-form')) {
       description = 'Crisis support form. ';
-      instructions += ' This information helps us provide appropriate support.';;
+      instructions += ' This information helps us provide appropriate support.'
   } else if (element.closest('.safety-plan')) {
       description = 'Safety plan form. ';
-      instructions += ' This creates your personal crisis management plan.';
-    }
+      instructions += ' This creates your personal crisis management plan.'
+  }
 
     const fullDescription = description + instructions;
     if (fullDescription.trim()) {
-      element.setAttribute('aria-description', fullDescription);
-    }
+      element.setAttribute('aria-description', fullDescription)
+  }
 
     // Add form validation announcements
-    this.setupFormValidation(input);
+    this.setupFormValidation(input)
   }
 
   /**
@@ -390,9 +390,9 @@ class ScreenReaderService {
         message: `${fieldName}: ${message}`,
         priority: 'medium',
         type: 'error',
-        context: 'form_validation';
-      });
-    });
+        context: 'form_validation'
+  })
+  });
 
     input.addEventListener('input', (event) => {
       const element = event.target as HTMLInputElement;
@@ -404,10 +404,10 @@ class ScreenReaderService {
           message: `${fieldName}: Input is now valid`,
           priority: 'low',
           type: 'success',
-          context: 'form_validation';
-        });
-      }
-    });
+          context: 'form_validation'
+  })
+  }
+    })
   }
 
   /**
@@ -420,7 +420,7 @@ class ScreenReaderService {
       (element.previousElementSibling as HTMLElement)?.textContent ||
       (element as HTMLInputElement).name ||
       'Field'
-    ).trim();
+    ).trim()
   }
 
   /**
@@ -440,12 +440,12 @@ class ScreenReaderService {
           message: `Navigated to ${pageName}. ${pageDescription}`,
           priority: 'medium',
           type: 'navigation',
-          context: 'page_change';
-        });
+          context: 'page_change'
+  });
 
         lastUrl = location.href;
-        lastTitle = document.title;
-      }
+        lastTitle = document.title
+  }
     };
 
     // Monitor for programmatic navigation;
@@ -454,25 +454,25 @@ class ScreenReaderService {
 
     history.pushState = function(...args) {
       originalPushState.apply(history, args);
-      setTimeout(announcePageChange, 100);
-    };
+      setTimeout(announcePageChange, 100)
+  };
 
     history.replaceState = function(...args) {
       originalReplaceState.apply(history, args);
-      setTimeout(announcePageChange, 100);
-    };
+      setTimeout(announcePageChange, 100)
+  };
 
     window.addEventListener('popstate', () => {
-      setTimeout(announcePageChange, 100);
-    });
+      setTimeout(announcePageChange, 100)
+  });
 
     // Monitor focus changes for navigation feedback
     document.addEventListener('focusin', (event) => {
       const target = event.target as HTMLElement;
       if (target && this.shouldAnnounceElement(target)) {
-        this.announceFocusedElement(target);
-      }
-    });
+        this.announceFocusedElement(target)
+  }
+    })
   }
 
   /**
@@ -482,13 +482,13 @@ class ScreenReaderService {
     // Try to extract from main heading;
     const mainHeading = document.querySelector('h1, [role="heading"][aria-level="1"]');
     if (mainHeading?.textContent) {
-      return mainHeading.textContent.trim();
-    }
+      return mainHeading.textContent.trim()
+  }
 
     // Try document title
     if (document.title && document.title !== 'Astral Core') {
-      return document.title;
-    }
+      return document.title
+  }
 
     // Extract from URL or view state;
     const path = location.pathname;
@@ -497,10 +497,10 @@ class ScreenReaderService {
     if (pathSegments.length > 0) {
       return pathSegments[pathSegments.length - 1]
         .replace(/-/g, ' ')
-        .replace(/\b\w/g, l => l.toUpperCase());
-    }
+        .replace(/\b\w/g, l => l.toUpperCase())
+  }
 
-    return 'Main Page';
+    return 'Main Page'
   }
 
   /**
@@ -520,7 +520,7 @@ class ScreenReaderService {
       '/': 'Main feed with community support and resources.'
     };
 
-    return descriptions[path] || 'Mental health support platform page.';
+    return descriptions[path] || 'Mental health support platform page.'
   }
 
   /**
@@ -529,16 +529,16 @@ class ScreenReaderService {
   private shouldAnnounceElement(element: HTMLElement): boolean {
     // Always announce crisis elements
     if (element.dataset.crisis || element.classList.contains('crisis-button') || element.classList.contains('emergency-button')) {
-      return true;
-    }
+      return true
+  }
 
     // Announce interactive elements;
     const interactiveTags = ['button', 'a', 'input', 'select', 'textarea'];
-    const hasInteractiveRole = ['button', 'link', 'tab', 'menuitem'].includes(;
+    const hasInteractiveRole = ['button', 'link', 'tab', 'menuitem'].includes(;;
       element.getAttribute('role') || ''
     );
 
-    return interactiveTags.includes(element.tagName.toLowerCase()) || hasInteractiveRole;
+    return interactiveTags.includes(element.tagName.toLowerCase()) || hasInteractiveRole
   }
 
   /**
@@ -551,9 +551,9 @@ class ScreenReaderService {
         message: description,
         priority: 'low',
         type: 'navigation',
-        context: 'focus_change';
-      });
-    }
+        context: 'focus_change'
+  })
+  }
   }
 
   /**
@@ -581,10 +581,10 @@ class ScreenReaderService {
     // Available shortcuts;
     const shortcuts = this.getElementShortcuts(element);
     if (shortcuts.length > 0) {
-      parts.push(`Shortcut: ${shortcuts.join(', ')}`);
-    }
+      parts.push(`Shortcut: ${shortcuts.join(', ')}`)
+  }
 
-    return parts.join(', ');
+    return parts.join(', ')
   }
 
   /**
@@ -598,7 +598,7 @@ class ScreenReaderService {
       (element as HTMLInputElement).placeholder ||
       element.textContent?.trim() ||
       ''
-    );
+    )
   }
 
   /**
@@ -612,10 +612,10 @@ class ScreenReaderService {
     const typeAttribute = (element as HTMLInputElement).type;
 
     if (tagName === 'input' && typeAttribute) {
-      return `${typeAttribute} input`;
-    }
+      return `${typeAttribute} input`
+  }
 
-    return tagName;
+    return tagName
   }
 
   /**
@@ -626,32 +626,32 @@ class ScreenReaderService {
 
     // Checked state
     if (element.hasAttribute('aria-checked')) {
-      states.push(element.getAttribute('aria-checked') === 'true' ? 'checked' : 'unchecked');;
+      states.push(element.getAttribute('aria-checked') === 'true' ? 'checked' : 'unchecked')
   } else if ((element as HTMLInputElement).checked !== undefined) {
-      states.push((element as HTMLInputElement).checked ? 'checked' : 'unchecked');
-    }
+      states.push((element as HTMLInputElement).checked ? 'checked' : 'unchecked')
+  }
 
     // Selected state
     if (element.getAttribute('aria-selected') === 'true') {
-      states.push('selected');
-    }
+      states.push('selected')
+  }
 
     // Expanded state
     if (element.hasAttribute('aria-expanded')) {
-      states.push(element.getAttribute('aria-expanded') === 'true' ? 'expanded' : 'collapsed');
-    }
+      states.push(element.getAttribute('aria-expanded') === 'true' ? 'expanded' : 'collapsed')
+  }
 
     // Disabled state
     if (element.hasAttribute('disabled') || element.getAttribute('aria-disabled') === 'true') {
-      states.push('disabled');
-    }
+      states.push('disabled')
+  }
 
     // Required state
     if (element.hasAttribute('required') || element.getAttribute('aria-required') === 'true') {
-      states.push('required');
-    }
+      states.push('required')
+  }
 
-    return states.join(', ');
+    return states.join(', ')
   }
 
   /**
@@ -663,23 +663,23 @@ class ScreenReaderService {
     const setSize = element.getAttribute('aria-setsize');
     
     if (posInSet && setSize) {
-      return `${posInSet} of ${setSize}`;
-    }
+      return `${posInSet} of ${setSize}`
+  }
 
     // Calculate position in parent container;
     const parent = element.parentElement;
     if (parent) {
-      const siblings = Array.from(parent.children).filter(;
+      const siblings = Array.from(parent.children).filter(;;
         child => child.tagName === element.tagName
       );
       const index = siblings.indexOf(element);
       
       if (index >= 0 && siblings.length > 1) {
-        return `${index + 1} of ${siblings.length}`;
-      }
+        return `${index + 1} of ${siblings.length}`
+  }
     }
 
-    return '';
+    return ''
   }
 
   /**
@@ -691,24 +691,24 @@ class ScreenReaderService {
     // Check for accesskey;
     const accessKey = element.getAttribute('accesskey');
     if (accessKey) {
-      shortcuts.push(`Alt+${accessKey}`);
-    }
+      shortcuts.push(`Alt+${accessKey}`)
+  }
 
     // Crisis-specific shortcuts
     if (element.dataset.crisis || element.classList.contains('crisis-button')) {
-      shortcuts.push('Alt+C');
-    }
+      shortcuts.push('Alt+C')
+  }
 
     if (element.classList.contains('emergency-button')) {
-      shortcuts.push('Alt+E');
-    }
+      shortcuts.push('Alt+E')
+  }
 
     // Tab-specific shortcuts
     if (element.getAttribute('role') === 'tab') {
-      shortcuts.push('Arrow keys to navigate tabs');
-    }
+      shortcuts.push('Arrow keys to navigate tabs')
+  }
 
-    return shortcuts;
+    return shortcuts
   }
 
   /**
@@ -722,19 +722,19 @@ class ScreenReaderService {
       this.crisisContext = { isActive, severity, interventionType };
       
       if (isActive) {
-        this.announceCrisisActivation(severity, interventionType);;
+        this.announceCrisisActivation(severity, interventionType)
   } else {
-        this.announceCrisisResolution();
-      }
+        this.announceCrisisResolution()
+  }
     }) as EventListener);
 
     // Monitor for crisis buttons
     document.addEventListener('click', (event) => {
       const target = event.target as HTMLElement;
       if (target.dataset.crisis || target.classList.contains('crisis-button') || target.classList.contains('emergency-button')) {
-        this.announceCrisisAction(target);
-      }
-    });
+        this.announceCrisisAction(target)
+  }
+    })
   }
 
   /**
@@ -750,20 +750,19 @@ class ScreenReaderService {
       case 'medium':
         message += 'Crisis support is ready. Trained helpers are available.';
         break;
-      default:
-        message += 'Support resources are now active.';
-    }
+      default: message += 'Support resources are now active.'
+  }
 
     if (interventionType !== 'none') {
-      message += ` ${interventionType} support is being connected.`;
-    }
+      message += ` ${interventionType} support is being connected.`
+  }
 
     this.announce({
       message,
       priority: 'emergency',
       type: 'crisis',
-      persistent: true;
-    });
+      persistent: true
+  })
   }
 
   /**
@@ -773,8 +772,8 @@ class ScreenReaderService {
     this.announce({
       message: 'Crisis support session ended. Regular support resources remain available.',
       priority: 'medium',
-      type: 'status';
-    });
+      type: 'status'
+  })
   }
 
   /**
@@ -787,17 +786,17 @@ class ScreenReaderService {
     let message = `${action} activated. `;
     
     if (isEmergency) {
-      message += 'Emergency services are being contacted. Stay on the line.';;
+      message += 'Emergency services are being contacted. Stay on the line.'
   } else {
-      message += 'Crisis resources are loading. Help is on the way.';
-    }
+      message += 'Crisis resources are loading. Help is on the way.'
+  }
 
     this.announce({
       message,
       priority: 'emergency',
       type: 'crisis',
-      persistent: true;
-    });
+      persistent: true
+  })
   }
 
   /**
@@ -809,8 +808,8 @@ class ScreenReaderService {
     
     // Start processing if not already processing
     if (!this.isProcessingQueue) {
-      this.processAnnouncementQueue();
-    }
+      this.processAnnouncementQueue()
+  }
   }
 
   /**
@@ -824,13 +823,13 @@ class ScreenReaderService {
       
       // Skip duplicate announcements
       if (this.lastAnnouncement === announcement.message) {
-        continue;
-      }
+        continue
+  }
 
       // Apply delay if specified
       if (announcement.delay) {
-        await new Promise(resolve => setTimeout(resolve, announcement.delay));
-      }
+        await new Promise(resolve => setTimeout(resolve, announcement.delay))
+  }
 
       await this.deliverAnnouncement(announcement);
       this.lastAnnouncement = announcement.message;
@@ -838,14 +837,14 @@ class ScreenReaderService {
 
       // Keep history manageable
       if (this.announcementHistory.length > 50) {
-        this.announcementHistory.shift();
-      }
+        this.announcementHistory.shift()
+  }
 
       // Brief pause between announcements
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
+      await new Promise(resolve => setTimeout(resolve, 100))
+  }
 
-    this.isProcessingQueue = false;
+    this.isProcessingQueue = false
   }
 
   /**
@@ -867,51 +866,50 @@ class ScreenReaderService {
         break;
       case 'status':
       case 'success':
-      default:
-        regionId = announcement.priority === 'high' ? 'sr-alerts' : 'sr-status';
-    }
+      default: regionId = announcement.priority === 'high' ? 'sr-alerts' : 'sr-status'
+  }
 
     const region = this.liveRegions.get(regionId);
     if (!region) return;
 
     // Clear previous content if not persistent
     if (!announcement.persistent) {
-      region.textContent = '';
-    }
+      region.textContent = ''
+  }
 
     // Add new announcement
     setTimeout(() => {
       if (announcement.persistent) {
-        region.textContent += ` ${announcement.message}`;;
+        region.textContent += ` ${announcement.message}`
   } else {
-        region.textContent = announcement.message;
-      }
+        region.textContent = announcement.message
+  }
     }, 50);
 
     // Clear non-persistent announcements after delay
     if (!announcement.persistent) {
       setTimeout(() => {
         if (region.textContent === announcement.message) {
-          region.textContent = '';
-        }
-      }, 8000);
-    }
+          region.textContent = ''
+  }
+      }, 8000)
+  }
 
-    console.log(`[ScreenReader] Announced: ${announcement.message}`);
+    console.log(`[ScreenReader] Announced: ${announcement.message}`)
   }
 
   /**
    * Get announcement history
    */
   public getAnnouncementHistory(): string[] {
-    return [...this.announcementHistory];
+    return [...this.announcementHistory]
   }
 
   /**
    * Clear announcement history
    */
   public clearAnnouncementHistory(): void {
-    this.announcementHistory.length = 0;
+    this.announcementHistory.length = 0
   }
 
   /**
@@ -935,17 +933,17 @@ class ScreenReaderService {
         message: `Validation error for ${field}: ${error}`,
         priority: 'medium',
         type: 'error',
-        context: 'form-validation';
-      };
-  };;
+        context: 'form-validation'
+  };
+  };
   } else {
       this.announce({
         message: `${field} is valid`,
         priority: 'low',
         type: 'success',
-        context: 'form-validation';
-      });
-    }
+        context: 'form-validation'
+  })
+  }
   }
 
   /**
@@ -959,8 +957,8 @@ class ScreenReaderService {
       message: `Focus moved to ${role}: ${label}`,
       priority: 'low',
       type: 'navigation',
-      context: context || 'focus-change';
-    });
+      context: context || 'focus-change'
+  })
   }
 
   /**
@@ -971,8 +969,8 @@ class ScreenReaderService {
       message: isLoading ? 'Loading content, please wait' : 'Content loaded',
       priority: 'medium',
       type: 'status',
-      context: context || 'loading';
-    });
+      context: context || 'loading'
+  })
   }
 
   /**
@@ -983,8 +981,8 @@ class ScreenReaderService {
       message,
       priority: 'medium',
       type: 'success',
-      context: context || 'success';
-    });
+      context: context || 'success'
+  })
   }
 
   /**
@@ -995,8 +993,8 @@ class ScreenReaderService {
       message,
       priority: 'high',
       type: 'error',
-      context: context || 'error';
-    });
+      context: context || 'error'
+  })
   }
 
   /**
@@ -1007,8 +1005,8 @@ class ScreenReaderService {
       message: `Navigated to ${pageName}`,
       priority: 'medium',
       type: 'navigation',
-      context: context || 'page-change';
-    });
+      context: context || 'page-change'
+  })
   }
 
   /**
@@ -1020,8 +1018,8 @@ class ScreenReaderService {
       message,
       priority: 'low',
       type: 'status',
-      context: 'keyboard-shortcuts';
-    });
+      context: 'keyboard-shortcuts'
+  })
   }
 
   /**
@@ -1033,8 +1031,8 @@ class ScreenReaderService {
       priority: 'emergency',
       type: 'crisis',
       context: 'crisis-escalation',
-      persistent: true;
-    });
+      persistent: true
+  })
   }
 
   /**
@@ -1046,7 +1044,7 @@ class ScreenReaderService {
     this.announcementHistory.length = 0;
     this.isProcessingQueue = false;
     
-    console.log('[ScreenReader] Service destroyed');
+    console.log('[ScreenReader] Service destroyed')
   }
 }
 

@@ -4,8 +4,8 @@ interface TypingIndicatorProps {
   className?: string;
   style?: React.CSSProperties;
   message?: string;
-  size?: 'small' | 'medium' | 'large';
-}
+  size?: 'small' | 'medium' | 'large'
+  }
 
 const TypingIndicator: React.FC<TypingIndicatorProps> = ({
   className = '',
@@ -16,18 +16,17 @@ const TypingIndicator: React.FC<TypingIndicatorProps> = ({
   const sizeClasses = {
     small: 'typing-indicator-small',
     medium: 'typing-indicator-medium',
-    large: 'typing-indicator-large';
+    large: 'typing-indicator-large'
   };
 
-  const classes = [;
+  const classes = [;;
     'typing-indicator',
     sizeClasses[size],
     className
   ].filter(Boolean).join(' ');
 
   return (
-    <div;
-      className={classes}
+    <div className={classes}
       style={style}
       role="status"
       aria-live="polite"
@@ -40,8 +39,8 @@ const TypingIndicator: React.FC<TypingIndicatorProps> = ({
       </div>
       <span className="sr-only">{message}...</span>
     </div>
-  );
-};
+  )
+  };
 
 export { TypingIndicator };
 export default TypingIndicator;

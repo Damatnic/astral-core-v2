@@ -17,7 +17,7 @@ export const samplePosts: Dilemma[] = [
     supportCount: 24,
     isSupported: false,
     isReported: false,
-    status: 'active' as const;
+    status: 'active' as const
   },
   {
     id: '2',
@@ -29,7 +29,7 @@ export const samplePosts: Dilemma[] = [
     supportCount: 67,
     isSupported: false,
     isReported: false,
-    status: 'active' as const;
+    status: 'active' as const
   },
   {
     id: '3',
@@ -41,7 +41,7 @@ export const samplePosts: Dilemma[] = [
     supportCount: 31,
     isSupported: false,
     isReported: false,
-    status: 'active' as const;
+    status: 'active' as const
   },
   {
     id: '4',
@@ -53,7 +53,7 @@ export const samplePosts: Dilemma[] = [
     supportCount: 45,
     isSupported: false,
     isReported: false,
-    status: 'active' as const;
+    status: 'active' as const
   },
   {
     id: '5',
@@ -65,7 +65,7 @@ export const samplePosts: Dilemma[] = [
     supportCount: 89,
     isSupported: false,
     isReported: false,
-    status: 'active' as const;
+    status: 'active' as const
   }
 ];
 
@@ -78,7 +78,7 @@ export const sampleReflections = [
     title: 'A Good Day',
     content: 'Today was better than most. I woke up feeling rested, had a productive morning, and even enjoyed lunch with a friend. Small progress, but I\'ll take it.',
     tags: ['gratitude', 'progress', 'social'],
-    isPrivate: false;
+    isPrivate: false
   },
   {
     id: 'r2',
@@ -87,7 +87,7 @@ export const sampleReflections = [
     title: 'Struggling but Surviving',
     content: 'Anxiety was high today. Couldn\'t focus at work, but I used my breathing exercises and they helped a bit. Tomorrow is a new day.',
     tags: ['anxiety', 'coping', 'work'],
-    isPrivate: true;
+    isPrivate: true
   },
   {
     id: 'r3',
@@ -96,7 +96,7 @@ export const sampleReflections = [
     title: 'Breakthrough in Therapy',
     content: 'Had an amazing therapy session today. Finally understood why I react certain ways to conflict. Feeling hopeful about applying these insights.',
     tags: ['therapy', 'growth', 'insight'],
-    isPrivate: false;
+    isPrivate: false
   },
   {
     id: 'r4',
@@ -105,7 +105,7 @@ export const sampleReflections = [
     title: 'Practicing Self-Compassion',
     content: 'Made a mistake at work today, but instead of spiraling, I practiced self-compassion. Everyone makes mistakes. I\'m learning and growing.',
     tags: ['self-compassion', 'work', 'growth'],
-    isPrivate: false;
+    isPrivate: false
   }
 ];
 
@@ -158,7 +158,7 @@ export const sampleWellnessVideos: WellnessVideo[] = [
     category: 'Meditation',
     tags: ['meditation', 'morning', 'mindfulness'],
     views: 1542,
-    likes: 234;
+    likes: 234
   },
   {
     id: 'v2',
@@ -170,7 +170,7 @@ export const sampleWellnessVideos: WellnessVideo[] = [
     category: 'Anxiety Management',
     tags: ['anxiety', 'breathing', 'coping'],
     views: 2891,
-    likes: 412;
+    likes: 412
   },
   {
     id: 'v3',
@@ -182,7 +182,7 @@ export const sampleWellnessVideos: WellnessVideo[] = [
     category: 'Relaxation',
     tags: ['relaxation', 'stress-relief', 'body-scan'],
     views: 987,
-    likes: 178;
+    likes: 178
   },
   {
     id: 'v4',
@@ -194,7 +194,7 @@ export const sampleWellnessVideos: WellnessVideo[] = [
     category: 'Sleep',
     tags: ['sleep', 'insomnia', 'rest'],
     views: 3456,
-    likes: 567;
+    likes: 567
   },
   {
     id: 'v5',
@@ -206,7 +206,7 @@ export const sampleWellnessVideos: WellnessVideo[] = [
     category: 'Exercise',
     tags: ['yoga', 'exercise', 'flexibility'],
     views: 2234,
-    likes: 389;
+    likes: 389
   }
 ];
 
@@ -248,35 +248,35 @@ export const sampleActivityHistory = [
     type: 'post',
     action: 'Created a post',
     title: 'Feeling overwhelmed with work-life balance',
-    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
+    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
   },
   {
     id: 'act2',
     type: 'comment',
     action: 'Commented on a post',
     title: 'Small victory: I went for a walk today!',
-    timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString();
+    timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString()
   },
   {
     id: 'act3',
     type: 'reflection',
     action: 'Added a reflection',
     title: 'A Good Day',
-    timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString();
+    timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
   },
   {
     id: 'act4',
     type: 'assessment',
     action: 'Completed assessment',
     title: 'Mood Check-In',
-    timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString();
+    timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
   },
   {
     id: 'act5',
     type: 'wellness',
     action: 'Updated wellness goals',
     title: 'Daily Meditation',
-    timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString();
+    timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
   }
 ];
 
@@ -300,7 +300,7 @@ export const sampleHelpers: Helper[] = [
     nextLevelXp: 3000,
     applicationStatus: 'approved',
     trainingCompleted: true,
-    quizScore: 95;
+    quizScore: 95
   },
   {
     id: 'h2',
@@ -320,7 +320,7 @@ export const sampleHelpers: Helper[] = [
     nextLevelXp: 5000,
     applicationStatus: 'approved',
     trainingCompleted: true,
-    quizScore: 98;
+    quizScore: 98
   },
   {
     id: 'h3',
@@ -340,7 +340,7 @@ export const sampleHelpers: Helper[] = [
     nextLevelXp: 2000,
     applicationStatus: 'approved',
     trainingCompleted: true,
-    quizScore: 92;
+    quizScore: 92
   }
 ];
 
@@ -357,73 +357,73 @@ export const astralTetherDemo = {
       duration: '15 minutes',
       type: 'Calming',
       effectiveness: 85,
-      notes: 'Felt a strong sense of peace and connection';
-    },
+      notes: 'Felt a strong sense of peace and connection'
+  },
     {
       id: 'at2',
       timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
       duration: '20 minutes',
       type: 'Energizing',
       effectiveness: 78,
-      notes: 'Helped lift my mood and motivation';
-    },
+      notes: 'Helped lift my mood and motivation'
+  },
     {
       id: 'at3',
       timestamp: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
       duration: '10 minutes',
       type: 'Grounding',
       effectiveness: 92,
-      notes: 'Perfect for managing anxiety in the moment';
-    }
+      notes: 'Perfect for managing anxiety in the moment'
+  }
   ],
   availableModes: [
     {
       name: 'Calming Wave',
       description: 'Gentle, soothing energy to reduce anxiety and promote relaxation',
       icon: '🌊',
-      color: '#6B9BD2';
-    },
+      color: '#6B9BD2'
+  },
     {
       name: 'Energizing Pulse',
       description: 'Uplifting vibrations to boost mood and motivation',
       icon: '⚡',
-      color: '#F4B942';
-    },
+      color: '#F4B942'
+  },
     {
       name: 'Grounding Root',
       description: 'Stabilizing frequency to center yourself and find balance',
       icon: '🌳',
-      color: '#7CB342';
-    },
+      color: '#7CB342'
+  },
     {
       name: 'Heart Opening',
       description: 'Compassionate resonance to foster self-love and connection',
       icon: '💜',
-      color: '#AB47BC';
-    },
+      color: '#AB47BC'
+  },
     {
       name: 'Clarity Focus',
       description: 'Sharpening wavelength to enhance mental clarity and focus',
       icon: '🔮',
-      color: '#5E35B1';
-    }
+      color: '#5E35B1'
+  }
   ],
   testimonials: [
     {
       text: 'The Astral Tether has been a game-changer for my anxiety management.',
       author: 'Anonymous User',
-      rating: 5;
-    },
+      rating: 5
+  },
     {
       text: 'I use it every morning to set a positive tone for my day.',
       author: 'Community Member',
-      rating: 5;
-    },
+      rating: 5
+  },
     {
       text: 'Skeptical at first, but the calming effect is undeniable.',
       author: 'New User',
-      rating: 4;
-    }
+      rating: 4
+  }
   ]
 };
 
@@ -434,35 +434,35 @@ export const sampleChatMessages = [
     senderId: 'helper',
     text: 'Hi there! I\'m Sarah, your peer support helper today. How are you feeling?',
     timestamp: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
-    isHelper: true;
+    isHelper: true
   },
   {
     id: 'm2',
     senderId: 'user',
     text: 'Hi Sarah. I\'m feeling pretty anxious about a presentation I have tomorrow.',
     timestamp: new Date(Date.now() - 9 * 60 * 1000).toISOString(),
-    isHelper: false;
+    isHelper: false
   },
   {
     id: 'm3',
     senderId: 'helper',
     text: 'I understand how nerve-wracking presentations can be. What specifically about it is making you most anxious?',
     timestamp: new Date(Date.now() - 8 * 60 * 1000).toISOString(),
-    isHelper: true;
+    isHelper: true
   },
   {
     id: 'm4',
     senderId: 'user',
     text: 'I\'m worried I\'ll forget what to say or that people will judge me if I make a mistake.',
     timestamp: new Date(Date.now() - 7 * 60 * 1000).toISOString(),
-    isHelper: false;
+    isHelper: false
   },
   {
     id: 'm5',
     senderId: 'helper',
     text: 'Those are very common fears, and they\'re completely valid. Let\'s work on some strategies to help you feel more confident. Have you tried any breathing exercises or grounding techniques before?',
     timestamp: new Date(Date.now() - 6 * 60 * 1000).toISOString(),
-    isHelper: true;
+    isHelper: true
   }
 ];
 

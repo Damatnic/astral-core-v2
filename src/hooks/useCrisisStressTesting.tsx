@@ -22,11 +22,11 @@ export interface CrisisStressTestingState {
   emergencyStatus: {
     active: boolean;
     reason?: string;
-    timestamp?: number;
+    timestamp?: number
   };
   testConfig: CrisisStressTestConfig;
-  selectedScenarios: string[];
-}
+  selectedScenarios: string[]
+  }
 
 export interface CrisisStressTestingActions {
   runStressTests: () => Promise<void>;
@@ -36,8 +36,8 @@ export interface CrisisStressTestingActions {
   updateTestConfig: (config: Partial<CrisisStressTestConfig>) => void;
   toggleScenario: (scenarioId: string) => void;
   clearResults: () => void;
-  exportResults: () => string;
-}
+  exportResults: () => string
+  }
 
 export interface CrisisStressTestingStats {
   total: number;
@@ -46,8 +46,8 @@ export interface CrisisStressTestingStats {
   critical: number;
   avgResponseTime: number;
   avgAvailability: number;
-  safetyScore: number;
-}
+  safetyScore: number
+  }
 
 export const useCrisisStressTesting = (
   onEmergencyBreak?: (reason: string) => void,
@@ -67,22 +67,22 @@ export const useCrisisStressTesting = (
       failureThresholds: {
         responseTime: 1000, // 1 second
         errorRate: 0.01, // 1%
-        availability: 0.99 // 99%;
-      },
+        availability: 0.99 // 99%
+  },
       emergencyBreakConditions: [
         'Critical safety impact detected',
         'System availability below 50%',
         'Emergency features completely unavailable'
       ]
     },
-    selectedScenarios: CRISIS_TEST_SCENARIOS.map(s => s.id);
+    selectedScenarios: CRISIS_TEST_SCENARIOS.map(s => s.id)
   });
 
   // Monitor for emergency conditions
   useEffect(() => {
     if (state.testResults.length === 0) return;
 
-    const criticalFailures = state.testResults.filter(r => ;
+    const criticalFailures = state.testResults.filter(r => ;;
       r.impactAssessment.safetyImpact === 'life-threatening'
     );
 
@@ -93,11 +93,11 @@ export const useCrisisStressTesting = (
         emergencyStatus: { 
           active: true, 
           reason, 
-          timestamp: Date.now() ;
-        }
+          timestamp: Date.now()
+  }
       }));
-      onEmergencyBreak?.(reason);
-    }
+      onEmergencyBreak?.(reason)
+  }
   };
   }, [state.testResults, state.emergencyStatus.active, onEmergencyBreak]);
 
@@ -110,8 +110,8 @@ export const useCrisisStressTesting = (
       isTestingActive: true,
       testResults: [],
       emergencyStatus: { active: false },
-      currentTest: 'Initializing crisis stress tests...';
-    }));
+      currentTest: 'Initializing crisis stress tests...'
+  }));
 
     try {
       // Filter scenarios based on selection;
@@ -124,22 +124,21 @@ export const useCrisisStressTesting = (
 
       setState(prev => ({
         ...prev,
-        currentTest: 'Running crisis intervention scenarios...';
-      }));
+        currentTest: 'Running crisis intervention scenarios...'
+  }));
 
-      const results = await crisisStressTestingSystem.runCrisisStressTests(;
+      const results = await crisisStressTestingSystem.runCrisisStressTests(;;
         configWithSelectedScenarios
       );
 
       setState(prev => ({
         ...prev,
         testResults: results,
-        currentTest: null;
-      }));
+        currentTest: null
+  }));
 
-      onTestComplete?.(results);
-
-    } catch (error) {
+      onTestComplete?.(results)
+  } catch (error) {
       console.error('Crisis stress testing failed:', error);
       const reason = `Testing system failure: ${error instanceof Error ? error.message : String(error)}`;
       setState(prev => ({
@@ -147,18 +146,18 @@ export const useCrisisStressTesting = (
         emergencyStatus: { 
           active: true, 
           reason, 
-          timestamp: Date.now() ;
-        },
-        currentTest: null;
-      }));
-      onEmergencyBreak?.(reason);
-    } finally {
+          timestamp: Date.now()
+  },
+        currentTest: null
+  }));
+      onEmergencyBreak?.(reason)
+  } finally {
       setState(prev => ({
         ...prev,
         isTestingActive: false,
-        currentTest: null;
-      }));
-    }
+        currentTest: null
+  }))
+  }
   };
   }, [state.isTestingActive, state.testConfig, state.selectedScenarios, onTestComplete, onEmergencyBreak]);
 
@@ -170,8 +169,8 @@ export const useCrisisStressTesting = (
       ...prev,
       isTestingActive: true,
       failoverResults: [],
-      currentTest: 'Testing emergency failover systems...';
-    }));
+      currentTest: 'Testing emergency failover systems...'
+  }));
 
     try {
       const failoverResults = await crisisStressTestingSystem.runEmergencyFailoverTests();
@@ -179,10 +178,9 @@ export const useCrisisStressTesting = (
       setState(prev => ({
         ...prev,
         failoverResults,
-        currentTest: null;
-      }));
-
-    } catch (error) {
+        currentTest: null
+  }))
+  } catch (error) {
       console.error('Failover testing failed:', error);
       const reason = `Failover testing failure: ${error instanceof Error ? error.message : 'Unknown error'}`;
       setState(prev => ({
@@ -190,18 +188,18 @@ export const useCrisisStressTesting = (
         emergencyStatus: { 
           active: true, 
           reason, 
-          timestamp: Date.now() ;
-        },
-        currentTest: null;
-      }));
-      onEmergencyBreak?.(reason);
-    } finally {
+          timestamp: Date.now()
+  },
+        currentTest: null
+  }));
+      onEmergencyBreak?.(reason)
+  } finally {
       setState(prev => ({
         ...prev,
         isTestingActive: false,
-        currentTest: null;
-      }));
-    }
+        currentTest: null
+  }))
+  }
   };
   }, [state.isTestingActive, onEmergencyBreak]);
 
@@ -214,10 +212,10 @@ export const useCrisisStressTesting = (
       emergencyStatus: { 
         active: true, 
         reason: 'Manual emergency stop', 
-        timestamp: Date.now() ;
-      }
+        timestamp: Date.now()
+  }
     }));
-    onEmergencyBreak?.('Manual emergency stop activated');
+    onEmergencyBreak?.('Manual emergency stop activated')
   };
   }, [onEmergencyBreak]);
 
@@ -226,7 +224,7 @@ export const useCrisisStressTesting = (
     setState(prev => ({
       ...prev,
       emergencyStatus: { active: false }
-    }));
+    }))
   };
   }, []);
 
@@ -235,7 +233,7 @@ export const useCrisisStressTesting = (
     setState(prev => ({
       ...prev,
       testConfig: { ...prev.testConfig, ...config }
-    }));
+    }))
   };
   }, []);
 
@@ -246,7 +244,7 @@ export const useCrisisStressTesting = (
       selectedScenarios: prev.selectedScenarios.includes(scenarioId)
         ? prev.selectedScenarios.filter(id => id !== scenarioId)
         : [...prev.selectedScenarios, scenarioId]
-    }));
+    }))
   };
   }, []);
 
@@ -257,7 +255,7 @@ export const useCrisisStressTesting = (
       testResults: [],
       failoverResults: [],
       emergencyStatus: { active: false }
-    }));
+    }))
   };
   }, []);
 
@@ -270,9 +268,9 @@ export const useCrisisStressTesting = (
       testResults: state.testResults,
       failoverResults: state.failoverResults,
       emergencyStatus: state.emergencyStatus,
-      statistics: getTestStats();
-    };
-    return JSON.stringify(exportData, null, 2);
+      statistics: getTestStats()
+  };
+    return JSON.stringify(exportData, null, 2)
   };
   }, [state]);
 
@@ -281,12 +279,12 @@ export const useCrisisStressTesting = (
     if (state.testResults.length === 0) return null;
 
     const successful = state.testResults.filter(r => r.success).length;
-    const critical = state.testResults.filter(r => ;
+    const critical = state.testResults.filter(r => ;;
       r.impactAssessment.safetyImpact === 'life-threatening'
     ).length;
-    const avgResponseTime = state.testResults.reduce((sum, r) => sum + r.responseTime, 0) / ;
+    const avgResponseTime = state.testResults.reduce((sum, r) => sum + r.responseTime, 0) / ;;
       state.testResults.length;
-    const avgAvailability = state.testResults.reduce((sum, r) => sum + r.availability, 0) / ;
+    const avgAvailability = state.testResults.reduce((sum, r) => sum + r.availability, 0) / ;;
       state.testResults.length;
 
     // Calculate safety score (0-100) based on success rate and critical failures;
@@ -321,7 +319,7 @@ export const useCrisisStressTesting = (
     actions,
     stats: getTestStats(),
     isEmergency: state.emergencyStatus.active,
-    hasResults: state.testResults.length > 0 || state.failoverResults.length > 0;
+    hasResults: state.testResults.length > 0 || state.failoverResults.length > 0
   };
 
 export default useCrisisStressTesting;

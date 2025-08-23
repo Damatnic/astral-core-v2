@@ -9,8 +9,8 @@ const mockAnimations = mockUseFormAnimations();
 
 // Mock the useFormAnimations hook
 jest.mock('../../hooks/useAnimations', () => ({
-  useFormAnimations: () => mockAnimations;
-}));
+  useFormAnimations: () => mockAnimations
+  }));
 
 describe('FormInput', () => {
   let user: ReturnType<typeof userEvent.setup>;
@@ -18,7 +18,7 @@ describe('FormInput', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     // Set up user event with real timers
-    user = userEvent.setup({ delay: null });
+    user = userEvent.setup({ delay: null })
   });
 
   describe('Rendering', () => {
@@ -27,71 +27,71 @@ describe('FormInput', () => {
       render(<FormInput {...props} />);
       
       expect(screen.getByLabelText('Test Label')).toBeInTheDocument();
-      expect(screen.getByRole('textbox')).toBeInTheDocument();
-    });
+      expect(screen.getByRole('textbox')).toBeInTheDocument()
+  });
 
     it('should render input without label', () => {
       const props = createMockFormInputProps({ label: undefined });
       render(<FormInput {...props} />);
       
       expect(screen.getByRole('textbox')).toBeInTheDocument();
-      expect(screen.queryByText('Test Input')).not.toBeInTheDocument();
-    });
+      expect(screen.queryByText('Test Input')).not.toBeInTheDocument()
+  });
 
     it('should render with placeholder', () => {
       const placeholder = 'Enter your name';
       const props = createMockFormInputProps({ placeholder });
       render(<FormInput {...props} />);
       
-      expect(screen.getByPlaceholderText(placeholder)).toBeInTheDocument();
-    });
+      expect(screen.getByPlaceholderText(placeholder)).toBeInTheDocument()
+  });
 
     it('should render with current value', () => {
       const value = 'Current input value';
       const props = createMockFormInputProps({ value });
       render(<FormInput {...props} />);
       
-      expect(screen.getByDisplayValue(value)).toBeInTheDocument();
-    });
+      expect(screen.getByDisplayValue(value)).toBeInTheDocument()
+  });
 
     it('should render floating label correctly', () => {
       const props = createMockFormInputProps({
         label: 'Floating Label',
-        floatingLabel: true;
-      });
+        floatingLabel: true
+  });
       const { container } = render(<FormInput {...props} />);
       
       expect(container.querySelector('.floating-label')).toBeInTheDocument();
-      expect(screen.getByLabelText('Floating Label')).toBeInTheDocument();
-    });
+      expect(screen.getByLabelText('Floating Label')).toBeInTheDocument()
+  });
 
     it('should render help text when provided', () => {
       const helpText = 'This is helpful information';
       const props = createMockFormInputProps({ helpText });
       render(<FormInput {...props} />);
       
-      expect(screen.getByText(helpText)).toBeInTheDocument();
-    });
+      expect(screen.getByText(helpText)).toBeInTheDocument()
+  });
 
     it('should render character count when enabled', () => {
       const props = createMockFormInputProps({
         showCharacterCount: true,
         maxLength: 100,
-        value: 'Test';
-      });
+        value: 'Test'
+  });
       render(<FormInput {...props} />);
       
       expect(screen.getByText('4/100 characters')).toBeInTheDocument();
-      expect(screen.getByText('96 remaining')).toBeInTheDocument();
-    });
+      expect(screen.getByText('96 remaining')).toBeInTheDocument()
+  });
 
     it('should render required indicator', () => {
       const props = createMockFormInputProps({ required: true, label: 'Required Field' });
       const { container } = render(<FormInput {...props} />);
       
       const label = container.querySelector('.form-label.required');
-      expect(label).toBeInTheDocument();
-    });
+      expect(label).toBeInTheDocument()
+  })
   });
 
   describe('Input Types', () => {
@@ -105,9 +105,9 @@ describe('FormInput', () => {
         const input = type === 'password' ? screen.getByLabelText('Test Input') :;
                       type === 'number' ? screen.getByRole('spinbutton') :
                       screen.getByRole('textbox');
-        expect(input).toHaveAttribute('type', type);
-      });
-    });
+        expect(input).toHaveAttribute('type', type)
+  })
+  })
   });
 
   describe('User Interactions', () => {
@@ -118,8 +118,8 @@ describe('FormInput', () => {
         
         const handleChange = (newValue: string) => {
           mockOnChange(newValue);
-          setValue(newValue);
-        };
+          setValue(newValue)
+  };
         
         return (
           <FormInput
@@ -128,8 +128,8 @@ describe('FormInput', () => {
             value={value}
             onChange={handleChange}
           />
-        );
-      };
+        )
+  };
       
       render(<TestWrapper />);
       
@@ -148,8 +148,8 @@ describe('FormInput', () => {
       expect(mockOnChange).toHaveBeenNthCalledWith(2, 'He');
       expect(mockOnChange).toHaveBeenNthCalledWith(3, 'Hel');
       expect(mockOnChange).toHaveBeenNthCalledWith(4, 'Hell');
-      expect(mockOnChange).toHaveBeenNthCalledWith(5, 'Hello');
-    });
+      expect(mockOnChange).toHaveBeenNthCalledWith(5, 'Hello')
+  });
 
     it('should call onBlur when input loses focus', async () => {
       const mockOnBlur = jest.fn();
@@ -164,8 +164,8 @@ describe('FormInput', () => {
             onChange={setValue}
             onBlur={mockOnBlur}
           />
-        );
-      };
+        )
+  };
       
       render(<TestWrapper />);
       
@@ -173,8 +173,8 @@ describe('FormInput', () => {
       fireEvent.focus(input);
       fireEvent.blur(input);
       
-      expect(mockOnBlur).toHaveBeenCalled();
-    });
+      expect(mockOnBlur).toHaveBeenCalled()
+  });
 
     it('should handle rapid typing', async () => {
       const mockOnChange = jest.fn();
@@ -183,8 +183,8 @@ describe('FormInput', () => {
         
         const handleChange = (newValue: string) => {
           mockOnChange(newValue);
-          setValue(newValue);
-        };
+          setValue(newValue)
+  };
         
         return (
           <FormInput
@@ -193,8 +193,8 @@ describe('FormInput', () => {
             value={value}
             onChange={handleChange}
           />
-        );
-      };
+        )
+  };
       
       render(<TestWrapper />);
       
@@ -205,12 +205,12 @@ describe('FormInput', () => {
       let accumulated = '';
       for (const char of text) {
         accumulated += char;
-        fireEvent.change(input, { target: { value: accumulated } });
-      }
+        fireEvent.change(input, { target: { value: accumulated } })
+  }
       
       expect(mockOnChange).toHaveBeenCalledTimes(11); // One call per character
-      expect(mockOnChange).toHaveBeenLastCalledWith('RapidTyping');
-    });
+      expect(mockOnChange).toHaveBeenLastCalledWith('RapidTyping')
+  })
   });
 
   describe('Validation', () => {
@@ -226,8 +226,8 @@ describe('FormInput', () => {
             onChange={setValue}
             required={true}
           />
-        );
-      };
+        )
+  };
       
       render(<TestWrapper />);
       
@@ -239,9 +239,9 @@ describe('FormInput', () => {
         expect(mockAnimations.showFieldError).toHaveBeenCalledWith(
           'test-input',
           'This field is required'
-        );
-      });
-    });
+        )
+  })
+  });
 
     it('should show minimum length error', async () => {
       const TestWrapper = () => {
@@ -255,8 +255,8 @@ describe('FormInput', () => {
             onChange={setValue}
             minLength={5}
           />
-        );
-      };
+        )
+  };
       
       render(<TestWrapper />);
       
@@ -268,9 +268,9 @@ describe('FormInput', () => {
         expect(mockAnimations.showFieldError).toHaveBeenCalledWith(
           'test-input',
           'Minimum 5 characters required'
-        );
-      });
-    });
+        )
+  })
+  });
 
     it('should show maximum length error', async () => {
       const TestWrapper = () => {
@@ -284,8 +284,8 @@ describe('FormInput', () => {
             onChange={setValue}
             maxLength={5}
           />
-        );
-      };
+        )
+  };
       
       render(<TestWrapper />);
       
@@ -297,9 +297,9 @@ describe('FormInput', () => {
         expect(mockAnimations.showFieldError).toHaveBeenCalledWith(
           'test-input',
           'Maximum 5 characters allowed'
-        );
-      });
-    });
+        )
+  })
+  });
 
     it('should validate email format', async () => {
       const TestWrapper = () => {
@@ -313,8 +313,8 @@ describe('FormInput', () => {
             onChange={setValue}
             type="email"
           />
-        );
-      };
+        )
+  };
       
       render(<TestWrapper />);
       
@@ -326,9 +326,9 @@ describe('FormInput', () => {
         expect(mockAnimations.showFieldError).toHaveBeenCalledWith(
           'test-input',
           'Please enter a valid email address'
-        );
-      });
-    });
+        )
+  })
+  });
 
     it('should validate against pattern', async () => {
       const TestWrapper = () => {
@@ -342,8 +342,8 @@ describe('FormInput', () => {
             onChange={setValue}
             pattern="^\\d{3}-\\d{2}-\\d{4}$"
           />
-        );
-      };
+        )
+  };
       
       render(<TestWrapper />);
       
@@ -355,15 +355,15 @@ describe('FormInput', () => {
         expect(mockAnimations.showFieldError).toHaveBeenCalledWith(
           'test-input',
           'Please enter a valid format'
-        );
-      });
-    });
+        )
+  })
+  });
 
     it('should validate custom rules', async () => {
       const validationRules = [{
         test: (value: string) => value.includes('test'),
-        message: 'Value must contain "test"';
-      }];
+        message: 'Value must contain "test"'
+  }];
       
       const TestWrapper = () => {
         const [value, setValue] = React.useState('invalid value');
@@ -376,8 +376,8 @@ describe('FormInput', () => {
             onChange={setValue}
             validationRules={validationRules}
           />
-        );
-      };
+        )
+  };
       
       render(<TestWrapper />);
       
@@ -389,9 +389,9 @@ describe('FormInput', () => {
         expect(mockAnimations.showFieldError).toHaveBeenCalledWith(
           'test-input',
           'Value must contain "test"'
-        );
-      });
-    });
+        )
+  })
+  });
 
     it('should show success state for valid input', async () => {
       const TestWrapper = () => {
@@ -405,8 +405,8 @@ describe('FormInput', () => {
             onChange={setValue}
             required={true}
           />
-        );
-      };
+        )
+  };
       
       render(<TestWrapper />);
       
@@ -415,34 +415,34 @@ describe('FormInput', () => {
       fireEvent.blur(input);
       
       await waitFor(() => {
-        expect(mockAnimations.showFieldSuccess).toHaveBeenCalledWith('test-input');
-      });
-    });
+        expect(mockAnimations.showFieldSuccess).toHaveBeenCalledWith('test-input')
+  })
+  });
 
     it('should validate in real-time when enabled', async () => {
       const props = createMockFormInputProps({
         realTimeValidation: true,
         required: true,
-        value: 'Valid';
-      });
+        value: 'Valid'
+  });
       render(<FormInput {...props} />);
       
       await waitFor(() => {
-        expect(mockAnimations.showFieldSuccess).toHaveBeenCalledWith(props.id);
-      });
-    });
+        expect(mockAnimations.showFieldSuccess).toHaveBeenCalledWith(props.id)
+  })
+  });
 
     it('should not validate until touched when realTimeValidation is false', () => {
       const props = createMockFormInputProps({
         realTimeValidation: false,
         required: true,
-        value: '' // Empty required field;
-      });
+        value: '' // Empty required field
+  });
       render(<FormInput {...props} />);
       
       // Should not show error immediately
-      expect(mockAnimations.showFieldError).not.toHaveBeenCalled();
-    });
+      expect(mockAnimations.showFieldError).not.toHaveBeenCalled()
+  })
   });
 
   describe('Character Count', () => {
@@ -450,13 +450,13 @@ describe('FormInput', () => {
       const props = createMockFormInputProps({
         showCharacterCount: true,
         maxLength: 100,
-        value: 'Hello world';
-      });
+        value: 'Hello world'
+  });
       render(<FormInput {...props} />);
       
       expect(screen.getByText('11/100 characters')).toBeInTheDocument();
-      expect(screen.getByText('89 remaining')).toBeInTheDocument();
-    });
+      expect(screen.getByText('89 remaining')).toBeInTheDocument()
+  });
 
     it('should apply near-limit class when approaching limit', () => {
       const props = createMockFormInputProps({
@@ -467,8 +467,8 @@ describe('FormInput', () => {
       const { container } = render(<FormInput {...props} />);
       
       const characterCount = container.querySelector('.form-character-count');
-      expect(characterCount).toHaveClass('near-limit');
-    });
+      expect(characterCount).toHaveClass('near-limit')
+  });
 
     it('should apply over-limit class when exceeding limit', () => {
       const props = createMockFormInputProps({
@@ -479,19 +479,19 @@ describe('FormInput', () => {
       const { container } = render(<FormInput {...props} />);
       
       const characterCount = container.querySelector('.form-character-count');
-      expect(characterCount).toHaveClass('over-limit');
-    });
+      expect(characterCount).toHaveClass('over-limit')
+  });
 
     it('should not show character count when disabled', () => {
       const props = createMockFormInputProps({
         showCharacterCount: false,
         maxLength: 100,
-        value: 'Hello world';
-      });
+        value: 'Hello world'
+  });
       render(<FormInput {...props} />);
       
-      expect(screen.queryByText('11/100 characters')).not.toBeInTheDocument();
-    });
+      expect(screen.queryByText('11/100 characters')).not.toBeInTheDocument()
+  })
   });
 
   describe('Accessibility', () => {
@@ -500,26 +500,26 @@ describe('FormInput', () => {
         id: 'test-input',
         label: 'Test Label',
         helpText: 'Help text',
-        required: true;
-      });
+        required: true
+  });
       render(<FormInput {...props} />);
       
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('id', 'test-input');
       expect(input).toHaveAttribute('required');
-      expect(input).toHaveAttribute('aria-describedby');
-    });
+      expect(input).toHaveAttribute('aria-describedby')
+  });
 
     it('should associate label with input', () => {
       const props = createMockFormInputProps({
         id: 'test-input',
-        label: 'Test Label';
-      });
+        label: 'Test Label'
+  });
       render(<FormInput {...props} />);
       
       const label = screen.getByText('Test Label');
-      expect(label).toHaveAttribute('for', 'test-input');
-    });
+      expect(label).toHaveAttribute('for', 'test-input')
+  });
 
     it('should mark input as invalid when validation fails', async () => {
       const TestWrapper = () => {
@@ -533,8 +533,8 @@ describe('FormInput', () => {
             onChange={setValue}
             required={true}
           />
-        );
-      };
+        )
+  };
       
       render(<TestWrapper />);
       
@@ -543,9 +543,9 @@ describe('FormInput', () => {
       fireEvent.blur(input);
       
       await waitFor(() => {
-        expect(input).toHaveAttribute('aria-invalid', 'true');
-      });
-    });
+        expect(input).toHaveAttribute('aria-invalid', 'true')
+  })
+  });
 
     it('should include all relevant IDs in aria-describedby', () => {
       const props = createMockFormInputProps({
@@ -562,8 +562,8 @@ describe('FormInput', () => {
       
       expect(describedBy).toContain('external-description');
       expect(describedBy).toContain('test-input-help');
-      expect(describedBy).toContain('test-input-counter');
-    });
+      expect(describedBy).toContain('test-input-counter')
+  })
   });
 
   describe('States and Classes', () => {
@@ -572,8 +572,8 @@ describe('FormInput', () => {
         floatingLabel: true,
         value: 'Has value',
         label: 'Test Label',
-        className: 'custom-class';
-      });
+        className: 'custom-class'
+  });
       const { container } = render(<FormInput {...props} />);
       
       const formGroup = container.querySelector('.form-group');
@@ -583,8 +583,8 @@ describe('FormInput', () => {
         'has-value',
         'has-label',
         'custom-class'
-      );
-    });
+      )
+  });
 
     it('should show success validation icon', async () => {
       const TestWrapper = () => {
@@ -598,8 +598,8 @@ describe('FormInput', () => {
             onChange={setValue}
             required={true}
           />
-        );
-      };
+        )
+  };
       
       const { container } = render(<TestWrapper />);
       
@@ -609,9 +609,9 @@ describe('FormInput', () => {
       
       await waitFor(() => {
         const successIcon = container.querySelector('.success-checkmark');
-        expect(successIcon).toBeInTheDocument();
-      });
-    });
+        expect(successIcon).toBeInTheDocument()
+  })
+  });
 
     it('should show error validation icon', async () => {
       const TestWrapper = () => {
@@ -625,8 +625,8 @@ describe('FormInput', () => {
             onChange={setValue}
             required={true}
           />
-        );
-      };
+        )
+  };
       
       const { container } = render(<TestWrapper />);
       
@@ -636,9 +636,9 @@ describe('FormInput', () => {
       
       await waitFor(() => {
         const errorIcon = container.querySelector('.error-icon');
-        expect(errorIcon).toBeInTheDocument();
-      });
-    });
+        expect(errorIcon).toBeInTheDocument()
+  })
+  })
   });
 
   describe('Disabled State', () => {
@@ -646,23 +646,23 @@ describe('FormInput', () => {
       const props = createMockFormInputProps({ disabled: true });
       render(<FormInput {...props} />);
       
-      expect(screen.getByRole('textbox')).toBeDisabled();
-    });
+      expect(screen.getByRole('textbox')).toBeDisabled()
+  });
 
     it('should not trigger validation when disabled', async () => {
       const props = createMockFormInputProps({
         disabled: true,
         required: true,
-        value: '';
-      });
+        value: ''
+  });
       render(<FormInput {...props} />);
       
       const input = screen.getByRole('textbox');
       // Disabled inputs won't receive focus/click events
       expect(input).toBeDisabled();
       
-      expect(mockAnimations.showFieldError).not.toHaveBeenCalled();
-    });
+      expect(mockAnimations.showFieldError).not.toHaveBeenCalled()
+  })
   });
 
   describe('Edge Cases', () => {
@@ -670,35 +670,35 @@ describe('FormInput', () => {
       const props = createMockFormInputProps({ validationRules: [] });
       render(<FormInput {...props} />);
       
-      expect(screen.getByRole('textbox')).toBeInTheDocument();
-    });
+      expect(screen.getByRole('textbox')).toBeInTheDocument()
+  });
 
     it('should handle undefined validation rules', () => {
       const props = createMockFormInputProps({ validationRules: undefined });
       render(<FormInput {...props} />);
       
-      expect(screen.getByRole('textbox')).toBeInTheDocument();
-    });
+      expect(screen.getByRole('textbox')).toBeInTheDocument()
+  });
 
     it('should handle maxLength without showCharacterCount', () => {
       const props = createMockFormInputProps({
         maxLength: 10,
         showCharacterCount: false,
-        value: 'test';
-      });
+        value: 'test'
+  });
       render(<FormInput {...props} />);
       
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('maxLength', '10');
-      expect(screen.queryByText('4/10 characters')).not.toBeInTheDocument();
-    });
+      expect(screen.queryByText('4/10 characters')).not.toBeInTheDocument()
+  });
 
     it('should handle floating label with empty placeholder', () => {
       const props = createMockFormInputProps({
         floatingLabel: true,
         placeholder: undefined,
-        label: 'Floating Label';
-      });
+        label: 'Floating Label'
+  });
       render(<FormInput {...props} />);
       
       const input = screen.getByRole('textbox');
@@ -715,23 +715,23 @@ describe('FormInput', () => {
       rerender(<FormInput {...props} value="abc" />);
       rerender(<FormInput {...props} value="" />);
       
-      expect(screen.getByRole('textbox')).toBeInTheDocument();
-    });
+      expect(screen.getByRole('textbox')).toBeInTheDocument()
+  });
 
     it('should handle complex validation rules', async () => {
-      const complexRules = [;
+      const complexRules = [;;
         {
           test: (value: string) => value.length >= 3,
-          message: 'Minimum 3 characters';
-        },
+          message: 'Minimum 3 characters'
+  },
         {
           test: (value: string) => /[A-Z]/.test(value),
-          message: 'Must contain uppercase letter';
-        },
+          message: 'Must contain uppercase letter'
+  },
         {
           test: (value: string) => /\d/.test(value),
-          message: 'Must contain number';
-        }
+          message: 'Must contain number'
+  }
       ];
       
       const TestWrapper = () => {
@@ -745,8 +745,8 @@ describe('FormInput', () => {
             onChange={setValue}
             validationRules={complexRules}
           />
-        );
-      };
+        )
+  };
       
       render(<TestWrapper />);
       
@@ -758,8 +758,8 @@ describe('FormInput', () => {
         expect(mockAnimations.showFieldError).toHaveBeenCalledWith(
           'test-input',
           'Minimum 3 characters'
-        );
-      });
-    });
+        )
+  })
+  })
+  })
   });
-});

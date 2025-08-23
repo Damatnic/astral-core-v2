@@ -19,7 +19,7 @@ import {
 import { useMobileForm, commonValidationRules } from '../hooks/useMobileForm';
 import { AppButton } from '../components/AppButton';
 
-const CONTACT_SUBJECTS = [;
+const CONTACT_SUBJECTS = [;;
   { value: 'general', label: 'General Inquiry' },
   { value: 'support', label: 'Technical Support' },
   { value: 'billing', label: 'Billing Question' },
@@ -27,14 +27,14 @@ const CONTACT_SUBJECTS = [;
   { value: 'partnership', label: 'Partnership Opportunity' },
 ];
 
-const PRIORITY_OPTIONS = [;
+const PRIORITY_OPTIONS = [;;
   { value: 'low', label: 'Low Priority' },
   { value: 'medium', label: 'Medium Priority' },
   { value: 'high', label: 'High Priority' },
   { value: 'urgent', label: 'Urgent' },
 ];
 
-const CONTACT_METHOD_OPTIONS = [;
+const CONTACT_METHOD_OPTIONS = [;;
   { value: 'email', label: 'Email' },
   { value: 'phone', label: 'Phone Call' },
   { value: 'sms', label: 'Text Message' },
@@ -73,21 +73,21 @@ export const EnhancedMobileContactForm: React.FC = () => {
         if (Math.random() > 0.2) {
           setSubmitStatus('success');
           setSubmitMessage('Thank you! Your message has been sent successfully.');
-          resetForm();;
+          resetForm()
   } else {
-          throw new Error('Failed to send message. Please try again.');
-        }
+          throw new Error('Failed to send message. Please try again.')
+  }
       } catch (error) {
         setSubmitStatus('error');
-        setSubmitMessage(error instanceof Error ? error.message : 'An error occurred');
-      }
+        setSubmitMessage(error instanceof Error ? error.message : 'An error occurred')
+  }
     },
   });
 
   const handleReset = () => {
     resetForm();
     setSubmitStatus('idle');
-    setSubmitMessage('');
+    setSubmitMessage('')
   };
 
   return (
@@ -131,8 +131,8 @@ export const EnhancedMobileContactForm: React.FC = () => {
             custom: (value: string) => {
               if (!value) return true; // Optional field;
               const cleaned = value.replace(/\D/g, '');
-              return cleaned.length >= 10 || 'Phone number must be at least 10 digits';
-            },
+              return cleaned.length >= 10 || 'Phone number must be at least 10 digits'
+  },
           }}
           helpText="Optional - for urgent matters"
           autoComplete="tel"
@@ -177,8 +177,8 @@ export const EnhancedMobileContactForm: React.FC = () => {
             maxLength: 2000,
             custom: (value: string) => {
               const wordCount = value.trim().split(/\s+/).length;
-              return wordCount >= 5 || 'Please provide at least 5 words in your message';
-            },
+              return wordCount >= 5 || 'Please provide at least 5 words in your message'
+  },
           }}
           helpText="Please provide as much detail as possible (minimum 20 characters)"
           maxLength={2000}
@@ -199,8 +199,7 @@ export const EnhancedMobileContactForm: React.FC = () => {
 
         {/* Form Actions */}
         <div className="form-actions">
-          <AppButton;
-            type="submit";
+          <AppButton type="submit";
             variant="primary"
             disabled={!isValid || isSubmitting}
             isLoading={isSubmitting}
@@ -210,8 +209,7 @@ export const EnhancedMobileContactForm: React.FC = () => {
             {isSubmitting ? 'Sending Message...' : 'Send Message'}
           </AppButton>
 
-          <AppButton;
-            type="button";
+          <AppButton type="button";
             variant="secondary"
             onClick={handleReset}
             disabled={isSubmitting}
@@ -240,63 +238,63 @@ export const EnhancedMobileContactForm: React.FC = () => {
           padding: 20px;
           background: var(--bg-primary);
           border-radius: 16px;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1)
+  }
 
         .form-header {
           text-align: center;
-          margin-bottom: 32px;
-        }
+          margin-bottom: 32px
+  }
 
         .form-header h2 {
           font-size: 28px;
           font-weight: 700;
           color: var(--text-primary);
-          margin-bottom: 8px;
-        }
+          margin-bottom: 8px
+  }
 
         .form-header p {
           font-size: 16px;
           color: var(--text-secondary);
-          line-height: 1.5;
-        }
+          line-height: 1.5
+  }
 
         .submit-message {
           padding: 16px;
           border-radius: 12px;
           margin-bottom: 24px;
           font-weight: 600;
-          text-align: center;
-        }
+          text-align: center
+  }
 
         .submit-message.success {
           background: rgba(var(--success-color-rgb), 0.1);
           color: var(--success-color);
-          border: 2px solid rgba(var(--success-color-rgb), 0.2);
-        }
+          border: 2px solid rgba(var(--success-color-rgb), 0.2)
+  }
 
         .submit-message.error {
           background: rgba(var(--danger-color-rgb), 0.1);
           color: var(--danger-color);
-          border: 2px solid rgba(var(--danger-color-rgb), 0.2);
-        }
+          border: 2px solid rgba(var(--danger-color-rgb), 0.2)
+  }
 
         .form-actions {
           display: flex;
           gap: 16px;
-          margin-top: 24px;
-        }
+          margin-top: 24px
+  }
 
         .submit-button {
           flex: 2;
           min-height: 48px;
-          font-weight: 600;
-        }
+          font-weight: 600
+  }
 
         .reset-button {
           flex: 1;
-          min-height: 48px;
-        }
+          min-height: 48px
+  }
 
         .form-debug {
           margin-top: 24px;
@@ -304,14 +302,14 @@ export const EnhancedMobileContactForm: React.FC = () => {
           background: var(--bg-secondary);
           border-radius: 8px;
           font-size: 12px;
-          color: var(--text-secondary);
-        }
+          color: var(--text-secondary)
+  }
 
         .form-debug summary {
           cursor: pointer;
           font-weight: 600;
-          margin-bottom: 8px;
-        }
+          margin-bottom: 8px
+  }
 
         .form-debug pre {
           background: var(--bg-tertiary);
@@ -319,8 +317,8 @@ export const EnhancedMobileContactForm: React.FC = () => {
           border-radius: 4px;
           overflow-x: auto;
           font-family: monospace;
-          font-size: 11px;
-        }
+          font-size: 11px
+  }
 
         /* Mobile-specific adjustments */
         @media (max-width: 768px) {
@@ -328,26 +326,26 @@ export const EnhancedMobileContactForm: React.FC = () => {
             padding: 16px;
             border-radius: 12px;
             margin: 16px;
-            max-width: calc(100vw - 32px);
-          }
+            max-width: calc(100vw - 32px)
+  }
 
           .form-header h2 {
-            font-size: 24px;
-          }
+            font-size: 24px
+  }
 
           .form-header p {
-            font-size: 14px;
-          }
+            font-size: 14px
+  }
 
           .form-actions {
             flex-direction: column;
-            gap: 12px;
-          }
+            gap: 12px
+  }
 
           .submit-button,
           .reset-button {
-            flex: none;
-          }
+            flex: none
+  }
         }
 
         /* Small phone screens */
@@ -355,16 +353,16 @@ export const EnhancedMobileContactForm: React.FC = () => {
           .mobile-contact-form-wrapper {
             margin: 8px;
             padding: 12px;
-            max-width: calc(100vw - 16px);
-          }
+            max-width: calc(100vw - 16px)
+  }
 
           .form-header {
-            margin-bottom: 24px;
-          }
+            margin-bottom: 24px
+  }
         }
       `}</style>
     </div>
-  );
-};
+  )
+  };
 
 export default EnhancedMobileContactForm;

@@ -17,8 +17,8 @@ declare global {
       toBeValid(): R;
       toBeInvalid(): R;
       toHaveFocus(): R;
-      toHaveStyle(css: string | object): R;
-    }
+      toHaveStyle(css: string | object): R
+  }
   }
 }
 

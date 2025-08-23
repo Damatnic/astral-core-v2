@@ -14,7 +14,7 @@ export interface CrisisAnalysisOptions {
     messagesSent?: number;
     sessionDuration?: number;
     previousEscalations?: number;
-    riskTrend?: 'increasing' | 'stable' | 'decreasing';
+    riskTrend?: 'increasing' | 'stable' | 'decreasing'
   };
   userContext?: {
     languageCode?: string;
@@ -25,8 +25,8 @@ export interface CrisisAnalysisOptions {
     location?: {
       country: string;
       region?: string;
-      hasGeolocation: boolean;
-    }
+      hasGeolocation: boolean
+  }
 
 export interface CrisisAnalysisResult {
   isCrisis: boolean;
@@ -39,8 +39,8 @@ export interface CrisisAnalysisResult {
   escalationResponse?: any;
   riskAssessment?: any;
   enhanced: boolean;
-  error?: string;
-}
+  error?: string
+  }
 
 export class CrisisDetectionIntegrationService {
   /**
@@ -67,8 +67,8 @@ export class CrisisDetectionIntegrationService {
         accessibilityNeeds: options.userContext?.accessibilityNeeds || [],
         preferredContactMethod: options.userContext?.preferredContactMethod || 'chat',
         timeZone: options.userContext?.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone,
-        location: options.userContext?.location;
-      };
+        location: options.userContext?.location
+  };
 
       // Perform crisis analysis with escalation integration;
       const result = await crisisService.analyze(text, userContext);
@@ -84,8 +84,8 @@ export class CrisisDetectionIntegrationService {
         escalationResponse: result.escalationResponse,
         riskAssessment: result.riskAssessment,
         enhanced: result.enhanced,
-        error: result.error;
-      } catch (error) {
+        error: result.error
+  } catch (error) {
       console.error('Crisis detection analysis failed:', error);
       return {
         isCrisis: false,
@@ -95,8 +95,8 @@ export class CrisisDetectionIntegrationService {
         escalationRequired: false,
         emergencyServicesRequired: false,
         enhanced: false,
-        error: error instanceof Error ? error.message : String(error);
-      }
+        error: error instanceof Error ? error.message : String(error)
+  }
   }
 
   /**
@@ -112,8 +112,8 @@ export class CrisisDetectionIntegrationService {
       const sessionData = {
         ...options.sessionData,
         messagesSent: i + 1,
-        sessionDuration: options.sessionData?.sessionDuration || (i * 30000) // Estimate 30s per message;
-      };
+        sessionDuration: options.sessionData?.sessionDuration || (i * 30000) // Estimate 30s per message
+  };
       
       const result = await this.analyzeTextForCrisis(messages[i], {
         ...options,
@@ -126,11 +126,11 @@ export class CrisisDetectionIntegrationService {
       // If crisis escalation was triggered, we should probably stop analyzing
       if (result.escalationRequired && result.escalationResponse) {
         console.log('Crisis escalation triggered, stopping analysis');
-        break;
-      }
+        break
+  }
     }
     
-    return results;
+    return results
   }
 
   /**
@@ -144,7 +144,7 @@ export class CrisisDetectionIntegrationService {
     isInCrisis: boolean;
     highestSeverity: string;
     escalationTriggered: boolean;
-    recommendedActions: string[];
+    recommendedActions: string[]
   }> {
     const results = await this.analyzeConversationForCrisis(recentMessages, {
       ...options,
@@ -159,20 +159,20 @@ export class CrisisDetectionIntegrationService {
     const highestSeverity = crisisResults.reduce((highest, result) => {
       const currentIndex = severityLevels.indexOf(result.severity);
       const highestIndex = severityLevels.indexOf(highest);
-      return currentIndex > highestIndex ? result.severity : highest;
-    }, 'none');
+      return currentIndex > highestIndex ? result.severity : highest
+  }, 'none');
     
     // Collect recommended actions;
-    const recommendedActions = crisisResults;
+    const recommendedActions = crisisResults;;
       .flatMap(r => r.interventionRecommendations || [])
       .map(rec => {
         // Type guard for recommendation object
         if (typeof rec === 'object' && rec !== null) {
           const recObj = rec as any;
-          return recObj.action || recObj.description || String(rec);
-        }
-        return String(rec);
-      })
+          return recObj.action || recObj.description || String(rec)
+  }
+        return String(rec)
+  })
       .filter((action, index, array) => array.indexOf(action) === index); // Remove duplicates
     
     return { isInCrisis: crisisResults.length > 0,
@@ -211,11 +211,11 @@ export class CrisisDetectionIntegrationService {
       // - Healthcare providers
       
       // For now, just log the escalation
-      return Promise.resolve();
-    } catch (error) {
+      return Promise.resolve()
+  } catch (error) {
       console.error('Failed to process emergency escalation:', error);
-      throw error;
-    }
+      throw error
+  }
   }
 }
 

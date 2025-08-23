@@ -20,14 +20,14 @@ const HelperApplicationRoute: React.FC = () => {
     };
     
     const route = routeMap[view] || '/helper/application';
-    navigate(route);
+    navigate(route)
   };
 
   return (
     <HelperApplicationView 
       setActiveView={handleSetActiveView}
     />
-  );
-};
+  )
+  };
 
 export default HelperApplicationRoute;

@@ -3,8 +3,8 @@ import './CalmingBackground.css';
 
 interface CalmingBackgroundProps {
   theme?: 'ocean' | 'forest' | 'sky' | 'aurora';
-  intensity?: number;
-}
+  intensity?: number
+  }
 
 export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({ 
   theme = 'ocean',
@@ -22,8 +22,8 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
     // Set canvas size;
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
+      canvas.height = window.innerHeight
+  };
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
     
@@ -48,8 +48,8 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
         this.speedX = (Math.random() - 0.5) * 0.5;
         this.speedY = (Math.random() - 0.5) * 0.5;
         this.opacity = Math.random() * 0.5 + 0.2;
-        this.hue = theme === 'ocean' ? 200 : theme === 'forest' ? 120 : theme === 'sky' ? 210 : 280;
-      }
+        this.hue = theme === 'ocean' ? 200 : theme === 'forest' ? 120 : theme === 'sky' ? 210 : 280
+  }
       
       update() {
         this.x += this.speedX;
@@ -64,8 +64,8 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
         if (this.y > height) this.y = 0;
         
         // Gentle floating motion
-        this.y += Math.sin(time * 0.001 + this.x * 0.01) * 0.2;
-      }
+        this.y += Math.sin(time * 0.001 + this.x * 0.01) * 0.2
+  }
       
       draw() {
         if (!ctx) return;
@@ -84,16 +84,16 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
         ctx.fill();
-        ctx.restore();
-      }
+        ctx.restore()
+  }
     }
     
     // Create particles;
     const particles: Particle[] = [];
     const particleCount = 50;
     for (let i = 0; i < particleCount; i++) {
-      particles.push(new Particle());
-    }
+      particles.push(new Particle())
+  }
     
     // Wave animation for ocean/sky themes;
     const drawWaves = () => {
@@ -110,20 +110,20 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
         ctx.lineWidth = 2;
         
         for (let x = 0; x < canvas.width; x++) {
-          const y = canvas.height / 2 + ;
+          const y = canvas.height / 2 + ;;
             Math.sin((x * 0.01) + (time * 0.001) + (i * 2)) * 50 * (i + 1) +
             Math.sin((x * 0.02) + (time * 0.002)) * 20;
           
           if (x === 0) {
-            ctx.moveTo(x, y);;
+            ctx.moveTo(x, y)
   } else {
-            ctx.lineTo(x, y);
-          }
+            ctx.lineTo(x, y)
+  }
         }
-        ctx.stroke();
-      }
-      ctx.restore();
-    };
+        ctx.stroke()
+  }
+      ctx.restore()
+  };
     
     // Aurora effect for aurora theme;
     const drawAurora = () => {
@@ -143,24 +143,24 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
         ctx.beginPath();
         
         for (let x = 0; x <= canvas.width; x += 10) {
-          const y = canvas.height * 0.3 + ;
+          const y = canvas.height * 0.3 + ;;
             Math.sin((x * 0.005) + (time * 0.002) + i) * 100 +
             Math.sin((x * 0.01) + (time * 0.001) + i * 2) * 50;
           
           if (x === 0) {
-            ctx.moveTo(x, y);;
+            ctx.moveTo(x, y)
   } else {
-            ctx.lineTo(x, y);
-          }
+            ctx.lineTo(x, y)
+  }
         }
         
         ctx.lineTo(canvas.width, 0);
         ctx.lineTo(0, 0);
         ctx.closePath();
-        ctx.fill();
-      }
-      ctx.restore();
-    };
+        ctx.fill()
+  }
+      ctx.restore()
+  };
     
     // Animation loop;
     const animate = () => {
@@ -175,19 +175,19 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
       // Update and draw particles
       particles.forEach(particle => {
         particle.update();
-        particle.draw();
-      });
+        particle.draw()
+  });
       
       time++;
-      animationId = requestAnimationFrame(animate);
-    };
+      animationId = requestAnimationFrame(animate)
+  };
     
     animate();
     
     return () => {
       cancelAnimationFrame(animationId);
-      window.removeEventListener('resize', resizeCanvas);
-    };
+      window.removeEventListener('resize', resizeCanvas)
+  };
   };
   }, [theme, intensity]);
   
@@ -200,5 +200,5 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
       />
       <div className={`background-overlay theme-${theme}`} />
     </div>
-  );
-};
+  )
+  };

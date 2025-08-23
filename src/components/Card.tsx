@@ -12,8 +12,8 @@ interface CardProps {
   variant?: 'default' | 'interactive' | 'glass' | 'elevated' | 'neumorph' | 'therapy';
   animate?: 'breathe' | 'float' | 'glow' | 'none';
   gradient?: 'calm' | 'wellness' | 'sky' | 'ocean' | 'sunset' | 'forest' | 'aurora' | 'peaceful' | 'none';
-  moodVariant?: 'happy' | 'calm' | 'anxious' | 'sad' | 'none';
-}
+  moodVariant?: 'happy' | 'calm' | 'anxious' | 'sad' | 'none'
+  }
 
 export const Card: React.FC<CardProps> = ({ 
   children, 
@@ -52,7 +52,7 @@ export const Card: React.FC<CardProps> = ({
   
   const isInteractive = !!onClick;
   
-  const classes = [;
+  const classes = [;;
     baseClass,
     variantClass,
     clickableClass,
@@ -66,20 +66,19 @@ export const Card: React.FC<CardProps> = ({
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (onClick && (event.key === 'Enter' || event.key === ' ')) {
       event.preventDefault();
-      onClick(event as any as React.MouseEvent<HTMLDivElement>);
-    }
+      onClick(event as any as React.MouseEvent<HTMLDivElement>)
+  }
   };
   
   // Apply gradient background if specified;
   const enhancedStyle = gradient !== 'none' ? {
     ...style,
     background: `var(--gradient-${gradient})`,
-    backgroundSize: '200% 200%';
+    backgroundSize: '200% 200%'
   } : style;
   
   return (
-    <div; 
-      className={classes}
+    <div className={classes}
       style={enhancedStyle} 
       onClick={onClick}
       onKeyDown={isInteractive ? handleKeyDown : undefined}
@@ -90,5 +89,5 @@ export const Card: React.FC<CardProps> = ({
     >
       {children}
     </div>
-  );
-};
+  )
+  };

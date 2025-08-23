@@ -35,8 +35,8 @@ export interface EnhancedModalProps {
   /** Footer content */
   footer?: React.ReactNode;
   /** Whether modal is loading */
-  loading?: boolean;
-}
+  loading?: boolean
+  }
 
 export const EnhancedModal: React.FC<EnhancedModalProps> = ({
   isOpen,
@@ -73,7 +73,7 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
     enableEscape: closeOnEscape,
     onEscape: onClose,
     restoreFocus: true,
-    handleTab: true;
+    handleTab: true
   });
 
   /**
@@ -81,8 +81,8 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
    */;
   const handleBackdropClick = useCallback((event: React.MouseEvent) => {
     if (closeOnBackdropClick && event.target === backdropRef.current) {
-      onClose();
-    }
+      onClose()
+  }
   };
   }, [closeOnBackdropClick, onClose]);
 
@@ -96,8 +96,8 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
       case 'Escape':
         if (closeOnEscape) {
           event.preventDefault();
-          onClose();
-        }
+          onClose()
+  }
         break;
 
       case 'Tab':
@@ -105,8 +105,8 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
           const focusableElements = getFocusableElements();
           if (focusableElements.length === 0) {
             event.preventDefault();
-            return;
-          }
+            return
+  }
 
           const currentIndex = focusableElements.indexOf(document.activeElement as HTMLElement);
           
@@ -114,18 +114,18 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
             // Shift + Tab - go to previous
             if (currentIndex === 0 || currentIndex === -1) {
               event.preventDefault();
-              focusLast();
-            };
+              focusLast()
+  }
   } else {
             // Tab - go to next
             if (currentIndex === focusableElements.length - 1 || currentIndex === -1) {
               event.preventDefault();
-              focusFirst();
-            }
+              focusFirst()
+  }
           }
         }
-        break;
-    }
+        break
+  }
   };
   }, [isOpen, closeOnEscape, onClose, trapFocus, getFocusableElements, focusFirst, focusLast]);
 
@@ -143,18 +143,18 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
 
       // Enable focus trapping
       if (trapFocus) {
-        trapFocusInContainer(true);
-      }
+        trapFocusInContainer(true)
+  }
 
       // Auto-focus first element or close button
       setTimeout(() => {
         if (autoFocus) {
           const focusableElements = getFocusableElements();
           if (focusableElements.length > 0) {
-            focusableElements[0].focus();;
+            focusableElements[0].focus()
   } else if (closeButtonRef.current) {
-            closeButtonRef.current.focus();
-          }
+            closeButtonRef.current.focus()
+  }
         }
       }, 100);
 
@@ -166,8 +166,8 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
         announcement.className = 'sr-only';
         announcement.textContent = openAnnouncement;
         document.body.appendChild(announcement);
-        setTimeout(() => document.body.removeChild(announcement), 1000);
-      }
+        setTimeout(() => document.body.removeChild(announcement), 1000)
+  }
 
       // Add keyboard event listener
       document.addEventListener('keydown', handleKeyDown, true);
@@ -180,15 +180,15 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
         
         // Disable focus trapping
         if (trapFocus) {
-          trapFocusInContainer(false);
-        }
+          trapFocusInContainer(false)
+  }
 
         // Restore focus to last focused element
         if (lastFocusedElement.current && document.contains(lastFocusedElement.current)) {
           setTimeout(() => {
-            lastFocusedElement.current?.focus();
-          }, 100);
-        }
+            lastFocusedElement.current?.focus()
+  }, 100)
+  }
 
         // Announce modal closing;
         const announcement = document.createElement('div');
@@ -197,15 +197,15 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
         announcement.className = 'sr-only';
         announcement.textContent = 'Modal closed';
         document.body.appendChild(announcement);
-        setTimeout(() => document.body.removeChild(announcement), 1000);
-      }
+        setTimeout(() => document.body.removeChild(announcement), 1000)
+  }
   };
   }, [isOpen, autoFocus, trapFocus, openAnnouncement, getFocusableElements, trapFocusInContainer, handleKeyDown]);
 
   // Don't render if not open
   if (!isOpen) return null;
 
-  const modalClasses = [;
+  const modalClasses = [;;
     'enhanced-modal',
     `enhanced-modal--${size}`,
     `enhanced-modal--${variant}`,
@@ -268,8 +268,8 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
         )}
       </div>
     </div>
-  );
-};
+  )
+  };
 
 /**
  * Modal context for managing multiple modals
@@ -278,18 +278,18 @@ interface ModalContextValue {
   openModal: (id: string, props: Omit<EnhancedModalProps, 'isOpen' | 'onClose'>) => void;
   closeModal: (id: string) => void;
   closeAllModals: () => void;
-  isModalOpen: (id: string) => boolean;
-}
+  isModalOpen: (id: string) => boolean
+  }
 
 const ModalContext = React.createContext<ModalContextValue | null>(null);
 
 export const useModal = () => {
   const context = React.useContext(ModalContext);
   if (!context) {
-    throw new Error('useModal must be used within a ModalProvider');
+    throw new Error('useModal must be used within a ModalProvider')
   }
-  return context;
-};
+  return context
+  };
 
 export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [modals, setModals] = React.useState<Record<string, EnhancedModalProps>>({});
@@ -300,27 +300,27 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       [id]: {
         ...props,
         isOpen: true,
-        onClose: () => closeModal(id);
-      }
-    }));
+        onClose: () => closeModal(id)
+  }
+    }))
   };
   }, []);
 
   const closeModal = useCallback((id: string) => {
     setModals(prev => {
       const { [id]: _, ...rest } = prev;
-      return rest;
-    });
+      return rest
+  })
   };
   }, []);
 
   const closeAllModals = useCallback(() => {
-    setModals({});
+    setModals({})
   };
   }, []);
 
   const isModalOpen = useCallback((id: string) => {
-    return Boolean(modals[id]?.isOpen);
+    return Boolean(modals[id]?.isOpen)
   };
   }, [modals]);
 
@@ -338,7 +338,7 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         <EnhancedModal key={id} {...props} />
       ))}
     </ModalContext.Provider>
-  );
-};
+  )
+  };
 
 export default EnhancedModal;

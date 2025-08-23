@@ -11,8 +11,8 @@ interface LazyStyleConfig {
   media?: string;
   priority?: 'immediate' | 'high' | 'medium' | 'low';
   condition?: () => boolean;
-  preload?: boolean;
-}
+  preload?: boolean
+  }
 
 interface LazyStylesStrategy {
   immediate: LazyStyleConfig[];
@@ -20,8 +20,8 @@ interface LazyStylesStrategy {
   routes: Record<string, LazyStyleConfig[]>;
   responsive: LazyStyleConfig[];
   emotional: Record<string, LazyStyleConfig[]>;
-  crisis: LazyStyleConfig[];
-}
+  crisis: LazyStyleConfig[]
+  }
 
 class CSSLoadingManager {
   private loadedStyles = new Set<string>();
@@ -37,8 +37,8 @@ class CSSLoadingManager {
       
       if (this.loadedStyles.has(href)) {
         resolve();
-        return;
-      }
+        return
+  }
 
       const link = document.createElement('link');
       link.rel = 'stylesheet';
@@ -47,18 +47,18 @@ class CSSLoadingManager {
       
       const onLoad = () => {
         if (link.media !== media) {
-          link.media = media;
-        }
+          link.media = media
+  }
         this.loadedStyles.add(href);
         link.onload = null;
-        resolve();
-      };
+        resolve()
+  };
 
       const onError = () => {
         console.warn(`Failed to load CSS: ${href}`);
         link.onerror = null;
-        reject(new Error(`Failed to load CSS: ${href}`));
-      };
+        reject(new Error(`Failed to load CSS: ${href}`))
+  };
 
       link.onload = onLoad;
       link.onerror = onError;
@@ -67,13 +67,13 @@ class CSSLoadingManager {
       if (priority !== 'immediate') {
         setTimeout(() => {
           if (link.media === 'only x') {
-            onLoad();
-          }
-        }, 3000);
-      }
+            onLoad()
+  }
+        }, 3000)
+  }
 
-      document.head.appendChild(link);
-    });
+      document.head.appendChild(link)
+  })
   }
 
   /**
@@ -81,8 +81,8 @@ class CSSLoadingManager {
    */
   preloadCSS(href: string): void {
     if (this.preloadedStyles.has(href) || this.loadedStyles.has(href)) {
-      return;
-    }
+      return
+  }
 
     const link = document.createElement('link');
     link.rel = 'preload';
@@ -90,14 +90,14 @@ class CSSLoadingManager {
     link.href = href;
     link.onload = () => this.preloadedStyles.add(href);
     
-    document.head.appendChild(link);
+    document.head.appendChild(link)
   }
 
   /**
    * Check if a style has been loaded
    */
   isLoaded(href: string): boolean {
-    return this.loadedStyles.has(href);
+    return this.loadedStyles.has(href)
   }
 
   /**
@@ -108,16 +108,16 @@ class CSSLoadingManager {
 
     const loadInteractionStyles = () => {
       configs.forEach(config => this.loadCSS(config));
-      this.interactionTriggered = true;
-    };
+      this.interactionTriggered = true
+  };
 
     const events = ['click', 'touchstart', 'keydown', 'scroll'];
     events.forEach(event => {
       document.addEventListener(event, loadInteractionStyles, { 
         once: true, 
-        passive: true ;
-      });
-    });
+        passive: true
+  })
+  })
   }
 }
 
@@ -173,20 +173,20 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
         href: '/assets/mobile.css', 
         media: '(max-width: 767px)', 
         priority: 'high',
-        condition: () => window.innerWidth <= 767;
-      },
+        condition: () => window.innerWidth <= 767
+  },
       { 
         href: '/assets/tablet.css', 
         media: '(min-width: 768px) and (max-width: 1023px)', 
         priority: 'medium',
-        condition: () => window.innerWidth >= 768 && window.innerWidth <= 1023;
-      },
+        condition: () => window.innerWidth >= 768 && window.innerWidth <= 1023
+  },
       { 
         href: '/assets/desktop.css', 
         media: '(min-width: 1024px)', 
         priority: 'medium',
-        condition: () => window.innerWidth >= 1024;
-      }
+        condition: () => window.innerWidth >= 1024
+  }
     ],
     emotional: {
       'seeking-help': [
@@ -221,10 +221,10 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
   const loadImmediateStyles = useCallback(async () => {
     try {
       const promises = mergedStrategy.immediate.map(config => cssManager.loadCSS(config));
-      await Promise.all(promises);
-    } catch (error) {
-      console.warn('Failed to load some immediate styles:', error);
-    }
+      await Promise.all(promises)
+  } catch (error) {
+      console.warn('Failed to load some immediate styles:', error)
+  }
   };
   }, [mergedStrategy]);
 
@@ -236,10 +236,10 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
       if (pathname.startsWith(route)) {
         try {
           const promises = configs.map(config => cssManager.loadCSS(config));
-          await Promise.all(promises);
-        } catch (error) {
-          console.warn(`Failed to load styles for route ${route}:`, error);
-        }
+          await Promise.all(promises)
+  } catch (error) {
+          console.warn(`Failed to load styles for route ${route}:`, error)
+  }
       }
     }
   };
@@ -249,16 +249,16 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
    * Load responsive styles based on viewport
    */;
   const loadResponsiveStyles = useCallback(async () => {
-    const applicableStyles = mergedStrategy.responsive.filter(config => ;
+    const applicableStyles = mergedStrategy.responsive.filter(config => ;;
       !config.condition || config.condition()
     );
 
     try {
       const promises = applicableStyles.map(config => cssManager.loadCSS(config));
-      await Promise.all(promises);
-    } catch (error) {
-      console.warn('Failed to load some responsive styles:', error);
-    }
+      await Promise.all(promises)
+  } catch (error) {
+      console.warn('Failed to load some responsive styles:', error)
+  }
   };
   }, [mergedStrategy]);
 
@@ -270,10 +270,10 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
     if (configs) {
       try {
         const promises = configs.map(config => cssManager.loadCSS(config));
-        await Promise.all(promises);
-      } catch (error) {
-        console.warn(`Failed to load emotional styles for ${emotionalState}:`, error);
-      }
+        await Promise.all(promises)
+  } catch (error) {
+        console.warn(`Failed to load emotional styles for ${emotionalState}:`, error)
+  }
     }
   };
   }, [mergedStrategy]);
@@ -284,10 +284,10 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
   const loadCrisisStyles = useCallback(async () => {
     try {
       const promises = mergedStrategy.crisis.map(config => cssManager.loadCSS(config));
-      await Promise.all(promises);
-    } catch (error) {
-      console.warn('Failed to load crisis styles:', error);
-    }
+      await Promise.all(promises)
+  } catch (error) {
+      console.warn('Failed to load crisis styles:', error)
+  }
   };
   }, [mergedStrategy]);
 
@@ -309,9 +309,9 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
     nextRoutes.forEach(route => {
       const configs = mergedStrategy.routes[route];
       if (configs) {
-        configs.forEach(config => cssManager.preloadCSS(config.href));
-      }
-    });
+        configs.forEach(config => cssManager.preloadCSS(config.href))
+  }
+    })
   };
   }, [location.pathname, mergedStrategy]);
 
@@ -331,11 +331,11 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
 
     // Setup resize listener for responsive styles;
     const handleResize = () => {
-      loadResponsiveStyles();
-    };
+      loadResponsiveStyles()
+  };
 
     window.addEventListener('resize', handleResize, { passive: true });
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize)
   };
   }, [loadImmediateStyles, loadResponsiveStyles, mergedStrategy.interaction]);
 
@@ -344,7 +344,8 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
     loadRouteStyles(location.pathname);
     
     // Preload likely next styles
-    setTimeout(preloadLikelyStyles, 1000);
+    setTimeout(preloadLikelyStyles, 1000)
+  };
   };
   };
   }, [location.pathname, loadRouteStyles, preloadLikelyStyles]);
@@ -366,15 +367,15 @@ export const withLazyStyles = (styleConfigs: LazyStyleConfig[]) => {
       const { cssManager } = useLazyStyles();
 
       useEffect(() => {
-        styleConfigs.forEach(config => cssManager.loadCSS(config));
-      };
+        styleConfigs.forEach(config => cssManager.loadCSS(config))
+  };
   }, [cssManager]);
 
-      return React.createElement(Component, props);
-    };
+      return React.createElement(Component, props)
+  };
 
     WithLazyStylesComponent.displayName = `withLazyStyles(${Component.displayName || Component.name})`;
-    return WithLazyStylesComponent;
+    return WithLazyStylesComponent
   };
 
 /**
@@ -385,7 +386,7 @@ export const cssOptimization = {
    * Mark critical CSS as loaded to hide loading screens
    */
   markCriticalCSSLoaded(): void {
-    document.documentElement.classList.add('css-loaded');
+    document.documentElement.classList.add('css-loaded')
   },
 
   /**
@@ -396,14 +397,14 @@ export const cssOptimization = {
       const observer = new PerformanceObserver((list) => {
         list.getEntries().forEach((entry) => {
           if (entry.name.includes('.css')) {
-            console.log(`CSS loaded: ${entry.name} in ${entry.duration}ms`);
-          }
+            console.log(`CSS loaded: ${entry.name} in ${entry.duration}ms`)
+  }
         };
   };
       });
       
-      observer.observe({ entryTypes: ['resource'] });
-    }
+      observer.observe({ entryTypes: ['resource'] })
+  }
   },
 
   /**

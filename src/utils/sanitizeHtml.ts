@@ -13,10 +13,10 @@ export function sanitizeHtml(html: string): string {
   let result = temp.innerHTML;
   // Ensure & is properly escaped to &amp;
   if (result.includes('&') && !result.includes('&amp;')) {
-    result = result.replace(/&(?!lt;|gt;|quot;|#39;|amp;)/g, '&amp;');
+    result = result.replace(/&(?!lt;|gt;|quot;|#39;|amp;)/g, '&amp;')
   }
-  return result;
-}
+  return result
+  }
 
 // Convert markdown-like syntax to safe HTML;
 export function safeMarkdownToHtml(text: string): string {
@@ -26,7 +26,7 @@ export function safeMarkdownToHtml(text: string): string {
   const escapeHtml = (str: string) => {
     const div = document.createElement('div');
     div.textContent = str;
-    return div.innerHTML;
+    return div.innerHTML
   };
   
   // Start with escaped text;
@@ -47,23 +47,23 @@ export function safeMarkdownToHtml(text: string): string {
     const isValidUrl = (urlString: string) => {
       try {
         const parsed = new URL(urlString);
-        return ['http:', 'https:', 'mailto:'].includes(parsed.protocol);
-      } catch {
+        return ['http:', 'https:', 'mailto: '].includes(parsed.protocol)
+  } catch {
         // If not a valid absolute URL, check if it's a relative path
-        return urlString.startsWith('/') || urlString.startsWith('#');
-      }
+        return urlString.startsWith('/') || urlString.startsWith('#')
+  }
     };
     
     if (isValidUrl(url)) {
       const safeUrl = escapeHtml(url);
       const safeText = escapeHtml(text);
-      return `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer">${safeText}</a>`;
-    }
+      return `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer">${safeText}</a>`
+  }
     return escapeHtml(match); // Return original if URL is not valid
   });
   
-  return safe;
-}
+  return safe
+  }
 
 // React-safe rendering helper;
 export function createSafeHtml(content: string): { __html: string } {

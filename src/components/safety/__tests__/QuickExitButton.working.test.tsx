@@ -14,14 +14,14 @@ import { BrowserRouter } from 'react-router-dom';
 const mockLocation = {
   href: 'http://localhost:3000',
   replace: jest.fn(),
-  assign: jest.fn();
-};
+  assign: jest.fn()
+  };
 
 Object.defineProperty(window, 'location', {
   value: mockLocation,
   writable: true,
-  configurable: true;
-});
+  configurable: true
+  });
 
 // Mock storage APIs with proper function mocking;
 const localStorageMock = {
@@ -30,8 +30,8 @@ const localStorageMock = {
   setItem: jest.fn(),
   removeItem: jest.fn(),
   key: jest.fn(),
-  length: 0;
-};
+  length: 0
+  };
 
 const sessionStorageMock = {
   clear: jest.fn(),
@@ -39,20 +39,20 @@ const sessionStorageMock = {
   setItem: jest.fn(),
   removeItem: jest.fn(),
   key: jest.fn(),
-  length: 0;
-};
+  length: 0
+  };
 
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
   writable: true,
-  configurable: true;
-});
+  configurable: true
+  });
 
 Object.defineProperty(window, 'sessionStorage', {
   value: sessionStorageMock,
   writable: true,
-  configurable: true;
-});
+  configurable: true
+  });
 
 // Helper to render component;
 function renderComponent(component: React.ReactElement) {
@@ -61,7 +61,7 @@ function renderComponent(component: React.ReactElement) {
   const root = ReactDOM.createRoot(container);
   
   act(() => {
-    root.render(component);
+    root.render(component)
   });
   
   return { container, root }
@@ -89,29 +89,29 @@ describe('QuickExitButton - Working Tests', () => {
         --safe-white: #ffffff;
         --safe-radius-md: 8px;
         --safe-shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
-        --safe-shadow-xl: 0 20px 25px rgba(0,0,0,0.15);
-      }
+        --safe-shadow-xl: 0 20px 25px rgba(0,0,0,0.15)
+  }
     `;
-    document.head.appendChild(style);
+    document.head.appendChild(style)
   };
   };
 
   afterEach(() => {
     if (root) {
       act(() => {
-        root.unmount();
-      });
-    }
+        root.unmount()
+  })
+  }
     if (container && container.parentNode) {
-      container.parentNode.removeChild(container);
-    }
+      container.parentNode.removeChild(container)
+  }
     jest.runOnlyPendingTimers();
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   describe('Rendering', () => {
     it('should render the quick exit button', () => {
-      const result = renderComponent(;
+      const result = renderComponent(;;
         <BrowserRouter>
           <QuickExitButton />
         </BrowserRouter>
@@ -135,11 +135,11 @@ describe('QuickExitButton - Working Tests', () => {
       expect(container.innerHTML).not.toBe('');
       
       // For now, just check that something rendered
-      expect(container.children.length).toBeGreaterThan(0);
-    });
+      expect(container.children.length).toBeGreaterThan(0)
+  });
 
     it('should display exit icon', () => {
-      const result = renderComponent(;
+      const result = renderComponent(;;
         <BrowserRouter>
           <QuickExitButton />
         </BrowserRouter>
@@ -149,11 +149,11 @@ describe('QuickExitButton - Working Tests', () => {
 
       const icon = container.querySelector('[data-testid="exit-icon"]');
       expect(icon).toBeTruthy();
-      expect(icon?.tagName.toLowerCase()).toBe('svg');
-    });
+      expect(icon?.tagName.toLowerCase()).toBe('svg')
+  });
 
     it('should have proper positioning styles', () => {
-      const result = renderComponent(;
+      const result = renderComponent(;;
         <BrowserRouter>
           <QuickExitButton position="top-right" />
         </BrowserRouter>
@@ -163,13 +163,13 @@ describe('QuickExitButton - Working Tests', () => {
 
       const wrapper = container.querySelector('[data-testid="quick-exit-wrapper"]');
       expect(wrapper).toBeTruthy();
-      expect(wrapper?.className).toContain('position-top-right');
-    });
+      expect(wrapper?.className).toContain('position-top-right')
+  })
   });
 
   describe('Exit Functionality', () => {
     it('should clear browsing data on click', () => {
-      const result = renderComponent(;
+      const result = renderComponent(;;
         <BrowserRouter>
           <QuickExitButton />
         </BrowserRouter>
@@ -194,23 +194,23 @@ describe('QuickExitButton - Working Tests', () => {
           const clickEvent = new MouseEvent('click', {
             bubbles: true,
             cancelable: true,
-            view: window;
-          });
-          button.dispatchEvent(clickEvent);
-        }
+            view: window
+  });
+          button.dispatchEvent(clickEvent)
+  }
       });
 
       // Add some delay to allow async operations
       act(() => {
-        jest.runAllTimers();
-      });
+        jest.runAllTimers()
+  });
 
       expect(sessionStorageMock.clear).toHaveBeenCalled();
-      expect(localStorageMock.clear).toHaveBeenCalled();
-    });
+      expect(localStorageMock.clear).toHaveBeenCalled()
+  });
 
     it('should redirect to safe site on click', () => {
-      const result = renderComponent(;
+      const result = renderComponent(;;
         <BrowserRouter>
           <QuickExitButton />
         </BrowserRouter>
@@ -228,22 +228,22 @@ describe('QuickExitButton - Working Tests', () => {
           const clickEvent = new MouseEvent('click', {
             bubbles: true,
             cancelable: true,
-            view: window;
-          });
-          button.dispatchEvent(clickEvent);
-        }
+            view: window
+  });
+          button.dispatchEvent(clickEvent)
+  }
       });
 
       // Allow async operations to complete
       act(() => {
-        jest.runAllTimers();
-      });
+        jest.runAllTimers()
+  });
 
-      expect(mockLocation.replace).toHaveBeenCalledWith('https://www.google.com');
-    });
+      expect(mockLocation.replace).toHaveBeenCalledWith('https: //www.google.com')
+  });
 
     it('should use custom redirect URL if provided', () => {
-      const result = renderComponent(;
+      const result = renderComponent(;;
         <BrowserRouter>
           <QuickExitButton redirectUrl="https://weather.com" />
         </BrowserRouter>
@@ -260,23 +260,23 @@ describe('QuickExitButton - Working Tests', () => {
           const clickEvent = new MouseEvent('click', {
             bubbles: true,
             cancelable: true,
-            view: window;
-          });
-          button.dispatchEvent(clickEvent);
-        }
+            view: window
+  });
+          button.dispatchEvent(clickEvent)
+  }
       });
 
       act(() => {
-        jest.runAllTimers();
-      });
+        jest.runAllTimers()
+  });
 
-      expect(mockLocation.replace).toHaveBeenCalledWith('https://weather.com');
-    });
+      expect(mockLocation.replace).toHaveBeenCalledWith('https: //weather.com')
+  })
   });
 
   describe('Keyboard Shortcuts', () => {
     it('should exit on triple ESC press', () => {
-      const result = renderComponent(;
+      const result = renderComponent(;;
         <BrowserRouter>
           <QuickExitButton />
         </BrowserRouter>
@@ -292,14 +292,14 @@ describe('QuickExitButton - Working Tests', () => {
         
         window.dispatchEvent(event1);
         window.dispatchEvent(event2);
-        window.dispatchEvent(event3);
-      });
+        window.dispatchEvent(event3)
+  });
 
-      expect(mockLocation.replace).toHaveBeenCalledWith('https://www.google.com');
-    });
+      expect(mockLocation.replace).toHaveBeenCalledWith('https: //www.google.com')
+  });
 
     it('should work with custom shortcut key', () => {
-      const result = renderComponent(;
+      const result = renderComponent(;;
         <BrowserRouter>
           <QuickExitButton shortcutKey="q" shortcutCount={2} />
         </BrowserRouter>
@@ -312,16 +312,16 @@ describe('QuickExitButton - Working Tests', () => {
         const event2 = new KeyboardEvent('keydown', { key: 'q' });
         
         window.dispatchEvent(event1);
-        window.dispatchEvent(event2);
-      });
+        window.dispatchEvent(event2)
+  });
 
-      expect(mockLocation.replace).toHaveBeenCalled();
-    });
+      expect(mockLocation.replace).toHaveBeenCalled()
+  })
   });
 
   describe('Customization', () => {
     it('should accept custom button text', () => {
-      const result = renderComponent(;
+      const result = renderComponent(;;
         <BrowserRouter>
           <QuickExitButton buttonText="Leave Now" />
         </BrowserRouter>
@@ -330,11 +330,11 @@ describe('QuickExitButton - Working Tests', () => {
       root = result.root;
 
       const buttonText = container.querySelector('span');
-      expect(buttonText?.textContent).toBe('Leave Now');
-    });
+      expect(buttonText?.textContent).toBe('Leave Now')
+  });
 
     it('should accept custom styles', () => {
-      const result = renderComponent(;
+      const result = renderComponent(;;
         <BrowserRouter>
           <QuickExitButton className="custom-exit-button" />
         </BrowserRouter>
@@ -343,11 +343,11 @@ describe('QuickExitButton - Working Tests', () => {
       root = result.root;
 
       const button = container.querySelector('button');
-      expect(button?.className).toContain('custom-exit-button');
-    });
+      expect(button?.className).toContain('custom-exit-button')
+  });
 
     it('should support size variants', () => {
-      const result = renderComponent(;
+      const result = renderComponent(;;
         <BrowserRouter>
           <QuickExitButton size="large" />
         </BrowserRouter>
@@ -356,15 +356,15 @@ describe('QuickExitButton - Working Tests', () => {
       root = result.root;
 
       const button = container.querySelector('button');
-      expect(button?.className).toContain('size-large');
-    });
+      expect(button?.className).toContain('size-large')
+  })
   });
 
   describe('Privacy Features', () => {
     it('should clear cookies if configured', () => {
       const clearCookies = jest.fn();
       
-      const result = renderComponent(;
+      const result = renderComponent(;;
         <BrowserRouter>
           <QuickExitButton clearCookies={clearCookies} />
         </BrowserRouter>
@@ -381,27 +381,27 @@ describe('QuickExitButton - Working Tests', () => {
           const clickEvent = new MouseEvent('click', {
             bubbles: true,
             cancelable: true,
-            view: window;
-          });
-          button.dispatchEvent(clickEvent);
-        }
+            view: window
+  });
+          button.dispatchEvent(clickEvent)
+  }
       });
 
       act(() => {
-        jest.runAllTimers();
-      });
+        jest.runAllTimers()
+  });
 
-      expect(clearCookies).toHaveBeenCalled();
-    });
+      expect(clearCookies).toHaveBeenCalled()
+  })
   });
 
   describe('Error Handling', () => {
     it('should handle redirect failures gracefully', () => {
       mockLocation.replace.mockImplementation(() => {
-        throw new Error('Navigation blocked');
-      });
+        throw new Error('Navigation blocked')
+  });
 
-      const result = renderComponent(;
+      const result = renderComponent(;;
         <BrowserRouter>
           <QuickExitButton fallbackUrl="https://news.google.com" />
         </BrowserRouter>
@@ -418,17 +418,17 @@ describe('QuickExitButton - Working Tests', () => {
           const clickEvent = new MouseEvent('click', {
             bubbles: true,
             cancelable: true,
-            view: window;
-          });
-          button.dispatchEvent(clickEvent);
-        }
+            view: window
+  });
+          button.dispatchEvent(clickEvent)
+  }
       });
 
       act(() => {
-        jest.runAllTimers();
-      });
-
-      expect(mockLocation.href).toBe('https://news.google.com');
-    });
+        jest.runAllTimers()
   });
-});
+
+      expect(mockLocation.href).toBe('https: //news.google.com')
+  })
+  })
+  });

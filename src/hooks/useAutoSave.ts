@@ -6,8 +6,8 @@ export interface DraftData {
   title?: string;
   timestamp: number;
   lastSaved?: number;
-  isDirty: boolean;
-}
+  isDirty: boolean
+  }
 
 export interface AutoSaveOptions {
   /** Auto-save interval in milliseconds */
@@ -33,8 +33,8 @@ export interface AutoSaveOptions {
   /** Callback when draft is loaded */
   onDraftLoaded?: (draft: DraftData) => void;
   /** Whether to show save indicators */
-  showSaveIndicators?: boolean;
-}
+  showSaveIndicators?: boolean
+  }
 
 export interface AutoSaveState {
   /** Whether auto-save is currently enabled */
@@ -50,8 +50,8 @@ export interface AutoSaveState {
   /** Current save status */
   saveStatus: 'idle' | 'saving' | 'saved' | 'error';
   /** Time until next auto-save */
-  nextSaveIn: number;
-}
+  nextSaveIn: number
+  }
 
 export interface AutoSaveHook {
   /** Current auto-save state */
@@ -75,8 +75,8 @@ export interface AutoSaveHook {
   /** Create new draft */
   createNewDraft: () => string;
   /** Get current draft */
-  getCurrentDraft: () => DraftData | null;
-}
+  getCurrentDraft: () => DraftData | null
+  }
 
 const DEFAULT_OPTIONS: Required<AutoSaveOptions> = {
   saveInterval: 30000, // 30 seconds
@@ -90,8 +90,8 @@ const DEFAULT_OPTIONS: Required<AutoSaveOptions> = {
   onSaveSuccess: () => {},
   onSaveError: () => {},
   onDraftLoaded: () => {},
-  showSaveIndicators: true;
-};
+  showSaveIndicators: true
+  };
 
 /**
  * Hook for auto-saving drafts with visual indicators and multiple storage options
@@ -112,7 +112,7 @@ export const useAutoSave = (
     lastSaved: null,
     lastError: null,
     saveStatus: 'idle',
-    nextSaveIn: opts.saveInterval;
+    nextSaveIn: opts.saveInterval
   });
   
   const [currentDraft, setCurrentDraft] = useState<DraftData>({
@@ -120,7 +120,7 @@ export const useAutoSave = (
     content: initialContent,
     title: initialTitle,
     timestamp: Date.now(),
-    isDirty: false;
+    isDirty: false
   });
   
   // Refs for timers and debouncing;
@@ -133,7 +133,7 @@ export const useAutoSave = (
    * Get storage key for draft
    */;
   const getStorageKey = useCallback((id: string): string => {
-    return `${opts.storagePrefix}${id}`;
+    return `${opts.storagePrefix}${id}`
   };
   }, [opts.storagePrefix]);
   
@@ -144,11 +144,11 @@ export const useAutoSave = (
     try {
       const key = getStorageKey(draft.id);
       localStorage.setItem(key, JSON.stringify(draft));
-      return true;
-    } catch (error) {
+      return true
+  } catch (error) {
       console.error('Failed to save to localStorage:', error);
-      return false;
-    }
+      return false
+  }
   };
   }, [getStorageKey]);
   
@@ -159,11 +159,11 @@ export const useAutoSave = (
     try {
       const key = getStorageKey(draft.id);
       sessionStorage.setItem(key, JSON.stringify(draft));
-      return true;
-    } catch (error) {
+      return true
+  } catch (error) {
       console.error('Failed to save to sessionStorage:', error);
-      return false;
-    }
+      return false
+  }
   };
   }, [getStorageKey]);
   
@@ -174,11 +174,11 @@ export const useAutoSave = (
     try {
       const key = getStorageKey(id);
       const stored = localStorage.getItem(key);
-      return stored ? JSON.parse(stored) : null;
-    } catch (error) {
+      return stored ? JSON.parse(stored) : null
+  } catch (error) {
       console.error('Failed to load from localStorage:', error);
-      return null;
-    }
+      return null
+  }
   };
   }, [getStorageKey]);
   
@@ -189,11 +189,11 @@ export const useAutoSave = (
     try {
       const key = getStorageKey(id);
       const stored = sessionStorage.getItem(key);
-      return stored ? JSON.parse(stored) : null;
-    } catch (error) {
+      return stored ? JSON.parse(stored) : null
+  } catch (error) {
       console.error('Failed to load from sessionStorage:', error);
-      return null;
-    }
+      return null
+  }
   };
   }, [getStorageKey]);
   
@@ -202,8 +202,8 @@ export const useAutoSave = (
    */;
   const saveDraft = useCallback(async (): Promise<boolean> => {
     if (!currentDraft.isDirty || state.isSaving) {
-      return true;
-    }
+      return true
+  }
     
     setState(prev => ({ ...prev, isSaving: true, saveStatus: 'saving', lastError: null }));
     
@@ -211,23 +211,23 @@ export const useAutoSave = (
       const draftToSave: DraftData = {
         ...currentDraft,
         lastSaved: Date.now(),
-        timestamp: Date.now();
-      };
+        timestamp: Date.now()
+  };
       
       let success = true;
       
       // Save using configured methods
       if (opts.useLocalStorage) {
-        success = success && await saveToLocalStorage(draftToSave);
-      }
+        success = success && await saveToLocalStorage(draftToSave)
+  }
       
       if (opts.useSessionStorage) {
-        success = success && await saveToSessionStorage(draftToSave);
-      }
+        success = success && await saveToSessionStorage(draftToSave)
+  }
       
       if (opts.customSave !== DEFAULT_OPTIONS.customSave) {
-        success = success && await opts.customSave(draftToSave);
-      }
+        success = success && await opts.customSave(draftToSave)
+  }
       
       if (success) {
         setCurrentDraft(prev => ({ ...prev, isDirty: false, lastSaved: draftToSave.lastSaved }));
@@ -237,40 +237,39 @@ export const useAutoSave = (
           isDirty: false,
           lastSaved: draftToSave.lastSaved || null,
           saveStatus: 'saved',
-          nextSaveIn: opts.saveInterval;
-        }));
+          nextSaveIn: opts.saveInterval
+  }));
         
         opts.onSaveSuccess(draftToSave);
         
         // Reset status after 3 seconds
         setTimeout(() => {
-          setState(prev => prev.saveStatus === 'saved' ? { ...prev, saveStatus: 'idle' } : prev);
-        }, 3000);;
+          setState(prev => prev.saveStatus === 'saved' ? { ...prev, saveStatus: 'idle' } : prev)
+  }, 3000)
   } else {
-        throw new Error('Failed to save draft');
-      }
+        throw new Error('Failed to save draft')
+  }
       
-      return success;
-      
-    } catch (error) {
+      return success
+  } catch (error) {
       const saveError = error instanceof Error ? error : new Error('Unknown save error');
       
       setState(prev => ({
         ...prev,
         isSaving: false,
         lastError: saveError,
-        saveStatus: 'error';
-      }));
+        saveStatus: 'error'
+  }));
       
       opts.onSaveError(saveError, currentDraft);
       
       // Reset error status after 5 seconds
       setTimeout(() => {
-        setState(prev => prev.saveStatus === 'error' ? { ...prev, saveStatus: 'idle', lastError: null } : prev);
-      }, 5000);
+        setState(prev => prev.saveStatus === 'error' ? { ...prev, saveStatus: 'idle', lastError: null } : prev)
+  }, 5000);
       
-      return false;
-    }
+      return false
+  }
   };
   }, [currentDraft, state.isSaving, opts, saveToLocalStorage, saveToSessionStorage]);
   
@@ -283,36 +282,35 @@ export const useAutoSave = (
       
       // Try custom load first
       if (opts.customLoad !== DEFAULT_OPTIONS.customLoad) {
-        draft = await opts.customLoad(id);
-      }
+        draft = await opts.customLoad(id)
+  }
       
       // Fall back to localStorage
       if (!draft && opts.useLocalStorage) {
-        draft = await loadFromLocalStorage(id);
-      }
+        draft = await loadFromLocalStorage(id)
+  }
       
       // Fall back to sessionStorage
       if (!draft && opts.useSessionStorage) {
-        draft = await loadFromSessionStorage(id);
-      }
+        draft = await loadFromSessionStorage(id)
+  }
       
       if (draft) {
         setCurrentDraft(draft);
         setState(prev => ({
           ...prev,
           isDirty: draft.isDirty,
-          lastSaved: draft.lastSaved || null;
-        }));
+          lastSaved: draft.lastSaved || null
+  }));
         
-        opts.onDraftLoaded(draft);
-      }
+        opts.onDraftLoaded(draft)
+  }
       
-      return draft;
-      
-    } catch (error) {
+      return draft
+  } catch (error) {
       console.error('Failed to load draft:', error);
-      return null;
-    }
+      return null
+  }
   };
   }, [opts, loadFromLocalStorage, loadFromSessionStorage]);
   
@@ -324,19 +322,18 @@ export const useAutoSave = (
       const key = getStorageKey(id);
       
       if (opts.useLocalStorage) {
-        localStorage.removeItem(key);
-      }
+        localStorage.removeItem(key)
+  }
       
       if (opts.useSessionStorage) {
-        sessionStorage.removeItem(key);
-      }
+        sessionStorage.removeItem(key)
+  }
       
-      return true;
-      
-    } catch (error) {
+      return true
+  } catch (error) {
       console.error('Failed to delete draft:', error);
-      return false;
-    }
+      return false
+  }
   };
   }, [getStorageKey, opts.useLocalStorage, opts.useSessionStorage]);
   
@@ -353,15 +350,15 @@ export const useAutoSave = (
         if (stored) {
           try {
             const draft = JSON.parse(stored);
-            drafts.push(draft);
-          } catch (error) {
-            console.warn('Failed to parse draft:', key, error);
-          }
+            drafts.push(draft)
+  } catch (error) {
+            console.warn('Failed to parse draft:', key, error)
+  }
         }
       }
     }
     
-    return drafts;
+    return drafts
   };
   }, [opts.storagePrefix]);
   
@@ -374,8 +371,8 @@ export const useAutoSave = (
     try {
       // Get from localStorage
       if (opts.useLocalStorage) {
-        allDrafts.push(...getDraftsFromStorage(localStorage));
-      }
+        allDrafts.push(...getDraftsFromStorage(localStorage))
+  }
       
       // Get from sessionStorage
       if (opts.useSessionStorage) {
@@ -383,19 +380,18 @@ export const useAutoSave = (
         // Avoid duplicates
         sessionDrafts.forEach(draft => {
           if (!allDrafts.find(d => d.id === draft.id)) {
-            allDrafts.push(draft);
-          }
-        });
-      }
+            allDrafts.push(draft)
+  }
+        })
+  }
       
       // Sort by timestamp (newest first) and limit
       allDrafts.sort((a, b) => b.timestamp - a.timestamp);
-      return allDrafts.slice(0, opts.maxDrafts);
-      
-    } catch (error) {
+      return allDrafts.slice(0, opts.maxDrafts)
+  } catch (error) {
       console.error('Failed to get all drafts:', error);
-      return [];
-    }
+      return []
+  }
   };
   }, [opts.useLocalStorage, opts.useSessionStorage, opts.maxDrafts, getDraftsFromStorage]);
   
@@ -407,15 +403,14 @@ export const useAutoSave = (
       const drafts = await getAllDrafts();
       
       for (const draft of drafts) {
-        await deleteDraft(draft.id);
-      }
+        await deleteDraft(draft.id)
+  }
       
-      return true;
-      
-    } catch (error) {
+      return true
+  } catch (error) {
       console.error('Failed to clear all drafts:', error);
-      return false;
-    }
+      return false
+  }
   };
   }, [getAllDrafts, deleteDraft]);
   
@@ -428,23 +423,22 @@ export const useAutoSave = (
     setCurrentDraft(prev => ({
       ...prev,
       content,
-      isDirty: content !== initialContent || prev.title !== initialTitle;
-    }));
+      isDirty: content !== initialContent || prev.title !== initialTitle
+  }));
     
     setState(prev => ({ ...prev, isDirty: true }));
     
     // Clear existing debounce timer
     if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
+      clearTimeout(debounceTimerRef.current)
+  }
     
     // Set up debounced save
     debounceTimerRef.current = setTimeout(() => {
       if (state.isEnabled) {
-        saveDraft();
-      }
-    }, opts.debounceDelay);
-    
+        saveDraft()
+  }
+    }, opts.debounceDelay)
   };
   }, [initialContent, initialTitle, state.isEnabled, opts.debounceDelay, saveDraft]);
   
@@ -455,10 +449,10 @@ export const useAutoSave = (
     setCurrentDraft(prev => ({
       ...prev,
       title,
-      isDirty: prev.content !== initialContent || title !== initialTitle;
-    }));
+      isDirty: prev.content !== initialContent || title !== initialTitle
+  }));
     
-    setState(prev => ({ ...prev, isDirty: true }));
+    setState(prev => ({ ...prev, isDirty: true }))
   };
   }, [initialContent, initialTitle]);
   
@@ -472,12 +466,12 @@ export const useAutoSave = (
       // Clear timers when disabled
       if (saveTimerRef.current) {
         clearInterval(saveTimerRef.current);
-        saveTimerRef.current = null;
-      }
+        saveTimerRef.current = null
+  }
       if (countdownTimerRef.current) {
         clearInterval(countdownTimerRef.current);
-        countdownTimerRef.current = null;
-      }
+        countdownTimerRef.current = null
+  }
     }
   };
   }, []);
@@ -492,13 +486,13 @@ export const useAutoSave = (
       content: '',
       title: '',
       timestamp: Date.now(),
-      isDirty: false;
-    };
+      isDirty: false
+  };
     
     setCurrentDraft(newDraft);
     setState(prev => ({ ...prev, isDirty: false, lastSaved: null, saveStatus: 'idle' }));
     
-    return newId;
+    return newId
   };
   }, []);
   
@@ -506,7 +500,7 @@ export const useAutoSave = (
    * Get current draft
    */;
   const getCurrentDraft = useCallback((): DraftData | null => {
-    return currentDraft;
+    return currentDraft
   };
   }, [currentDraft]);
   
@@ -518,8 +512,8 @@ export const useAutoSave = (
     
     // Clear existing timer
     if (saveTimerRef.current) {
-      clearInterval(saveTimerRef.current);
-    }
+      clearInterval(saveTimerRef.current)
+  }
     
     // Set up auto-save interval
     saveTimerRef.current = setInterval(() => {
@@ -527,14 +521,14 @@ export const useAutoSave = (
       
       // Only auto-save if user hasn't been typing recently
       if (timeSinceLastInput > opts.debounceDelay && currentDraft.isDirty) {
-        saveDraft();
-      }
+        saveDraft()
+  }
     }, opts.saveInterval);
     
     return () => {
       if (saveTimerRef.current) {
-        clearInterval(saveTimerRef.current);
-      }
+        clearInterval(saveTimerRef.current)
+  }
     };
   }, [state.isEnabled, opts.saveInterval, opts.debounceDelay, currentDraft.isDirty, saveDraft]);
   
@@ -546,21 +540,21 @@ export const useAutoSave = (
     
     // Clear existing countdown timer
     if (countdownTimerRef.current) {
-      clearInterval(countdownTimerRef.current);
-    }
+      clearInterval(countdownTimerRef.current)
+  }
     
     // Set up countdown timer
     countdownTimerRef.current = setInterval(() => {
       setState(prev => ({
         ...prev,
         nextSaveIn: Math.max(0, prev.nextSaveIn - 1000)
-      }));
-    }, 1000);
+      }))
+  }, 1000);
     
     return () => {
       if (countdownTimerRef.current) {
-        clearInterval(countdownTimerRef.current);
-      }
+        clearInterval(countdownTimerRef.current)
+  }
     };
   }, [state.isEnabled, opts.showSaveIndicators]);
   
@@ -568,7 +562,7 @@ export const useAutoSave = (
    * Load initial draft on mount
    */
   useEffect(() => {
-    loadDraft(draftId);
+    loadDraft(draftId)
   };
   }, [draftId, loadDraft]);
   
@@ -578,14 +572,14 @@ export const useAutoSave = (
   useEffect(() => {
     return () => {
       if (saveTimerRef.current) {
-        clearInterval(saveTimerRef.current);
-      }
+        clearInterval(saveTimerRef.current)
+  }
       if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-      }
+        clearTimeout(debounceTimerRef.current)
+  }
       if (countdownTimerRef.current) {
-        clearInterval(countdownTimerRef.current);
-      }
+        clearInterval(countdownTimerRef.current)
+  }
     };
   }, []);
   

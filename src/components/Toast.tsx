@@ -6,15 +6,15 @@ export const Toast: React.FC<{ toast: ToastType, onDismiss: (id: string) => void
     useEffect(() => {
         const timer = setTimeout(() => {
             if (onDismiss) {
-                onDismiss(toast.id);
-            }
+                onDismiss(toast.id)
+  }
         }, 5000);
-        return () => clearTimeout(timer);
-    };
+        return () => clearTimeout(timer)
+  };
   }, [toast, onDismiss]);
 
     // Use glass morphism for toasts;
-    const toastClasses = [;
+    const toastClasses = [;;
         'glass-card',
         'toast',
         `toast-${toast.type}`,
@@ -27,8 +27,8 @@ export const Toast: React.FC<{ toast: ToastType, onDismiss: (id: string) => void
             <div className="toast-message">{toast.message}</div>
             <div className="toast-progress animate-gradient"></div>
         </div>
-    );
-};
+    )
+  };
 
 export const ToastContainer: React.FC<{}> = () => {
     const { toasts, removeToast } = useNotification();
@@ -38,5 +38,5 @@ export const ToastContainer: React.FC<{}> = () => {
                 <Toast key={toast.id} toast={toast} onDismiss={removeToast} />
             ))}
         </div>
-    );
-};
+    )
+  };

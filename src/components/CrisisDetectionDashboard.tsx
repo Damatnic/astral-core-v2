@@ -22,8 +22,8 @@ interface CrisisDetectionDashboardProps {
   languageCode?: string;
   culturalContext?: string;
   onCrisisDetected?: (analysis: any) => void;
-  onInterventionTriggered?: (intervention: string) => void;
-}
+  onInterventionTriggered?: (intervention: string) => void
+  }
 
 export const CrisisDetectionDashboard: React.FC<CrisisDetectionDashboardProps> = ({
   userId,
@@ -44,7 +44,7 @@ export const CrisisDetectionDashboard: React.FC<CrisisDetectionDashboardProps> =
     if (emotion.valence > 0.6) return 'happy';
     if (emotion.valence < -0.6) return 'sad';
     if (emotion.arousal > 0.6) return 'anxious';
-    return 'neutral';
+    return 'neutral'
   };
 
   const {
@@ -71,8 +71,8 @@ export const CrisisDetectionDashboard: React.FC<CrisisDetectionDashboardProps> =
     onCrisisDetected,
     onInterventionRecommended: (interventions) => {
       if (interventions.length > 0 && onInterventionTriggered) {
-        onInterventionTriggered(interventions[0]);
-      }
+        onInterventionTriggered(interventions[0])
+  }
     }
   });
 
@@ -83,8 +83,8 @@ export const CrisisDetectionDashboard: React.FC<CrisisDetectionDashboardProps> =
   // Handle test text analysis;
   const handleTestAnalysis = async () => {
     if (testText.trim()) {
-      await analyzeText(testText, { immediate: true, trackHistory: true });
-    }
+      await analyzeText(testText, { immediate: true, trackHistory: true })
+  }
   };
 
   // Get risk level color;
@@ -100,9 +100,9 @@ export const CrisisDetectionDashboard: React.FC<CrisisDetectionDashboardProps> =
   const getEmotionalEmoji = (emotion: string): string => {
     const emojiMap: Record<string, string> = {
       anger: '😠', fear: '😨', sadness: '😢', joy: '😊',
-      disgust: '🤢', surprise: '😲', contempt: '😤', neutral: '😐';
-    };
-    return emojiMap[emotion] || '😐';
+      disgust: '🤢', surprise: '😲', contempt: '😤', neutral: '😐'
+  };
+    return emojiMap[emotion] || '😐'
   };
 
   return (
@@ -204,12 +204,11 @@ export const CrisisDetectionDashboard: React.FC<CrisisDetectionDashboardProps> =
             <div className="status-item">
               <span className="status-label">{tCrisis('dashboard.risk_level')}:</span>
               <div className="risk-indicator">
-                <div; 
-                  className="risk-bar"
+                <div className="risk-bar"
                   style={{ 
                     width: `${currentRiskLevel}%`,
-                    backgroundColor: getRiskColor(currentRiskLevel);
-                  }}
+                    backgroundColor: getRiskColor(currentRiskLevel)
+  }}
                 />
                 <span className="risk-value">{currentRiskLevel}%</span>
               </div>
@@ -264,8 +263,7 @@ export const CrisisDetectionDashboard: React.FC<CrisisDetectionDashboardProps> =
             <div className="prediction-content">
               <div className="prediction-value">
                 <span className="prediction-label">{tCrisis('dashboard.predicted_24h_risk')}:</span>
-                <span; 
-                  className="prediction-risk"
+                <span className="prediction-risk"
                   style={{ color: getRiskColor(riskPrediction.predictedRisk) }}
                 >
                   {Math.round(riskPrediction.predictedRisk)}%
@@ -406,7 +404,7 @@ export const CrisisDetectionDashboard: React.FC<CrisisDetectionDashboardProps> =
         )}
       </Modal>
     </div>
-  );
-};
+  )
+  };
 
 export default CrisisDetectionDashboard;

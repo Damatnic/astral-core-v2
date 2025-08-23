@@ -142,7 +142,7 @@ const DevFallback: React.FC<ErrorFallbackProps> = ({
     background: '#ff000010', 
     border: '2px solid #ff0000', 
     padding: '20px', 
-    margin: '10px' ;
+    margin: '10px'
   }}>
     <h3 style={{ color: '#ff0000' }}>Development Error</h3>
     <details open>
@@ -178,11 +178,11 @@ export const CrisisErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ c
     crisisContactInfo: {
       phone: '988',
       text: '741741',
-      chat: 'https://suicidepreventionlifeline.org/chat/';
-    },
+      chat: 'https://suicidepreventionlifeline.org/chat/'
+  },
     showErrorDetails: false,
     allowErrorDismiss: false,
-    isDevelopment: process.env.NODE_ENV === 'development';
+    isDevelopment: process.env.NODE_ENV === 'development'
   };
 
   return (
@@ -196,14 +196,14 @@ export const CrisisErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ c
         localStorage.setItem('last_crisis_error', JSON.stringify({
           id: errorId,
           timestamp: new Date().toISOString(),
-          error: error.message;
-        }));
-      }}
+          error: error.message
+  }))
+  }}
     >
       {children}
     </ErrorBoundary>
-  );
-};
+  )
+  };
 
 // Authentication flow error boundary;
 export const AuthErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -214,7 +214,7 @@ export const AuthErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ chi
     retryDelay: 2000,
     redirectOnError: '/login',
     showErrorDetails: false,
-    allowErrorDismiss: true;
+    allowErrorDismiss: true
   };
 
   return (
@@ -224,14 +224,14 @@ export const AuthErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ chi
         // Clear potentially corrupted auth data
         if (error.message.includes('auth') || error.message.includes('token')) {
           localStorage.removeItem('auth_token');
-          localStorage.removeItem('user_session');
-        }
+          localStorage.removeItem('user_session')
+  }
       }}
     >
       {children}
     </ErrorBoundary>
-  );
-};
+  )
+  };
 
 // Communication error boundary;
 export const CommunicationErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -241,15 +241,15 @@ export const CommunicationErrorBoundary: React.FC<{ children: React.ReactNode }>
     maxRetries: 3,
     autoRetry: false,
     showErrorDetails: false,
-    allowErrorDismiss: true;
+    allowErrorDismiss: true
   };
 
   return (
     <ErrorBoundary {...config} fallback={CommunicationFallback}>
       {children}
     </ErrorBoundary>
-  );
-};
+  )
+  };
 
 // Form/Input error boundary;
 export const FormErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -258,15 +258,15 @@ export const FormErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ chi
     enableRetry: true,
     maxRetries: 2,
     showErrorDetails: true,
-    allowErrorDismiss: true;
+    allowErrorDismiss: true
   };
 
   return (
     <ErrorBoundary {...config} fallback={FormFallback}>
       {children}
     </ErrorBoundary>
-  );
-};
+  )
+  };
 
 // Dashboard/Analytics error boundary;
 export const DashboardErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -275,15 +275,15 @@ export const DashboardErrorBoundary: React.FC<{ children: React.ReactNode }> = (
     enableRetry: true,
     maxRetries: 2,
     showErrorDetails: false,
-    allowErrorDismiss: true;
+    allowErrorDismiss: true
   };
 
   return (
     <ErrorBoundary {...config} fallback={DashboardFallback}>
       {children}
     </ErrorBoundary>
-  );
-};
+  )
+  };
 
 // Admin panel error boundary;
 export const AdminErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -293,28 +293,28 @@ export const AdminErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ ch
     maxRetries: 2,
     showErrorDetails: true,
     allowErrorDismiss: false,
-    redirectOnError: '/admin';
+    redirectOnError: '/admin'
   };
 
   return (
     <ErrorBoundary {...config} fallback={AdminFallback}>
       {children}
     </ErrorBoundary>
-  );
-};
+  )
+  };
 
 // Page-level error boundary;
 export const PageErrorBoundary: React.FC<{ 
   children: React.ReactNode;
-  pageName?: string;
-}> = ({ children, pageName = 'page' }) => {
+  pageName?: string
+  }> = ({ children, pageName = 'page' }) => {
   const config: ErrorBoundaryConfig = {
     reportErrors: true,
     enableRetry: true,
     maxRetries: 2,
     showErrorDetails: false,
     allowErrorDismiss: false,
-    redirectOnError: '/';
+    redirectOnError: '/'
   };
 
   const PageFallbackWithName: React.FC<ErrorFallbackProps> = (props) => (
@@ -325,8 +325,8 @@ export const PageErrorBoundary: React.FC<{
     <ErrorBoundary {...config} fallback={PageFallbackWithName}>
       {children}
     </ErrorBoundary>
-  );
-};
+  )
+  };
 
 // Network-aware error boundary;
 export const NetworkErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -341,8 +341,8 @@ export const NetworkErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ 
 
     return () => {
       window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
+      window.removeEventListener('offline', handleOffline)
+  };
   };
   }, []);
 
@@ -353,7 +353,7 @@ export const NetworkErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ 
     autoRetry: isOnline,
     retryDelay: isOnline ? 2000 : 5000,
     showErrorDetails: false,
-    allowErrorDismiss: true;
+    allowErrorDismiss: true
   };
 
   const NetworkFallbackWithState: React.FC<ErrorFallbackProps> = (props) => (
@@ -364,13 +364,13 @@ export const NetworkErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ 
     <ErrorBoundary {...config} fallback={NetworkFallbackWithState}>
       {children}
     </ErrorBoundary>
-  );
-};
+  )
+  };
 
 // Development-only error boundary with detailed debugging;
 export const DevErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   if (process.env.NODE_ENV !== 'development') {
-    return <>{children}</>;
+    return <>{children}</>
   }
 
   const config: ErrorBoundaryConfig = {
@@ -380,15 +380,15 @@ export const DevErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ chil
     showErrorDetails: true,
     allowErrorDismiss: true,
     isDevelopment: true,
-    logToConsole: true;
+    logToConsole: true
   };
 
   return (
     <ErrorBoundary {...config} fallback={DevFallback}>
       {children}
     </ErrorBoundary>
-  );
-};
+  )
+  };
 
 // Higher-order component for automatic error boundary wrapping;
 export const withErrorBoundary = <P extends object>(
@@ -404,19 +404,19 @@ export const withErrorBoundary = <P extends object>(
       dashboard: DashboardErrorBoundary,
       admin: AdminErrorBoundary,
       page: PageErrorBoundary,
-      network: NetworkErrorBoundary;
-    }[boundaryType];
+      network: NetworkErrorBoundary
+  }[boundaryType];
 
     return (
       <ErrorBoundaryComponent>
         <Component {...props} />
       </ErrorBoundaryComponent>
-    );
+    )
   };
 
   WrappedComponent.displayName = `withErrorBoundary(${Component.displayName || Component.name})`;
-  return WrappedComponent;
-};
+  return WrappedComponent
+  };
 
 // Named export for the full object (for existing imports);
 export const SpecializedErrorBoundariesBundle = {

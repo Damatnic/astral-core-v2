@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 // Custom SVG Icon Components;
-const CalendarIcon = () => (;
+const CalendarIcon = () => (;;
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
     <line x1="16" y1="2" x2="16" y2="6"/>
@@ -10,14 +10,14 @@ const CalendarIcon = () => (;
   </svg>
 );
 
-const ClockIcon = () => (;
+const ClockIcon = () => (;;
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <circle cx="12" cy="12" r="10"/>
     <polyline points="12,6 12,12 16,14"/>
   </svg>
 );
 
-const UsersIcon = () => (;
+const UsersIcon = () => (;;
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
     <circle cx="9" cy="7" r="4"/>
@@ -26,20 +26,20 @@ const UsersIcon = () => (;
   </svg>
 );
 
-const ShieldIcon = () => (;
+const ShieldIcon = () => (;;
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
   </svg>
 );
 
-const EyeIcon = () => (;
+const EyeIcon = () => (;;
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
     <circle cx="12" cy="12" r="3"/>
   </svg>
 );
 
-const EyeOffIcon = () => (;
+const EyeOffIcon = () => (;;
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
     <line x1="1" y1="1" x2="23" y2="23"/>
@@ -51,48 +51,48 @@ const formatDate = (date: Date): string => {
   return date.toLocaleDateString('en-US', { 
     month: 'short', 
     day: 'numeric', 
-    year: 'numeric' ;
-  });
-};
+    year: 'numeric'
+  })
+  };
 
 const formatTime = (date: Date): string => {
   return date.toLocaleTimeString('en-US', { 
     hour: 'numeric', 
     minute: '2-digit',
-    hour12: true;
-  });
-};
+    hour12: true
+  })
+  };
 
 const getMonthYear = (date: Date): string => {
   return date.toLocaleDateString('en-US', { 
     month: 'long', 
-    year: 'numeric' ;
-  });
-};
+    year: 'numeric'
+  })
+  };
 
 const addDays = (date: Date, days: number): Date => {
   const result = new Date(date);
   result.setDate(result.getDate() + days);
-  return result;
-};
+  return result
+  };
 
 const addWeeks = (date: Date, weeks: number): Date => {
-  return addDays(date, weeks * 7);
-};
+  return addDays(date, weeks * 7)
+  };
 
 const startOfWeek = (date: Date): Date => {
   const result = new Date(date);
   const day = result.getDay();
   const diff = result.getDate() - day;
   result.setDate(diff);
-  return result;
-};
+  return result
+  };
 
 const isSameDay = (date1: Date, date2: Date): boolean => {
   return date1.getDate() === date2.getDate() &&
          date1.getMonth() === date2.getMonth() &&
-         date1.getFullYear() === date2.getFullYear();
-};
+         date1.getFullYear() === date2.getFullYear()
+  };
 
 // Types for anonymous group sessions;
 interface AnonymousSession {
@@ -113,8 +113,8 @@ interface AnonymousSession {
 interface CalendarDay {
   date: Date;
   isCurrentMonth: boolean;
-  sessions: AnonymousSession[];
-}
+  sessions: AnonymousSession[]
+  }
 
 const GroupSessionView: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -127,9 +127,9 @@ const GroupSessionView: React.FC = () => {
   // Generate anonymous alias on component mount
   useEffect(() => {
     if (!anonymousAlias) {
-      generateAnonymousAlias();
-    }
-    loadGroupSessions();
+      generateAnonymousAlias()
+  }
+    loadGroupSessions()
   };
   }, []);
 
@@ -139,7 +139,7 @@ const GroupSessionView: React.FC = () => {
     const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
     const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
     const randomNumber = Math.floor(Math.random() * 999);
-    setAnonymousAlias(`${randomAdjective}${randomNoun}${randomNumber}`);
+    setAnonymousAlias(`${randomAdjective}${randomNoun}${randomNumber}`)
   };
 
   const loadGroupSessions = async () => {
@@ -158,8 +158,8 @@ const GroupSessionView: React.FC = () => {
           facilitatorAlias: 'GuideLight42',
           sessionType: 'support',
           isJoined: false,
-          requiresVerification: false;
-        },
+          requiresVerification: false
+  },
         {
           id: 'session-2',
           title: 'Anxiety Management Workshop',
@@ -171,8 +171,8 @@ const GroupSessionView: React.FC = () => {
           facilitatorAlias: 'CalmWaters',
           sessionType: 'therapy',
           isJoined: false,
-          requiresVerification: true;
-        },
+          requiresVerification: true
+  },
         {
           id: 'session-3',
           title: 'Wellness Wednesday',
@@ -184,23 +184,23 @@ const GroupSessionView: React.FC = () => {
           facilitatorAlias: 'SereneForest',
           sessionType: 'wellness',
           isJoined: false,
-          requiresVerification: false;
-        }
+          requiresVerification: false
+  }
       ];
       
-      setSessions(mockSessions);
-    } catch (error) {
-      console.error('Failed to load group sessions:', error);
-    } finally {
-      setLoading(false);
-    }
+      setSessions(mockSessions)
+  } catch (error) {
+      console.error('Failed to load group sessions:', error)
+  } finally {
+      setLoading(false)
+  }
   };
 
   const joinSession = async (session: AnonymousSession) => {
     if (!anonymousAlias.trim()) {
       alert('Please set your anonymous alias first');
-      return;
-    }
+      return
+  }
 
     try {
       // Simulate API call
@@ -216,11 +216,11 @@ const GroupSessionView: React.FC = () => {
           : s
       ));
 
-      alert(`Successfully joined "${session.title}" as ${anonymousAlias}`);
-    } catch (error) {
+      alert(`Successfully joined "${session.title}" as ${anonymousAlias}`)
+  } catch (error) {
       console.error('Failed to join session:', error);
-      alert('Failed to join session. Please try again.');
-    }
+      alert('Failed to join session. Please try again.')
+  }
   };
 
   const leaveSession = async (sessionId: string) => {
@@ -232,20 +232,19 @@ const GroupSessionView: React.FC = () => {
       setJoinedSessions(prev => {
         const newSet = new Set(prev);
         newSet.delete(sessionId);
-        return newSet;
-      });
+        return newSet
+  });
       
       // Update session participant count
       setSessions(prev => prev.map(s => 
         s.id === sessionId 
           ? { ...s, currentParticipants: Math.max(0, s.currentParticipants - 1), isJoined: false }
           : s
-      ));
-
-    } catch (error) {
+      ))
+  } catch (error) {
       console.error('Failed to leave session:', error);
-      alert('Failed to leave session. Please try again.');
-    }
+      alert('Failed to leave session. Please try again.')
+  }
   };
 
   const getSessionTypeColor = (type: AnonymousSession['sessionType']) => {
@@ -254,8 +253,8 @@ const GroupSessionView: React.FC = () => {
       case 'therapy': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
       case 'wellness': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
       case 'crisis-followup': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
-    }
+      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+  }
   };
 
   const generateCalendarDays = (): CalendarDay[] => {
@@ -264,18 +263,18 @@ const GroupSessionView: React.FC = () => {
     
     for (let i = 0; i < 42; i++) { // 6 weeks;
       const date = addDays(startDate, i);
-      const daySessions = sessions.filter(session => ;
+      const daySessions = sessions.filter(session => ;;
         isSameDay(session.scheduledTime, date)
       );
       
       days.push({
         date,
         isCurrentMonth: date.getMonth() === currentDate.getMonth(),
-        sessions: daySessions;
-      });
-    }
+        sessions: daySessions
+  })
+  }
     
-    return days;
+    return days
   };
 
   if (loading) {
@@ -286,7 +285,7 @@ const GroupSessionView: React.FC = () => {
           <p className="text-gray-600 dark:text-gray-400">Loading group sessions...</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -392,8 +391,8 @@ const GroupSessionView: React.FC = () => {
                   <button
                     key={`${day.date.toISOString()}-${index}`}
                     className={`p-2 min-h-[60px] border border-gray-100 dark:border-gray-700 rounded hover:bg-gray-50 dark:hover:bg-gray-700 text-left ${
-                      !day.isCurrentMonth ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-white';
-                    }`}
+                      !day.isCurrentMonth ? 'text-gray-400 dark: text-gray-600' : 'text-gray-900 dark:text-white'
+  }`}
                     onClick={() => {/* Date selected */}}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
@@ -477,8 +476,8 @@ const GroupSessionView: React.FC = () => {
                             className={`px-4 py-2 rounded-lg text-sm font-medium ${
                               session.currentParticipants >= session.maxParticipants
                                 ? 'bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed'
-                                : 'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500';
-                            }`}
+                                : 'bg-blue-600 text-white hover: bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500'
+  }`}
                           >
                             {session.currentParticipants >= session.maxParticipants ? 'Full' : 'Join'}
                           </button>
@@ -493,7 +492,7 @@ const GroupSessionView: React.FC = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export default GroupSessionView;

@@ -24,8 +24,8 @@ const style1={
               fontSize: "20px",
               transform: isExpanded ? 'scale(1)' : 'scale(0)',
               transition: "all 0.2s ease",
-              outline: 'none';
-            };
+              outline: 'none'
+  }
   label: string;
   icon: React.FC<unknown>;
   action: () => void;
@@ -40,8 +40,8 @@ interface MobileCrisisButtonProps {
   onBreathingExercise?: () => void;
   onGroundingExercise?: () => void;
   emergencyNumber?: string;
-  autoExpand?: boolean;
-}
+  autoExpand?: boolean
+  }
 
 export const MobileCrisisButton: React.FC<MobileCrisisButtonProps> = ({
   position = "bottom-right",
@@ -58,7 +58,7 @@ export const MobileCrisisButton: React.FC<MobileCrisisButtonProps> = ({
   const [isPressed, setIsPressed] = useState(false),;
   const [showPulse, setShowPulse] = useState(true);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const expandedRef = useRef<HTMLDivElement>(null),;
+  const expandedRef = useRef<HTMLDivElement>(null),;;
 
   // Crisis actions available in mobile menu;
   const crisisActions: CrisisAction[] = [;
@@ -71,8 +71,8 @@ export const MobileCrisisButton: React.FC<MobileCrisisButtonProps> = ({
         onEmergencyCall?.() || window.location.assign(`tel:${emergencyNumber})
       },
       color: `var(--error-500),
-      urgent: true;
-    },
+      urgent: true
+  },
     {
       id: "crisis-chat",
       label: "Crisis" Chat",
@@ -114,8 +114,8 @@ export const MobileCrisisButton: React.FC<MobileCrisisButtonProps> = ({
     const patterns={
       emergency: [200, 100, 200, 100, 200], // Urgent pattern
       notification: [100, 50, 100],          // Standard pattern
-      selection: [50]                        // Light tap;
-    }
+      selection: [50]                        // Light tap
+  }
 
     navigator.vibrate(patterns[type])
   }
@@ -127,7 +127,7 @@ export const MobileCrisisButton: React.FC<MobileCrisisButtonProps> = ({
     setTimeout(() => setIsPressed(false), 150)
 
     if(isExpanded) {
-      setIsExpanded(false);
+      setIsExpanded(false)
   } else {
       setIsExpanded(true)
       setShowPulse(false)
@@ -142,8 +142,8 @@ export const MobileCrisisButton: React.FC<MobileCrisisButtonProps> = ({
       setIsExpanded(false)
     
     return () => {
-      clearTimeout(timer);
-    }, 10000) // Hide after 10 seconds of inactivity
+      clearTimeout(timer)
+  }, 10000) // Hide after 10 seconds of inactivity
 
     return () => clearTimeout(timer)
   }, [isExpanded])
@@ -181,8 +181,8 @@ export const MobileCrisisButton: React.FC<MobileCrisisButtonProps> = ({
     transition: 'all' 0.2s ease',
     outline: "none",
     ...(showPulse && {
-      animation: 'crisis-pulse' 2s infinite';
-    })
+      animation: 'crisis-pulse' 2s infinite'
+  })
   }
 
   const expandedStyles: React.CSSProperties={
@@ -201,7 +201,7 @@ export const MobileCrisisButton: React.FC<MobileCrisisButtonProps> = ({
     alignItems: "center",
     justifyContent: 'center',
     gap: '12px"
-    padding: isExpanded ? '20px' : '0';
+    padding: isExpanded ? '20px' : '0'
   }
 
   return (

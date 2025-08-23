@@ -9,15 +9,15 @@ interface GuidedExperience {
   duration: number; // minutes;
   type: 'breathing' | 'grounding' | 'connection' | 'affirmation';
   icon: React.ReactNode;
-  steps: ExperienceStep[];
-}
+  steps: ExperienceStep[]
+  }
 
 interface ExperienceStep {
   instruction: string;
   duration: number; // seconds
   action?: 'breathe' | 'visualize' | 'send' | 'receive';
-  visual?: string;
-}
+  visual?: string
+  }
 
 const experiences: GuidedExperience[] = [
   {
@@ -89,8 +89,8 @@ const experiences: GuidedExperience[] = [
 interface GuidedTetherExperienceProps {
   onExperienceComplete?: (experienceId: string) => void;
   partnerName?: string;
-  isConnected?: boolean;
-}
+  isConnected?: boolean
+  }
 
 export const GuidedTetherExperience: React.FC<GuidedTetherExperienceProps> = ({
   onExperienceComplete,
@@ -114,18 +114,18 @@ export const GuidedTetherExperience: React.FC<GuidedTetherExperienceProps> = ({
           // Move to next step
           if (currentStepIndex < selectedExperience.steps.length - 1) {
             setCurrentStepIndex(currentStepIndex + 1);
-            return 0;;
+            return 0
   } else {
             // Experience complete
             completeExperience();
-            return 100;
-          }
+            return 100
+  }
         }
-        return newProgress;
-      });
-    }, 100);
+        return newProgress
+  })
+  }, 100);
     
-    return () => clearInterval(progressInterval);
+    return () => clearInterval(progressInterval)
   };
   }, [isActive, currentStepIndex, selectedExperience]);
   
@@ -136,7 +136,7 @@ export const GuidedTetherExperience: React.FC<GuidedTetherExperienceProps> = ({
     const totalSteps = selectedExperience.steps.length;
     const currentStepCompletion = stepProgress / 100;
     
-    setTotalProgress(((completedSteps + currentStepCompletion) / totalSteps) * 100);
+    setTotalProgress(((completedSteps + currentStepCompletion) / totalSteps) * 100)
   };
   }, [currentStepIndex, stepProgress, selectedExperience]);
   
@@ -145,15 +145,15 @@ export const GuidedTetherExperience: React.FC<GuidedTetherExperienceProps> = ({
     setCurrentStepIndex(0);
     setStepProgress(0);
     setTotalProgress(0);
-    setIsActive(true);
+    setIsActive(true)
   };
   
   const pauseExperience = () => {
-    setIsActive(false);
+    setIsActive(false)
   };
   
   const resumeExperience = () => {
-    setIsActive(true);
+    setIsActive(true)
   };
   
   const stopExperience = () => {
@@ -161,20 +161,20 @@ export const GuidedTetherExperience: React.FC<GuidedTetherExperienceProps> = ({
     setSelectedExperience(null);
     setCurrentStepIndex(0);
     setStepProgress(0);
-    setTotalProgress(0);
+    setTotalProgress(0)
   };
   
   const completeExperience = () => {
     if (selectedExperience) {
-      onExperienceComplete?.(selectedExperience.id);
-    }
+      onExperienceComplete?.(selectedExperience.id)
+  }
     setIsActive(false);
     setTimeout(() => {
       setSelectedExperience(null);
       setCurrentStepIndex(0);
       setStepProgress(0);
-      setTotalProgress(0);
-    }, 2000);
+      setTotalProgress(0)
+  }, 2000)
   };
   
   const getVisualElement = (visual?: string) => {
@@ -193,9 +193,8 @@ export const GuidedTetherExperience: React.FC<GuidedTetherExperienceProps> = ({
         return <div className="energy-glow incoming">✨</div>;
       case 'message':
         return <div className="affirmation-bubble">💬</div>;
-      default:
-        return null;
-    }
+      default: return null
+  }
   };
   
   if (!selectedExperience) {
@@ -235,7 +234,7 @@ export const GuidedTetherExperience: React.FC<GuidedTetherExperienceProps> = ({
           ))}
         </div>
       </div>
-    );
+    )
   }
   
   const currentStep = selectedExperience.steps[currentStepIndex];
@@ -246,8 +245,7 @@ export const GuidedTetherExperience: React.FC<GuidedTetherExperienceProps> = ({
         <h3 className="player-title">{selectedExperience.name}</h3>
         <div className="player-progress">
           <div className="progress-bar">
-            <div; 
-              className="progress-fill"
+            <div className="progress-fill"
               style={{ width: `${totalProgress}%` }}
             />
           </div>
@@ -277,8 +275,7 @@ export const GuidedTetherExperience: React.FC<GuidedTetherExperienceProps> = ({
         
         <div className="step-progress-container">
           <div className="step-progress-bar">
-            <div; 
-              className="step-progress-fill"
+            <div className="step-progress-fill"
               style={{ width: `${stepProgress}%` }}
             />
           </div>
@@ -314,5 +311,5 @@ export const GuidedTetherExperience: React.FC<GuidedTetherExperienceProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+  };

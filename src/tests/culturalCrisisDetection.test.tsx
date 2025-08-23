@@ -21,33 +21,33 @@ jest.mock('../services/culturalCrisisDetectionService', () => ({
         type: 'communication_style',
         present: true,
         culturalSignificance: 'high',
-        description: 'Direct expression of distress typical in Western cultures';
-      }],
+        description: 'Direct expression of distress typical in Western cultures'
+  }],
       communicationPatterns: [{
         pattern: 'direct_expression',
         culturalContext: 'western',
-        confidence: 0.9;
-      }],
+        confidence: 0.9
+  }],
       culturalBiasAdjustments: [{
         factor: 'communication_style',
         adjustment: -0.1,
         confidence: 0.8,
         culturalRelevance: ['western'],
-        explanation: 'Direct communication style reduces underestimation bias';
-      }],
+        explanation: 'Direct communication style reduces underestimation bias'
+  }],
       culturallyAdjustedRisk: {
         originalRisk: 75,
         adjustedRisk: 68,
         culturalConfidence: 0.85,
-        adjustmentFactors: ['communication_directness'];
-      },
+        adjustmentFactors: ['communication_directness']
+  },
       culturalInterventions: {
         familyInvolvement: 'medium' as const,
         communityApproach: false,
         religiousConsideration: false,
         culturalResources: ['western_counseling'],
-        languageSpecificResources: ['english_crisis_line'];
-      }
+        languageSpecificResources: ['english_crisis_line']
+  }
     }),
     initialize: jest.fn(),
   }
@@ -73,23 +73,23 @@ const testScenarios = {
     western: {
       languageCode: 'en',
       culturalContext: 'western-individualistic',
-      communicationStyle: 'direct';
-    },
+      communicationStyle: 'direct'
+  },
     eastern: {
       languageCode: 'zh',
       culturalContext: 'eastern-collectivistic',
-      communicationStyle: 'indirect';
-    },
+      communicationStyle: 'indirect'
+  },
     latinAmerican: {
       languageCode: 'es',
       culturalContext: 'latin-american',
-      communicationStyle: 'expressive';
-    },
+      communicationStyle: 'expressive'
+  },
     middleEastern: {
       languageCode: 'ar',
       culturalContext: 'middle-eastern',
-      communicationStyle: 'contextual';
-    }
+      communicationStyle: 'contextual'
+  }
   },
 
   // Crisis scenarios with cultural variations
@@ -98,26 +98,26 @@ const testScenarios = {
       western: "I want to kill myself, I can't take this anymore",
       eastern: "I feel like I'm a burden to my family, maybe they'd be better off without me",
       latinAmerican: "No puedo más, siento que todo está perdido",
-      middleEastern: "I feel like I have brought shame to my family";
-    },
+      middleEastern: "I feel like I have brought shame to my family"
+  },
     indirectDistress: {
       western: "Everything feels pointless and I'm completely alone",
       eastern: "I have failed to meet my family's expectations and feel worthless",
       latinAmerican: "Mi familia no me entiende y me siento muy solo",
-      middleEastern: "I feel disconnected from Allah and my community";
-    },
+      middleEastern: "I feel disconnected from Allah and my community"
+  },
     familyConflict: {
       western: "My parents don't understand me and I feel trapped",
       eastern: "I cannot honor my family while being true to myself",
       latinAmerican: "Mis padres no aceptan quién soy realmente",
-      middleEastern: "I struggle between tradition and my own path";
-    },
+      middleEastern: "I struggle between tradition and my own path"
+  },
     academicPressure: {
       western: "I'm failing everything and feel like a complete failure",
       eastern: "I have dishonored my family by not achieving academic excellence",
       latinAmerican: "No puedo cumplir con las expectativas de mi familia",
-      middleEastern: "I fear I am not living up to what is expected of me";
-    }
+      middleEastern: "I fear I am not living up to what is expected of me"
+  }
   },
 
   // Mood tracker test cases
@@ -125,24 +125,24 @@ const testScenarios = {
     criticalMood: {
       mood: { id: 'terrible', value: 1, label: 'Terrible' },
       tags: ['hopeless', 'overwhelmed'],
-      note: 'I feel like giving up on everything';
-    },
+      note: 'I feel like giving up on everything'
+  },
     concerningTags: {
       mood: { id: 'bad', value: 2, label: 'Bad' },
       tags: ['worthless', 'trapped'],
-      note: 'Nothing seems to matter anymore';
-    },
+      note: 'Nothing seems to matter anymore'
+  },
     culturalDistress: {
       mood: { id: 'bad', value: 2, label: 'Bad' },
       tags: ['alone', 'misunderstood'],
-      note: 'My family would be ashamed if they knew how I really feel';
-    }
+      note: 'My family would be ashamed if they knew how I really feel'
+  }
   }
 };
 
 describe('Cultural Crisis Detection Integration', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   describe('MoodTracker Crisis Detection', () => {
@@ -167,14 +167,14 @@ describe('Cultural Crisis Detection Integration', () => {
         communityApproach: true,
         religiousConsideration: false,
         culturalResources: ['family_therapy', 'cultural_counselor'],
-        languageSpecificResources: ['crisis_hotline_native_language'];
-      }
+        languageSpecificResources: ['crisis_hotline_native_language']
+  }
     };
 
     beforeEach(() => {
       (culturalCrisisDetectionService.analyzeCrisisWithCulturalContext as jest.Mock)
-        .mockResolvedValue(mockCrisisAnalysis);
-    });
+        .mockResolvedValue(mockCrisisAnalysis)
+  });
 
     test('should detect crisis indicators from low mood values', async () => {
       const mockOnMoodSubmit = jest.fn();
@@ -193,12 +193,12 @@ describe('Cultural Crisis Detection Integration', () => {
 
       // Should show cultural crisis alert
       await waitFor(() => {
-        expect(screen.getByText(/support recommended/i)).toBeInTheDocument();
-      });
+        expect(screen.getByText(/support recommended/i)).toBeInTheDocument()
+  });
 
       // Should not submit mood until crisis is addressed
-      expect(mockOnMoodSubmit).not.toHaveBeenCalled();
-    });
+      expect(mockOnMoodSubmit).not.toHaveBeenCalled()
+  });
 
     test('should detect crisis from concerning tags', async () => {
       const mockOnMoodSubmit = jest.fn();
@@ -223,9 +223,9 @@ describe('Cultural Crisis Detection Integration', () => {
 
       // Should trigger crisis detection
       await waitFor(() => {
-        expect(screen.getByText(/support recommended/i)).toBeInTheDocument();
-      });
-    });
+        expect(screen.getByText(/support recommended/i)).toBeInTheDocument()
+  })
+  });
 
     test('should detect crisis from concerning note content', async () => {
       const mockOnMoodSubmit = jest.fn();
@@ -250,9 +250,9 @@ describe('Cultural Crisis Detection Integration', () => {
 
       // Should trigger crisis detection
       await waitFor(() => {
-        expect(screen.getByText(/support recommended/i)).toBeInTheDocument();
-      });
-    });
+        expect(screen.getByText(/support recommended/i)).toBeInTheDocument()
+  })
+  })
   });
 
   describe('Cultural Crisis Alert Component', () => {
@@ -272,8 +272,8 @@ describe('Cultural Crisis Detection Integration', () => {
           communityApproach: true,
           religiousConsideration: true,
           culturalResources: ['family_therapy', 'community_elder'],
-          languageSpecificResources: ['native_language_counselor'];
-        }
+          languageSpecificResources: ['native_language_counselor']
+  }
       };
 
       (culturalCrisisDetectionService.analyzeCrisisWithCulturalContext as jest.Mock)
@@ -294,9 +294,9 @@ describe('Cultural Crisis Detection Integration', () => {
         expect(screen.getByText(/support recommended/i)).toBeInTheDocument();
         
         // Should display cultural factors
-        expect(screen.getByText(/family_centered/i)).toBeInTheDocument();
-      });
-    });
+        expect(screen.getByText(/family_centered/i)).toBeInTheDocument()
+  })
+  });
 
     test('should show loading state during analysis', async () => {
       // Mock a delayed response
@@ -312,8 +312,8 @@ describe('Cultural Crisis Detection Integration', () => {
       );
 
       // Should show loading state
-      expect(screen.getByText(/analyzing with cultural context/i)).toBeInTheDocument();
-    });
+      expect(screen.getByText(/analyzing with cultural context/i)).toBeInTheDocument()
+  })
   });
 
   describe.skip('Cross-Cultural Crisis Scenarios - SKIPPED: Hook implementation issues', () => {
@@ -337,8 +337,8 @@ describe('Cultural Crisis Detection Integration', () => {
               communicationPatterns: [{
                 pattern: 'cultural_expression',
                 culturalContext: context.culturalContext,
-                confidence: 0.8;
-              }],
+                confidence: 0.8
+  }],
               culturalBiasAdjustments: [{
                 factor: 'cultural_context',
                 adjustment: -0.1,
@@ -375,8 +375,8 @@ describe('Cultural Crisis Detection Integration', () => {
             );
 
             await waitFor(() => {
-              expect(screen.getByText(/support recommended/i)).toBeInTheDocument();
-            });
+              expect(screen.getByText(/support recommended/i)).toBeInTheDocument()
+  });
 
             // Verify cultural analysis was called with correct parameters
             expect(culturalCrisisDetectionService.analyzeCrisisWithCulturalContext)
@@ -385,11 +385,11 @@ describe('Cultural Crisis Detection Integration', () => {
                 undefined, // userId
                 context.languageCode,
                 context.culturalContext
-              );
-          });
-        });
-      });
-    });
+              )
+  })
+  })
+  })
+  })
   });
 
   describe('Bias Mitigation', () => {
@@ -404,20 +404,20 @@ describe('Cultural Crisis Detection Integration', () => {
           type: 'communication_style',
           present: true,
           culturalSignificance: 'high',
-          description: 'Indirect communication style detected';
-        }],
+          description: 'Indirect communication style detected'
+  }],
         communicationPatterns: [{
           pattern: 'indirect_expression',
           culturalContext: 'eastern-collectivistic',
-          confidence: 0.85;
-        }],
+          confidence: 0.85
+  }],
         culturalBiasAdjustments: [{
           factor: 'communication_style',
           adjustment: -0.3, // Significant reduction due to cultural bias
           confidence: 0.85,
           culturalRelevance: ['indirect_communication'],
-          explanation: 'Adjusted for indirect communication style in collectivistic culture';
-        }],
+          explanation: 'Adjusted for indirect communication style in collectivistic culture'
+  }],
         culturallyAdjustedRisk: {
           originalRisk: 90, // High original risk
           adjustedRisk: 60,  // Reduced after cultural adjustment
@@ -433,8 +433,8 @@ describe('Cultural Crisis Detection Integration', () => {
           communityApproach: true,
           religiousConsideration: false,
           culturalResources: ['eastern_counseling'],
-          languageSpecificResources: ['zh_crisis_line'];
-        }
+          languageSpecificResources: ['zh_crisis_line']
+  }
       };
 
       (culturalCrisisDetectionService.analyzeCrisisWithCulturalContext as jest.Mock)
@@ -454,13 +454,13 @@ describe('Cultural Crisis Detection Integration', () => {
 
       // Verify the service is being called
       await waitFor(() => {
-        expect(culturalCrisisDetectionService.analyzeCrisisWithCulturalContext).toHaveBeenCalled();
-      }, { timeout: 10000 });
+        expect(culturalCrisisDetectionService.analyzeCrisisWithCulturalContext).toHaveBeenCalled()
+  }, { timeout: 10000 });
 
       // Wait for component to render with analysis result
       await waitFor(() => {
-        expect(screen.getByText('communication_style')).toBeInTheDocument();
-      }, { timeout: 10000 });
+        expect(screen.getByText('communication_style')).toBeInTheDocument()
+  }, { timeout: 10000 });
 
       // Give more time for the hook's useEffect to process and trigger callbacks
       await waitFor(() => {
@@ -468,9 +468,9 @@ describe('Cultural Crisis Detection Integration', () => {
           expect.arrayContaining([
             expect.stringContaining('communication_style')
           ])
-        );
-      }, { timeout: 10000 });
-    });
+        )
+  }, { timeout: 10000 })
+  })
   });
 
   describe.skip('Error Handling - SKIPPED: Hook implementation issues', () => {
@@ -488,8 +488,8 @@ describe('Cultural Crisis Detection Integration', () => {
       );
 
       // Component should still render without errors
-      expect(screen.getByText(/analyzing with cultural context/i)).toBeInTheDocument();
-    });
+      expect(screen.getByText(/analyzing with cultural context/i)).toBeInTheDocument()
+  });
 
     test.skip('should provide fallback behavior when cultural analysis fails', async () => {
       (culturalCrisisDetectionService.analyzeCrisisWithCulturalContext as jest.Mock)
@@ -511,9 +511,9 @@ describe('Cultural Crisis Detection Integration', () => {
 
       // Should still trigger crisis alert even if cultural analysis fails
       await waitFor(() => {
-        expect(screen.getByText(/support recommended/i)).toBeInTheDocument();
-      });
-    });
+        expect(screen.getByText(/support recommended/i)).toBeInTheDocument()
+  })
+  })
   });
 
   describe('Accessibility and User Experience', () => {
@@ -525,22 +525,22 @@ describe('Cultural Crisis Detection Integration', () => {
           type: 'communication_style',
           present: true,
           culturalSignificance: 'high',
-          description: 'Direct expression of distress typical in Western cultures';
-        }],
+          description: 'Direct expression of distress typical in Western cultures'
+  }],
         culturalBiasAdjustments: [{
           factor: 'communication_style',
           adjustment: -0.1,
           confidence: 0.8,
           culturalRelevance: ['western'],
-          explanation: 'Direct communication style reduces underestimation bias';
-        }],
+          explanation: 'Direct communication style reduces underestimation bias'
+  }],
         culturalInterventions: {
           familyInvolvement: 'medium' as const,
           communityApproach: false,
           religiousConsideration: false,
           culturalResources: ['western_counseling'],
-          languageSpecificResources: ['english_crisis_line'];
-        }
+          languageSpecificResources: ['english_crisis_line']
+  }
       };
 
       (culturalCrisisDetectionService.analyzeCrisisWithCulturalContext as jest.Mock)
@@ -561,9 +561,9 @@ describe('Cultural Crisis Detection Integration', () => {
         
         // Check that cultural actions are properly labeled;
         const actionsSection = screen.getByText(/Recommended Actions/i);
-        expect(actionsSection).toBeInTheDocument();
-      });
-    });
+        expect(actionsSection).toBeInTheDocument()
+  })
+  });
 
     test.skip('should support keyboard navigation', async () => {
       const mockCrisisData = {
@@ -573,22 +573,22 @@ describe('Cultural Crisis Detection Integration', () => {
           type: 'communication_style',
           present: true,
           culturalSignificance: 'high',
-          description: 'Direct expression of distress typical in Western cultures';
-        }],
+          description: 'Direct expression of distress typical in Western cultures'
+  }],
         culturalBiasAdjustments: [{
           factor: 'communication_style',
           adjustment: -0.1,
           confidence: 0.8,
           culturalRelevance: ['western'],
-          explanation: 'Direct communication style reduces underestimation bias';
-        }],
+          explanation: 'Direct communication style reduces underestimation bias'
+  }],
         culturalInterventions: {
           familyInvolvement: 'medium' as const,
           communityApproach: false,
           religiousConsideration: false,
           culturalResources: ['western_counseling'],
-          languageSpecificResources: ['english_crisis_line'];
-        }
+          languageSpecificResources: ['english_crisis_line']
+  }
       };
 
       (culturalCrisisDetectionService.analyzeCrisisWithCulturalContext as jest.Mock)
@@ -611,8 +611,8 @@ describe('Cultural Crisis Detection Integration', () => {
         
         // Test keyboard interaction
         fireEvent.keyDown(dismissButton, { key: 'Enter', code: 'Enter' });
-        expect(onDismiss).toHaveBeenCalled();
-      });
-    });
+        expect(onDismiss).toHaveBeenCalled()
+  })
+  })
+  })
   });
-});

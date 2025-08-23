@@ -7,8 +7,8 @@ export interface EncryptionConfig {
   ivLength: number;
   tagLength: number;
   iterations: number;
-  hashAlgorithm: string;
-}
+  hashAlgorithm: string
+  }
 
 export interface EncryptedData {
   data: string;          // Base64 encoded encrypted data
@@ -23,8 +23,8 @@ export interface DataClassification {
   level: 'public' | 'internal' | 'confidential' | 'restricted';
   category: 'personal' | 'health' | 'crisis' | 'communication' | 'analytics';
   retention: number;    // Days to retain data
-  hipaaCompliant: boolean;
-}
+  hipaaCompliant: boolean
+  }
 
 // Default encryption configuration;
 const DEFAULT_CONFIG: EncryptionConfig = {
@@ -33,8 +33,8 @@ const DEFAULT_CONFIG: EncryptionConfig = {
   ivLength: 12,         // 96 bits for GCM
   tagLength: 16,        // 128 bits for authentication
   iterations: 100000,   // PBKDF2 iterations
-  hashAlgorithm: 'SHA-256';
-};
+  hashAlgorithm: 'SHA-256'
+  };
 
 // Data classification rules for different types of sensitive data;
 const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
@@ -43,7 +43,7 @@ const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
     level: 'restricted',
     category: 'health',
     retention: 2555,      // 7 years (HIPAA requirement)
-    hipaaCompliant: true;
+    hipaaCompliant: true
   },
   
   // Mood analysis contains personal health information
@@ -51,7 +51,7 @@ const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
     level: 'restricted',
     category: 'health',
     retention: 2555,
-    hipaaCompliant: true;
+    hipaaCompliant: true
   },
   
   // User tokens for authentication
@@ -59,7 +59,7 @@ const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
     level: 'confidential',
     category: 'personal',
     retention: 90,
-    hipaaCompliant: false;
+    hipaaCompliant: false
   },
   
   // User ID for identification
@@ -67,7 +67,7 @@ const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
     level: 'confidential',
     category: 'personal',
     retention: 90,
-    hipaaCompliant: false;
+    hipaaCompliant: false
   },
   
   // Chat messages may contain health information
@@ -75,14 +75,14 @@ const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
     level: 'restricted',
     category: 'health',
     retention: 1095,      // 3 years
-    hipaaCompliant: true;
+    hipaaCompliant: true
   },
   
   'peerChatHistory': {
     level: 'restricted',
     category: 'communication',
     retention: 1095,
-    hipaaCompliant: true;
+    hipaaCompliant: true
   },
   
   // Crisis-specific data requires highest protection
@@ -90,14 +90,14 @@ const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
     level: 'restricted',
     category: 'crisis',
     retention: 2555,
-    hipaaCompliant: true;
+    hipaaCompliant: true
   },
   
   'last_crisis_error': {
     level: 'restricted',
     category: 'crisis',
     retention: 2555,
-    hipaaCompliant: true;
+    hipaaCompliant: true
   },
   
   // User stats and gamification data
@@ -105,7 +105,7 @@ const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
     level: 'internal',
     category: 'analytics',
     retention: 365,
-    hipaaCompliant: false;
+    hipaaCompliant: false
   },
   
   // Accessibility preferences
@@ -113,7 +113,7 @@ const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
     level: 'internal',
     category: 'personal',
     retention: 365,
-    hipaaCompliant: false;
+    hipaaCompliant: false
   },
   
   // Content filters
@@ -121,7 +121,7 @@ const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
     level: 'internal',
     category: 'personal',
     retention: 365,
-    hipaaCompliant: false;
+    hipaaCompliant: false
   }
 };
 
@@ -132,7 +132,7 @@ class EncryptionService {
 
   constructor(config?: Partial<EncryptionConfig>) {
     this.config = { ...DEFAULT_CONFIG, ...config };
-    this.checkBrowserSupport();
+    this.checkBrowserSupport()
   }
 
   /**
@@ -148,8 +148,8 @@ class EncryptionService {
     );
 
     if (!this.isSupported) {
-      console.warn('EncryptionService: Browser does not support required cryptographic operations');
-    }
+      console.warn('EncryptionService: Browser does not support required cryptographic operations')
+  }
   }
 
   /**
@@ -158,7 +158,7 @@ class EncryptionService {
   private generateSecurePassword(): string {
     const array = new Uint8Array(32);
     crypto.getRandomValues(array);
-    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('')
   }
 
   /**
@@ -175,11 +175,11 @@ class EncryptionService {
       
       // Also create a backup in memory for this session
       if (typeof window !== 'undefined') {
-        (window as any).__astral_device_key = password;
-      }
+        (window as any).__astral_device_key = password
+  }
     }
     
-    return password;
+    return password
   }
 
   /**
@@ -190,7 +190,7 @@ class EncryptionService {
     const passwordData = encoder.encode(password);
 
     // Import password as key material;
-    const keyMaterial = await crypto.subtle.importKey(;
+    const keyMaterial = await crypto.subtle.importKey(;;
       'raw',
       passwordData,
       'PBKDF2',
@@ -204,16 +204,16 @@ class EncryptionService {
         name: 'PBKDF2',
         salt: salt,
         iterations: this.config.iterations,
-        hash: this.config.hashAlgorithm;
-      },
+        hash: this.config.hashAlgorithm
+  },
       keyMaterial,
       {
         name: this.config.algorithm,
-        length: this.config.keyLength;
-      },
+        length: this.config.keyLength
+  },
       false,
       ['encrypt', 'decrypt']
-    );
+    )
   }
 
   /**
@@ -222,7 +222,7 @@ class EncryptionService {
   private generateRandomBytes(length: number): Uint8Array {
     const bytes = new Uint8Array(length);
     crypto.getRandomValues(bytes);
-    return bytes;
+    return bytes
   }
 
   /**
@@ -230,7 +230,7 @@ class EncryptionService {
    */
   private arrayBufferToBase64(buffer: Uint8Array): string {
     const bytes = Array.from(buffer);
-    return btoa(String.fromCharCode(...bytes));
+    return btoa(String.fromCharCode(...bytes))
   }
 
   /**
@@ -240,9 +240,9 @@ class EncryptionService {
     const binaryString = atob(base64);
     const bytes = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-    return bytes;
+      bytes[i] = binaryString.charCodeAt(i)
+  }
+    return bytes
   }
 
   /**
@@ -251,35 +251,35 @@ class EncryptionService {
   private getDataClassification(key: string): DataClassification {
     // Check for exact match first
     if (DATA_CLASSIFICATIONS[key]) {
-      return DATA_CLASSIFICATIONS[key];
-    }
+      return DATA_CLASSIFICATIONS[key]
+  }
 
     // Check for pattern matches
     if (key.includes('crisis') || key.includes('emergency')) {
-      return DATA_CLASSIFICATIONS['crisis_error'];
-    }
+      return DATA_CLASSIFICATIONS['crisis_error']
+  }
     
     if (key.includes('mood') || key.includes('health')) {
-      return DATA_CLASSIFICATIONS['mood_analyses'];
-    }
+      return DATA_CLASSIFICATIONS['mood_analyses']
+  }
     
     if (key.includes('chat') || key.includes('message')) {
-      return DATA_CLASSIFICATIONS['aiChatHistory'];
-    }
+      return DATA_CLASSIFICATIONS['aiChatHistory']
+  }
 
     // Default to internal level for unknown keys
     return { level: 'internal',
       category: 'personal',
       retention: 90,
-      hipaaCompliant: false;
-     }
+      hipaaCompliant: false
+  }
 
   /**
    * Determine if data should be encrypted based on classification
    */
   private shouldEncrypt(key: string): boolean {
     const classification = this.getDataClassification(key);
-    return classification.level === 'restricted' || classification.level === 'confidential';
+    return classification.level === 'restricted' || classification.level === 'confidential'
   }
 
   /**
@@ -287,8 +287,8 @@ class EncryptionService {
    */
   public async encrypt(data: string, key: string): Promise<EncryptedData> {
     if (!this.isSupported) {
-      throw new Error('Encryption not supported in this browser');
-    }
+      throw new Error('Encryption not supported in this browser')
+  }
 
     try {
       const encoder = new TextEncoder();
@@ -303,11 +303,11 @@ class EncryptionService {
       const cryptoKey = await this.deriveKey(password, salt);
 
       // Encrypt the data;
-      const encryptedData = await crypto.subtle.encrypt(;
+      const encryptedData = await crypto.subtle.encrypt(;;
         {
           name: this.config.algorithm,
-          iv: iv;
-        },
+          iv: iv
+  },
         cryptoKey,
         dataBytes
       );
@@ -324,28 +324,27 @@ class EncryptionService {
         salt: this.arrayBufferToBase64(salt),
         tag: this.arrayBufferToBase64(tag),
         version: '1.0',
-        algorithm: this.config.algorithm;
-      };
+        algorithm: this.config.algorithm
+  };
 
       // Log encryption event for audit trail (without sensitive data)
       this.logSecurityEvent('data_encrypted', {
         key: key,
         algorithm: this.config.algorithm,
         dataSize: data.length,
-        classification: this.getDataClassification(key);
-      };
+        classification: this.getDataClassification(key)
+  };
   };
 
-      return result;
-
-    } catch (error) {
+      return result
+  } catch (error) {
       console.error('Encryption failed:', error);
       this.logSecurityEvent('encryption_failed', {
         key: key,
-        error: error instanceof Error ? error.message : 'Unknown error';
-      });
-      throw new Error('Failed to encrypt data');
-    }
+        error: error instanceof Error ? error.message : 'Unknown error'
+  });
+      throw new Error('Failed to encrypt data')
+  }
   }
 
   /**
@@ -353,8 +352,8 @@ class EncryptionService {
    */
   public async decrypt(encryptedData: EncryptedData, key: string): Promise<string> {
     if (!this.isSupported) {
-      throw new Error('Decryption not supported in this browser');
-    }
+      throw new Error('Decryption not supported in this browser')
+  }
 
     try {
       // Convert Base64 data back to Uint8Array;
@@ -373,11 +372,11 @@ class EncryptionService {
       const cryptoKey = await this.deriveKey(password, salt);
 
       // Decrypt the data;
-      const decryptedData = await crypto.subtle.decrypt(;
+      const decryptedData = await crypto.subtle.decrypt(;;
         {
           name: encryptedData.algorithm,
-          iv: iv;
-        },
+          iv: iv
+  },
         cryptoKey,
         combinedData
       );
@@ -391,19 +390,18 @@ class EncryptionService {
         key: key,
         algorithm: encryptedData.algorithm,
         dataSize: result.length,
-        classification: this.getDataClassification(key);
-      });
+        classification: this.getDataClassification(key)
+  });
 
-      return result;
-
-    } catch (error) {
+      return result
+  } catch (error) {
       console.error('Decryption failed:', error);
       this.logSecurityEvent('decryption_failed', {
         key: key,
-        error: error instanceof Error ? error.message : 'Unknown error';
-      });
-      throw new Error('Failed to decrypt data');
-    }
+        error: error instanceof Error ? error.message : 'Unknown error'
+  });
+      throw new Error('Failed to decrypt data')
+  }
   }
 
   /**
@@ -417,18 +415,18 @@ class EncryptionService {
           encrypted: true,
           ...encryptedData,
           classification: this.getDataClassification(key),
-          timestamp: Date.now();
-        };
-        localStorage.setItem(key, JSON.stringify(storageData));;
+          timestamp: Date.now()
+  };
+        localStorage.setItem(key, JSON.stringify(storageData))
   } else {
         // Store non-sensitive data as plain text
-        localStorage.setItem(key, value);
-      }
+        localStorage.setItem(key, value)
+  }
     } catch (error) {
       console.error('Failed to store encrypted data:', error);
       // Fallback to plain text storage if encryption fails
-      localStorage.setItem(key, value);
-    }
+      localStorage.setItem(key, value)
+  }
   }
 
   /**
@@ -439,17 +437,17 @@ class EncryptionService {
       const storedValue = localStorage.getItem(key);
       
       if (!storedValue) {
-        return null;
-      }
+        return null
+  }
 
       // Try to parse as encrypted data;
       let parsedData: any;
       try {
-        parsedData = JSON.parse(storedValue);
-      } catch {
+        parsedData = JSON.parse(storedValue)
+  } catch {
         // If parsing fails, it's plain text data
-        return storedValue;
-      }
+        return storedValue
+  }
 
       // Check if data is encrypted
       if (parsedData.encrypted && parsedData.data) {
@@ -459,20 +457,19 @@ class EncryptionService {
           salt: parsedData.salt,
           tag: parsedData.tag,
           version: parsedData.version,
-          algorithm: parsedData.algorithm;
-        };
+          algorithm: parsedData.algorithm
+  };
         
-        return await this.decrypt(encryptedData, key);
-      }
+        return await this.decrypt(encryptedData, key)
+  }
 
       // Return parsed JSON data (for objects) or original string
-      return typeof parsedData === 'object' ? JSON.stringify(parsedData) : storedValue;
-
-    } catch (error) {
+      return typeof parsedData === 'object' ? JSON.stringify(parsedData) : storedValue
+  } catch (error) {
       console.error('Failed to retrieve encrypted data:', error);
       // Return original value if decryption fails
-      return localStorage.getItem(key);
-    }
+      return localStorage.getItem(key)
+  }
   }
 
   /**
@@ -484,10 +481,10 @@ class EncryptionService {
     // Log data deletion for audit trail
     this.logSecurityEvent('data_deleted', {
       key: key,
-      classification: classification;
-    });
+      classification: classification
+  });
 
-    localStorage.removeItem(key);
+    localStorage.removeItem(key)
   }
 
   /**
@@ -504,8 +501,8 @@ class EncryptionService {
           try {
             const parsed = JSON.parse(value);
             if (parsed.encrypted) {
-              encryptedKeys.push(key);
-            }
+              encryptedKeys.push(key)
+  }
           } catch {
             // Not JSON, skip
           }
@@ -513,7 +510,7 @@ class EncryptionService {
       }
     }
     
-    return encryptedKeys;
+    return encryptedKeys
   }
 
   /**
@@ -522,10 +519,10 @@ class EncryptionService {
   private isDataEncrypted(value: string): boolean {
     try {
       const parsed = JSON.parse(value);
-      return parsed.encrypted === true;
-    } catch {
-      return false;
-    }
+      return parsed.encrypted === true
+  } catch {
+      return false
+  }
   }
 
   /**
@@ -539,11 +536,11 @@ class EncryptionService {
       }
 
       await this.secureSetItem(key, value);
-      return true;
-    } catch (error) {
+      return true
+  } catch (error) {
       console.error(`Failed to migrate data for key ${key}:`, error);
-      return false;
-    }
+      return false
+  }
   }
 
   /**
@@ -555,11 +552,11 @@ class EncryptionService {
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key && this.shouldEncrypt(key)) {
-        keysToMigrate.push(key);
-      }
+        keysToMigrate.push(key)
+  }
     }
     
-    return keysToMigrate;
+    return keysToMigrate
   }
 
   /**
@@ -575,10 +572,10 @@ class EncryptionService {
     for (const key of keysToMigrate) {
       const migrated = await this.migrateSingleKey(key);
       if (migrated) {
-        migratedCount++;;
+        migratedCount++
   } else {
-        failedCount++;
-      }
+        failedCount++
+  }
     }
 
     const migrationTime = Date.now() - migrationStartTime;
@@ -588,10 +585,10 @@ class EncryptionService {
       migratedCount,
       failedCount,
       migrationTime,
-      totalKeys: localStorage.length;
-    });
+      totalKeys: localStorage.length
+  });
 
-    console.log(`Data migration completed: ${migratedCount} keys migrated, ${failedCount} failed in ${migrationTime}ms`);
+    console.log(`Data migration completed: ${migratedCount} keys migrated, ${failedCount} failed in ${migrationTime}ms`)
   }
 
   /**
@@ -605,18 +602,18 @@ class EncryptionService {
       try {
         const value = await this.secureGetItem(key);
         if (value !== null) {
-          results.valid++;;
+          results.valid++
   } else {
           results.invalid++;
-          results.errors.push(`Failed to decrypt data for key: ${key}`);
-        }
+          results.errors.push(`Failed to decrypt data for key: ${key}`)
+  }
       } catch (error) {
         results.invalid++;
-        results.errors.push(`Integrity check failed for key ${key}: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      }
+        results.errors.push(`Integrity check failed for key ${key}: ${error instanceof Error ? error.message : 'Unknown error'}`)
+  }
     }
 
-    return results;
+    return results
   }
 
   /**
@@ -625,13 +622,13 @@ class EncryptionService {
   public clearEncryptionKeys(): void {
     sessionStorage.removeItem('device_encryption_key');
     if (typeof window !== 'undefined') {
-      delete (window as any).__astral_device_key;
-    }
+      delete (window as any).__astral_device_key
+  }
     this.keyCache.clear();
 
     this.logSecurityEvent('encryption_keys_cleared', {
-      keysClearedCount: this.keyCache.size;
-    });
+      keysClearedCount: this.keyCache.size
+  })
   }
 
   /**
@@ -642,7 +639,7 @@ class EncryptionService {
     encryptedKeys: number;
     totalKeys: number;
     classifications: Record<string, number>;
-    hipaaCompliantKeys: number;
+    hipaaCompliantKeys: number
   } {
     const encryptedKeys = this.getEncryptedKeys();
     const classifications: Record<string, number> = {};
@@ -654,8 +651,8 @@ class EncryptionService {
       classifications[classification.level] = (classifications[classification.level] || 0) + 1;
       
       if (classification.hipaaCompliant) {
-        hipaaCompliantKeys++;
-      }
+        hipaaCompliantKeys++
+  }
     }
 
     return { isSupported: this.isSupported,
@@ -675,10 +672,10 @@ class EncryptionService {
       details: {
         ...details,
         userAgent: navigator.userAgent,
-        url: window.location.href;
-      },
-      severity: 'info' as const;
-    };
+        url: window.location.href
+  },
+      severity: 'info' as const
+  };
 
     // Store in localStorage for development/audit
     try {
@@ -687,18 +684,18 @@ class EncryptionService {
       
       // Keep only last 100 logs
       if (logs.length > 100) {
-        logs.splice(0, logs.length - 100);
-      }
+        logs.splice(0, logs.length - 100)
+  }
       
-      localStorage.setItem('security_logs', JSON.stringify(logs));
-    } catch (error) {
-      console.warn('Failed to log security event:', error);
-    }
+      localStorage.setItem('security_logs', JSON.stringify(logs))
+  } catch (error) {
+      console.warn('Failed to log security event:', error)
+  }
 
     // In development, log to console
     if (process.env.NODE_ENV === 'development') {
-      console.log('Security Event:', logEntry);
-    }
+      console.log('Security Event:', logEntry)
+  }
   }
 
   /**
@@ -719,12 +716,12 @@ class EncryptionService {
     try {
       const parsed = JSON.parse(value);
       if (!parsed.encrypted) {
-        return `HIPAA-sensitive data in key '${key}' is not encrypted`;
-      }
+        return `HIPAA-sensitive data in key '${key}' is not encrypted`
+  }
     } catch {
       // Plain text HIPAA data
-      return `HIPAA-sensitive data in key '${key}' is stored as plain text`;
-    }
+      return `HIPAA-sensitive data in key '${key}' is stored as plain text`
+  }
 
     return null; // No violation found
   }
@@ -740,12 +737,12 @@ class EncryptionService {
       if (key) {
         const violation = this.checkKeyForHIPAAViolation(key);
         if (violation) {
-          violations.push(violation);
-        }
+          violations.push(violation)
+  }
       }
     }
 
-    return violations;
+    return violations
   }
 
   /**
@@ -757,10 +754,10 @@ class EncryptionService {
     if (violations.length > 0) {
       recommendations.push('Run data migration to encrypt all HIPAA-sensitive data');
       recommendations.push('Implement automatic encryption for all health-related data');
-      recommendations.push('Review data classification rules for completeness');
-    }
+      recommendations.push('Review data classification rules for completeness')
+  }
 
-    return recommendations;
+    return recommendations
   }
 
   /**
@@ -769,7 +766,7 @@ class EncryptionService {
   public performHIPAAComplianceCheck(): {
     compliant: boolean;
     violations: string[];
-    recommendations: string[];
+    recommendations: string[]
   } {
     const violations = this.scanForHIPAAViolations();
     const recommendations = this.generateHIPAARecommendations(violations);
@@ -790,10 +787,10 @@ let encryptionServiceInstance: EncryptionService | null = null;
  */;
 export const getEncryptionService = (): EncryptionService => {
   if (!encryptionServiceInstance) {
-    encryptionServiceInstance = new EncryptionService();
+    encryptionServiceInstance = new EncryptionService()
   }
-  return encryptionServiceInstance;
-};
+  return encryptionServiceInstance
+  };
 
 /**
  * React hook for using the encryption service
@@ -802,23 +799,23 @@ export const useEncryption = () => {
   const service = getEncryptionService();
 
   const encryptData = async (data: string, key: string) => {
-    return await service.encrypt(data, key);
+    return await service.encrypt(data, key)
   };
 
   const decryptData = async (encryptedData: EncryptedData, key: string) => {
-    return await service.decrypt(encryptedData, key);
+    return await service.decrypt(encryptedData, key)
   };
 
   const secureStore = async (key: string, value: string) => {
-    return await service.secureSetItem(key, value);
+    return await service.secureSetItem(key, value)
   };
 
   const secureRetrieve = async (key: string) => {
-    return await service.secureGetItem(key);
+    return await service.secureGetItem(key)
   };
 
   const secureDelete = (key: string) => {
-    service.secureRemoveItem(key);
+    service.secureRemoveItem(key)
   };
 
   return {
@@ -830,7 +827,7 @@ export const useEncryption = () => {
     migrateData: () => service.migrateExistingData(),
     validateIntegrity: () => service.validateDataIntegrity(),
     getStats: () => service.getEncryptionStats(),
-    checkHIPAACompliance: () => service.performHIPAAComplianceCheck();
+    checkHIPAACompliance: () => service.performHIPAAComplianceCheck()
   };
 
 export default EncryptionService;

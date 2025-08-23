@@ -16,7 +16,7 @@ jest.mock('../../../utils/crisisDetection', () => ({
     name: '988 Suicide & Crisis Lifeline',
     number: '988',
     text: 'Text HOME to 741741',
-    url: 'https://988lifeline.org';
+    url: 'https://988lifeline.org'
   })
 }));
 
@@ -26,7 +26,7 @@ const RouterWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
 describe('CrisisAlertBanner', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   describe('Rendering', () => {
@@ -41,8 +41,8 @@ describe('CrisisAlertBanner', () => {
         </RouterWrapper>
       );
 
-      expect(screen.getByTestId('crisis-alert-banner')).toBeInTheDocument();
-    });
+      expect(screen.getByTestId('crisis-alert-banner')).toBeInTheDocument()
+  });
 
     it('should not render when show is false', () => {
       render(
@@ -55,8 +55,8 @@ describe('CrisisAlertBanner', () => {
         </RouterWrapper>
       );
 
-      expect(screen.queryByTestId('crisis-alert-banner')).not.toBeInTheDocument();
-    });
+      expect(screen.queryByTestId('crisis-alert-banner')).not.toBeInTheDocument()
+  });
 
     it('should display appropriate message based on severity', () => {
       const { container } = render(
@@ -73,8 +73,8 @@ describe('CrisisAlertBanner', () => {
       expect(screen.getByText(/If you.*thinking about suicide/i)).toBeInTheDocument();
       
       // Check CSS class for severity
-      expect(container.querySelector('.crisis-alert-banner--info')).toBeInTheDocument();
-    });
+      expect(container.querySelector('.crisis-alert-banner--info')).toBeInTheDocument()
+  })
   });
 
   describe('Crisis Resources', () => {
@@ -90,8 +90,8 @@ describe('CrisisAlertBanner', () => {
       );
 
       expect(screen.getByText('988')).toBeInTheDocument();
-      expect(screen.getByText(/988 Suicide & Crisis Lifeline/i)).toBeInTheDocument();
-    });
+      expect(screen.getByText(/988 Suicide & Crisis Lifeline/i)).toBeInTheDocument()
+  });
 
     it('should display text support option', () => {
       render(
@@ -104,8 +104,8 @@ describe('CrisisAlertBanner', () => {
         </RouterWrapper>
       );
 
-      expect(screen.getByText('Text HOME to 741741')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Text HOME to 741741')).toBeInTheDocument()
+  });
 
     it('should show emergency services for critical severity', () => {
       const { container } = render(
@@ -120,8 +120,8 @@ describe('CrisisAlertBanner', () => {
 
       // The component shows 988 as the main crisis line;
       const phoneLink = container.querySelector('a[href="tel:988"]');
-      expect(phoneLink).toBeInTheDocument();
-    });
+      expect(phoneLink).toBeInTheDocument()
+  });
 
     it('should display location-specific resources when provided', () => {
       render(
@@ -135,8 +135,8 @@ describe('CrisisAlertBanner', () => {
       );
 
       // Default resources should be US-based
-      expect(screen.getByText('988')).toBeInTheDocument();
-    });
+      expect(screen.getByText('988')).toBeInTheDocument()
+  })
   });
 
   describe('Interactive Elements', () => {
@@ -152,8 +152,8 @@ describe('CrisisAlertBanner', () => {
       );
 
       const phoneLink = container.querySelector('a[href="tel:988"]');
-      expect(phoneLink).toBeInTheDocument();
-    });
+      expect(phoneLink).toBeInTheDocument()
+  });
 
     it('should open chat support in new window', () => {
       render(
@@ -169,8 +169,8 @@ describe('CrisisAlertBanner', () => {
       // Look for the "Get Help Now" link which opens in new window;
       const helpLink = screen.getByText('Get Help Now');
       expect(helpLink).toHaveAttribute('target', '_blank');
-      expect(helpLink).toHaveAttribute('rel', 'noopener noreferrer');
-    });
+      expect(helpLink).toHaveAttribute('rel', 'noopener noreferrer')
+  });
 
     it('should navigate to resources page', () => {
       render(
@@ -189,8 +189,8 @@ describe('CrisisAlertBanner', () => {
       // Test the click action
       fireEvent.click(resourcesButton);
       // The component uses window.location.href = '#crisis'
-      expect(window.location.href).toContain('#crisis');
-    });
+      expect(window.location.href).toContain('#crisis')
+  })
   });
 
   describe('Dismiss Functionality', () => {
@@ -210,8 +210,8 @@ describe('CrisisAlertBanner', () => {
       const dismissButton = screen.getByLabelText('Close crisis alert');
       fireEvent.click(dismissButton);
 
-      expect(onDismiss).toHaveBeenCalled();
-    });
+      expect(onDismiss).toHaveBeenCalled()
+  });
 
     it('should not show dismiss button for emergency severity', () => {
       render(
@@ -224,8 +224,8 @@ describe('CrisisAlertBanner', () => {
         </RouterWrapper>
       );
 
-      expect(screen.queryByLabelText('Close crisis alert')).not.toBeInTheDocument();
-    });
+      expect(screen.queryByLabelText('Close crisis alert')).not.toBeInTheDocument()
+  });
 
     it('should allow dismissal after delay for high severity', async () => {
       const onClose = jest.fn();
@@ -245,8 +245,8 @@ describe('CrisisAlertBanner', () => {
       expect(dismissButton).toBeInTheDocument();
       
       fireEvent.click(dismissButton);
-      expect(onClose).toHaveBeenCalled();
-    });
+      expect(onClose).toHaveBeenCalled()
+  })
   });
 
   describe('Visual Styling', () => {
@@ -275,8 +275,8 @@ describe('CrisisAlertBanner', () => {
       );
 
       // Check for urgent class when severity is high
-      expect(container.querySelector('.crisis-alert-banner--urgent')).toBeInTheDocument();
-    });
+      expect(container.querySelector('.crisis-alert-banner--urgent')).toBeInTheDocument()
+  });
 
     it('should have pulsing animation for emergency', () => {
       const { container } = render(
@@ -291,8 +291,8 @@ describe('CrisisAlertBanner', () => {
 
       // High severity should have urgent class;
       const banner = container.querySelector('.crisis-alert-banner--urgent');
-      expect(banner).toBeInTheDocument();
-    });
+      expect(banner).toBeInTheDocument()
+  });
 
     it('should stick to top of viewport', () => {
       render(
@@ -307,8 +307,8 @@ describe('CrisisAlertBanner', () => {
 
       const banner = screen.getByTestId('crisis-alert-banner');
       // Component exists at the top
-      expect(banner).toBeInTheDocument();
-    });
+      expect(banner).toBeInTheDocument()
+  })
   });
 
   describe('Accessibility', () => {
@@ -329,8 +329,8 @@ describe('CrisisAlertBanner', () => {
       
       // Check for close button accessibility;
       const closeButton = screen.getByLabelText('Close crisis alert');
-      expect(closeButton).toBeInTheDocument();
-    });
+      expect(closeButton).toBeInTheDocument()
+  });
 
     it('should be keyboard navigable', () => {
       const { container } = render(
@@ -348,8 +348,8 @@ describe('CrisisAlertBanner', () => {
       const helpLink = screen.getByText('Get Help Now');
 
       expect(phoneLink).toBeInTheDocument();
-      expect(helpLink).toBeInTheDocument();
-    });
+      expect(helpLink).toBeInTheDocument()
+  });
 
     it('should announce to screen readers immediately', () => {
       render(
@@ -364,8 +364,8 @@ describe('CrisisAlertBanner', () => {
 
       // Component should be visible for screen readers;
       const banner = screen.getByTestId('crisis-alert-banner');
-      expect(banner).toBeInTheDocument();
-    });
+      expect(banner).toBeInTheDocument()
+  })
   });
 
   describe('Quick Actions', () => {
@@ -382,8 +382,8 @@ describe('CrisisAlertBanner', () => {
 
       // The component doesn't have a breathing exercise button in the current implementation
       // Check for other quick actions instead
-      expect(screen.getByText('View All Resources')).toBeInTheDocument();
-    });
+      expect(screen.getByText('View All Resources')).toBeInTheDocument()
+  });
 
     it('should trigger breathing exercise overlay', () => {
       render(
@@ -398,8 +398,8 @@ describe('CrisisAlertBanner', () => {
 
       // The component doesn't have a breathing exercise button in the current implementation
       // This test validates that the component renders without errors
-      expect(screen.getByTestId('crisis-alert-banner')).toBeInTheDocument();
-    });
+      expect(screen.getByTestId('crisis-alert-banner')).toBeInTheDocument()
+  });
 
     it('should show safety plan button when available', () => {
       render(
@@ -414,8 +414,8 @@ describe('CrisisAlertBanner', () => {
       );
 
       // The component shows "Get Help Now" link
-      expect(screen.getByText('Get Help Now')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Get Help Now')).toBeInTheDocument()
+  });
 
     it('should trigger safety plan view', () => {
       render(
@@ -430,8 +430,8 @@ describe('CrisisAlertBanner', () => {
 
       // The component has "Get Help Now" link that opens in new window;
       const helpLink = screen.getByText('Get Help Now');
-      expect(helpLink).toHaveAttribute('target', '_blank');
-    });
+      expect(helpLink).toHaveAttribute('target', '_blank')
+  })
   });
 
   describe('Animation and Transitions', () => {
@@ -457,8 +457,8 @@ describe('CrisisAlertBanner', () => {
       );
 
       const banner = screen.getByTestId('crisis-alert-banner');
-      expect(banner).toBeInTheDocument();
-    });
+      expect(banner).toBeInTheDocument()
+  });
 
     it('should fade out when dismissing', async () => {
       const onDismiss = jest.fn();
@@ -489,8 +489,8 @@ describe('CrisisAlertBanner', () => {
         </RouterWrapper>
       );
       
-      expect(screen.queryByTestId('crisis-alert-banner')).not.toBeInTheDocument();
-    });
+      expect(screen.queryByTestId('crisis-alert-banner')).not.toBeInTheDocument()
+  })
   });
 
   describe('Responsive Design', () => {
@@ -498,8 +498,8 @@ describe('CrisisAlertBanner', () => {
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
         configurable: true,
-        value: 400;
-      });
+        value: 400
+  });
 
       render(
         <RouterWrapper>
@@ -512,15 +512,15 @@ describe('CrisisAlertBanner', () => {
       );
 
       // Check that resources are displayed
-      expect(screen.getByText('Text Support')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Text Support')).toBeInTheDocument()
+  });
 
     it('should use icons only on very small screens', () => {
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
         configurable: true,
-        value: 320;
-      });
+        value: 320
+  });
 
       const { container } = render(
         <RouterWrapper>
@@ -535,8 +535,8 @@ describe('CrisisAlertBanner', () => {
       // Check that the component still displays key information
       expect(screen.getByText('988')).toBeInTheDocument();
       // Icons should be present
-      expect(container.querySelector('svg')).toBeInTheDocument();
-    });
+      expect(container.querySelector('svg')).toBeInTheDocument()
+  })
   });
 
   describe('Error Handling', () => {
@@ -552,14 +552,14 @@ describe('CrisisAlertBanner', () => {
       );
 
       // Should still show default resources
-      expect(screen.getByText('988')).toBeInTheDocument();
-    });
+      expect(screen.getByText('988')).toBeInTheDocument()
+  });
 
     it('should handle click errors gracefully', () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       const onDismiss = jest.fn(() => {
-        throw new Error('Dismiss error');
-      });
+        throw new Error('Dismiss error')
+  });
 
       render(
         <RouterWrapper>
@@ -576,7 +576,7 @@ describe('CrisisAlertBanner', () => {
       // Should not throw
       expect(() => fireEvent.click(dismissButton)).not.toThrow();
 
-      consoleSpy.mockRestore();
-    });
+      consoleSpy.mockRestore()
+  })
+  })
   });
-});

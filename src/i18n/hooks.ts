@@ -53,8 +53,8 @@ export const useI18n = () => {
     
     // Helper function for namespace-specific translations
     tWithNamespace: (namespace: string, key: string, options?: any) => {
-      return i18n.t(`${namespace}:${key}`, options);
-    }
+      return i18n.t(`${namespace}:${key}`, options)
+  }
   };
 }
 
@@ -92,7 +92,7 @@ export const useCrisisI18n = () => {
     // Communication style adaptations
     needsIndirectCommunication: culturalContext.preferredCommunicationStyle === "indirect",
     prefersFormalCommunication: culturalContext.preferredCommunicationStyle === "formal",
-    respondsToBrotherlyApproach: culturalContext.preferredCommunicationStyle === "familial";
+    respondsToBrotherlyApproach: culturalContext.preferredCommunicationStyle === "familial"
   };
 }
 
@@ -109,27 +109,27 @@ export const useAccessibilityI18n = () => {
     
     // Screen reader announcements with cultural context
     announceWithContext: (message: string) => {
-      const culturalPrefix = culturalContext.preferredCommunicationStyle === "formal";
+      const culturalPrefix = culturalContext.preferredCommunicationStyle === "formal";;
         ? t("accessibility.formal_announcement_prefix", { defaultValue: "" })
         : "";
-      return culturalPrefix + message;
-    },
+      return culturalPrefix + message
+  },
     
     // RTL-aware aria labels
     getAriaLabel: (key: string, options?: any) => {
       const label = t("accessibility." + key, options);
-      return culturalContext.rtl ? label + " (من اليمين إلى اليسار)" : label;
-    },
+      return culturalContext.rtl ? label + " (من اليمين إلى اليسار)" : label
+  },
     
     // Crisis-specific accessibility announcements
     announceCrisis: (key: string) => {
       const message = getCrisisTranslation(key);
       const urgencyPrefix = t("accessibility.crisis_announcement_prefix", {
-        defaultValue: "Important";
-      };
+        defaultValue: "Important"
   };
-      return urgencyPrefix + message;
-    }
+  };
+      return urgencyPrefix + message
+  }
   };
 }
 

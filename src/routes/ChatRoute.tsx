@@ -23,10 +23,10 @@ const ChatRoute: React.FC = () => {
         isTyping: false,
         perspective: 'seeker',
         helpSessionId: undefined,
-        helper: undefined;
-      };
-      setSession(defaultSession);
-    }
+        helper: undefined
+  };
+      setSession(defaultSession)
+  }
   };
   }, [user, session]);
 
@@ -50,10 +50,10 @@ const ChatRoute: React.FC = () => {
         summary: undefined,
         summaryLoading: false,
         moderation: undefined,
-        aiMatchReason: undefined;
-      };
-      setDilemma(defaultDilemma);
-    }
+        aiMatchReason: undefined
+  };
+      setDilemma(defaultDilemma)
+  }
   };
   }, [dilemma, user]);
 
@@ -64,7 +64,7 @@ const ChatRoute: React.FC = () => {
   };
 
   if (!session || !dilemma) {
-    return <div>Loading chat...</div>;
+    return <div>Loading chat...</div>
   }
 
   return (
@@ -73,7 +73,7 @@ const ChatRoute: React.FC = () => {
       dilemma={dilemma}
       onViewHelperProfile={handleViewHelperProfile}
     />
-  );
-};
+  )
+  };
 
 export default ChatRoute;

@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 
 const Custom404Page: React.FC = () => {
   const handleGoBack = () => {
-    window.history.back();
+    window.history.back()
   };
 
-  const suggestions = [;
+  const suggestions = [;;
     { path: '/', label: 'Return to Home', icon: '🏠' },
     { path: '/wellness', label: 'Wellness Resources', icon: '🌱' },
     { path: '/chat', label: 'Chat Support', icon: '💬' },
@@ -90,16 +90,15 @@ const Custom404Page: React.FC = () => {
               Or search for what you need:
             </h3>
             
-            <form; 
-              className="search-form" 
+            <form className="search-form" 
               onSubmit={(e) => {
                 e.preventDefault();
                 const formData = new FormData(e.currentTarget);
                 const query = formData.get('search') as string;
                 if (query.trim()) {
                   // Navigate to search results or homepage with query
-                  window.location.href = `/?search=${encodeURIComponent(query)}`;
-                }
+                  window.location.href = `/?search=${encodeURIComponent(query)}`
+  }
               }}
             >
               <div className="search-input-group">
@@ -114,8 +113,7 @@ const Custom404Page: React.FC = () => {
                   className="search-input"
                   aria-describedby="search-help"
                 />
-                <button; 
-                  type="submit"; 
+                <button type="submit"; 
                   className="search-btn"
                   aria-label="Search"
                 >
@@ -178,7 +176,7 @@ const Custom404Page: React.FC = () => {
         Page not found. You are now on the 404 error page. Use the navigation links or search to find what you&apos;re looking for.
       </div>
     </main>
-  );
-};
+  )
+  };
 
 export default Custom404Page;

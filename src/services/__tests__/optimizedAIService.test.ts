@@ -8,13 +8,13 @@ jest.mock('../enhancedCrisisKeywordDetectionService', () => ({
       overallSeverity: 'low',
       riskAssessment: {
         immediateRisk: 0.2,
-        confidenceScore: 50;
-      },
+        confidenceScore: 50
+  },
       keywordMatches: [],
       interventionRecommendations: [],
       escalationRequired: false,
-      emergencyServicesRequired: false;
-    })
+      emergencyServicesRequired: false
+  })
   }
 }));
 
@@ -22,8 +22,8 @@ jest.mock('../crisisEscalationWorkflowService', () => ({
   crisisEscalationWorkflowService: {
     initiateEscalation: jest.fn().mockResolvedValue({
       escalated: false,
-      level: 'none';
-    })
+      level: 'none'
+  })
   }
 }));
 
@@ -31,25 +31,25 @@ jest.mock('../crisisEscalationWorkflowService', () => ({
 jest.mock('@tensorflow/tfjs-core', () => ({
   ready: jest.fn().mockResolvedValue(undefined),
   tensor: jest.fn(),
-  dispose: jest.fn();
-}));
+  dispose: jest.fn()
+  }));
 
 // Mock window.requestIdleCallback
 global.requestIdleCallback = jest.fn((callback) => {
   callback({ didTimeout: false, timeRemaining: () => 50 });
-  return 1;
-});
+  return 1
+  });
 
 // Mock Response for caching tests
 global.Response = jest.fn((body: any) => ({
-  json: () => Promise.resolve(JSON.parse(body));
-})) as any;
+  json: () => Promise.resolve(JSON.parse(body))
+  })) as any;
 
 // Mock caches API
 global.caches = {
   open: jest.fn().mockResolvedValue({
     put: jest.fn().mockResolvedValue(undefined),
-    match: jest.fn().mockResolvedValue(null);
+    match: jest.fn().mockResolvedValue(null)
   })
 } as any;
 
@@ -58,7 +58,7 @@ describe('AIServiceManager', () => {
 
   beforeEach(() => {
     service = aiServiceManager;
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   describe('getCrisisDetectionService', () => {
@@ -66,8 +66,8 @@ describe('AIServiceManager', () => {
       const crisisService = await service.getCrisisDetectionService(true);
       
       expect(crisisService).toBeDefined();
-      expect(crisisService).toHaveProperty('analyze');
-    });
+      expect(crisisService).toHaveProperty('analyze')
+  });
 
     it.skip('should analyze text for crisis indicators', async () => {
       const { enhancedCrisisKeywordDetectionService } = require('../enhancedCrisisKeywordDetectionService');
@@ -76,28 +76,28 @@ describe('AIServiceManager', () => {
         overallSeverity: 'high',
         riskAssessment: {
           immediateRisk: 0.9,
-          confidenceScore: 90;
-        },
+          confidenceScore: 90
+  },
         keywordMatches: ['suicide', 'end it'],
         interventionRecommendations: ['Immediate intervention required'],
         escalationRequired: true,
-        emergencyServicesRequired: false;
-      });
+        emergencyServicesRequired: false
+  });
 
       const crisisService = await service.getCrisisDetectionService(true);
       const result = await crisisService.analyze('I want to end it all');
       
       expect(enhancedCrisisKeywordDetectionService.analyzeEnhancedCrisisKeywords).toHaveBeenCalledWith('I want to end it all');
       expect(result).toHaveProperty('isCrisis', true);
-      expect(result).toHaveProperty('severity', 'high');
-    });
+      expect(result).toHaveProperty('severity', 'high')
+  });
 
     it.skip('should use basic detection when useAdvanced is false', async () => {
       const crisisService = await service.getCrisisDetectionService(false);
       
       expect(crisisService).toBeDefined();
-      expect(crisisService).toHaveProperty('analyze');
-    });
+      expect(crisisService).toHaveProperty('analyze')
+  });
 
     it.skip('should handle errors in enhanced crisis detection', async () => {
       const { enhancedCrisisKeywordDetectionService } = require('../enhancedCrisisKeywordDetectionService');
@@ -108,8 +108,8 @@ describe('AIServiceManager', () => {
       
       // Should fall back to basic analysis
       expect(result).toBeDefined();
-      expect(result).toHaveProperty('isCrisis');
-    });
+      expect(result).toHaveProperty('isCrisis')
+  });
 
     it.skip('should cache the service instance', async () => {
       const service1 = await service.getCrisisDetectionService(true);
@@ -117,8 +117,8 @@ describe('AIServiceManager', () => {
       
       // Should return the same cached instance
       expect(service1).toBeDefined();
-      expect(service2).toBeDefined();
-    });
+      expect(service2).toBeDefined()
+  })
   });
 
   describe('getAdvancedAIService', () => {
@@ -131,8 +131,8 @@ describe('AIServiceManager', () => {
       await expect(service.getAdvancedAIService()).rejects.toThrow('Advanced AI features not available on this device');
       
       // Restore original function
-      progressiveAIEnhancement.shouldEnableAI = originalShouldEnableAI;
-    });
+      progressiveAIEnhancement.shouldEnableAI = originalShouldEnableAI
+  });
 
     it.skip('should return advanced AI service when available', async () => {
       // Import progressiveAIEnhancement and mock it;
@@ -144,12 +144,12 @@ describe('AIServiceManager', () => {
       const tfMock = require('@tensorflow/tfjs-core');
       tfMock.ready.mockResolvedValue(undefined);
       tfMock.tensor1d = jest.fn().mockReturnValue({
-        dispose: jest.fn();
-      });
+        dispose: jest.fn()
+  });
       tfMock.div = jest.fn().mockReturnValue({
         data: jest.fn().mockResolvedValue([1, 2, 3]),
-        dispose: jest.fn();
-      });
+        dispose: jest.fn()
+  });
       tfMock.max = jest.fn().mockReturnValue(3);
 
       const result = await service.getAdvancedAIService();
@@ -159,8 +159,8 @@ describe('AIServiceManager', () => {
       expect(typeof result.analyzeComplexPatterns).toBe('function');
       
       // Restore original function
-      progressiveAIEnhancement.shouldEnableAI = originalShouldEnableAI;
-    });
+      progressiveAIEnhancement.shouldEnableAI = originalShouldEnableAI
+  })
   });
 
   describe('preloadCriticalServices', () => {
@@ -173,8 +173,8 @@ describe('AIServiceManager', () => {
       expect(global.requestIdleCallback).toHaveBeenCalled();
       
       // The callback should have been executed synchronously in our mock
-      expect(mockGetCrisisDetectionService).toHaveBeenCalledWith(true);
-    });
+      expect(mockGetCrisisDetectionService).toHaveBeenCalledWith(true)
+  });
 
     it.skip('should handle preload failures gracefully', async () => {
       const mockGetCrisisDetectionService = jest.spyOn(service, 'getCrisisDetectionService');
@@ -189,19 +189,19 @@ describe('AIServiceManager', () => {
       
       expect(consoleDebugSpy).toHaveBeenCalledWith('Preload failed for AI services:', expect.any(Error));
       consoleDebugSpy.mockRestore();
-      mockGetCrisisDetectionService.mockRestore();
-    });
+      mockGetCrisisDetectionService.mockRestore()
+  });
 
     it.skip('should not crash when requestIdleCallback is not available', () => {
       const originalRequestIdleCallback = global.requestIdleCallback;
       delete (global as any).requestIdleCallback;
 
       expect(() => {
-        service.preloadCriticalServices();
-      }).not.toThrow();
+        service.preloadCriticalServices()
+  }).not.toThrow();
 
-      global.requestIdleCallback = originalRequestIdleCallback;
-    });
+      global.requestIdleCallback = originalRequestIdleCallback
+  })
   });
 
   describe('lazyLoader through createLazyAIService', () => {
@@ -216,8 +216,8 @@ describe('AIServiceManager', () => {
       
       // TensorFlow mock should be loaded
       expect(tfMock.ready).toHaveBeenCalled();
-      expect(tf).toBeDefined();
-    });
+      expect(tf).toBeDefined()
+  });
 
     it.skip('should handle TensorFlow loading failures', async () => {
       const { createLazyAIService } = require('../optimizedAIService');
@@ -233,8 +233,8 @@ describe('AIServiceManager', () => {
       expect(consoleWarnSpy).toHaveBeenCalledWith('Failed to load TensorFlow:', expect.any(Error));
       expect(tf).toBeNull();
       
-      consoleWarnSpy.mockRestore();
-    });
+      consoleWarnSpy.mockRestore()
+  });
 
     it.skip('should return null for Natural NLP (not installed)', async () => {
       const { createLazyAIService } = require('../optimizedAIService');
@@ -247,16 +247,16 @@ describe('AIServiceManager', () => {
       expect(consoleWarnSpy).toHaveBeenCalledWith('Natural NLP library not installed - using fallback');
       expect(nlp).toBeNull();
       
-      consoleWarnSpy.mockRestore();
-    });
+      consoleWarnSpy.mockRestore()
+  });
 
     it.skip('should return null for sentiment analysis (disabled)', async () => {
       const { createLazyAIService } = require('../optimizedAIService');
       const lazyService = createLazyAIService();
       
       const sentiment = await lazyService.loadSentimentAnalysis();
-      expect(sentiment).toBeNull();
-    });
+      expect(sentiment).toBeNull()
+  })
   });
 
   describe('service singleton behavior', () => {
@@ -264,8 +264,8 @@ describe('AIServiceManager', () => {
       const { aiServiceManager: instance1 } = require('../optimizedAIService');
       const { aiServiceManager: instance2 } = require('../optimizedAIService');
       
-      expect(instance1).toBe(instance2);
-    });
+      expect(instance1).toBe(instance2)
+  });
 
     it.skip('should maintain state across method calls', async () => {
       // First call should create the service;
@@ -282,7 +282,7 @@ describe('AIServiceManager', () => {
       expect(result2).toBeDefined();
       
       // Services object should be the same
-      expect((service as any).services).toBe(originalServices);
-    });
+      expect((service as any).services).toBe(originalServices)
+  })
+  })
   });
-});

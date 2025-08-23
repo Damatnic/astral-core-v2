@@ -10,8 +10,8 @@ interface SafetyPlanData {
   safeEnvironment: string[];
   reasonsToLive: string[];
   emergencyContacts: Array<{ name: string; number: string }>;
-  lastUpdated: string;
-}
+  lastUpdated: string
+  }
 
 const DEFAULT_PLAN: SafetyPlanData = {
   warningSignals: [],
@@ -25,13 +25,13 @@ const DEFAULT_PLAN: SafetyPlanData = {
     { name: '988 Suicide & Crisis Lifeline', number: '988' },
     { name: 'Emergency Services', number: '911' }
   ],
-  lastUpdated: new Date().toISOString();
-};
+  lastUpdated: new Date().toISOString()
+  };
 
 interface SafetyPlanBuilderProps {
   onSave?: (plan: SafetyPlanData) => void;
-  initialPlan?: SafetyPlanData;
-}
+  initialPlan?: SafetyPlanData
+  }
 
 export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({ 
   onSave,
@@ -48,15 +48,15 @@ export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({
     if (savedPlan && !initialPlan) {
       try {
         setPlan(JSON.parse(savedPlan));
-        setIsEditing(false);
-      } catch (error) {
-        console.error('Error loading saved plan:', error);
-      }
+        setIsEditing(false)
+  } catch (error) {
+        console.error('Error loading saved plan:', error)
+  }
     }
   };
   }, [initialPlan]);
 
-  const steps = [;
+  const steps = [;;
     {
       title: 'Warning Signals',
       key: 'warningSignals',
@@ -104,8 +104,8 @@ export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({
         'Add their contact information',
         'Consider their availability'
       ],
-      isComplex: true;
-    },
+      isComplex: true
+  },
     {
       title: 'Professional Contacts',
       key: 'professionals',
@@ -117,8 +117,8 @@ export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({
         'Add crisis hotline numbers',
         'Include after-hours contacts'
       ],
-      isComplex: true;
-    },
+      isComplex: true
+  },
     {
       title: 'Safe Environment',
       key: 'safeEnvironment',
@@ -151,7 +151,7 @@ export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({
     setPlan(updatedPlan);
     localStorage.setItem('safetyPlan', JSON.stringify(updatedPlan));
     if (onSave) onSave(updatedPlan);
-    setIsEditing(false);
+    setIsEditing(false)
   };
 
   const handleAddItem = (key: string, value: string) => {
@@ -160,28 +160,28 @@ export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({
     setPlan(prev => ({
       ...prev,
       [key]: [...(prev[key as keyof SafetyPlanData] as string[]), value]
-    }));
+    }))
   };
 
   const handleRemoveItem = (key: string, index: number) => {
     setPlan(prev => ({
       ...prev,
       [key]: (prev[key as keyof SafetyPlanData] as string[]).filter((_, i) => i !== index)
-    }));
+    }))
   };
 
   const handleAddContact = (key: 'supportPeople' | 'professionals', contact: any) => {
     setPlan(prev => ({
       ...prev,
       [key]: [...prev[key], contact]
-    }));
+    }))
   };
 
   const handleRemoveContact = (key: 'supportPeople' | 'professionals', index: number) => {
     setPlan(prev => ({
       ...prev,
       [key]: prev[key].filter((_, i) => i !== index)
-    }));
+    }))
   };
 
   const exportPlan = () => {
@@ -193,21 +193,21 @@ export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({
     const linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
     linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
+    linkElement.click()
   };
 
   const printPlan = () => {
     setShowPrintView(true);
     setTimeout(() => {
       window.print();
-      setShowPrintView(false);
-    }, 100);
+      setShowPrintView(false)
+  }, 100)
   };
 
   const currentStepData = steps[currentStep];
 
   if (showPrintView) {
-    return <PrintView plan={plan} steps={steps} />;
+    return <PrintView plan={plan} steps={steps} />
   }
 
   if (!isEditing) {
@@ -261,8 +261,8 @@ export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({
                   </ul>
                 )}
               </div>
-            );
-          })}
+            )
+  })}
 
           <div className="emergency-section">
             <h3>🚨 Emergency Contacts</h3>
@@ -277,7 +277,7 @@ export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -331,8 +331,7 @@ export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({
         )}
 
         <div className="navigation">
-          <button;
-            className="nav-btn prev"
+          <button className="nav-btn prev"
             onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
             disabled={currentStep === 0}
           >
@@ -344,8 +343,7 @@ export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({
               💾 Save Plan
             </button>
           ) : (
-            <button;
-              className="nav-btn next"
+            <button className="nav-btn next"
               onClick={() => setCurrentStep(Math.min(steps.length - 1, currentStep + 1))}
             >
               Next →
@@ -354,30 +352,29 @@ export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 // Simple Input Component;
 const SimpleInput: React.FC<{
   items: string[];
   placeholder: string;
   onAdd: (value: string) => void;
-  onRemove: (index: number) => void;
-}> = ({ items, placeholder, onAdd, onRemove }) => {
+  onRemove: (index: number) => void
+  }> = ({ items, placeholder, onAdd, onRemove }) => {
   const [inputValue, setInputValue] = useState('');
 
   const handleAdd = () => {
     if (inputValue.trim()) {
       onAdd(inputValue);
-      setInputValue('');
-    }
+      setInputValue('')
+  }
   };
 
   return (
     <div className="input-section">
       <div className="input-group">
-        <input;
-          type="text"
+        <input type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder={placeholder}
@@ -395,49 +392,46 @@ const SimpleInput: React.FC<{
         ))}
       </div>
     </div>
-  );
-};
+  )
+  };
 
 // Complex Input Component for contacts;
 const ComplexInput: React.FC<{
   stepKey: 'supportPeople' | 'professionals';
   items: unknown[];
   onAdd: (item: unknown) => void;
-  onRemove: (index: number) => void;
-}> = ({ stepKey, items, onAdd, onRemove }) => {
+  onRemove: (index: number) => void
+  }> = ({ stepKey, items, onAdd, onRemove }) => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [extra, setExtra] = useState('');
 
   const handleAdd = () => {
     if (name.trim() && phone.trim()) {
-      const newItem = stepKey === 'supportPeople';
+      const newItem = stepKey === 'supportPeople';;
         ? { name, phone, relationship: extra }
         : { name, phone, role: extra };
       onAdd(newItem);
       setName('');
       setPhone('');
-      setExtra('');
-    }
+      setExtra('')
+  }
   };
 
   return (
     <div className="complex-input-section">
       <div className="complex-input-group">
-        <input;
-          type="text"
+        <input type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Name"
         />
-        <input;
-          type="tel"
+        <input type="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           placeholder="Phone number"
         />
-        <input;
-          type="text"
+        <input type="text"
           value={extra}
           onChange={(e) => setExtra(e.target.value)}
           placeholder={stepKey === 'supportPeople' ? 'Relationship' : 'Role/Title'}
@@ -458,8 +452,8 @@ const ComplexInput: React.FC<{
         ))}
       </div>
     </div>
-  );
-};
+  )
+  };
 
 // Print View Component;
 const PrintView: React.FC<{ plan: SafetyPlanData; steps: any[] }> = ({ plan, steps }) => {
@@ -491,8 +485,8 @@ const PrintView: React.FC<{ plan: SafetyPlanData; steps: any[] }> = ({ plan, ste
               </ul>
             )}
           </div>
-        );
-      })}
+        )
+  })}
 
       <div className="print-emergency">
         <h2>🚨 Emergency Contacts</h2>
@@ -503,7 +497,7 @@ const PrintView: React.FC<{ plan: SafetyPlanData; steps: any[] }> = ({ plan, ste
         ))}
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export default SafetyPlanBuilder;

@@ -5,8 +5,8 @@ interface AIAssistanceIndicatorProps {
   className?: string;
   style?: React.CSSProperties;
   message?: string;
-  variant?: 'default' | 'compact' | 'minimal';
-}
+  variant?: 'default' | 'compact' | 'minimal'
+  }
 
 export const AIAssistanceIndicator: React.FC<AIAssistanceIndicatorProps> = ({
   isActive = true,
@@ -19,7 +19,7 @@ export const AIAssistanceIndicator: React.FC<AIAssistanceIndicatorProps> = ({
   const variantClass = variant !== 'default' ? `ai-assistance-indicator-${variant}` : '';
   const activeClass = isActive ? 'ai-assistance-active' : 'ai-assistance-inactive';
 
-  const classes = [;
+  const classes = [;;
     baseClass,
     variantClass,
     activeClass,
@@ -27,8 +27,7 @@ export const AIAssistanceIndicator: React.FC<AIAssistanceIndicatorProps> = ({
   ].filter(Boolean).join(' ');
 
   return (
-    <div;
-      className={classes}
+    <div className={classes}
       style={style}
       role="status"
       aria-live="polite"
@@ -43,5 +42,5 @@ export const AIAssistanceIndicator: React.FC<AIAssistanceIndicatorProps> = ({
         </span>
       )}
     </div>
-  );
-};
+  )
+  };

@@ -45,8 +45,8 @@ export interface AutoSaveTextEditorProps {
   /** Minimum height for content area */
   minHeight?: number;
   /** Maximum height for content area */
-  maxHeight?: number;
-}
+  maxHeight?: number
+  }
 
 /**
  * Enhanced text editor with auto-save functionality
@@ -82,13 +82,13 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
   const autoSave = useAutoSave(draftId, initialContent, initialTitle, {
     saveInterval,
     onSaveSuccess: (draft) => {
-      onDraftSaved?.(draft.content, draft.title || '');
-    },
+      onDraftSaved?.(draft.content, draft.title || '')
+  },
     onDraftLoaded: (draft) => {
       setContent(draft.content);
       setTitle(draft.title || '');
-      onDraftLoaded?.(draft.content, draft.title || '');
-    }
+      onDraftLoaded?.(draft.content, draft.title || '')
+  }
   });
   
   const [content, setContent] = useState(initialContent);
@@ -97,7 +97,7 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
   
   // Update auto-save when enabled state changes
   useEffect(() => {
-    autoSave.setEnabled(enableAutoSave);
+    autoSave.setEnabled(enableAutoSave)
   };
   }, [enableAutoSave, autoSave]);
   
@@ -109,12 +109,12 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
     
     // Enforce character limit
     if (maxCharacters && newContent.length > maxCharacters) {
-      return;
-    }
+      return
+  }
     
     setContent(newContent);
     autoSave.updateContent(newContent);
-    onContentChange?.(newContent);
+    onContentChange?.(newContent)
   };
   
   /**
@@ -125,14 +125,14 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
     
     setTitle(newTitle);
     autoSave.updateTitle(newTitle);
-    onTitleChange?.(newTitle);
+    onTitleChange?.(newTitle)
   };
   
   /**
    * Get character count
    */;
   const getCharCount = (): number => {
-    return content.length;
+    return content.length
   };
   
   /**
@@ -140,14 +140,14 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
    */;
   const getWordCount = (): number => {
     if (!content.trim()) return 0;
-    return content.trim().split(/\s+/).length;
+    return content.trim().split(/\s+/).length
   };
   
   /**
    * Get remaining characters
    */;
   const getRemainingChars = (): number => {
-    return maxCharacters ? maxCharacters - content.length : 0;
+    return maxCharacters ? maxCharacters - content.length : 0
   };
   
   /**
@@ -160,12 +160,12 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
     const isNearCharLimit = content.length > maxCharacters * 0.9;
     
     if (isAtCharLimit) {
-      return 'auto-save-text-editor__char-count--at-limit';
-    }
+      return 'auto-save-text-editor__char-count--at-limit'
+  }
     if (isNearCharLimit) {
-      return 'auto-save-text-editor__char-count--near-limit';
-    }
-    return '';
+      return 'auto-save-text-editor__char-count--near-limit'
+  }
+    return ''
   };
   
   /**
@@ -177,37 +177,37 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
     // Ctrl/Cmd + S to save
     if ((event.ctrlKey || event.metaKey) && event.key === 's') {
       event.preventDefault();
-      autoSave.saveDraft();
-    }
+      autoSave.saveDraft()
+  }
     
     // Ctrl/Cmd + N to create new draft
     if ((event.ctrlKey || event.metaKey) && event.key === 'n') {
       event.preventDefault();
       autoSave.createNewDraft();
       setContent('');
-      setTitle('');
-    }
+      setTitle('')
+  }
   };
   
   /**
    * Handle focus events
    */;
   const handleFocus = () => {
-    setIsFocused(true);
+    setIsFocused(true)
   };
   
   const handleBlur = () => {
-    setIsFocused(false);
+    setIsFocused(false)
   };
   
   /**
    * Manual save handler
    */;
   const handleManualSave = () => {
-    autoSave.saveDraft();
+    autoSave.saveDraft()
   };
   
-  const editorClasses = [;
+  const editorClasses = [;;
     'auto-save-text-editor',
     isFocused && 'auto-save-text-editor--focused',
     disabled && 'auto-save-text-editor--disabled',
@@ -271,8 +271,7 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
             )}
             
             {showCharCount && (
-              <span; 
-                className={`auto-save-text-editor__char-count ${getCharCountClass()}`}
+              <span className={`auto-save-text-editor__char-count ${getCharCountClass()}`}
               >
                 {getCharCount()}
                 {maxCharacters ? ` / ${maxCharacters}` : ''}
@@ -289,8 +288,7 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
       </div>
       
       <div className="auto-save-text-editor__actions">
-        <button;
-          type="button"
+        <button type="button"
           onClick={handleManualSave}
           disabled={disabled || !autoSave.state.isDirty || autoSave.state.isSaving}
           className="auto-save-text-editor__save-button"
@@ -316,7 +314,7 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
         />
       )}
     </div>
-  );
-};
+  )
+  };
 
 export default AutoSaveTextEditor;

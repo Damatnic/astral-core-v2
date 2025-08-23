@@ -18,8 +18,8 @@ interface ResponsiveNavigationProps {
   onLogout: () => void;
   onlineHelperCount: number;
   userToken: string | null;
-  helperProfile: Helper | null;
-}
+  helperProfile: Helper | null
+  }
 
 export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.memo(({
   activeView,
@@ -41,8 +41,8 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
   useEffect(() => {
     if (!isMobile && isSidebarOpen) {
       // Close mobile sidebar when switching to desktop
-      closeSidebar();
-    }
+      closeSidebar()
+  }
   };
   }, [isMobile, isSidebarOpen, closeSidebar]);
 
@@ -53,12 +53,12 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isSidebarOpen) {
         closeSidebar();
-        hamburgerRef.current?.focus();
-      }
+        hamburgerRef.current?.focus()
+  }
     };
 
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown)
   };
   }, [isMobile, isSidebarOpen, closeSidebar]);
 
@@ -68,9 +68,9 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
       // Focus first interactive element in sidebar for mobile
       setTimeout(() => {
         const firstButton = sidebarRef.current?.querySelector('button, a[href]');
-        (firstButton as HTMLElement)?.focus();
-      }, 100);
-    }
+        (firstButton as HTMLElement)?.focus()
+  }, 100)
+  }
   };
   }, [isMobile, isSidebarOpen, isTransitioning]);
 
@@ -88,8 +88,8 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
         document.body.style.top = '';
         document.body.style.width = '';
         document.body.style.overflow = '';
-        window.scrollTo(0, scrollY);
-      }
+        window.scrollTo(0, scrollY)
+  }
   };
   }, [isMobile, isSidebarOpen]);
 
@@ -103,14 +103,14 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
       // Return focus to hamburger menu for keyboard users
       setTimeout(() => {
         hamburgerRef.current?.focus();
-        setIsTransitioning(false);
-      }, 300);
-    }
+        setIsTransitioning(false)
+  }, 300)
+  }
   };
 
   const handleOverlayClick = () => {
     closeSidebar();
-    hamburgerRef.current?.focus();
+    hamburgerRef.current?.focus()
   };
 
   const renderSidebarContent = () => {
@@ -128,10 +128,10 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
           {...props}
           helperProfile={helperProfile}
         />
-      );
-    }
+      )
+  }
     
-    return <SeekerSidebar {...props} />;
+    return <SeekerSidebar {...props} />
   };
 
   // Mobile Navigation
@@ -157,8 +157,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
           {/* Quick action buttons for mobile */}
           <div className="mobile-header-actions">
             {isAuthenticated && (
-              <button;
-                className="crisis-quick-access"
+              <button className="crisis-quick-access"
                 onClick={() => handleSidebarNavigation({ view: 'crisis' })}
                 aria-label="Crisis support"
               >
@@ -170,8 +169,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
 
         {/* Mobile Sidebar Overlay */}
         {isSidebarOpen && (
-          <button;
-            className="sidebar-overlay"
+          <button className="sidebar-overlay"
             onClick={handleOverlayClick}
             aria-label="Close navigation menu"
             tabIndex={-1}
@@ -188,8 +186,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
         >
           <div className="mobile-sidebar-header">
             <h2 className="mobile-sidebar-title">Menu</h2>
-            <button;
-              className="mobile-sidebar-close touch-optimized"
+            <button className="mobile-sidebar-close touch-optimized"
               onClick={closeSidebar}
               aria-label="Close navigation menu";
               type="button"
@@ -203,7 +200,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
           </nav>
         </aside>
       </>
-    );
+    )
   }
 
   // Tablet Navigation (collapsible sidebar)
@@ -214,8 +211,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
         className={`tablet-sidebar ${isSidebarOpen ? 'expanded' : 'collapsed'}`}
         role="navigation"
       >
-        <button;
-          className="tablet-sidebar-toggle"
+        <button className="tablet-sidebar-toggle"
           onClick={() => isSidebarOpen ? closeSidebar() : openSidebar()}
           aria-label={isSidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
           aria-expanded={isSidebarOpen}
@@ -227,7 +223,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
           {renderSidebarContent()}
         </div>
       </aside>
-    );
+    )
   }
 
   // Desktop Navigation (always visible sidebar)
@@ -252,8 +248,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
           {onlineHelperCount} helpers online
         </p>
         {isAuthenticated && (
-          <button;
-            className="sidebar-logout"
+          <button className="sidebar-logout"
             onClick={onLogout}
             aria-label="Logout"
           >
@@ -262,8 +257,8 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
         )}
       </div>
     </aside>
-  );
-});
+  )
+  });
 
 ResponsiveNavigation.displayName = 'ResponsiveNavigation';
 

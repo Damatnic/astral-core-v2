@@ -19,14 +19,14 @@ interface ChatSession {
   messages: AIChatMessage[];
   summary?: string;
   tags?: string[];
-  crisisFlags?: number;
-}
+  crisisFlags?: number
+  }
 
 interface AIChatHistoryProps {
   userId: string;
   onSelectSession?: (session: ChatSession) => void;
-  onDeleteSession?: (sessionId: string) => void;
-}
+  onDeleteSession?: (sessionId: string) => void
+  }
 
 export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
   userId,
@@ -41,12 +41,12 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   
   useEffect(() => {
-    loadSessions();
+    loadSessions()
   };
   }, [userId]);
   
   useEffect(() => {
-    filterSessions();
+    filterSessions()
   };
   }, [sessions, searchQuery, filterTag]);
   
@@ -57,7 +57,7 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
       const storedSessions = localStorage.getItem(`chat_sessions_${userId}`);
       if (storedSessions) {
         const parsed = JSON.parse(storedSessions);
-        setSessions(parsed);;
+        setSessions(parsed)
   } else {
         // Create demo sessions;
         const demoSessions: ChatSession[] = [
@@ -71,19 +71,19 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
                 id: '1',
                 sender: 'user',
                 text: "I've been feeling anxious lately",
-                timestamp: new Date(Date.now() - 86400000).toISOString();
-              },
+                timestamp: new Date(Date.now() - 86400000).toISOString()
+  },
               {
                 id: '2',
                 sender: 'ai',
                 text: "I understand that anxiety can be really challenging. Would you like to talk about what's been causing these feelings?",
-                timestamp: new Date(Date.now() - 86300000).toISOString();
-              }
+                timestamp: new Date(Date.now() - 86300000).toISOString()
+  }
             ],
             summary: 'Discussion about anxiety management',
             tags: ['anxiety', 'coping'],
-            crisisFlags: 0;
-          },
+            crisisFlags: 0
+  },
           {
             id: 'session-2',
             userId,
@@ -94,28 +94,28 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
                 id: '3',
                 sender: 'user',
                 text: "I need help with stress management",
-                timestamp: new Date(Date.now() - 172800000).toISOString();
-              },
+                timestamp: new Date(Date.now() - 172800000).toISOString()
+  },
               {
                 id: '4',
                 sender: 'ai',
                 text: "I'm here to help you with stress management. Let's explore some techniques that might work for you.",
-                timestamp: new Date(Date.now() - 172700000).toISOString();
-              }
+                timestamp: new Date(Date.now() - 172700000).toISOString()
+  }
             ],
             summary: 'Stress management techniques',
             tags: ['stress', 'mindfulness'],
-            crisisFlags: 0;
-          }
+            crisisFlags: 0
+  }
         ];
-        setSessions(demoSessions);
-      }
+        setSessions(demoSessions)
+  }
     } catch (error) {
       console.error('Failed to load chat sessions:', error);
-      setSessions([]);
-    } finally {
-      setIsLoading(false);
-    }
+      setSessions([])
+  } finally {
+      setIsLoading(false)
+  }
   };
   
   const filterSessions = () => {
@@ -130,35 +130,35 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
         ) ||
         session.summary?.toLowerCase().includes(query) ||
         session.tags?.some(tag => tag.toLowerCase().includes(query))
-      );
-    }
+      )
+  }
     
     // Tag filter
     if (filterTag) {
       filtered = filtered.filter(session => 
         session.tags?.includes(filterTag)
-      );
-    }
+      )
+  }
     
     // Sort by most recent
     filtered.sort((a, b) => 
       new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
     );
     
-    setFilteredSessions(filtered);
+    setFilteredSessions(filtered)
   };
   
   const handleSelectSession = (session: ChatSession) => {
     setSelectedSessionId(session.id);
-    onSelectSession?.(session);
+    onSelectSession?.(session)
   };
   
   const handleDeleteSession = async (sessionId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     
     if (!window.confirm('Are you sure you want to delete this conversation?')) {
-      return;
-    }
+      return
+  }
     
     try {
       // Remove from state;
@@ -168,10 +168,10 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
       // Update localStorage
       localStorage.setItem(`chat_sessions_${userId}`, JSON.stringify(updatedSessions));
       
-      onDeleteSession?.(sessionId);
-    } catch (error) {
-      console.error('Failed to delete session:', error);
-    }
+      onDeleteSession?.(sessionId)
+  } catch (error) {
+      console.error('Failed to delete session:', error)
+  }
   };
   
   const exportSession = (session: ChatSession, e: React.MouseEvent) => {
@@ -183,28 +183,28 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
         startTime: session.startTime,
         endTime: session.endTime,
         summary: session.summary,
-        tags: session.tags;
-      },
-      messages: session.messages;
-    };
+        tags: session.tags
+  },
+      messages: session.messages
+  };
     
     const blob = new Blob([JSON.stringify(content, null, 2)], { 
-      type: 'application/json' ;
-    });
+      type: 'application/json'
+  });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = `chat-session-${session.id}.json`;
     a.click();
-    URL.revokeObjectURL(url);
+    URL.revokeObjectURL(url)
   };
   
   const getAllTags = (): string[] => {
     const tagSet = new Set<string>();
     sessions.forEach(session => {
-      session.tags?.forEach(tag => tagSet.add(tag));
-    });
-    return Array.from(tagSet);
+      session.tags?.forEach(tag => tagSet.add(tag))
+  });
+    return Array.from(tagSet)
   };
   
   if (isLoading) {
@@ -213,7 +213,7 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
         <div className="history-loading-spinner"></div>
         <p>Loading conversation history...</p>
       </div>
-    );
+    )
   }
   
   return (
@@ -228,8 +228,7 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
       <div className="history-controls">
         <div className="history-search">
           <SearchIcon />
-          <input;
-            type="text"
+          <input type="text"
             placeholder="Search conversations..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -255,12 +254,11 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
           <HistoryIcon />
           <p>No conversations found</p>
           {searchQuery || filterTag ? (
-            <button; 
-              className="clear-filters-btn"
+            <button className="clear-filters-btn"
               onClick={() => {
                 setSearchQuery('');
-                setFilterTag(null);
-              }}
+                setFilterTag(null)
+  }}
             >
               Clear filters
             </button>
@@ -286,15 +284,13 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
                   )}
                 </div>
                 <div className="session-actions">
-                  <button; 
-                    className="session-action-btn"
+                  <button className="session-action-btn"
                     onClick={(e) => exportSession(session, e)}
                     aria-label="Export session"
                   >
                     <DownloadIcon />
                   </button>
-                  <button; 
-                    className="session-action-btn delete"
+                  <button className="session-action-btn delete"
                     onClick={(e) => handleDeleteSession(session.id, e)}
                     aria-label="Delete session"
                   >
@@ -342,7 +338,7 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 export default AIChatHistory;

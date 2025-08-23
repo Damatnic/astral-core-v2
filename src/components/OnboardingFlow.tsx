@@ -16,17 +16,17 @@ interface OnboardingStep {
   content: React.ReactNode;
   action?: {
     label: string;
-    onClick: () => void | Promise<void>;
+    onClick: () => void | Promise<void>
   };
   skipable?: boolean;
   validation?: () => boolean;
-  helpText?: string;
-}
+  helpText?: string
+  }
 
 interface OnboardingFlowProps {
   onComplete: () => void;
-  onSkip?: () => void;
-}
+  onSkip?: () => void
+  }
 
 const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   onComplete,
@@ -92,8 +92,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       content: (
         <div className="onboarding-role">
           <div className="role-options">
-            <button;
-              className={userPreferences.role === 'seeker' ? 'role-option selected' : 'role-option'}
+            <button className={userPreferences.role === 'seeker' ? 'role-option selected' : 'role-option'}
               onClick={() => setUserPreferences(prev => ({ ...prev, role: 'seeker' }))}
               aria-pressed={userPreferences.role === 'seeker'}
             >
@@ -101,8 +100,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               <h3>Seeker</h3>
               <p>Connect with peers and find support for your mental health journey</p>
             </button>
-            <button;
-              className={userPreferences.role === 'helper' ? 'role-option selected' : 'role-option'}
+            <button className={userPreferences.role === 'helper' ? 'role-option selected' : 'role-option'}
               onClick={() => setUserPreferences(prev => ({ ...prev, role: 'helper' }))}
               aria-pressed={userPreferences.role === 'helper'}
             >
@@ -110,8 +108,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               <h3>Helper</h3>
               <p>Provide support and share your experience to help others</p>
             </button>
-            <button;
-              className={userPreferences.role === 'both' ? 'role-option selected' : 'role-option'}
+            <button className={userPreferences.role === 'both' ? 'role-option selected' : 'role-option'}
               onClick={() => setUserPreferences(prev => ({ ...prev, role: 'both' }))}
               aria-pressed={userPreferences.role === 'both'}
             >
@@ -157,8 +154,8 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                     primaryConcerns: prev.primaryConcerns.includes(concern.id)
                       ? prev.primaryConcerns.filter(c => c !== concern.id)
                       : [...prev.primaryConcerns, concern.id],
-                  }));
-                }}
+                  }))
+  }}
                 aria-pressed={userPreferences.primaryConcerns.includes(concern.id)}
               >
                 <span className="concern-option__icon">{concern.icon}</span>
@@ -190,21 +187,20 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                   userPreferences.preferredSupport.includes(support.id) ? 'selected' : ''
                 }`}
               >
-                <input;
-                  type="checkbox"
+                <input type="checkbox"
                   checked={userPreferences.preferredSupport.includes(support.id)}
                   onChange={(e) => {
                     if (e.target.checked) {
                       setUserPreferences(prev => ({
                         ...prev,
                         preferredSupport: [...prev.preferredSupport, support.id],
-                      }));;
+                      }))
   } else {
                       setUserPreferences(prev => ({
                         ...prev,
                         preferredSupport: prev.preferredSupport.filter(s => s !== support.id),
-                      }));
-                    }
+                      }))
+  }
                   }}
                   aria-label={support.label}
                 />
@@ -246,8 +242,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
             <div className="safety-feature">
               <h3>🔔 Check-in Reminders</h3>
               <label className="toggle-option">
-                <input;
-                  type="checkbox"
+                <input type="checkbox"
                   checked={userPreferences.notifications}
                   onChange={(e) => setUserPreferences(prev => ({
                     ...prev,
@@ -259,8 +254,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
             </div>
             <div className="safety-feature">
               <h3>👤 Emergency Contact (Optional)</h3>
-              <input;
-                type="email"
+              <input type="email"
                 placeholder="Trusted contact email"
                 value={userPreferences.emergencyContact}
                 onChange={(e) => setUserPreferences(prev => ({
@@ -287,8 +281,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           <p>Choose how much potentially triggering content you're comfortable seeing:</p>
           <div className="comfort-levels">
             <label className="comfort-level">
-              <input;
-                type="radio"
+              <input type="radio"
                 name="comfort"
                 value="low"
                 checked={userPreferences.comfortLevel === 'low'}
@@ -300,8 +293,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               </div>
             </label>
             <label className="comfort-level">
-              <input;
-                type="radio"
+              <input type="radio"
                 name="comfort"
                 value="moderate"
                 checked={userPreferences.comfortLevel === 'moderate'}
@@ -313,8 +305,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               </div>
             </label>
             <label className="comfort-level">
-              <input;
-                type="radio"
+              <input type="radio"
                 name="comfort"
                 value="high"
                 checked={userPreferences.comfortLevel === 'high'}
@@ -378,8 +369,8 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       action: {
         label: 'Start Interactive Tour',
         onClick: async () => {
-          localStorage.setItem('show-interactive-tour', 'true');
-        },
+          localStorage.setItem('show-interactive-tour', 'true')
+  },
       },
       skipable: true,
     },
@@ -423,45 +414,45 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         type: 'warning',
         message: 'Please complete this step before continuing',
       });
-      return;
-    }
+      return
+  }
 
     if (currentStepData.action) {
       setIsLoading(true);
       try {
-        await currentStepData.action.onClick();
-      } catch (error) {
+        await currentStepData.action.onClick()
+  } catch (error) {
         showFeedback({
           type: 'error',
           message: 'An error occurred. Please try again.',
         });
         setIsLoading(false);
-        return;
-      }
-      setIsLoading(false);
-    }
+        return
+  }
+      setIsLoading(false)
+  }
 
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
-      announce(`Step ${currentStep + 2} of ${steps.length}: ${steps[currentStep + 1].title}`);;
+      announce(`Step ${currentStep + 2} of ${steps.length}: ${steps[currentStep + 1].title}`)
   } else {
-      await completeOnboarding();
-    }
+      await completeOnboarding()
+  }
   };
   }, [currentStep, currentStepData, steps, announce, showFeedback]);
 
   const goToPreviousStep = useCallback(() => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
-      announce(`Step ${currentStep} of ${steps.length}: ${steps[currentStep - 1].title}`);
-    }
+      announce(`Step ${currentStep} of ${steps.length}: ${steps[currentStep - 1].title}`)
+  }
   };
   }, [currentStep, steps, announce]);
 
   const skipCurrentStep = useCallback(() => {
     if (currentStepData.skipable) {
-      goToNextStep();
-    }
+      goToNextStep()
+  }
   };
   }, [currentStepData, goToNextStep]);
 
@@ -483,34 +474,34 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       // Navigate to dashboard
       setTimeout(() => {
         onComplete();
-        navigate('/dashboard');
-      }, 1500);
-    } catch (error) {
+        navigate('/dashboard')
+  }, 1500)
+  } catch (error) {
       showFeedback({
         type: 'error',
         message: 'Failed to save preferences',
         description: 'But you can continue to the app',
       });
-      onComplete();
-    } finally {
-      setIsLoading(false);
-    }
+      onComplete()
+  } finally {
+      setIsLoading(false)
+  }
   };
 
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight' || e.key === 'Enter') {
-        goToNextStep();;
+        goToNextStep()
   } else if (e.key === 'ArrowLeft') {
-        goToPreviousStep();;
+        goToPreviousStep()
   } else if (e.key === 'Escape' && onSkip) {
-        onSkip();
-      }
+        onSkip()
+  }
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown)
   };
   }, [goToNextStep, goToPreviousStep, onSkip]);
 
@@ -524,8 +515,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           showPercentage={false}
         />
         {onSkip && currentStep < steps.length - 1 && (
-          <button;
-            className="onboarding-skip"
+          <button className="onboarding-skip"
             onClick={onSkip}
             aria-label="Skip onboarding"
           >
@@ -551,8 +541,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
 
       <div className="onboarding-actions">
         {currentStep > 0 && (
-          <button;
-            className="onboarding-action onboarding-action--back"
+          <button className="onboarding-action onboarding-action--back"
             onClick={goToPreviousStep}
             disabled={isLoading}
             aria-label="Previous step"
@@ -563,8 +552,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         
         <div className="onboarding-actions__right">
           {currentStepData.skipable && (
-            <button;
-              className="onboarding-action onboarding-action--skip"
+            <button className="onboarding-action onboarding-action--skip"
               onClick={skipCurrentStep}
               disabled={isLoading}
             >
@@ -594,8 +582,8 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 // Heart Icon Component;
 const HeartIcon: React.FC<{ size?: number }> = ({ size = 48 }) => (

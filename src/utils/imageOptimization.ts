@@ -14,8 +14,8 @@ export interface ImageFormat {
   format: 'webp' | 'jpeg' | 'png';
   width: number;
   height: number;
-  quality?: number;
-}
+  quality?: number
+  }
 
 export interface OptimizedImage {
   id: string;
@@ -40,7 +40,7 @@ export interface ImageOptimizationConfig {
   quality: {
     webp: 85;
     jpeg: 80;
-    png: 95;
+    png: 95
   };
   
   // Lazy loading settings
@@ -66,14 +66,14 @@ export const defaultImageConfig: ImageOptimizationConfig = {
   quality: {
     webp: 85,
     jpeg: 80,
-    png: 95;
+    png: 95
   },
   lazyLoadingOffset: 100,
   cacheExpiry: 86400000,
   connectionThresholds: {
     slow: 1,
     medium: 5,
-    fast: Infinity;
+    fast: Infinity
   }
 };
 
@@ -90,7 +90,7 @@ export class ImageOptimizer {
     this.config = { ...defaultImageConfig, ...config };
     this.cache = new Map();
     this.initConnectionDetection();
-    this.initIntersectionObserver();
+    this.initIntersectionObserver()
   }
 
   /**
@@ -101,26 +101,26 @@ export class ImageOptimizer {
       const navigatorWithConnection = navigator as any & { 
         connection?: { 
           downlink?: number;
-          addEventListener?: (event: string, handler: () => void) => void;
-        } 
+          addEventListener?: (event: string, handler: () => void) => void
+  } 
       };
       const connection = navigatorWithConnection.connection;
       if (connection) {
         const updateConnectionType = () => {
           const downlink = connection.downlink || 1;
           if (downlink < this.config.connectionThresholds.slow) {
-            this.connectionType = 'slow';;
+            this.connectionType = 'slow'
   } else if (downlink < this.config.connectionThresholds.medium) {
-            this.connectionType = 'medium';;
+            this.connectionType = 'medium'
   } else {
-            this.connectionType = 'fast';
-          }
+            this.connectionType = 'fast'
+  }
         };
         
         updateConnectionType();
         if (connection.addEventListener) {
-          connection.addEventListener('change', updateConnectionType);
-        }
+          connection.addEventListener('change', updateConnectionType)
+  }
       }
     }
   }
@@ -136,15 +136,15 @@ export class ImageOptimizer {
             if (entry.isIntersecting) {
               const img = entry.target as HTMLImageElement;
               this.loadOptimizedImage(img);
-              this.intersectionObserver?.unobserve(img);
-            }
-          });
-        },
+              this.intersectionObserver?.unobserve(img)
+  }
+          })
+  },
         {
           rootMargin: `${this.config.lazyLoadingOffset}px`
         }
-      );
-    }
+      )
+  }
   }
 
   /**
@@ -155,15 +155,15 @@ export class ImageOptimizer {
     options: {
       alt: string;
       priority?: number;
-      loading?: 'lazy' | 'eager';
-    }
+      loading?: 'lazy' | 'eager'
+  }
   ): OptimizedImage {
     const id = this.generateImageId(sourceUrl);
     
     // Check cache first
     if (this.cache.has(id)) {
-      return this.cache.get(id)!;
-    }
+      return this.cache.get(id)!
+  }
 
     const formats: ImageFormat[] = [];
     const { breakpoints, quality } = this.config;
@@ -176,8 +176,8 @@ export class ImageOptimizer {
         format: 'webp',
         width: dimensions.width,
         height: dimensions.height,
-        quality: quality.webp;
-      });
+        quality: quality.webp
+  });
 
       // JPEG fallback
       formats.push({
@@ -185,9 +185,9 @@ export class ImageOptimizer {
         format: 'jpeg',
         width: dimensions.width,
         height: dimensions.height,
-        quality: quality.jpeg;
-      });
-    });
+        quality: quality.jpeg
+  })
+  });
 
     const optimizedImage: OptimizedImage = {
       id,
@@ -197,13 +197,13 @@ export class ImageOptimizer {
       placeholder: this.generatePlaceholder(sourceUrl),
       alt: options.alt,
       loading: options.loading || 'lazy',
-      priority: options.priority || 5;
-    };
+      priority: options.priority || 5
+  };
 
     // Cache the result
     this.cache.set(id, optimizedImage);
     
-    return optimizedImage;
+    return optimizedImage
   }
 
   /**
@@ -226,14 +226,14 @@ export class ImageOptimizer {
     url.searchParams.set('fit', 'cover');
     url.searchParams.set('auto', 'compress');
     
-    return url.toString();
+    return url.toString()
   }
 
   /**
    * Generate a unique ID for image caching
    */
   private generateImageId(sourceUrl: string): string {
-    return btoa(sourceUrl).replace(/[^a-zA-Z0-9]/g, '').substring(0, 16);
+    return btoa(sourceUrl).replace(/[^a-zA-Z0-9]/g, '').substring(0, 16)
   }
 
   /**
@@ -252,10 +252,10 @@ export class ImageOptimizer {
       gradient.addColorStop(0, '#E5E7EB');
       gradient.addColorStop(1, '#F3F4F6');
       ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 40, 23);
-    }
+      ctx.fillRect(0, 0, 40, 23)
+  }
     
-    return canvas.toDataURL('image/jpeg', 0.1);
+    return canvas.toDataURL('image/jpeg', 0.1)
   }
 
   /**
@@ -268,7 +268,7 @@ export class ImageOptimizer {
     const supportsWebP = this.supportsWebP();
     
     // Filter formats based on browser support;
-    const supportedFormats = formats.filter(format => ;
+    const supportedFormats = formats.filter(format => ;;
       supportsWebP || format.format !== 'webp'
     );
 
@@ -283,15 +283,15 @@ export class ImageOptimizer {
         break;
       case 'fast':
         targetWidth = this.config.breakpoints.medium.width;
-        break;
-    }
+        break
+  }
 
     // Find the best matching format;
-    const bestFormat = supportedFormats;
+    const bestFormat = supportedFormats;;
       .filter(format => format.width <= targetWidth)
       .sort((a, b) => b.width - a.width)[0] || supportedFormats[0];
 
-    return bestFormat;
+    return bestFormat
   }
 
   /**
@@ -301,14 +301,14 @@ export class ImageOptimizer {
     const canvas = document.createElement('canvas');
     canvas.width = 1;
     canvas.height = 1;
-    return canvas.toDataURL('image/webp').indexOf('webp') !== -1;
+    return canvas.toDataURL('image/webp').indexOf('webp') !== -1
   }
 
   /**
    * Preload critical images
    */
   preloadCriticalImages(images: OptimizedImage[]): void {
-    const criticalImages = images;
+    const criticalImages = images;;
       .filter(img => img.priority >= 8 || img.loading === 'eager')
       .slice(0, 3); // Limit to first 3 critical images
 
@@ -318,8 +318,8 @@ export class ImageOptimizer {
       link.rel = 'preload';
       link.as = 'image';
       link.href = optimalFormat.url;
-      document.head.appendChild(link);
-    });
+      document.head.appendChild(link)
+  })
   }
 
   /**
@@ -328,11 +328,11 @@ export class ImageOptimizer {
   setupLazyLoading(imgElement: HTMLImageElement): void {
     if (this.intersectionObserver) {
       imgElement.loading = 'lazy';
-      this.intersectionObserver.observe(imgElement);;
+      this.intersectionObserver.observe(imgElement)
   } else {
       // Fallback for browsers without IntersectionObserver
-      this.loadOptimizedImage(imgElement);
-    }
+      this.loadOptimizedImage(imgElement)
+  }
   }
 
   /**
@@ -351,26 +351,26 @@ export class ImageOptimizer {
     const testImg = new Image();
     testImg.onload = () => {
       imgElement.src = optimalFormat.url;
-      imgElement.classList.add('loaded');
-    };
+      imgElement.classList.add('loaded')
+  };
     testImg.onerror = () => {
       // Fallback to original or next best format;
       const fallback = optimizedImage.formats.find(f => f.format === 'jpeg');
       if (fallback) {
-        imgElement.src = fallback.url;;
+        imgElement.src = fallback.url
   } else {
-        imgElement.src = optimizedImage.originalUrl;
-      }
-      imgElement.classList.add('loaded');
-    };
-    testImg.src = optimalFormat.url;
+        imgElement.src = optimizedImage.originalUrl
+  }
+      imgElement.classList.add('loaded')
+  };
+    testImg.src = optimalFormat.url
   }
 
   /**
    * Clear cache (useful for memory management)
    */
   clearCache(): void {
-    this.cache.clear();
+    this.cache.clear()
   }
 
   /**
@@ -380,7 +380,7 @@ export class ImageOptimizer {
     return optimizedImage.formats
       .filter(f => f.format === format)
       .map(f => `${f.url} ${f.width}w`)
-      .join(', ');
+      .join(', ')
   }
 
   /**
@@ -392,7 +392,7 @@ export class ImageOptimizer {
       '(max-width: 768px) 480px',
       '(max-width: 1024px) 720px',
       '1280px'
-    ].join(', ');
+    ].join(', ')
   }
 }
 

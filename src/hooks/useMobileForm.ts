@@ -15,21 +15,21 @@ export interface FormField {
   isValid: boolean;
   errors: string[];
   isTouched: boolean;
-  isValidating: boolean;
-}
+  isValidating: boolean
+  }
 
 export interface FormState {
   fields: Record<string, FormField>;
   isValid: boolean;
   isSubmitting: boolean;
-  submitCount: number;
-}
+  submitCount: number
+  }
 
 export interface UseFormOptions {
   initialValues?: Record<string, string>;
   onSubmit?: (values: Record<string, string>) => Promise<void> | void;
-  onFieldChange?: (fieldName: string, value: string) => void;
-}
+  onFieldChange?: (fieldName: string, value: string) => void
+  }
 
 export const useMobileForm = (options: UseFormOptions = {}) => {
   const {
@@ -72,12 +72,12 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
       },
     }));
 
-    onFieldChange?.(fieldName, value);
+    onFieldChange?.(fieldName, value)
   };
   }, [onFieldChange]);
 
   // Update field validation state;
-  const setFieldValidation = useCallback((;
+  const setFieldValidation = useCallback((;;
     fieldName: string, 
     isValid: boolean, 
     errors: string[] = []
@@ -116,7 +116,7 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
           isTouched: touched,
         },
       },
-    }));
+    }))
   };
   }, []);
 
@@ -131,7 +131,7 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
           isValidating: validating,
         },
       },
-    }));
+    }))
   };
   }, []);
 
@@ -149,14 +149,14 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
       value: field.value,
       error: field.isTouched && !field.isValid ? field.errors[0] : undefined,
       onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        setFieldValue(fieldName, e.target.value);
-      },
+        setFieldValue(fieldName, e.target.value)
+  },
       onBlur: () => {
-        setFieldTouched(fieldName, true);
-      },
+        setFieldTouched(fieldName, true)
+  },
       onValidationChange: (isValid: boolean, errors: string[]) => {
-        setFieldValidation(fieldName, isValid, errors);
-      },
+        setFieldValidation(fieldName, isValid, errors)
+  },
     };
   }, [formState.fields, setFieldValue, setFieldTouched, setFieldValidation]);
 
@@ -178,7 +178,7 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
       isValid: true,
       isSubmitting: false,
       submitCount: 0,
-    });
+    })
   };
   }, [initialValues]);
 
@@ -202,28 +202,28 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
       // Get form values;
       const values: Record<string, string> = {};
       Object.keys(formState.fields).forEach(key => {
-        values[key] = formState.fields[key].value;
-      });
+        values[key] = formState.fields[key].value
+  });
 
       // Only submit if form is valid
       if (formState.isValid) {
-        await onSubmit(values);
-      }
+        await onSubmit(values)
+  }
     } catch (error) {
-      console.error('Form submission error:', error);
-    } finally {
+      console.error('Form submission error:', error)
+  } finally {
       setFormState(prev => ({
         ...prev,
         isSubmitting: false,
-      }));
-    }
+      }))
+  }
   };
   }, [onSubmit, formState]);
 
   // Handle form submit event;
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    submitForm();
+    submitForm()
   };
   }, [submitForm]);
 
@@ -231,9 +231,9 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
   const getValues = useCallback(() => {
     const values: Record<string, string> = {};
     Object.keys(formState.fields).forEach(key => {
-      values[key] = formState.fields[key].value;
-    });
-    return values;
+      values[key] = formState.fields[key].value
+  });
+    return values
   };
   }, [formState.fields]);
 
@@ -243,17 +243,17 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
     Object.keys(formState.fields).forEach(key => {
       const field = formState.fields[key];
       if (field.isTouched && !field.isValid) {
-        errors[key] = field.errors;
-      }
+        errors[key] = field.errors
+  }
     });
-    return errors;
+    return errors
   };
   }, [formState.fields]);
 
   // Check if field has error;
   const hasFieldError = useCallback((fieldName: string) => {
     const field = formState.fields[fieldName];
-    return field ? field.isTouched && !field.isValid : false;
+    return field ? field.isTouched && !field.isValid : false
   };
   }, [formState.fields]);
 
@@ -261,9 +261,10 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
   const getFieldError = useCallback((fieldName: string) => {
     const field = formState.fields[fieldName];
     if (field && field.isTouched && !field.isValid && field.errors.length > 0) {
-      return field.errors[0];
-    }
-    return undefined;
+      return field.errors[0]
+  }
+    return undefined
+  };
   };
   };
   }, [formState.fields]);
@@ -307,32 +308,32 @@ export const createMobileFormValidator = (rules: Record<string, any>) => {
 
     // Required validation
     if (rule.required && !value.trim()) {
-      errors.push(`${fieldName} is required`);
-    }
+      errors.push(`${fieldName} is required`)
+  }
 
     if (value.trim()) {
       // Length validations
       if (rule.minLength && value.length < rule.minLength) {
-        errors.push(`${fieldName} must be at least ${rule.minLength} characters`);
-      }
+        errors.push(`${fieldName} must be at least ${rule.minLength} characters`)
+  }
 
       if (rule.maxLength && value.length > rule.maxLength) {
-        errors.push(`${fieldName} must be no more than ${rule.maxLength} characters`);
-      }
+        errors.push(`${fieldName} must be no more than ${rule.maxLength} characters`)
+  }
 
       // Pattern validation
       if (rule.pattern && !rule.pattern.test(value)) {
-        errors.push(rule.message || `${fieldName} format is invalid`);
-      }
+        errors.push(rule.message || `${fieldName} format is invalid`)
+  }
 
       // Custom validation
       if (rule.custom) {
         const customResult = rule.custom(value);
         if (typeof customResult === 'string') {
-          errors.push(customResult);;
+          errors.push(customResult)
   } else if (!customResult) {
-          errors.push(`${fieldName} is invalid`);
-        }
+          errors.push(`${fieldName} is invalid`)
+  }
       }
     }
 
@@ -357,17 +358,17 @@ export const commonValidationRules = {
       if (!/(?=.*[a-z])/.test(value)) return 'Password must contain at least one lowercase letter';
       if (!/(?=.*[A-Z])/.test(value)) return 'Password must contain at least one uppercase letter';
       if (!/(?=.*\d)/.test(value)) return 'Password must contain at least one number';
-      return true;
-    },
+      return true
+  },
   },
   confirmPassword: (passwordField: string) => ({
     required: true,
     custom: (value: string, formValues: Record<string, string>) => {
       if (value !== formValues[passwordField]) {
-        return 'Passwords do not match';
-      }
-      return true;
-    },
+        return 'Passwords do not match'
+  }
+      return true
+  },
   }),
   phone: {
     required: false,

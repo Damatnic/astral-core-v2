@@ -16,7 +16,7 @@ jest.mock('../services/privacyPreservingAnalyticsService', () => ({
     exportAnonymizedData: jest.fn(),
     getPrivacyMetrics: jest.fn(),
     resetPrivacyBudget: jest.fn(),
-    updateCulturalPatterns: jest.fn();
+    updateCulturalPatterns: jest.fn()
   }
 }));
 
@@ -38,7 +38,7 @@ const mockInsights = {
     totalSessions: 2847,
     privacyCompliantSessions: 2847,
     dataRetentionCompliance: 1.0,
-    differentialPrivacyBudgetUsed: 0.6;
+    differentialPrivacyBudgetUsed: 0.6
   },
   culturalComparisons: [
     {
@@ -47,22 +47,22 @@ const mockInsights = {
       averageRiskReduction: 0.31,
       preferredInterventions: ['CBT', 'mindfulness'],
       sessionCount: 1200,
-      followUpRate: 0.68;
-    },
+      followUpRate: 0.68
+  },
     {
       culturalContext: 'Eastern',
       interventionSuccess: 0.82,
       averageRiskReduction: 0.35,
       preferredInterventions: ['family-therapy', 'meditation'],
       sessionCount: 800,
-      followUpRate: 0.75;
-    }
+      followUpRate: 0.75
+  }
   ],
   privacyMetrics: {
     budgetUsed: 6.2,
     budgetRemaining: 3.8,
     dataPoints: 15430,
-    retentionCompliance: true;
+    retentionCompliance: true
   }
 };
 
@@ -70,8 +70,8 @@ const mockPrivacyMetrics = {
   budgetUsed: 6.2,
   budgetRemaining: 3.8,
   dataPoints: 15430,
-  retentionCompliance: true;
-};
+  retentionCompliance: true
+  };
 
 const mockReport = {
   summary: 'Crisis intervention effectiveness analysis shows positive outcomes with 78% success rate',
@@ -104,10 +104,10 @@ describe('usePrivacyAnalytics Hook', () => {
     (privacyPreservingAnalyticsService.exportAnonymizedData as jest.Mock).mockResolvedValue({
       exportTime: Date.now(),
       dataPoints: 15430,
-      privacyLevel: 'high';
-    });
+      privacyLevel: 'high'
+  });
     (privacyPreservingAnalyticsService.recordInterventionOutcome as jest.Mock).mockResolvedValue(undefined);
-    (privacyPreservingAnalyticsService.recordFollowUpEngagement as jest.Mock).mockResolvedValue(undefined);
+    (privacyPreservingAnalyticsService.recordFollowUpEngagement as jest.Mock).mockResolvedValue(undefined)
   });
 
   it.skip('should initialize with default state', () => {
@@ -119,21 +119,21 @@ describe('usePrivacyAnalytics Hook', () => {
       used: 0,
       remaining: 10,
       dataPoints: 0,
-      retentionCompliant: true;
-    });
+      retentionCompliant: true
+  });
     expect(result.current.isLoading).toBe(false);
     expect(result.current.error).toBeNull();
     expect(typeof result.current.recordIntervention).toBe('function');
     expect(typeof result.current.recordFollowUp).toBe('function');
-    expect(typeof result.current.generateReport).toBe('function');
+    expect(typeof result.current.generateReport).toBe('function')
   });
 
   it.skip('should load analytics insights on mount', async () => {
     const { result } = renderHook(() => usePrivacyAnalytics());
 
     await waitFor(() => {
-      expect(result.current.insights).toEqual(mockInsights);
-    });
+      expect(result.current.insights).toEqual(mockInsights)
+  });
 
     expect(privacyPreservingAnalyticsService.generateAnalyticsInsights).toHaveBeenCalled();
     expect(result.current.culturalMetrics).toEqual(mockInsights.culturalComparisons);
@@ -141,9 +141,9 @@ describe('usePrivacyAnalytics Hook', () => {
       used: 6.2,
       remaining: 3.8,
       dataPoints: 15430,
-      retentionCompliant: true;
-    });
-    expect(result.current.error).toBeNull();
+      retentionCompliant: true
+  });
+    expect(result.current.error).toBeNull()
   });
 
   it.skip('should handle insights loading errors', async () => {
@@ -155,8 +155,8 @@ describe('usePrivacyAnalytics Hook', () => {
     const { result } = renderHook(() => usePrivacyAnalytics());
 
     await waitFor(() => {
-      expect(result.current.error).toBe('Insufficient privacy budget');
-    });
+      expect(result.current.error).toBe('Insufficient privacy budget')
+  });
 
     expect(result.current.insights).toBeNull();
     expect(result.current.isLoading).toBe(false);
@@ -165,7 +165,7 @@ describe('usePrivacyAnalytics Hook', () => {
       insightsError
     );
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should record intervention outcome successfully', async () => {
@@ -179,16 +179,16 @@ describe('usePrivacyAnalytics Hook', () => {
       initialRiskLevel: 75,
       finalRiskLevel: 35,
       sessionDuration: 1800,
-      feedback: 4;
-    };
+      feedback: 4
+  };
 
     await act(async () => {
-      await result.current.recordIntervention(outcomeData);
-    });
+      await result.current.recordIntervention(outcomeData)
+  });
 
     expect(privacyPreservingAnalyticsService.recordInterventionOutcome).toHaveBeenCalledWith(outcomeData);
     expect(result.current.privacyBudget.used).toBe(6.2);
-    expect(result.current.error).toBeNull();
+    expect(result.current.error).toBeNull()
   });
 
   it.skip('should handle intervention recording errors', async () => {
@@ -206,12 +206,12 @@ describe('usePrivacyAnalytics Hook', () => {
       interventionType: 'human-helper' as const,
       initialRiskLevel: 80,
       finalRiskLevel: 40,
-      sessionDuration: 2400;
-    };
+      sessionDuration: 2400
+  };
 
     await act(async () => {
-      await result.current.recordIntervention(outcomeData);
-    });
+      await result.current.recordIntervention(outcomeData)
+  });
 
     expect(result.current.error).toBe('Privacy budget exceeded');
     expect(consoleSpy).toHaveBeenCalledWith(
@@ -219,18 +219,18 @@ describe('usePrivacyAnalytics Hook', () => {
       recordError
     );
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should record follow-up engagement successfully', async () => {
     const { result } = renderHook(() => usePrivacyAnalytics());
 
     await act(async () => {
-      await result.current.recordFollowUp('user-789', 'session-456');
-    });
+      await result.current.recordFollowUp('user-789', 'session-456')
+  });
 
     expect(privacyPreservingAnalyticsService.recordFollowUpEngagement).toHaveBeenCalledWith('user-789', 'session-456');
-    expect(result.current.error).toBeNull();
+    expect(result.current.error).toBeNull()
   });
 
   it.skip('should handle follow-up recording errors', async () => {
@@ -242,8 +242,8 @@ describe('usePrivacyAnalytics Hook', () => {
     const { result } = renderHook(() => usePrivacyAnalytics());
 
     await act(async () => {
-      await result.current.recordFollowUp('user-789', 'invalid-session');
-    });
+      await result.current.recordFollowUp('user-789', 'invalid-session')
+  });
 
     expect(result.current.error).toBe('Session not found');
     expect(consoleSpy).toHaveBeenCalledWith(
@@ -251,7 +251,7 @@ describe('usePrivacyAnalytics Hook', () => {
       followUpError
     );
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should generate effectiveness report successfully', async () => {
@@ -259,13 +259,13 @@ describe('usePrivacyAnalytics Hook', () => {
 
     let report: any;
     await act(async () => {
-      report = await result.current.generateReport();
-    });
+      report = await result.current.generateReport()
+  });
 
     expect(privacyPreservingAnalyticsService.generateEffectivenessReport).toHaveBeenCalled();
     expect(report).toEqual(mockReport);
     expect(result.current.isLoading).toBe(false);
-    expect(result.current.error).toBeNull();
+    expect(result.current.error).toBeNull()
   });
 
   it.skip('should handle report generation errors', async () => {
@@ -278,8 +278,8 @@ describe('usePrivacyAnalytics Hook', () => {
 
     let report: any;
     await act(async () => {
-      report = await result.current.generateReport();
-    });
+      report = await result.current.generateReport()
+  });
 
     expect(report).toBeNull();
     expect(result.current.error).toBe('Insufficient data for report');
@@ -288,7 +288,7 @@ describe('usePrivacyAnalytics Hook', () => {
       reportError
     );
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should export anonymized data successfully', async () => {
@@ -306,13 +306,13 @@ describe('usePrivacyAnalytics Hook', () => {
 
     let exportData: any;
     await act(async () => {
-      exportData = await result.current.exportData();
-    });
+      exportData = await result.current.exportData()
+  });
 
     expect(privacyPreservingAnalyticsService.exportAnonymizedData).toHaveBeenCalled();
     expect(exportData).toEqual(mockExportData);
     expect(result.current.isLoading).toBe(false);
-    expect(result.current.error).toBeNull();
+    expect(result.current.error).toBeNull()
   });
 
   it.skip('should handle data export errors', async () => {
@@ -325,8 +325,8 @@ describe('usePrivacyAnalytics Hook', () => {
 
     let exportData: any;
     await act(async () => {
-      exportData = await result.current.exportData();
-    });
+      exportData = await result.current.exportData()
+  });
 
     expect(exportData).toBeNull();
     expect(result.current.error).toBe('Export failed - privacy violation');
@@ -335,7 +335,7 @@ describe('usePrivacyAnalytics Hook', () => {
       exportError
     );
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should refresh insights manually', async () => {
@@ -343,29 +343,29 @@ describe('usePrivacyAnalytics Hook', () => {
 
     // Wait for initial load
     await waitFor(() => {
-      expect(result.current.insights).toBeDefined();
-    });
+      expect(result.current.insights).toBeDefined()
+  });
 
     // Clear mock calls
     (privacyPreservingAnalyticsService.generateAnalyticsInsights as jest.Mock).mockClear();
 
     await act(async () => {
-      await result.current.refreshInsights();
-    });
+      await result.current.refreshInsights()
+  });
 
     expect(privacyPreservingAnalyticsService.generateAnalyticsInsights).toHaveBeenCalledTimes(1);
-    expect(result.current.error).toBeNull();
+    expect(result.current.error).toBeNull()
   });
 
   it.skip('should reset privacy budget', async () => {
     const { result } = renderHook(() => usePrivacyAnalytics());
 
     act(() => {
-      result.current.resetPrivacyBudget();
-    });
+      result.current.resetPrivacyBudget()
+  });
 
     expect(privacyPreservingAnalyticsService.resetPrivacyBudget).toHaveBeenCalled();
-    expect(privacyPreservingAnalyticsService.getPrivacyMetrics).toHaveBeenCalled();
+    expect(privacyPreservingAnalyticsService.getPrivacyMetrics).toHaveBeenCalled()
   });
 
   it.skip('should update privacy budget after operations', async () => {
@@ -373,8 +373,8 @@ describe('usePrivacyAnalytics Hook', () => {
       budgetUsed: 7.5,
       budgetRemaining: 2.5,
       dataPoints: 16000,
-      retentionCompliance: true;
-    };
+      retentionCompliance: true
+  };
 
     (privacyPreservingAnalyticsService.getPrivacyMetrics as jest.Mock).mockReturnValue(updatedMetrics);
 
@@ -387,16 +387,16 @@ describe('usePrivacyAnalytics Hook', () => {
       interventionType: 'peer-support' as const,
       initialRiskLevel: 60,
       finalRiskLevel: 25,
-      sessionDuration: 2100;
-    };
+      sessionDuration: 2100
+  };
 
     await act(async () => {
-      await result.current.recordIntervention(outcomeData);
-    });
+      await result.current.recordIntervention(outcomeData)
+  });
 
     expect(result.current.privacyBudget.used).toBe(7.5);
     expect(result.current.privacyBudget.remaining).toBe(2.5);
-    expect(result.current.privacyBudget.dataPoints).toBe(16000);
+    expect(result.current.privacyBudget.dataPoints).toBe(16000)
   });
 
   it.skip('should track privacy budget exhaustion', async () => {
@@ -404,25 +404,25 @@ describe('usePrivacyAnalytics Hook', () => {
       budgetUsed: 9.8,
       budgetRemaining: 0.2,
       dataPoints: 25000,
-      retentionCompliance: true;
-    };
+      retentionCompliance: true
+  };
 
     (privacyPreservingAnalyticsService.getPrivacyMetrics as jest.Mock).mockReturnValue(lowBudgetMetrics);
 
     const { result } = renderHook(() => usePrivacyAnalytics());
 
     await waitFor(() => {
-      expect(result.current.privacyBudget.remaining).toBe(0.2);
-    });
+      expect(result.current.privacyBudget.remaining).toBe(0.2)
+  });
 
     // Privacy budget is critically low
-    expect(result.current.privacyBudget.remaining / (result.current.privacyBudget.used + result.current.privacyBudget.remaining)).toBeLessThan(0.05);
+    expect(result.current.privacyBudget.remaining / (result.current.privacyBudget.used + result.current.privacyBudget.remaining)).toBeLessThan(0.05)
   });
 
   it.skip('should handle privacy metrics errors gracefully', async () => {
     (privacyPreservingAnalyticsService.getPrivacyMetrics as jest.Mock).mockImplementation(() => {
-      throw new Error('Privacy service unavailable');
-    });
+      throw new Error('Privacy service unavailable')
+  });
 
     const { result } = renderHook(() => usePrivacyAnalytics());
 
@@ -431,46 +431,46 @@ describe('usePrivacyAnalytics Hook', () => {
       used: 0,
       remaining: 10,
       dataPoints: 0,
-      retentionCompliant: true;
-    });
+      retentionCompliant: true
+  })
   });
 
   it.skip('should maintain HIPAA compliance indicators', async () => {
     const { result } = renderHook(() => usePrivacyAnalytics());
 
     await waitFor(() => {
-      expect(result.current.insights).toBeDefined();
-    });
+      expect(result.current.insights).toBeDefined()
+  });
 
     // Verify HIPAA compliance indicators
     expect(result.current.privacyBudget.retentionCompliant).toBe(true);
     expect(result.current.insights?.privacyMetrics.dataRetentionCompliance).toBe(true);
-    expect(result.current.insights?.globalMetrics.totalInterventions).toBeGreaterThanOrEqual(0);
+    expect(result.current.insights?.globalMetrics.totalInterventions).toBeGreaterThanOrEqual(0)
   });
 
   it.skip('should handle differential privacy budget tracking', async () => {
     const { result } = renderHook(() => usePrivacyAnalytics());
 
     await waitFor(() => {
-      expect(result.current.insights).toBeDefined();
-    });
+      expect(result.current.insights).toBeDefined()
+  });
 
     // Verify differential privacy is being tracked
     expect(result.current.insights?.privacyMetrics.totalBudgetConsumed).toBeLessThan(1.0);
-    expect(result.current.privacyBudget.used).toBeGreaterThan(0);
+    expect(result.current.privacyBudget.used).toBeGreaterThan(0)
   });
 
   it.skip('should provide cultural metrics for analysis', async () => {
     const { result } = renderHook(() => usePrivacyAnalytics());
 
     await waitFor(() => {
-      expect(result.current.culturalMetrics).toHaveLength(2);
-    });
+      expect(result.current.culturalMetrics).toHaveLength(2)
+  });
 
     expect(result.current.culturalMetrics[0].culturalGroup).toBe('Western');
     expect(result.current.culturalMetrics[1].culturalGroup).toBe('Eastern');
     expect(result.current.culturalMetrics[0].successRate).toBeGreaterThan(0.5);
-    expect(result.current.culturalMetrics[1].successRate).toBeGreaterThan(0.5);
+    expect(result.current.culturalMetrics[1].successRate).toBeGreaterThan(0.5)
   });
 
   it.skip('should handle concurrent privacy operations safely', async () => {
@@ -485,14 +485,14 @@ describe('usePrivacyAnalytics Hook', () => {
           interventionType: 'ai-chat' as const,
           initialRiskLevel: 70,
           finalRiskLevel: 30,
-          sessionDuration: 1500;
-        }),
+          sessionDuration: 1500
+  }),
         result.current.recordFollowUp('user-2', 'session-2'),
         result.current.generateReport()
-      ]);
-    });
+      ])
+  });
 
     expect(operations[2]).toEqual(mockReport); // generateReport result
-    expect(result.current.error).toBeNull();
+    expect(result.current.error).toBeNull()
+  })
   });
-});

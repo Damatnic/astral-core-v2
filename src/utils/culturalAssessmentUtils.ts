@@ -12,15 +12,15 @@ import { culturalAssessmentService } from '../services/culturalAssessmentService
 export interface AssessmentQuestion {
   id: string;
   text: string;
-  options: { text: string; value: number }[];
-}
+  options: { text: string; value: number }[]
+  }
 
 export interface AssessmentResult {
   score: number;
   severity: string;
   recommendation: string;
-  color?: string;
-}
+  color?: string
+  }
 
 export interface CulturalAssessmentResult extends AssessmentResult {
   culturalContext: string;
@@ -28,18 +28,18 @@ export interface CulturalAssessmentResult extends AssessmentResult {
     expressionStyle: 'direct' | 'indirect' | 'somatic' | 'metaphorical';
     stigmaLevel: number;
     familyInvolvement: 'individual' | 'family-inclusive' | 'community-oriented';
-    helpSeekingStyle: 'professional' | 'informal' | 'religious' | 'traditional';
+    helpSeekingStyle: 'professional' | 'informal' | 'religious' | 'traditional'
   };
   recommendations: {
     primary: string;
     cultural: string[];
     resources: string[];
-    familyGuidance?: string;
+    familyGuidance?: string
   };
   privacyMetadata?: {
     culturallyAdjusted: boolean;
     culturalConfidenceScore: number;
-    biasReductionApplied: boolean;
+    biasReductionApplied: boolean
   }
 
 /**
@@ -50,7 +50,7 @@ export async function getCulturalPhq9Questions(
   culturalContext?: string
 ): Promise<AssessmentQuestion[]> {
   try {
-    const culturalQuestions = await culturalAssessmentService.getCulturalAssessmentQuestions(;
+    const culturalQuestions = await culturalAssessmentService.getCulturalAssessmentQuestions(;;
       'phq-9',
       languageCode,
       culturalContext
@@ -62,12 +62,12 @@ export async function getCulturalPhq9Questions(
       text: q.culturalAdaptations[culturalContext]?.text || 
             q.culturalAdaptations['Western']?.text || 
             q.text,
-      options: q.options;
-    }));
+      options: q.options
+  }))
   } catch (error) {
     console.error('[Assessment Utils] Failed to get cultural PHQ-9 questions:', error);
     // Fallback to standard questions
-    return getStandardPhq9Questions();
+    return getStandardPhq9Questions()
   }
 }
 
@@ -79,7 +79,7 @@ export async function getCulturalGad7Questions(
   culturalContext?: string
 ): Promise<AssessmentQuestion[]> {
   try {
-    const culturalQuestions = await culturalAssessmentService.getCulturalAssessmentQuestions(;
+    const culturalQuestions = await culturalAssessmentService.getCulturalAssessmentQuestions(;;
       'gad-7',
       languageCode,
       culturalContext
@@ -91,12 +91,12 @@ export async function getCulturalGad7Questions(
       text: q.culturalAdaptations[culturalContext]?.text || 
             q.culturalAdaptations['Western']?.text || 
             q.text,
-      options: q.options;
-    }));
+      options: q.options
+  }))
   } catch (error) {
     console.error('[Assessment Utils] Failed to get cultural GAD-7 questions:', error);
     // Fallback to standard questions
-    return getStandardGad7Questions();
+    return getStandardGad7Questions()
   }
 }
 
@@ -110,7 +110,7 @@ export async function getCulturalPhq9Result(
   textualAnswers?: string[]
 ): Promise<CulturalAssessmentResult> {
   try {
-    const result = await culturalAssessmentService.calculateCulturalAssessmentResult(;
+    const result = await culturalAssessmentService.calculateCulturalAssessmentResult(;;
       'phq-9',
       scores,
       textualAnswers || scores.map(String),
@@ -126,8 +126,8 @@ export async function getCulturalPhq9Result(
       culturalContext: result.culturalContext,
       culturalFactors: result.culturalFactors,
       recommendations: result.recommendations,
-      privacyMetadata: result.privacyMetadata;
-    } catch (error) {
+      privacyMetadata: result.privacyMetadata
+  } catch (error) {
     console.error('[Assessment Utils] Failed to get cultural PHQ-9 result:', error);
     // Fallback to standard calculation
     return {
@@ -137,13 +137,13 @@ export async function getCulturalPhq9Result(
         expressionStyle: 'direct',
         stigmaLevel: 0.5,
         familyInvolvement: 'individual',
-        helpSeekingStyle: 'professional';
-      },
+        helpSeekingStyle: 'professional'
+  },
       recommendations: {
         primary: getStandardPhq9Result(scores).recommendation,
         cultural: [],
-        resources: ['Crisis Text Line: Text HOME to 741741', 'National Suicide Prevention Lifeline: 988'];
-      }
+        resources: ['Crisis Text Line: Text HOME to 741741', 'National Suicide Prevention Lifeline: 988']
+  }
     }
 }
 
@@ -157,7 +157,7 @@ export async function getCulturalGad7Result(
   textualAnswers?: string[]
 ): Promise<CulturalAssessmentResult> {
   try {
-    const result = await culturalAssessmentService.calculateCulturalAssessmentResult(;
+    const result = await culturalAssessmentService.calculateCulturalAssessmentResult(;;
       'gad-7',
       scores,
       textualAnswers || scores.map(String),
@@ -173,8 +173,8 @@ export async function getCulturalGad7Result(
       culturalContext: result.culturalContext,
       culturalFactors: result.culturalFactors,
       recommendations: result.recommendations,
-      privacyMetadata: result.privacyMetadata;
-    } catch (error) {
+      privacyMetadata: result.privacyMetadata
+  } catch (error) {
     console.error('[Assessment Utils] Failed to get cultural GAD-7 result:', error);
     // Fallback to standard calculation
     return {
@@ -184,13 +184,13 @@ export async function getCulturalGad7Result(
         expressionStyle: 'direct',
         stigmaLevel: 0.5,
         familyInvolvement: 'individual',
-        helpSeekingStyle: 'professional';
-      },
+        helpSeekingStyle: 'professional'
+  },
       recommendations: {
         primary: getStandardGad7Result(scores).recommendation,
         cultural: [],
-        resources: ['Crisis Text Line: Text HOME to 741741', 'National Suicide Prevention Lifeline: 988'];
-      }
+        resources: ['Crisis Text Line: Text HOME to 741741', 'National Suicide Prevention Lifeline: 988']
+  }
     }
 }
 
@@ -219,7 +219,7 @@ export async function submitCulturalAssessment(
   };
   } catch (error) {
     console.error('[Assessment Utils] Failed to submit cultural assessment:', error);
-    throw error;
+    throw error
   }
 }
 
@@ -316,8 +316,8 @@ function getStandardPhq9Questions(): AssessmentQuestion[] {
         { value: 3, text: 'Nearly every day' }
       ]
     }
-  ];
-}
+  ]
+  }
 
 function getStandardGad7Questions(): AssessmentQuestion[] {
   return [
@@ -391,8 +391,8 @@ function getStandardGad7Questions(): AssessmentQuestion[] {
         { value: 3, text: 'Nearly every day' }
       ]
     }
-  ];
-}
+  ]
+  }
 
 function getStandardPhq9Result(scores: number[]): AssessmentResult {
   const totalScore = scores.reduce((sum, score) => sum + score, 0);
@@ -402,32 +402,32 @@ function getStandardPhq9Result(scores: number[]): AssessmentResult {
       score: totalScore,
       severity: 'minimal',
       recommendation: 'Your symptoms suggest minimal depression. Continue with self-care and stress management techniques.',
-      color: '#10b981' // green;
-    } else if (totalScore <= 9) {
+      color: '#10b981' // green
+  } else if (totalScore <= 9) {
     return {
       score: totalScore,
       severity: 'mild',
       recommendation: 'Your symptoms suggest mild depression. Consider self-care practices and monitor your symptoms.',
-      color: '#f59e0b' // yellow;
-    } else if (totalScore <= 14) {
+      color: '#f59e0b' // yellow
+  } else if (totalScore <= 14) {
     return {
       score: totalScore,
       severity: 'moderate',
       recommendation: 'Your symptoms suggest moderate depression. Consider speaking with a mental health professional.',
-      color: '#f97316' // orange;
-    } else if (totalScore <= 19) {
+      color: '#f97316' // orange
+  } else if (totalScore <= 19) {
     return {
       score: totalScore,
       severity: 'moderately-severe',
       recommendation: 'Your symptoms suggest moderately severe depression. Please consider seeking professional help soon.',
-      color: '#dc2626' // red;
-    } else {
+      color: '#dc2626' // red
+  } else {
     return {
       score: totalScore,
       severity: 'severe',
       recommendation: 'Your symptoms suggest severe depression. We strongly recommend seeking immediate professional help.',
-      color: '#991b1b' // dark red;
-    }
+      color: '#991b1b' // dark red
+  }
 }
 
 function getStandardGad7Result(scores: number[]): AssessmentResult {
@@ -438,26 +438,26 @@ function getStandardGad7Result(scores: number[]): AssessmentResult {
       score: totalScore,
       severity: 'minimal',
       recommendation: 'Your symptoms suggest minimal anxiety. Continue with self-care and stress management techniques.',
-      color: '#10b981' // green;
-    } else if (totalScore <= 9) {
+      color: '#10b981' // green
+  } else if (totalScore <= 9) {
     return {
       score: totalScore,
       severity: 'mild',
       recommendation: 'Your symptoms suggest mild anxiety. Consider relaxation techniques and stress management.',
-      color: '#f59e0b' // yellow;
-    } else if (totalScore <= 14) {
+      color: '#f59e0b' // yellow
+  } else if (totalScore <= 14) {
     return {
       score: totalScore,
       severity: 'moderate',
       recommendation: 'Your symptoms suggest moderate anxiety. Consider speaking with a mental health professional.',
-      color: '#f97316' // orange;
-    } else {
+      color: '#f97316' // orange
+  } else {
     return {
       score: totalScore,
       severity: 'severe',
       recommendation: 'Your symptoms suggest severe anxiety. We recommend seeking professional help.',
-      color: '#dc2626' // red;
-    }
+      color: '#dc2626' // red
+  }
 }
 
 function getSeverityColor(severity: string): string {
@@ -481,22 +481,22 @@ export function formatAssessmentDate(date: string | Date): string {
     // Handle date-only strings (YYYY-MM-DD) by treating them as local dates
     if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
       const [year, month, day] = date.split('-').map(Number);
-      assessmentDate = new Date(year, month - 1, day);;
+      assessmentDate = new Date(year, month - 1, day)
   } else {
-      assessmentDate = new Date(date);
-    };
+      assessmentDate = new Date(date)
+  }
   } else {
-    assessmentDate = date;
+    assessmentDate = date
   }
   
   if (isNaN(assessmentDate.getTime())) {
-    return 'Invalid Date';
+    return 'Invalid Date'
   }
   
   return assessmentDate.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
-    day: 'numeric';
+    day: 'numeric'
   };
   };
 }
@@ -508,6 +508,6 @@ export function getAssessmentDisplayName(type: string): string {
   switch (type) {
     case 'phq-9': return 'PHQ-9 (Depression)';
     case 'gad-7': return 'GAD-7 (Anxiety)';
-    default: return 'Unknown Assessment';
+    default: return 'Unknown Assessment'
   }
 }

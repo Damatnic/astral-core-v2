@@ -39,7 +39,7 @@ export const OfflineStatusIndicator: React.FC = () => {
     if (bytes === 0) return '0 B';
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    return `${(bytes / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`;
+    return `${(bytes / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`
   };
 
   /**
@@ -47,7 +47,7 @@ export const OfflineStatusIndicator: React.FC = () => {
    */;
   const getStatusColor = (): string => {
     if (isOnline) return 'var(--accent-success)';
-    return hasOfflineSupport ? 'var(--accent-warning)' : 'var(--accent-error)';
+    return hasOfflineSupport ? 'var(--accent-warning)' : 'var(--accent-error)'
   };
 
   /**
@@ -58,7 +58,7 @@ export const OfflineStatusIndicator: React.FC = () => {
     if (isOnline) return t('offline.status.online', 'Online');
     return hasOfflineSupport 
       ? t('offline.status.offlineSupported', 'Offline (Crisis resources available)')
-      : t('offline.status.offlineUnsupported', 'Offline (Limited functionality)');
+      : t('offline.status.offlineUnsupported', 'Offline (Limited functionality)')
   };
 
   /**
@@ -66,10 +66,10 @@ export const OfflineStatusIndicator: React.FC = () => {
    */;
   const handleUpdateResources = async () => {
     try {
-      await updateOfflineResources();
-    } catch (err) {
-      console.error('Failed to update offline resources:', err);
-    }
+      await updateOfflineResources()
+  } catch (err) {
+      console.error('Failed to update offline resources:', err)
+  }
   };
 
   /**
@@ -78,10 +78,10 @@ export const OfflineStatusIndicator: React.FC = () => {
   const handleClearData = async () => {
     try {
       await clearOfflineData();
-      setShowDetailsModal(false);
-    } catch (err) {
-      console.error('Failed to clear offline data:', err);
-    }
+      setShowDetailsModal(false)
+  } catch (err) {
+      console.error('Failed to clear offline data:', err)
+  }
   };
 
   if (!capabilities) return null;
@@ -89,14 +89,13 @@ export const OfflineStatusIndicator: React.FC = () => {
   return (
     <>
       {/* Compact status indicator */}
-      <button; 
-        className="offline-status-indicator"
+      <button className="offline-status-indicator"
         onClick={() => setShowDetailsModal(true)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            setShowDetailsModal(true);
-          }
+            setShowDetailsModal(true)
+  }
         }}
         aria-label={t('offline.indicator.ariaLabel', 'Open offline status details')}
         title={getStatusText()}
@@ -114,16 +113,16 @@ export const OfflineStatusIndicator: React.FC = () => {
           fontSize: '12px',
           display: 'flex',
           alignItems: 'center',
-          gap: '6px';
-        }}
+          gap: '6px'
+  }}
       >
         <div 
           style={{
             width: '8px',
             height: '8px',
             borderRadius: '50%',
-            backgroundColor: getStatusColor();
-          }}
+            backgroundColor: getStatusColor()
+  }}
         />
         <span style={{ fontWeight: 'bold' }}>
           {isOnline ? '📶' : '📴'}
@@ -134,8 +133,8 @@ export const OfflineStatusIndicator: React.FC = () => {
             color: 'white', 
             borderRadius: '10px', 
             padding: '2px 6px',
-            fontSize: '10px';
-          }}>
+            fontSize: '10px'
+  }}>
             {syncQueueSize}
           </span>
         )}
@@ -159,8 +158,8 @@ export const OfflineStatusIndicator: React.FC = () => {
                   width: '12px',
                   height: '12px',
                   borderRadius: '50%',
-                  backgroundColor: getStatusColor();
-                }}
+                  backgroundColor: getStatusColor()
+  }}
               />
               <span className="font-medium">{getStatusText()}</span>
             </div>
@@ -214,8 +213,7 @@ export const OfflineStatusIndicator: React.FC = () => {
                 <span>{formatStorageSize(storageUsage.quota)}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div; 
-                  className="bg-blue-600 h-2 rounded-full"
+                <div className="bg-blue-600 h-2 rounded-full"
                   style={{ width: `${Math.min(storageUsage.percentage, 100)}%` }}
                 />
               </div>
@@ -316,7 +314,7 @@ export const OfflineStatusIndicator: React.FC = () => {
         </div>
       </Modal>
     </>
-  );
-};
+  )
+  };
 
 export default OfflineStatusIndicator;

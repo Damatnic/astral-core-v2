@@ -9,8 +9,8 @@ interface ViewportState {
   height: number;
   isKeyboardOpen: boolean;
   keyboardHeight: number;
-  orientation: 'portrait' | 'landscape';
-}
+  orientation: 'portrait' | 'landscape'
+  }
 
 type ViewportChangeListener = (state: ViewportState) => void;
 
@@ -20,7 +20,7 @@ class MobileViewportManager {
 
   constructor() {
     this.currentState = this.getInitialState();
-    this.init();
+    this.init()
   }
 
   private getInitialState(): ViewportState {
@@ -34,20 +34,20 @@ class MobileViewportManager {
 
   private init() {
     this.setupViewportListener();
-    this.updateCSSVariables();
+    this.updateCSSVariables()
   }
 
   private setupViewportListener() {
     if (window.visualViewport) {
       const handleViewportChange = () => {
-        this.updateViewportState();
-      };
+        this.updateViewportState()
+  };
 
-      window.visualViewport.addEventListener('resize', handleViewportChange);;
+      window.visualViewport.addEventListener('resize', handleViewportChange)
   } else {
       window.addEventListener('resize', () => {
-        this.updateViewportState();
-      };
+        this.updateViewportState()
+  };
   };
     }
   }
@@ -68,7 +68,7 @@ class MobileViewportManager {
     };
 
     this.updateCSSVariables();
-    this.notifyListeners();
+    this.notifyListeners()
   }
 
   private updateCSSVariables() {
@@ -80,17 +80,17 @@ class MobileViewportManager {
     root.style.setProperty('--keyboard-height', `${this.currentState.keyboardHeight}px`);
     root.style.setProperty('--is-keyboard-open', this.currentState.isKeyboardOpen ? '1' : '0');
     
-    document.body.classList.toggle('keyboard-open', this.currentState.isKeyboardOpen);
+    document.body.classList.toggle('keyboard-open', this.currentState.isKeyboardOpen)
   }
 
   private notifyListeners() {
     this.listeners.forEach(listener => {
       try {
-        listener(this.currentState);
-      } catch (error) {
-        console.warn('Viewport listener error:', error);
-      }
-    });
+        listener(this.currentState)
+  } catch (error) {
+        console.warn('Viewport listener error:', error)
+  }
+    })
   }
 
   public getState(): ViewportState {
@@ -102,12 +102,12 @@ class MobileViewportManager {
     return () => {
       const index = this.listeners.indexOf(listener);
       if (index > -1) {
-        this.listeners.splice(index, 1);
-      }
+        this.listeners.splice(index, 1)
+  }
     }
 
   public isKeyboardVisible(): boolean {
-    return this.currentState.isKeyboardOpen;
+    return this.currentState.isKeyboardOpen
   }
 }
 
@@ -120,12 +120,12 @@ export const useMobileViewport = () => {
 
   React.useEffect(() => {
     const unsubscribe = viewportManager.onViewportChange(setState);
-    return unsubscribe;
+    return unsubscribe
   };
   }, []);
 
-  return state;
-};
+  return state
+  };
 
 // Utility functions for common mobile patterns;
 export const mobileUtils = {
@@ -133,8 +133,8 @@ export const mobileUtils = {
     // Prevent pinch zoom
     document.addEventListener('touchmove', (e) => {
       if (e.touches.length > 1) {
-        e.preventDefault();
-      }
+        e.preventDefault()
+  }
     }, { passive: false };
   };
 
@@ -143,10 +143,10 @@ export const mobileUtils = {
     document.addEventListener('touchend', (e) => {
       const now = Date.now();
       if (now - lastTouchEnd <= 300) {
-        e.preventDefault();
-      }
-      lastTouchEnd = now;
-    }, false);
+        e.preventDefault()
+  }
+      lastTouchEnd = now
+  }, false)
   },
 
   optimizeInputs: () => {
@@ -157,23 +157,23 @@ export const mobileUtils = {
       
       // Prevent zoom on iOS
       if (!element.style.fontSize || parseFloat(element.style.fontSize) < 16) {
-        element.style.fontSize = '16px';
-      }
+        element.style.fontSize = '16px'
+  }
 
       // Add touch-friendly attributes
       element.setAttribute('touch-action', 'manipulation');
       
       // Optimize input types for mobile keyboards
       if (element.type === 'email') {
-        element.setAttribute('inputmode', 'email');;
+        element.setAttribute('inputmode', 'email')
   } else if (element.type === 'tel') {
-        element.setAttribute('inputmode', 'tel');;
+        element.setAttribute('inputmode', 'tel')
   } else if (element.type === 'url') {
-        element.setAttribute('inputmode', 'url');;
+        element.setAttribute('inputmode', 'url')
   } else if (element.type === 'number') {
-        element.setAttribute('inputmode', 'numeric');
-      }
-    });
+        element.setAttribute('inputmode', 'numeric')
+  }
+    })
   },
 
   addTouchFeedback: (element: HTMLElement) => {
@@ -181,19 +181,19 @@ export const mobileUtils = {
 
     element.addEventListener('touchstart', () => {
       element.classList.add('touch-active');
-      clearTimeout(touchTimeout);
-    }, { passive: true });
+      clearTimeout(touchTimeout)
+  }, { passive: true });
 
     element.addEventListener('touchend', () => {
       touchTimeout = window.setTimeout(() => {
-        element.classList.remove('touch-active');
-      }, 150);
-    }, { passive: true });
+        element.classList.remove('touch-active')
+  }, 150)
+  }, { passive: true });
 
     element.addEventListener('touchcancel', () => {
       element.classList.remove('touch-active');
-      clearTimeout(touchTimeout);
-    }, { passive: true });
+      clearTimeout(touchTimeout)
+  }, { passive: true })
   },
 
   enableHapticFeedback: (element: HTMLElement, intensity: 'light' | 'medium' | 'heavy' = 'light') => {
@@ -202,11 +202,11 @@ export const mobileUtils = {
         const patterns = {
           light: 10,
           medium: 20,
-          heavy: 30;
-        };
-        navigator.vibrate(patterns[intensity]);
-      }
-    }, { passive: true });
+          heavy: 30
+  };
+        navigator.vibrate(patterns[intensity])
+  }
+    }, { passive: true })
   }
 };
 

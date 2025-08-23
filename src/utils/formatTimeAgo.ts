@@ -19,31 +19,31 @@ export const formatTimeAgo = (timestamp: string | Date | null | undefined): stri
     const months = days / 30;
     if (months < 12) return `${Math.floor(months)}mo ago`;
     const years = days / 365;
-    return `${Math.floor(years)}y ago`;
-};
+    return `${Math.floor(years)}y ago`
+  };
 
 export const formatChatTimestamp = (timestamp: string): string => {
     const messageDate = new Date(timestamp);
     const now = new Date(Date.now()); // Use Date.now() for better testability;
     
-    const isToday = messageDate.getDate() === now.getDate() &&;
+    const isToday = messageDate.getDate() === now.getDate() &&;;
                     messageDate.getMonth() === now.getMonth() &&
                     messageDate.getFullYear() === now.getFullYear();
 
     if (isToday) {
-        return messageDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: '2-digit' });
-    }
+        return messageDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: '2-digit' })
+  }
     
     // Check for yesterday;
     const yesterday = new Date(Date.now());
     yesterday.setDate(yesterday.getDate() - 1);
-    const isYesterday = messageDate.getDate() === yesterday.getDate() &&;
+    const isYesterday = messageDate.getDate() === yesterday.getDate() &&;;
                         messageDate.getMonth() === yesterday.getMonth() &&
                         messageDate.getFullYear() === yesterday.getFullYear();
 
     if (isYesterday) {
-        return `Yesterday at ${messageDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: '2-digit' })}`;
-    }
+        return `Yesterday at ${messageDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: '2-digit' })}`
+  }
     
-    return messageDate.toLocaleDateString(navigator.language, { year: 'numeric', month: 'short', day: 'numeric' });
-};
+    return messageDate.toLocaleDateString(navigator.language, { year: 'numeric', month: 'short', day: 'numeric' })
+  };

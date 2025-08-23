@@ -66,11 +66,11 @@ export const getConditionalExternals = (isDevelopment: boolean) => {
       '@storybook/react-vite',
       'eslint',
       'typescript'
-    );
+    )
   }
   
-  return baseExternals;
-};
+  return baseExternals
+  };
 
 // Vite-specific externals configuration;
 export const viteExternalsConfig = {
@@ -78,10 +78,10 @@ export const viteExternalsConfig = {
     // Check if the id is in our externals list
     return browserExternals.some(external => {
       if (typeof external === 'string') {
-        return id.includes(external);
-      }
-      return false;
-    });
+        return id.includes(external)
+  }
+      return false
+  })
   },
   
   // Define how externals should be handled
@@ -97,8 +97,8 @@ export const viteExternalsConfig = {
 // Rollup-specific externals configuration;
 export const rollupExternalsConfig = (id: string) => {
   // Return true for modules that should be external
-  return browserExternals.some(external => id.includes(external));
-};
+  return browserExternals.some(external => id.includes(external))
+  };
 
 // AI-specific optimization configuration;
 export const aiOptimizationConfig = {
@@ -194,21 +194,21 @@ export const bundleSizeOptimization = {
   maxSizes: {
     critical: 150,
     vendor: 400,
-    async: 250;
+    async: 250
   },
   
   // Compression settings
   compression: {
     gzip: true,
     brotli: true,
-    threshold: 1024 // Only compress files larger than 1KB;
+    threshold: 1024 // Only compress files larger than 1KB
   },
   
   // Asset optimization
   assets: {
     inlineLimit: 4096, // Inline assets smaller than 4KB
     imageOptimization: true,
-    svgOptimization: true;
+    svgOptimization: true
   }
 };
 

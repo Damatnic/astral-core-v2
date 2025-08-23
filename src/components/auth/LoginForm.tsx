@@ -5,8 +5,8 @@ import { isError } from '../../types/common';
 
 interface LoginFormProps {
   onSuccess?: () => void;
-  onSwitchToRegister?: () => void;
-}
+  onSwitchToRegister?: () => void
+  }
 
 export const LoginForm: React.FC<LoginFormProps> = ({ 
   onSuccess, 
@@ -33,18 +33,18 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         
         // Call success callback or navigate
         if (onSuccess) {
-          onSuccess();;
+          onSuccess()
   } else {
-          navigate('/dashboard');
-        };
+          navigate('/dashboard')
+  }
   } else {
-        setError(response.error || 'Login failed');
-      }
+        setError(response.error || 'Login failed')
+  }
     } catch (err) {
-      setError(isError(err) ? err.message : 'An unexpected error occurred');
-    } finally {
-      setIsLoading(false);
-    }
+      setError(isError(err) ? err.message : 'An unexpected error occurred')
+  } finally {
+      setIsLoading(false)
+  }
   };
 
   const handleDemoLogin = async () => {
@@ -58,18 +58,18 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       
       if (response.success) {
         if (onSuccess) {
-          onSuccess();;
+          onSuccess()
   } else {
-          navigate('/dashboard');
-        };
+          navigate('/dashboard')
+  }
   } else {
-        setError('Demo login failed. Please try again.');
-      }
+        setError('Demo login failed. Please try again.')
+  }
     } catch (err) {
-      setError('Demo login failed. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+      setError('Demo login failed. Please try again.')
+  } finally {
+      setIsLoading(false)
+  }
   };
 
   return (
@@ -88,8 +88,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           <label htmlFor="email" className="form-label">
             Email Address
           </label>
-          <input;
-            type="email"
+          <input type="email"
             id="email";
             className="form-input glass-input smooth-transition"
             value={email}
@@ -105,8 +104,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           <label htmlFor="password" className="form-label">
             Password
           </label>
-          <input;
-            type="password"
+          <input type="password"
             id="password";
             className="form-input glass-input smooth-transition"
             value={password}
@@ -120,8 +118,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         </div>
 
         <div className="form-actions">
-          <button;
-            type="submit";
+          <button type="submit";
             className="glass-button btn-primary-therapeutic smooth-transition ripple-button animate-glow"
             disabled={isLoading}
           >
@@ -134,8 +131,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             ) : 'Sign In'}
           </button>
 
-          <button;
-            type="button"
+          <button type="button"
             onClick={handleDemoLogin}
             className="glass-button btn-secondary-therapeutic smooth-transition ripple-button"
             disabled={isLoading}
@@ -147,8 +143,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         <div className="auth-form-footer">
           <p>
             Don't have an account?{' '}
-            <button;
-              type="button";
+            <button type="button";
               className="link-button smooth-transition gradient-text"
               onClick={onSwitchToRegister}
               disabled={isLoading}
@@ -166,8 +161,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           align-items: center;
           min-height: 100vh;
           padding: 1rem;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+  }
 
         .auth-form {
           background: white;
@@ -175,22 +170,22 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           padding: 2rem;
           width: 100%;
           max-width: 400px;
-          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        }
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1)
+  }
 
         .auth-form-title {
           font-size: 1.75rem;
           font-weight: 700;
           color: #1a202c;
           margin-bottom: 0.5rem;
-          text-align: center;
-        }
+          text-align: center
+  }
 
         .auth-form-subtitle {
           color: #718096;
           text-align: center;
-          margin-bottom: 1.5rem;
-        }
+          margin-bottom: 1.5rem
+  }
 
         .auth-error-message {
           background-color: #fed7d7;
@@ -198,20 +193,20 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           padding: 0.75rem;
           border-radius: 0.5rem;
           margin-bottom: 1rem;
-          font-size: 0.875rem;
-        }
+          font-size: 0.875rem
+  }
 
         .form-group {
-          margin-bottom: 1.25rem;
-        }
+          margin-bottom: 1.25rem
+  }
 
         .form-label {
           display: block;
           margin-bottom: 0.5rem;
           font-weight: 500;
           color: #4a5568;
-          font-size: 0.875rem;
-        }
+          font-size: 0.875rem
+  }
 
         .form-input {
           width: 100%;
@@ -219,26 +214,26 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           border: 1px solid #e2e8f0;
           border-radius: 0.5rem;
           font-size: 1rem;
-          transition: all 0.2s;
-        }
+          transition: all 0.2s
+  }
 
         .form-input:focus {
           outline: none;
           border-color: #667eea;
-          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1)
+  }
 
         .form-input:disabled {
           background-color: #f7fafc;
-          cursor: not-allowed;
-        }
+          cursor: not-allowed
+  }
 
         .form-actions {
           display: flex;
           flex-direction: column;
           gap: 0.75rem;
-          margin-top: 1.5rem;
-        }
+          margin-top: 1.5rem
+  }
 
         .btn {
           padding: 0.75rem 1.5rem;
@@ -248,40 +243,40 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           font-size: 1rem;
           cursor: pointer;
           transition: all 0.2s;
-          width: 100%;
-        }
+          width: 100%
+  }
 
         .btn-primary {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-        }
+          color: white
+  }
 
         .btn-primary:hover:not(:disabled) {
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4)
+  }
 
         .btn-secondary {
           background: #f7fafc;
           color: #4a5568;
-          border: 1px solid #e2e8f0;
-        }
+          border: 1px solid #e2e8f0
+  }
 
         .btn-secondary:hover:not(:disabled) {
-          background: #edf2f7;
-        }
+          background: #edf2f7
+  }
 
         .btn:disabled {
           opacity: 0.6;
-          cursor: not-allowed;
-        }
+          cursor: not-allowed
+  }
 
         .auth-form-footer {
           margin-top: 1.5rem;
           text-align: center;
           color: #718096;
-          font-size: 0.875rem;
-        }
+          font-size: 0.875rem
+  }
 
         .link-button {
           background: none;
@@ -289,30 +284,30 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           color: #667eea;
           font-weight: 600;
           cursor: pointer;
-          text-decoration: underline;
-        }
+          text-decoration: underline
+  }
 
         .link-button:hover:not(:disabled) {
-          color: #764ba2;
-        }
+          color: #764ba2
+  }
 
         .link-button:disabled {
           opacity: 0.6;
-          cursor: not-allowed;
-        }
+          cursor: not-allowed
+  }
 
         @media (max-width: 480px) {
           .auth-form {
-            padding: 1.5rem;
-          }
+            padding: 1.5rem
+  }
 
           .auth-form-title {
-            font-size: 1.5rem;
-          }
+            font-size: 1.5rem
+  }
         }
       `}</style>
     </div>
-  );
-};
+  )
+  };
 
 export default LoginForm;

@@ -6,13 +6,13 @@ interface MeditationPreset {
   duration: number; // in minutes
   description: string;
   icon: string;
-  ambientSound?: string;
-}
+  ambientSound?: string
+  }
 
 interface MeditationTimerProps {
   onComplete?: (duration: number) => void;
-  autoStart?: boolean;
-}
+  autoStart?: boolean
+  }
 
 const MEDITATION_PRESETS: MeditationPreset[] = [
   { name: 'Quick Reset', duration: 3, description: 'A brief moment of calm', icon: '⚡' },
@@ -23,7 +23,7 @@ const MEDITATION_PRESETS: MeditationPreset[] = [
   { name: 'Extended Session', duration: 30, description: 'Deep meditation practice', icon: '🏔️' }
 ];
 
-const AMBIENT_SOUNDS = [;
+const AMBIENT_SOUNDS = [;;
   { id: 'none', name: 'Silence', icon: '🔇' },
   { id: 'rain', name: 'Rain', icon: '🌧️', frequency: 200 },
   { id: 'ocean', name: 'Ocean Waves', icon: '🌊', frequency: 150 },
@@ -32,7 +32,7 @@ const AMBIENT_SOUNDS = [;
   { id: 'whitenoise', name: 'White Noise', icon: '📻', frequency: 100 }
 ];
 
-const BELL_INTERVALS = [;
+const BELL_INTERVALS = [;;
   { value: 0, label: 'No bells' },
   { value: 1, label: 'Every minute' },
   { value: 3, label: 'Every 3 minutes' },
@@ -75,12 +75,12 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
     if (savedStats) {
       const stats = JSON.parse(savedStats);
       setSessionCount(stats.sessionCount || 0);
-      setTotalMinutes(stats.totalMinutes || 0);
-    }
+      setTotalMinutes(stats.totalMinutes || 0)
+  }
 
     return () => {
-      stopAmbientSound();
-    };
+      stopAmbientSound()
+  };
   };
   }, []);
 
@@ -103,10 +103,10 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       gainNode.gain.exponentialRampToValueAtTime(0.001, now + 2);
       
       oscillator.start(now);
-      oscillator.stop(now + 2);
-    } catch (error) {
-      console.log('Bell sound not available');
-    }
+      oscillator.stop(now + 2)
+  } catch (error) {
+      console.log('Bell sound not available')
+  }
   };
 
   // Start ambient sound;
@@ -134,10 +134,10 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       oscillator.start();
       lfo.start();
       
-      oscillatorRef.current = oscillator;
-    } catch (error) {
-      console.log('Ambient sound not available');
-    }
+      oscillatorRef.current = oscillator
+  } catch (error) {
+      console.log('Ambient sound not available')
+  }
   };
 
   // Stop ambient sound;
@@ -146,8 +146,8 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       try {
         oscillatorRef.current.stop();
         oscillatorRef.current.disconnect();
-        oscillatorRef.current = null;
-      } catch (error) {
+        oscillatorRef.current = null
+  } catch (error) {
         // Already stopped
       }
     }
@@ -157,10 +157,10 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   useEffect(() => {
     if (!isActive || isPaused) {
       if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      return;
-    }
+        clearInterval(intervalRef.current)
+  }
+      return
+  }
 
     intervalRef.current = setInterval(() => {
       setTimeRemaining((prev) => {
@@ -180,29 +180,29 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           localStorage.setItem('meditationStats', JSON.stringify({
             sessionCount: newSessionCount,
             totalMinutes: newTotalMinutes,
-            lastSession: new Date().toISOString();
-          }));
+            lastSession: new Date().toISOString()
+  }));
           
           if (onComplete) onComplete(duration);
-          return 0;
-        }
+          return 0
+  }
         
         // Check for interval bells
         if (bellInterval > 0) {
           const elapsedSeconds = (isCustom ? customDuration * 60 : selectedPreset.duration * 60) - prev + 1;
           if (elapsedSeconds % (bellInterval * 60) === 0 && elapsedSeconds > 0) {
-            playBell();
-          }
+            playBell()
+  }
         }
         
-        return prev - 1;
-      });
-    }, 1000);
+        return prev - 1
+  })
+  }, 1000);
 
     return () => {
       if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+        clearInterval(intervalRef.current)
+  }
     };
   }, [isActive, isPaused, bellInterval, customDuration, selectedPreset, isCustom, sessionCount, totalMinutes, onComplete]);
 
@@ -213,58 +213,57 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
     setIsPaused(false);
     bellTimeRef.current = 0;
     playBell(); // Starting bell
-    startAmbientSound();
+    startAmbientSound()
   };
 
   const handlePause = () => {
     setIsPaused(!isPaused);
     if (!isPaused) {
-      stopAmbientSound();;
+      stopAmbientSound()
   } else {
-      startAmbientSound();
-    }
+      startAmbientSound()
+  }
   };
 
   const handleStop = () => {
     setIsActive(false);
     setIsPaused(false);
     setTimeRemaining(0);
-    stopAmbientSound();
+    stopAmbientSound()
   };
 
   const handlePresetSelect = (preset: MeditationPreset) => {
     setSelectedPreset(preset);
     setIsCustom(false);
     if (isActive) {
-      handleStop();
-    }
+      handleStop()
+  }
   };
 
   const handleCustomDurationChange = (value: number) => {
     setCustomDuration(value);
     setIsCustom(true);
     if (isActive) {
-      handleStop();
-    }
+      handleStop()
+  }
   };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
   };
 
   const getProgress = () => {
     const total = isCustom ? customDuration * 60 : selectedPreset.duration * 60;
-    return ((total - timeRemaining) / total) * 100;
+    return ((total - timeRemaining) / total) * 100
   };
 
   return (
     <div className="meditation-timer">
       <div className="timer-header">
         <h2>Meditation Timer</h2>
-        <button; 
-          className="settings-toggle"
+        <button className="settings-toggle"
           onClick={() => setShowSettings(!showSettings)}
         >
           ⚙️
@@ -328,8 +327,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
         <div className="custom-duration">
           <label>Custom Duration (minutes)</label>
-          <input;
-            type="range"
+          <input type="range"
             min="1"
             max="60"
             value={customDuration}
@@ -343,8 +341,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       <div className="timer-display">
         <div className="timer-circle">
           <svg className="progress-ring" width="280" height="280">
-            <circle;
-              className="progress-ring-bg"
+            <circle className="progress-ring-bg"
               cx="140"
               cy="140"
               r="130"
@@ -352,8 +349,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
               stroke="#e5e7eb"
               strokeWidth="8"
             />
-            <circle;
-              className="progress-ring-progress"
+            <circle className="progress-ring-progress"
               cx="140"
               cy="140"
               r="130"
@@ -443,7 +439,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
         </ul>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export default MeditationTimer;

@@ -3,8 +3,8 @@ import './GroundingTechnique.css';
 
 interface GroundingTechniqueProps {
   onComplete?: () => void;
-  autoStart?: boolean;
-}
+  autoStart?: boolean
+  }
 
 export const GroundingTechnique: React.FC<GroundingTechniqueProps> = ({ 
   onComplete,
@@ -15,7 +15,7 @@ export const GroundingTechnique: React.FC<GroundingTechniqueProps> = ({
   const [isStarted, setIsStarted] = useState(autoStart);
   const [isCompleted, setIsCompleted] = useState(false);
 
-  const steps = [;
+  const steps = [;;
     { 
       number: 5, 
       sense: 'things you can SEE', 
@@ -38,64 +38,64 @@ export const GroundingTechnique: React.FC<GroundingTechniqueProps> = ({
       icon: '👂', 
       placeholder: 'e.g., birds chirping, fan noise',
       color: '#8b5cf6',
-      tips: 'Listen for both near and distant sounds';
-    },
+      tips: 'Listen for both near and distant sounds'
+  },
     { 
       number: 2, 
       sense: 'things you can SMELL', 
       icon: '👃', 
       placeholder: 'e.g., coffee, fresh air',
       color: '#f59e0b',
-      tips: 'Take deep breaths and notice any scents';
-    },
+      tips: 'Take deep breaths and notice any scents'
+  },
     { 
       number: 1, 
       sense: 'thing you can TASTE', 
       icon: '👅', 
       placeholder: 'e.g., mint, coffee',
       color: '#ef4444',
-      tips: 'Notice the taste in your mouth or take a sip of water';
-    }
+      tips: 'Notice the taste in your mouth or take a sip of water'
+  }
   ];
 
   const handleStart = () => {
     setIsStarted(true);
     setStep(0);
     setResponses([[], [], [], [], []]);
-    setIsCompleted(false);
+    setIsCompleted(false)
   };
 
   const handleNext = () => {
     if (step < steps.length - 1) {
-      setStep(step + 1);;
+      setStep(step + 1)
   } else {
       setIsCompleted(true);
       if (onComplete) {
-        setTimeout(onComplete, 2000);
-      }
+        setTimeout(onComplete, 2000)
+  }
     }
   };
 
   const handlePrevious = () => {
     if (step > 0) {
-      setStep(step - 1);
-    }
+      setStep(step - 1)
+  }
   };
 
   const handleReset = () => {
     setStep(0);
     setResponses([[], [], [], [], []]);
     setIsCompleted(false);
-    setIsStarted(false);
+    setIsStarted(false)
   };
 
   const handleInputChange = (index: number, value: string) => {
     const newResponses = [...responses];
     if (!newResponses[step]) {
-      newResponses[step] = [];
-    }
+      newResponses[step] = []
+  }
     newResponses[step][index] = value;
-    setResponses(newResponses);
+    setResponses(newResponses)
   };
 
   const isStepComplete = () => {
@@ -108,7 +108,7 @@ export const GroundingTechnique: React.FC<GroundingTechniqueProps> = ({
   const calculateProgress = () => {
     const totalSteps = steps.length;
     const completedSteps = step + (isStepComplete() ? 1 : 0);
-    return (completedSteps / totalSteps) * 100;
+    return (completedSteps / totalSteps) * 100
   };
 
   if (!isStarted) {
@@ -135,7 +135,7 @@ export const GroundingTechnique: React.FC<GroundingTechniqueProps> = ({
           </button>
         </div>
       </div>
-    );
+    )
   }
 
   if (isCompleted) {
@@ -171,7 +171,7 @@ export const GroundingTechnique: React.FC<GroundingTechniqueProps> = ({
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   const currentStep = steps[step];
@@ -181,12 +181,11 @@ export const GroundingTechnique: React.FC<GroundingTechniqueProps> = ({
       {/* Progress Bar */}
       <div className="progress-container">
         <div className="progress-bar">
-          <div; 
-            className="progress-fill" 
+          <div className="progress-fill" 
             style={{ 
               width: `${calculateProgress()}%`,
-              backgroundColor: currentStep.color ;
-            }}
+              backgroundColor: currentStep.color
+  }}
           />
         </div>
         <div className="step-indicators">
@@ -195,8 +194,8 @@ export const GroundingTechnique: React.FC<GroundingTechniqueProps> = ({
               key={index} 
               className={`step-dot ${index === step ? 'active' : ''} ${index < step ? 'completed' : ''}`}
               style={{ 
-                backgroundColor: index <= step ? steps[index].color : '#e5e7eb' ;
-              }}
+                backgroundColor: index <= step ? steps[index].color : '#e5e7eb'
+  }}
             />
           ))}
         </div>
@@ -220,8 +219,7 @@ export const GroundingTechnique: React.FC<GroundingTechniqueProps> = ({
               <span className="input-number" style={{ color: currentStep.color }}>
                 {index + 1}
               </span>
-              <input;
-                type="text";
+              <input type="text";
                 className="grounding-input"
                 placeholder={currentStep.placeholder}
                 value={responses[step]?.[index] || ''}
@@ -234,8 +232,7 @@ export const GroundingTechnique: React.FC<GroundingTechniqueProps> = ({
 
         {/* Navigation */}
         <div className="navigation-buttons">
-          <button; 
-            className="nav-button previous" 
+          <button className="nav-button previous" 
             onClick={handlePrevious}
             disabled={step === 0}
           >
@@ -246,12 +243,11 @@ export const GroundingTechnique: React.FC<GroundingTechniqueProps> = ({
             Step {step + 1} of {steps.length}
           </div>
 
-          <button; 
-            className="nav-button next" 
+          <button className="nav-button next" 
             onClick={handleNext}
             style={{ 
-              backgroundColor: isStepComplete() ? currentStep.color : '#9ca3af' ;
-            }}
+              backgroundColor: isStepComplete() ? currentStep.color : '#9ca3af'
+  }}
           >
             {step === steps.length - 1 ? 'Complete' : 'Next'} →
           </button>
@@ -269,7 +265,7 @@ export const GroundingTechnique: React.FC<GroundingTechniqueProps> = ({
         </ul>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export default GroundingTechnique;

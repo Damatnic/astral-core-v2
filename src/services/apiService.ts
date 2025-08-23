@@ -11,8 +11,8 @@ export interface ApiConfig {
   retries?: number;
   retryDelay?: number;
   cache?: boolean;
-  cacheTTL?: number;
-}
+  cacheTTL?: number
+  }
 
 export interface ApiRequestConfig {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
@@ -23,22 +23,22 @@ export interface ApiRequestConfig {
   cacheTTL?: number;
   retries?: number;
   timeout?: number;
-  skipAuth?: boolean;
-}
+  skipAuth?: boolean
+  }
 
 export interface ApiResponse<T = any> {
   data: T;
   status: number;
   headers: Headers;
-  ok: boolean;
-}
+  ok: boolean
+  }
 
 export interface ApiError {
   message: string;
   code?: string;
   status?: number;
-  details?: any;
-}
+  details?: any
+  }
 
 class ApiService {
   private config: ApiConfig;
@@ -47,7 +47,7 @@ class ApiService {
   private interceptors = {
     request: [] as Array<(config: ApiRequestConfig) => ApiRequestConfig | Promise<ApiRequestConfig>>,
     response: [] as Array<(response: ApiResponse) => ApiResponse | Promise<ApiResponse>>,
-    error: [] as Array<(error: ApiError) => ApiError | Promise<ApiError>>;
+    error: [] as Array<(error: ApiError) => ApiError | Promise<ApiError>>
   };
 
   constructor(config: ApiConfig) {
@@ -61,7 +61,7 @@ class ApiService {
     };
 
     // Add default interceptors
-    this.setupDefaultInterceptors();
+    this.setupDefaultInterceptors()
   }
 
   /**
@@ -78,8 +78,8 @@ class ApiService {
             'Authorization': `Bearer ${token}`
           }
       }
-      return config;
-    });
+      return config
+  });
 
     // Handle 401 errors
     this.addErrorInterceptor(async (error) => {
@@ -88,35 +88,35 @@ class ApiService {
         try {
           await auth0Service.refreshToken();
           // Retry the original request
-          return error;
-        } catch (refreshError) {
+          return error
+  } catch (refreshError) {
           // Redirect to login
-          await auth0Service.logout();
-        }
+          await auth0Service.logout()
+  }
       }
-      return error;
-    });
+      return error
+  })
   }
 
   /**
    * Add request interceptor
    */
   addRequestInterceptor(interceptor: (config: ApiRequestConfig) => ApiRequestConfig | Promise<ApiRequestConfig>) {
-    this.interceptors.request.push(interceptor);
+    this.interceptors.request.push(interceptor)
   }
 
   /**
    * Add response interceptor
    */
   addResponseInterceptor(interceptor: (response: ApiResponse) => ApiResponse | Promise<ApiResponse>) {
-    this.interceptors.response.push(interceptor);
+    this.interceptors.response.push(interceptor)
   }
 
   /**
    * Add error interceptor
    */
   addErrorInterceptor(interceptor: (error: ApiError) => ApiError | Promise<ApiError>) {
-    this.interceptors.error.push(interceptor);
+    this.interceptors.error.push(interceptor)
   }
 
   /**
@@ -126,8 +126,8 @@ class ApiService {
     // Apply request interceptors;
     let finalConfig = { ...config };
     for (const interceptor of this.interceptors.request) {
-      finalConfig = await interceptor(finalConfig);
-    }
+      finalConfig = await interceptor(finalConfig)
+  }
 
     // Check cache for GET requests;
     const cacheKey = this.getCacheKey(url, finalConfig);
@@ -139,8 +139,8 @@ class ApiService {
       // Check for pending request to prevent duplicate calls;
       const pending = this.pendingRequests.get(cacheKey);
       if (pending) {
-        return pending as Promise<ApiResponse<T>>;
-      }
+        return pending as Promise<ApiResponse<T>>
+  }
     }
 
     // Create request promise;
@@ -148,8 +148,8 @@ class ApiService {
 
     // Store as pending for deduplication
     if (finalConfig.method === 'GET' || !finalConfig.method) {
-      this.pendingRequests.set(cacheKey, requestPromise);
-    }
+      this.pendingRequests.set(cacheKey, requestPromise)
+  }
 
     try {
       const response = await requestPromise;
@@ -157,18 +157,18 @@ class ApiService {
       // Apply response interceptors;
       let finalResponse = response;
       for (const interceptor of this.interceptors.response) {
-        finalResponse = await interceptor(finalResponse);
-      }
+        finalResponse = await interceptor(finalResponse)
+  }
 
       // Cache successful GET responses
       if ((finalConfig.method === 'GET' || !finalConfig.method) && finalResponse.ok) {
-        this.setCache(cacheKey, finalResponse.data, finalConfig.cacheTTL);
-      }
+        this.setCache(cacheKey, finalResponse.data, finalConfig.cacheTTL)
+  }
 
-      return finalResponse;
-    } finally {
-      this.pendingRequests.delete(cacheKey);
-    }
+      return finalResponse
+  } finally {
+      this.pendingRequests.delete(cacheKey)
+  }
   }
 
   /**
@@ -193,8 +193,8 @@ class ApiService {
             ...config.headers
           },
           body: config.body ? JSON.stringify(config.body) : undefined,
-          signal: controller.signal;
-        };
+          signal: controller.signal
+  };
   };
 
         clearTimeout(timeoutId);
@@ -203,82 +203,82 @@ class ApiService {
         let data: T;
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
-          data = await response.json();;
+          data = await response.json()
   } else {
-          data = await response.text() as unknown as T;
-        }
+          data = await response.text() as unknown as T
+  }
 
         // Handle HTTP errors
         if (!response.ok) {
           const error: ApiError = {
             message: `HTTP ${response.status}: ${response.statusText}`,
             status: response.status,
-            details: data;
-          };
+            details: data
+  };
 
           // Apply error interceptors;
           let finalError = error;
           for (const interceptor of this.interceptors.error) {
-            finalError = await interceptor(finalError);
-          }
+            finalError = await interceptor(finalError)
+  }
 
           // Retry on 5xx errors
           if (response.status >= 500 && attempt < retries) {
             lastError = finalError;
             await this.delay(retryDelay * Math.pow(2, attempt)); // Exponential backoff
-            continue;
-          }
+            continue
+  }
 
-          throw finalError;
-        }
+          throw finalError
+  }
 
         return {
           data,
           status: response.status,
           headers: response.headers,
-          ok: response.ok;
-        } catch (error) {
+          ok: response.ok
+  } catch (error) {
         // Handle network errors with proper type guards
         if (error instanceof Error) {
           if (error.name === 'AbortError') {
             lastError = {
               message: 'Request timeout',
-              code: 'TIMEOUT';
-            } else if (error instanceof TypeError && error.message === 'Failed to fetch') {
+              code: 'TIMEOUT'
+  } else if (error instanceof TypeError && error.message === 'Failed to fetch') {
             lastError = {
               message: 'Network error',
-              code: 'NETWORK_ERROR';
-            } else {
+              code: 'NETWORK_ERROR'
+  } else {
             lastError = {
               message: error.message,
-              code: 'UNKNOWN_ERROR';
-            };
+              code: 'UNKNOWN_ERROR'
+  }
   } else {
           lastError = {
             message: typeof error === 'string' ? error : 'Unknown error occurred',
-            code: 'UNKNOWN_ERROR';
-          }
+            code: 'UNKNOWN_ERROR'
+  }
 
         // Retry on network errors
         if (attempt < retries) {
           await this.delay(retryDelay * Math.pow(2, attempt));
-          continue;
-        }
+          continue
+  }
 
         // Apply error interceptors;
         let finalError = lastError;
         if (finalError) {
           for (const interceptor of this.interceptors.error) {
-            finalError = await interceptor(finalError);
-          }
-          throw finalError;;
+            finalError = await interceptor(finalError)
+  }
+          throw finalError
   } else {
-          throw new Error('Request failed');
-        }
+          throw new Error('Request failed')
+  }
       }
     }
 
-    throw lastError || new Error('Request failed after retries');
+    throw lastError || new Error('Request failed after retries')
   }
 
   /**
@@ -288,22 +288,22 @@ class ApiService {
     const url = path.startsWith('http') ? path : `${this.config.baseURL}${path}`;
     
     if (!params || Object.keys(params).length === 0) {
-      return url;
-    }
+      return url
+  }
 
-    const queryString = Object.entries(params);
+    const queryString = Object.entries(params);;
       .filter(([_, value]) => value !== undefined && value !== null)
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
       .join('&');
 
-    return `${url}${url.includes('?') ? '&' : '?'}${queryString}`;
+    return `${url}${url.includes('?') ? '&' : '?'}${queryString}`
   }
 
   /**
    * Generate cache key
    */
   private getCacheKey(url: string, config: ApiRequestConfig): string {
-    return `${config.method || 'GET'}:${url}:${JSON.stringify(config.params || {})}`;
+    return `${config.method || 'GET'}:${url}:${JSON.stringify(config.params || {})}`
   }
 
   /**
@@ -318,10 +318,10 @@ class ApiService {
     const ttl = this.config.cacheTTL ?? 300000;
     if (Date.now() - cached.timestamp > ttl) {
       this.cache.delete(key);
-      return null;
-    }
+      return null
+  }
 
-    return cached.data;
+    return cached.data
   }
 
   /**
@@ -332,8 +332,8 @@ class ApiService {
 
     this.cache.set(key, {
       data,
-      timestamp: Date.now();
-    };
+      timestamp: Date.now()
+  };
   };
 
     // Clean old cache entries
@@ -344,10 +344,10 @@ class ApiService {
       
       entries.forEach(([key, value]) => {
         if (now - value.timestamp > effectiveTTL) {
-          this.cache.delete(key);
-        }
-      });
-    }
+          this.cache.delete(key)
+  }
+      })
+  }
   }
 
   /**
@@ -358,45 +358,45 @@ class ApiService {
       const keys = Array.from(this.cache.keys());
       keys.forEach(key => {
         if (key.includes(pattern)) {
-          this.cache.delete(key);
-        }
-      });;
+          this.cache.delete(key)
+  }
+      })
   } else {
-      this.cache.clear();
-    }
+      this.cache.clear()
+  }
   }
 
   /**
    * Delay helper for retry logic
    */
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms))
   }
 
   // Convenience methods
   async get<T = any>(url: string, params?: Record<string, any>, config?: ApiRequestConfig): Promise<T> {
     const response = await this.request<T>(url, { ...config, method: 'GET', params });
-    return response.data;
+    return response.data
   }
 
   async post<T = any>(url: string, body?: any, config?: ApiRequestConfig): Promise<T> {
     const response = await this.request<T>(url, { ...config, method: 'POST', body });
-    return response.data;
+    return response.data
   }
 
   async put<T = any>(url: string, body?: any, config?: ApiRequestConfig): Promise<T> {
     const response = await this.request<T>(url, { ...config, method: 'PUT', body });
-    return response.data;
+    return response.data
   }
 
   async patch<T = any>(url: string, body?: any, config?: ApiRequestConfig): Promise<T> {
     const response = await this.request<T>(url, { ...config, method: 'PATCH', body });
-    return response.data;
+    return response.data
   }
 
   async delete<T = any>(url: string, config?: ApiRequestConfig): Promise<T> {
     const response = await this.request<T>(url, { ...config, method: 'DELETE' });
-    return response.data;
+    return response.data
   }
 }
 
@@ -408,8 +408,8 @@ const apiService = new ApiService({
   timeout: 30000,
   retries: 3,
   cache: true,
-  cacheTTL: 5 * 60 * 1000 // 5 minutes;
-});
+  cacheTTL: 5 * 60 * 1000 // 5 minutes
+  });
 
 // Export for crisis endpoints (with different config);
 export const crisisApiService = new ApiService({
@@ -417,7 +417,7 @@ export const crisisApiService = new ApiService({
   timeout: 60000, // Longer timeout for crisis
   retries: 5, // More retries for crisis
   cache: true,
-  cacheTTL: 60 * 60 * 1000 // 1 hour cache for crisis resources;
-});
+  cacheTTL: 60 * 60 * 1000 // 1 hour cache for crisis resources
+  });
 
 export default apiService;

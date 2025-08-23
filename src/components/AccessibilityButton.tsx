@@ -17,15 +17,15 @@ export const AccessibilityButton: React.FC = () => {
 
   useEffect(() => {
     const handleSettingsChange = () => {
-      setSettings(accessibilityService.getSettings());
-    };
+      setSettings(accessibilityService.getSettings())
+  };
 
     // Listen for settings changes
     window.addEventListener('accessibility-settings-changed', handleSettingsChange);
     
     return () => {
-      window.removeEventListener('accessibility-settings-changed', handleSettingsChange);
-    };
+      window.removeEventListener('accessibility-settings-changed', handleSettingsChange)
+  };
   };
   }, []);
 
@@ -34,83 +34,83 @@ export const AccessibilityButton: React.FC = () => {
       case 'high-contrast': {
         const newSettings = {
           ...settings,
-          highContrast: !settings.highContrast;
-        };
+          highContrast: !settings.highContrast
+  };
         accessibilityService.updateSettings(newSettings);
         setSettings(newSettings);
         accessibilityService.announce({
           message: `High contrast ${newSettings.highContrast ? 'enabled' : 'disabled'}`,
           priority: 'high',
-          type: 'status';
-        });
-        break;
-      }
+          type: 'status'
+  });
+        break
+  }
       case 'large-text': {
         const currentSize = settings.increasedTextSize || 1.0;
         const newSize = currentSize === 1.0 ? 1.5 : currentSize === 1.5 ? 2.0 : 1.0;
         const newSettings = {
           ...settings,
-          increasedTextSize: newSize;
-        };
+          increasedTextSize: newSize
+  };
         accessibilityService.updateSettings(newSettings);
         setSettings(newSettings);
         accessibilityService.announce({
           message: `Text size set to ${newSize === 1.0 ? 'normal' : newSize === 1.5 ? 'large' : 'extra-large'}`,
           priority: 'high',
-          type: 'status';
-        });
-        break;
-      }
+          type: 'status'
+  });
+        break
+  }
       case 'reduce-motion': {
         const newSettings = {
           ...settings,
-          reducedMotion: !settings.reducedMotion;
-        };
+          reducedMotion: !settings.reducedMotion
+  };
         accessibilityService.updateSettings(newSettings);
         setSettings(newSettings);
         accessibilityService.announce({
           message: `Animations ${newSettings.reducedMotion ? 'reduced' : 'enabled'}`,
           priority: 'high',
-          type: 'status';
-        });
-        break;
-      }
+          type: 'status'
+  });
+        break
+  }
       case 'screen-reader': {
         const newSettings = {
           ...settings,
-          screenReaderEnabled: !settings.screenReaderEnabled;
-        };
+          screenReaderEnabled: !settings.screenReaderEnabled
+  };
         accessibilityService.updateSettings(newSettings);
         setSettings(newSettings);
         accessibilityService.announce({
           message: `Screen reader mode ${newSettings.screenReaderEnabled ? 'enabled' : 'disabled'}`,
           priority: 'high',
-          type: 'status';
-        });
-        break;
-      }
+          type: 'status'
+  });
+        break
+  }
       case 'keyboard-nav': {
         const newSettings = {
           ...settings,
-          enhancedKeyboardNavigation: !settings.enhancedKeyboardNavigation;
-        };
+          enhancedKeyboardNavigation: !settings.enhancedKeyboardNavigation
+  };
         accessibilityService.updateSettings(newSettings);
         setSettings(newSettings);
         accessibilityService.announce({
           message: `Keyboard navigation ${newSettings.enhancedKeyboardNavigation ? 'enabled' : 'disabled'}`,
           priority: 'high',
-          type: 'status';
-        });
-        break;
-      }
+          type: 'status'
+  });
+        break
+  }
       case 'crisis-shortcuts': {
         accessibilityService.announce({
           message: 'Crisis shortcuts: Alt+C for crisis resources, Alt+E for emergency, Alt+S for safety plan, Alt+Q for quiet space',
           priority: 'high',
-          type: 'status';
-        });
-        break;
-      }
+          type: 'status'
+  });
+        break
+  }
     }
   };
 
@@ -138,13 +138,13 @@ export const AccessibilityButton: React.FC = () => {
           case 'k':
             e.preventDefault();
             handleQuickActions('keyboard-nav');
-            break;
-        }
+            break
+  }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown)
   };
   }, [isExpanded, settings]);
 
@@ -159,8 +159,8 @@ export const AccessibilityButton: React.FC = () => {
           display: flex;
           flex-direction: column;
           align-items: flex-end;
-          gap: 0.5rem;
-        }
+          gap: 0.5rem
+  }
 
         .accessibility-main-button {
           width: 56px;
@@ -175,26 +175,26 @@ export const AccessibilityButton: React.FC = () => {
           justify-content: center;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
           transition: all 0.3s ease;
-          position: relative;
-        }
+          position: relative
+  }
 
         .accessibility-main-button:hover {
           transform: scale(1.1);
-          box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-        }
+          box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3)
+  }
 
         .accessibility-main-button:focus {
           outline: 3px solid #667eea;
-          outline-offset: 3px;
-        }
+          outline-offset: 3px
+  }
 
         .accessibility-main-button.active {
-          transform: rotate(45deg);
-        }
+          transform: rotate(45deg)
+  }
 
         .accessibility-icon {
-          font-size: 1.5rem;
-        }
+          font-size: 1.5rem
+  }
 
         .accessibility-quick-panel {
           background: var(--card-bg);
@@ -209,14 +209,14 @@ export const AccessibilityButton: React.FC = () => {
           opacity: 0;
           transform: translateY(20px) scale(0.9);
           pointer-events: none;
-          transition: all 0.3s ease;
-        }
+          transition: all 0.3s ease
+  }
 
         .accessibility-quick-panel.expanded {
           opacity: 1;
           transform: translateY(0) scale(1);
-          pointer-events: all;
-        }
+          pointer-events: all
+  }
 
         .accessibility-panel-header {
           display: flex;
@@ -224,16 +224,16 @@ export const AccessibilityButton: React.FC = () => {
           justify-content: space-between;
           padding-bottom: 0.75rem;
           border-bottom: 1px solid var(--border-color);
-          margin-bottom: 0.5rem;
-        }
+          margin-bottom: 0.5rem
+  }
 
         .accessibility-panel-title {
           font-weight: 600;
           color: var(--text-primary);
           display: flex;
           align-items: center;
-          gap: 0.5rem;
-        }
+          gap: 0.5rem
+  }
 
         .accessibility-close-btn {
           background: transparent;
@@ -242,13 +242,13 @@ export const AccessibilityButton: React.FC = () => {
           cursor: pointer;
           padding: 0.25rem;
           border-radius: 4px;
-          transition: all 0.2s ease;
-        }
+          transition: all 0.2s ease
+  }
 
         .accessibility-close-btn:hover {
           background: var(--bg-secondary);
-          color: var(--text-primary);
-        }
+          color: var(--text-primary)
+  }
 
         .quick-action-item {
           display: flex;
@@ -259,25 +259,25 @@ export const AccessibilityButton: React.FC = () => {
           border-radius: 8px;
           border: 1px solid transparent;
           cursor: pointer;
-          transition: all 0.2s ease;
-        }
+          transition: all 0.2s ease
+  }
 
         .quick-action-item:hover {
           border-color: var(--accent-primary);
-          transform: translateX(-2px);
-        }
+          transform: translateX(-2px)
+  }
 
         .quick-action-item.active {
           background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-          border-color: var(--accent-primary);
-        }
+          border-color: var(--accent-primary)
+  }
 
         .quick-action-info {
           display: flex;
           align-items: center;
           gap: 0.75rem;
-          flex: 1;
-        }
+          flex: 1
+  }
 
         .quick-action-icon {
           width: 32px;
@@ -287,24 +287,24 @@ export const AccessibilityButton: React.FC = () => {
           justify-content: center;
           background: var(--bg-primary);
           border-radius: 8px;
-          color: var(--accent-primary);
-        }
+          color: var(--accent-primary)
+  }
 
         .quick-action-text {
           display: flex;
-          flex-direction: column;
-        }
+          flex-direction: column
+  }
 
         .quick-action-label {
           font-weight: 500;
           color: var(--text-primary);
-          font-size: 0.9rem;
-        }
+          font-size: 0.9rem
+  }
 
         .quick-action-shortcut {
           font-size: 0.75rem;
-          color: var(--text-secondary);
-        }
+          color: var(--text-secondary)
+  }
 
         .quick-action-toggle {
           width: 44px;
@@ -312,12 +312,12 @@ export const AccessibilityButton: React.FC = () => {
           background: var(--bg-tertiary);
           border-radius: 12px;
           position: relative;
-          transition: background 0.3s ease;
-        }
+          transition: background 0.3s ease
+  }
 
         .quick-action-toggle.active {
-          background: var(--accent-primary);
-        }
+          background: var(--accent-primary)
+  }
 
         .quick-action-toggle::after {
           content: '';
@@ -328,12 +328,12 @@ export const AccessibilityButton: React.FC = () => {
           height: 20px;
           background: white;
           border-radius: 50%;
-          transition: transform 0.3s ease;
-        }
+          transition: transform 0.3s ease
+  }
 
         .quick-action-toggle.active::after {
-          transform: translateX(20px);
-        }
+          transform: translateX(20px)
+  }
 
         .accessibility-settings-link {
           display: flex;
@@ -348,13 +348,13 @@ export const AccessibilityButton: React.FC = () => {
           border-radius: 8px;
           cursor: pointer;
           font-weight: 500;
-          transition: all 0.2s ease;
-        }
+          transition: all 0.2s ease
+  }
 
         .accessibility-settings-link:hover {
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        }
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3)
+  }
 
         .accessibility-badge {
           position: absolute;
@@ -364,19 +364,19 @@ export const AccessibilityButton: React.FC = () => {
           height: 12px;
           background: #10b981;
           border-radius: 50%;
-          border: 2px solid white;
-        }
+          border: 2px solid white
+  }
 
         @media (max-width: 768px) {
           .accessibility-floating-container {
             bottom: 1rem;
-            right: 1rem;
-          }
+            right: 1rem
+  }
 
           .accessibility-quick-panel {
             min-width: calc(100vw - 2rem);
-            right: -1rem;
-          }
+            right: -1rem
+  }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -384,8 +384,8 @@ export const AccessibilityButton: React.FC = () => {
           .accessibility-quick-panel,
           .quick-action-item,
           .quick-action-toggle::after {
-            transition: none;
-          }
+            transition: none
+  }
         }
       `}</style>
 
@@ -397,8 +397,7 @@ export const AccessibilityButton: React.FC = () => {
                 <SettingsIcon />
                 Accessibility
               </h3>
-              <button;
-                className="accessibility-close-btn"
+              <button className="accessibility-close-btn"
                 onClick={() => setIsExpanded(false)}
                 aria-label="Close accessibility panel"
               >
@@ -406,8 +405,7 @@ export const AccessibilityButton: React.FC = () => {
               </button>
             </div>
 
-            <button;
-              className={settings.highContrast ? 'quick-action-item active' : 'quick-action-item'}
+            <button className={settings.highContrast ? 'quick-action-item active' : 'quick-action-item'}
               onClick={() => handleQuickActions('high-contrast')}
               aria-label="Toggle high contrast mode"
             >
@@ -421,8 +419,7 @@ export const AccessibilityButton: React.FC = () => {
               <div className={settings.highContrast ? 'quick-action-toggle active' : 'quick-action-toggle'} />
             </button>
 
-            <button;
-              className={(settings.increasedTextSize || 1.0) > 1.0 ? 'quick-action-item active' : 'quick-action-item'}
+            <button className={(settings.increasedTextSize || 1.0) > 1.0 ? 'quick-action-item active' : 'quick-action-item'}
               onClick={() => handleQuickActions('large-text')}
               aria-label="Cycle text size"
             >
@@ -436,8 +433,7 @@ export const AccessibilityButton: React.FC = () => {
               <div className={(settings.increasedTextSize || 1.0) > 1.0 ? 'quick-action-toggle active' : 'quick-action-toggle'} />
             </button>
 
-            <button;
-              className={settings.reducedMotion ? 'quick-action-item active' : 'quick-action-item'}
+            <button className={settings.reducedMotion ? 'quick-action-item active' : 'quick-action-item'}
               onClick={() => handleQuickActions('reduce-motion')}
               aria-label="Toggle reduced motion"
             >
@@ -451,8 +447,7 @@ export const AccessibilityButton: React.FC = () => {
               <div className={settings.reducedMotion ? 'quick-action-toggle active' : 'quick-action-toggle'} />
             </button>
 
-            <button;
-              className={settings.screenReaderEnabled ? 'quick-action-item active' : 'quick-action-item'}
+            <button className={settings.screenReaderEnabled ? 'quick-action-item active' : 'quick-action-item'}
               onClick={() => handleQuickActions('screen-reader')}
               aria-label="Toggle screen reader mode"
             >
@@ -466,8 +461,7 @@ export const AccessibilityButton: React.FC = () => {
               <div className={settings.screenReaderEnabled ? 'quick-action-toggle active' : 'quick-action-toggle'} />
             </button>
 
-            <button;
-              className={settings.enhancedKeyboardNavigation ? 'quick-action-item active' : 'quick-action-item'}
+            <button className={settings.enhancedKeyboardNavigation ? 'quick-action-item active' : 'quick-action-item'}
               onClick={() => handleQuickActions('keyboard-nav')}
               aria-label="Toggle keyboard navigation"
             >
@@ -481,8 +475,7 @@ export const AccessibilityButton: React.FC = () => {
               <div className={settings.enhancedKeyboardNavigation ? 'quick-action-toggle active' : 'quick-action-toggle'} />
             </button>
 
-            <button;
-              className="quick-action-item"
+            <button className="quick-action-item"
               onClick={() => handleQuickActions('crisis-shortcuts')}
               aria-label="Announce crisis keyboard shortcuts"
             >
@@ -495,12 +488,11 @@ export const AccessibilityButton: React.FC = () => {
               </div>
             </button>
 
-            <button;
-              className="accessibility-settings-link"
+            <button className="accessibility-settings-link"
               onClick={() => {
                 setIsSettingsOpen(true);
-                setIsExpanded(false);
-              }}
+                setIsExpanded(false)
+  }}
             >
               <SettingsIcon />
               Full Settings
@@ -508,8 +500,7 @@ export const AccessibilityButton: React.FC = () => {
           </div>
         )}
 
-        <button;
-          className={isExpanded ? 'accessibility-main-button active' : 'accessibility-main-button'}
+        <button className={isExpanded ? 'accessibility-main-button active' : 'accessibility-main-button'}
           onClick={() => setIsExpanded(!isExpanded)}
           aria-label={isExpanded ? 'Close accessibility menu' : 'Open accessibility menu'}
           aria-expanded={isExpanded}
@@ -528,7 +519,7 @@ export const AccessibilityButton: React.FC = () => {
         />
       )}
     </>
-  );
-};
+  )
+  };
 
 export default AccessibilityButton;

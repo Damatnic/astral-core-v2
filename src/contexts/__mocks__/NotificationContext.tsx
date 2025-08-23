@@ -7,8 +7,8 @@ interface NotificationContextType {
   removeToast: (id: string) => void;
   confirmationModal: ConfirmationModalState | null;
   showConfirmationModal: (config: ConfirmationModalState) => void;
-  hideConfirmationModal: () => void;
-}
+  hideConfirmationModal: () => void
+  }
 
 const defaultNotificationContext: NotificationContextType = {
   toasts: [],
@@ -32,13 +32,13 @@ export const NotificationProvider: React.FC<{ children: ReactNode; value?: Parti
     <NotificationContext.Provider value={contextValue}>
       {children}
     </NotificationContext.Provider>
-  );
-};
+  )
+  };
 
 export const useNotification = (): NotificationContextType => {
   const context = useContext(NotificationContext);
   if (!context) {
-    return defaultNotificationContext;
+    return defaultNotificationContext
   }
-  return context;
-};
+  return context
+  };

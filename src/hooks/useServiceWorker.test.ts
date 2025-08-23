@@ -20,15 +20,15 @@ jest.mock('../services/serviceWorkerManager', () => ({
     cacheCrisisResource: jest.fn(),
     precacheCrisisResources: jest.fn(),
     forceReload: jest.fn(),
-    getNetworkStatus: jest.fn();
+    getNetworkStatus: jest.fn()
   }
 }));
 
 // Mock navigator
 Object.defineProperty(global.navigator, 'onLine', {
   value: true,
-  writable: true;
-});
+  writable: true
+  });
 
 
 describe('useServiceWorker Hook', () => {
@@ -41,11 +41,11 @@ describe('useServiceWorker Hook', () => {
     (serviceWorkerManager.getCacheStatus as jest.Mock).mockResolvedValue({
       totalSize: 1024,
       itemCount: 10,
-      lastUpdated: Date.now();
-    });
+      lastUpdated: Date.now()
+  });
     (serviceWorkerManager.getNetworkStatus as jest.Mock).mockReturnValue({
-      isOnline: true;
-    });
+      isOnline: true
+  })
   });
 
   it.skip('should initialize with correct default state', async () => {
@@ -54,7 +54,7 @@ describe('useServiceWorker Hook', () => {
     expect(result.current.isOnline).toBe(true);
     expect(result.current.isOfflineReady).toBe(false);
     expect(result.current.updateAvailable).toBe(false);
-    expect(result.current.cacheStatus).toBeNull();
+    expect(result.current.cacheStatus).toBeNull()
   });
 
   it.skip('should register event listeners on mount', async () => {
@@ -62,7 +62,7 @@ describe('useServiceWorker Hook', () => {
     
     expect(serviceWorkerManager.onOnline).toHaveBeenCalled();
     expect(serviceWorkerManager.onOffline).toHaveBeenCalled();
-    expect(serviceWorkerManager.onUpdateAvailable).toHaveBeenCalled();
+    expect(serviceWorkerManager.onUpdateAvailable).toHaveBeenCalled()
   });
 
   it.skip('should remove event listeners on unmount', async () => {
@@ -72,14 +72,14 @@ describe('useServiceWorker Hook', () => {
     
     expect(serviceWorkerManager.removeOnlineListener).toHaveBeenCalled();
     expect(serviceWorkerManager.removeOfflineListener).toHaveBeenCalled();
-    expect(serviceWorkerManager.removeUpdateListener).toHaveBeenCalled();
+    expect(serviceWorkerManager.removeUpdateListener).toHaveBeenCalled()
   });
 
   it.skip('should update online status when coming online', async () => {
     let onlineHandler: () => void;
     (serviceWorkerManager.onOnline as jest.Mock).mockImplementation((handler) => {
-      onlineHandler = handler;
-    });
+      onlineHandler = handler
+  });
 
     const { result } = renderHook(() => useServiceWorker());
     
@@ -87,17 +87,17 @@ describe('useServiceWorker Hook', () => {
     result.current.isOnline = false;
     
     await act(async () => {
-      onlineHandler();
-    });
+      onlineHandler()
+  });
 
-    expect(result.current.isOnline).toBe(true);
+    expect(result.current.isOnline).toBe(true)
   });
 
   it.skip('should update online status when going offline', async () => {
     let offlineHandler: () => void;
     (serviceWorkerManager.onOffline as jest.Mock).mockImplementation((handler) => {
-      offlineHandler = handler;
-    });
+      offlineHandler = handler
+  });
 
     const { result } = renderHook(() => useServiceWorker());
     
@@ -105,25 +105,25 @@ describe('useServiceWorker Hook', () => {
     expect(result.current.isOnline).toBe(true);
     
     await act(async () => {
-      offlineHandler();
-    });
+      offlineHandler()
+  });
 
-    expect(result.current.isOnline).toBe(false);
+    expect(result.current.isOnline).toBe(false)
   });
 
   it.skip('should update when service worker update is available', async () => {
     let updateHandler: () => void;
     (serviceWorkerManager.onUpdateAvailable as jest.Mock).mockImplementation((handler) => {
-      updateHandler = handler;
-    });
+      updateHandler = handler
+  });
 
     const { result } = renderHook(() => useServiceWorker());
     
     await act(async () => {
-      updateHandler();
-    });
+      updateHandler()
+  });
 
-    expect(result.current.updateAvailable).toBe(true);
+    expect(result.current.updateAvailable).toBe(true)
   });
 
   it.skip('should check offline readiness on mount', async () => {
@@ -132,10 +132,10 @@ describe('useServiceWorker Hook', () => {
     const { result } = renderHook(() => useServiceWorker());
     
     await waitFor(() => {
-      expect(result.current.isOfflineReady).toBe(true);
-    });
+      expect(result.current.isOfflineReady).toBe(true)
+  });
 
-    expect(serviceWorkerManager.isOfflineReady).toHaveBeenCalled();
+    expect(serviceWorkerManager.isOfflineReady).toHaveBeenCalled()
   });
 
   it.skip('should handle offline readiness check errors', async () => {
@@ -145,29 +145,29 @@ describe('useServiceWorker Hook', () => {
     const { result } = renderHook(() => useServiceWorker());
     
     await waitFor(() => {
-      expect(result.current.isOfflineReady).toBe(false);
-    });
+      expect(result.current.isOfflineReady).toBe(false)
+  });
 
     expect(consoleSpy).toHaveBeenCalledWith('Failed to check offline readiness:', expect.any(Error));
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should get cache status on mount', async () => {
     const mockCacheStatus = {
       totalSize: 2048,
       itemCount: 20,
-      lastUpdated: Date.now();
-    };
+      lastUpdated: Date.now()
+  };
     
     (serviceWorkerManager.getCacheStatus as jest.Mock).mockResolvedValue(mockCacheStatus);
     
     const { result } = renderHook(() => useServiceWorker());
     
     await waitFor(() => {
-      expect(result.current.cacheStatus).toEqual(mockCacheStatus);
-    });
+      expect(result.current.cacheStatus).toEqual(mockCacheStatus)
+  });
 
-    expect(serviceWorkerManager.getCacheStatus).toHaveBeenCalled();
+    expect(serviceWorkerManager.getCacheStatus).toHaveBeenCalled()
   });
 
   it.skip('should handle cache status errors', async () => {
@@ -177,10 +177,10 @@ describe('useServiceWorker Hook', () => {
     renderHook(() => useServiceWorker());
     
     await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith('Failed to get cache status:', expect.any(Error));
-    });
+      expect(consoleSpy).toHaveBeenCalledWith('Failed to get cache status:', expect.any(Error))
+  });
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should skip waiting and clear update available', async () => {
@@ -192,11 +192,11 @@ describe('useServiceWorker Hook', () => {
     result.current.updateAvailable = true;
     
     await act(async () => {
-      await result.current.skipWaiting();
-    });
+      await result.current.skipWaiting()
+  });
 
     expect(serviceWorkerManager.skipWaiting).toHaveBeenCalled();
-    expect(result.current.updateAvailable).toBe(false);
+    expect(result.current.updateAvailable).toBe(false)
   });
 
   it.skip('should handle skip waiting errors', async () => {
@@ -206,11 +206,11 @@ describe('useServiceWorker Hook', () => {
     const { result } = renderHook(() => useServiceWorker());
     
     await act(async () => {
-      await result.current.skipWaiting();
-    });
+      await result.current.skipWaiting()
+  });
 
     expect(consoleSpy).toHaveBeenCalledWith('Failed to skip waiting:', expect.any(Error));
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should check for updates', async () => {
@@ -220,11 +220,11 @@ describe('useServiceWorker Hook', () => {
     
     let hasUpdate: boolean = false;
     await act(async () => {
-      hasUpdate = await result.current.checkForUpdates();
-    });
+      hasUpdate = await result.current.checkForUpdates()
+  });
 
     expect(hasUpdate).toBe(true);
-    expect(serviceWorkerManager.checkForUpdates).toHaveBeenCalled();
+    expect(serviceWorkerManager.checkForUpdates).toHaveBeenCalled()
   });
 
   it.skip('should handle check for updates errors', async () => {
@@ -235,12 +235,12 @@ describe('useServiceWorker Hook', () => {
     
     let hasUpdate: boolean = false;
     await act(async () => {
-      hasUpdate = await result.current.checkForUpdates();
-    });
+      hasUpdate = await result.current.checkForUpdates()
+  });
 
     expect(hasUpdate).toBe(false);
     expect(consoleSpy).toHaveBeenCalledWith('Failed to check for updates:', expect.any(Error));
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should clear cache and update status', async () => {
@@ -250,8 +250,8 @@ describe('useServiceWorker Hook', () => {
     
     let success: boolean = false;
     await act(async () => {
-      success = await result.current.clearCache();
-    });
+      success = await result.current.clearCache()
+  });
 
     expect(success).toBe(true);
     expect(serviceWorkerManager.clearCache).toHaveBeenCalled();
@@ -267,12 +267,12 @@ describe('useServiceWorker Hook', () => {
     
     let success: boolean = false;
     await act(async () => {
-      success = await result.current.clearCache();
-    });
+      success = await result.current.clearCache()
+  });
 
     expect(success).toBe(false);
     expect(consoleSpy).toHaveBeenCalledWith('Failed to clear cache:', expect.any(Error));
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should cache crisis resource', async () => {
@@ -282,11 +282,11 @@ describe('useServiceWorker Hook', () => {
     
     let success: boolean = false;
     await act(async () => {
-      success = await result.current.cacheCrisisResource('/crisis-resources.json');
-    });
+      success = await result.current.cacheCrisisResource('/crisis-resources.json')
+  });
 
     expect(success).toBe(true);
-    expect(serviceWorkerManager.cacheCrisisResource).toHaveBeenCalledWith('/crisis-resources.json');
+    expect(serviceWorkerManager.cacheCrisisResource).toHaveBeenCalledWith('/crisis-resources.json')
   });
 
   it.skip('should handle cache crisis resource errors', async () => {
@@ -297,12 +297,12 @@ describe('useServiceWorker Hook', () => {
     
     let success: boolean = false;
     await act(async () => {
-      success = await result.current.cacheCrisisResource('/crisis-resources.json');
-    });
+      success = await result.current.cacheCrisisResource('/crisis-resources.json')
+  });
 
     expect(success).toBe(false);
     expect(consoleSpy).toHaveBeenCalledWith('Failed to cache crisis resource:', expect.any(Error));
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should precache crisis resources', async () => {
@@ -311,10 +311,10 @@ describe('useServiceWorker Hook', () => {
     const { result } = renderHook(() => useServiceWorker());
     
     await act(async () => {
-      await result.current.precacheCrisisResources();
-    });
+      await result.current.precacheCrisisResources()
+  });
 
-    expect(serviceWorkerManager.precacheCrisisResources).toHaveBeenCalled();
+    expect(serviceWorkerManager.precacheCrisisResources).toHaveBeenCalled()
   });
 
   it.skip('should handle precache crisis resources errors', async () => {
@@ -324,11 +324,11 @@ describe('useServiceWorker Hook', () => {
     const { result } = renderHook(() => useServiceWorker());
     
     await act(async () => {
-      await result.current.precacheCrisisResources();
-    });
+      await result.current.precacheCrisisResources()
+  });
 
     expect(consoleSpy).toHaveBeenCalledWith('Failed to pre-cache crisis resources:', expect.any(Error));
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should force reload', async () => {
@@ -336,39 +336,39 @@ describe('useServiceWorker Hook', () => {
     
     result.current.forceReload();
 
-    expect(serviceWorkerManager.forceReload).toHaveBeenCalled();
+    expect(serviceWorkerManager.forceReload).toHaveBeenCalled()
   });
 
   it.skip('should sync with service worker manager network status', async () => {
     (serviceWorkerManager.getNetworkStatus as jest.Mock).mockReturnValue({
-      isOnline: false;
-    });
+      isOnline: false
+  });
 
     const { result } = renderHook(() => useServiceWorker());
     
     // Should update to match service worker manager status
-    expect(result.current.isOnline).toBe(false);
+    expect(result.current.isOnline).toBe(false)
+  })
   });
-});
 
 describe('useOfflineStatus Hook', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    (navigator as any).onLine = true;
+    (navigator as any).onLine = true
   });
 
   it.skip('should initialize with navigator online status', async () => {
     const { result } = renderHook(() => useOfflineStatus());
     
     expect(result.current.isOnline).toBe(true);
-    expect(result.current.isOffline).toBe(false);
+    expect(result.current.isOffline).toBe(false)
   });
 
   it.skip('should register event listeners', async () => {
     renderHook(() => useOfflineStatus());
     
     expect(serviceWorkerManager.onOnline).toHaveBeenCalled();
-    expect(serviceWorkerManager.onOffline).toHaveBeenCalled();
+    expect(serviceWorkerManager.onOffline).toHaveBeenCalled()
   });
 
   it.skip('should remove event listeners on unmount', async () => {
@@ -377,41 +377,41 @@ describe('useOfflineStatus Hook', () => {
     unmount();
     
     expect(serviceWorkerManager.removeOnlineListener).toHaveBeenCalled();
-    expect(serviceWorkerManager.removeOfflineListener).toHaveBeenCalled();
+    expect(serviceWorkerManager.removeOfflineListener).toHaveBeenCalled()
   });
 
   it.skip('should update status when going online', async () => {
     let onlineHandler: () => void;
     (serviceWorkerManager.onOnline as jest.Mock).mockImplementation((handler) => {
-      onlineHandler = handler;
-    });
+      onlineHandler = handler
+  });
 
     const { result } = renderHook(() => useOfflineStatus());
     
     act(() => {
-      onlineHandler();
-    });
+      onlineHandler()
+  });
 
     expect(result.current.isOnline).toBe(true);
-    expect(result.current.isOffline).toBe(false);
+    expect(result.current.isOffline).toBe(false)
   });
 
   it.skip('should update status when going offline', async () => {
     let offlineHandler: () => void;
     (serviceWorkerManager.onOffline as jest.Mock).mockImplementation((handler) => {
-      offlineHandler = handler;
-    });
+      offlineHandler = handler
+  });
 
     const { result } = renderHook(() => useOfflineStatus());
     
     act(() => {
-      offlineHandler();
-    });
+      offlineHandler()
+  });
 
     expect(result.current.isOnline).toBe(false);
-    expect(result.current.isOffline).toBe(true);
+    expect(result.current.isOffline).toBe(true)
+  })
   });
-});
 
 describe('useCacheManager Hook', () => {
   beforeEach(() => {
@@ -419,8 +419,8 @@ describe('useCacheManager Hook', () => {
     (serviceWorkerManager.getCacheStatus as jest.Mock).mockResolvedValue({
       totalSize: 1024,
       itemCount: 10,
-      lastUpdated: Date.now();
-    });
+      lastUpdated: Date.now()
+  })
   });
 
   it.skip('should initialize with null cache status', async () => {
@@ -428,25 +428,25 @@ describe('useCacheManager Hook', () => {
     
     expect(result.current.cacheStatus).toBeNull();
     // Initially loading as it fetches cache status on mount
-    expect(result.current.isLoading).toBe(true);
+    expect(result.current.isLoading).toBe(true)
   });
 
   it.skip('should get cache status on mount', async () => {
     const mockStatus = {
       totalSize: 2048,
       itemCount: 20,
-      lastUpdated: Date.now();
-    };
+      lastUpdated: Date.now()
+  };
     
     (serviceWorkerManager.getCacheStatus as jest.Mock).mockResolvedValue(mockStatus);
     
     const { result } = renderHook(() => useCacheManager());
     
     await waitFor(() => {
-      expect(result.current.cacheStatus).toEqual(mockStatus);
-    });
+      expect(result.current.cacheStatus).toEqual(mockStatus)
+  });
 
-    expect(serviceWorkerManager.getCacheStatus).toHaveBeenCalled();
+    expect(serviceWorkerManager.getCacheStatus).toHaveBeenCalled()
   });
 
   it.skip('should show loading state during cache operations', async () => {
@@ -457,14 +457,14 @@ describe('useCacheManager Hook', () => {
     const { result } = renderHook(() => useCacheManager());
     
     act(() => {
-      result.current.clearCache();
-    });
+      result.current.clearCache()
+  });
 
     expect(result.current.isLoading).toBe(true);
     
     await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    });
+      expect(result.current.isLoading).toBe(false)
+  })
   });
 
   it.skip('should clear cache and update status', async () => {
@@ -474,11 +474,11 @@ describe('useCacheManager Hook', () => {
     
     let success: boolean = false;
     await act(async () => {
-      success = await result.current.clearCache();
-    });
+      success = await result.current.clearCache()
+  });
 
     expect(success).toBe(true);
-    expect(serviceWorkerManager.clearCache).toHaveBeenCalled();
+    expect(serviceWorkerManager.clearCache).toHaveBeenCalled()
   });
 
   it.skip('should handle clear cache errors', async () => {
@@ -489,13 +489,13 @@ describe('useCacheManager Hook', () => {
     
     let success: boolean = false;
     await act(async () => {
-      success = await result.current.clearCache();
-    });
+      success = await result.current.clearCache()
+  });
 
     expect(success).toBe(false);
     expect(result.current.isLoading).toBe(false);
     expect(consoleSpy).toHaveBeenCalledWith('Failed to clear cache:', expect.any(Error));
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should cache crisis resource', async () => {
@@ -505,11 +505,11 @@ describe('useCacheManager Hook', () => {
     
     let success: boolean = false;
     await act(async () => {
-      success = await result.current.cacheCrisisResource('/test-resource.json');
-    });
+      success = await result.current.cacheCrisisResource('/test-resource.json')
+  });
 
     expect(success).toBe(true);
-    expect(serviceWorkerManager.cacheCrisisResource).toHaveBeenCalledWith('/test-resource.json');
+    expect(serviceWorkerManager.cacheCrisisResource).toHaveBeenCalledWith('/test-resource.json')
   });
 
   it.skip('should handle cache crisis resource errors', async () => {
@@ -520,12 +520,12 @@ describe('useCacheManager Hook', () => {
     
     let success: boolean = false;
     await act(async () => {
-      success = await result.current.cacheCrisisResource('/test-resource.json');
-    });
+      success = await result.current.cacheCrisisResource('/test-resource.json')
+  });
 
     expect(success).toBe(false);
     expect(consoleSpy).toHaveBeenCalledWith('Failed to cache crisis resource:', expect.any(Error));
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should update cache status manually', async () => {
@@ -533,16 +533,16 @@ describe('useCacheManager Hook', () => {
     
     // Wait for initial load to complete
     await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    });
+      expect(result.current.isLoading).toBe(false)
+  });
     
     // Clear mock to count only manual calls
     (serviceWorkerManager.getCacheStatus as jest.Mock).mockClear();
     
     await act(async () => {
-      await result.current.updateCacheStatus();
-    });
+      await result.current.updateCacheStatus()
+  });
 
     expect(serviceWorkerManager.getCacheStatus).toHaveBeenCalledTimes(1); // Only manual call
+  })
   });
-});

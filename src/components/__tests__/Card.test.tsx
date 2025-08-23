@@ -6,7 +6,7 @@ describe('Card', () => {
   const mockOnClick = jest.fn();
 
   beforeEach(() => {
-    mockOnClick.mockClear();
+    mockOnClick.mockClear()
   });
 
   describe('Rendering', () => {
@@ -17,8 +17,8 @@ describe('Card', () => {
         </Card>
       );
       
-      expect(screen.getByText('Card content')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Card content')).toBeInTheDocument()
+  });
 
     it('should apply custom className', () => {
       const { container } = render(
@@ -27,8 +27,8 @@ describe('Card', () => {
         </Card>
       );
       
-      expect(container.firstChild).toHaveClass('custom-card');
-    });
+      expect(container.firstChild).toHaveClass('custom-card')
+  });
 
     it('should apply custom styles', () => {
       const customStyle = { backgroundColor: 'red', padding: '10px' };
@@ -40,8 +40,8 @@ describe('Card', () => {
       
       const card = container.firstChild as HTMLElement;
       expect(card.style.backgroundColor).toBe('red');
-      expect(card.style.padding).toBe('10px');
-    });
+      expect(card.style.padding).toBe('10px')
+  });
 
     it('should render with enhanced classes by default', () => {
       const { container } = render(
@@ -50,8 +50,8 @@ describe('Card', () => {
         </Card>
       );
       
-      expect(container.firstChild).toHaveClass('card-enhanced');
-    });
+      expect(container.firstChild).toHaveClass('card-enhanced')
+  });
 
     it('should render with legacy classes when enhanced is false', () => {
       const { container } = render(
@@ -61,8 +61,8 @@ describe('Card', () => {
       );
       
       expect(container.firstChild).toHaveClass('card');
-      expect(container.firstChild).not.toHaveClass('card-enhanced');
-    });
+      expect(container.firstChild).not.toHaveClass('card-enhanced')
+  })
   });
 
   describe('Variants', () => {
@@ -80,13 +80,13 @@ describe('Card', () => {
         expect(card).toHaveClass('card-enhanced');
         
         if (variant !== 'default') {
-          expect(card).toHaveClass(variant);;
+          expect(card).toHaveClass(variant)
   } else {
           // Default variant should not add a variant class
-          expect(card).not.toHaveClass('default');
-        }
-      });
-    });
+          expect(card).not.toHaveClass('default')
+  }
+      })
+  });
 
     it('should not apply variant classes when not enhanced', () => {
       const { container } = render(
@@ -97,8 +97,8 @@ describe('Card', () => {
       
       const card = container.firstChild as HTMLElement;
       expect(card).toHaveClass('card');
-      expect(card).not.toHaveClass('interactive');
-    });
+      expect(card).not.toHaveClass('interactive')
+  })
   });
 
   describe('Interactive Cards', () => {
@@ -109,8 +109,8 @@ describe('Card', () => {
         </Card>
       );
       
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
+      expect(screen.getByRole('button')).toBeInTheDocument()
+  });
 
     it('should render as region role when no onClick provided', () => {
       render(
@@ -119,8 +119,8 @@ describe('Card', () => {
         </Card>
       );
       
-      expect(screen.getByRole('region')).toBeInTheDocument();
-    });
+      expect(screen.getByRole('region')).toBeInTheDocument()
+  });
 
     it('should use custom role when provided', () => {
       render(
@@ -129,8 +129,8 @@ describe('Card', () => {
         </Card>
       );
       
-      expect(screen.getByRole('article')).toBeInTheDocument();
-    });
+      expect(screen.getByRole('article')).toBeInTheDocument()
+  });
 
     it('should be focusable when interactive', () => {
       render(
@@ -140,8 +140,8 @@ describe('Card', () => {
       );
       
       const card = screen.getByRole('button');
-      expect(card).toHaveAttribute('tabIndex', '0');
-    });
+      expect(card).toHaveAttribute('tabIndex', '0')
+  });
 
     it('should use custom tabIndex when provided', () => {
       render(
@@ -151,8 +151,8 @@ describe('Card', () => {
       );
       
       const card = screen.getByRole('button');
-      expect(card).toHaveAttribute('tabIndex', '-1');
-    });
+      expect(card).toHaveAttribute('tabIndex', '-1')
+  });
 
     it('should not be focusable when not interactive', () => {
       render(
@@ -162,8 +162,8 @@ describe('Card', () => {
       );
       
       const card = screen.getByRole('region');
-      expect(card).not.toHaveAttribute('tabIndex');
-    });
+      expect(card).not.toHaveAttribute('tabIndex')
+  });
 
     it('should add touch classes for legacy interactive cards', () => {
       const { container } = render(
@@ -173,8 +173,8 @@ describe('Card', () => {
       );
       
       const card = container.firstChild as HTMLElement;
-      expect(card).toHaveClass('touch-optimized', 'touch-feedback');
-    });
+      expect(card).toHaveClass('touch-optimized', 'touch-feedback')
+  });
 
     it('should not add touch classes for enhanced interactive cards', () => {
       const { container } = render(
@@ -184,8 +184,8 @@ describe('Card', () => {
       );
       
       const card = container.firstChild as HTMLElement;
-      expect(card).not.toHaveClass('touch-optimized', 'touch-feedback');
-    });
+      expect(card).not.toHaveClass('touch-optimized', 'touch-feedback')
+  });
 
     it('should add aria-pressed attribute for interactive cards', () => {
       render(
@@ -195,8 +195,8 @@ describe('Card', () => {
       );
       
       const card = screen.getByRole('button');
-      expect(card).toHaveAttribute('aria-pressed', 'false');
-    });
+      expect(card).toHaveAttribute('aria-pressed', 'false')
+  })
   });
 
   describe('User Interactions', () => {
@@ -208,8 +208,8 @@ describe('Card', () => {
       );
       
       fireEvent.click(screen.getByRole('button'));
-      expect(mockOnClick).toHaveBeenCalledTimes(1);
-    });
+      expect(mockOnClick).toHaveBeenCalledTimes(1)
+  });
 
     it('should call onClick when Enter key is pressed', () => {
       render(
@@ -220,8 +220,8 @@ describe('Card', () => {
       
       const card = screen.getByRole('button');
       fireEvent.keyDown(card, { key: 'Enter', code: 'Enter' });
-      expect(mockOnClick).toHaveBeenCalledTimes(1);
-    });
+      expect(mockOnClick).toHaveBeenCalledTimes(1)
+  });
 
     it('should call onClick when Space key is pressed', () => {
       render(
@@ -232,8 +232,8 @@ describe('Card', () => {
       
       const card = screen.getByRole('button');
       fireEvent.keyDown(card, { key: ' ', code: 'Space' });
-      expect(mockOnClick).toHaveBeenCalledTimes(1);
-    });
+      expect(mockOnClick).toHaveBeenCalledTimes(1)
+  });
 
     it('should not call onClick for other keys', () => {
       render(
@@ -247,8 +247,8 @@ describe('Card', () => {
       fireEvent.keyDown(card, { key: 'Escape', code: 'Escape' });
       fireEvent.keyDown(card, { key: 'a', code: 'KeyA' });
       
-      expect(mockOnClick).not.toHaveBeenCalled();
-    });
+      expect(mockOnClick).not.toHaveBeenCalled()
+  });
 
     it('should not handle keyDown events when not interactive', () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -264,8 +264,8 @@ describe('Card', () => {
       
       expect(mockOnClick).not.toHaveBeenCalled();
       expect(consoleSpy).not.toHaveBeenCalled();
-      consoleSpy.mockRestore();
-    });
+      consoleSpy.mockRestore()
+  });
 
     it('should prevent default behavior on Enter and Space', () => {
       render(
@@ -280,13 +280,13 @@ describe('Card', () => {
         key: 'Enter',
         code: 'Enter',
         bubbles: true,
-        cancelable: true;
-      });
+        cancelable: true
+  });
       const preventDefaultSpy = jest.spyOn(enterEvent, 'preventDefault');
       
       fireEvent(card, enterEvent);
-      expect(preventDefaultSpy).toHaveBeenCalled();
-    });
+      expect(preventDefaultSpy).toHaveBeenCalled()
+  })
   });
 
   describe('Accessibility', () => {
@@ -297,8 +297,8 @@ describe('Card', () => {
         </Card>
       );
       
-      expect(screen.getByLabelText('Custom card label')).toBeInTheDocument();
-    });
+      expect(screen.getByLabelText('Custom card label')).toBeInTheDocument()
+  });
 
     it('should not have aria-label when not provided', () => {
       render(
@@ -308,8 +308,8 @@ describe('Card', () => {
       );
       
       const card = screen.getByRole('region');
-      expect(card).not.toHaveAttribute('aria-label');
-    });
+      expect(card).not.toHaveAttribute('aria-label')
+  });
 
     it('should have proper role for interactive cards', () => {
       render(
@@ -319,8 +319,8 @@ describe('Card', () => {
       );
       
       const card = screen.getByRole('button');
-      expect(card).toHaveAttribute('role', 'button');
-    });
+      expect(card).toHaveAttribute('role', 'button')
+  });
 
     it('should have proper role for static cards', () => {
       render(
@@ -330,8 +330,8 @@ describe('Card', () => {
       );
       
       const card = screen.getByRole('region');
-      expect(card).toHaveAttribute('role', 'region');
-    });
+      expect(card).toHaveAttribute('role', 'region')
+  })
   });
 
   describe('Edge Cases', () => {
@@ -342,8 +342,8 @@ describe('Card', () => {
         </Card>
       );
       
-      expect(container.firstChild).toHaveClass('card-enhanced');
-    });
+      expect(container.firstChild).toHaveClass('card-enhanced')
+  });
 
     it('should handle empty className', () => {
       const { container } = render(
@@ -352,8 +352,8 @@ describe('Card', () => {
         </Card>
       );
       
-      expect(container.firstChild).toHaveClass('card-enhanced');
-    });
+      expect(container.firstChild).toHaveClass('card-enhanced')
+  });
 
     it('should handle complex children', () => {
       render(
@@ -368,8 +368,8 @@ describe('Card', () => {
       
       expect(screen.getByText('Card Title')).toBeInTheDocument();
       expect(screen.getByText('Card description')).toBeInTheDocument();
-      expect(screen.getByText('Action Button')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Action Button')).toBeInTheDocument()
+  });
 
     it('should handle null or undefined children gracefully', () => {
       const { unmount } = render(<Card>{null}</Card>);
@@ -377,8 +377,8 @@ describe('Card', () => {
       unmount();
       
       render(<Card>{undefined}</Card>);
-      expect(screen.getByRole('region')).toBeInTheDocument();
-    });
+      expect(screen.getByRole('region')).toBeInTheDocument()
+  });
 
     it('should handle multiple className values', () => {
       const { container } = render(
@@ -388,8 +388,8 @@ describe('Card', () => {
       );
       
       const card = container.firstChild as HTMLElement;
-      expect(card).toHaveClass('card-enhanced', 'class1', 'class2', 'class3');
-    });
+      expect(card).toHaveClass('card-enhanced', 'class1', 'class2', 'class3')
+  });
 
     it('should handle rapid click events', () => {
       render(
@@ -405,16 +405,16 @@ describe('Card', () => {
       fireEvent.click(card);
       fireEvent.click(card);
       
-      expect(mockOnClick).toHaveBeenCalledTimes(3);
-    });
+      expect(mockOnClick).toHaveBeenCalledTimes(3)
+  })
   });
 
   describe('Event Handling', () => {
     it('should pass correct event object to onClick', () => {
       let receivedEvent: any;
       const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-        receivedEvent = event;
-      };
+        receivedEvent = event
+  };
       
       render(
         <Card onClick={handleClick}>
@@ -425,14 +425,14 @@ describe('Card', () => {
       fireEvent.click(screen.getByRole('button'));
       
       expect(receivedEvent).toBeTruthy();
-      expect(receivedEvent.type).toBe('click');
-    });
+      expect(receivedEvent.type).toBe('click')
+  });
 
     it('should pass keyboard event to onClick when triggered by keyboard', () => {
       let receivedEvent: any;
       const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        receivedEvent = event;
-      };
+        receivedEvent = event
+  };
       
       render(
         <Card onClick={handleClick}>
@@ -444,7 +444,7 @@ describe('Card', () => {
       fireEvent.keyDown(card, { key: 'Enter', code: 'Enter' });
       
       expect(receivedEvent).toBeTruthy();
-      expect(receivedEvent.key).toBe('Enter');
-    });
+      expect(receivedEvent.key).toBe('Enter')
+  })
+  })
   });
-});

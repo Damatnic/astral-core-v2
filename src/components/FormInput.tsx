@@ -3,8 +3,8 @@ import { useFormAnimations } from '../hooks/useAnimations';
 
 export interface ValidationRule {
   test: (value: string) => boolean;
-  message: string;
-}
+  message: string
+  }
 
 export interface FormInputProps {
   id: string;
@@ -26,8 +26,8 @@ export interface FormInputProps {
   floatingLabel?: boolean;
   helpText?: string;
   className?: string;
-  'aria-describedby'?: string;
-}
+  'aria-describedby'?: string
+  }
 
 // Validation helper functions;
 const validateRequired = (value: string, required: boolean): { isValid: boolean; message: string } => {
@@ -132,22 +132,22 @@ export const FormInput: React.FC<FormInputProps> = ({
     setValidationMessage(validation.message);
 
     if (validation.state === 'error') {
-      showFieldError(id, validation.message);;
+      showFieldError(id, validation.message)
   } else if (validation.state === 'success') {
-      showFieldSuccess(id);;
+      showFieldSuccess(id)
   } else {
-      clearFieldState(id);
-    }
+      clearFieldState(id)
+  }
   };
   }, [value, isTouched, realTimeValidation, id, showFieldError, showFieldSuccess, clearFieldState]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value);
+    onChange(e.target.value)
   };
 
   const handleBlur = () => {
     setIsTouched(true);
-    onBlur?.();
+    onBlur?.()
   };
 
   // Character count calculations;
@@ -156,7 +156,7 @@ export const FormInput: React.FC<FormInputProps> = ({
   const isOverLimit = Boolean(maxLength && charactersUsed > maxLength);
 
   // CSS classes with therapeutic design;
-  const formGroupClasses = [;
+  const formGroupClasses = [;;
     'form-group',
     'smooth-transition',
     validationState !== 'idle' ? validationState : '',
@@ -166,7 +166,7 @@ export const FormInput: React.FC<FormInputProps> = ({
     className
   ].filter(Boolean).join(' ');
 
-  const inputClasses = [;
+  const inputClasses = [;;
     'glass-input',
     'form-input',
     'enhanced-input',
@@ -178,7 +178,7 @@ export const FormInput: React.FC<FormInputProps> = ({
   const helpTextId = `${id}-help`;
   const counterId = `${id}-counter`;
 
-  const describedBy = [;
+  const describedBy = [;;
     ariaDescribedBy,
     validationMessage ? messageId : null,
     helpText ? helpTextId : null,
@@ -216,8 +216,8 @@ export const FormInput: React.FC<FormInputProps> = ({
       isNearLimit={isNearLimit}
       isOverLimit={isOverLimit}
     />
-  );
-};
+  )
+  };
 
 // Wrapper component to reduce complexity;
 interface FormInputWrapperProps {
@@ -248,8 +248,8 @@ interface FormInputWrapperProps {
   counterId: string;
   charactersUsed: number;
   isNearLimit: boolean;
-  isOverLimit: boolean;
-}
+  isOverLimit: boolean
+  }
 
 const FormInputWrapper: React.FC<FormInputWrapperProps> = ({
   formGroupClasses,
@@ -353,8 +353,8 @@ const FormInputWrapper: React.FC<FormInputWrapperProps> = ({
         isOverLimit={isOverLimit}
       />
     </div>
-  );
-};
+  )
+  };
 
 // Sub-components to reduce complexity;
 const ValidationIcon: React.FC<{ validationState: string }> = ({ validationState }) => {
@@ -378,14 +378,14 @@ const ValidationIcon: React.FC<{ validationState: string }> = ({ validationState
         </svg>
       )}
     </div>
-  );
-};
+  )
+  };
 
 interface ValidationMessageProps {
   validationMessage: string;
   messageId: string;
-  validationState: string;
-}
+  validationState: string
+  }
 
 const ValidationMessage: React.FC<ValidationMessageProps> = ({
   validationMessage,
@@ -410,8 +410,8 @@ const ValidationMessage: React.FC<ValidationMessageProps> = ({
       </div>
       <span className="form-message-text">{validationMessage}</span>
     </div>
-  );
-};
+  )
+  };
 
 interface CharacterCountProps {
   showCharacterCount: boolean;
@@ -419,8 +419,8 @@ interface CharacterCountProps {
   counterId: string;
   charactersUsed: number;
   isNearLimit: boolean;
-  isOverLimit: boolean;
-}
+  isOverLimit: boolean
+  }
 
 const CharacterCount: React.FC<CharacterCountProps> = ({
   showCharacterCount,
@@ -448,7 +448,7 @@ const CharacterCount: React.FC<CharacterCountProps> = ({
       <span>{charactersUsed}/{maxLength} characters</span>
       <span>{charactersRemaining} remaining</span>
     </div>
-  );
-};
+  )
+  };
 
 export default FormInput;

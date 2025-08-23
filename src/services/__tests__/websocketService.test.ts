@@ -23,27 +23,27 @@ class MockWebSocket {
     setTimeout(() => {
       this.readyState = MockWebSocket.OPEN;
       if (this.onopen) {
-        this.onopen(new Event('open'));
-      }
-    }, 100);
+        this.onopen(new Event('open'))
+  }
+    }, 100)
   }
 
   send = jest.fn((_data: string) => {
     if (this.readyState !== MockWebSocket.OPEN) {
-      throw new Error('WebSocket is not open');
-    }
+      throw new Error('WebSocket is not open')
+  }
   });
 
   close = jest.fn((code?: number, reason?: string) => {
     this.readyState = MockWebSocket.CLOSED;
     if (this.onclose) {
-      this.onclose(new CloseEvent('close', { code, reason }));
-    }
+      this.onclose(new CloseEvent('close', { code, reason }))
+  }
   });
 
   addEventListener = jest.fn();
-  removeEventListener = jest.fn();
-}
+  removeEventListener = jest.fn()
+  }
 
 global.WebSocket = MockWebSocket as any;
 
@@ -53,7 +53,7 @@ describe('WebSocketService', () => {
 
   beforeEach(() => {
     service = getWebSocketService();
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   describe('connection management', () => {
@@ -61,8 +61,8 @@ describe('WebSocketService', () => {
       const connection = await service.connect('ws://localhost:8080/crisis-support');
 
       expect(connection.connected).toBe(true);
-      expect(connection.url).toBe('ws://localhost:8080/crisis-support');
-    });
+      expect(connection.url).toBe('ws: //localhost:8080/crisis-support')
+  });
 
     it.skip('should handle connection with authentication', async () => {
       const authToken = 'bearer-token-123';
@@ -70,8 +70,8 @@ describe('WebSocketService', () => {
       const connection = await service.connectWithAuth('ws://localhost:8080/secure', authToken);
 
       expect(connection.authenticated).toBe(true);
-      expect(connection.connected).toBe(true);
-    });
+      expect(connection.connected).toBe(true)
+  });
 
     it.skip('should reconnect automatically on disconnection', async () => {
       await service.connect('ws://localhost:8080/test');
@@ -84,14 +84,14 @@ describe('WebSocketService', () => {
       // Wait for reconnection attempt
       await new Promise(resolve => setTimeout(resolve, 200));
       
-      expect(reconnectSpy).toHaveBeenCalled();
-    });
+      expect(reconnectSpy).toHaveBeenCalled()
+  });
 
     it.skip('should handle connection failures gracefully', async () => {
       // Mock WebSocket constructor to throw error;
       const FailingWebSocket = function() {
-        throw new Error('Connection failed');
-      } as any;
+        throw new Error('Connection failed')
+  } as any;
       (FailingWebSocket as any).CONNECTING = 0;
       (FailingWebSocket as any).OPEN = 1;
       (FailingWebSocket as any).CLOSING = 2;
@@ -102,8 +102,8 @@ describe('WebSocketService', () => {
       const connection = await service.connect('ws://invalid-url');
 
       expect(connection.connected).toBe(false);
-      expect(connection.error).toBeDefined();
-    });
+      expect(connection.error).toBeDefined()
+  })
   });
 
   describe('message handling', () => {
@@ -116,8 +116,8 @@ describe('WebSocketService', () => {
         type: 'crisis_alert',
         userId: 'user-123',
         riskLevel: 'high',
-        message: 'Immediate intervention needed';
-      };
+        message: 'Immediate intervention needed'
+  };
 
       await service.sendCrisisAlert(crisisAlert);
 
@@ -125,18 +125,18 @@ describe('WebSocketService', () => {
         JSON.stringify({
           type: 'crisis_alert',
           payload: crisisAlert,
-          timestamp: expect.any(Number);
-        })
-      );
-    });
+          timestamp: expect.any(Number)
+  })
+      )
+  });
 
     it.skip('should send chat messages in real-time', async () => {
       const chatMessage = {
         sessionId: 'session-456',
         senderId: 'user-123',
         text: 'I need someone to talk to',
-        timestamp: Date.now();
-      };
+        timestamp: Date.now()
+  };
 
       await service.sendChatMessage(chatMessage);
 
@@ -144,10 +144,10 @@ describe('WebSocketService', () => {
         JSON.stringify({
           type: 'chat_message',
           payload: chatMessage,
-          timestamp: expect.any(Number);
-        })
-      );
-    });
+          timestamp: expect.any(Number)
+  })
+      )
+  });
 
     it.skip('should handle incoming messages', async () => {
       const messageHandler = jest.fn();
@@ -158,20 +158,20 @@ describe('WebSocketService', () => {
         payload: {
           sessionId: 'session-456',
           senderId: 'helper-789',
-          text: 'I\'m here to help. How are you feeling?';
-        },
-        timestamp: Date.now();
-      };
+          text: 'I\'m here to help. How are you feeling?'
+  },
+        timestamp: Date.now()
+  };
 
       // Simulate incoming message
       if (mockWebSocket.onmessage) {
         mockWebSocket.onmessage(new MessageEvent('message', {
-          data: JSON.stringify(incomingMessage);
-        }));
-      }
+          data: JSON.stringify(incomingMessage)
+  }))
+  }
 
-      expect(messageHandler).toHaveBeenCalledWith(incomingMessage);
-    });
+      expect(messageHandler).toHaveBeenCalledWith(incomingMessage)
+  });
 
     it.skip('should handle presence updates', async () => {
       const presenceHandler = jest.fn();
@@ -182,18 +182,18 @@ describe('WebSocketService', () => {
         payload: {
           userId: 'helper-789',
           status: 'online',
-          availability: 'available';
-        }
+          availability: 'available'
+  }
       };
 
       if (mockWebSocket.onmessage) {
         mockWebSocket.onmessage(new MessageEvent('message', {
-          data: JSON.stringify(presenceUpdate);
-        }));
-      }
+          data: JSON.stringify(presenceUpdate)
+  }))
+  }
 
-      expect(presenceHandler).toHaveBeenCalledWith(presenceUpdate.payload);
-    });
+      expect(presenceHandler).toHaveBeenCalledWith(presenceUpdate.payload)
+  })
   });
 
   describe('room and channel management', () => {
@@ -210,12 +210,12 @@ describe('WebSocketService', () => {
           payload: {
             roomId: 'crisis-room-123',
             userId: 'user-456',
-            roomType: 'crisis_support';
-          },
-          timestamp: expect.any(Number);
-        })
-      );
-    });
+            roomType: 'crisis_support'
+  },
+          timestamp: expect.any(Number)
+  })
+      )
+  });
 
     it.skip('should leave room gracefully', async () => {
       await service.leaveRoom('crisis-room-123', 'user-456');
@@ -225,12 +225,12 @@ describe('WebSocketService', () => {
           type: 'leave_room',
           payload: {
             roomId: 'crisis-room-123',
-            userId: 'user-456';
-          },
-          timestamp: expect.any(Number);
-        })
-      );
-    });
+            userId: 'user-456'
+  },
+          timestamp: expect.any(Number)
+  })
+      )
+  });
 
     it.skip('should handle room events', async () => {
       const roomEventHandler = jest.fn();
@@ -248,12 +248,12 @@ describe('WebSocketService', () => {
 
       if (mockWebSocket.onmessage) {
         mockWebSocket.onmessage(new MessageEvent('message', {
-          data: JSON.stringify(roomEvent);
-        }));
-      }
+          data: JSON.stringify(roomEvent)
+  }))
+  }
 
-      expect(roomEventHandler).toHaveBeenCalledWith(roomEvent.payload);
-    });
+      expect(roomEventHandler).toHaveBeenCalledWith(roomEvent.payload)
+  })
   });
 
   describe('crisis-specific features', () => {
@@ -276,10 +276,10 @@ describe('WebSocketService', () => {
           type: 'crisis_escalation',
           payload: escalation,
           priority: 'immediate',
-          timestamp: expect.any(Number);
-        })
-      );
-    });
+          timestamp: expect.any(Number)
+  })
+      )
+  });
 
     it.skip('should handle emergency interventions', async () => {
       const interventionHandler = jest.fn();
@@ -291,26 +291,26 @@ describe('WebSocketService', () => {
           userId: 'user-123',
           interventionType: 'immediate_contact',
           responderAssigned: 'counselor-456',
-          estimatedResponseTime: 300;
-        }
+          estimatedResponseTime: 300
+  }
       };
 
       if (mockWebSocket.onmessage) {
         mockWebSocket.onmessage(new MessageEvent('message', {
-          data: JSON.stringify(intervention);
-        }));
-      }
+          data: JSON.stringify(intervention)
+  }))
+  }
 
-      expect(interventionHandler).toHaveBeenCalledWith(intervention.payload);
-    });
+      expect(interventionHandler).toHaveBeenCalledWith(intervention.payload)
+  });
 
     it.skip('should send safety check requests', async () => {
       const safetyCheck = {
         userId: 'user-789',
         checkType: 'wellness',
         scheduledTime: Date.now() + 3600000, // 1 hour from now
-        priority: 'medium';
-      };
+        priority: 'medium'
+  };
 
       await service.sendSafetyCheck(safetyCheck);
 
@@ -318,10 +318,10 @@ describe('WebSocketService', () => {
         JSON.stringify({
           type: 'safety_check',
           payload: safetyCheck,
-          timestamp: expect.any(Number);
-        })
-      );
-    });
+          timestamp: expect.any(Number)
+  })
+      )
+  })
   });
 
   describe('connection health and monitoring', () => {
@@ -337,10 +337,10 @@ describe('WebSocketService', () => {
       expect(mockWebSocket.send).toHaveBeenCalledWith(
         JSON.stringify({
           type: 'heartbeat',
-          timestamp: expect.any(Number);
-        })
-      );
-    });
+          timestamp: expect.any(Number)
+  })
+      )
+  });
 
     it.skip('should monitor connection health', () => {
       const health = service.getConnectionHealth();
@@ -348,8 +348,8 @@ describe('WebSocketService', () => {
       expect(health).toHaveProperty('connected');
       expect(health).toHaveProperty('latency');
       expect(health).toHaveProperty('lastHeartbeat');
-      expect(health).toHaveProperty('messagesPerSecond');
-    });
+      expect(health).toHaveProperty('messagesPerSecond')
+  });
 
     it.skip('should detect and report connection issues', async () => {
       const connectionIssueHandler = jest.fn();
@@ -361,9 +361,9 @@ describe('WebSocketService', () => {
       expect(connectionIssueHandler).toHaveBeenCalledWith({
         issue: 'high_latency',
         severity: expect.any(String),
-        timestamp: expect.any(Number);
-      });
-    });
+        timestamp: expect.any(Number)
+  })
+  })
   });
 
   describe('message queuing and offline support', () => {
@@ -378,8 +378,8 @@ describe('WebSocketService', () => {
 
       const queuedMessages = service.getQueuedMessages();
       expect(queuedMessages).toHaveLength(1);
-      expect(queuedMessages[0]).toEqual(expect.objectContaining(message));
-    });
+      expect(queuedMessages[0]).toEqual(expect.objectContaining(message))
+  });
 
     it.skip('should send queued messages when reconnected', async () => {
       // Queue messages while disconnected
@@ -395,8 +395,8 @@ describe('WebSocketService', () => {
       await service.flushMessageQueue();
 
       expect(mockWebSocket.send).toHaveBeenCalledTimes(2);
-      expect(service.getQueuedMessages()).toHaveLength(0);
-    });
+      expect(service.getQueuedMessages()).toHaveLength(0)
+  });
 
     it.skip('should handle message priority in queue', async () => {
       const lowPriorityMsg = { type: 'chat', payload: {}, priority: 'low' };
@@ -407,8 +407,8 @@ describe('WebSocketService', () => {
 
       const queue = service.getQueuedMessages();
       expect(queue[0].priority).toBe('high');
-      expect(queue[1].priority).toBe('low');
-    });
+      expect(queue[1].priority).toBe('low')
+  })
   });
 
   describe('security and validation', () => {
@@ -416,12 +416,12 @@ describe('WebSocketService', () => {
       const validMessage = {
         type: 'chat_message',
         payload: { text: 'Hello' },
-        timestamp: Date.now();
-      };
+        timestamp: Date.now()
+  };
 
       const isValid = service.validateMessage(validMessage);
-      expect(isValid).toBe(true);
-    });
+      expect(isValid).toBe(true)
+  });
 
     it.skip('should reject invalid messages', () => {
       const invalidMessage = {
@@ -430,21 +430,21 @@ describe('WebSocketService', () => {
       };
 
       const isValid = service.validateMessage(invalidMessage);
-      expect(isValid).toBe(false);
-    });
+      expect(isValid).toBe(false)
+  });
 
     it.skip('should sanitize message content', () => {
       const unsafeMessage = {
         type: 'chat_message',
         payload: {
-          text: '<script>alert("xss")</script>Safe text';
-        }
+          text: '<script>alert("xss")</script>Safe text'
+  }
       };
 
       const sanitized = service.sanitizeMessage(unsafeMessage);
       expect(sanitized.payload.text).not.toContain('<script>');
-      expect(sanitized.payload.text).toContain('Safe text');
-    });
+      expect(sanitized.payload.text).toContain('Safe text')
+  })
   });
 
   describe('error handling and recovery', () => {
@@ -457,11 +457,11 @@ describe('WebSocketService', () => {
 
       // Simulate WebSocket error
       if (mockWebSocket.onerror) {
-        mockWebSocket.onerror(new Event('error'));
-      }
+        mockWebSocket.onerror(new Event('error'))
+  }
 
-      expect(errorHandler).toHaveBeenCalled();
-    });
+      expect(errorHandler).toHaveBeenCalled()
+  });
 
     it.skip('should implement exponential backoff for reconnection', async () => {
       const reconnectSpy = jest.spyOn(service, 'reconnectWithBackoff');
@@ -471,11 +471,11 @@ describe('WebSocketService', () => {
       // Simulate multiple disconnections
       for (let i = 0; i < 3; i++) {
         service.simulateDisconnection();
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
+        await new Promise(resolve => setTimeout(resolve, 100))
+  }
 
-      expect(reconnectSpy).toHaveBeenCalled();
-    });
+      expect(reconnectSpy).toHaveBeenCalled()
+  });
 
     it.skip('should cleanup resources on disconnect', async () => {
       await service.connect('ws://localhost:8080/test');
@@ -484,7 +484,7 @@ describe('WebSocketService', () => {
       
       await service.disconnect();
 
-      expect(cleanupSpy).toHaveBeenCalled();
-    });
+      expect(cleanupSpy).toHaveBeenCalled()
+  })
+  })
   });
-});

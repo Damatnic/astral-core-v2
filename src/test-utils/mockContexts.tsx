@@ -18,7 +18,7 @@ export const mockAuthContextValue: AuthContextType = {
     isAuthenticated: false,
     user: null,
     helperProfile: null,
-    userToken: 'test-token';
+    userToken: 'test-token'
   },
   register: jest.fn(() => Promise.resolve()),
 };
@@ -45,13 +45,13 @@ export const mockThemeContextValue = {
       sm: '0.5rem', 
       md: '1rem', 
       lg: '1.5rem', 
-      xl: '2.5rem' ;
-    },
+      xl: '2.5rem'
+  },
     radius: { 
       sm: '4px', 
       md: '8px', 
-      lg: '12px' ;
-    },
+      lg: '12px'
+  },
   },
   toggleTheme: jest.fn(),
 };
@@ -82,8 +82,8 @@ export interface MockAuthContextType {
   userToken: string | null;
   isAnonymous?: boolean;
   authState?: any;
-  register?: jest.Mock;
-}
+  register?: jest.Mock
+  }
 
 const MockAuthContext = createContext<MockAuthContextType>(mockAuthContextValue as MockAuthContextType);
 
@@ -96,8 +96,8 @@ export const MockAuthProvider: React.FC<{ children: ReactNode; value?: Partial<M
     <MockAuthContext.Provider value={contextValue}>
       {children}
     </MockAuthContext.Provider>
-  );
-};
+  )
+  };
 
 // ========================================
 // NOTIFICATION CONTEXT MOCK
@@ -108,8 +108,8 @@ export interface MockNotificationContextType {
   removeToast: jest.Mock;
   confirmationModal: any | null;
   showConfirmationModal: jest.Mock;
-  hideConfirmationModal: jest.Mock;
-}
+  hideConfirmationModal: jest.Mock
+  }
 
 const MockNotificationContext = createContext<MockNotificationContextType>(mockNotificationContextValue as MockNotificationContextType);
 
@@ -122,8 +122,8 @@ export const MockNotificationProvider: React.FC<{ children: ReactNode; value?: P
     <MockNotificationContext.Provider value={contextValue}>
       {children}
     </MockNotificationContext.Provider>
-  );
-};
+  )
+  };
 
 // ========================================
 // THEME CONTEXT MOCK
@@ -131,8 +131,8 @@ export const MockNotificationProvider: React.FC<{ children: ReactNode; value?: P
 export interface MockThemeContextType {
   theme: 'light' | 'dark';
   themeConfig: any;
-  toggleTheme: jest.Mock;
-}
+  toggleTheme: jest.Mock
+  }
 
 const MockThemeContext = createContext<MockThemeContextType>(mockThemeContextValue as MockThemeContextType);
 
@@ -145,8 +145,8 @@ export const MockThemeProvider: React.FC<{ children: ReactNode; value?: Partial<
     <MockThemeContext.Provider value={contextValue}>
       {children}
     </MockThemeContext.Provider>
-  );
-};
+  )
+  };
 
 // ========================================
 // COMBINED PROVIDERS
@@ -155,8 +155,8 @@ export interface AllProvidersProps {
   children: ReactNode;
   authValue?: Partial<MockAuthContextType>;
   notificationValue?: Partial<MockNotificationContextType>;
-  themeValue?: Partial<MockThemeContextType>;
-}
+  themeValue?: Partial<MockThemeContextType>
+  }
 
 /**
  * Wraps children with all mock context providers
@@ -176,13 +176,13 @@ export const AllMockProviders: React.FC<AllProvidersProps> = ({
         </MockAuthProvider>
       </MockNotificationProvider>
     </MockThemeProvider>
-  );
-};
+  )
+  };
 
 // AllProviders wrapper for tests - alias for AllMockProviders;
 export const AllProviders: React.FC<{ children: ReactNode }> = ({ children }) => {
-  return <AllMockProviders>{children}</AllMockProviders>;
-};
+  return <AllMockProviders>{children}</AllMockProviders>
+  };
 
 // Mock useLegalConsents hook;
 export const mockUseLegalConsents = () => ({
@@ -200,7 +200,7 @@ export const resetAllMockContexts = () => {
   (mockAuthContextValue.reloadProfile as jest.Mock).mockClear();
   (mockAuthContextValue.updateHelperProfile as jest.Mock).mockClear();
   if (mockAuthContextValue.register) {
-    (mockAuthContextValue.register as jest.Mock).mockClear();
+    (mockAuthContextValue.register as jest.Mock).mockClear()
   }
   
   // Reset Notification mocks
@@ -210,8 +210,8 @@ export const resetAllMockContexts = () => {
   (mockNotificationContextValue.hideConfirmationModal as jest.Mock).mockClear();
   
   // Reset Theme mocks
-  (mockThemeContextValue.toggleTheme as jest.Mock).mockClear();
-};
+  (mockThemeContextValue.toggleTheme as jest.Mock).mockClear()
+  };
 
 // Export default mock values for easy jest.mock() usage;
 export const defaultMockContexts = {
@@ -249,21 +249,21 @@ export const createMockUseAuth = (overrides?: Partial<MockAuthContextType>) => {
   return jest.fn(() => ({
     ...mockAuthContextValue,
     ...overrides,
-  }));
-};
+  }))
+  };
 
 // Create mock for useTheme hook;
 export const createMockUseTheme = (theme: 'light' | 'dark' = 'light') => {
   return jest.fn(() => ({
     ...mockThemeContextValue,
     theme,
-  }));
-};
+  }))
+  };
 
 // Create mock for useNotification hook;
 export const createMockUseNotification = (overrides?: any) => {
   return jest.fn(() => ({
     ...mockNotificationContextValue,
     ...overrides,
-  }));
-};
+  }))
+  };

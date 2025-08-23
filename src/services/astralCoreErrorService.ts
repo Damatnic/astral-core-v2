@@ -44,8 +44,8 @@ export interface AstralCoreError {
   retryable: boolean;
   retryAfter?: number;
   helpUrl?: string;
-  actions?: ErrorAction[];
-}
+  actions?: ErrorAction[]
+  }
 
 export interface ErrorContext {
   userId?: string;
@@ -54,15 +54,15 @@ export interface ErrorContext {
   userAgent?: string;
   component?: string;
   action?: string;
-  metadata?: Record<string, any>;
-}
+  metadata?: Record<string, any>
+  }
 
 export interface ErrorAction {
   label: string;
   action: () => void | Promise<void>;
   primary?: boolean;
-  destructive?: boolean;
-}
+  destructive?: boolean
+  }
 
 export interface ErrorHandlerOptions {
   notify?: boolean;
@@ -70,8 +70,8 @@ export interface ErrorHandlerOptions {
   report?: boolean;
   fallback?: () => void;
   retry?: () => Promise<void>;
-  suppressConsole?: boolean;
-}
+  suppressConsole?: boolean
+  }
 
 // Error Messages for users;
 const USER_FRIENDLY_MESSAGES: Record<string, string> = {
@@ -115,7 +115,7 @@ const USER_FRIENDLY_MESSAGES: Record<string, string> = {
 };
 
 // Crisis-related error codes that need special handling;
-const CRISIS_ERROR_CODES = [;
+const CRISIS_ERROR_CODES = [;;
   'CRISIS_ALERT_FAILED',
   'SOS_FAILED',
   'EMERGENCY_CONTACT_FAILED',
@@ -140,7 +140,7 @@ class AstralCoreErrorService {
     // Enable error reporting in production, optional in development
     this.reportingEnabled = getEnvVar('NODE_ENV') === 'production' || getEnvVar('VITE_DEBUG_MODE') === 'true';
     this.sessionId = this.generateSessionId();
-    this.setupGlobalHandlers();
+    this.setupGlobalHandlers()
   }
 
   /**
@@ -164,42 +164,42 @@ class AstralCoreErrorService {
 
     // Check if crisis error
     if (this.isCrisisError(astralError)) {
-      this.handleCrisisError(astralError);
-    }
+      this.handleCrisisError(astralError)
+  }
 
     // Log error
     if (log) {
-      this.logError(astralError, suppressConsole);
-    }
+      this.logError(astralError, suppressConsole)
+  }
 
     // Show notification
     if (notify && this.shouldNotifyUser(astralError)) {
-      this.notifyUser(astralError);
-    }
+      this.notifyUser(astralError)
+  }
 
     // Report to server
     if (report && this.reportingEnabled) {
-      this.reportError(astralError);
-    }
+      this.reportError(astralError)
+  }
 
     // Execute fallback
     if (fallback) {
       try {
-        fallback();
-      } catch (fallbackError) {
-        console.error('Astral Core: Fallback failed', fallbackError);
-      }
+        fallback()
+  } catch (fallbackError) {
+        console.error('Astral Core: Fallback failed', fallbackError)
+  }
     }
 
     // Set up retry
     if (retry && astralError.retryable) {
-      this.setupRetry(astralError, retry);
-    }
+      this.setupRetry(astralError, retry)
+  }
 
     // Emit to listeners
     this.emitError(astralError);
 
-    return astralError;
+    return astralError
   }
 
   /**
@@ -233,8 +233,8 @@ class AstralCoreErrorService {
       retry: async () => {
         // Retry network request
         if (endpoint) {
-          await apiClient.get(endpoint);
-        }
+          await apiClient.get(endpoint)
+  }
       },
     };
   };
@@ -248,15 +248,15 @@ class AstralCoreErrorService {
       notify: true,
       fallback: () => {
         // Redirect to login
-        window.location.href = '/login';
-      },
+        window.location.href = '/login'
+  },
     });
 
     // Clear auth state
     localStorage.removeItem('astralcore_auth_token');
     sessionStorage.clear();
 
-    return astralError;
+    return astralError
   }
 
   /**
@@ -266,7 +266,7 @@ class AstralCoreErrorService {
     errors: Record<string, string[]>,
     formName?: string
   ): AstralCoreError {
-    const errorMessages = Object.entries(errors);
+    const errorMessages = Object.entries(errors);;
       .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
       .join('\n');
 
@@ -282,7 +282,7 @@ class AstralCoreErrorService {
         log: false,
         report: false,
       }
-    );
+    )
   }
 
   /**
@@ -300,28 +300,28 @@ class AstralCoreErrorService {
     // Save error state for recovery
     this.saveErrorState(astralError);
 
-    return astralError;
+    return astralError
   }
 
   /**
    * Clear error log
    */
   clearErrorLog(): void {
-    this.errorLog = [];
+    this.errorLog = []
   }
 
   /**
    * Get error log
    */
   getErrorLog(): AstralCoreError[] {
-    return [...this.errorLog];
+    return [...this.errorLog]
   }
 
   /**
    * Get errors by type
    */
   getErrorsByType(type: ErrorType): AstralCoreError[] {
-    return this.errorLog.filter(error => error.type === type);
+    return this.errorLog.filter(error => error.type === type)
   }
 
   /**
@@ -330,21 +330,21 @@ class AstralCoreErrorService {
   onError(callback: (error: AstralCoreError) => void): string {
     const listenerId = this.generateListenerId();
     this.errorListeners.set(listenerId, callback);
-    return listenerId;
+    return listenerId
   }
 
   /**
    * Unsubscribe from errors
    */
   offError(listenerId: string): void {
-    this.errorListeners.delete(listenerId);
+    this.errorListeners.delete(listenerId)
   }
 
   /**
    * Check if error is recoverable
    */
   isRecoverableError(error: AstralCoreError): boolean {
-    return error.recoverable;
+    return error.recoverable
   }
 
   /**
@@ -356,22 +356,22 @@ class AstralCoreErrorService {
     // Window error handler
     window.addEventListener('error', (event) => {
       const error = event.error || new Error(event.message);
-      this.handle(error);
-    });
+      this.handle(error)
+  });
 
     // Promise rejection handler
     window.addEventListener('unhandledrejection', (event) => {
       const error = event.reason instanceof Error ? event.reason : new Error('Unhandled Promise Rejection');
-      this.handle(error);
-    });
+      this.handle(error)
+  });
 
     // Network status handler
     window.addEventListener('offline', () => {
       this.handle(
         this.createError('OFFLINE', 'Network connection lost', null, ErrorType.NETWORK),
         { notify: true, log: false, report: false }
-      );
-    });
+      )
+  });
 
     window.addEventListener('online', () => {
       astralCoreNotificationService.show({
@@ -379,10 +379,10 @@ class AstralCoreErrorService {
         priority: NotificationPriority.NORMAL,
         title: 'Connection Restored',
         body: 'You\'re back online!',
-      });
-    });
+      })
+  });
 
-    this.globalHandlersSetup = true;
+    this.globalHandlersSetup = true
   }
 
   /**
@@ -390,8 +390,8 @@ class AstralCoreErrorService {
    */
   private normalizeError(error: unknown): AstralCoreError {
     if (this.isAstralError(error)) {
-      return error;
-    }
+      return error
+  }
 
     const errorObj = error as any;
     const type = this.determineErrorType(errorObj);
@@ -421,7 +421,7 @@ class AstralCoreErrorService {
            e?.type && 
            e?.severity &&
            e?.code &&
-           e?.timestamp;
+           e?.timestamp
   }
 
   /**
@@ -436,22 +436,22 @@ class AstralCoreErrorService {
       if (error.code.includes('CRISIS')) return ErrorType.CRISIS;
       if (error.code.includes('RATE')) return ErrorType.RATE_LIMIT;
       if (error.code.includes('VALID')) return ErrorType.VALIDATION;
-      if (error.code.includes('STORAGE')) return ErrorType.STORAGE;
-    }
+      if (error.code.includes('STORAGE')) return ErrorType.STORAGE
+  }
 
     if (error.name === 'NetworkError' || error.message?.includes('fetch')) {
-      return ErrorType.NETWORK;
-    }
+      return ErrorType.NETWORK
+  }
 
     if (error.status) {
       if (error.status === 401) return ErrorType.AUTHENTICATION;
       if (error.status === 403) return ErrorType.AUTHORIZATION;
       if (error.status === 429) return ErrorType.RATE_LIMIT;
       if (error.status >= 400 && error.status < 500) return ErrorType.VALIDATION;
-      if (error.status >= 500) return ErrorType.API;
-    }
+      if (error.status >= 500) return ErrorType.API
+  }
 
-    return ErrorType.UNKNOWN;
+    return ErrorType.UNKNOWN
   }
 
   /**
@@ -460,39 +460,39 @@ class AstralCoreErrorService {
   private determineSeverity(code: string, type: ErrorType): ErrorSeverity {
     // Crisis errors are always critical
     if (CRISIS_ERROR_CODES.includes(code) || type === ErrorType.CRISIS) {
-      return ErrorSeverity.CRITICAL;
-    }
+      return ErrorSeverity.CRITICAL
+  }
 
     // Authentication/Authorization errors are high
     if (type === ErrorType.AUTHENTICATION || type === ErrorType.AUTHORIZATION) {
-      return ErrorSeverity.HIGH;
-    }
+      return ErrorSeverity.HIGH
+  }
 
     // Network and API errors are medium
     if (type === ErrorType.NETWORK || type === ErrorType.API) {
-      return ErrorSeverity.MEDIUM;
-    }
+      return ErrorSeverity.MEDIUM
+  }
 
     // Validation errors are low
     if (type === ErrorType.VALIDATION) {
-      return ErrorSeverity.LOW;
-    }
+      return ErrorSeverity.LOW
+  }
 
-    return ErrorSeverity.MEDIUM;
+    return ErrorSeverity.MEDIUM
   }
 
   /**
    * Get user-friendly message
    */
   private getUserMessage(code: string): string {
-    return USER_FRIENDLY_MESSAGES[code] || USER_FRIENDLY_MESSAGES['UNKNOWN_ERROR'];
+    return USER_FRIENDLY_MESSAGES[code] || USER_FRIENDLY_MESSAGES['UNKNOWN_ERROR']
   }
 
   /**
    * Check if error is recoverable
    */
   private isRecoverable(code: string, type: ErrorType): boolean {
-    const nonRecoverableCodes = [;
+    const nonRecoverableCodes = [;;
       'ACCOUNT_DELETED',
       'SERVICE_TERMINATED',
       'CRITICAL_FAILURE',
@@ -500,29 +500,29 @@ class AstralCoreErrorService {
 
     // Crisis errors are generally not automatically recoverable
     if (type === ErrorType.CRISIS) {
-      return false;
-    }
+      return false
+  }
 
-    return !nonRecoverableCodes.includes(code);
+    return !nonRecoverableCodes.includes(code)
   }
 
   /**
    * Check if error is retryable
    */
   private isRetryable(code: string, type: ErrorType): boolean {
-    const retryableTypes = [;
+    const retryableTypes = [;;
       ErrorType.NETWORK,
       ErrorType.RATE_LIMIT,
       ErrorType.API,
     ];
 
-    const nonRetryableCodes = [;
+    const nonRetryableCodes = [;;
       'INVALID_CREDENTIALS',
       'PERMISSION_DENIED',
       'VALIDATION_ERROR',
     ];
 
-    return retryableTypes.includes(type) && !nonRetryableCodes.includes(code);
+    return retryableTypes.includes(type) && !nonRetryableCodes.includes(code)
   }
 
   /**
@@ -552,7 +552,7 @@ class AstralCoreErrorService {
    */
   private isCrisisError(error: AstralCoreError): boolean {
     return error.type === ErrorType.CRISIS || 
-           CRISIS_ERROR_CODES.includes(error.code);
+           CRISIS_ERROR_CODES.includes(error.code)
   }
 
   /**
@@ -573,7 +573,7 @@ class AstralCoreErrorService {
     console.error('ASTRAL CORE CRISIS ERROR:', error);
 
     // Report immediately
-    this.reportError(error, true);
+    this.reportError(error, true)
   }
 
   /**
@@ -585,19 +585,19 @@ class AstralCoreErrorService {
 
     // Limit log size
     if (this.errorLog.length > this.maxLogSize) {
-      this.errorLog.shift();
-    }
+      this.errorLog.shift()
+  }
 
     // Console logging
     if (!suppressConsole && isDev()) {
       let logMethod: keyof Console;
       if (error.severity === ErrorSeverity.CRITICAL) {
-        logMethod = 'error';;
+        logMethod = 'error'
   } else if (error.severity === ErrorSeverity.HIGH) {
-        logMethod = 'warn';;
+        logMethod = 'warn'
   } else {
-        logMethod = 'log';
-      }
+        logMethod = 'log'
+  }
       
       console[logMethod]('Astral Core Error:', {
         code: error.code,
@@ -615,20 +615,20 @@ class AstralCoreErrorService {
   private shouldNotifyUser(error: AstralCoreError): boolean {
     // Always notify for critical errors
     if (error.severity === ErrorSeverity.CRITICAL) {
-      return true;
-    }
+      return true
+  }
 
     // Don't notify for low severity
     if (error.severity === ErrorSeverity.LOW) {
-      return false;
-    }
+      return false
+  }
 
     // Check if too many notifications recently;
-    const recentNotifications = this.errorLog;
+    const recentNotifications = this.errorLog;;
       .filter(e => Date.now() - e.timestamp.getTime() < 60000)
       .length;
 
-    return recentNotifications < 3;
+    return recentNotifications < 3
   }
 
   /**
@@ -648,10 +648,10 @@ class AstralCoreErrorService {
         action: a.label.toLowerCase().replace(/\s+/g, '-'),
         title: a.label,
         icon: undefined,
-      }));
-    }
+      }))
+  }
 
-    astralCoreNotificationService.show(notificationOptions);
+    astralCoreNotificationService.show(notificationOptions)
   }
 
   /**
@@ -665,11 +665,11 @@ class AstralCoreErrorService {
 
     if (immediate || error.severity === ErrorSeverity.CRITICAL) {
       // Send immediately
-      this.sendErrorBatch();;
+      this.sendErrorBatch()
   } else {
       // Batch report
-      this.scheduleBatchReport();
-    }
+      this.scheduleBatchReport()
+  }
   }
 
   /**
@@ -680,8 +680,8 @@ class AstralCoreErrorService {
 
     this.batchReportTimer = setTimeout(() => {
       this.sendErrorBatch();
-      this.batchReportTimer = null;
-    }, 5000); // Send after 5 seconds
+      this.batchReportTimer = null
+  }, 5000); // Send after 5 seconds
   }
 
   /**
@@ -698,8 +698,8 @@ class AstralCoreErrorService {
         errors: batch,
         sessionId: this.sessionId,
         environment: isProd() ? 'production' : 'development',
-      });
-    } catch (error) {
+      })
+  } catch (error) {
       console.error('Astral Core: Failed to report errors', error);
       // Don't re-add to batch to avoid infinite loop
     }
@@ -721,15 +721,15 @@ class AstralCoreErrorService {
           priority: NotificationPriority.NORMAL,
           title: 'Success',
           body: 'The operation completed successfully.',
-        });
-      } catch (retryError) {
+        })
+  } catch (retryError) {
         // Handle retry failure
         this.handle(retryError as Error, {
           notify: true,
           retry: undefined, // Don't retry again
-        });
-      }
-    }, delay);
+        })
+  }
+    }, delay)
   }
 
   /**
@@ -738,11 +738,11 @@ class AstralCoreErrorService {
   private emitError(error: AstralCoreError): void {
     this.errorListeners.forEach(listener => {
       try {
-        listener(error);
-      } catch (listenerError) {
-        console.error('Astral Core: Error listener failed', listenerError);
-      }
-    });
+        listener(error)
+  } catch (listenerError) {
+        console.error('Astral Core: Error listener failed', listenerError)
+  }
+    })
   }
 
   /**
@@ -786,28 +786,28 @@ class AstralCoreErrorService {
         justify-content: center;
         z-index: 999999;
         color: white;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      }
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif
+  }
       .error-container {
         max-width: 500px;
         padding: 2rem;
         background: #1a1a1a;
         border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-      }
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3)
+  }
       .error-container h2 {
         margin: 0 0 1rem 0;
-        color: #ff6b6b;
-      }
+        color: #ff6b6b
+  }
       .error-container p {
         margin: 0 0 1.5rem 0;
-        line-height: 1.6;
-      }
+        line-height: 1.6
+  }
       .error-actions {
         display: flex;
         gap: 1rem;
-        margin-bottom: 1rem;
-      }
+        margin-bottom: 1rem
+  }
       .error-actions button {
         flex: 1;
         padding: 0.75rem;
@@ -816,32 +816,32 @@ class AstralCoreErrorService {
         background: #4263eb;
         color: white;
         cursor: pointer;
-        font-size: 1rem;
-      }
+        font-size: 1rem
+  }
       .error-actions button:hover {
-        background: #364fc7;
-      }
+        background: #364fc7
+  }
       details {
         margin-top: 1rem;
         padding-top: 1rem;
-        border-top: 1px solid #333;
-      }
+        border-top: 1px solid #333
+  }
       summary {
         cursor: pointer;
-        color: #868e96;
-      }
+        color: #868e96
+  }
       pre {
         margin: 1rem 0 0 0;
         padding: 1rem;
         background: #0a0a0a;
         border-radius: 4px;
         overflow-x: auto;
-        font-size: 0.875rem;
-      }
+        font-size: 0.875rem
+  }
     `;
 
     document.head.appendChild(style);
-    document.body.appendChild(overlay);
+    document.body.appendChild(overlay)
   }
 
   /**
@@ -855,31 +855,31 @@ class AstralCoreErrorService {
           url: window.location.href,
           timestamp: new Date().toISOString(),
         },
-      }));
-    } catch (e) {
-      console.error('Astral Core: Failed to save error state', e);
-    }
+      }))
+  } catch (e) {
+      console.error('Astral Core: Failed to save error state', e)
+  }
   }
 
   /**
    * Generate error ID
    */
   private generateErrorId(): string {
-    return `err_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+    return `err_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`
   }
 
   /**
    * Generate listener ID
    */
   private generateListenerId(): string {
-    return `listener_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+    return `listener_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`
   }
 
   /**
    * Generate session ID
    */
   private generateSessionId(): string {
-    return `session_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+    return `session_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`
   }
 }
 

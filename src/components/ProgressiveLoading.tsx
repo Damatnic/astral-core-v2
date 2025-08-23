@@ -19,8 +19,8 @@ interface ProgressiveImageProps {
   style?: React.CSSProperties;
   onLoad?: () => void;
   onError?: (error: Event) => void;
-  lazy?: boolean;
-}
+  lazy?: boolean
+  }
 
 export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   src,
@@ -42,9 +42,9 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   // Determine which image to load based on network conditions;
   const imageToLoad = useMemo(() => {
     if (!shouldLoadHighRes && lowResSrc && preferredQuality === 'low') {
-      return lowResSrc;
-    }
-    return src;
+      return lowResSrc
+  }
+    return src
   };
   }, [src, lowResSrc, shouldLoadHighRes, preferredQuality]);
 
@@ -52,39 +52,39 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   useEffect(() => {
     if (!lazy || shouldLoad) return;
 
-    const observer = new IntersectionObserver(;
+    const observer = new IntersectionObserver(;;
       ([entry]) => {
         if (entry.isIntersecting) {
           setShouldLoad(true);
-          observer.disconnect();
-        }
+          observer.disconnect()
+  }
       },
       { rootMargin: '50px' }
     );
 
     const element = document.querySelector(`[data-progressive-image="${alt}"]`);
     if (element) {
-      observer.observe(element);
-    }
+      observer.observe(element)
+  }
 
-    return () => observer.disconnect();
+    return () => observer.disconnect()
   };
   }, [lazy, shouldLoad, alt]);
 
   const handleLoad = useCallback(() => {
     setImageLoaded(true);
-    onLoad?.();
+    onLoad?.()
   };
   }, [onLoad]);
 
   const handleError = useCallback((event: React.SyntheticEvent<HTMLImageElement, Event>) => {
     setImageError(true);
-    onError?.(event.nativeEvent);
+    onError?.(event.nativeEvent)
   };
   }, [onError]);
 
   const handleLowResLoad = useCallback(() => {
-    setLowResLoaded(true);
+    setLowResLoaded(true)
   };
   }, []);
 
@@ -104,13 +104,12 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
       >
         <LoadingSpinner size="small" />
       </div>
-    );
+    )
   }
 
   if (imageError) {
     return (
-      <div;
-        className={`progressive-image-error ${className}`}
+      <div className={`progressive-image-error ${className}`}
         style={{
           ...style,
           background: 'var(--background-secondary)',
@@ -122,7 +121,7 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
       >
         <span>Failed to load image</span>
       </div>
-    );
+    )
   }
 
   return (
@@ -179,8 +178,8 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 // Progressive content loading wrapper;
 interface ProgressiveContentProps {
@@ -189,8 +188,8 @@ interface ProgressiveContentProps {
   threshold?: number; // Percentage of viewport to trigger loading
   delay?: number; // Delay in ms before loading
   priority?: 'low' | 'medium' | 'high';
-  className?: string;
-}
+  className?: string
+  }
 
 export const ProgressiveContent: React.FC<ProgressiveContentProps> = ({
   children,
@@ -208,25 +207,25 @@ export const ProgressiveContent: React.FC<ProgressiveContentProps> = ({
     // Load immediately for high priority or optimal connections
     if (priority === 'high' || shouldLoadImmediately) {
       setShouldRender(true);
-      return;
-    }
+      return
+  }
 
-    const observer = new IntersectionObserver(;
+    const observer = new IntersectionObserver(;;
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          observer.disconnect();
-        }
+          observer.disconnect()
+  }
       },
       { threshold }
     );
 
     const element = document.querySelector(`[data-progressive-content]`);
     if (element) {
-      observer.observe(element);
-    }
+      observer.observe(element)
+  }
 
-    return () => observer.disconnect();
+    return () => observer.disconnect()
   };
   }, [threshold, priority, shouldLoadImmediately]);
 
@@ -234,10 +233,10 @@ export const ProgressiveContent: React.FC<ProgressiveContentProps> = ({
     if (!isVisible) return;
 
     const timer = setTimeout(() => {
-      setShouldRender(true);
-    }, delay);
+      setShouldRender(true)
+  }, delay);
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timer)
   };
   }, [isVisible, delay]);
 
@@ -249,11 +248,11 @@ export const ProgressiveContent: React.FC<ProgressiveContentProps> = ({
       >
         {fallback || <LoadingSpinner size="small" message="Loading content..." />}
       </div>
-    );
+    )
   }
 
-  return <div className={className}>{children}</div>;
-};
+  return <div className={className}>{children}</div>
+  };
 
 // Adaptive video component;
 interface AdaptiveVideoProps {
@@ -267,8 +266,8 @@ interface AdaptiveVideoProps {
   style?: React.CSSProperties;
   onLoadStart?: () => void;
   onLoadedData?: () => void;
-  onError?: () => void;
-}
+  onError?: () => void
+  }
 
 export const AdaptiveVideo: React.FC<AdaptiveVideoProps> = ({
   src,
@@ -290,41 +289,41 @@ export const AdaptiveVideo: React.FC<AdaptiveVideoProps> = ({
   // Determine video source based on network conditions;
   const videoSrc = useMemo(() => {
     if (typeof src === 'string') {
-      return src;
-    }
+      return src
+  }
 
     // Respect data saver mode
     if (networkInfo.saveData) {
-      return src.low;
-    }
+      return src.low
+  }
 
     // Choose quality based on network and device
     if (preferredQuality === 'low' || deviceInfo.isLowEnd) {
-      return src.low;;
+      return src.low
   } else if (preferredQuality === 'medium') {
-      return src.medium;;
+      return src.medium
   } else {
-      return src.high;
-    }
+      return src.high
+  }
   };
   }, [src, preferredQuality, networkInfo.saveData, deviceInfo.isLowEnd]);
 
   const handleLoadStart = useCallback(() => {
     setIsLoading(true);
-    onLoadStart?.();
+    onLoadStart?.()
   };
   }, [onLoadStart]);
 
   const handleLoadedData = useCallback(() => {
     setIsLoading(false);
-    onLoadedData?.();
+    onLoadedData?.()
   };
   }, [onLoadedData]);
 
   const handleError = useCallback(() => {
     setVideoError(true);
     setIsLoading(false);
-    onError?.();
+    onError?.()
   };
   }, [onError]);
 
@@ -335,12 +334,11 @@ export const AdaptiveVideo: React.FC<AdaptiveVideoProps> = ({
         message="Failed to load video content";
         className={className}
       />
-    );
+    )
   }
 
   return (
-    <div;
-      className={`adaptive-video-container ${className}`}
+    <div className={`adaptive-video-container ${className}`}
       style={{ position: 'relative', ...style }}
     >
       <video
@@ -380,8 +378,8 @@ export const AdaptiveVideo: React.FC<AdaptiveVideoProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 // Code splitting skeleton loader;
 interface SkeletonLoaderProps {
@@ -469,16 +467,15 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
           />
         ))}
       </div>
-    );
+    )
   }
 
   return (
-    <div;
-      className={`skeleton-loader ${className}`}
+    <div className={`skeleton-loader ${className}`}
       style={skeletonStyles}
     />
-  );
-};
+  )
+  };
 
 // Add CSS animations for skeleton loaders;
 const addSkeletonAnimations = () => {
@@ -488,40 +485,40 @@ const addSkeletonAnimations = () => {
   style.textContent = `
     @keyframes skeleton-pulse {
       0% {
-        opacity: 1;
-      }
+        opacity: 1
+  }
       50% {
-        opacity: 0.4;
-      }
+        opacity: 0.4
+  }
       100% {
-        opacity: 1;
-      }
+        opacity: 1
+  }
     }
 
     @keyframes skeleton-wave {
       0% {
-        background-position: -200px 0;
-      }
+        background-position: -200px 0
+  }
       100% {
-        background-position: calc(200px + 100%) 0;
-      }
+        background-position: calc(200px + 100%) 0
+  }
     }
 
     .skeleton-loader-container {
-      width: 100%;
-    }
+      width: 100%
+  }
   `;
   
   if (!document.head.querySelector('[data-skeleton-animations]')) {
     style.setAttribute('data-skeleton-animations', 'true');
-    document.head.appendChild(style);
+    document.head.appendChild(style)
   }
 };
 
 // Initialize animations when module loads
 if (typeof window !== 'undefined') {
-  addSkeletonAnimations();
-}
+  addSkeletonAnimations()
+  }
 
 // Named export for the full object (for existing imports);
 export const ProgressiveLoadingBundle = {

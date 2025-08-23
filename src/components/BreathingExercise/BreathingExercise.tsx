@@ -7,8 +7,8 @@ interface BreathingPattern {
   hold1: number;
   exhale: number;
   hold2: number;
-  description: string;
-}
+  description: string
+  }
 
 const BREATHING_PATTERNS: BreathingPattern[] = [
   {
@@ -17,7 +17,7 @@ const BREATHING_PATTERNS: BreathingPattern[] = [
     hold1: 4,
     exhale: 4,
     hold2: 4,
-    description: 'Equal intervals for calm and focus';
+    description: 'Equal intervals for calm and focus'
   },
   {
     name: '4-7-8 Relaxation',
@@ -25,7 +25,7 @@ const BREATHING_PATTERNS: BreathingPattern[] = [
     hold1: 7,
     exhale: 8,
     hold2: 0,
-    description: 'Quick relaxation and sleep aid';
+    description: 'Quick relaxation and sleep aid'
   },
   {
     name: 'Calm Breathing',
@@ -33,7 +33,7 @@ const BREATHING_PATTERNS: BreathingPattern[] = [
     hold1: 0,
     exhale: 5,
     hold2: 0,
-    description: 'Simple pattern for anxiety relief';
+    description: 'Simple pattern for anxiety relief'
   },
   {
     name: 'Energizing Breath',
@@ -41,14 +41,14 @@ const BREATHING_PATTERNS: BreathingPattern[] = [
     hold1: 2,
     exhale: 3,
     hold2: 1,
-    description: 'Boost energy and alertness';
+    description: 'Boost energy and alertness'
   }
 ];
 
 interface BreathingExerciseProps {
   onComplete?: () => void;
-  autoStart?: boolean;
-}
+  autoStart?: boolean
+  }
 
 export const BreathingExercise: React.FC<BreathingExerciseProps> = ({ 
   onComplete, 
@@ -80,8 +80,8 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
     return () => {
       if (oscillatorRef.current) {
         oscillatorRef.current.stop();
-        oscillatorRef.current.disconnect();
-      }
+        oscillatorRef.current.disconnect()
+  }
     };
   }, []);
 
@@ -103,20 +103,20 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
       gainNodeRef.current.gain.linearRampToValueAtTime(0, now + duration);
       
       oscillator.start(now);
-      oscillator.stop(now + duration);
-    } catch (error) {
-      console.log('Audio playback not available');
-    }
+      oscillator.stop(now + duration)
+  } catch (error) {
+      console.log('Audio playback not available')
+  }
   };
 
   // Handle breathing cycle
   useEffect(() => {
     if (!isActive || isPaused) {
       if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      return;
-    }
+        clearInterval(intervalRef.current)
+  }
+      return
+  }
 
     intervalRef.current = setInterval(() => {
       setCountdown((prev) => {
@@ -150,36 +150,36 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
                   if (newCycles >= targetCycles) {
                     setIsActive(false);
                     playSound(523, 0.3); // C5 note - completion
-                    if (onComplete) onComplete();
-                  }
-                  return newCycles;
-                });
+                    if (onComplete) onComplete()
+  }
+                  return newCycles
+  });
                 break;
               default:
                 nextPhase = 'inhale';
-                nextDuration = selectedPattern.inhale;
-            }
+                nextDuration = selectedPattern.inhale
+  }
             
             // Skip phases with 0 duration
             if (nextDuration === 0) {
               if (nextPhase === 'hold1') {
-                return 'exhale';;
+                return 'exhale'
   } else if (nextPhase === 'hold2') {
                 setCycles((prev) => {
                   const newCycles = prev + 1;
                   if (newCycles >= targetCycles) {
                     setIsActive(false);
                     playSound(523, 0.3);
-                    if (onComplete) onComplete();
-                  }
-                  return newCycles;
-                });
-                return 'inhale';
-              }
+                    if (onComplete) onComplete()
+  }
+                  return newCycles
+  });
+                return 'inhale'
+  }
             }
             
-            return nextPhase;
-          });
+            return nextPhase
+  });
           
           // Return the new countdown value
           if (phase === 'inhale' && selectedPattern.hold1 > 0) return selectedPattern.hold1;
@@ -188,16 +188,16 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
           if (phase === 'exhale' && selectedPattern.hold2 > 0) return selectedPattern.hold2;
           if (phase === 'exhale' && selectedPattern.hold2 === 0) return selectedPattern.inhale;
           if (phase === 'hold2') return selectedPattern.inhale;
-          return selectedPattern.inhale;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+          return selectedPattern.inhale
+  }
+        return prev - 1
+  })
+  }, 1000);
 
     return () => {
       if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+        clearInterval(intervalRef.current)
+  }
     };
   }, [isActive, isPaused, phase, selectedPattern, targetCycles, onComplete]);
 
@@ -211,7 +211,7 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
   };
 
   const handlePause = () => {
-    setIsPaused(!isPaused);
+    setIsPaused(!isPaused)
   };
 
   const handleStop = () => {
@@ -219,14 +219,14 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
     setIsPaused(false);
     setCycles(0);
     setPhase('inhale');
-    setCountdown(selectedPattern.inhale);
+    setCountdown(selectedPattern.inhale)
   };
 
   const handlePatternChange = (pattern: BreathingPattern) => {
     setSelectedPattern(pattern);
     if (isActive) {
-      handleStop();
-    }
+      handleStop()
+  }
   };
 
   const getPhaseText = () => {
@@ -239,9 +239,8 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
         return 'Breathe Out';
       case 'hold2':
         return 'Hold';
-      default:
-        return '';
-    }
+      default: return ''
+  }
   };
 
   const getCircleScale = () => {
@@ -256,17 +255,15 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
         return 1.4 - (1 - countdown / selectedPattern.exhale) * 0.4;
       case 'hold2':
         return 1;
-      default:
-        return 1;
-    }
+      default: return 1
+  }
   };
 
   return (
     <div className="breathing-exercise">
       <div className="breathing-header">
         <h2>Breathing Exercise</h2>
-        <button; 
-          className="settings-btn"
+        <button className="settings-btn"
           onClick={() => setShowSettings(!showSettings)}
           aria-label="Toggle settings"
         >
@@ -295,8 +292,7 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
 
           <div className="cycles-selector">
             <label>Target Cycles: {targetCycles}</label>
-            <input;
-              type="range"
+            <input type="range"
               min="3"
               max="10"
               value={targetCycles}
@@ -309,8 +305,7 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
 
       <div className="breathing-visualization">
         <div className="breathing-circle-container">
-          <div; 
-            className={`breathing-circle ${phase}`}
+          <div className={`breathing-circle ${phase}`}
             style={{ transform: `scale(${getCircleScale()})` }}
           >
             <div className="breathing-inner-circle">
@@ -328,8 +323,7 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
           
           {/* Progress ring */}
           <svg className="progress-ring" width="300" height="300">
-            <circle;
-              className="progress-ring-bg"
+            <circle className="progress-ring-bg"
               cx="150"
               cy="150"
               r="140"
@@ -337,8 +331,7 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
               stroke="#e5e7eb"
               strokeWidth="4"
             />
-            <circle;
-              className="progress-ring-progress"
+            <circle className="progress-ring-progress"
               cx="150"
               cy="150"
               r="140"
@@ -407,7 +400,7 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
         </ul>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export default BreathingExercise;

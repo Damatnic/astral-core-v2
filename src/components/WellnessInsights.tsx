@@ -5,15 +5,15 @@ import './WellnessInsights.css';
 interface Insight {
   type: 'positive' | 'improvement' | 'achievement';
   message: string;
-  icon: React.ReactNode;
-}
+  icon: React.ReactNode
+  }
 
 interface WellnessInsightsProps {
   moodAverage: number;
   streakDays: number;
   totalCheckIns: number;
-  topMood: string;
-}
+  topMood: string
+  }
 
 export const WellnessInsights: React.FC<WellnessInsightsProps> = ({
   moodAverage,
@@ -28,41 +28,41 @@ export const WellnessInsights: React.FC<WellnessInsightsProps> = ({
       insights.push({
         type: 'achievement',
         message: `Amazing! You've checked in for ${streakDays} days straight!`,
-        icon: <StarIcon />;
-      });
-    }
+        icon: <StarIcon />
+  })
+  }
     
     if (moodAverage >= 4) {
       insights.push({
         type: 'positive',
         message: 'Your mood has been consistently positive this week!',
-        icon: <HeartIcon />;
-      });;
+        icon: <HeartIcon />
+  })
   } else if (moodAverage >= 3) {
       insights.push({
         type: 'improvement',
         message: 'Your mood is stable. Small daily habits can boost it further.',
-        icon: <SparkleIcon />;
-      });
-    }
+        icon: <SparkleIcon />
+  })
+  }
     
     if (totalCheckIns >= 30) {
       insights.push({
         type: 'achievement',
         message: `You've completed ${totalCheckIns} check-ins! Self-awareness is growing.`,
-        icon: <TrendingUpIcon />;
-      });
-    }
+        icon: <TrendingUpIcon />
+  })
+  }
     
     if (!insights.length) {
       insights.push({
         type: 'improvement',
         message: 'Keep tracking to unlock personalized insights!',
-        icon: <SparkleIcon />;
-      });
-    }
+        icon: <SparkleIcon />
+  })
+  }
     
-    return insights;
+    return insights
   };
   
   const insights = getInsights();
@@ -137,5 +137,5 @@ export const WellnessInsights: React.FC<WellnessInsightsProps> = ({
         </p>
       </div>
     </div>
-  );
-};
+  )
+  };

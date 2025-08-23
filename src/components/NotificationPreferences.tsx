@@ -10,14 +10,14 @@ interface NotificationPreference {
   enabled: boolean;
   icon: React.ReactNode;
   category: 'crisis' | 'wellness' | 'social' | 'system';
-  priority: 'high' | 'medium' | 'low';
-}
+  priority: 'high' | 'medium' | 'low'
+  }
 
 interface QuietHours {
   enabled: boolean;
   start: string;
-  end: string;
-}
+  end: string
+  }
 
 interface NotificationSchedule {
   id: string;
@@ -26,8 +26,8 @@ interface NotificationSchedule {
   time: string;
   days: string[];
   enabled: boolean;
-  message?: string;
-}
+  message?: string
+  }
 
 export const NotificationPreferences: React.FC = () => {
   const [preferences, setPreferences] = useState<NotificationPreference[]>([
@@ -38,8 +38,8 @@ export const NotificationPreferences: React.FC = () => {
       enabled: true,
       icon: <AlertIcon />,
       category: 'crisis',
-      priority: 'high';
-    },
+      priority: 'high'
+  },
     {
       id: 'medication_reminders',
       label: 'Medication Reminders',
@@ -47,8 +47,8 @@ export const NotificationPreferences: React.FC = () => {
       enabled: true,
       icon: <CalendarIcon />,
       category: 'wellness',
-      priority: 'high';
-    },
+      priority: 'high'
+  },
     {
       id: 'mood_checkins',
       label: 'Mood Check-ins',
@@ -56,8 +56,8 @@ export const NotificationPreferences: React.FC = () => {
       enabled: true,
       icon: <HeartIcon />,
       category: 'wellness',
-      priority: 'medium';
-    },
+      priority: 'medium'
+  },
     {
       id: 'peer_messages',
       label: 'Peer Support Messages',
@@ -65,8 +65,8 @@ export const NotificationPreferences: React.FC = () => {
       enabled: true,
       icon: <UsersIcon />,
       category: 'social',
-      priority: 'medium';
-    },
+      priority: 'medium'
+  },
     {
       id: 'wellness_tips',
       label: 'Wellness Tips',
@@ -74,8 +74,8 @@ export const NotificationPreferences: React.FC = () => {
       enabled: false,
       icon: <HeartIcon />,
       category: 'wellness',
-      priority: 'low';
-    },
+      priority: 'low'
+  },
     {
       id: 'system_updates',
       label: 'System Updates',
@@ -83,14 +83,14 @@ export const NotificationPreferences: React.FC = () => {
       enabled: false,
       icon: <BellIcon />,
       category: 'system',
-      priority: 'low';
-    }
+      priority: 'low'
+  }
   ]);
 
   const [quietHours, setQuietHours] = useState<QuietHours>({
     enabled: true,
     start: '22:00',
-    end: '08:00';
+    end: '08:00'
   });
 
   const [schedules, setSchedules] = useState<NotificationSchedule[]>([
@@ -101,8 +101,8 @@ export const NotificationPreferences: React.FC = () => {
       time: '09:00',
       days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       enabled: true,
-      message: 'Time to take your morning medication';
-    },
+      message: 'Time to take your morning medication'
+  },
     {
       id: '2',
       type: 'mood_checkin',
@@ -110,8 +110,8 @@ export const NotificationPreferences: React.FC = () => {
       time: '20:00',
       days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       enabled: true,
-      message: 'How are you feeling this evening?';
-    }
+      message: 'How are you feeling this evening?'
+  }
   ]);
 
   const [permission, setPermission] = useState<NotificationPermission>('default');
@@ -124,14 +124,14 @@ export const NotificationPreferences: React.FC = () => {
     checkNotificationStatus();
     
     // Load saved preferences
-    loadSavedPreferences();
+    loadSavedPreferences()
   };
   }, []);
 
   const checkNotificationStatus = async () => {
     const status = pushNotificationService.getStatus();
     setPermission(status.hasPermission ? 'granted' : Notification.permission);
-    setIsSubscribed(status.isSubscribed);
+    setIsSubscribed(status.isSubscribed)
   };
 
   const loadSavedPreferences = () => {
@@ -143,10 +143,10 @@ export const NotificationPreferences: React.FC = () => {
         const parsed = JSON.parse(saved);
         if (parsed.preferences) setPreferences(parsed.preferences);
         if (parsed.quietHours) setQuietHours(parsed.quietHours);
-        if (parsed.schedules) setSchedules(parsed.schedules);
-      } catch (error) {
-        console.error('Failed to load saved preferences:', error);
-      }
+        if (parsed.schedules) setSchedules(parsed.schedules)
+  } catch (error) {
+        console.error('Failed to load saved preferences:', error)
+  }
     }
   };
 
@@ -156,13 +156,13 @@ export const NotificationPreferences: React.FC = () => {
       preferences,
       quietHours,
       schedules,
-      updatedAt: new Date().toISOString();
-    };
+      updatedAt: new Date().toISOString()
+  };
     
     localStorage.setItem(`notification_prefs_${userId}`, JSON.stringify(data));
     
     // Update push notification service
-    pushNotificationService.updateNotificationPreferences(userId, data);
+    pushNotificationService.updateNotificationPreferences(userId, data)
   };
 
   const handleEnableNotifications = async () => {
@@ -177,14 +177,14 @@ export const NotificationPreferences: React.FC = () => {
           
           // Subscribe to crisis alerts by default;
           const userId = localStorage.getItem('userId') || 'default';
-          await pushNotificationService.subscribeToCrisisAlerts(userId);
-        }
+          await pushNotificationService.subscribeToCrisisAlerts(userId)
+  }
       }
     } catch (error) {
-      console.error('Failed to enable notifications:', error);
-    } finally {
-      setLoading(false);
-    }
+      console.error('Failed to enable notifications:', error)
+  } finally {
+      setLoading(false)
+  }
   };
 
   const handleDisableNotifications = async () => {
@@ -192,18 +192,18 @@ export const NotificationPreferences: React.FC = () => {
     try {
       const success = await pushNotificationService.unsubscribe();
       if (success) {
-        setIsSubscribed(false);
-      }
+        setIsSubscribed(false)
+  }
     } catch (error) {
-      console.error('Failed to disable notifications:', error);
-    } finally {
-      setLoading(false);
-    }
+      console.error('Failed to disable notifications:', error)
+  } finally {
+      setLoading(false)
+  }
   };
 
   const togglePreference = (id: string) => {
     setPreferences(prev => {
-      const updated = prev.map(p => ;
+      const updated = prev.map(p => ;;
         p.id === id ? { ...p, enabled: !p.enabled } : p
       );
       
@@ -213,39 +213,39 @@ export const NotificationPreferences: React.FC = () => {
         preferences: updated,
         quietHours,
         schedules,
-        updatedAt: new Date().toISOString();
-      };
+        updatedAt: new Date().toISOString()
+  };
       localStorage.setItem(`notification_prefs_${userId}`, JSON.stringify(data));
       pushNotificationService.updateNotificationPreferences(userId, data);
       
-      return updated;
-    });
+      return updated
+  })
   };
 
   const toggleQuietHours = () => {
     setQuietHours(prev => {
       const updated = { ...prev, enabled: !prev.enabled };
       savePreferences();
-      return updated;
-    });
+      return updated
+  })
   };
 
   const updateQuietHours = (field: 'start' | 'end', value: string) => {
     setQuietHours(prev => {
       const updated = { ...prev, [field]: value };
       savePreferences();
-      return updated;
-    });
+      return updated
+  })
   };
 
   const toggleSchedule = (id: string) => {
     setSchedules(prev => {
-      const updated = prev.map(s => ;
+      const updated = prev.map(s => ;;
         s.id === id ? { ...s, enabled: !s.enabled } : s
       );
       savePreferences();
-      return updated;
-    });
+      return updated
+  })
   };
 
   const addSchedule = () => {
@@ -256,32 +256,32 @@ export const NotificationPreferences: React.FC = () => {
       time: '12:00',
       days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
       enabled: true,
-      message: 'Custom reminder';
-    };
+      message: 'Custom reminder'
+  };
     
     setSchedules(prev => {
       const updated = [...prev, newSchedule];
       savePreferences();
-      return updated;
-    });
+      return updated
+  })
   };
 
   const removeSchedule = (id: string) => {
     setSchedules(prev => {
       const updated = prev.filter(s => s.id !== id);
       savePreferences();
-      return updated;
-    });
+      return updated
+  })
   };
 
   const sendTestNotification = async () => {
     try {
       await pushNotificationService.sendTestNotification();
       setTestSent(true);
-      setTimeout(() => setTestSent(false), 3000);
-    } catch (error) {
-      console.error('Failed to send test notification:', error);
-    }
+      setTimeout(() => setTestSent(false), 3000)
+  } catch (error) {
+      console.error('Failed to send test notification:', error)
+  }
   };
 
   const getCategoryColor = (category: string) => {
@@ -290,8 +290,8 @@ export const NotificationPreferences: React.FC = () => {
       case 'wellness': return 'var(--color-success)';
       case 'social': return 'var(--color-info)';
       case 'system': return 'var(--color-neutral)';
-      default: return 'var(--color-primary)';
-    }
+      default: return 'var(--color-primary)'
+  }
   };
 
   return (
@@ -320,8 +320,7 @@ export const NotificationPreferences: React.FC = () => {
             <div>
               <h3>Enable Push Notifications</h3>
               <p>Get important alerts for crisis support, medication reminders, and wellness check-ins</p>
-              <button; 
-                className="btn-primary"
+              <button className="btn-primary"
                 onClick={handleEnableNotifications}
                 disabled={loading}
               >
@@ -336,15 +335,13 @@ export const NotificationPreferences: React.FC = () => {
               <h3>Notifications Enabled</h3>
               <p>You're receiving push notifications</p>
               <div className="status-actions">
-                <button; 
-                  className="btn-secondary"
+                <button className="btn-secondary"
                   onClick={sendTestNotification}
                   disabled={testSent}
                 >
                   {testSent ? 'Test Sent!' : 'Send Test'}
                 </button>
-                <button; 
-                  className="btn-danger"
+                <button className="btn-danger"
                   onClick={handleDisableNotifications}
                   disabled={loading}
                 >
@@ -362,8 +359,7 @@ export const NotificationPreferences: React.FC = () => {
         <div className="preference-list">
           {preferences.map(pref => (
             <div key={pref.id} className="preference-item">
-              <div; 
-                className="pref-icon"
+              <div className="pref-icon"
                 style={{ color: getCategoryColor(pref.category) }}
               >
                 {pref.icon}
@@ -376,8 +372,7 @@ export const NotificationPreferences: React.FC = () => {
                       <span className="priority-badge high">High Priority</span>
                     )}
                   </label>
-                  <input;
-                    type="checkbox"
+                  <input type="checkbox"
                     id={`pref-${pref.id}`}
                     checked={pref.enabled}
                     onChange={() => togglePreference(pref.id)}
@@ -402,8 +397,7 @@ export const NotificationPreferences: React.FC = () => {
             <label htmlFor="quiet-hours-enabled">
               Enable Quiet Hours
             </label>
-            <input;
-              type="checkbox"
+            <input type="checkbox"
               id="quiet-hours-enabled"
               checked={quietHours.enabled}
               onChange={toggleQuietHours}
@@ -414,8 +408,7 @@ export const NotificationPreferences: React.FC = () => {
             <div className="quiet-hours-times">
               <div className="time-input">
                 <label htmlFor="quiet-start">Start</label>
-                <input;
-                  type="time"
+                <input type="time"
                   id="quiet-start"
                   value={quietHours.start}
                   onChange={(e) => updateQuietHours('start', e.target.value)}
@@ -424,8 +417,7 @@ export const NotificationPreferences: React.FC = () => {
               </div>
               <div className="time-input">
                 <label htmlFor="quiet-end">End</label>
-                <input;
-                  type="time"
+                <input type="time"
                   id="quiet-end"
                   value={quietHours.end}
                   onChange={(e) => updateQuietHours('end', e.target.value)}
@@ -444,8 +436,7 @@ export const NotificationPreferences: React.FC = () => {
       <div className="preferences-section">
         <div className="section-header">
           <h3>Scheduled Reminders</h3>
-          <button; 
-            className="btn-add"
+          <button className="btn-add"
             onClick={addSchedule}
             disabled={!isSubscribed}
           >
@@ -456,25 +447,22 @@ export const NotificationPreferences: React.FC = () => {
           {schedules.map(schedule => (
             <div key={schedule.id} className="schedule-item">
               <div className="schedule-header">
-                <input;
-                  type="checkbox"
+                <input type="checkbox"
                   checked={schedule.enabled}
                   onChange={() => toggleSchedule(schedule.id)}
                   disabled={!isSubscribed}
                 />
-                <input;
-                  type="text"
+                <input type="text"
                   value={schedule.label}
                   className="schedule-label"
                   onChange={(e) => {
                     setSchedules(prev => prev.map(s => 
                       s.id === schedule.id ? { ...s, label: e.target.value } : s
-                    ));
-                  }}
+                    ))
+  }}
                   disabled={!isSubscribed}
                 />
-                <button;
-                  className="btn-remove"
+                <button className="btn-remove"
                   onClick={() => removeSchedule(schedule.id)}
                   disabled={!isSubscribed}
                 >
@@ -482,14 +470,13 @@ export const NotificationPreferences: React.FC = () => {
                 </button>
               </div>
               <div className="schedule-details">
-                <input;
-                  type="time"
+                <input type="time"
                   value={schedule.time}
                   onChange={(e) => {
                     setSchedules(prev => prev.map(s => 
                       s.id === schedule.id ? { ...s, time: e.target.value } : s
-                    ));
-                  }}
+                    ))
+  }}
                   disabled={!isSubscribed}
                 />
                 <div className="schedule-days">
@@ -500,14 +487,14 @@ export const NotificationPreferences: React.FC = () => {
                       onClick={() => {
                         setSchedules(prev => prev.map(s => {
                           if (s.id === schedule.id) {
-                            const days = s.days.includes(day);
+                            const days = s.days.includes(day);;
                               ? s.days.filter(d => d !== day)
                               : [...s.days, day];
                             return { ...s, days }
-                          return s;
-                        };
-  });
-                      }}
+                          return s
+  };
+  })
+  }}
                       disabled={!isSubscribed}
                     >
                       {day[0]}
@@ -516,16 +503,15 @@ export const NotificationPreferences: React.FC = () => {
                 </div>
               </div>
               {schedule.message && (
-                <input;
-                  type="text"
+                <input type="text"
                   value={schedule.message}
                   className="schedule-message"
                   placeholder="Reminder message"
                   onChange={(e) => {
                     setSchedules(prev => prev.map(s => 
                       s.id === schedule.id ? { ...s, message: e.target.value } : s
-                    ));
-                  }}
+                    ))
+  }}
                   disabled={!isSubscribed}
                 />
               )}
@@ -541,5 +527,5 @@ export const NotificationPreferences: React.FC = () => {
         </p>
       </div>
     </div>
-  );
-};
+  )
+  };

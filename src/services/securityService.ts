@@ -5,24 +5,24 @@ import React from 'react';
 export interface RateLimitConfig {
   windowMs: number;
   maxRequests: number;
-  keyGenerator?: (request: any) => string;
-}
+  keyGenerator?: (request: any) => string
+  }
 
 export interface ValidationRule {
   required?: boolean;
   minLength?: number;
   maxLength?: number;
   pattern?: RegExp;
-  custom?: (value: unknown) => boolean | string;
-}
+  custom?: (value: unknown) => boolean | string
+  }
 
 export interface SecurityConfig {
   enableCSP: boolean;
   enableXSSProtection: boolean;
   enableRateLimit: boolean;
   enableInputValidation: boolean;
-  rateLimits: Record<string, RateLimitConfig>;
-}
+  rateLimits: Record<string, RateLimitConfig>
+  }
 
 class SecurityService {
   private readonly config: SecurityConfig;
@@ -54,13 +54,13 @@ class SecurityService {
     };
 
     if (this.config.enableCSP) {
-      this.setupCSP();
-    }
+      this.setupCSP()
+  }
   }
 
   private setupCSP() {
     // Set up Content Security Policy;
-    const cspDirectives = [;
+    const cspDirectives = [;;
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' https://esm.sh https://cdn.jsdelivr.net",
       "style-src 'self' 'unsafe-inline'",
@@ -77,7 +77,7 @@ class SecurityService {
     const meta = document.createElement('meta');
     meta.httpEquiv = 'Content-Security-Policy';
     meta.content = cspDirectives;
-    document.head.appendChild(meta);
+    document.head.appendChild(meta)
   }
 
   // Input validation
@@ -89,38 +89,38 @@ class SecurityService {
 
     // Required check
     if (rules.required && (!value || (typeof value === 'string' && value.trim() === ''))) {
-      errors.push('This field is required');
-    }
+      errors.push('This field is required')
+  }
 
     if (value && typeof value === 'string') {
       // Length checks
       if (rules.minLength && value.length < rules.minLength) {
-        errors.push(`Minimum length is ${rules.minLength} characters`);
-      }
+        errors.push(`Minimum length is ${rules.minLength} characters`)
+  }
 
       if (rules.maxLength && value.length > rules.maxLength) {
-        errors.push(`Maximum length is ${rules.maxLength} characters`);
-      }
+        errors.push(`Maximum length is ${rules.maxLength} characters`)
+  }
 
       // Pattern check
       if (rules.pattern && !rules.pattern.test(value)) {
-        errors.push('Invalid format');
-      }
+        errors.push('Invalid format')
+  }
 
       // XSS check
       if (this.containsXSS(value)) {
-        errors.push('Invalid characters detected');
-      }
+        errors.push('Invalid characters detected')
+  }
     }
 
     // Custom validation
     if (rules.custom) {
       const customResult = rules.custom(value);
       if (typeof customResult === 'string') {
-        errors.push(customResult);;
+        errors.push(customResult)
   } else if (!customResult) {
-        errors.push('Invalid value');
-      }
+        errors.push('Invalid value')
+  }
     }
 
     return {
@@ -131,8 +131,8 @@ class SecurityService {
   // XSS Protection
   sanitizeInput(input: string): string {
     if (!this.config.enableXSSProtection) {
-      return input;
-    }
+      return input
+  }
 
     // HTML encode dangerous characters
     return input
@@ -141,11 +141,11 @@ class SecurityService {
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#x27;')
-      .replace(/\//g, '&#x2F;');
+      .replace(/\//g, '&#x2F;')
   }
 
   containsXSS(input: string): boolean {
-    return this.suspiciousPatterns.some(pattern => pattern.test(input));
+    return this.suspiciousPatterns.some(pattern => pattern.test(input))
   }
 
   sanitizeHTML(html: string): string {
@@ -157,7 +157,7 @@ class SecurityService {
     sanitized = sanitized.replace(/on\w+\s*=\s*'[^']*'/gi, '');
     sanitized = sanitized.replace(/javascript:/gi, '');
 
-    return sanitized;
+    return sanitized
   }
 
   // Rate Limiting
@@ -177,28 +177,28 @@ class SecurityService {
       // New window or expired
       this.rateLimitStore.set(rateLimitKey, {
         count: 1,
-        resetTime: now + config.windowMs;
-      };
+        resetTime: now + config.windowMs
+  };
   };
       return { 
         allowed: true, 
         resetTime: now + config.windowMs,
-        remaining: config.maxRequests - 1;
-      }
+        remaining: config.maxRequests - 1
+  }
 
     if (existing.count >= config.maxRequests) {
       return { 
         allowed: false, 
         resetTime: existing.resetTime,
-        remaining: 0;
-      }
+        remaining: 0
+  }
 
     existing.count++;
     return { 
       allowed: true, 
       resetTime: existing.resetTime,
-      remaining: config.maxRequests - existing.count;
-    }
+      remaining: config.maxRequests - existing.count
+  }
 
   // IP blocking
   blockIP(ip: string, duration?: number) {
@@ -206,13 +206,13 @@ class SecurityService {
     
     if (duration) {
       setTimeout(() => {
-        this.blockedIPs.delete(ip);
-      }, duration);
-    }
+        this.blockedIPs.delete(ip)
+  }, duration)
+  }
   }
 
   isIPBlocked(ip: string): boolean {
-    return this.blockedIPs.has(ip);
+    return this.blockedIPs.has(ip)
   }
 
   // Password security
@@ -222,10 +222,10 @@ class SecurityService {
 
     // Length check
     if (password.length >= 8) {
-      score += 1;;
+      score += 1
   } else {
-      feedback.push('Password should be at least 8 characters long');
-    }
+      feedback.push('Password should be at least 8 characters long')
+  }
 
     // Complexity checks
     if (/[a-z]/.test(password)) score += 1;
@@ -241,15 +241,15 @@ class SecurityService {
     else feedback.push('Add special characters');
 
     // Common password check;
-    const commonPasswords = [;
+    const commonPasswords = [;;
       'password', '123456', 'password123', 'admin', 'qwerty',
       'letmein', 'welcome', 'monkey', '1234567890'
     ];
     
     if (commonPasswords.includes(password.toLowerCase())) {
       score = 0;
-      feedback.push('This password is too common');
-    }
+      feedback.push('This password is too common')
+  }
 
     return {
       isValid: score >= 3,
@@ -265,8 +265,8 @@ class SecurityService {
     
     return crypto.subtle.digest('SHA-256', data).then(hashBuffer => {
       const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    };
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+  };
   };
   }
 
@@ -274,29 +274,29 @@ class SecurityService {
   generateSecureToken(length: number = 32): string {
     const array = new Uint8Array(length);
     crypto.getRandomValues(array);
-    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('')
   }
 
   validateSession(token: string): boolean {
     // Basic token validation
     if (!token || token.length < 32) {
-      return false;
-    }
+      return false
+  }
 
     // Check if token is hex
-    return /^[a-f0-9]+$/i.test(token);
+    return /^[a-f0-9]+$/i.test(token)
   }
 
   // CSRF Protection
   generateCSRFToken(): string {
     const token = this.generateSecureToken(32);
     sessionStorage.setItem('csrf_token', token);
-    return token;
+    return token
   }
 
   validateCSRFToken(token: string): boolean {
     const stored = sessionStorage.getItem('csrf_token');
-    return stored === token;
+    return stored === token
   }
 
   // Content filtering
@@ -307,7 +307,7 @@ class SecurityService {
     ];
 
     const words = text.toLowerCase().split(/\s+/);
-    return profanityWords.some(word => words.includes(word));
+    return profanityWords.some(word => words.includes(word))
   }
 
   filterContent(text: string): string {
@@ -315,9 +315,9 @@ class SecurityService {
       // Replace profanity with asterisks;
       let filtered = text;
       // Implementation would replace detected words
-      return filtered;
-    }
-    return text;
+      return filtered
+  }
+    return text
   }
 
   // Audit logging
@@ -328,8 +328,8 @@ class SecurityService {
       details,
       severity,
       userAgent: navigator.userAgent,
-      url: window.location.href;
-    };
+      url: window.location.href
+  };
 
     // Store in localStorage for development;
     const logs = JSON.parse(localStorage.getItem('security_logs') || '[]');
@@ -337,13 +337,13 @@ class SecurityService {
     
     // Keep only last 100 logs
     if (logs.length > 100) {
-      logs.splice(0, logs.length - 100);
-    }
+      logs.splice(0, logs.length - 100)
+  }
     
     localStorage.setItem('security_logs', JSON.stringify(logs));
 
     // In production, send to security monitoring service
-    console.warn('Security Event:', logEntry);
+    console.warn('Security Event:', logEntry)
   }
 
   // Form security
@@ -366,12 +366,12 @@ class SecurityService {
           this.logSecurityEvent('xss_attempt', { 
             field: target.name, 
             value: target.value.substring(0, 100) 
-          }, 'high');;
+          }, 'high')
   } else {
-          target.setCustomValidity('');
-        }
-      });
-    });
+          target.setCustomValidity('')
+  }
+      })
+  })
   }
 
   // Clean up
@@ -379,17 +379,17 @@ class SecurityService {
     const now = Date.now();
     for (const [key, value] of this.rateLimitStore.entries()) {
       if (now > value.resetTime) {
-        this.rateLimitStore.delete(key);
-      }
+        this.rateLimitStore.delete(key)
+  }
     }
   }
 
   getSecurityLogs(): unknown[] {
-    return JSON.parse(localStorage.getItem('security_logs') || '[]');
+    return JSON.parse(localStorage.getItem('security_logs') || '[]')
   }
 
   clearSecurityLogs() {
-    localStorage.removeItem('security_logs');
+    localStorage.removeItem('security_logs')
   }
 }
 
@@ -400,10 +400,11 @@ export const useSecurity = () => {
   React.useEffect(() => {
     // Clean up rate limit store periodically;
     const cleanup = setInterval(() => {
-      service.clearRateLimitStore();
-    }, 60000); // Every minute
+      service.clearRateLimitStore()
+  }, 60000); // Every minute
 
-    return () => clearInterval(cleanup);
+    return () => clearInterval(cleanup)
+  };
   };
   };
   }, [service]);
@@ -421,7 +422,7 @@ export const useSecurity = () => {
     validateCSRFToken: service.validateCSRFToken.bind(service),
     filterContent: service.filterContent.bind(service),
     logSecurityEvent: service.logSecurityEvent.bind(service),
-    addFormProtection: service.addFormProtection.bind(service);
+    addFormProtection: service.addFormProtection.bind(service)
   };
 
 // Validation rules presets;
@@ -429,28 +430,28 @@ export const ValidationRules = {
   email: {
     required: true,
     pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    maxLength: 254;
+    maxLength: 254
   },
   password: {
     required: true,
     minLength: 8,
-    maxLength: 128;
+    maxLength: 128
   },
   username: {
     required: true,
     minLength: 3,
     maxLength: 30,
-    pattern: /^\w+$/;
+    pattern: /^\w+$/
   },
   post: {
     required: true,
     minLength: 1,
-    maxLength: 2000;
+    maxLength: 2000
   },
   comment: {
     required: true,
     minLength: 1,
-    maxLength: 500;
+    maxLength: 500
   }
 };
 
@@ -459,7 +460,7 @@ let securityServiceInstance: SecurityService | null = null;
 
 export const getSecurityService = () => {
   securityServiceInstance ??= new SecurityService();
-  return securityServiceInstance;
-};
+  return securityServiceInstance
+  };
 
 export default SecurityService;

@@ -6,8 +6,8 @@ export interface TetherProfile {
   color: string;
   sound: 'heartbeat' | 'ocean' | 'rain' | 'silence' | 'custom';
   comfortMessages: string[];
-  breathingPattern: 'box' | '478' | 'coherent' | 'custom';
-}
+  breathingPattern: 'box' | '478' | 'coherent' | 'custom'
+  }
 
 export interface TetherCircleMember {
   id: string;
@@ -16,8 +16,8 @@ export interface TetherCircleMember {
   availability: 'available' | 'busy' | 'offline';
   lastTether?: string;
   trustLevel: 'primary' | 'secondary' | 'tertiary';
-  preferredTimes?: string[];
-}
+  preferredTimes?: string[]
+  }
 
 export interface ActiveTether {
   id: string;
@@ -29,8 +29,8 @@ export interface ActiveTether {
   isInitiator: boolean;
   hapticEnabled: boolean;
   audioEnabled: boolean;
-  drawingEnabled: boolean;
-}
+  drawingEnabled: boolean
+  }
 
 export interface TetherSession {
   id: string;
@@ -45,7 +45,7 @@ export interface TetherSession {
   patterns?: {
     peakIntensity: number;
     averageStrength: number;
-    disconnections: number;
+    disconnections: number
   }
 
 interface TetherState {
@@ -59,7 +59,7 @@ interface TetherState {
     from: string;
     fromName: string;
     message: string;
-    timestamp: Date;
+    timestamp: Date
   }>;
   
   // Settings
@@ -83,8 +83,8 @@ interface TetherState {
   updateAvailability: (status: 'available' | 'busy' | 'offline') => void;
   loadSessionHistory: () => Promise<void>;
   triggerWellnessCheck: (partnerId: string) => Promise<void>;
-  escalateToCrisis: () => Promise<void>;
-}
+  escalateToCrisis: () => Promise<void>
+  }
 
 export const useTetherStore = create<TetherState>((set, get) => ({
   // Initial state
@@ -102,7 +102,7 @@ export const useTetherStore = create<TetherState>((set, get) => ({
       "You're safe",
       "This will pass"
     ],
-    breathingPattern: 'box';
+    breathingPattern: 'box'
   },
   sessionHistory: [],
   pendingRequests: [],
@@ -134,16 +134,16 @@ export const useTetherStore = create<TetherState>((set, get) => ({
           try {
             const message = JSON.parse(event.data);
             if (message.type === 'strength_update') {
-              get().updateConnectionStrength(message.strength);;
+              get().updateConnectionStrength(message.strength)
   } else if (message.type === 'haptic') {
               // Trigger haptic feedback
               if ('vibrate' in navigator && !get().silentMode) {
-                navigator.vibrate(message.pattern);
-              }
+                navigator.vibrate(message.pattern)
+  }
             }
           } catch (error) {
-            console.error('Failed to parse WebSocket message:', error);
-          }
+            console.error('Failed to parse WebSocket message:', error)
+  }
         };
 
         set({
@@ -157,8 +157,8 @@ export const useTetherStore = create<TetherState>((set, get) => ({
             isInitiator: true,
             hapticEnabled: true,
             audioEnabled: !get().silentMode,
-            drawingEnabled: false;
-          }
+            drawingEnabled: false
+  }
         });
 
         // Set up auto-escalation if enabled
@@ -166,15 +166,15 @@ export const useTetherStore = create<TetherState>((set, get) => ({
           setTimeout(() => {
             const currentTether = get().activeTether;
             if (currentTether && !currentTether.partnerId) {
-              get().escalateToCrisis();
-            }
-          }, get().escalationTimeout * 60 * 1000);
-        }
+              get().escalateToCrisis()
+  }
+          }, get().escalationTimeout * 60 * 1000)
+  }
       }
     } catch (error) {
       console.error('Failed to initiate tether:', error);
-      throw error;
-    }
+      throw error
+  }
   },
 
   acceptTether: async (requestId: string) => {
@@ -205,14 +205,14 @@ export const useTetherStore = create<TetherState>((set, get) => ({
             isInitiator: false,
             hapticEnabled: true,
             audioEnabled: !get().silentMode,
-            drawingEnabled: false;
-          },
-          pendingRequests: get().pendingRequests.filter(r => r.id !== requestId);
-        });
-      }
+            drawingEnabled: false
+  },
+          pendingRequests: get().pendingRequests.filter(r => r.id !== requestId)
+  })
+  }
     } catch (error) {
-      console.error('Failed to accept tether:', error);
-    }
+      console.error('Failed to accept tether:', error)
+  }
   },
 
   declineTether: async (requestId: string) => {
@@ -224,15 +224,15 @@ export const useTetherStore = create<TetherState>((set, get) => ({
           'Authorization': `Bearer ${sessionStorage.getItem('userToken')}`
         },
         body: JSON.stringify({ requestId })
-      });
-    } catch (error) {
-      console.error('Failed to decline tether:', error);
-    } finally {
+      })
+  } catch (error) {
+      console.error('Failed to decline tether:', error)
+  } finally {
       // Always remove from pending requests, even on error
       set({
-        pendingRequests: get().pendingRequests.filter(r => r.id !== requestId);
-      });
-    }
+        pendingRequests: get().pendingRequests.filter(r => r.id !== requestId)
+  })
+  }
   },
 
   endTether: async (notes?: string, rating?: number) => {
@@ -262,8 +262,8 @@ export const useTetherStore = create<TetherState>((set, get) => ({
         duration: Date.now() - current.startTime.getTime(),
         mode: current.mode,
         notes,
-        helpfulnessRating: rating;
-      };
+        helpfulnessRating: rating
+  };
 
       set({
         activeTether: null,
@@ -272,11 +272,11 @@ export const useTetherStore = create<TetherState>((set, get) => ({
 
       // Gentle fade-out with haptic feedback
       if ('vibrate' in navigator && !get().silentMode) {
-        navigator.vibrate([100, 50, 50, 50, 25]);
-      }
+        navigator.vibrate([100, 50, 50, 50, 25])
+  }
     } catch (error) {
-      console.error('Failed to end tether:', error);
-    }
+      console.error('Failed to end tether:', error)
+  }
   },
 
   updateConnectionStrength: (strength: number) => {
@@ -288,7 +288,7 @@ export const useTetherStore = create<TetherState>((set, get) => ({
         ...current,
         connectionStrength: Math.max(0, Math.min(100, strength))
       }
-    });
+    })
   },
 
   sendHapticPulse: (intensity: number) => {
@@ -311,8 +311,8 @@ export const useTetherStore = create<TetherState>((set, get) => ({
     // Local haptic feedback
     if ('vibrate' in navigator && !get().silentMode) {
       const duration = intensity * 10;
-      navigator.vibrate(duration);
-    }
+      navigator.vibrate(duration)
+  }
   },
 
   toggleDrawing: () => {
@@ -322,9 +322,9 @@ export const useTetherStore = create<TetherState>((set, get) => ({
     set({
       activeTether: {
         ...current,
-        drawingEnabled: !current.drawingEnabled;
-      }
-    });
+        drawingEnabled: !current.drawingEnabled
+  }
+    })
   },
 
   updateTetherProfile: (profile: Partial<TetherProfile>) => {
@@ -341,8 +341,8 @@ export const useTetherStore = create<TetherState>((set, get) => ({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${sessionStorage.getItem('userToken')}`
       },
-      body: JSON.stringify(updated);
-    });
+      body: JSON.stringify(updated)
+  })
   },
 
   addToCircle: (member: TetherCircleMember) => {
@@ -357,14 +357,14 @@ export const useTetherStore = create<TetherState>((set, get) => ({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${sessionStorage.getItem('userToken')}`
       },
-      body: JSON.stringify(member);
-    });
+      body: JSON.stringify(member)
+  })
   },
 
   removeFromCircle: (memberId: string) => {
     set({
-      tetherCircle: get().tetherCircle.filter(m => m.id !== memberId);
-    });
+      tetherCircle: get().tetherCircle.filter(m => m.id !== memberId)
+  });
 
     // Remove from backend
     fetch(`/api/tether/circle/remove/${memberId}`, {
@@ -372,7 +372,7 @@ export const useTetherStore = create<TetherState>((set, get) => ({
       headers: {
         'Authorization': `Bearer ${sessionStorage.getItem('userToken')}`
       }
-    });
+    })
   },
 
   updateAvailability: (status: 'available' | 'busy' | 'offline') => {
@@ -383,7 +383,7 @@ export const useTetherStore = create<TetherState>((set, get) => ({
         'Authorization': `Bearer ${sessionStorage.getItem('userToken')}`
       },
       body: JSON.stringify({ status })
-    });
+    })
   },
 
   loadSessionHistory: async () => {
@@ -396,11 +396,11 @@ export const useTetherStore = create<TetherState>((set, get) => ({
 
       if (response.ok) {
         const data = await response.json();
-        set({ sessionHistory: data.sessions });
-      }
+        set({ sessionHistory: data.sessions })
+  }
     } catch (error) {
-      console.error('Failed to load session history:', error);
-    }
+      console.error('Failed to load session history:', error)
+  }
   },
 
   triggerWellnessCheck: async (partnerId: string) => {
@@ -412,10 +412,10 @@ export const useTetherStore = create<TetherState>((set, get) => ({
           'Authorization': `Bearer ${sessionStorage.getItem('userToken')}`
         },
         body: JSON.stringify({ partnerId })
-      });
-    } catch (error) {
-      console.error('Failed to trigger wellness check:', error);
-    }
+      })
+  } catch (error) {
+      console.error('Failed to trigger wellness check:', error)
+  }
   },
 
   escalateToCrisis: async () => {
@@ -430,9 +430,9 @@ export const useTetherStore = create<TetherState>((set, get) => ({
           'Authorization': `Bearer ${sessionStorage.getItem('userToken')}`
         },
         body: JSON.stringify({ contacts })
-      });
-    } catch (error) {
-      console.error('Failed to escalate to crisis:', error);
-    }
+      })
+  } catch (error) {
+      console.error('Failed to escalate to crisis:', error)
+  }
   }
 }));

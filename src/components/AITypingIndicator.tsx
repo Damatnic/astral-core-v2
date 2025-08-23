@@ -5,8 +5,8 @@ interface AITypingIndicatorProps {
   variant?: 'dots' | 'pulse' | 'wave';
   text?: string;
   showText?: boolean;
-  color?: string;
-}
+  color?: string
+  }
 
 export const AITypingIndicator: React.FC<AITypingIndicatorProps> = ({
   variant = 'dots',
@@ -18,9 +18,9 @@ export const AITypingIndicator: React.FC<AITypingIndicatorProps> = ({
   
   useEffect(() => {
     const interval = setInterval(() => {
-      setAnimationPhase(prev => (prev + 1) % 3);
-    }, 500);
-    return () => clearInterval(interval);
+      setAnimationPhase(prev => (prev + 1) % 3)
+  }, 500);
+    return () => clearInterval(interval)
   };
   }, []);
   
@@ -52,16 +52,15 @@ export const AITypingIndicator: React.FC<AITypingIndicatorProps> = ({
                 className="wave-bar" 
                 style={{ 
                   animationDelay: `${i * 100}ms`,
-                  backgroundColor: color ;
-                }}
+                  backgroundColor: color
+  }}
               />
             ))}
           </div>
         );
       
-      default:
-        return null;
-    }
+      default: return null
+  }
   };
   
   return (
@@ -73,7 +72,7 @@ export const AITypingIndicator: React.FC<AITypingIndicatorProps> = ({
         </span>
       )}
     </div>
-  );
-};
+  )
+  };
 
 export default AITypingIndicator;

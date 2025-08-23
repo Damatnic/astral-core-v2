@@ -24,7 +24,7 @@ export interface HIPAASecurityConfig {
   physicalSafeguards: {
     facilityAccessControls: boolean;
     workstationUseRestrictions: boolean;
-    deviceMediaControls: boolean;
+    deviceMediaControls: boolean
   };
 
   // HIPAA Technical Safeguards
@@ -32,7 +32,7 @@ export interface HIPAASecurityConfig {
     accessControl: boolean;
     auditControls: boolean;
     integrity: boolean;
-    transmission: boolean;
+    transmission: boolean
   };
 }
 export interface CrisisSecurityConfig {
@@ -40,14 +40,14 @@ export interface CrisisSecurityConfig {
     enabled: boolean;
     bypassRateLimiting: boolean;
     elevatedLogging: boolean;
-    instantAlerts: boolean;
+    instantAlerts: boolean
   };
   
   interventionSecurity: {
     requireTwoFactorForHelpers: boolean;
     encryptCrisisNotes: boolean;
     anonymizeAfterResolution: number; // hours
-    auditAllAccess: boolean;
+    auditAllAccess: boolean
   };
 }
 export interface ZeroTrustConfig {
@@ -55,21 +55,21 @@ export interface ZeroTrustConfig {
     enabled: boolean;
     requireDeviceFingerprinting: boolean;
     continuousValidation: boolean;
-    riskBasedAccess: boolean;
+    riskBasedAccess: boolean
   };
   
   leastPrivilegeAccess: {
     enabled: boolean;
     timeBasedAccess: boolean;
     conditionalAccess: boolean;
-    privilegeEscalationLogging: boolean;
+    privilegeEscalationLogging: boolean
   };
   
   assumeBreach: {
     enabled: boolean;
     networkSegmentation: boolean;
     encryptEverything: boolean;
-    minimizeBlastRadius: boolean;
+    minimizeBlastRadius: boolean
   };
 }
 export interface EncryptionConfig {
@@ -77,21 +77,21 @@ export interface EncryptionConfig {
     algorithm: string;
     keySize: number;
     keyRotationDays: number;
-    backupEncryption: boolean;
+    backupEncryption: boolean
   };
   
   inTransit: {
     enforceHTTPS: boolean;
     tlsVersion: string;
     certificatePinning: boolean;
-    hsts: boolean;
+    hsts: boolean
   };
   
   endToEnd: {
     enabled: boolean;
     keyExchangeAlgorithm: string;
     messageEncryption: string;
-    fileEncryption: boolean;
+    fileEncryption: boolean
   };
 }
 export interface CSPConfig {
@@ -110,12 +110,12 @@ export interface CSPConfig {
     baseUri: string[];
     upgradeInsecureRequests: boolean;
     reportUri?: string;
-    reportTo?: string;
+    reportTo?: string
   };
   
   reportOnly: boolean;
-  nonce: boolean;
-}
+  nonce: boolean
+  }
 
 export interface RateLimitConfig {
   windowMs: number;
@@ -124,36 +124,36 @@ export interface RateLimitConfig {
   skipFailedRequests?: boolean;
   keyGenerator?: string;
   onLimitReached?: string;
-  store?: string;
-}
+  store?: string
+  }
 
 export interface SecurityHeadersConfig {
   hsts: {
     enabled: boolean;
     maxAge: number;
     includeSubDomains: boolean;
-    preload: boolean;
+    preload: boolean
   };
   
   xFrameOptions: {
     enabled: boolean;
     value: 'DENY' | 'SAMEORIGIN' | 'ALLOW-FROM';
-    allowFrom?: string;
+    allowFrom?: string
   };
   
   xContentTypeOptions: {
     enabled: boolean;
-    nosniff: boolean;
+    nosniff: boolean
   };
   
   referrerPolicy: {
     enabled: boolean;
-    policy: 'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url';
+    policy: 'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url'
   };
   
   permissionsPolicy: {
     enabled: boolean;
-    directives: Record<string, string[]>;
+    directives: Record<string, string[]>
   };
 }
 export interface SessionConfig {
@@ -163,7 +163,7 @@ export interface SessionConfig {
     expiresIn: string;
     refreshTokenExpiresIn: string;
     issuer: string;
-    audience: string;
+    audience: string
   };
   
   session: {
@@ -173,14 +173,14 @@ export interface SessionConfig {
     secure: boolean;
     sameSite: 'strict' | 'lax' | 'none';
     maxAge: number;
-    rolling: boolean;
+    rolling: boolean
   };
   
   security: {
     requireTwoFactor: boolean;
     deviceRemembering: boolean;
     concurrentSessionLimit: number;
-    sessionTimeout: number;
+    sessionTimeout: number
   };
 }
 export interface APISecurityConfig {
@@ -188,27 +188,27 @@ export interface APISecurityConfig {
     required: boolean;
     methods: string[];
     tokenValidation: boolean;
-    apiKeyRequired: boolean;
+    apiKeyRequired: boolean
   };
   
   authorization: {
     rbac: boolean;
     abac: boolean;
-    resourceBasedAccess: boolean;
+    resourceBasedAccess: boolean
   };
   
   validation: {
     inputSanitization: boolean;
     outputEncoding: boolean;
     sqlInjectionProtection: boolean;
-    xssProtection: boolean;
+    xssProtection: boolean
   };
   
   logging: {
     requestLogging: boolean;
     errorLogging: boolean;
     securityEventLogging: boolean;
-    performanceLogging: boolean;
+    performanceLogging: boolean
   };
 }
 export interface SecurityConfig {
@@ -237,7 +237,7 @@ export interface SecurityConfig {
     auth: RateLimitConfig;
     crisis: RateLimitConfig;
     chat: RateLimitConfig;
-    upload: RateLimitConfig;
+    upload: RateLimitConfig
   };
   
   // CORS Configuration
@@ -250,7 +250,7 @@ export interface SecurityConfig {
     credentials: boolean;
     preflightContinue: boolean;
     optionsSuccessStatus: number;
-    maxAge: number;
+    maxAge: number
   };
   
   // Security Headers
@@ -269,7 +269,7 @@ export interface SecurityConfig {
     logAuthEvents: boolean;
     logDataAccess: boolean;
     retentionDays: number;
-    complianceReporting: boolean;
+    complianceReporting: boolean
   };
   
   // Privacy Settings
@@ -278,7 +278,7 @@ export interface SecurityConfig {
     rightToForgetting: boolean;
     consentManagement: boolean;
     anonymization: boolean;
-    pseudonymization: boolean;
+    pseudonymization: boolean
   };
   
   // Threat Detection
@@ -288,7 +288,7 @@ export interface SecurityConfig {
     xssDetection: boolean;
     bruteForceProtection: boolean;
     anomalyDetection: boolean;
-    geoBlocking: string[];
+    geoBlocking: string[]
   }
 
 // Default Security Configuration;
@@ -616,11 +616,11 @@ export const getSecurityConfigForEnvironment = (env: 'development' | 'staging' |
       config.csp.directives.scriptSrc = config.csp.directives.scriptSrc.filter(src => src !== "'unsafe-inline'");
       config.session.security.requireTwoFactor = true;
       config.encryption.inTransit.certificatePinning = true;
-      break;
+      break
   }
   
-  return config;
-};
+  return config
+  };
 
 // Utility functions;
 export const validateSecurityConfig = (config: SecurityConfig): { valid: boolean; errors: string[] } => {
@@ -628,22 +628,22 @@ export const validateSecurityConfig = (config: SecurityConfig): { valid: boolean
   
   // Validate JWT secret
   if (!config.session.jwt.secret || config.session.jwt.secret.includes('change-this')) {
-    errors.push('JWT secret must be set and not contain default values');
+    errors.push('JWT secret must be set and not contain default values')
   }
   
   // Validate session secret
   if (!config.session.session.secret || config.session.session.secret.includes('change-this')) {
-    errors.push('Session secret must be set and not contain default values');
+    errors.push('Session secret must be set and not contain default values')
   }
   
   // Validate HIPAA settings
   if (config.hipaa.dataMinimization.retentionPeriod < 2555) {
-    errors.push('HIPAA requires data retention for at least 7 years (2555 days)');
+    errors.push('HIPAA requires data retention for at least 7 years (2555 days)')
   }
   
   // Validate encryption
   if (config.encryption.atRest.keySize < 256) {
-    errors.push('Encryption key size must be at least 256 bits for HIPAA compliance');
+    errors.push('Encryption key size must be at least 256 bits for HIPAA compliance')
   }
   
   return {

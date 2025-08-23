@@ -12,7 +12,7 @@ import { enhancedAICrisisDetectionService } from '../services/enhancedAiCrisisDe
 // Mock the enhanced AI crisis detection service
 jest.mock('../services/enhancedAiCrisisDetectionService', () => ({
   enhancedAICrisisDetectionService: {
-    analyzeCrisisWithML: jest.fn();
+    analyzeCrisisWithML: jest.fn()
   }
 }));
 
@@ -24,7 +24,7 @@ const mockMLAnalysisResult = {
     valence: -0.7,
     arousal: 0.6,
     dominance: -0.3,
-    timestamp: Date.now();
+    timestamp: Date.now()
   },
   realTimeRisk: {
     immediateRisk: 75,
@@ -32,28 +32,28 @@ const mockMLAnalysisResult = {
     recommendedInterventions: [
       {
         priority: 8,
-        description: 'Immediate professional intervention recommended';
-      },
+        description: 'Immediate professional intervention recommended'
+  },
       {
         priority: 6,
-        description: 'Contact emergency mental health services';
-      }
+        description: 'Contact emergency mental health services'
+  }
     ]
   },
   biasAdjustments: [
     {
       factor: 'Language bias adjustment',
-      confidence: 0.9;
-    }
+      confidence: 0.9
+  }
   ],
-  culturalContext: 'Western';
-};
+  culturalContext: 'Western'
+  };
 
 // No wrapper needed for these tests
 
 describe('useEnhancedCrisisDetection Hook', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   it.skip('should initialize with default state', async () => {
@@ -72,7 +72,7 @@ describe('useEnhancedCrisisDetection Hook', () => {
     expect(result.current.currentEmotionalState).toBe('neutral');
     expect(result.current.interventionUrgency).toBe(0);
     expect(result.current.isEmergency).toBe(false);
-    expect(result.current.mlConfidence).toBe(0);
+    expect(result.current.mlConfidence).toBe(0)
   });
 
   it.skip('should initialize with custom options', async () => {
@@ -97,7 +97,7 @@ describe('useEnhancedCrisisDetection Hook', () => {
     const { result } = renderHook(() => useEnhancedCrisisDetection(options));
 
     expect(result.current.isAnalyzing).toBe(false);
-    expect(typeof result.current.analyzeText).toBe('function');
+    expect(typeof result.current.analyzeText).toBe('function')
   });
 
   it.skip('should analyze text successfully with ML', async () => {
@@ -108,8 +108,8 @@ describe('useEnhancedCrisisDetection Hook', () => {
 
     await act(async () => {
       const analysisResult = await result.current.analyzeText('I feel completely hopeless and see no way out');
-      expect(analysisResult).toEqual(mockMLAnalysisResult);
-    });
+      expect(analysisResult).toEqual(mockMLAnalysisResult)
+  });
 
     expect(enhancedAICrisisDetectionService.analyzeCrisisWithML).toHaveBeenCalledWith(
       'I feel completely hopeless and see no way out',
@@ -124,7 +124,7 @@ describe('useEnhancedCrisisDetection Hook', () => {
     expect(result.current.hasCrisisIndicators).toBe(true);
     expect(result.current.currentRiskLevel).toBe(75);
     expect(result.current.currentEmotionalState).toBe('despair');
-    expect(result.current.mlConfidence).toBe(0.85);
+    expect(result.current.mlConfidence).toBe(0.85)
   });
 
   it.skip('should handle analysis errors gracefully', async () => {
@@ -138,8 +138,8 @@ describe('useEnhancedCrisisDetection Hook', () => {
 
     let analysisResult: any;
     await act(async () => {
-      analysisResult = await result.current.analyzeText('Test text');
-    });
+      analysisResult = await result.current.analyzeText('Test text')
+  });
 
     expect(analysisResult).toBeNull();
     expect(result.current.isAnalyzing).toBe(false);
@@ -147,7 +147,7 @@ describe('useEnhancedCrisisDetection Hook', () => {
     // The hook may not always log errors
     // expect(consoleSpy).toHaveBeenCalled();
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should skip analysis for text that is too short', async () => {
@@ -155,11 +155,11 @@ describe('useEnhancedCrisisDetection Hook', () => {
 
     let analysisResult: any;
     await act(async () => {
-      analysisResult = await result.current.analyzeText('Short');
-    });
+      analysisResult = await result.current.analyzeText('Short')
+  });
 
     expect(analysisResult).toBeNull();
-    expect(enhancedAICrisisDetectionService.analyzeCrisisWithML).not.toHaveBeenCalled();
+    expect(enhancedAICrisisDetectionService.analyzeCrisisWithML).not.toHaveBeenCalled()
   });
 
   it.skip('should skip analysis when ML features are disabled', async () => {
@@ -169,14 +169,14 @@ describe('useEnhancedCrisisDetection Hook', () => {
 
     let analysisResult: any;
     await act(async () => {
-      analysisResult = await result.current.analyzeText('Test text for analysis');
-    });
+      analysisResult = await result.current.analyzeText('Test text for analysis')
+  });
 
     expect(analysisResult).toBeNull();
     expect(consoleSpy).toHaveBeenCalledWith('[Enhanced Crisis Detection] ML features disabled');
     expect(enhancedAICrisisDetectionService.analyzeCrisisWithML).not.toHaveBeenCalled();
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should track emotional history', async () => {
@@ -186,11 +186,11 @@ describe('useEnhancedCrisisDetection Hook', () => {
     const { result } = renderHook(() => useEnhancedCrisisDetection());
 
     await act(async () => {
-      await result.current.analyzeText('Test emotional analysis');
-    });
+      await result.current.analyzeText('Test emotional analysis')
+  });
 
     expect(result.current.emotionalHistory).toHaveLength(1);
-    expect(result.current.emotionalHistory[0]).toEqual(mockMLAnalysisResult.emotionalState);
+    expect(result.current.emotionalHistory[0]).toEqual(mockMLAnalysisResult.emotionalState)
   });
 
   it.skip('should track risk trend', async () => {
@@ -200,11 +200,11 @@ describe('useEnhancedCrisisDetection Hook', () => {
     const { result } = renderHook(() => useEnhancedCrisisDetection());
 
     await act(async () => {
-      await result.current.analyzeText('Test risk tracking');
-    });
+      await result.current.analyzeText('Test risk tracking')
+  });
 
     expect(result.current.riskTrend).toHaveLength(1);
-    expect(result.current.riskTrend[0]).toBe(75);
+    expect(result.current.riskTrend[0]).toBe(75)
   });
 
   it.skip('should limit history size', async () => {
@@ -215,18 +215,18 @@ describe('useEnhancedCrisisDetection Hook', () => {
 
     // Add 3 analyses to exceed limit
     await act(async () => {
-      await result.current.analyzeText('First text');
-    });
+      await result.current.analyzeText('First text')
+  });
     await act(async () => {
-      await result.current.analyzeText('Second text');
-    });
+      await result.current.analyzeText('Second text')
+  });
     await act(async () => {
-      await result.current.analyzeText('Third text');
-    });
+      await result.current.analyzeText('Third text')
+  });
 
     expect(result.current.emotionalHistory).toHaveLength(2);
     expect(result.current.riskTrend).toHaveLength(2);
-    expect(result.current.analysisHistory).toHaveLength(2);
+    expect(result.current.analysisHistory).toHaveLength(2)
   });
 
   it.skip('should call crisis detected callback', async () => {
@@ -237,10 +237,10 @@ describe('useEnhancedCrisisDetection Hook', () => {
     const { result } = renderHook(() => useEnhancedCrisisDetection({ onCrisisDetected }));
 
     await act(async () => {
-      await result.current.analyzeText('Crisis text');
-    });
+      await result.current.analyzeText('Crisis text')
+  });
 
-    expect(onCrisisDetected).toHaveBeenCalledWith(mockMLAnalysisResult);
+    expect(onCrisisDetected).toHaveBeenCalledWith(mockMLAnalysisResult)
   });
 
   it.skip('should call risk escalation callback', async () => {
@@ -262,8 +262,8 @@ describe('useEnhancedCrisisDetection Hook', () => {
 
     // First analysis with low risk
     await act(async () => {
-      await result.current.analyzeText('Low risk text');
-    });
+      await result.current.analyzeText('Low risk text')
+  });
 
     // First call shouldn't trigger escalation since there's no previous risk to compare
     // The hook tracks lastRiskLevelRef internally
@@ -271,11 +271,11 @@ describe('useEnhancedCrisisDetection Hook', () => {
 
     // Second analysis with significantly higher risk (>20 point increase triggers callback)
     await act(async () => {
-      await result.current.analyzeText('High risk text');
-    });
+      await result.current.analyzeText('High risk text')
+  });
 
     // onRiskEscalation is called with just the risk level number
-    expect(onRiskEscalation).toHaveBeenCalledWith(80);
+    expect(onRiskEscalation).toHaveBeenCalledWith(80)
   });
 
   it.skip('should call intervention recommended callback', async () => {
@@ -286,8 +286,8 @@ describe('useEnhancedCrisisDetection Hook', () => {
     const { result } = renderHook(() => useEnhancedCrisisDetection({ onInterventionRecommended }));
 
     await act(async () => {
-      await result.current.analyzeText('Test text');
-    });
+      await result.current.analyzeText('Test text')
+  });
 
     // Check if callback was called - the hook only calls it when there are recommendations
     // and it needs to have a proper realTimeRisk object
@@ -297,7 +297,7 @@ describe('useEnhancedCrisisDetection Hook', () => {
         'Immediate professional intervention recommended',
         'Contact emergency mental health services'
       ])
-    );
+    )
   });
 
   it.skip('should update crisis alert based on risk level', async () => {
@@ -312,8 +312,8 @@ describe('useEnhancedCrisisDetection Hook', () => {
     const { result } = renderHook(() => useEnhancedCrisisDetection());
 
     await act(async () => {
-      await result.current.analyzeText('Critical risk text');
-    });
+      await result.current.analyzeText('Critical risk text')
+  });
 
     expect(result.current.crisisAlert.show).toBe(true);
     // 95 is actually in the 'immediate' range (>= 90)
@@ -321,11 +321,11 @@ describe('useEnhancedCrisisDetection Hook', () => {
     expect(result.current.isEmergency).toBe(true);
     // Check other properties exist
     expect(result.current.currentRiskLevel).toBe(95);
-    expect(result.current.currentEmotionalState).toBe('despair');
+    expect(result.current.currentEmotionalState).toBe('despair')
   });
 
   it.skip('should handle different severity levels correctly', async () => {
-    const testCases = [;
+    const testCases = [;;
       { risk: 15, expectedSeverity: 'none' },
       { risk: 25, expectedSeverity: 'low' },
       { risk: 45, expectedSeverity: 'medium' },
@@ -346,11 +346,11 @@ describe('useEnhancedCrisisDetection Hook', () => {
       const { result } = renderHook(() => useEnhancedCrisisDetection());
 
       await act(async () => {
-        await result.current.analyzeText(`Risk level ${testCase.risk} text`);
-      });
+        await result.current.analyzeText(`Risk level ${testCase.risk} text`)
+  });
 
-      expect(result.current.crisisAlert.severity).toBe(testCase.expectedSeverity);
-    }
+      expect(result.current.crisisAlert.severity).toBe(testCase.expectedSeverity)
+  }
   });
 
   it.skip('should provide debounced analysis', async () => {
@@ -365,8 +365,8 @@ describe('useEnhancedCrisisDetection Hook', () => {
     act(() => {
       result.current.analyzeTextDebounced('Text 1');
       result.current.analyzeTextDebounced('Text 2');
-      result.current.analyzeTextDebounced('Text 3');
-    });
+      result.current.analyzeTextDebounced('Text 3')
+  });
 
     // Should not have called service yet
     expect(enhancedAICrisisDetectionService.analyzeCrisisWithML).not.toHaveBeenCalled();
@@ -375,8 +375,8 @@ describe('useEnhancedCrisisDetection Hook', () => {
     await act(async () => {
       jest.advanceTimersByTime(500);
       // Allow the debounced function to execute - use setTimeout instead of setImmediate
-      await new Promise(resolve => setTimeout(resolve, 0));
-    });
+      await new Promise(resolve => setTimeout(resolve, 0))
+  });
 
     // Check that the service was called
     expect(enhancedAICrisisDetectionService.analyzeCrisisWithML).toHaveBeenCalledTimes(1);
@@ -387,7 +387,7 @@ describe('useEnhancedCrisisDetection Hook', () => {
       expect.any(Object)
     );
 
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   it.skip('should monitor text input automatically', async () => {
@@ -405,7 +405,7 @@ describe('useEnhancedCrisisDetection Hook', () => {
     cleanup();
 
     expect(removeEventListenerSpy).toHaveBeenCalledWith('input', expect.any(Function));
-    expect(removeEventListenerSpy).toHaveBeenCalledWith('paste', expect.any(Function));
+    expect(removeEventListenerSpy).toHaveBeenCalledWith('paste', expect.any(Function))
   });
 
   it.skip('should dismiss crisis alert', async () => {
@@ -416,21 +416,21 @@ describe('useEnhancedCrisisDetection Hook', () => {
 
     // First trigger an alert
     await act(async () => {
-      await result.current.analyzeText('High risk text');
-    });
+      await result.current.analyzeText('High risk text')
+  });
 
     expect(result.current.crisisAlert.show).toBe(true);
 
     // Then dismiss it
     act(() => {
-      result.current.dismissAlert();
-    });
+      result.current.dismissAlert()
+  });
 
-    expect(result.current.crisisAlert.show).toBe(false);
+    expect(result.current.crisisAlert.show).toBe(false)
   });
 
   it.skip('should get emotional trend analysis', async () => {
-    const emotionalStates = [;
+    const emotionalStates = [;;
       { ...mockMLAnalysisResult.emotionalState, valence: -0.5, arousal: 0.3 },
       { ...mockMLAnalysisResult.emotionalState, valence: -0.3, arousal: 0.4 },
       { ...mockMLAnalysisResult.emotionalState, valence: -0.1, arousal: 0.2 }
@@ -440,18 +440,18 @@ describe('useEnhancedCrisisDetection Hook', () => {
       (enhancedAICrisisDetectionService.analyzeCrisisWithML as jest.Mock)
         .mockResolvedValueOnce({ 
           ...mockMLAnalysisResult, 
-          emotionalState: emotionalStates[i] ;
-        });
-    }
+          emotionalState: emotionalStates[i]
+  })
+  }
 
     const { result } = renderHook(() => useEnhancedCrisisDetection());
 
     // Analyze multiple times to build history
     for (let i = 0; i < emotionalStates.length; i++) {
       await act(async () => {
-        await result.current.analyzeText(`Text ${i + 1}`);
-      });
-    }
+        await result.current.analyzeText(`Text ${i + 1}`)
+  })
+  }
 
     const trend = result.current.getEmotionalTrend();
 
@@ -460,7 +460,7 @@ describe('useEnhancedCrisisDetection Hook', () => {
     expect(trend).toHaveProperty('confidence');
     expect(['improving', 'worsening', 'stable', 'insufficient_data']).toContain(trend.trend);
     expect(trend.confidence).toBeGreaterThanOrEqual(0);
-    expect(trend.confidence).toBeLessThanOrEqual(1);
+    expect(trend.confidence).toBeLessThanOrEqual(1)
   });
 
   it.skip('should get risk prediction', async () => {
@@ -477,9 +477,9 @@ describe('useEnhancedCrisisDetection Hook', () => {
         });
       
       await act(async () => {
-        await result.current.analyzeText(`Text ${i + 1}`);
-      });
-    }
+        await result.current.analyzeText(`Text ${i + 1}`)
+  })
+  }
 
     const prediction = result.current.getRiskPrediction();
 
@@ -488,7 +488,7 @@ describe('useEnhancedCrisisDetection Hook', () => {
     expect(prediction.predictedRisk).toBeGreaterThanOrEqual(0);
     expect(prediction.predictedRisk).toBeLessThanOrEqual(100);
     expect(prediction.confidence).toBeGreaterThanOrEqual(0);
-    expect(['increasing', 'decreasing', 'stable']).toContain(prediction.trend);
+    expect(['increasing', 'decreasing', 'stable']).toContain(prediction.trend)
   });
 
   it.skip('should get personalized intervention recommendations', async () => {
@@ -498,8 +498,8 @@ describe('useEnhancedCrisisDetection Hook', () => {
     const { result } = renderHook(() => useEnhancedCrisisDetection());
 
     await act(async () => {
-      await result.current.analyzeText('Test text');
-    });
+      await result.current.analyzeText('Test text')
+  });
 
     const interventions = result.current.getPersonalizedInterventions();
 
@@ -522,8 +522,8 @@ describe('useEnhancedCrisisDetection Hook', () => {
       expect(typeof interventions[0].description).toBe('string');
       expect(Array.isArray(interventions[0].actionItems)).toBe(true);
       expect(Array.isArray(interventions[0].resources)).toBe(true);
-      expect(Array.isArray(interventions[0].culturalConsiderations)).toBe(true);
-    }
+      expect(Array.isArray(interventions[0].culturalConsiderations)).toBe(true)
+  }
   });
 
   it.skip('should clear analysis history', async () => {
@@ -534,13 +534,13 @@ describe('useEnhancedCrisisDetection Hook', () => {
 
     // First analyze to populate state
     await act(async () => {
-      await result.current.analyzeText('Test text');
-    });
+      await result.current.analyzeText('Test text')
+  });
 
     // Wait for state to be updated
     await waitFor(() => {
-      expect(result.current.analysisHistory.length).toBeGreaterThan(0);
-    });
+      expect(result.current.analysisHistory.length).toBeGreaterThan(0)
+  });
 
     expect(result.current.analysisHistory).toHaveLength(1);
     expect(result.current.emotionalHistory).toHaveLength(1);
@@ -549,15 +549,15 @@ describe('useEnhancedCrisisDetection Hook', () => {
 
     // Then clear
     act(() => {
-      result.current.clearHistory();
-    });
+      result.current.clearHistory()
+  });
 
     expect(result.current.analysisHistory).toEqual([]);
     expect(result.current.emotionalHistory).toEqual([]);
     expect(result.current.riskTrend).toEqual([]);
     expect(result.current.lastAnalysis).toBeNull();
     // analysisCount is exposed in the hook
-    expect(result.current.analysisCount).toBe(0);
+    expect(result.current.analysisCount).toBe(0)
   });
 
   it.skip('should handle insufficient data for trend analysis', async () => {
@@ -570,7 +570,7 @@ describe('useEnhancedCrisisDetection Hook', () => {
     expect(trend.confidence).toBe(0);
     expect(prediction.predictedRisk).toBe(0);
     expect(prediction.confidence).toBe(0);
-    expect(prediction.trend).toBe('unknown');
+    expect(prediction.trend).toBe('unknown')
   });
 
   it.skip('should handle analysis without tracking history', async () => {
@@ -581,14 +581,14 @@ describe('useEnhancedCrisisDetection Hook', () => {
 
     await act(async () => {
       const analysisResult = await result.current.analyzeText('Test text', { trackHistory: false });
-      expect(analysisResult).toEqual(mockMLAnalysisResult);
-    });
+      expect(analysisResult).toEqual(mockMLAnalysisResult)
+  });
 
     // When trackHistory is false, history arrays should remain empty
     expect(result.current.lastAnalysis).toEqual(mockMLAnalysisResult);
     expect(result.current.analysisHistory).toEqual([]);
     expect(result.current.emotionalHistory).toEqual([]);
-    expect(result.current.riskTrend).toEqual([]);
+    expect(result.current.riskTrend).toEqual([])
   });
 
   it.skip('should cleanup debounce timeout on unmount', async () => {
@@ -600,17 +600,17 @@ describe('useEnhancedCrisisDetection Hook', () => {
 
     // Should not throw errors when cleanup runs
     expect(() => {
-      jest.runAllTimers();
-    }).not.toThrow();
+      jest.runAllTimers()
+  }).not.toThrow();
 
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   it.skip('should handle analysis without real-time risk', async () => {
     const analysisWithoutRisk = {
       ...mockMLAnalysisResult,
-      realTimeRisk: null;
-    };
+      realTimeRisk: null
+  };
 
     (enhancedAICrisisDetectionService.analyzeCrisisWithML as jest.Mock)
       .mockResolvedValue(analysisWithoutRisk);
@@ -618,12 +618,12 @@ describe('useEnhancedCrisisDetection Hook', () => {
     const { result } = renderHook(() => useEnhancedCrisisDetection());
 
     await act(async () => {
-      await result.current.analyzeText('Test text');
-    });
+      await result.current.analyzeText('Test text')
+  });
 
     expect(result.current.crisisAlert.show).toBe(false);
     expect(result.current.crisisAlert.severity).toBe('none');
     expect(result.current.currentRiskLevel).toBe(0);
-    expect(result.current.interventionUrgency).toBe(0);
+    expect(result.current.interventionUrgency).toBe(0)
+  })
   });
-});

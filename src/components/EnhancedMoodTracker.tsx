@@ -8,8 +8,8 @@ interface MoodOption {
   color: string;
   gradient: string;
   description: string;
-  value: number;
-}
+  value: number
+  }
 
 interface MoodEntry {
   mood: string;
@@ -17,8 +17,8 @@ interface MoodEntry {
   timestamp: Date;
   note?: string;
   triggers?: string[];
-  activities?: string[];
-}
+  activities?: string[]
+  }
 
 const EnhancedMoodTracker: React.FC = () => {
   const [selectedMood, setSelectedMood] = useState<MoodOption | null>(null);
@@ -38,8 +38,8 @@ const EnhancedMoodTracker: React.FC = () => {
       color: '#FFD700',
       gradient: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
       description: 'Feeling fantastic and full of energy',
-      value: 10;
-    },
+      value: 10
+  },
     {
       id: 'happy',
       label: 'Happy',
@@ -47,8 +47,8 @@ const EnhancedMoodTracker: React.FC = () => {
       color: '#90EE90',
       gradient: 'linear-gradient(135deg, #90EE90 0%, #32CD32 100%)',
       description: 'Feeling good and positive',
-      value: 8;
-    },
+      value: 8
+  },
     {
       id: 'calm',
       label: 'Calm',
@@ -56,8 +56,8 @@ const EnhancedMoodTracker: React.FC = () => {
       color: '#87CEEB',
       gradient: 'linear-gradient(135deg, #87CEEB 0%, #4682B4 100%)',
       description: 'Peaceful and relaxed',
-      value: 7;
-    },
+      value: 7
+  },
     {
       id: 'okay',
       label: 'Okay',
@@ -65,8 +65,8 @@ const EnhancedMoodTracker: React.FC = () => {
       color: '#DDA0DD',
       gradient: 'linear-gradient(135deg, #DDA0DD 0%, #9370DB 100%)',
       description: 'Neutral, neither good nor bad',
-      value: 5;
-    },
+      value: 5
+  },
     {
       id: 'anxious',
       label: 'Anxious',
@@ -74,8 +74,8 @@ const EnhancedMoodTracker: React.FC = () => {
       color: '#FFB6C1',
       gradient: 'linear-gradient(135deg, #FFB6C1 0%, #FF69B4 100%)',
       description: 'Feeling worried or nervous',
-      value: 4;
-    },
+      value: 4
+  },
     {
       id: 'sad',
       label: 'Sad',
@@ -83,8 +83,8 @@ const EnhancedMoodTracker: React.FC = () => {
       color: '#B0C4DE',
       gradient: 'linear-gradient(135deg, #B0C4DE 0%, #708090 100%)',
       description: 'Feeling down or blue',
-      value: 3;
-    },
+      value: 3
+  },
     {
       id: 'angry',
       label: 'Angry',
@@ -92,8 +92,8 @@ const EnhancedMoodTracker: React.FC = () => {
       color: '#FF6B6B',
       gradient: 'linear-gradient(135deg, #FF6B6B 0%, #DC143C 100%)',
       description: 'Feeling frustrated or upset',
-      value: 2;
-    },
+      value: 2
+  },
     {
       id: 'overwhelmed',
       label: 'Overwhelmed',
@@ -101,11 +101,11 @@ const EnhancedMoodTracker: React.FC = () => {
       color: '#9B59B6',
       gradient: 'linear-gradient(135deg, #9B59B6 0%, #8E44AD 100%)',
       description: 'Too much to handle right now',
-      value: 1;
-    }
+      value: 1
+  }
   ];
 
-  const triggers = [;
+  const triggers = [;;
     { id: 'work', label: 'Work', emoji: '💼' },
     { id: 'relationships', label: 'Relationships', emoji: '❤️' },
     { id: 'health', label: 'Health', emoji: '🏥' },
@@ -117,7 +117,7 @@ const EnhancedMoodTracker: React.FC = () => {
     { id: 'other', label: 'Other', emoji: '🔮' }
   ];
 
-  const activities = [;
+  const activities = [;;
     { id: 'exercise', label: 'Exercise', emoji: '🏃' },
     { id: 'meditation', label: 'Meditation', emoji: '🧘' },
     { id: 'music', label: 'Music', emoji: '🎵' },
@@ -136,9 +136,9 @@ const EnhancedMoodTracker: React.FC = () => {
       const parsed = JSON.parse(saved);
       setMoodHistory(parsed.map((entry: any) => ({
         ...entry,
-        timestamp: new Date(entry.timestamp);
-      })));
-    }
+        timestamp: new Date(entry.timestamp)
+  })))
+  }
   };
   }, []);
 
@@ -148,8 +148,8 @@ const EnhancedMoodTracker: React.FC = () => {
     const element = document.getElementById(`mood-${mood.id}`);
     if (element) {
       element.classList.add('animate-glow');
-      setTimeout(() => element.classList.remove('animate-glow'), 2000);
-    }
+      setTimeout(() => element.classList.remove('animate-glow'), 2000)
+  }
   };
 
   const handleTriggerToggle = (triggerId: string) => {
@@ -157,7 +157,7 @@ const EnhancedMoodTracker: React.FC = () => {
       prev.includes(triggerId)
         ? prev.filter(t => t !== triggerId)
         : [...prev, triggerId]
-    );
+    )
   };
 
   const handleActivityToggle = (activityId: string) => {
@@ -165,7 +165,7 @@ const EnhancedMoodTracker: React.FC = () => {
       prev.includes(activityId)
         ? prev.filter(a => a !== activityId)
         : [...prev, activityId]
-    );
+    )
   };
 
   const handleSubmit = async () => {
@@ -182,8 +182,8 @@ const EnhancedMoodTracker: React.FC = () => {
       timestamp: new Date(),
       note: moodNote,
       triggers: selectedTriggers,
-      activities: selectedActivities;
-    };
+      activities: selectedActivities
+  };
 
     const updatedHistory = [newEntry, ...moodHistory];
     setMoodHistory(updatedHistory);
@@ -199,22 +199,22 @@ const EnhancedMoodTracker: React.FC = () => {
       setMoodNote('');
       setSelectedTriggers([]);
       setSelectedActivities([]);
-      setCurrentStep(1);
-    }, 2000);
+      setCurrentStep(1)
+  }, 2000)
   };
 
   const nextStep = () => {
-    if (currentStep < 4) setCurrentStep(currentStep + 1);
+    if (currentStep < 4) setCurrentStep(currentStep + 1)
   };
 
   const prevStep = () => {
-    if (currentStep > 1) setCurrentStep(currentStep - 1);
+    if (currentStep > 1) setCurrentStep(currentStep - 1)
   };
 
   const getAverageMood = () => {
     if (moodHistory.length === 0) return 0;
     const sum = moodHistory.reduce((acc, entry) => acc + entry.value, 0);
-    return (sum / moodHistory.length).toFixed(1);
+    return (sum / moodHistory.length).toFixed(1)
   };
 
   const getMoodTrend = () => {
@@ -229,7 +229,7 @@ const EnhancedMoodTracker: React.FC = () => {
     
     if (recentAvg > olderAvg + 0.5) return 'improving';
     if (recentAvg < olderAvg - 0.5) return 'declining';
-    return 'stable';
+    return 'stable'
   };
 
   return (
@@ -275,8 +275,7 @@ const EnhancedMoodTracker: React.FC = () => {
         <div className="flex items-center gap-2">
           {[1, 2, 3, 4].map((step) => (
             <React.Fragment key={step}>
-              <div;
-                className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${
                   currentStep >= step
                     ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
                     : 'bg-gray-200 text-gray-500'
@@ -285,8 +284,7 @@ const EnhancedMoodTracker: React.FC = () => {
                 {step}
               </div>
               {step < 4 && (
-                <div;
-                  className={`w-16 h-1 transition-all ${
+                <div className={`w-16 h-1 transition-all ${
                     currentStep > step ? 'bg-blue-500' : 'bg-gray-200'
                   }`}
                 />
@@ -313,8 +311,8 @@ const EnhancedMoodTracker: React.FC = () => {
                   onClick={() => handleMoodSelect(mood)}
                   className={`mood-option ${selectedMood?.id === mood.id ? 'selected' : ''}`}
                   style={{
-                    background: selectedMood?.id === mood.id ? mood.gradient : undefined;
-                  }}
+                    background: selectedMood?.id === mood.id ? mood.gradient : undefined
+  }}
                 >
                   <div className="text-4xl mb-2">{mood.emoji}</div>
                   <div className="font-medium text-sm">{mood.label}</div>
@@ -357,8 +355,8 @@ const EnhancedMoodTracker: React.FC = () => {
                     background: selectedTriggers.includes(trigger.id)
                       ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
                       : undefined,
-                    color: selectedTriggers.includes(trigger.id) ? 'white' : undefined;
-                  }}
+                    color: selectedTriggers.includes(trigger.id) ? 'white' : undefined
+  }}
                 >
                   <span className="text-xl mr-2">{trigger.emoji}</span>
                   <span className="text-sm">{trigger.label}</span>
@@ -399,8 +397,8 @@ const EnhancedMoodTracker: React.FC = () => {
                     background: selectedActivities.includes(activity.id)
                       ? 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
                       : undefined,
-                    color: selectedActivities.includes(activity.id) ? 'white' : undefined;
-                  }}
+                    color: selectedActivities.includes(activity.id) ? 'white' : undefined
+  }}
                 >
                   <span className="text-xl mr-2">{activity.emoji}</span>
                   <span className="text-sm">{activity.label}</span>
@@ -541,13 +539,13 @@ const EnhancedMoodTracker: React.FC = () => {
                     {entry.value}/10
                   </div>
                 </div>
-              );
-            })}
+              )
+  })}
           </div>
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 export default EnhancedMoodTracker;

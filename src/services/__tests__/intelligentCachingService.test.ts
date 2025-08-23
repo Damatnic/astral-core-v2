@@ -61,7 +61,7 @@ Object.defineProperty(navigator, 'connection', {
     downlink: 10,
     rtt: 50,
     saveData: false,
-    type: 'cellular';
+    type: 'cellular'
   },
   writable: true,
 });
@@ -72,21 +72,21 @@ if (!navigator.storage) {
     value: {
       estimate: jest.fn().mockResolvedValue({
         quota: 1000000000, // 1GB
-        usage: 100000000   // 100MB;
-      }),
+        usage: 100000000   // 100MB
+  }),
       getDirectory: jest.fn(),
-      persist: jest.fn();
-    },
+      persist: jest.fn()
+  },
     writable: true,
-    configurable: true;
-  });;
+    configurable: true
+  })
   } else {
   // If storage exists, just mock the estimate method
   if (navigator.storage && !navigator.storage.estimate) {
     navigator.storage.estimate = jest.fn().mockResolvedValue({
       quota: 1000000000, // 1GB
-      usage: 100000000   // 100MB;
-    });
+      usage: 100000000   // 100MB
+  })
   }
 }
 
@@ -115,13 +115,13 @@ describe('IntelligentCachingService', () => {
     mockObjectStore.delete.mockResolvedValue(undefined);
     
     // Create a new service instance for each test
-    service = new IntelligentCachingService();
+    service = new IntelligentCachingService()
   });
   
   afterEach(() => {
     consoleErrorSpy.mockRestore();
     consoleLogSpy.mockRestore();
-    jest.clearAllTimers();
+    jest.clearAllTimers()
   });
 
   describe('initialization', () => {
@@ -133,22 +133,22 @@ describe('IntelligentCachingService', () => {
         'intelligent-cache',
         1,
         expect.objectContaining({
-          upgrade: expect.any(Function);
-        })
-      );
-    });
+          upgrade: expect.any(Function)
+  })
+      )
+  });
 
     it.skip('should set up database schema during upgrade', async () => {
       const mockDb = {
         createObjectStore: jest.fn().mockReturnValue({
-          createIndex: jest.fn();
-        })
+          createIndex: jest.fn()
+  })
       };
       
       openDB.mockImplementation((_name: string, _version: number, { upgrade }: any) => {
         upgrade(mockDb);
-        return Promise.resolve(mockDatabase);
-      });
+        return Promise.resolve(mockDatabase)
+  });
 
       // Create a new service to trigger initialization
       new IntelligentCachingService();
@@ -159,8 +159,8 @@ describe('IntelligentCachingService', () => {
       expect(openDB).toHaveBeenCalled();
       expect(mockDb.createObjectStore).toHaveBeenCalledWith('cache_entries', { keyPath: 'url' });
       expect(mockDb.createObjectStore).toHaveBeenCalledWith('cache_analytics', { keyPath: 'id' });
-      expect(mockDb.createObjectStore).toHaveBeenCalledWith('storage_quota', { keyPath: 'id' });
-    });
+      expect(mockDb.createObjectStore).toHaveBeenCalledWith('storage_quota', { keyPath: 'id' })
+  });
 
     it.skip('should handle initialization errors gracefully', async () => {
       // Restore console.error for this test to check the error
@@ -182,15 +182,15 @@ describe('IntelligentCachingService', () => {
       
       testConsoleSpy.mockRestore();
       // Re-suppress for next tests
-      consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
-    });
+      consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
+  })
   });
 
   describe('cache management', () => {
     beforeEach(async () => {
       // Wait for service initialization
-      await new Promise(resolve => setTimeout(resolve, 10));
-    });
+      await new Promise(resolve => setTimeout(resolve, 10))
+  });
 
     it.skip('should cache critical resources with highest priority', async () => {
       const url = '/crisis-resources/hotlines';
@@ -204,8 +204,8 @@ describe('IntelligentCachingService', () => {
 
       // Verify critical resources were warmed
       expect(global.fetch).toHaveBeenCalled();
-      expect(mockCache.put).toHaveBeenCalled();
-    });
+      expect(mockCache.put).toHaveBeenCalled()
+  });
 
     it.skip('should invalidate cache entries', async () => {
       const url = '/cached-resource';
@@ -215,19 +215,19 @@ describe('IntelligentCachingService', () => {
       await service.invalidateCache(url, 'manual');
       
       expect(mockCache.delete).toHaveBeenCalledWith(url);
-      expect(mockDatabase.delete).toHaveBeenCalledWith(url);
-    });
+      expect(mockDatabase.delete).toHaveBeenCalledWith(url)
+  });
 
     it.skip('should get storage info', async () => {
       Object.defineProperty(navigator, 'storage', {
         value: {
           estimate: jest.fn().mockResolvedValue({
             quota: 1000000,
-            usage: 500000;
-          })
+            usage: 500000
+  })
         },
-        writable: true;
-      });
+        writable: true
+  });
       
       mockDatabase.getAll.mockResolvedValue([{}, {}, {}]);
       
@@ -237,9 +237,9 @@ describe('IntelligentCachingService', () => {
         usage: 500000,
         quota: 1000000,
         usagePercentage: 0.5,
-        cacheEntries: 3;
-      });
-    });
+        cacheEntries: 3
+  })
+  });
 
     it.skip('should clean up expired entries', async () => {
       const oldTimestamp = Date.now() - (4 * 24 * 60 * 60 * 1000); // 4 days ago
@@ -249,15 +249,15 @@ describe('IntelligentCachingService', () => {
           url: '/old-resource',
           priority: 'low',
           timestamp: oldTimestamp,
-          resourceType: 'static-asset';
-        }
+          resourceType: 'static-asset'
+  }
       ]);
       
       const cleanedCount = await service.cleanupExpiredEntries();
       
       expect(cleanedCount).toBeGreaterThan(0);
-      expect(mockCache.delete).toHaveBeenCalledWith('/old-resource');
-    });
+      expect(mockCache.delete).toHaveBeenCalledWith('/old-resource')
+  });
 
     it.skip('should get cache analytics', async () => {
       const mockAnalytics = {
@@ -270,8 +270,8 @@ describe('IntelligentCachingService', () => {
           averageLoadTime: 100,
           cacheRetrievalTime: 50,
           networkFallbackTime: 200,
-          offlineRequestCount: 10;
-        }
+          offlineRequestCount: 10
+  }
       };
       
       mockDatabase.get.mockResolvedValue(mockAnalytics);
@@ -281,16 +281,16 @@ describe('IntelligentCachingService', () => {
       expect(analytics).toEqual(expect.objectContaining({
         hitRate: mockAnalytics.hitRate,
         missRate: mockAnalytics.missRate,
-        evictionCount: mockAnalytics.evictionCount;
-      }));
-    });
+        evictionCount: mockAnalytics.evictionCount
+  }))
+  })
   });
 
   describe('cache eviction and cleanup', () => {
     beforeEach(async () => {
       // Wait for service initialization
-      await new Promise(resolve => setTimeout(resolve, 10));
-    });
+      await new Promise(resolve => setTimeout(resolve, 10))
+  });
 
     it.skip('should perform intelligent eviction when storage is high', async () => {
       // Mock high storage usage
@@ -298,11 +298,11 @@ describe('IntelligentCachingService', () => {
         value: {
           estimate: jest.fn().mockResolvedValue({
             quota: 1000000,
-            usage: 850000 // 85% usage;
-          })
+            usage: 850000 // 85% usage
+  })
         },
-        writable: true;
-      });
+        writable: true
+  });
       
       mockDatabase.getAll.mockResolvedValue([
         {
@@ -311,14 +311,14 @@ describe('IntelligentCachingService', () => {
           timestamp: Date.now() - 1000,
           lastAccessed: Date.now() - 5000,
           hitCount: 1,
-          resourceType: 'static-asset';
-        }
+          resourceType: 'static-asset'
+  }
       ]);
 
       await service.performIntelligentEviction();
 
-      expect(mockCache.delete).toHaveBeenCalled();
-    });
+      expect(mockCache.delete).toHaveBeenCalled()
+  });
 
     it.skip('should never evict critical resources', async () => {
       // Mock high storage usage
@@ -326,11 +326,11 @@ describe('IntelligentCachingService', () => {
         value: {
           estimate: jest.fn().mockResolvedValue({
             quota: 1000000,
-            usage: 850000 // 85% usage;
-          })
+            usage: 850000 // 85% usage
+  })
         },
-        writable: true;
-      });
+        writable: true
+  });
       
       mockDatabase.getAll.mockResolvedValue([
         {
@@ -339,14 +339,14 @@ describe('IntelligentCachingService', () => {
           timestamp: Date.now() - (30 * 24 * 60 * 60 * 1000),
           lastAccessed: Date.now() - (30 * 24 * 60 * 60 * 1000),
           hitCount: 100,
-          resourceType: 'crisis-resource';
-        }
+          resourceType: 'crisis-resource'
+  }
       ]);
 
       await service.performIntelligentEviction();
 
-      expect(mockCache.delete).not.toHaveBeenCalledWith('/crisis-hotline');
-    });
+      expect(mockCache.delete).not.toHaveBeenCalledWith('/crisis-hotline')
+  });
 
     it.skip('should clean up expired entries based on retention policy', async () => {
       const now = Date.now();
@@ -356,40 +356,40 @@ describe('IntelligentCachingService', () => {
           url: '/old-low-priority',
           priority: 'low',
           timestamp: now - (4 * 24 * 60 * 60 * 1000), // 4 days old (exceeds 3 day retention)
-          resourceType: 'static-asset';
-        },
+          resourceType: 'static-asset'
+  },
         {
           url: '/recent-high-priority',
           priority: 'high',
           timestamp: now - (1 * 24 * 60 * 60 * 1000), // 1 day old (within 30 day retention)
-          resourceType: 'user-data';
-        }
+          resourceType: 'user-data'
+  }
       ]);
 
       const cleanedCount = await service.cleanupExpiredEntries();
 
       expect(cleanedCount).toBe(1);
       expect(mockCache.delete).toHaveBeenCalledWith('/old-low-priority');
-      expect(mockCache.delete).not.toHaveBeenCalledWith('/recent-high-priority');
-    });
+      expect(mockCache.delete).not.toHaveBeenCalledWith('/recent-high-priority')
+  })
   });
 
   describe('storage monitoring', () => {
     beforeEach(async () => {
       // Wait for service initialization
-      await new Promise(resolve => setTimeout(resolve, 10));
-    });
+      await new Promise(resolve => setTimeout(resolve, 10))
+  });
 
     it.skip('should get storage info correctly', async () => {
       Object.defineProperty(navigator, 'storage', {
         value: {
           estimate: jest.fn().mockResolvedValue({
             quota: 2000000,
-            usage: 1000000;
-          })
+            usage: 1000000
+  })
         },
-        writable: true;
-      });
+        writable: true
+  });
       
       mockDatabase.getAll.mockResolvedValue([{}, {}, {}, {}]);
       
@@ -399,9 +399,9 @@ describe('IntelligentCachingService', () => {
         usage: 1000000,
         quota: 2000000,
         usagePercentage: 0.5,
-        cacheEntries: 4;
-      });
-    });
+        cacheEntries: 4
+  })
+  });
 
     it.skip('should handle storage quota warnings', async () => {
       // Simulate high storage usage
@@ -409,26 +409,26 @@ describe('IntelligentCachingService', () => {
         value: {
           estimate: jest.fn().mockResolvedValue({
             quota: 1000000,
-            usage: 910000 // 91% usage - critical;
-          })
+            usage: 910000 // 91% usage - critical
+  })
         },
-        writable: true;
-      });
+        writable: true
+  });
       
       // Trigger a manual check by getting storage info
       await service.getStorageInfo();
       
       // The monitoring interval will handle warnings, but we can check the storage state;
       const info = await service.getStorageInfo();
-      expect(info.usagePercentage).toBeGreaterThan(0.9);
-    });
+      expect(info.usagePercentage).toBeGreaterThan(0.9)
+  })
   });
 
   describe('cache warming', () => {
     beforeEach(async () => {
       // Wait for service initialization
-      await new Promise(resolve => setTimeout(resolve, 10));
-    });
+      await new Promise(resolve => setTimeout(resolve, 10))
+  });
 
     it.skip('should warm critical caches on initialization', async () => {
       global.fetch = jest.fn().mockResolvedValue(
@@ -441,8 +441,8 @@ describe('IntelligentCachingService', () => {
       
       // Should attempt to warm critical resources
       expect(global.fetch).toHaveBeenCalled();
-      expect(mockCache.put).toHaveBeenCalled();
-    });
+      expect(mockCache.put).toHaveBeenCalled()
+  });
 
     it.skip('should handle cache warming errors gracefully', async () => {
       const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
@@ -453,15 +453,15 @@ describe('IntelligentCachingService', () => {
       // Should log warnings but not throw
       expect(consoleWarnSpy).toHaveBeenCalled();
       
-      consoleWarnSpy.mockRestore();
-    });
+      consoleWarnSpy.mockRestore()
+  })
   });
 
   describe('analytics and monitoring', () => {
     beforeEach(async () => {
       // Wait for service initialization
-      await new Promise(resolve => setTimeout(resolve, 10));
-    });
+      await new Promise(resolve => setTimeout(resolve, 10))
+  });
 
     it.skip('should return cache analytics', async () => {
       const mockAnalytics = {
@@ -474,8 +474,8 @@ describe('IntelligentCachingService', () => {
           averageLoadTime: 150,
           cacheRetrievalTime: 75,
           networkFallbackTime: 250,
-          offlineRequestCount: 5;
-        }
+          offlineRequestCount: 5
+  }
       };
       
       mockDatabase.get.mockResolvedValue(mockAnalytics);
@@ -484,8 +484,8 @@ describe('IntelligentCachingService', () => {
       
       expect(analytics).toBeDefined();
       expect(analytics.hitRate).toBe(0.8);
-      expect(analytics.missRate).toBe(0.2);
-    });
+      expect(analytics.missRate).toBe(0.2)
+  });
 
     it.skip('should return default analytics when DB is not available', async () => {
       mockDatabase.get.mockResolvedValue(null);
@@ -494,8 +494,8 @@ describe('IntelligentCachingService', () => {
       
       expect(analytics).toBeDefined();
       expect(analytics.performanceMetrics).toBeDefined();
-      expect(analytics.performanceMetrics.averageLoadTime).toBeDefined();
-    });
+      expect(analytics.performanceMetrics.averageLoadTime).toBeDefined()
+  });
 
     it.skip('should track performance metrics', async () => {
       const analytics = await service.getCacheAnalytics() as any;
@@ -503,15 +503,15 @@ describe('IntelligentCachingService', () => {
       expect(analytics.performanceMetrics).toHaveProperty('averageLoadTime');
       expect(analytics.performanceMetrics).toHaveProperty('cacheRetrievalTime');
       expect(analytics.performanceMetrics).toHaveProperty('networkFallbackTime');
-      expect(analytics.performanceMetrics).toHaveProperty('offlineRequestCount');
-    });
+      expect(analytics.performanceMetrics).toHaveProperty('offlineRequestCount')
+  })
   });
 
   describe('cache invalidation', () => {
     beforeEach(async () => {
       // Wait for service initialization
-      await new Promise(resolve => setTimeout(resolve, 10));
-    });
+      await new Promise(resolve => setTimeout(resolve, 10))
+  });
 
     it.skip('should invalidate cache entries', async () => {
       const url = '/resource-to-invalidate';
@@ -522,8 +522,8 @@ describe('IntelligentCachingService', () => {
       await service.invalidateCache(url, 'updated');
       
       expect(mockCache.delete).toHaveBeenCalledWith(url);
-      expect(mockDatabase.delete).toHaveBeenCalledWith(url);
-    });
+      expect(mockDatabase.delete).toHaveBeenCalledWith(url)
+  });
 
     it.skip('should handle invalidation errors gracefully', async () => {
       // Temporarily restore console.error to test it
@@ -538,15 +538,15 @@ describe('IntelligentCachingService', () => {
       
       testConsoleSpy.mockRestore();
       // Re-suppress for next tests
-      consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
-    });
+      consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
+  })
   });
 
   describe('cleanup operations', () => {
     beforeEach(async () => {
       // Wait for service initialization
-      await new Promise(resolve => setTimeout(resolve, 10));
-    });
+      await new Promise(resolve => setTimeout(resolve, 10))
+  });
 
     it.skip('should clean up expired entries by priority', async () => {
       const now = Date.now();
@@ -557,22 +557,22 @@ describe('IntelligentCachingService', () => {
           url: '/old-low',
           priority: 'low',
           timestamp: now - (5 * 24 * 60 * 60 * 1000),
-          resourceType: 'static-asset';
-        },
+          resourceType: 'static-asset'
+  },
         // Should NOT be deleted - within 30 day retention for high priority
         {
           url: '/old-high',
           priority: 'high',
           timestamp: now - (20 * 24 * 60 * 60 * 1000),
-          resourceType: 'user-data';
-        },
+          resourceType: 'user-data'
+  },
         // Should NOT be deleted - critical resources have 90 day retention
         {
           url: '/old-critical',
           priority: 'critical',
           timestamp: now - (60 * 24 * 60 * 60 * 1000),
-          resourceType: 'crisis-resource';
-        }
+          resourceType: 'crisis-resource'
+  }
       ]);
       
       const cleanedCount = await service.cleanupExpiredEntries();
@@ -580,15 +580,15 @@ describe('IntelligentCachingService', () => {
       expect(cleanedCount).toBe(1);
       expect(mockCache.delete).toHaveBeenCalledWith('/old-low');
       expect(mockCache.delete).not.toHaveBeenCalledWith('/old-high');
-      expect(mockCache.delete).not.toHaveBeenCalledWith('/old-critical');
-    });
+      expect(mockCache.delete).not.toHaveBeenCalledWith('/old-critical')
+  })
   });
 
   describe('error handling', () => {
     beforeEach(async () => {
       // Wait for service initialization  
-      await new Promise(resolve => setTimeout(resolve, 10));
-    });
+      await new Promise(resolve => setTimeout(resolve, 10))
+  });
 
     it.skip('should handle cache operations when DB is not initialized', async () => {
       // Create a service instance but mock DB to be null;
@@ -598,8 +598,8 @@ describe('IntelligentCachingService', () => {
       // Should not throw when DB is null
       await expect(testService.getCacheAnalytics()).resolves.toBeDefined();
       await expect(testService.getStorageInfo()).resolves.toBeDefined();
-      await expect(testService.cleanupExpiredEntries()).resolves.toBe(0);
-    });
+      await expect(testService.cleanupExpiredEntries()).resolves.toBe(0)
+  });
 
     it.skip('should handle storage estimate errors', async () => {
       // Temporarily restore console.error to test it
@@ -608,10 +608,10 @@ describe('IntelligentCachingService', () => {
       
       Object.defineProperty(navigator, 'storage', {
         value: {
-          estimate: jest.fn().mockRejectedValue(new Error('Storage API error'));
-        },
-        writable: true;
-      });
+          estimate: jest.fn().mockRejectedValue(new Error('Storage API error'))
+  },
+        writable: true
+  });
       
       const info = await service.getStorageInfo();
       
@@ -619,14 +619,14 @@ describe('IntelligentCachingService', () => {
         usage: 0,
         quota: 0,
         usagePercentage: 0,
-        cacheEntries: 0;
-      });
+        cacheEntries: 0
+  });
       
       expect(testConsoleSpy).toHaveBeenCalled();
       
       testConsoleSpy.mockRestore();
       // Re-suppress for next tests
-      consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
-    });
+      consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
+  })
+  })
   });
-});

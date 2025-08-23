@@ -4,7 +4,7 @@ import { createMockButtonProps } from '../../test-utils';
 
 describe('AppButton', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   describe('Rendering', () => {
@@ -14,8 +14,8 @@ describe('AppButton', () => {
       
       const button = screen.getByRole('button');
       expect(button).toBeInTheDocument();
-      expect(button).toHaveTextContent('Test Button');
-    });
+      expect(button).toHaveTextContent('Test Button')
+  });
 
     it('should render button with correct type attribute', () => {
       const types = ['button', 'submit', 'reset'] as const;
@@ -26,9 +26,9 @@ describe('AppButton', () => {
         );
         
         expect(screen.getByRole('button')).toHaveAttribute('type', type);
-        unmount();
-      });
-    });
+        unmount()
+  })
+  });
 
     it('should render with icon when provided', () => {
       const icon = <span data-testid="test-icon">🔍</span>;
@@ -36,8 +36,8 @@ describe('AppButton', () => {
       render(<AppButton {...props} />);
       
       expect(screen.getByTestId('test-icon')).toBeInTheDocument();
-      expect(screen.getByRole('button')).toHaveTextContent('Search');
-    });
+      expect(screen.getByRole('button')).toHaveTextContent('Search')
+  });
 
     it('should render icon-only button correctly', () => {
       const icon = <span data-testid="icon">🔍</span>;
@@ -51,21 +51,21 @@ describe('AppButton', () => {
       const button = screen.getByRole('button');
       expect(button).toHaveClass('btn-icon-only');
       expect(button).toHaveAttribute('aria-label', 'Search button');
-      expect(screen.getByTestId('icon')).toBeInTheDocument();
-    });
+      expect(screen.getByTestId('icon')).toBeInTheDocument()
+  });
 
     it('should not render children text in icon-only mode', () => {
       const icon = <span data-testid="icon">🔍</span>;
       const props = createMockButtonProps({
         icon,
         iconOnly: true,
-        children: 'This should not appear';
-      });
+        children: 'This should not appear'
+  });
       render(<AppButton {...props} />);
       
       expect(screen.queryByText('This should not appear')).not.toBeInTheDocument();
-      expect(screen.getByTestId('icon')).toBeInTheDocument();
-    });
+      expect(screen.getByTestId('icon')).toBeInTheDocument()
+  })
   });
 
   describe('Button Variants', () => {
@@ -83,11 +83,11 @@ describe('AppButton', () => {
         
         // Check for variant-specific therapeutic classes
         if (variant === 'primary' || variant === 'secondary' || variant === 'success' || variant === 'danger') {
-          expect(button).toHaveClass(`btn-${variant}-therapeutic`);;
+          expect(button).toHaveClass(`btn-${variant}-therapeutic`)
   } else if (variant === 'ghost') {
           // Ghost variant just gets passed through as is
-          expect(button).toHaveClass('ghost');
-        }
+          expect(button).toHaveClass('ghost')
+  }
       });
 
       it(`should apply correct classes for ${variant} variant when not enhanced`, () => {
@@ -95,9 +95,9 @@ describe('AppButton', () => {
         render(<AppButton {...props} />);
         
         const button = screen.getByRole('button');
-        expect(button).toHaveClass('btn', `btn-${variant}`);
-      });
-    });
+        expect(button).toHaveClass('btn', `btn-${variant}`)
+  })
+  })
   });
 
   describe('Button Sizes', () => {
@@ -110,11 +110,11 @@ describe('AppButton', () => {
         
         const button = screen.getByRole('button');
         if (size !== 'md') {
-          expect(button).toHaveClass(`btn-${size}`);;
+          expect(button).toHaveClass(`btn-${size}`)
   } else {
           // 'md' is default, so no size class should be applied
-          expect(button).not.toHaveClass('btn-md');
-        }
+          expect(button).not.toHaveClass('btn-md')
+  }
       });
 
       it(`should apply correct size class for ${size} when not enhanced`, () => {
@@ -123,13 +123,13 @@ describe('AppButton', () => {
         
         const button = screen.getByRole('button');
         if (size !== 'md') {
-          expect(button).toHaveClass(`btn-${size}`);;
+          expect(button).toHaveClass(`btn-${size}`)
   } else {
           // 'md' is default, so no size class should be applied
-          expect(button).not.toHaveClass('btn-md');
-        }
-      });
-    });
+          expect(button).not.toHaveClass('btn-md')
+  }
+      })
+  })
   });
 
   describe('Loading State', () => {
@@ -140,20 +140,20 @@ describe('AppButton', () => {
       expect(screen.getByRole('button')).toBeDisabled();
       // The component uses loading-dots, not loading-spinner
       expect(document.querySelector('.loading-dots')).toBeInTheDocument();
-      expect(screen.queryByText('Test Button')).not.toBeInTheDocument();
-    });
+      expect(screen.queryByText('Test Button')).not.toBeInTheDocument()
+  });
 
     it('should not show children when loading', () => {
       const props = createMockButtonProps({
         isLoading: true,
-        children: 'Submit Form';
-      });
+        children: 'Submit Form'
+  });
       render(<AppButton {...props} />);
       
       expect(screen.queryByText('Submit Form')).not.toBeInTheDocument();
       // The component uses loading-dots, not loading-spinner
-      expect(document.querySelector('.loading-dots')).toBeInTheDocument();
-    });
+      expect(document.querySelector('.loading-dots')).toBeInTheDocument()
+  });
 
     it('should show loading dots when loading', () => {
       const props = createMockButtonProps({ isLoading: true, size: 'lg' });
@@ -163,8 +163,8 @@ describe('AppButton', () => {
       const loadingDots = document.querySelector('.loading-dots');
       expect(loadingDots).toBeInTheDocument();
       const dots = document.querySelectorAll('.loading-dot');
-      expect(dots).toHaveLength(3);
-    });
+      expect(dots).toHaveLength(3)
+  });
 
     it('should show loading dots for default size', () => {
       const props = createMockButtonProps({ isLoading: true, size: 'md' });
@@ -172,8 +172,8 @@ describe('AppButton', () => {
       
       // The component uses loading-dots;
       const loadingDots = document.querySelector('.loading-dots');
-      expect(loadingDots).toBeInTheDocument();
-    });
+      expect(loadingDots).toBeInTheDocument()
+  })
   });
 
   describe('Disabled State', () => {
@@ -181,38 +181,38 @@ describe('AppButton', () => {
       const props = createMockButtonProps({ disabled: true });
       render(<AppButton {...props} />);
       
-      expect(screen.getByRole('button')).toBeDisabled();
-    });
+      expect(screen.getByRole('button')).toBeDisabled()
+  });
 
     it('should be disabled when isLoading is true', () => {
       const props = createMockButtonProps({ isLoading: true });
       render(<AppButton {...props} />);
       
-      expect(screen.getByRole('button')).toBeDisabled();
-    });
+      expect(screen.getByRole('button')).toBeDisabled()
+  });
 
     it('should be disabled when both disabled and isLoading are true', () => {
       const props = createMockButtonProps({ disabled: true, isLoading: true });
       render(<AppButton {...props} />);
       
-      expect(screen.getByRole('button')).toBeDisabled();
-    });
+      expect(screen.getByRole('button')).toBeDisabled()
+  });
 
     it('should not call onClick when disabled', () => {
       const props = createMockButtonProps({ disabled: true });
       render(<AppButton {...props} />);
       
       fireEvent.click(screen.getByRole('button'));
-      expect(props.onClick).not.toHaveBeenCalled();
-    });
+      expect(props.onClick).not.toHaveBeenCalled()
+  });
 
     it('should not call onClick when loading', () => {
       const props = createMockButtonProps({ isLoading: true });
       render(<AppButton {...props} />);
       
       fireEvent.click(screen.getByRole('button'));
-      expect(props.onClick).not.toHaveBeenCalled();
-    });
+      expect(props.onClick).not.toHaveBeenCalled()
+  })
   });
 
   describe('User Interactions', () => {
@@ -222,8 +222,8 @@ describe('AppButton', () => {
       
       fireEvent.click(screen.getByRole('button'));
       expect(props.onClick).toHaveBeenCalledTimes(1);
-      expect(props.onClick).toHaveBeenCalledWith(expect.any(Object));
-    });
+      expect(props.onClick).toHaveBeenCalledWith(expect.any(Object))
+  });
 
     it('should call onClick multiple times when clicked multiple times', () => {
       const props = createMockButtonProps();
@@ -234,8 +234,8 @@ describe('AppButton', () => {
       fireEvent.click(button);
       fireEvent.click(button);
       
-      expect(props.onClick).toHaveBeenCalledTimes(3);
-    });
+      expect(props.onClick).toHaveBeenCalledTimes(3)
+  });
 
     it('should pass click event to onClick handler', () => {
       const props = createMockButtonProps();
@@ -246,10 +246,10 @@ describe('AppButton', () => {
       expect(props.onClick).toHaveBeenCalledWith(
         expect.objectContaining({
           type: 'click',
-          target: expect.any(Element);
-        })
-      );
-    });
+          target: expect.any(Element)
+  })
+      )
+  })
   });
 
   describe('Accessibility', () => {
@@ -263,26 +263,26 @@ describe('AppButton', () => {
       expect(button.style.display).toBe('inline-flex');
       expect(button.style.alignItems).toBe('center');
       expect(button.style.justifyContent).toBe('center');
-      expect(button.style.touchAction).toBe('manipulation');
-    });
+      expect(button.style.touchAction).toBe('manipulation')
+  });
 
     it('should have minimum width for icon-only buttons', () => {
       const props = createMockButtonProps({ iconOnly: true });
       render(<AppButton {...props} />);
       
       const button = screen.getByRole('button');
-      expect(button.style.minWidth).toBe('44px');
-    });
+      expect(button.style.minWidth).toBe('44px')
+  });
 
     it('should use aria-label for icon-only buttons with string children', () => {
       const props = createMockButtonProps({
         iconOnly: true,
-        children: 'Search';
-      });
+        children: 'Search'
+  });
       render(<AppButton {...props} />);
       
-      expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Search');
-    });
+      expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Search')
+  });
 
     it('should use provided aria-label over children for icon-only buttons', () => {
       const props = createMockButtonProps({
@@ -292,8 +292,8 @@ describe('AppButton', () => {
       });
       render(<AppButton {...props} />);
       
-      expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Custom search button');
-    });
+      expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Custom search button')
+  });
 
     it('should use provided aria-label for regular buttons', () => {
       const props = createMockButtonProps({
@@ -301,15 +301,15 @@ describe('AppButton', () => {
       });
       render(<AppButton {...props} />);
       
-      expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Custom button label');
-    });
+      expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Custom button label')
+  });
 
     it('should not have aria-label when not icon-only and no explicit aria-label', () => {
       const props = createMockButtonProps({ iconOnly: false });
       render(<AppButton {...props} />);
       
-      expect(screen.getByRole('button')).not.toHaveAttribute('aria-label');
-    });
+      expect(screen.getByRole('button')).not.toHaveAttribute('aria-label')
+  })
   });
 
   describe('CSS Classes', () => {
@@ -322,8 +322,8 @@ describe('AppButton', () => {
       expect(button).toHaveClass('glass-button');
       expect(button).toHaveClass('btn-primary-therapeutic'); // Default variant is primary
       // Touch classes are always applied
-      expect(button).toHaveClass('touch-optimized', 'touch-feedback');
-    });
+      expect(button).toHaveClass('touch-optimized', 'touch-feedback')
+  });
 
     it('should apply legacy classes when enhanced is false', () => {
       const props = createMockButtonProps({ enhanced: false });
@@ -333,15 +333,15 @@ describe('AppButton', () => {
       expect(button).toHaveClass('btn', 'btn-primary'); // Legacy uses btn-primary
       expect(button).toHaveClass('touch-optimized', 'touch-feedback');
       // Ripple is applied by default when ripple={true}
-      expect(button).toHaveClass('ripple-button');
-    });
+      expect(button).toHaveClass('ripple-button')
+  });
 
     it('should apply custom className', () => {
       const props = createMockButtonProps({ className: 'custom-button-class' });
       render(<AppButton {...props} />);
       
-      expect(screen.getByRole('button')).toHaveClass('custom-button-class');
-    });
+      expect(screen.getByRole('button')).toHaveClass('custom-button-class')
+  });
 
     it('should combine all appropriate classes', () => {
       const props = createMockButtonProps({
@@ -349,8 +349,8 @@ describe('AppButton', () => {
         size: 'lg',
         enhanced: true,
         iconOnly: true,
-        className: 'custom-class';
-      });
+        className: 'custom-class'
+  });
       render(<AppButton {...props} />);
       
       const button = screen.getByRole('button');
@@ -360,8 +360,8 @@ describe('AppButton', () => {
         'btn-lg',
         'btn-icon-only',
         'custom-class'
-      );
-    });
+      )
+  })
   });
 
   describe('Custom Styles', () => {
@@ -369,16 +369,16 @@ describe('AppButton', () => {
       const customStyle = {
         backgroundColor: 'red',
         color: 'white',
-        padding: '10px';
-      };
+        padding: '10px'
+  };
       const props = createMockButtonProps({ style: customStyle });
       render(<AppButton {...props} />);
       
       const button = screen.getByRole('button');
       expect(button.style.backgroundColor).toBe('red');
       expect(button.style.color).toBe('white');
-      expect(button.style.padding).toBe('10px');
-    });
+      expect(button.style.padding).toBe('10px')
+  });
 
     it('should merge custom styles with default touch target styles', () => {
       const customStyle = { backgroundColor: 'blue' };
@@ -388,8 +388,8 @@ describe('AppButton', () => {
       const button = screen.getByRole('button');
       expect(button.style.backgroundColor).toBe('blue');
       expect(button.style.minHeight).toBe('44px'); // Default touch target style
-      expect(button.style.display).toBe('inline-flex');
-    });
+      expect(button.style.display).toBe('inline-flex')
+  })
   });
 
   describe('Edge Cases', () => {
@@ -397,18 +397,18 @@ describe('AppButton', () => {
       const props = createMockButtonProps({ children: undefined });
       render(<AppButton {...props} />);
       
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
+      expect(screen.getByRole('button')).toBeInTheDocument()
+  });
 
     it('should handle null children gracefully', () => {
       const props = createMockButtonProps({ children: null });
       render(<AppButton {...props} />);
       
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
+      expect(screen.getByRole('button')).toBeInTheDocument()
+  });
 
     it('should handle complex children content', () => {
-      const complexChildren = (;
+      const complexChildren = (;;
         <>
           <span>Complex</span>
           <strong>Content</strong>
@@ -418,12 +418,12 @@ describe('AppButton', () => {
       render(<AppButton {...props} />);
       
       expect(screen.getByText('Complex')).toBeInTheDocument();
-      expect(screen.getByText('Content')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Content')).toBeInTheDocument()
+  });
 
     it('should handle icon with complex children in icon-only mode', () => {
       const icon = <span data-testid="icon">🔍</span>;
-      const complexChildren = (;
+      const complexChildren = (;;
         <>
           <span>Should</span>
           <span>Not</span>
@@ -433,15 +433,15 @@ describe('AppButton', () => {
       const props = createMockButtonProps({
         icon,
         iconOnly: true,
-        children: complexChildren;
-      });
+        children: complexChildren
+  });
       render(<AppButton {...props} />);
       
       expect(screen.getByTestId('icon')).toBeInTheDocument();
       expect(screen.queryByText('Should')).not.toBeInTheDocument();
       expect(screen.queryByText('Not')).not.toBeInTheDocument();
-      expect(screen.queryByText('Appear')).not.toBeInTheDocument();
-    });
+      expect(screen.queryByText('Appear')).not.toBeInTheDocument()
+  });
 
     it('should handle rapid state changes', () => {
       const props = createMockButtonProps({ isLoading: false });
@@ -457,7 +457,7 @@ describe('AppButton', () => {
       expect(noLoadingDots).not.toBeInTheDocument();
       
       rerender(<AppButton {...props} disabled={true} />);
-      expect(screen.getByRole('button')).toBeDisabled();
-    });
+      expect(screen.getByRole('button')).toBeDisabled()
+  })
+  })
   });
-});

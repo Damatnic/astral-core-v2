@@ -41,15 +41,15 @@ interface LazyLoadOptions {
   
   // Retry configuration
   maxRetries?: number;
-  retryDelay?: number;
-}
+  retryDelay?: number
+  }
 
 // Retry state interface;
 interface RetryState {
   attempts: number;
   isRetrying: boolean;
-  lastError: Error | null;
-}
+  lastError: Error | null
+  }
 
 // Enhanced lazy component creator;
 export function createEnhancedLazyComponent<T extends ComponentType<any>>(;
@@ -80,15 +80,15 @@ export function createEnhancedLazyComponent<T extends ComponentType<any>>(;
         
         // Track bundle load time
         if (trackPerformance && 'reportWebVital' in window) {
-          (window as any).reportWebVital?.(`${componentName}_bundle_load`, loadTime);
-        }
+          (window as any).reportWebVital?.(`${componentName}_bundle_load`, loadTime)
+  }
         
-        return module;
-      })
+        return module
+  })
       .catch(error => {
         console.warn(`Failed to load component ${componentName}:`, error);
-        throw error;
-      });
+        throw error
+  })
   });
 
   // Enhanced wrapper component;
@@ -106,37 +106,37 @@ export function createEnhancedLazyComponent<T extends ComponentType<any>>(;
     
     // Track component render time
     if (trackPerformance) {
-      useComponentRenderTracker(componentName);
-    }
+      useComponentRenderTracker(componentName)
+  }
 
     // Network-aware loading logic
     useEffect(() => {
       if (strategy === 'network-aware') {
         // Respect data saver setting
         if (respectDataSaver && networkInfo.saveData) {
-          return;
-        }
+          return
+  }
 
         // Load immediately on good connections
         if (shouldLoadImmediately) {
           setShouldLoad(true);
-          return;
-        }
+          return
+  }
 
         // Delay loading on slower connections;
-        const delay = networkInfo.effectiveType === '3g' ? 1000 : ;
+        const delay = networkInfo.effectiveType === '3g' ? 1000 : ;;
                      networkInfo.effectiveType === '2g' ? 2000 : 500;
         
         const timer = setTimeout(() => setShouldLoad(true), delay);
-        return () => clearTimeout(timer);
-      }
+        return () => clearTimeout(timer)
+  }
     };
   }, [strategy, shouldLoadImmediately, networkInfo, respectDataSaver]);
 
     // Viewport-based loading
     useEffect(() => {
       if (strategy === 'viewport' && !shouldLoad) {
-        const observer = new IntersectionObserver(;
+        const observer = new IntersectionObserver(;;
           ([entry]) => {
             if (entry.isIntersecting) {
               setIsIntersecting(true);
@@ -144,8 +144,8 @@ export function createEnhancedLazyComponent<T extends ComponentType<any>>(;
               // Delay loading slightly to avoid loading too many components at once
               setTimeout(() => setShouldLoad(true), preloadDelay);
               
-              observer.disconnect();
-            }
+              observer.disconnect()
+  }
           },
           { rootMargin }
         );
@@ -159,8 +159,8 @@ export function createEnhancedLazyComponent<T extends ComponentType<any>>(;
         return () => {
           observer.disconnect();
           if (placeholder.parentNode) {
-            placeholder.parentNode.removeChild(placeholder);
-          }
+            placeholder.parentNode.removeChild(placeholder)
+  }
         }
     };
   }, [strategy, shouldLoad, rootMargin, preloadDelay]);
@@ -172,14 +172,14 @@ export function createEnhancedLazyComponent<T extends ComponentType<any>>(;
         
         const events = ['mouseenter', 'click', 'touchstart', 'focus'];
         events.forEach(event => {
-          document.addEventListener(event, handleInteraction, { once: true, passive: true });
-        });
+          document.addEventListener(event, handleInteraction, { once: true, passive: true })
+  });
 
         return () => {
           events.forEach(event => {
-            document.removeEventListener(event, handleInteraction);
-          });
-        }
+            document.removeEventListener(event, handleInteraction)
+  })
+  }
     };
   }, [strategy, shouldLoad]);
 
@@ -190,11 +190,11 @@ export function createEnhancedLazyComponent<T extends ComponentType<any>>(;
         const timer = setTimeout(() => {
           importFn().catch(() => {
             // Silently fail preload attempts
-          });
-        }, preloadDelay);
+          })
+  }, preloadDelay);
 
-        return () => clearTimeout(timer);
-      }
+        return () => clearTimeout(timer)
+  }
     };
   }, [shouldPreload, priority, shouldLoad, preloadDelay]);
 
@@ -213,9 +213,9 @@ export function createEnhancedLazyComponent<T extends ComponentType<any>>(;
             isRetrying: false,
             lastError: null,
           }));
-          setShouldLoad(true);
-        }, retryDelay);
-      }
+          setShouldLoad(true)
+  }, retryDelay)
+  }
     };
   }, [retryState.attempts, maxRetries, retryDelay]);
 
@@ -228,18 +228,18 @@ export function createEnhancedLazyComponent<T extends ComponentType<any>>(;
         const handleError = (event: ErrorEvent) => {
           setHasError(true);
           setError(new Error(event.message));
-          setRetryState(prev => ({ ...prev, lastError: new Error(event.message) }));
-        };
+          setRetryState(prev => ({ ...prev, lastError: new Error(event.message) }))
+  };
 
         window.addEventListener('error', handleError);
-        return () => window.removeEventListener('error', handleError);
-      };
+        return () => window.removeEventListener('error', handleError)
+  };
   }, []);
 
       if (hasError && error) {
         if (CustomErrorFallback) {
-          return <CustomErrorFallback error={error} retry={handleRetry} />;
-        }
+          return <CustomErrorFallback error={error} retry={handleRetry} />
+  }
         
         return (
           <ErrorState 
@@ -248,21 +248,21 @@ export function createEnhancedLazyComponent<T extends ComponentType<any>>(;
             onRetry={retryState.attempts < maxRetries ? handleRetry : undefined}
             isRetrying={retryState.isRetrying}
           />
-        );
-      }
+        )
+  }
 
-      return <>{children}</>;
-    };
+      return <>{children}</>
+  };
 
     // Loading fallback component;
-    const LoadingFallback = CustomFallback || (() => (;
+    const LoadingFallback = CustomFallback || (() => (;;
       <div className="lazy-loading-container" style={{ 
         minHeight: '100px', 
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'center',
-        padding: '20px';
-      }}>
+        padding: '20px'
+  }}>
         <LoadingSpinner 
           size={optimizeForMobile && deviceInfo.isMobile ? 'small' : 'medium'}
           message={`Loading ${componentName}...`}
@@ -275,8 +275,7 @@ export function createEnhancedLazyComponent<T extends ComponentType<any>>(;
       // Show placeholder for viewport strategy
       if (strategy === 'viewport') {
         return (
-          <div; 
-            className="lazy-placeholder"
+          <div className="lazy-placeholder"
             style={{ 
               minHeight: '50px',
               background: 'transparent',
@@ -284,19 +283,18 @@ export function createEnhancedLazyComponent<T extends ComponentType<any>>(;
               alignItems: 'center',
               justifyContent: 'center',
               color: 'var(--text-secondary)',
-              fontSize: '14px';
-            }}
+              fontSize: '14px'
+  }}
           >
             {isIntersecting ? 'Loading...' : ''}
           </div>
-        );
-      }
+        )
+  }
 
       // Show loading state for interaction strategy
       if (strategy === 'interaction') {
         return (
-          <div; 
-            className="lazy-interaction-trigger"
+          <div className="lazy-interaction-trigger"
             style={{ 
               minHeight: '100px',
               display: 'flex',
@@ -305,17 +303,17 @@ export function createEnhancedLazyComponent<T extends ComponentType<any>>(;
               border: '2px dashed var(--border-color)',
               borderRadius: '8px',
               cursor: 'pointer',
-              padding: '20px';
-            }}
+              padding: '20px'
+  }}
             onClick={() => setShouldLoad(true)}
           >
             Click to load {componentName}
           </div>
-        );
-      }
+        )
+  }
 
-      return <LoadingFallback />;
-    }
+      return <LoadingFallback />
+  }
 
     // Render the lazy component
     return (
@@ -324,14 +322,14 @@ export function createEnhancedLazyComponent<T extends ComponentType<any>>(;
           <LazyComponent {...props} />
         </Suspense>
       </ErrorBoundary>
-    );
+    )
   };
 
   // Set display name for debugging
   EnhancedLazyWrapper.displayName = `EnhancedLazy(${componentName})`;
 
-  return EnhancedLazyWrapper;
-}
+  return EnhancedLazyWrapper
+  }
 
 // Preload utility for critical components;
 export const preloadComponent = (;
@@ -342,13 +340,13 @@ export const preloadComponent = (;
     .then(() => {
       // Component successfully preloaded
       if (process.env.NODE_ENV === 'development') {
-        console.log(`Component preloaded with ${priority} priority`);
-      }
+        console.log(`Component preloaded with ${priority} priority`)
+  }
     })
     .catch((error) => {
-      console.warn('Failed to preload component:', error);
-    });
-};
+      console.warn('Failed to preload component:', error)
+  })
+  };
 
 // Bundle analyzer utility (development only);
 export const analyzeBundleSize = async (
@@ -356,7 +354,7 @@ export const analyzeBundleSize = async (
   importFn: () => Promise<{ default: ComponentType<any> }>
 ): Promise<void> => {
   if (process.env.NODE_ENV !== 'development') {
-    return;
+    return
   }
 
   const startTime = performance.now();
@@ -371,9 +369,9 @@ export const analyzeBundleSize = async (
     console.group(`📦 Bundle Analysis: ${componentName}`);
     console.log(`⏱️ Load Time: ${loadTime.toFixed(2)}ms`);
     console.log(`💾 Memory Impact: ${(memoryIncrease / 1024 / 1024).toFixed(2)}MB`);
-    console.groupEnd();
+    console.groupEnd()
   } catch (error) {
-    console.error(`❌ Failed to analyze ${componentName}:`, error);
+    console.error(`❌ Failed to analyze ${componentName}:`, error)
   }
 };
 
@@ -393,13 +391,13 @@ export class ComponentPreloader {
     this.preloadQueue.push({ name, importFn, priority: priorityValue });
     this.preloadQueue.sort((a, b) => b.priority - a.priority);
     
-    this.processQueue();
+    this.processQueue()
   }
 
   private static async processQueue(): Promise<void> {
     if (this.isProcessing || this.preloadQueue.length === 0) {
-      return;
-    }
+      return
+  }
 
     this.isProcessing = true;
 
@@ -416,28 +414,28 @@ export class ComponentPreloader {
           
           const loadTime = performance.now() - startTime;
           if (process.env.NODE_ENV === 'development') {
-            console.log(`✅ Preloaded ${name} in ${loadTime.toFixed(2)}ms`);
-          }
+            console.log(`✅ Preloaded ${name} in ${loadTime.toFixed(2)}ms`)
+  }
         } catch (error) {
           console.warn(`❌ Failed to preload ${name}:`, error);
-          this.preloadCache.delete(name);
-        }
+          this.preloadCache.delete(name)
+  }
       }
 
       // Small delay to prevent blocking the main thread
-      await new Promise(resolve => setTimeout(resolve, 10));
-    }
+      await new Promise(resolve => setTimeout(resolve, 10))
+  }
 
-    this.isProcessing = false;
+    this.isProcessing = false
   }
 
   static isPreloaded(name: string): boolean {
-    return this.preloadCache.has(name);
+    return this.preloadCache.has(name)
   }
 
   static clearCache(): void {
     this.preloadCache.clear();
-    this.preloadQueue.length = 0;
+    this.preloadQueue.length = 0
   }
 }
 
@@ -457,8 +455,8 @@ export const createMobileLazyComponent = <T extends ComponentType<any>>(;
     retryDelay: 1000,
     rootMargin: '100px',
     ...options,
-  });
-};
+  })
+  };
 
 export default {
   createEnhancedLazyComponent,

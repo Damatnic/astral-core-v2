@@ -8,8 +8,8 @@ interface AnimatedCardProps {
   animationType?: 'fadeIn' | 'slideInUp' | 'scaleIn';
   hoverEffect?: boolean;
   onClick?: () => void;
-  id?: string;
-}
+  id?: string
+  }
 
 export const AnimatedCard: React.FC<AnimatedCardProps> = ({
   children,
@@ -23,7 +23,7 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
   const { elementRef, isVisible } = useScrollAnimation(0.1);
   const { isHovered, handleMouseEnter, handleMouseLeave } = useDelayedHover(50, 150);
 
-  const animationClasses = [;
+  const animationClasses = [;;
     'card',
     isVisible ? `${animationType} fade-in-scroll visible` : 'fade-in-scroll',
     hoverEffect && isHovered ? 'card-hover' : '',
@@ -37,8 +37,8 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (onClick && (event.key === 'Enter' || event.key === ' ')) {
       event.preventDefault();
-      onClick();
-    }
+      onClick()
+  }
   };
 
   // If clickable, render as button element for proper accessibility
@@ -57,7 +57,7 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
       >
         {children}
       </button>
-    );
+    )
   }
 
   // Non-clickable card with hover effects (visual feedback only)
@@ -72,16 +72,16 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
     >
       {children}
     </div>
-  );
-};
+  )
+  };
 
 interface AnimatedListProps {
   children: React.ReactNode[];
   staggerDelay?: number;
   animationType?: 'fadeIn' | 'slideInUp' | 'scaleIn';
   className?: string;
-  itemIdPrefix?: string;
-}
+  itemIdPrefix?: string
+  }
 
 export const AnimatedList: React.FC<AnimatedListProps> = ({
   children,
@@ -104,7 +104,7 @@ export const AnimatedList: React.FC<AnimatedListProps> = ({
         </AnimatedCard>
       ))}
     </div>
-  );
-};
+  )
+  };
 
 export default AnimatedCard;

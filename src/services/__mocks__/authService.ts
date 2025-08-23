@@ -17,7 +17,7 @@ export const authService = {
   refreshToken: jest.fn(() => Promise.resolve('new-mock-token')),
   getCurrentUser: jest.fn(() => ({
     id: 'test-user',
-    email: 'test@example.com';
+    email: 'test@example.com'
   })),
   isAuthenticated: jest.fn(() => true),
   getToken: jest.fn(() => 'mock-token'),
@@ -28,13 +28,13 @@ export const authService = {
   deleteAccount: jest.fn(() => Promise.resolve()),
   // Add the missing methods for helper profile management
   setUpdater: jest.fn((updater: (profile: any) => void) => {
-    _updateHelperProfile = updater;
+    _updateHelperProfile = updater
   }),
   updateHelperProfile: jest.fn((profile: any) => {
     if (_updateHelperProfile) {
-      _updateHelperProfile(profile);;
+      _updateHelperProfile(profile)
   } else {
-      console.error("AuthService updater not set. Cannot update helper profile.");
-    }
+      console.error("AuthService updater not set. Cannot update helper profile.")
+  }
   }),
 };

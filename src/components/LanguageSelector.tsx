@@ -11,8 +11,8 @@ interface LanguageOption {
   name: string;
   nativeName: string;
   flag: string;
-  rtl?: boolean;
-}
+  rtl?: boolean
+  }
 
 const SUPPORTED_LANGUAGES: LanguageOption[] = [
   { code: 'en', name: 'English', nativeName: 'English', flag: '🇺🇸' },
@@ -30,8 +30,8 @@ interface LanguageSelectorProps {
   showFlags?: boolean;
   showNativeNames?: boolean;
   className?: string;
-  onLanguageChange?: (language: string) => void;
-}
+  onLanguageChange?: (language: string) => void
+  }
 
 export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   variant = 'dropdown',
@@ -49,8 +49,8 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   const handleLanguageChange = async (newLanguage: string) => {
     if (newLanguage === language) {
       setIsOpen(false);
-      return;
-    }
+      return
+  }
 
     setIsChanging(true);
     
@@ -60,8 +60,8 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       
       // Announce language change for accessibility;
       const announcement = t('accessibility.language_changed', { 
-        language: SUPPORTED_LANGUAGES.find(l => l.code === newLanguage)?.nativeName || newLanguage ;
-      });
+        language: SUPPORTED_LANGUAGES.find(l => l.code === newLanguage)?.nativeName || newLanguage
+  });
       
       // Create screen reader announcement;
       const srElement = document.createElement('div');
@@ -72,18 +72,17 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       document.body.appendChild(srElement);
       
       setTimeout(() => {
-        document.body.removeChild(srElement);
-      }, 3000);
-      
-    } catch (error) {
-      console.error('[LanguageSelector] Failed to change language:', error);
-    } finally {
+        document.body.removeChild(srElement)
+  }, 3000)
+  } catch (error) {
+      console.error('[LanguageSelector] Failed to change language:', error)
+  } finally {
       setIsChanging(false);
-      setIsOpen(false);
-    }
+      setIsOpen(false)
+  }
   };
 
-  const renderLanguageOption = (lang: LanguageOption, isSelected: boolean = false) => (;
+  const renderLanguageOption = (lang: LanguageOption, isSelected: boolean = false) => (;;
     <div 
       key={lang.code}
       className={`language-option ${isSelected ? 'selected' : ''} ${lang.rtl ? 'rtl' : ''}`}
@@ -94,8 +93,8 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          handleLanguageChange(lang.code);
-        }
+          handleLanguageChange(lang.code)
+  }
       }}
     >
       {showFlags && <span className="language-flag" aria-hidden="true">{lang.flag}</span>}
@@ -115,14 +114,13 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
           {SUPPORTED_LANGUAGES.map(lang => renderLanguageOption(lang, lang.code === language))}
         </div>
       </div>
-    );
+    )
   }
 
   if (variant === 'modal') {
     return (
       <>
-        <button;
-          className={`language-trigger ${className}`}
+        <button className={`language-trigger ${className}`}
           onClick={() => setIsOpen(true)}
           aria-label={t('settings.change_language', { defaultValue: 'Change language' })}
           disabled={isChanging}
@@ -134,8 +132,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
         
         {isOpen && (
           <div className="language-modal-overlay" onClick={() => setIsOpen(false)}>
-            <div; 
-              className={`language-modal ${isRTL ? 'rtl' : ''}`}
+            <div className={`language-modal ${isRTL ? 'rtl' : ''}`}
               onClick={e => e.stopPropagation()}
               role="dialog"
               aria-labelledby="language-modal-title"
@@ -147,8 +144,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
               <div className="language-modal-content">
                 {SUPPORTED_LANGUAGES.map(lang => renderLanguageOption(lang, lang.code === language))}
               </div>
-              <button; 
-                className="language-modal-close"
+              <button className="language-modal-close"
                 onClick={() => setIsOpen(false)}
                 aria-label={t('common.close', { defaultValue: 'Close' })}
               >
@@ -158,19 +154,18 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
           </div>
         )}
       </>
-    );
+    )
   }
 
   // Default dropdown variant
   return (
     <div className={`language-selector ${className} ${isRTL ? 'rtl' : ''} ${isOpen ? 'open' : ''}`}>
-      <button;
-        className="language-trigger"
+      <button className="language-trigger"
         onClick={() => setIsOpen(!isOpen)}
         onKeyDown={(e) => {
           if (e.key === 'Escape') {
-            setIsOpen(false);
-          }
+            setIsOpen(false)
+  }
         }}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
@@ -185,8 +180,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       </button>
       
       {isOpen && (
-        <div; 
-          className="language-dropdown"
+        <div className="language-dropdown"
           role="listbox"
           aria-label={t('settings.available_languages', { defaultValue: 'Available languages' })}
         >
@@ -194,7 +188,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 export default LanguageSelector;

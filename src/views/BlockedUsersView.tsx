@@ -13,19 +13,19 @@ export const BlockedUsersView: React.FC<{ userId: string | null; }> = ({ userId 
         setIsLoading(true);
         try {
             const blocks = await ApiClient.userBlocking.getBlockedUsers(userId);
-            setBlockedUsers(blocks);
-        } catch (error) {
+            setBlockedUsers(blocks)
+  } catch (error) {
             console.error("Failed to fetch blocked users:", error);
-            alert("Could not load your blocked users list.");
-        } finally {
-            setIsLoading(false);
-        }
+            alert("Could not load your blocked users list.")
+  } finally {
+            setIsLoading(false)
+  }
     };
   }, [userId]);
 
     useEffect(() => {
-        fetchBlockedUsers();
-    };
+        fetchBlockedUsers()
+  };
   }, [fetchBlockedUsers]);
 
     const handleUnblock = async (blockedId: string) => {
@@ -35,11 +35,11 @@ export const BlockedUsersView: React.FC<{ userId: string | null; }> = ({ userId 
         try {
             await ApiClient.userBlocking.unblockUser(userId, blockedId);
             // Refresh the list after unblocking
-            fetchBlockedUsers();
-        } catch (error) {
+            fetchBlockedUsers()
+  } catch (error) {
             console.error("Failed to unblock user:", error);
-            alert("Could not unblock the user.");
-        }
+            alert("Could not unblock the user.")
+  }
     };
 
     return (
@@ -70,8 +70,8 @@ export const BlockedUsersView: React.FC<{ userId: string | null; }> = ({ userId 
                 )}
             </div>
         </>
-    );
-};
+    )
+  };
 
 
 export default BlockedUsersView;

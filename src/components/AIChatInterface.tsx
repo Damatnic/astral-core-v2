@@ -23,8 +23,8 @@ interface AIChatInterfaceProps {
   userName?: string;
   onClose?: () => void;
   provider?: 'openai' | 'claude';
-  theme?: 'light' | 'dark' | 'calming';
-}
+  theme?: 'light' | 'dark' | 'calming'
+  }
 
 interface ChatState {
   messages: AIChatMessage[];
@@ -32,8 +32,8 @@ interface ChatState {
   error: string | null;
   crisisDetected: boolean;
   sessionId: string;
-  provider: 'openai' | 'claude';
-}
+  provider: 'openai' | 'claude'
+  }
 
 export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
   userId,
@@ -59,13 +59,13 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
   
   // Auto-scroll to bottom
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   };
   }, [state.messages, state.isTyping]);
   
   // Load conversation history
   useEffect(() => {
-    loadHistory();
+    loadHistory()
   };
   }, [userId]);
   
@@ -78,14 +78,14 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
           setState(prev => ({ 
             ...prev, 
             messages: data.messages,
-            sessionId: data.metadata?.sessionId || prev.sessionId ;
-          }));
-          setShowWelcome(false);
-        }
+            sessionId: data.metadata?.sessionId || prev.sessionId
+  }));
+          setShowWelcome(false)
+  }
       }
     } catch (error) {
-      console.error('Failed to load chat history:', error);
-    }
+      console.error('Failed to load chat history:', error)
+  }
   };
   
   const sendMessage = async () => {
@@ -95,16 +95,16 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
       id: crypto.randomUUID(),
       sender: 'user',
       text: inputValue.trim(),
-      timestamp: new Date().toISOString();
-    };
+      timestamp: new Date().toISOString()
+  };
     
     const newMessages = [...state.messages, userMessage];
     setState(prev => ({ 
       ...prev, 
       messages: newMessages, 
       isTyping: true, 
-      error: null ;
-    }));
+      error: null
+  }));
     setInputValue('');
     setShowWelcome(false);
     
@@ -112,8 +112,8 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
     const crisisAnalysis = enhancedCrisisDetectionService.analyzeCrisisContent(userMessage.text);
     if (crisisAnalysis.hasCrisisIndicators && 
         (crisisAnalysis.severityLevel === 'high' || crisisAnalysis.severityLevel === 'critical')) {
-      setState(prev => ({ ...prev, crisisDetected: true }));
-    }
+      setState(prev => ({ ...prev, crisisDetected: true }))
+  }
     
     try {
       const response = await fetch('/.netlify/functions/api-ai/chat', {
@@ -124,13 +124,13 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
         body: JSON.stringify({
           messages: newMessages,
           userId,
-          provider: state.provider;
-        })
+          provider: state.provider
+  })
       });
       
       if (!response.ok) {
-        throw new Error('Failed to get AI response');
-      }
+        throw new Error('Failed to get AI response')
+  }
       
       const data = await response.json();
       
@@ -139,15 +139,15 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
         sender: 'ai',
         text: data.response,
         timestamp: new Date().toISOString(),
-        metadata: data.metadata;
-      };
+        metadata: data.metadata
+  };
       
       setState(prev => ({ 
         ...prev, 
         messages: [...newMessages, aiMessage],
         isTyping: false,
-        crisisDetected: data.metadata?.crisisDetected || prev.crisisDetected;
-      }));
+        crisisDetected: data.metadata?.crisisDetected || prev.crisisDetected
+  }));
       
       // Save to history
       await fetch('/.netlify/functions/api-ai/history', {
@@ -157,16 +157,15 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
           userId,
           messages: [...newMessages, aiMessage]
         })
-      });
-      
-    } catch (error) {
+      })
+  } catch (error) {
       console.error('Chat error:', error);
       setState(prev => ({ 
         ...prev, 
         isTyping: false,
-        error: 'Unable to connect to AI service. Please try again.';
-      }));
-    }
+        error: 'Unable to connect to AI service. Please try again.'
+  }))
+  }
   };
   
   const clearChat = async () => {
@@ -182,21 +181,21 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
           ...prev,
           messages: [],
           crisisDetected: false,
-          sessionId: crypto.randomUUID();
-        }));
-        setShowWelcome(true);
-      } catch (error) {
-        console.error('Failed to clear chat:', error);
-      }
+          sessionId: crypto.randomUUID()
+  }));
+        setShowWelcome(true)
+  } catch (error) {
+        console.error('Failed to clear chat:', error)
+  }
     }
   };
   
   const switchProvider = (newProvider: 'openai' | 'claude') => {
     setState(prev => ({ ...prev, provider: newProvider }));
-    setShowOptions(false);
+    setShowOptions(false)
   };
   
-  const quickActions = [;
+  const quickActions = [;;
     "I'm feeling anxious",
     "I need someone to talk to",
     "Help me understand my emotions",
@@ -236,16 +235,14 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
         </div>
         
         <div className="ai-chat-header-actions">
-          <button; 
-            className="ai-chat-action-btn"
+          <button className="ai-chat-action-btn"
             onClick={() => setShowOptions(!showOptions)}
             aria-label="More options"
           >
             <MoreIcon />
           </button>
           {onClose && (
-            <button; 
-              className="ai-chat-action-btn"
+            <button className="ai-chat-action-btn"
               onClick={onClose}
               aria-label="Close chat"
             >
@@ -259,14 +256,12 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
           <div className="ai-chat-options">
             <div className="ai-chat-option-group">
               <label>AI Provider:</label>
-              <button; 
-                className={state.provider === 'openai' ? 'active' : ''}
+              <button className={state.provider === 'openai' ? 'active' : ''}
                 onClick={() => switchProvider('openai')}
               >
                 OpenAI GPT-4
               </button>
-              <button; 
-                className={state.provider === 'claude' ? 'active' : ''}
+              <button className={state.provider === 'claude' ? 'active' : ''}
                 onClick={() => switchProvider('claude')}
               >
                 Claude 3
@@ -314,8 +309,8 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
                     className="ai-chat-quick-btn"
                     onClick={() => {
                       setInputValue(action);
-                      inputRef.current?.focus();
-                    }}
+                      inputRef.current?.focus()
+  }}
                   >
                     {action}
                   </button>
@@ -383,8 +378,8 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
           onKeyPress={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
-              sendMessage();
-            }
+              sendMessage()
+  }
           }}
           placeholder="Type your message here... (Shift+Enter for new line)"
           disabled={state.isTyping}
@@ -413,7 +408,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export default AIChatInterface;

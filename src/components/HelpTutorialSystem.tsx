@@ -19,8 +19,8 @@ interface HelpTopic {
   tags: string[];
   relatedTopics?: string[];
   videoUrl?: string;
-  screenshots?: string[];
-}
+  screenshots?: string[]
+  }
 
 interface TutorialStep {
   id: string;
@@ -30,11 +30,11 @@ interface TutorialStep {
   position: 'top' | 'bottom' | 'left' | 'right' | 'center';
   action?: {
     label: string;
-    onClick: () => void;
+    onClick: () => void
   };
   skipable?: boolean;
-  highlightTarget?: boolean;
-}
+  highlightTarget?: boolean
+  }
 
 interface Tutorial {
   id: string;
@@ -43,8 +43,8 @@ interface Tutorial {
   steps: TutorialStep[];
   requiredPath?: string;
   estimatedTime?: number; // in minutes
-  difficulty?: 'beginner' | 'intermediate' | 'advanced';
-}
+  difficulty?: 'beginner' | 'intermediate' | 'advanced'
+  }
 
 interface TooltipData {
   id: string;
@@ -52,21 +52,21 @@ interface TooltipData {
   content: string;
   showOnHover?: boolean;
   showOnFocus?: boolean;
-  delay?: number;
-}
+  delay?: number
+  }
 
 interface HelpSystemConfig {
   showTutorialOnFirstVisit?: boolean;
   enableTooltips?: boolean;
   enableKeyboardShortcuts?: boolean;
   enableContextualHelp?: boolean;
-  autoShowHelpForNewFeatures?: boolean;
-}
+  autoShowHelpForNewFeatures?: boolean
+  }
 
 interface HelpTutorialSystemProps {
   config?: HelpSystemConfig;
-  userId?: string;
-}
+  userId?: string
+  }
 
 const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
   config = {
@@ -454,7 +454,7 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
   ];
 
   // Keyboard shortcuts;
-  const keyboardShortcuts = [;
+  const keyboardShortcuts = [;;
     { keys: ['Alt', 'H'], action: 'Open Help', category: 'Navigation' },
     { keys: ['Alt', 'S'], action: 'Search', category: 'Navigation' },
     { keys: ['Alt', 'M'], action: 'Main Menu', category: 'Navigation' },
@@ -473,15 +473,15 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
     if (savedState) {
       const state = JSON.parse(savedState);
       setViewedTopics(new Set(state.viewedTopics || []));
-      setCompletedTutorials(new Set(state.completedTutorials || []));
-    }
+      setCompletedTutorials(new Set(state.completedTutorials || []))
+  }
 
     // Check if should show tutorial on first visit;
     const hasVisited = localStorage.getItem('has-visited');
     if (!hasVisited && config.showTutorialOnFirstVisit) {
       localStorage.setItem('has-visited', 'true');
-      startTutorial('platform-tour');
-    }
+      startTutorial('platform-tour')
+  }
   };
   }, [userId, config.showTutorialOnFirstVisit]);
 
@@ -491,7 +491,7 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
       viewedTopics: Array.from(viewedTopics),
       completedTutorials: Array.from(completedTutorials),
     };
-    localStorage.setItem(`help-system-${userId}`, JSON.stringify(state));
+    localStorage.setItem(`help-system-${userId}`, JSON.stringify(state))
   };
   }, [userId, viewedTopics, completedTutorials]);
 
@@ -499,23 +499,23 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
   const searchHelp = useCallback((query: string) => {
     if (!query.trim()) {
       setSearchResults([]);
-      return;
-    }
+      return
+  }
 
     const lowerQuery = query.toLowerCase();
     const results = helpTopics.filter(topic => {
       const matchesQuery = 
-        topic.title.toLowerCase().includes(lowerQuery) ||;
+        topic.title.toLowerCase().includes(lowerQuery) ||;;
         topic.description.toLowerCase().includes(lowerQuery) ||
         topic.content.toLowerCase().includes(lowerQuery) ||
         topic.tags.some(tag => tag.toLowerCase().includes(lowerQuery));
       
       const matchesCategory = selectedCategory === 'all' || topic.category === selectedCategory;
       
-      return matchesQuery && matchesCategory;
-    });
+      return matchesQuery && matchesCategory
+  });
 
-    setSearchResults(results);
+    setSearchResults(results)
   };
   }, [selectedCategory]);
 
@@ -532,12 +532,12 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
       });
       navigate(tutorial.requiredPath);
       setTimeout(() => startTutorial(tutorialId), 500);
-      return;
-    }
+      return
+  }
 
     setActiveTutorial(tutorial);
     setCurrentTutorialStep(0);
-    announce(`Starting tutorial: ${tutorial.name}`);
+    announce(`Starting tutorial: ${tutorial.name}`)
   };
   }, [location.pathname, navigate, announce, showFeedback]);
 
@@ -547,10 +547,10 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
     if (currentTutorialStep < activeTutorial.steps.length - 1) {
       setCurrentTutorialStep(currentTutorialStep + 1);
       const nextStep = activeTutorial.steps[currentTutorialStep + 1];
-      announce(`Step ${currentTutorialStep + 2}: ${nextStep.title}`);;
+      announce(`Step ${currentTutorialStep + 2}: ${nextStep.title}`)
   } else {
-      completeTutorial();
-    }
+      completeTutorial()
+  }
   };
   }, [activeTutorial, currentTutorialStep]);
 
@@ -558,8 +558,8 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
     if (currentTutorialStep > 0) {
       setCurrentTutorialStep(currentTutorialStep - 1);
       const prevStep = activeTutorial!.steps[currentTutorialStep - 1];
-      announce(`Step ${currentTutorialStep}: ${prevStep.title}`);
-    }
+      announce(`Step ${currentTutorialStep}: ${prevStep.title}`)
+  }
   };
   }, [activeTutorial, currentTutorialStep]);
 
@@ -573,14 +573,14 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
       description: `You've completed the ${activeTutorial.name} tutorial`,
     });
     setActiveTutorial(null);
-    setCurrentTutorialStep(0);
+    setCurrentTutorialStep(0)
   };
   }, [activeTutorial, showFeedback]);
 
   const exitTutorial = useCallback(() => {
     setActiveTutorial(null);
     setCurrentTutorialStep(0);
-    announce('Tutorial exited');
+    announce('Tutorial exited')
   };
   }, [announce]);
 
@@ -598,15 +598,15 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
 
         if ((isHover || isFocus) && element === e.target) {
           setTimeout(() => {
-            setActiveTooltip(tooltip.id);
-          }, tooltip.delay || 0);
-        }
-      });
-    };
+            setActiveTooltip(tooltip.id)
+  }, tooltip.delay || 0)
+  }
+      })
+  };
 
     const hideTooltips = () => {
-      setActiveTooltip(null);
-    };
+      setActiveTooltip(null)
+  };
 
     document.addEventListener('mouseenter', handleTooltips, true);
     document.addEventListener('focus', handleTooltips, true);
@@ -617,8 +617,8 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
       document.removeEventListener('mouseenter', handleTooltips, true);
       document.removeEventListener('focus', handleTooltips, true);
       document.removeEventListener('mouseleave', hideTooltips, true);
-      document.removeEventListener('blur', hideTooltips, true);
-    };
+      document.removeEventListener('blur', hideTooltips, true)
+  };
   };
   }, [config.enableTooltips]);
 
@@ -630,25 +630,25 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
       // Show shortcuts dialog
       if (e.ctrlKey && e.key === '/') {
         e.preventDefault();
-        setShowKeyboardShortcuts(true);
-      }
+        setShowKeyboardShortcuts(true)
+  }
 
       // Open help
       if (e.altKey && e.key === 'h') {
         e.preventDefault();
-        setIsHelpOpen(true);
-      }
+        setIsHelpOpen(true)
+  }
 
       // Navigate tutorial
       if (activeTutorial) {
         if (e.key === 'ArrowRight') nextTutorialStep();
         if (e.key === 'ArrowLeft') previousTutorialStep();
-        if (e.key === 'Escape') exitTutorial();
-      }
+        if (e.key === 'Escape') exitTutorial()
+  }
     };
 
     window.addEventListener('keydown', handleKeyboard);
-    return () => window.removeEventListener('keydown', handleKeyboard);
+    return () => window.removeEventListener('keydown', handleKeyboard)
   };
   }, [config.enableKeyboardShortcuts, activeTutorial, nextTutorialStep, previousTutorialStep, exitTutorial]);
 
@@ -678,12 +678,12 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
             onClick: () => {
               setIsHelpOpen(true);
               setSearchQuery(relevantTopic);
-              searchHelp(relevantTopic);
-            },
+              searchHelp(relevantTopic)
+  },
           },
-        });
-      }, 3000);
-    }
+        })
+  }, 3000)
+  }
   };
   }, [location.pathname, config.enableContextualHelp, viewedTopics, showFeedback, searchHelp]);
 
@@ -703,8 +703,7 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
         <div className={`tutorial-popup tutorial-popup--${currentStep.position}`}>
           <div className="tutorial-header">
             <div className="tutorial-progress">
-              <div; 
-                className="tutorial-progress__bar" 
+              <div className="tutorial-progress__bar" 
                 style={{ width: `${progress}%` }}
                 role="progressbar"
                 aria-valuenow={progress}
@@ -712,8 +711,7 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
                 aria-valuemax={100}
               />
             </div>
-            <button; 
-              className="tutorial-close"
+            <button className="tutorial-close"
               onClick={exitTutorial}
               aria-label="Exit tutorial"
             >
@@ -726,8 +724,7 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
             <p>{currentStep.content}</p>
             
             {currentStep.action && (
-              <button; 
-                className="tutorial-action"
+              <button className="tutorial-action"
                 onClick={currentStep.action.onClick}
               >
                 {currentStep.action.label}
@@ -764,7 +761,7 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
           </div>
         </div>
       </div>
-    );
+    )
   };
 
   // Render help panel;
@@ -775,8 +772,7 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
       <div className="help-panel" ref={helpPanelRef} role="dialog" aria-label="Help panel">
         <div className="help-panel__header">
           <h2>Help & Support</h2>
-          <button; 
-            className="help-panel__close"
+          <button className="help-panel__close"
             onClick={() => setIsHelpOpen(false)}
             aria-label="Close help"
           >
@@ -785,14 +781,13 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
         </div>
         
         <div className="help-panel__search">
-          <input;
-            type="search"
+          <input type="search"
             placeholder="Search for help..."
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
-              searchHelp(e.target.value);
-            }}
+              searchHelp(e.target.value)
+  }}
             aria-label="Search help topics"
           />
         </div>
@@ -804,8 +799,8 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
               className={`help-category ${selectedCategory === cat ? 'active' : ''}`}
               onClick={() => {
                 setSelectedCategory(cat);
-                searchHelp(searchQuery);
-              }}
+                searchHelp(searchQuery)
+  }}
             >
               {cat.charAt(0).toUpperCase() + cat.slice(1)}
             </button>
@@ -851,8 +846,8 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
                     <button 
                       onClick={() => {
                         setIsHelpOpen(false);
-                        startTutorial(tutorial.id);
-                      }}
+                        startTutorial(tutorial.id)
+  }}
                     >
                       {completedTutorials.has(tutorial.id) ? 'Replay' : 'Start'} Tutorial
                     </button>
@@ -879,7 +874,7 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
           )}
         </div>
       </div>
-    );
+    )
   };
 
   // Render keyboard shortcuts modal;
@@ -889,8 +884,8 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
     const groupedShortcuts = keyboardShortcuts.reduce((acc, shortcut) => {
       if (!acc[shortcut.category]) acc[shortcut.category] = [];
       acc[shortcut.category].push(shortcut);
-      return acc;
-    }, {} as Record<string, typeof keyboardShortcuts>);
+      return acc
+  }, {} as Record<string, typeof keyboardShortcuts>);
 
     return (
       <div className="shortcuts-modal" role="dialog" aria-label="Keyboard shortcuts">
@@ -929,7 +924,7 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
           </div>
         </div>
       </div>
-    );
+    )
   };
 
   // Render active tooltip;
@@ -943,14 +938,13 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
       <div className="help-tooltip" role="tooltip">
         {tooltip.content}
       </div>
-    );
+    )
   };
 
   return (
     <>
       {/* Help trigger button */}
-      <button; 
-        className="help-trigger"
+      <button className="help-trigger"
         onClick={() => setIsHelpOpen(!isHelpOpen)}
         aria-label="Toggle help"
         aria-expanded={isHelpOpen}
@@ -971,8 +965,8 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
         </div>
       )}
     </>
-  );
-};
+  )
+  };
 
 // Export individual components for flexibility;
 export const HelpButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
@@ -985,8 +979,8 @@ export const HelpButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
 export const TutorialCard: React.FC<{
   tutorial: Tutorial;
   completed: boolean;
-  onStart: () => void;
-}> = ({ tutorial, completed, onStart }) => (
+  onStart: () => void
+  }> = ({ tutorial, completed, onStart }) => (
   <div className="tutorial-card">
     <h3>{tutorial.name}</h3>
     <p>{tutorial.description}</p>

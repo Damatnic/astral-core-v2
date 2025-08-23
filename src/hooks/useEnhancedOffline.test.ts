@@ -7,8 +7,8 @@ jest.mock('../services/enhancedOfflineService');
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     i18n: {
-      language: 'en';
-    }
+      language: 'en'
+  }
   })
 }));
 
@@ -20,8 +20,8 @@ import { enhancedOfflineService } from '../services/enhancedOfflineService';
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     i18n: {
-      language: 'en';
-    }
+      language: 'en'
+  }
   })
 }));
 
@@ -35,7 +35,7 @@ jest.mock('../services/enhancedOfflineService', () => ({
     detectCrisisOffline: jest.fn(),
     addToSyncQueue: jest.fn(),
     clearOfflineData: jest.fn(),
-    updateOfflineResources: jest.fn();
+    updateOfflineResources: jest.fn()
   }
 }));
 
@@ -46,10 +46,10 @@ const mockOfflineCapabilities = {
   hasServiceWorker: true,
   estimatedStorage: 1024 * 1024 * 100, // 100MB
   usedStorage: 1024 * 1024 * 10, // 10MB
-  supportsPWA: true;
-};
+  supportsPWA: true
+  };
 
-const mockCrisisResources = [;
+const mockCrisisResources = [;;
   {
     id: 'resource-1',
     type: 'hotline',
@@ -59,7 +59,7 @@ const mockCrisisResources = [;
     language: 'en',
     culturalContext: 'western',
     priority: 1,
-    offline: true;
+    offline: true
   },
   {
     id: 'resource-2',
@@ -70,7 +70,7 @@ const mockCrisisResources = [;
     language: 'en',
     culturalContext: 'western',
     priority: 2,
-    offline: true;
+    offline: true
   }
 ];
 
@@ -79,8 +79,8 @@ const mockCrisisDetectionResult = {
   severity: 'high' as const,
   keywords: ['hopeless', 'end it all'],
   recommendations: mockCrisisResources,
-  confidence: 0.85;
-};
+  confidence: 0.85
+  };
 
 // Mock navigator properties;
 const mockNavigator = {
@@ -88,15 +88,15 @@ const mockNavigator = {
   storage: {
     estimate: jest.fn().mockResolvedValue({
       usage: 10 * 1024 * 1024, // 10MB
-      quota: 100 * 1024 * 1024  // 100MB;
-    })
+      quota: 100 * 1024 * 1024  // 100MB
+  })
   }
 };
 
 Object.defineProperty(global, 'navigator', {
   value: mockNavigator,
-  writable: true;
-});
+  writable: true
+  });
 
 
 describe('useEnhancedOffline Hook', () => {
@@ -106,15 +106,15 @@ describe('useEnhancedOffline Hook', () => {
     // Reset navigator.onLine
     Object.defineProperty(navigator, 'onLine', {
       writable: true,
-      value: true;
-    });
+      value: true
+  });
 
     // Default successful initialization
     (enhancedOfflineService.initialize as jest.Mock).mockResolvedValue(undefined);
     (enhancedOfflineService.getOfflineCapabilities as jest.Mock).mockResolvedValue(mockOfflineCapabilities);
     (enhancedOfflineService.onStatusChange as jest.Mock).mockReturnValue(() => {});
     (enhancedOfflineService.getCrisisResources as jest.Mock).mockResolvedValue(mockCrisisResources);
-    (enhancedOfflineService.detectCrisisOffline as jest.Mock).mockResolvedValue(mockCrisisDetectionResult);
+    (enhancedOfflineService.detectCrisisOffline as jest.Mock).mockResolvedValue(mockCrisisDetectionResult)
   });
 
   it.skip('should initialize with loading state', async () => {
@@ -127,22 +127,22 @@ describe('useEnhancedOffline Hook', () => {
     expect(result.current.storageUsage.used).toBe(0);
     expect(result.current.storageUsage.quota).toBe(0);
     expect(result.current.syncQueueSize).toBe(0);
-    expect(result.current.error).toBeNull();
+    expect(result.current.error).toBeNull()
   });
 
   it.skip('should initialize offline service successfully', async () => {
     const { result } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result.current.isInitializing).toBe(false);
-    });
+      expect(result.current.isInitializing).toBe(false)
+  });
 
     expect(enhancedOfflineService.initialize).toHaveBeenCalled();
     expect(enhancedOfflineService.getOfflineCapabilities).toHaveBeenCalled();
     expect(result.current.capabilities).toEqual(mockOfflineCapabilities);
     expect(result.current.isOnline).toBe(true);
     expect(result.current.hasOfflineSupport).toBe(true);
-    expect(result.current.error).toBeNull();
+    expect(result.current.error).toBeNull()
   });
 
   it.skip('should handle initialization errors', async () => {
@@ -154,8 +154,8 @@ describe('useEnhancedOffline Hook', () => {
     const { result } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result.current.isInitializing).toBe(false);
-    });
+      expect(result.current.isInitializing).toBe(false)
+  });
 
     expect(result.current.error).toBe('Failed to initialize offline service');
     expect(consoleSpy).toHaveBeenCalledWith(
@@ -163,7 +163,7 @@ describe('useEnhancedOffline Hook', () => {
       initError
     );
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should set up status change monitoring', async () => {
@@ -173,27 +173,27 @@ describe('useEnhancedOffline Hook', () => {
     const { unmount } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(enhancedOfflineService.onStatusChange).toHaveBeenCalledWith(expect.any(Function));
-    });
+      expect(enhancedOfflineService.onStatusChange).toHaveBeenCalledWith(expect.any(Function))
+  });
 
     unmount();
 
-    expect(mockUnsubscribe).toHaveBeenCalled();
+    expect(mockUnsubscribe).toHaveBeenCalled()
   });
 
   it.skip('should handle network status changes', async () => {
     const { result } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result.current.isInitializing).toBe(false);
-    });
+      expect(result.current.isInitializing).toBe(false)
+  });
 
     // Simulate going offline
     Object.defineProperty(navigator, 'onLine', { value: false });
     
     act(() => {
-      window.dispatchEvent(new Event('offline'));
-    });
+      window.dispatchEvent(new Event('offline'))
+  });
 
     expect(result.current.isOnline).toBe(false);
 
@@ -201,37 +201,37 @@ describe('useEnhancedOffline Hook', () => {
     Object.defineProperty(navigator, 'onLine', { value: true });
     
     act(() => {
-      window.dispatchEvent(new Event('online'));
-    });
+      window.dispatchEvent(new Event('online'))
+  });
 
     expect(result.current.isOnline).toBe(true);
-    expect(result.current.lastSync).toBeDefined();
+    expect(result.current.lastSync).toBeDefined()
   });
 
   it.skip('should update storage usage', async () => {
     const { result } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result.current.isInitializing).toBe(false);
-    });
+      expect(result.current.isInitializing).toBe(false)
+  });
 
     expect(navigator.storage.estimate).toHaveBeenCalled();
     expect(result.current.storageUsage.used).toBe(10 * 1024 * 1024);
     expect(result.current.storageUsage.quota).toBe(100 * 1024 * 1024);
-    expect(result.current.storageUsage.percentage).toBe(10);
+    expect(result.current.storageUsage.percentage).toBe(10)
   });
 
   it.skip('should get crisis resources successfully', async () => {
     const { result } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result.current.isInitializing).toBe(false);
-    });
+      expect(result.current.isInitializing).toBe(false)
+  });
 
     let resources: unknown[];
     await act(async () => {
-      resources = await result.current.getCrisisResources('hotline');
-    });
+      resources = await result.current.getCrisisResources('hotline')
+  });
 
     expect(enhancedOfflineService.getCrisisResources).toHaveBeenCalledWith(
       'en',       // language
@@ -239,7 +239,7 @@ describe('useEnhancedOffline Hook', () => {
       'hotline'   // type
     );
     expect(resources!).toEqual(mockCrisisResources);
-    expect(result.current.error).toBeNull();
+    expect(result.current.error).toBeNull()
   });
 
   it.skip('should handle crisis resources errors', async () => {
@@ -251,32 +251,32 @@ describe('useEnhancedOffline Hook', () => {
     const { result } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result.current.isInitializing).toBe(false);
-    });
+      expect(result.current.isInitializing).toBe(false)
+  });
 
     let resources: unknown[];
     await act(async () => {
-      resources = await result.current.getCrisisResources();
-    });
+      resources = await result.current.getCrisisResources()
+  });
 
     expect(resources!).toEqual([]);
     expect(result.current.error).toBe('Failed to load resources');
     expect(consoleSpy).toHaveBeenCalled();
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should detect crisis offline successfully', async () => {
     const { result } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result.current.isInitializing).toBe(false);
-    });
+      expect(result.current.isInitializing).toBe(false)
+  });
 
     let detectionResult: any;
     await act(async () => {
-      detectionResult = await result.current.detectCrisisOffline('I want to end it all');
-    });
+      detectionResult = await result.current.detectCrisisOffline('I want to end it all')
+  });
 
     expect(enhancedOfflineService.detectCrisisOffline).toHaveBeenCalledWith(
       'I want to end it all',
@@ -284,7 +284,7 @@ describe('useEnhancedOffline Hook', () => {
       'western'
     );
     expect(detectionResult).toEqual(mockCrisisDetectionResult);
-    expect(result.current.error).toBeNull();
+    expect(result.current.error).toBeNull()
   });
 
   it.skip('should handle crisis detection errors with safe fallback', async () => {
@@ -296,53 +296,53 @@ describe('useEnhancedOffline Hook', () => {
     const { result } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result.current.isInitializing).toBe(false);
-    });
+      expect(result.current.isInitializing).toBe(false)
+  });
 
     let detectionResult: any;
     await act(async () => {
-      detectionResult = await result.current.detectCrisisOffline('Test text');
-    });
+      detectionResult = await result.current.detectCrisisOffline('Test text')
+  });
 
     expect(detectionResult).toEqual({
       isCrisis: false,
       severity: 'low',
       keywords: [],
       recommendations: [],
-      confidence: 0;
-    });
+      confidence: 0
+  });
     expect(result.current.error).toBe('Offline detection unavailable');
     expect(consoleSpy).toHaveBeenCalled();
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should add items to sync queue', async () => {
     const { result } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result.current.isInitializing).toBe(false);
-    });
+      expect(result.current.isInitializing).toBe(false)
+  });
 
     const syncItem = {
       type: 'crisis-event' as const,
       data: { riskLevel: 75, timestamp: Date.now() },
       priority: 5,
       culturalContext: 'western',
-      language: 'en';
-    };
+      language: 'en'
+  };
 
     await act(async () => {
-      await result.current.addToSyncQueue(syncItem);
-    });
+      await result.current.addToSyncQueue(syncItem)
+  });
 
     expect(enhancedOfflineService.addToSyncQueue).toHaveBeenCalledWith({
       ...syncItem,
       language: 'en',
-      culturalContext: 'western';
-    });
+      culturalContext: 'western'
+  });
     expect(result.current.syncQueueSize).toBe(1);
-    expect(result.current.error).toBeNull();
+    expect(result.current.error).toBeNull()
   });
 
   it.skip('should handle sync queue errors', async () => {
@@ -354,46 +354,46 @@ describe('useEnhancedOffline Hook', () => {
     const { result } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result.current.isInitializing).toBe(false);
-    });
+      expect(result.current.isInitializing).toBe(false)
+  });
 
     const syncItem = {
       type: 'session-data' as const,
       data: { test: true },
       priority: 3,
       culturalContext: 'western',
-      language: 'en';
-    };
+      language: 'en'
+  };
 
     await act(async () => {
-      await result.current.addToSyncQueue(syncItem);
-    });
+      await result.current.addToSyncQueue(syncItem)
+  });
 
     expect(result.current.error).toBe('Sync queue full');
     expect(consoleSpy).toHaveBeenCalled();
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should clear offline data', async () => {
     const { result } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result.current.isInitializing).toBe(false);
-    });
+      expect(result.current.isInitializing).toBe(false)
+  });
 
     const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
 
     await act(async () => {
-      await result.current.clearOfflineData();
-    });
+      await result.current.clearOfflineData()
+  });
 
     expect(enhancedOfflineService.clearOfflineData).toHaveBeenCalled();
     expect(result.current.syncQueueSize).toBe(0);
     expect(consoleSpy).toHaveBeenCalledWith('[Enhanced Offline Hook] Offline data cleared');
     expect(result.current.error).toBeNull();
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should handle clear data errors', async () => {
@@ -405,33 +405,33 @@ describe('useEnhancedOffline Hook', () => {
     const { result } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result.current.isInitializing).toBe(false);
-    });
+      expect(result.current.isInitializing).toBe(false)
+  });
 
     await act(async () => {
-      await result.current.clearOfflineData();
-    });
+      await result.current.clearOfflineData()
+  });
 
     expect(result.current.error).toBe('Failed to clear data');
     expect(consoleSpy).toHaveBeenCalled();
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should update offline resources', async () => {
     const { result } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result.current.isInitializing).toBe(false);
-    });
+      expect(result.current.isInitializing).toBe(false)
+  });
 
     expect(result.current.isUpdatingResources).toBe(false);
 
     const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
 
     const updatePromise = act(async () => {
-      await result.current.updateOfflineResources();
-    });
+      await result.current.updateOfflineResources()
+  });
 
     // Should be updating during the call
     expect(result.current.isUpdatingResources).toBe(true);
@@ -443,7 +443,7 @@ describe('useEnhancedOffline Hook', () => {
     expect(consoleSpy).toHaveBeenCalledWith('[Enhanced Offline Hook] Offline resources updated');
     expect(result.current.error).toBeNull();
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should handle update resources errors', async () => {
@@ -455,18 +455,18 @@ describe('useEnhancedOffline Hook', () => {
     const { result } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result.current.isInitializing).toBe(false);
-    });
+      expect(result.current.isInitializing).toBe(false)
+  });
 
     await act(async () => {
-      await result.current.updateOfflineResources();
-    });
+      await result.current.updateOfflineResources()
+  });
 
     expect(result.current.isUpdatingResources).toBe(false);
     expect(result.current.error).toBe('Network unavailable');
     expect(consoleSpy).toHaveBeenCalled();
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should determine offline support correctly', async () => {
@@ -474,21 +474,21 @@ describe('useEnhancedOffline Hook', () => {
     const { result: result1 } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result1.current.hasOfflineSupport).toBe(true);
-    });
+      expect(result1.current.hasOfflineSupport).toBe(true)
+  });
 
     // Test with limited support
     (enhancedOfflineService.getOfflineCapabilities as jest.Mock).mockResolvedValue({
       ...mockOfflineCapabilities,
       hasIndexedDB: false,
-      hasStorage: false;
-    });
+      hasStorage: false
+  });
 
     const { result: result2 } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result2.current.hasOfflineSupport).toBe(false);
-    });
+      expect(result2.current.hasOfflineSupport).toBe(false)
+  })
   });
 
   it.skip('should handle storage estimation errors gracefully', async () => {
@@ -501,8 +501,8 @@ describe('useEnhancedOffline Hook', () => {
     const { result } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result.current.isInitializing).toBe(false);
-    });
+      expect(result.current.isInitializing).toBe(false)
+  });
 
     expect(result.current.storageUsage.used).toBe(0);
     expect(result.current.storageUsage.quota).toBe(0);
@@ -512,7 +512,7 @@ describe('useEnhancedOffline Hook', () => {
       storageError
     );
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should handle browsers without storage API', async () => {
@@ -523,14 +523,14 @@ describe('useEnhancedOffline Hook', () => {
     const { result } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result.current.isInitializing).toBe(false);
-    });
+      expect(result.current.isInitializing).toBe(false)
+  });
 
     expect(result.current.storageUsage.used).toBe(0);
     expect(result.current.storageUsage.quota).toBe(0);
 
     // Restore storage API
-    (navigator as any).storage = originalStorage;
+    (navigator as any).storage = originalStorage
   });
 
   it.skip('should update storage usage periodically', async () => {
@@ -539,20 +539,20 @@ describe('useEnhancedOffline Hook', () => {
     const { result } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result.current.isInitializing).toBe(false);
-    });
+      expect(result.current.isInitializing).toBe(false)
+  });
 
     // Clear the initial call
     (navigator.storage.estimate as jest.Mock).mockClear();
 
     // Fast-forward 30 seconds
     act(() => {
-      jest.advanceTimersByTime(30000);
-    });
+      jest.advanceTimersByTime(30000)
+  });
 
     expect(navigator.storage.estimate).toHaveBeenCalled();
 
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   it.skip('should handle status change callbacks', async () => {
@@ -564,20 +564,20 @@ describe('useEnhancedOffline Hook', () => {
     const { result } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
-      expect(result.current.isInitializing).toBe(false);
-    });
+      expect(result.current.isInitializing).toBe(false)
+  });
 
     const updatedStatus = {
       ...mockOfflineCapabilities,
-      isOnline: false;
-    };
+      isOnline: false
+  };
 
     act(() => {
-      statusCallback!(updatedStatus);
-    });
+      statusCallback!(updatedStatus)
+  });
 
     expect(result.current.capabilities).toEqual(updatedStatus);
-    expect(result.current.isOnline).toBe(false);
+    expect(result.current.isOnline).toBe(false)
   });
 
   it.skip('should cleanup event listeners on unmount', async () => {
@@ -595,7 +595,7 @@ describe('useEnhancedOffline Hook', () => {
     expect(removeEventListenerSpy).toHaveBeenCalledWith('offline', expect.any(Function));
 
     addEventListenerSpy.mockRestore();
-    removeEventListenerSpy.mockRestore();
+    removeEventListenerSpy.mockRestore()
   });
 
   it.skip('should clear storage usage update interval on unmount', async () => {
@@ -610,6 +610,6 @@ describe('useEnhancedOffline Hook', () => {
     expect(clearIntervalSpy).toHaveBeenCalled();
 
     jest.useRealTimers();
-    clearIntervalSpy.mockRestore();
+    clearIntervalSpy.mockRestore()
+  })
   });
-});

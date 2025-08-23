@@ -28,13 +28,13 @@ jest.mock('../services/accessibilityAuditSystem', () => {
       setupAlerts: mockSetupAlerts,
       teardownAlerts: mockTeardownAlerts,
       setupKeyboardSupport: mockSetupKeyboardSupport,
-      teardownKeyboardSupport: mockTeardownKeyboardSupport;
-    },
+      teardownKeyboardSupport: mockTeardownKeyboardSupport
+  },
     WCAGLevel: {
       A: 'A',
       AA: 'AA',
-      AAA: 'AAA';
-    },
+      AAA: 'AAA'
+  },
     AccessibilityIssueType: {
       COLOR_CONTRAST: 'COLOR_CONTRAST',
       MISSING_ALT_TEXT: 'MISSING_ALT_TEXT',
@@ -43,8 +43,8 @@ jest.mock('../services/accessibilityAuditSystem', () => {
       FOCUS_MANAGEMENT: 'FOCUS_MANAGEMENT',
       SCREEN_READER: 'SCREEN_READER',
       SEMANTIC_HTML: 'SEMANTIC_HTML',
-      FORM_LABELS: 'FORM_LABELS';
-    }
+      FORM_LABELS: 'FORM_LABELS'
+  }
   };
   };
 
@@ -59,14 +59,14 @@ describe('useAccessibilityAudit Hook', () => {
       score: 100,
       issues: [],
       wcagLevel: WCAGLevel.AA,
-      timestamp: new Date().toISOString();
-    });
+      timestamp: new Date().toISOString()
+  })
   });
 
   afterEach(() => {
     jest.runOnlyPendingTimers();
     jest.clearAllMocks();
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   it.skip('should initialize with null result', async () => {
@@ -78,8 +78,8 @@ describe('useAccessibilityAudit Hook', () => {
     
     // Clean up pending promises
     await act(async () => {
-      jest.runAllTimers();
-    });
+      jest.runAllTimers()
+  })
   });
 
   it.skip('should run audit on mount', async () => {
@@ -88,23 +88,23 @@ describe('useAccessibilityAudit Hook', () => {
       score: 95,
       issues: [],
       wcagLevel: WCAGLevel.AA,
-      timestamp: new Date().toISOString();
-    };
+      timestamp: new Date().toISOString()
+  };
 
     (accessibilityAuditSystem.runAccessibilityAudit as jest.Mock).mockResolvedValue(mockResult);
 
     const { result } = renderHook(() => useAccessibilityAudit());
 
     await act(async () => {
-      jest.runAllTimers();
-    });
+      jest.runAllTimers()
+  });
 
     await waitFor(() => {
       expect(result.current.auditResult).toEqual(mockResult);
-      expect(result.current.isLoading).toBe(false);
-    }, { timeout: 10000 });
+      expect(result.current.isLoading).toBe(false)
+  }, { timeout: 10000 });
 
-    expect(accessibilityAuditSystem.runAccessibilityAudit).toHaveBeenCalledWith(WCAGLevel.AA);
+    expect(accessibilityAuditSystem.runAccessibilityAudit).toHaveBeenCalledWith(WCAGLevel.AA)
   });
 
   it.skip('should handle custom WCAG level', async () => {
@@ -113,22 +113,22 @@ describe('useAccessibilityAudit Hook', () => {
       score: 98,
       issues: [],
       wcagLevel: WCAGLevel.AAA,
-      timestamp: new Date().toISOString();
-    };
+      timestamp: new Date().toISOString()
+  };
 
     (accessibilityAuditSystem.runAccessibilityAudit as jest.Mock).mockResolvedValue(mockResult);
 
     const { result } = renderHook(() => useAccessibilityAudit(WCAGLevel.AAA));
 
     await act(async () => {
-      jest.runAllTimers();
-    });
+      jest.runAllTimers()
+  });
 
     await waitFor(() => {
-      expect(result.current.auditResult).toEqual(mockResult);
-    }, { timeout: 10000 });
+      expect(result.current.auditResult).toEqual(mockResult)
+  }, { timeout: 10000 });
 
-    expect(accessibilityAuditSystem.runAccessibilityAudit).toHaveBeenCalledWith(WCAGLevel.AAA);
+    expect(accessibilityAuditSystem.runAccessibilityAudit).toHaveBeenCalledWith(WCAGLevel.AAA)
   });
 
   it.skip('should handle audit errors', async () => {
@@ -150,13 +150,13 @@ describe('useAccessibilityAudit Hook', () => {
       // Run any pending timers
       jest.runAllTimers();
       // Wait for promises to resolve
-      await new Promise(resolve => process.nextTick(resolve));
-    });
+      await new Promise(resolve => process.nextTick(resolve))
+  });
 
     // After the error, the state should be updated
     await waitFor(() => {
-      expect(result.current.error).toBe('Audit failed');
-    }, { timeout: 10000 });
+      expect(result.current.error).toBe('Audit failed')
+  }, { timeout: 10000 });
     
     expect(result.current.isLoading).toBe(false);
     expect(result.current.auditResult).toBeNull();
@@ -170,8 +170,8 @@ describe('useAccessibilityAudit Hook', () => {
       score: 100,
       issues: [],
       wcagLevel: WCAGLevel.AA,
-      timestamp: new Date().toISOString();
-    });
+      timestamp: new Date().toISOString()
+  })
   });
 
   it.skip('should allow manual audit trigger', async () => {
@@ -180,8 +180,8 @@ describe('useAccessibilityAudit Hook', () => {
       score: 100,
       issues: [],
       wcagLevel: WCAGLevel.AA,
-      timestamp: new Date().toISOString();
-    };
+      timestamp: new Date().toISOString()
+  };
     
     const updatedResult = {
       passed: false,
@@ -191,31 +191,31 @@ describe('useAccessibilityAudit Hook', () => {
           type: AccessibilityIssueType.COLOR_CONTRAST,
           severity: 'high',
           message: 'Insufficient color contrast',
-          element: 'button.primary';
-        }
+          element: 'button.primary'
+  }
       ],
       wcagLevel: WCAGLevel.AA,
-      timestamp: new Date().toISOString();
-    };
+      timestamp: new Date().toISOString()
+  };
 
     // Setup mock to return different results;
     let callCount = 0;
     (accessibilityAuditSystem.runAccessibilityAudit as jest.Mock).mockImplementation(() => {
       callCount++;
-      return Promise.resolve(callCount === 1 ? initialResult : updatedResult);
-    });
+      return Promise.resolve(callCount === 1 ? initialResult : updatedResult)
+  });
 
     const { result } = renderHook(() => useAccessibilityAudit());
 
     // Wait for initial audit to complete
     await act(async () => {
       jest.runAllTimers();
-      await new Promise(resolve => process.nextTick(resolve));
-    });
+      await new Promise(resolve => process.nextTick(resolve))
+  });
 
     await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    }, { timeout: 10000 });
+      expect(result.current.isLoading).toBe(false)
+  }, { timeout: 10000 });
     
     expect(result.current.auditResult).toEqual(initialResult);
 
@@ -223,24 +223,24 @@ describe('useAccessibilityAudit Hook', () => {
     await act(async () => {
       const promise = result.current.runAudit();
       jest.runAllTimers();
-      await promise;
-    });
+      await promise
+  });
 
     expect(callCount).toBe(2);
-    expect(result.current.auditResult).toEqual(updatedResult);
+    expect(result.current.auditResult).toEqual(updatedResult)
+  })
   });
-});
 
 describe('useAccessibilityMonitoring Hook', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.clearAllTimers();
+    jest.clearAllTimers()
   });
 
   afterEach(() => {
     jest.runOnlyPendingTimers();
     jest.useRealTimers();
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   it.skip('should start monitoring on mount', () => {
@@ -248,7 +248,7 @@ describe('useAccessibilityMonitoring Hook', () => {
     
     renderHook(() => useAccessibilityMonitoring(true, mockCallback));
 
-    expect(accessibilityAuditSystem.startMonitoring).toHaveBeenCalledWith(mockCallback);
+    expect(accessibilityAuditSystem.startMonitoring).toHaveBeenCalledWith(mockCallback)
   });
 
   it.skip('should not monitor when disabled', () => {
@@ -256,7 +256,7 @@ describe('useAccessibilityMonitoring Hook', () => {
     
     renderHook(() => useAccessibilityMonitoring(false, mockCallback));
 
-    expect(accessibilityAuditSystem.startMonitoring).not.toHaveBeenCalled();
+    expect(accessibilityAuditSystem.startMonitoring).not.toHaveBeenCalled()
   });
 
   it.skip('should stop monitoring on unmount', () => {
@@ -266,7 +266,7 @@ describe('useAccessibilityMonitoring Hook', () => {
 
     unmount();
 
-    expect(accessibilityAuditSystem.stopMonitoring).toHaveBeenCalled();
+    expect(accessibilityAuditSystem.stopMonitoring).toHaveBeenCalled()
   });
 
   it.skip('should handle monitoring state changes', () => {
@@ -275,8 +275,8 @@ describe('useAccessibilityMonitoring Hook', () => {
     const { rerender } = renderHook(
       (props?: { enabled: boolean }) => {
         const enabled = props?.enabled ?? false;
-        return useAccessibilityMonitoring(enabled, mockCallback);
-      },
+        return useAccessibilityMonitoring(enabled, mockCallback)
+  },
       {
         initialProps: { enabled: false }
       }
@@ -290,7 +290,7 @@ describe('useAccessibilityMonitoring Hook', () => {
 
     rerender({ enabled: false });
 
-    expect(accessibilityAuditSystem.stopMonitoring).toHaveBeenCalled();
+    expect(accessibilityAuditSystem.stopMonitoring).toHaveBeenCalled()
   });
 
   it.skip('should update callback when it changes', () => {
@@ -300,8 +300,8 @@ describe('useAccessibilityMonitoring Hook', () => {
     const { rerender } = renderHook(
       (props?: { callback: jest.Mock }) => {
         const callback = props?.callback ?? mockCallback1;
-        return useAccessibilityMonitoring(true, callback);
-      },
+        return useAccessibilityMonitoring(true, callback)
+  },
       {
         initialProps: { callback: mockCallback1 }
       }
@@ -314,32 +314,32 @@ describe('useAccessibilityMonitoring Hook', () => {
     rerender({ callback: mockCallback2 });
 
     expect(accessibilityAuditSystem.stopMonitoring).toHaveBeenCalled();
-    expect(accessibilityAuditSystem.startMonitoring).toHaveBeenCalledWith(mockCallback2);
+    expect(accessibilityAuditSystem.startMonitoring).toHaveBeenCalledWith(mockCallback2)
+  })
   });
-});
 
 describe('useAccessibilityAlerts Hook', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.clearAllTimers();
+    jest.clearAllTimers()
   });
 
   afterEach(() => {
     jest.runOnlyPendingTimers();
     jest.useRealTimers();
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   it.skip('should setup alerts with default threshold', () => {
     renderHook(() => useAccessibilityAlerts(80));
 
-    expect(accessibilityAuditSystem.setupAlerts).toHaveBeenCalled();
+    expect(accessibilityAuditSystem.setupAlerts).toHaveBeenCalled()
   });
 
   it.skip('should setup alerts with custom threshold', () => {
     renderHook(() => useAccessibilityAlerts(90));
 
-    expect(accessibilityAuditSystem.setupAlerts).toHaveBeenCalled();
+    expect(accessibilityAuditSystem.setupAlerts).toHaveBeenCalled()
   });
 
   it.skip('should teardown alerts on unmount', () => {
@@ -348,15 +348,15 @@ describe('useAccessibilityAlerts Hook', () => {
 
     unmount();
 
-    expect(accessibilityAuditSystem.teardownAlerts).toHaveBeenCalled();
+    expect(accessibilityAuditSystem.teardownAlerts).toHaveBeenCalled()
   });
 
   it.skip('should handle threshold changes', () => {
     const { rerender } = renderHook(
       (props?: { threshold: number }) => {
         const threshold = props?.threshold ?? 80;
-        return useAccessibilityAlerts(threshold);
-      }
+        return useAccessibilityAlerts(threshold)
+  }
     );
 
     expect(accessibilityAuditSystem.setupAlerts).toHaveBeenCalled();
@@ -366,21 +366,21 @@ describe('useAccessibilityAlerts Hook', () => {
     rerender({ threshold: 95 });
 
     expect(accessibilityAuditSystem.teardownAlerts).toHaveBeenCalled();
-    expect(accessibilityAuditSystem.setupAlerts).toHaveBeenCalled();
+    expect(accessibilityAuditSystem.setupAlerts).toHaveBeenCalled()
   });
 
   it.skip('should not setup alerts when disabled', () => {
     renderHook(() => useAccessibilityAlerts(80, false));
 
-    expect(accessibilityAuditSystem.setupAlerts).not.toHaveBeenCalled();
+    expect(accessibilityAuditSystem.setupAlerts).not.toHaveBeenCalled()
   });
 
   it.skip('should handle enable/disable state changes', () => {
     const { rerender } = renderHook(
       (props?: { enabled: boolean }) => {
         const enabled = props?.enabled ?? false;
-        return useAccessibilityAlerts(80, enabled);
-      }
+        return useAccessibilityAlerts(80, enabled)
+  }
     );
 
     expect(accessibilityAuditSystem.setupAlerts).not.toHaveBeenCalled();
@@ -393,26 +393,26 @@ describe('useAccessibilityAlerts Hook', () => {
 
     rerender({ enabled: false });
 
-    expect(accessibilityAuditSystem.teardownAlerts).toHaveBeenCalled();
+    expect(accessibilityAuditSystem.teardownAlerts).toHaveBeenCalled()
+  })
   });
-});
 
 describe('useAccessibilityKeyboardSupport Hook', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.clearAllTimers();
+    jest.clearAllTimers()
   });
 
   afterEach(() => {
     jest.runOnlyPendingTimers();
     jest.useRealTimers();
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   it.skip('should setup keyboard support on mount', () => {
     renderHook(() => useAccessibilityKeyboardSupport());
 
-    expect(accessibilityAuditSystem.setupKeyboardSupport).toHaveBeenCalled();
+    expect(accessibilityAuditSystem.setupKeyboardSupport).toHaveBeenCalled()
   });
 
   it.skip('should teardown keyboard support on unmount', () => {
@@ -420,21 +420,21 @@ describe('useAccessibilityKeyboardSupport Hook', () => {
 
     unmount();
 
-    expect(accessibilityAuditSystem.teardownKeyboardSupport).toHaveBeenCalled();
+    expect(accessibilityAuditSystem.teardownKeyboardSupport).toHaveBeenCalled()
   });
 
   it.skip('should not setup when disabled', () => {
     renderHook(() => useAccessibilityKeyboardSupport(false));
 
-    expect(accessibilityAuditSystem.setupKeyboardSupport).not.toHaveBeenCalled();
+    expect(accessibilityAuditSystem.setupKeyboardSupport).not.toHaveBeenCalled()
   });
 
   it.skip('should handle enable/disable state changes', () => {
     const { rerender } = renderHook(
       (props?: { enabled: boolean }) => {
         const enabled = props?.enabled ?? false;
-        return useAccessibilityKeyboardSupport(enabled);
-      }
+        return useAccessibilityKeyboardSupport(enabled)
+  }
     );
 
     expect(accessibilityAuditSystem.setupKeyboardSupport).not.toHaveBeenCalled();
@@ -447,15 +447,15 @@ describe('useAccessibilityKeyboardSupport Hook', () => {
 
     rerender({ enabled: false });
 
-    expect(accessibilityAuditSystem.teardownKeyboardSupport).toHaveBeenCalled();
+    expect(accessibilityAuditSystem.teardownKeyboardSupport).toHaveBeenCalled()
   });
 
   it.skip('should handle multiple enable/disable cycles', () => {
     const { rerender } = renderHook(
       (props?: { enabled: boolean }) => {
         const enabled = props?.enabled ?? true;
-        return useAccessibilityKeyboardSupport(enabled);
-      }
+        return useAccessibilityKeyboardSupport(enabled)
+  }
     );
 
     expect(accessibilityAuditSystem.setupKeyboardSupport).toHaveBeenCalledTimes(1);
@@ -470,13 +470,13 @@ describe('useAccessibilityKeyboardSupport Hook', () => {
     expect(accessibilityAuditSystem.setupKeyboardSupport).toHaveBeenCalledTimes(1);
 
     rerender({ enabled: false });
-    expect(accessibilityAuditSystem.teardownKeyboardSupport).toHaveBeenCalled();
+    expect(accessibilityAuditSystem.teardownKeyboardSupport).toHaveBeenCalled()
+  })
   });
-});
 
 // Dummy test to keep suite active
 describe('Test Suite Active', () => {
   it('Placeholder test to prevent empty suite', () => {
-    expect(true).toBe(true);
+    expect(true).toBe(true)
+  })
   });
-});

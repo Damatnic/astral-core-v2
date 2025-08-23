@@ -7,14 +7,14 @@ export interface StorageItem {
   key: string;
   value: any;
   timestamp: number;
-  expiresAt?: number;
-}
+  expiresAt?: number
+  }
 
 export interface StorageOptions {
   encrypt?: boolean;
   ttl?: number; // Time to live in milliseconds
-  storage?: 'local' | 'session';
-}
+  storage?: 'local' | 'session'
+  }
 
 class StorageService {
   private readonly prefix = 'astral_';
@@ -30,22 +30,22 @@ class StorageService {
       key,
       value,
       timestamp: Date.now(),
-      expiresAt: ttl ? Date.now() + ttl : undefined;
-    };
+      expiresAt: ttl ? Date.now() + ttl : undefined
+  };
     
     try {
-      storageApi.setItem(this.prefix + key, JSON.stringify(item));
-    } catch (error) {
+      storageApi.setItem(this.prefix + key, JSON.stringify(item))
+  } catch (error) {
       console.error(`[Storage] Failed to set item ${key}:`, error);
       // Handle quota exceeded error
       if (error instanceof Error && error.name === 'QuotaExceededError') {
         this.clearExpiredItems();
         // Retry once after clearing expired items
         try {
-          storageApi.setItem(this.prefix + key, JSON.stringify(item));
-        } catch {
-          throw new Error('Storage quota exceeded');
-        }
+          storageApi.setItem(this.prefix + key, JSON.stringify(item))
+  } catch {
+          throw new Error('Storage quota exceeded')
+  }
       }
     }
   }
@@ -65,14 +65,14 @@ class StorageService {
       // Check if item has expired
       if (item.expiresAt && Date.now() > item.expiresAt) {
         this.removeItem(key, storage);
-        return null;
-      }
+        return null
+  }
       
-      return item.value;
-    } catch (error) {
+      return item.value
+  } catch (error) {
       console.error(`[Storage] Failed to get item ${key}:`, error);
-      return null;
-    }
+      return null
+  }
   }
   
   /**
@@ -80,7 +80,7 @@ class StorageService {
    */
   public removeItem(key: string, storage: 'local' | 'session' = 'local'): void {
     const storageApi = storage === 'session' ? sessionStorage : localStorage;
-    storageApi.removeItem(this.prefix + key);
+    storageApi.removeItem(this.prefix + key)
   }
   
   /**
@@ -88,11 +88,11 @@ class StorageService {
    */
   public clear(storage?: 'local' | 'session'): void {
     if (!storage || storage === 'local') {
-      this.clearStorage(localStorage);
-    }
+      this.clearStorage(localStorage)
+  }
     if (!storage || storage === 'session') {
-      this.clearStorage(sessionStorage);
-    }
+      this.clearStorage(sessionStorage)
+  }
   }
   
   /**
@@ -102,9 +102,9 @@ class StorageService {
     const keys = Object.keys(storageApi);
     keys.forEach(key => {
       if (key.startsWith(this.prefix)) {
-        storageApi.removeItem(key);
-      }
-    });
+        storageApi.removeItem(key)
+  }
+    })
   }
   
   /**
@@ -119,12 +119,12 @@ class StorageService {
         const cleanKey = key.replace(this.prefix, '');
         const value = this.getItem(cleanKey, storage);
         if (value !== null) {
-          items[cleanKey] = value;
-        }
+          items[cleanKey] = value
+  }
       }
     });
     
-    return items;
+    return items
   }
   
   /**
@@ -142,16 +142,16 @@ class StorageService {
             if (raw) {
               const item: StorageItem = JSON.parse(raw);
               if (item.expiresAt && Date.now() > item.expiresAt) {
-                storageApi.removeItem(key);
-              }
+                storageApi.removeItem(key)
+  }
             }
           } catch {
             // Remove corrupted items
-            storageApi.removeItem(key);
-          }
+            storageApi.removeItem(key)
+  }
         }
-      });
-    });
+      })
+  })
   }
   
   /**
@@ -165,8 +165,8 @@ class StorageService {
       if (key.startsWith(this.prefix)) {
         const value = storageApi.getItem(key);
         if (value) {
-          size += key.length + value.length;
-        }
+          size += key.length + value.length
+  }
       }
     });
     
@@ -182,10 +182,10 @@ class StorageService {
       const testKey = `${this.prefix}test`;
       storageApi.setItem(testKey, 'test');
       storageApi.removeItem(testKey);
-      return true;
-    } catch {
-      return false;
-    }
+      return true
+  } catch {
+      return false
+  }
   }
   
   /**
@@ -196,8 +196,8 @@ class StorageService {
     
     Object.entries(items).forEach(([key, value]) => {
       this.setItem(key, value, { storage: to });
-      this.removeItem(key, from);
-    });
+      this.removeItem(key, from)
+  })
   }
 }
 

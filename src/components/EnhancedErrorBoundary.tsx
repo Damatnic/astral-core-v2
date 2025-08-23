@@ -27,16 +27,16 @@ interface ErrorBoundaryState {
   category: ErrorCategory;
   canRecover: boolean;
   retryCount: number;
-  timestamp: string | null;
-}
+  timestamp: string | null
+  }
 
 // Error boundary props;
 interface ErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode;
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
-  maxRetries?: number;
-}
+  maxRetries?: number
+  }
 
 class EnhancedErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   private retryTimeouts: NodeJS.Timeout[] = [];
@@ -53,8 +53,8 @@ class EnhancedErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryS
       category: 'unknown',
       canRecover: true,
       retryCount: 0,
-      timestamp: null;
-    }
+      timestamp: null
+  }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
     const errorId = `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)};
@@ -81,14 +81,13 @@ class EnhancedErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryS
 
     // Call custom error handler if provided
     if(this.props.onError) {
-      this.props.onError(error, errorInfo);
-    }
+      this.props.onError(error, errorInfo)
+  }
   }
 
   componentWillUnmount(): void {
     // Clear any pending retry timeouts
-    this.retryTimeouts.forEach(timeout => clearTimeout(timeout));
-  
+    this.retryTimeouts.forEach(timeout => clearTimeout(timeout))
   }
 
   private handleRetry = () => {
@@ -99,9 +98,9 @@ class EnhancedErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryS
         hasError: false,
         error: null,
         errorInfo: null,
-        retryCount: prevState.retryCount + 1;
-      }));
-    }
+        retryCount: prevState.retryCount + 1
+  }))
+  }
   };
 
   private handleReset = () => {
@@ -114,16 +113,15 @@ class EnhancedErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryS
       category: 'unknown',
       canRecover: true,
       retryCount: 0,
-      timestamp: null;
-    });
+      timestamp: null
+  })
   };
 
   render(): unknown {
     if(this.state.hasError) {
       // Custom fallback UI
       if(this.props.fallback) {
-        return this.props.fallback;
-      
+        return this.props.fallback
   }
 
       // Default error UI
@@ -163,10 +161,10 @@ class EnhancedErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryS
             )}
           </div>
         </div>
-      `;
-    }
+      `
+  }
 
-    return this.props.children;
+    return this.props.children
   }
 }
 

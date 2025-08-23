@@ -28,8 +28,8 @@ export interface NetworkConnection {
   quality: Quality;
   downlink: number; // Mbps
   rtt: number; // milliseconds
-  saveData: boolean;
-}
+  saveData: boolean
+  }
 
 export interface AdaptiveLoadingStrategy {
   imageQuality: ImageQuality;
@@ -38,8 +38,8 @@ export interface AdaptiveLoadingStrategy {
   lazyLoadThreshold: number;
   maxConcurrentRequests: number;
   enableVideoAutoplay: boolean;
-  compressionLevel: CompressionLevel;
-}
+  compressionLevel: CompressionLevel
+  }
 
 class MobileNetworkService {
   private connection: NavigatorConnection | null = null;
@@ -49,7 +49,7 @@ class MobileNetworkService {
 
   constructor() {
     this.initializeConnection();
-    this.setupNetworkMonitoring();
+    this.setupNetworkMonitoring()
   }
 
   private initializeConnection(): void {
@@ -59,28 +59,28 @@ class MobileNetworkService {
                       (navigator as any).webkitConnection || 
                       null;
 
-    this.updateConnectionInfo();
+    this.updateConnectionInfo()
   }
 
   private setupNetworkMonitoring(): void {
     if (this.connection) {
-      this.connection.addEventListener('change', this.handleNetworkChange.bind(this));
-    }
+      this.connection.addEventListener('change', this.handleNetworkChange.bind(this))
+  }
 
     // Fallback: Monitor online/offline events
     window.addEventListener('online', this.handleNetworkChange.bind(this));
     window.addEventListener('offline', this.handleNetworkChange.bind(this));
 
     // Performance-based detection as fallback
-    this.setupPerformanceMonitoring();
+    this.setupPerformanceMonitoring()
   }
 
   private setupPerformanceMonitoring(): void {
     // Monitor resource loading times to estimate connection quality
     if ('performance' in window && 'getEntriesByType' in performance) {
       setInterval(() => {
-        this.analyzePerformanceMetrics();
-      }, 30000); // Check every 30 seconds
+        this.analyzePerformanceMetrics()
+  }, 30000); // Check every 30 seconds
     }
   }
 
@@ -98,23 +98,23 @@ class MobileNetworkService {
 
     if (loadTime > 3000 || connectTime > 1000) {
       estimatedQuality = 'poor';
-      estimatedSpeed = 'slow';;
+      estimatedSpeed = 'slow'
   } else if (loadTime < 1000 && connectTime < 200) {
       estimatedQuality = 'excellent';
-      estimatedSpeed = 'fast';
-    }
+      estimatedSpeed = 'fast'
+  }
 
     // Update connection info if no native API available
     if (!this.connection && this.currentConnection) {
       this.currentConnection.quality = estimatedQuality;
       this.currentConnection.speed = estimatedSpeed;
-      this.updateAdaptiveStrategy();
-    }
+      this.updateAdaptiveStrategy()
+  }
   }
 
   private handleNetworkChange(): void {
     this.updateConnectionInfo();
-    this.notifyListeners();
+    this.notifyListeners()
   }
 
   private updateConnectionInfo(): void {
@@ -128,8 +128,8 @@ class MobileNetworkService {
         quality: 'poor',
         downlink: 0,
         rtt: Infinity,
-        saveData: true;
-      } else if (this.connection) {
+        saveData: true
+  } else if (this.connection) {
       // Use Network Information API
       this.currentConnection = {
         type: this.mapConnectionType(this.connection.type || 'unknown'),
@@ -138,8 +138,8 @@ class MobileNetworkService {
         quality: this.getQualityFromConnection(),
         downlink: this.connection.downlink || 0,
         rtt: this.connection.rtt || 0,
-        saveData: this.connection.saveData || false;
-      } else {
+        saveData: this.connection.saveData || false
+  } else {
       // Fallback estimation
       this.currentConnection = {
         type: 'unknown',
@@ -148,10 +148,10 @@ class MobileNetworkService {
         quality: 'good',
         downlink: 1,
         rtt: 100,
-        saveData: false;
-      }
+        saveData: false
+  }
 
-    this.updateAdaptiveStrategy();
+    this.updateAdaptiveStrategy()
   }
 
   private mapConnectionType(type: string): NetworkType {
@@ -160,8 +160,8 @@ class MobileNetworkService {
       case 'wifi': return 'wifi';
       case 'ethernet': return 'ethernet';
       case 'bluetooth': return 'unknown';
-      default: return 'unknown';
-    }
+      default: return 'unknown'
+  }
   }
 
   private getSpeedFromEffectiveType(effectiveType: string): Speed {
@@ -170,8 +170,8 @@ class MobileNetworkService {
       case '2g': return 'slow';
       case '3g': return 'medium';
       case '4g': return 'fast';
-      default: return 'medium';
-    }
+      default: return 'medium'
+  }
   }
 
   private getQualityFromConnection(): Quality {
@@ -182,7 +182,7 @@ class MobileNetworkService {
 
     if (downlink < 1.5 || rtt > 300) return 'poor';
     if (downlink > 10 && rtt < 50) return 'excellent';
-    return 'good';
+    return 'good'
   }
 
   private updateAdaptiveStrategy(): void {
@@ -199,8 +199,8 @@ class MobileNetworkService {
         lazyLoadThreshold: 0.1, // Load very close to viewport
         maxConcurrentRequests: 2,
         enableVideoAutoplay: false,
-        compressionLevel: 'high';
-      } else if (quality === 'excellent' || speed === 'fast') {
+        compressionLevel: 'high'
+  } else if (quality === 'excellent' || speed === 'fast') {
       this.strategy = {
         imageQuality: 'high',
         preloadLevel: 'aggressive',
@@ -208,8 +208,8 @@ class MobileNetworkService {
         lazyLoadThreshold: 0.5, // Load well before viewport
         maxConcurrentRequests: 6,
         enableVideoAutoplay: true,
-        compressionLevel: 'low';
-      } else {
+        compressionLevel: 'low'
+  } else {
       // Good quality - balanced approach
       this.strategy = {
         imageQuality: 'medium',
@@ -218,23 +218,23 @@ class MobileNetworkService {
         lazyLoadThreshold: 0.2,
         maxConcurrentRequests: 4,
         enableVideoAutoplay: effectiveType === '4g',
-        compressionLevel: 'medium';
-      }
+        compressionLevel: 'medium'
+  }
   }
 
   private notifyListeners(): void {
     if (this.currentConnection) {
-      this.listeners.forEach(listener => listener(this.currentConnection!));
-    }
+      this.listeners.forEach(listener => listener(this.currentConnection!))
+  }
   }
 
   // Public API
   public getCurrentConnection(): NetworkConnection | null {
-    return this.currentConnection;
+    return this.currentConnection
   }
 
   public getCurrentAdaptiveStrategy(): AdaptiveLoadingStrategy | null {
-    return this.strategy;
+    return this.strategy
   }
 
   public onConnectionChange(callback: (connection: NetworkConnection) => void): () => void {
@@ -242,8 +242,8 @@ class MobileNetworkService {
     
     // Return unsubscribe function
     return () => {
-      this.listeners = this.listeners.filter(listener => listener !== callback);
-    }
+      this.listeners = this.listeners.filter(listener => listener !== callback)
+  }
 
   public shouldLoadResource(resourceType: 'image' | 'video' | 'script' | 'css'): boolean {
     if (!this.currentConnection || !this.strategy) return true;
@@ -265,9 +265,8 @@ class MobileNetworkService {
         return quality !== 'poor' || resourceType === 'image';
       case 'aggressive':
         return true;
-      default:
-        return true;
-    }
+      default: return true
+  }
   }
 
   public getOptimalImageFormat(supportsWebP: boolean, supportsAVIF: boolean): 'avif' | 'webp' | 'jpeg' {
@@ -279,15 +278,15 @@ class MobileNetworkService {
     if (compressionLevel === 'high') {
       if (supportsAVIF) return 'avif'; // Best compression
       if (supportsWebP) return 'webp'; // Good compression
-      return 'jpeg';
-    }
+      return 'jpeg'
+  }
 
     // For good connections, prefer quality
     if (imageQuality === 'high') {
       if (supportsAVIF) return 'avif'; // Best quality + compression
       if (supportsWebP) return 'webp'; // Good quality
-      return 'jpeg';
-    }
+      return 'jpeg'
+  }
 
     return 'jpeg'; // Safe fallback
   }
@@ -309,19 +308,19 @@ class MobileNetworkService {
   }
 
   public getRequestConcurrency(): number {
-    return this.strategy?.maxConcurrentRequests || 4;
+    return this.strategy?.maxConcurrentRequests || 4
   }
 
   public shouldEnableAnimations(): boolean {
-    return this.strategy?.animationsEnabled !== false;
+    return this.strategy?.animationsEnabled !== false
   }
 
   public shouldAutoplayVideo(): boolean {
-    return this.strategy?.enableVideoAutoplay || false;
+    return this.strategy?.enableVideoAutoplay || false
   }
 
   public getLazyLoadThreshold(): number {
-    return this.strategy?.lazyLoadThreshold || 0.2;
+    return this.strategy?.lazyLoadThreshold || 0.2
   }
 }
 
@@ -340,11 +339,11 @@ export const useMobileNetwork = () => {
   React.useEffect(() => {
     const unsubscribe = mobileNetworkService.onConnectionChange((newConnection) => {
       setConnection(newConnection);
-      setStrategy(mobileNetworkService.getCurrentAdaptiveStrategy());
-    };
+      setStrategy(mobileNetworkService.getCurrentAdaptiveStrategy())
+  };
   };
 
-    return unsubscribe;
+    return unsubscribe
   };
   }, []);
 
@@ -356,13 +355,13 @@ export const useMobileNetwork = () => {
     getImageQualitySettings: mobileNetworkService.getImageQualitySettings.bind(mobileNetworkService),
     shouldEnableAnimations: mobileNetworkService.shouldEnableAnimations.bind(mobileNetworkService),
     shouldAutoplayVideo: mobileNetworkService.shouldAutoplayVideo.bind(mobileNetworkService),
-    getLazyLoadThreshold: mobileNetworkService.getLazyLoadThreshold.bind(mobileNetworkService);
+    getLazyLoadThreshold: mobileNetworkService.getLazyLoadThreshold.bind(mobileNetworkService)
   };
 
 // Type declaration for Navigator interface extension
 declare global {
   interface Navigator {
-    connection?: NavigatorConnection;
+    connection?: NavigatorConnection
   }
 
   interface NavigatorConnection extends EventTarget {
@@ -370,7 +369,7 @@ declare global {
     effectiveType?: '2g' | '3g' | '4g' | 'slow-2g';
     downlink?: number;
     rtt?: number;
-    saveData?: boolean;
+    saveData?: boolean
   }
 }
 

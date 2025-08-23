@@ -3,8 +3,8 @@ import React, { useEffect, useRef } from 'react';
 interface ScreenReaderAnnouncementProps {
   message: string;
   priority?: 'polite' | 'assertive';
-  clearOnUnmount?: boolean;
-}
+  clearOnUnmount?: boolean
+  }
 
 const ScreenReaderAnnouncement: React.FC<ScreenReaderAnnouncementProps> = ({
   message,
@@ -21,20 +21,20 @@ const ScreenReaderAnnouncement: React.FC<ScreenReaderAnnouncementProps> = ({
       // Add new message with a slight delay to ensure screen readers pick it up;
       const timeoutId = setTimeout(() => {
         if (announcementRef.current) {
-          announcementRef.current.textContent = message;
-        }
+          announcementRef.current.textContent = message
+  }
       }, 100);
 
-      return () => clearTimeout(timeoutId);
-    }
+      return () => clearTimeout(timeoutId)
+  }
   };
   }, [message]);
 
   useEffect(() => {
     return () => {
       if (clearOnUnmount && announcementRef.current) {
-        announcementRef.current.textContent = '';
-      }
+        announcementRef.current.textContent = ''
+  }
     };
   }, [clearOnUnmount]);
 
@@ -45,8 +45,8 @@ const ScreenReaderAnnouncement: React.FC<ScreenReaderAnnouncementProps> = ({
       aria-atomic="true";
       className="sr-only sr-announcement"
     />
-  );
-};
+  )
+  };
 
 // Hook for managing announcements;
 export const useScreenReaderAnnouncement = () => {
@@ -63,30 +63,30 @@ export const useScreenReaderAnnouncement = () => {
     
     // Announce message
     setTimeout(() => {
-      announcement.textContent = message;
-    }, 100);
+      announcement.textContent = message
+  }, 100);
     
     // Clean up after announcement
     setTimeout(() => {
       if (document.body.contains(announcement)) {
-        document.body.removeChild(announcement);
-      }
-    }, 3000);
+        document.body.removeChild(announcement)
+  }
+    }, 3000)
   };
 
   return { announce };
 
 // Context for global announcements;
 export const AnnouncementContext = React.createContext<{
-  announce: (message: string, priority?: 'polite' | 'assertive') => void;
-}>({
+  announce: (message: string, priority?: 'polite' | 'assertive') => void
+  }>({
   announce: () => {}
 };
   };
 
 interface AnnouncementProviderProps {
-  children: React.ReactNode;
-}
+  children: React.ReactNode
+  }
 
 export const AnnouncementProvider: React.FC<AnnouncementProviderProps> = ({ children }) => {
   const { announce } = useScreenReaderAnnouncement();
@@ -95,17 +95,17 @@ export const AnnouncementProvider: React.FC<AnnouncementProviderProps> = ({ chil
     <AnnouncementContext.Provider value={{ announce }}>
       {children}
     </AnnouncementContext.Provider>
-  );
-};
+  )
+  };
 
 // Hook to use the announcement context;
 export const useAnnouncement = () => {
   const context = React.useContext(AnnouncementContext);
   if (!context) {
-    throw new Error('useAnnouncement must be used within an AnnouncementProvider');
+    throw new Error('useAnnouncement must be used within an AnnouncementProvider')
   }
-  return context;
-};
+  return context
+  };
 
 // Common announcement messages;
 export const ANNOUNCEMENT_MESSAGES = {
@@ -176,8 +176,8 @@ export const ANNOUNCEMENT_MESSAGES = {
   
   // Accessibility
   KEYBOARD_SHORTCUT: (shortcut: string, action: string) => `Keyboard shortcut: ${shortcut} for ${action}`,
-  SCREEN_READER_HELP: 'Screen reader help available. Press H for help menu.';
-} as const;
+  SCREEN_READER_HELP: 'Screen reader help available. Press H for help menu.'
+  } as const;
 
 // Helper component for common state announcements;
 interface StateAnnouncementProps {
@@ -185,8 +185,8 @@ interface StateAnnouncementProps {
   loadingMessage?: string;
   successMessage?: string;
   errorMessage?: string;
-  previousState?: string;
-}
+  previousState?: string
+  }
 
 export const StateAnnouncement: React.FC<StateAnnouncementProps> = ({
   state,
@@ -204,9 +204,8 @@ export const StateAnnouncement: React.FC<StateAnnouncementProps> = ({
       case 'error':
         return errorMessage;
       case 'idle':
-      default:
-        return '';
-    }
+      default: return ''
+  }
   };
 
   const message = getMessage();
@@ -217,7 +216,7 @@ export const StateAnnouncement: React.FC<StateAnnouncementProps> = ({
 
   return shouldAnnounce ? (
     <ScreenReaderAnnouncement message={message} priority={priority} />
-  ) : null;
-};
+  ) : null
+  };
 
 export default ScreenReaderAnnouncement;

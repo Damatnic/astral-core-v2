@@ -8,7 +8,7 @@ export const TherapeuticSpinner: React.FC<{ size?: 'small' | 'medium' | 'large' 
   const sizeClasses = {
     small: 'w-8 h-8',
     medium: 'w-12 h-12',
-    large: 'w-16 h-16';
+    large: 'w-16 h-16'
   };
 
   return (
@@ -18,8 +18,8 @@ export const TherapeuticSpinner: React.FC<{ size?: 'small' | 'medium' | 'large' 
       <div className="absolute inset-0 rounded-full border-4 border-transparent border-b-purple-500 animate-spin" 
            style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
     </div>
-  );
-};
+  )
+  };
 
 // Pulsing Dots Loader;
 export const PulsingDots: React.FC<{ color?: string }> = ({ color = 'blue' }) => {
@@ -27,7 +27,7 @@ export const PulsingDots: React.FC<{ color?: string }> = ({ color = 'blue' }) =>
     blue: 'bg-blue-500',
     purple: 'bg-purple-500',
     green: 'bg-green-500',
-    pink: 'bg-pink-500';
+    pink: 'bg-pink-500'
   };
 
   return (
@@ -39,8 +39,8 @@ export const PulsingDots: React.FC<{ color?: string }> = ({ color = 'blue' }) =>
         />
       ))}
     </div>
-  );
-};
+  )
+  };
 
 // Skeleton Card Loader;
 export const SkeletonCard: React.FC<{ showAvatar?: boolean }> = ({ showAvatar = true }) => {
@@ -57,8 +57,8 @@ export const SkeletonCard: React.FC<{ showAvatar?: boolean }> = ({ showAvatar = 
         </div>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 // Skeleton Text Lines;
 export const SkeletonText: React.FC<{ lines?: number }> = ({ lines = 3 }) => {
@@ -72,8 +72,8 @@ export const SkeletonText: React.FC<{ lines?: number }> = ({ lines = 3 }) => {
         />
       ))}
     </div>
-  );
-};
+  )
+  };
 
 // Skeleton Dashboard Stats;
 export const SkeletonStats: React.FC = () => {
@@ -92,8 +92,8 @@ export const SkeletonStats: React.FC = () => {
         </div>
       ))}
     </div>
-  );
-};
+  )
+  };
 
 // Beautiful Page Loader;
 export const PageLoader: React.FC<{ message?: string }> = ({ 
@@ -123,8 +123,8 @@ export const PageLoader: React.FC<{ message?: string }> = ({
         <PulsingDots color="purple" />
       </div>
     </div>
-  );
-};
+  )
+  };
 
 // Content Placeholder;
 export const ContentPlaceholder: React.FC<{ type?: 'post' | 'chat' | 'form' }> = ({ 
@@ -152,7 +152,7 @@ export const ContentPlaceholder: React.FC<{ type?: 'post' | 'chat' | 'form' }> =
           <div className="h-8 w-20 bg-gray-200 rounded-lg skeleton-loader"></div>
         </div>
       </div>
-    );
+    )
   }
 
   if (type === 'chat') {
@@ -181,7 +181,7 @@ export const ContentPlaceholder: React.FC<{ type?: 'post' | 'chat' | 'form' }> =
           </div>
         ))}
       </div>
-    );
+    )
   }
 
   if (type === 'form') {
@@ -204,11 +204,11 @@ export const ContentPlaceholder: React.FC<{ type?: 'post' | 'chat' | 'form' }> =
           <div className="h-11 flex-1 bg-gray-200 rounded-xl skeleton-loader"></div>
         </div>
       </div>
-    );
+    )
   }
 
-  return null;
-};
+  return null
+  };
 
 // Breathing Animation Loader;
 export const BreathingLoader: React.FC<{ text?: string }> = ({ 
@@ -227,8 +227,8 @@ export const BreathingLoader: React.FC<{ text?: string }> = ({
       </div>
       <p className="text-lg text-gray-700 animate-pulse">{text}</p>
     </div>
-  );
-};
+  )
+  };
 
 // Loading Button;
 export const LoadingButton: React.FC<{
@@ -236,8 +236,8 @@ export const LoadingButton: React.FC<{
   children: React.ReactNode;
   onClick?: () => void;
   className?: string;
-  variant?: 'primary' | 'secondary' | 'danger';
-}> = ({ 
+  variant?: 'primary' | 'secondary' | 'danger'
+  }> = ({ 
   loading = false, 
   children, 
   onClick, 
@@ -247,7 +247,7 @@ export const LoadingButton: React.FC<{
   const variantClasses = {
     primary: 'bg-gradient-to-r from-blue-500 to-purple-500 text-white',
     secondary: 'bg-gray-200 text-gray-800',
-    danger: 'bg-gradient-to-r from-red-500 to-pink-500 text-white';
+    danger: 'bg-gradient-to-r from-red-500 to-pink-500 text-white'
   };
 
   return (
@@ -267,15 +267,15 @@ export const LoadingButton: React.FC<{
         children
       )}
     </button>
-  );
-};
+  )
+  };
 
 // Progress Bar Loader;
 export const ProgressLoader: React.FC<{ 
   progress: number; 
   label?: string;
-  showPercentage?: boolean;
-}> = ({ 
+  showPercentage?: boolean
+  }> = ({ 
   progress, 
   label,
   showPercentage = true 
@@ -289,17 +289,16 @@ export const ProgressLoader: React.FC<{
         </div>
       )}
       <div className="wellness-progress">
-        <div; 
-          className="wellness-progress-bar"
+        <div className="wellness-progress-bar"
           style={{ 
             width: `${Math.min(100, Math.max(0, progress))}%`,
-            background: 'var(--gradient-calm)';
-          }}
+            background: 'var(--gradient-calm)'
+  }}
         />
       </div>
     </div>
-  );
-};
+  )
+  };
 
 // Shimmer Effect Component;
 export const ShimmerEffect: React.FC<{ className?: string }> = ({ className = '' }) => {
@@ -307,8 +306,8 @@ export const ShimmerEffect: React.FC<{ className?: string }> = ({ className = ''
     <div className={`relative overflow-hidden ${className}`}>
       <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
     </div>
-  );
-};
+  )
+  };
 
 // Export all components;
 export default {

@@ -23,8 +23,8 @@ export const useMobileViewport = () => {
   useEffect(() => {
     const checkMobile = () => {
       const mobile = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      setIsMobile(mobile);
-    };
+      setIsMobile(mobile)
+  };
 
     const updateViewportHeight = () => {
       // Use the new CSS viewport units for better mobile support;
@@ -33,8 +33,8 @@ export const useMobileViewport = () => {
       
       // For older browsers, also set a custom property
       document.documentElement.style.setProperty('--mobile-vh', `${window.innerHeight}px`);
-      setViewportHeight(window.innerHeight);
-    };
+      setViewportHeight(window.innerHeight)
+  };
 
     const detectKeyboard = () => {
       const currentHeight = window.innerHeight;
@@ -50,15 +50,15 @@ export const useMobileViewport = () => {
         setIsKeyboardOpen(true);
         document.documentElement.style.setProperty('--keyboard-height', `${calculatedKeyboardHeight}px`);
         document.documentElement.style.setProperty('--is-keyboard-open', '1');
-        document.body.classList.add('keyboard-open');;
+        document.body.classList.add('keyboard-open')
   } else {
         // Keyboard is likely closed
         setKeyboardHeight(0);
         setIsKeyboardOpen(false);
         document.documentElement.style.setProperty('--keyboard-height', '0px');
         document.documentElement.style.setProperty('--is-keyboard-open', '0');
-        document.body.classList.remove('keyboard-open');
-      }
+        document.body.classList.remove('keyboard-open')
+  }
     };
 
     checkMobile();
@@ -71,8 +71,8 @@ export const useMobileViewport = () => {
     window.addEventListener('orientationchange', () => {
       setTimeout(() => {
         updateViewportHeight();
-        detectKeyboard();
-      }, 500); // Delay to allow orientation change to complete
+        detectKeyboard()
+  }, 500); // Delay to allow orientation change to complete
     });
 
     // Visual viewport API support for better keyboard detection
@@ -84,13 +84,13 @@ export const useMobileViewport = () => {
             setKeyboardHeight(heightDiff);
             setIsKeyboardOpen(true);
             document.documentElement.style.setProperty('--keyboard-height', `${heightDiff}px`);
-            document.body.classList.add('keyboard-open');;
+            document.body.classList.add('keyboard-open')
   } else {
             setKeyboardHeight(0);
             setIsKeyboardOpen(false);
             document.documentElement.style.setProperty('--keyboard-height', '0px');
-            document.body.classList.remove('keyboard-open');
-          }
+            document.body.classList.remove('keyboard-open')
+  }
         }
       };
 
@@ -99,13 +99,13 @@ export const useMobileViewport = () => {
       return () => {
         window.removeEventListener('resize', updateViewportHeight);
         window.removeEventListener('resize', detectKeyboard);
-        window.visualViewport?.removeEventListener('resize', handleVisualViewportChange);
-      }
+        window.visualViewport?.removeEventListener('resize', handleVisualViewportChange)
+  }
 
     return () => {
       window.removeEventListener('resize', updateViewportHeight);
-      window.removeEventListener('resize', detectKeyboard);
-    };
+      window.removeEventListener('resize', detectKeyboard)
+  };
   };
   }, []);
 
@@ -118,7 +118,8 @@ export const useMobileViewport = () => {
       ...options
     };
     
-    element.scrollIntoView(defaultOptions);
+    element.scrollIntoView(defaultOptions)
+  };
   };
   };
   }, [isMobile]);
@@ -141,8 +142,8 @@ interface MobileAppInputProps {
   containerStyle?: React.CSSProperties;
   style?: React.CSSProperties;
   autoFocus?: boolean;
-  type?: string;
-}
+  type?: string
+  }
 
 export const MobileAppInput: React.FC<MobileAppInputProps> = ({
   value,
@@ -170,12 +171,12 @@ export const MobileAppInput: React.FC<MobileAppInputProps> = ({
         scrollIntoView(inputRef.current, { block: 'end' };
   };
       }
-    }, 300);
+    }, 300)
   };
   }, [isMobile, scrollIntoView]);
 
   const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.classList.remove('mobile-focused');
+    e.target.classList.remove('mobile-focused')
   };
   }, []);
 
@@ -183,8 +184,8 @@ export const MobileAppInput: React.FC<MobileAppInputProps> = ({
     // Ensure input focuses properly on touch
     if (isMobile && inputRef.current && inputRef.current !== document.activeElement) {
       e.preventDefault();
-      inputRef.current.focus();
-    }
+      inputRef.current.focus()
+  }
   };
   }, [isMobile]);
 
@@ -233,15 +234,15 @@ export const MobileAppInput: React.FC<MobileAppInputProps> = ({
         data-mobile-input="true"
       />
     </div>
-  );
-};
+  )
+  };
 
 // Mobile-optimized chat composer component;
 interface MobileChatComposerProps {
   children: React.ReactNode;
   className?: string;
-  style?: React.CSSProperties;
-}
+  style?: React.CSSProperties
+  }
 
 export const MobileChatComposer: React.FC<MobileChatComposerProps> = ({
   children,
@@ -269,19 +270,18 @@ export const MobileChatComposer: React.FC<MobileChatComposerProps> = ({
   };
 
   return (
-    <div; 
-      className={`chat-composer ${className} ${isMobile ? 'mobile-composer' : ''}`}
+    <div className={`chat-composer ${className} ${isMobile ? 'mobile-composer' : ''}`}
       style={composerStyle}
     >
       {children}
     </div>
-  );
-};
+  )
+  };
 
 // Provider component for mobile keyboard context;
 interface MobileKeyboardProviderProps {
-  children: React.ReactNode;
-}
+  children: React.ReactNode
+  }
 
 export const MobileKeyboardProvider: React.FC<MobileKeyboardProviderProps> = ({ children }) => {
   useEffect(() => {
@@ -291,8 +291,8 @@ export const MobileKeyboardProvider: React.FC<MobileKeyboardProviderProps> = ({ 
     if (!viewportMeta) {
       viewportMeta = document.createElement('meta');
       viewportMeta.name = 'viewport';
-      document.head.appendChild(viewportMeta);
-    }
+      document.head.appendChild(viewportMeta)
+  }
 
     // Updated viewport configuration for better mobile keyboard handling
     viewportMeta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover';
@@ -303,16 +303,16 @@ export const MobileKeyboardProvider: React.FC<MobileKeyboardProviderProps> = ({ 
       :root {
         --mobile-vh: 100vh;
         --keyboard-height: 0px;
-        --is-keyboard-open: 0;
-      }
+        --is-keyboard-open: 0
+  }
 
       /* Support for CSS environment variables (safe areas) */
       @supports (padding: max(0px)) {
         .mobile-safe-area {
           padding-left: env(safe-area-inset-left);
           padding-right: env(safe-area-inset-right);
-          padding-bottom: env(safe-area-inset-bottom);
-        }
+          padding-bottom: env(safe-area-inset-bottom)
+  }
       }
 
       /* Mobile keyboard adjustments */
@@ -327,16 +327,16 @@ export const MobileKeyboardProvider: React.FC<MobileKeyboardProviderProps> = ({ 
         textarea,
         select {
           font-size: 16px !important; /* Prevent iOS Safari zoom */
-          -webkit-text-size-adjust: 100%;
-        }
+          -webkit-text-size-adjust: 100%
+  }
 
         /* Enhanced chat layout */
         .chat-view {
           height: 100vh;
           height: var(--mobile-vh, 100vh);
           position: relative;
-          overflow: hidden;
-        }
+          overflow: hidden
+  }
 
         .chat-messages {
           flex: 1;
@@ -346,62 +346,62 @@ export const MobileKeyboardProvider: React.FC<MobileKeyboardProviderProps> = ({ 
           -webkit-overflow-scrolling: touch;
           /* Enhanced scrolling performance */
           scroll-behavior: smooth;
-          overscroll-behavior: contain;
-        }
+          overscroll-behavior: contain
+  }
 
         .keyboard-open .chat-messages {
-          padding-bottom: calc(140px + var(--keyboard-height, 0px) + 20px);
-        }
+          padding-bottom: calc(140px + var(--keyboard-height, 0px) + 20px)
+  }
 
         .mobile-focused {
           position: relative;
-          z-index: 1001;
-        }
+          z-index: 1001
+  }
 
         .chat-input:focus {
           border-color: var(--primary-color);
-          box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
-        }
+          box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2)
+  }
 
         /* Mobile composer improvements */
         .mobile-composer {
           /* Ensure composer stays above keyboard */
           transform: translateY(calc(-1 * var(--keyboard-height, 0px)));
           /* Smooth animation */
-          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+  }
 
         /* Enhanced touch targets for mobile */
         button,
         .touchable {
           min-height: 44px !important;
           min-width: 44px !important;
-          touch-action: manipulation;
-        }
+          touch-action: manipulation
+  }
 
         /* Prevent text selection on UI elements */
         .ui-element {
           -webkit-user-select: none;
-          user-select: none;
-        }
+          user-select: none
+  }
 
         /* Allow text selection in content areas */
         .selectable-text {
           -webkit-user-select: text;
-          user-select: text;
-        }
+          user-select: text
+  }
       }
     `;
     
     document.head.appendChild(style);
 
     return () => {
-      document.head.removeChild(style);
-    };
+      document.head.removeChild(style)
+  };
   };
   }, []);
 
-  return <>{children}</>;
-};
+  return <>{children}</>
+  };
 
 export default MobileKeyboardProvider;

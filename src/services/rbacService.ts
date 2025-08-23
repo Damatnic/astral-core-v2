@@ -96,7 +96,7 @@ export enum Action {
 }
 
 // Role-Permission mapping;
-const userPermissions = [;
+const userPermissions = [;;
   Permission.VIEW_PROFILE,
   Permission.EDIT_PROFILE,
   Permission.VIEW_CONTENT,
@@ -109,7 +109,7 @@ const userPermissions = [;
   Permission.ACCESS_API,
 ];
 
-const helperPermissions = [;
+const helperPermissions = [;;
   ...userPermissions,
   Permission.VIEW_HELPER_DASHBOARD,
   Permission.ACCEPT_HELP_REQUESTS,
@@ -119,7 +119,7 @@ const helperPermissions = [;
   Permission.EDIT_CONTENT,
 ];
 
-const moderatorPermissions = [;
+const moderatorPermissions = [;;
   ...helperPermissions,
   Permission.VIEW_REPORTS,
   Permission.MODERATE_USERS,
@@ -129,7 +129,7 @@ const moderatorPermissions = [;
   Permission.DELETE_CONTENT,
 ];
 
-const crisisResponderPermissions = [;
+const crisisResponderPermissions = [;;
   ...userPermissions,
   Permission.RESPOND_TO_CRISIS,
   Permission.MANAGE_CRISIS_RESOURCES,
@@ -163,20 +163,20 @@ class RBACService {
     const cacheKey = `${role}:${permission}`;
     
     if (this.permissionCache.has(cacheKey)) {
-      return this.permissionCache.get(cacheKey)!;
-    }
+      return this.permissionCache.get(cacheKey)!
+  }
 
     const hasPermission = rolePermissions[role]?.includes(permission) || false;
     this.permissionCache.set(cacheKey, hasPermission);
     
-    return hasPermission;
+    return hasPermission
   }
 
   /**
    * Check if user has permission
    */
   userHasPermission(userRoles: UserRole[], permission: Permission): boolean {
-    return userRoles.some(role => this.roleHasPermission(role, permission));
+    return userRoles.some(role => this.roleHasPermission(role, permission))
   }
 
   /**
@@ -190,24 +190,24 @@ class RBACService {
   ): boolean {
     // Admin can do anything
     if (userRoles.includes(UserRole.ADMIN)) {
-      return true;
-    }
+      return true
+  }
 
     // Map resource-action to permissions;
     const requiredPermission = this.getRequiredPermission(resource, action);
     if (!requiredPermission) {
-      return false;
-    }
+      return false
+  }
 
     // Check if user has the required permission;
     const hasPermission = this.userHasPermission(userRoles, requiredPermission);
     
     // Apply resource-specific conditions
     if (hasPermission && resourceData) {
-      return this.checkResourceConditions(userRoles, resource, action, resourceData);
-    }
+      return this.checkResourceConditions(userRoles, resource, action, resourceData)
+  }
 
-    return hasPermission;
+    return hasPermission
   }
 
   /**
@@ -252,7 +252,7 @@ class RBACService {
     };
 
     const key = `${resource}:${action}`;
-    return permissionMap[key] || null;
+    return permissionMap[key] || null
   }
 
   /**
@@ -266,27 +266,27 @@ class RBACService {
   ): boolean {
     // Users can only edit their own profile
     if (resource === Resource.PROFILE && action === Action.UPDATE) {
-      return resourceData.userId === resourceData.currentUserId;
-    }
+      return resourceData.userId === resourceData.currentUserId
+  }
 
     // Users can only delete their own content
     if (resource === Resource.CONTENT && action === Action.DELETE) {
       if (userRoles.includes(UserRole.MODERATOR)) {
         return true; // Moderators can delete any content
       }
-      return resourceData.authorId === resourceData.currentUserId;
-    }
+      return resourceData.authorId === resourceData.currentUserId
+  }
 
     // Users can only delete their own messages
     if (resource === Resource.CHAT && action === Action.DELETE) {
       if (userRoles.includes(UserRole.MODERATOR)) {
         return true; // Moderators can delete any message
       }
-      return resourceData.senderId === resourceData.currentUserId;
-    }
+      return resourceData.senderId === resourceData.currentUserId
+  }
 
     // Default to permission check
-    return true;
+    return true
   }
 
   /**
@@ -297,11 +297,11 @@ class RBACService {
     
     roles.forEach(role => {
       rolePermissions[role]?.forEach(permission => {
-        permissions.add(permission);
-      });
-    });
+        permissions.add(permission)
+  })
+  });
 
-    return Array.from(permissions);
+    return Array.from(permissions)
   }
 
   /**
@@ -311,7 +311,7 @@ class RBACService {
     return resource.userId === userId || 
            resource.ownerId === userId || 
            resource.authorId === userId ||
-           resource.createdBy === userId;
+           resource.createdBy === userId
   }
 
   /**
@@ -324,13 +324,13 @@ class RBACService {
   ): T[] {
     // Admin sees everything
     if (userRoles.includes(UserRole.ADMIN)) {
-      return data;
-    }
+      return data
+  }
 
     // Apply custom filter if provided
     if (filterFn) {
-      return data.filter(filterFn);
-    }
+      return data.filter(filterFn)
+  }
 
     // Default filtering based on common patterns
     return data.filter(item => {
@@ -339,43 +339,43 @@ class RBACService {
         isPrivate?: boolean;
         currentUserId?: string;
         isFlagged?: boolean;
-        isDeleted?: boolean;
-      };
+        isDeleted?: boolean
+  };
       
       // Check if item has privacy settings
       if ('isPrivate' in itemWithProps && itemWithProps.isPrivate) {
         // Only owner or admin can see private items
-        return this.isResourceOwner(itemWithProps.currentUserId, item);
-      }
+        return this.isResourceOwner(itemWithProps.currentUserId, item)
+  }
 
       // Check if item is flagged
       if ('isFlagged' in itemWithProps && itemWithProps.isFlagged) {
         // Only moderators and above can see flagged items
-        return userRoles.includes(UserRole.MODERATOR);
-      }
+        return userRoles.includes(UserRole.MODERATOR)
+  }
 
       // Check if item is deleted
       if ('isDeleted' in itemWithProps && itemWithProps.isDeleted) {
         // Only admins can see deleted items
-        return false;
-      }
+        return false
+  }
 
-      return true;
-    });
+      return true
+  })
   }
 
   /**
    * Create permission string for caching
    */
   createPermissionKey(roles: UserRole[], permission: Permission): string {
-    return `${roles.sort().join(',')}:${permission}`;
+    return `${roles.sort().join(',')}:${permission}`
   }
 
   /**
    * Clear permission cache
    */
   clearCache(): void {
-    this.permissionCache.clear();
+    this.permissionCache.clear()
   }
 
   /**
@@ -389,17 +389,17 @@ class RBACService {
     const allAssignedPermissions = new Set<Permission>();
     
     Object.values(rolePermissions).forEach(permissions => {
-      permissions.forEach(p => allAssignedPermissions.add(p));
-    });
+      permissions.forEach(p => allAssignedPermissions.add(p))
+  });
 
     allDefinedPermissions.forEach(permission => {
       if (!allAssignedPermissions.has(permission)) {
-        errors.push(`Permission ${permission} is not assigned to any role`);
-      }
+        errors.push(`Permission ${permission} is not assigned to any role`)
+  }
     });
 
     // Check for role hierarchy violations;
-    const roleHierarchy = [;
+    const roleHierarchy = [;;
       UserRole.USER,
       UserRole.HELPER,
       UserRole.MODERATOR,
@@ -415,10 +415,10 @@ class RBACService {
       
       lowerPerms.forEach(perm => {
         if (!higherPerms.has(perm) && higherRole !== UserRole.ADMIN) {
-          errors.push(`Role ${higherRole} is missing permission ${perm} from ${lowerRole}`);
-        }
-      });
-    }
+          errors.push(`Role ${higherRole} is missing permission ${perm} from ${lowerRole}`)
+  }
+      })
+  }
 
     return {
       valid: errors.length === 0,
@@ -431,8 +431,8 @@ export const rbacService = new RBACService();
 
 // Export helper functions;
 export const hasPermission = (userRoles: UserRole[], permission: Permission): boolean => {
-  return rbacService.userHasPermission(userRoles, permission);
-};
+  return rbacService.userHasPermission(userRoles, permission)
+  };
 
 export const canAccess = (
   userRoles: UserRole[],
@@ -440,7 +440,7 @@ export const canAccess = (
   action: Action,
   resourceData?: any
 ): boolean => {
-  return rbacService.canPerformAction(userRoles, resource, action, resourceData);
-};
+  return rbacService.canPerformAction(userRoles, resource, action, resourceData)
+  };
 
 export default rbacService;

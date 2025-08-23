@@ -24,8 +24,8 @@ interface CrisisAlertItem {
     timestamp: string;
     status: 'active' | 'responded' | 'escalated';
     description: string;
-    location?: string;
-}
+    location?: string
+  }
 
 interface AssignedUser {
     id: string;
@@ -34,8 +34,8 @@ interface AssignedUser {
     status: 'active' | 'at-risk' | 'stable' | 'needs-attention';
     caseType: 'ongoing-support' | 'crisis-follow-up' | 'weekly-check-in' | 'escalated-case';
     nextSession?: string;
-    unreadMessages: number;
-}
+    unreadMessages: number
+  }
 
 interface ModerationCase {
     id: string;
@@ -46,8 +46,8 @@ interface ModerationCase {
     timestamp: string;
     priority: 'urgent' | 'high' | 'normal';
     status: 'pending' | 'reviewed' | 'action-taken';
-    relatedContent?: string;
-}
+    relatedContent?: string
+  }
 
 interface ProfessionalResource {
     id: string;
@@ -56,12 +56,12 @@ interface ProfessionalResource {
     category: 'crisis-intervention' | 'communication' | 'boundaries' | 'self-care';
     duration?: string;
     completed?: boolean;
-    dueDate?: string;
-}
+    dueDate?: string
+  }
 
 export const ConstellationGuideDashboardView: React.FC<{
-    setActiveView: (view: ActiveView) => void;
-}> = ({ setActiveView }) => {
+    setActiveView: (view: ActiveView) => void
+  }> = ({ setActiveView }) => {
     const { helperProfile } = useAuth();
     const [activeTab, setActiveTab] = useState<'overview' | 'active-cases' | 'crisis-alerts' | 'moderation' | 'resources'>('overview');
     const [selectedAlert, setSelectedAlert] = useState<CrisisAlertItem | null>(null);
@@ -78,8 +78,8 @@ export const ConstellationGuideDashboardView: React.FC<{
             timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
             status: 'active',
             description: 'User expressed thoughts of self-harm in journal entry. AI detection flagged for immediate review.',
-            location: 'Personal Journal';
-        },
+            location: 'Personal Journal'
+  },
         {
             id: 'alert-002',
             userId: 'user-456',
@@ -89,8 +89,8 @@ export const ConstellationGuideDashboardView: React.FC<{
             timestamp: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
             status: 'responded',
             description: 'User reported severe panic attack and requested immediate support.',
-            location: 'Crisis Chat';
-        },
+            location: 'Crisis Chat'
+  },
         {
             id: 'alert-003',
             userId: 'user-321',
@@ -100,8 +100,8 @@ export const ConstellationGuideDashboardView: React.FC<{
             timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
             status: 'escalated',
             description: 'Session escalated due to mention of substance use with safety concerns.',
-            location: 'Support Session';
-        }
+            location: 'Support Session'
+  }
     ];
 
     const assignedUsers: AssignedUser[] = [
@@ -112,8 +112,8 @@ export const ConstellationGuideDashboardView: React.FC<{
             status: 'active',
             caseType: 'ongoing-support',
             nextSession: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
-            unreadMessages: 2;
-        },
+            unreadMessages: 2
+  },
         {
             id: 'case-002',
             username: 'StarSeeker23',
@@ -121,16 +121,16 @@ export const ConstellationGuideDashboardView: React.FC<{
             status: 'at-risk',
             caseType: 'crisis-follow-up',
             nextSession: new Date(Date.now() + 1 * 60 * 60 * 1000).toISOString(),
-            unreadMessages: 0;
-        },
+            unreadMessages: 0
+  },
         {
             id: 'case-003',
             username: 'CalmSeeker',
             lastContact: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
             status: 'needs-attention',
             caseType: 'weekly-check-in',
-            unreadMessages: 0;
-        },
+            unreadMessages: 0
+  },
         {
             id: 'case-004',
             username: 'BrightPath',
@@ -138,8 +138,8 @@ export const ConstellationGuideDashboardView: React.FC<{
             status: 'stable',
             caseType: 'ongoing-support',
             nextSession: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-            unreadMessages: 1;
-        }
+            unreadMessages: 1
+  }
     ];
 
     const moderationCases: ModerationCase[] = [
@@ -152,8 +152,8 @@ export const ConstellationGuideDashboardView: React.FC<{
             timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
             priority: 'urgent',
             status: 'pending',
-            relatedContent: 'Chat Session #447';
-        },
+            relatedContent: 'Chat Session #447'
+  },
         {
             id: 'mod-002',
             type: 'content-review',
@@ -163,8 +163,8 @@ export const ConstellationGuideDashboardView: React.FC<{
             timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
             priority: 'high',
             status: 'pending',
-            relatedContent: 'Forum Post #1247';
-        },
+            relatedContent: 'Forum Post #1247'
+  },
         {
             id: 'mod-003',
             type: 'user-report',
@@ -174,8 +174,8 @@ export const ConstellationGuideDashboardView: React.FC<{
             timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
             priority: 'normal',
             status: 'reviewed',
-            relatedContent: 'Group Discussion #89';
-        }
+            relatedContent: 'Group Discussion #89'
+  }
     ];
 
     const professionalResources: ProfessionalResource[] = [
@@ -186,37 +186,37 @@ export const ConstellationGuideDashboardView: React.FC<{
             category: 'crisis-intervention',
             duration: '2 hours',
             completed: false,
-            dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
-        },
+            dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+  },
         {
             id: 'res-002',
             title: 'Maintaining Professional Boundaries',
             type: 'guideline',
             category: 'boundaries',
-            completed: true;
-        },
+            completed: true
+  },
         {
             id: 'res-003',
             title: 'Trauma-Informed Communication Protocols',
             type: 'protocol',
             category: 'communication',
             duration: '45 minutes',
-            completed: false;
-        },
+            completed: false
+  },
         {
             id: 'res-004',
             title: 'Helper Self-Care & Burnout Prevention',
             type: 'continuing-education',
             category: 'self-care',
             duration: '1.5 hours',
-            completed: true;
-        }
+            completed: true
+  }
     ];
 
     const handleAlertClick = (alert: CrisisAlertItem) => {
         setSelectedAlert(alert);
-        setIsAlertModalOpen(true);
-    };
+        setIsAlertModalOpen(true)
+  };
 
     const getStatusColor = (status: string) => {
         switch(status) {
@@ -224,8 +224,8 @@ export const ConstellationGuideDashboardView: React.FC<{
             case 'at-risk': return 'var(--accent-warning)';
             case 'needs-attention': return 'var(--accent-primary)';
             case 'stable': return 'var(--text-secondary)';
-            default: return 'var(--text-secondary)';
-        }
+            default: return 'var(--text-secondary)'
+  }
     };
 
     const getSeverityColor = (severity: string) => {
@@ -233,8 +233,8 @@ export const ConstellationGuideDashboardView: React.FC<{
             case 'high': return 'var(--accent-error)';
             case 'medium': return 'var(--accent-warning)';
             case 'low': return 'var(--accent-primary)';
-            default: return 'var(--text-secondary)';
-        }
+            default: return 'var(--text-secondary)'
+  }
     };
 
     const getPriorityColor = (priority: string) => {
@@ -242,8 +242,8 @@ export const ConstellationGuideDashboardView: React.FC<{
             case 'urgent': return 'var(--accent-error)';
             case 'high': return 'var(--accent-warning)';
             case 'normal': return 'var(--accent-primary)';
-            default: return 'var(--text-secondary)';
-        }
+            default: return 'var(--text-secondary)'
+  }
     };
 
     const renderTabContent = () => {
@@ -329,8 +329,7 @@ export const ConstellationGuideDashboardView: React.FC<{
                                             <span className="case-type">{user.caseType.replace('-', ' ')}</span>
                                         </div>
                                         <div className="case-status">
-                                            <span; 
-                                                className="status-badge"
+                                            <span className="status-badge"
                                                 style={{ backgroundColor: getStatusColor(user.status) }}
                                             >
                                                 {user.status.replace('-', ' ')}
@@ -384,8 +383,7 @@ export const ConstellationGuideDashboardView: React.FC<{
                                             <span className="alert-type">{alert.type.replace('-', ' ')}</span>
                                         </div>
                                         <div className="alert-status">
-                                            <span; 
-                                                className="severity-badge"
+                                            <span className="severity-badge"
                                                 style={{ backgroundColor: getSeverityColor(alert.severity) }}
                                             >
                                                 {alert.severity} priority
@@ -440,8 +438,7 @@ export const ConstellationGuideDashboardView: React.FC<{
                                             <span className="reported-by">Reported by: {caseItem.reportedBy}</span>
                                         </div>
                                         <div className="moderation-status">
-                                            <span; 
-                                                className="priority-badge"
+                                            <span className="priority-badge"
                                                 style={{ backgroundColor: getPriorityColor(caseItem.priority) }}
                                             >
                                                 {caseItem.priority}
@@ -520,14 +517,13 @@ export const ConstellationGuideDashboardView: React.FC<{
                     </div>
                 );
 
-            default:
-                return null;
-        }
+            default: return null
+  }
     };
 
     if (!helperProfile) {
-        return <div className="loading-spinner" style={{margin: '5rem auto'}}></div>;
-    }
+        return <div className="loading-spinner" style={{margin: '5rem auto'}}></div>
+  }
 
     return (
         <>
@@ -575,36 +571,31 @@ export const ConstellationGuideDashboardView: React.FC<{
             </div>
 
             <div className="dashboard-tabs constellation-tabs">
-                <AppButton; 
-                    className={activeTab === 'overview' ? 'active' : ''} 
+                <AppButton className={activeTab === 'overview' ? 'active' : ''} 
                     onClick={() => setActiveTab('overview')}
                 >
                     <SettingsIcon />
                     Overview
                 </AppButton>
-                <AppButton; 
-                    className={activeTab === 'active-cases' ? 'active' : ''} 
+                <AppButton className={activeTab === 'active-cases' ? 'active' : ''} 
                     onClick={() => setActiveTab('active-cases')}
                 >
                     <UsersIcon />
                     Active Cases ({assignedUsers.filter(u => u.status !== 'stable').length})
                 </AppButton>
-                <AppButton; 
-                    className={activeTab === 'crisis-alerts' ? 'active' : ''} 
+                <AppButton className={activeTab === 'crisis-alerts' ? 'active' : ''} 
                     onClick={() => setActiveTab('crisis-alerts')}
                 >
                     <AlertTriangle />
                     Crisis Alerts ({crisisAlerts.filter(a => a.status === 'active').length})
                 </AppButton>
-                <AppButton; 
-                    className={activeTab === 'moderation' ? 'active' : ''} 
+                <AppButton className={activeTab === 'moderation' ? 'active' : ''} 
                     onClick={() => setActiveTab('moderation')}
                 >
                     <ShieldIcon />
                     Moderation ({moderationCases.filter(m => m.status === 'pending').length})
                 </AppButton>
-                <AppButton; 
-                    className={activeTab === 'resources' ? 'active' : ''} 
+                <AppButton className={activeTab === 'resources' ? 'active' : ''} 
                     onClick={() => setActiveTab('resources')}
                 >
                     <BookIcon />
@@ -616,7 +607,7 @@ export const ConstellationGuideDashboardView: React.FC<{
                 {renderTabContent()}
             </div>
         </>
-    );
-};
+    )
+  };
 
 export default ConstellationGuideDashboardView;

@@ -18,8 +18,8 @@ interface AccessibilityDashboardProps {
   autoRefresh?: boolean;
   refreshInterval?: number; // in milliseconds
   onIssueClick?: (issue: AccessibilityIssue) => void;
-  className?: string;
-}
+  className?: string
+  }
 
 export const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   autoRefresh = false,
@@ -39,13 +39,13 @@ export const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
     
     try {
       const result = await accessibilityAuditSystem.runAccessibilityAudit(selectedLevel);
-      setAuditResult(result);
-    } catch (err) {
+      setAuditResult(result)
+  } catch (err) {
       setError(err instanceof Error ? err.message : 'Accessibility audit failed');
-      console.error('Accessibility audit error:', err);
-    } finally {
-      setIsLoading(false);
-    }
+      console.error('Accessibility audit error:', err)
+  } finally {
+      setIsLoading(false)
+  }
   };
   }, [selectedLevel]);
 
@@ -53,14 +53,14 @@ export const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   useEffect(() => {
     if (autoRefresh && auditResult) {
       const interval = setInterval(runAudit, refreshInterval);
-      return () => clearInterval(interval);
-    }
+      return () => clearInterval(interval)
+  }
   };
   }, [autoRefresh, refreshInterval, runAudit, auditResult]);
 
   // Initial audit on mount
   useEffect(() => {
-    runAudit();
+    runAudit()
   };
   }, [runAudit]);
 
@@ -71,8 +71,8 @@ export const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
       case 'high': return 'text-orange-600 bg-orange-50 border-orange-200';
       case 'medium': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
       case 'low': return 'text-blue-600 bg-blue-50 border-blue-200';
-      default: return 'text-gray-600 bg-gray-50 border-gray-200';
-    }
+      default: return 'text-gray-600 bg-gray-50 border-gray-200'
+  }
   };
 
   // Get score color;
@@ -80,7 +80,7 @@ export const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
     if (score >= 90) return 'text-green-600';
     if (score >= 75) return 'text-yellow-600';
     if (score >= 60) return 'text-orange-600';
-    return 'text-red-600';
+    return 'text-red-600'
   };
 
   // Get compliance badge;
@@ -93,7 +93,7 @@ export const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
       }`}>
         {isCompliant ? '✓ Compliant' : '✗ Non-compliant'}
       </span>
-    );
+    )
   };
 
   if (error) {
@@ -121,7 +121,7 @@ export const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -416,7 +416,7 @@ export const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
         </>
       )}
     </div>
-  );
-};
+  )
+  };
 
 export default AccessibilityDashboard;

@@ -5,7 +5,7 @@
  */
 
 // Crisis keywords that may indicate someone needs immediate help;
-const CRISIS_KEYWORDS = [;
+const CRISIS_KEYWORDS = [;;
   // Suicide-related
   'suicide', 'suicidal', 'kill myself', 'end my life', 'not worth living',
   'better off dead', 'want to die', 'wish i was dead', 'cant go on',
@@ -30,7 +30,7 @@ const CRISIS_KEYWORDS = [;
 ];
 
 // Phrases that might indicate past tense or recovery;
-const PAST_TENSE_MODIFIERS = [;
+const PAST_TENSE_MODIFIERS = [;;
   'used to', 'in the past', 'years ago', 'when i was',
   'recovered from', 'got through', 'survived', 'overcame'
 ];
@@ -39,8 +39,8 @@ export interface CrisisDetectionResult {
   isCrisis: boolean;
   severity: 'low' | 'medium' | 'high';
   keywords: string[];
-  isPastTense: boolean;
-}
+  isPastTense: boolean
+  }
 
 /**
  * Analyzes text for potential crisis indicators
@@ -54,21 +54,21 @@ export const detectCrisis = (text: string): CrisisDetectionResult => {
   // Check for crisis keywords
   for (const keyword of CRISIS_KEYWORDS) {
     if (lowerText.includes(keyword)) {
-      detectedKeywords.push(keyword);
-    }
+      detectedKeywords.push(keyword)
+  }
   }
   
   // Check if it's past tense;
-  const isPastTense = PAST_TENSE_MODIFIERS.some(modifier => ;
+  const isPastTense = PAST_TENSE_MODIFIERS.some(modifier => ;;
     lowerText.includes(modifier)
   );
   
   // Check for medical/academic context;
-  const medicalContextIndicators = [;
+  const medicalContextIndicators = [;;
     'patient', 'study', 'studies', 'research', 'statistics', 
     'according to', 'history of', 'character', 'movie', 'book'
   ];
-  const isMedicalContext = medicalContextIndicators.some(indicator => ;
+  const isMedicalContext = medicalContextIndicators.some(indicator => ;;
     lowerText.includes(indicator)
   );
   
@@ -76,7 +76,7 @@ export const detectCrisis = (text: string): CrisisDetectionResult => {
   let severity: 'low' | 'medium' | 'high' = 'low';
   if (detectedKeywords.length > 0) {
     // High severity for immediate danger or explicit suicide mentions;
-    const highSeverityKeywords = [;
+    const highSeverityKeywords = [;;
       'suicide', 'suicidal', 'kill myself', 'end my life', 'end it all',
       'about to', 'going to do it', 'tonight is the night', 
       'made up my mind', 'have a plan', 'have the means', 'wrote a note',
@@ -85,7 +85,7 @@ export const detectCrisis = (text: string): CrisisDetectionResult => {
     ];
     
     // Medium severity indicators;
-    const mediumSeverityKeywords = [;
+    const mediumSeverityKeywords = [;;
       'want to die', 'wish i was dead', 'better off dead',
       'self harm', 'self-harm', 'cutting', 'hurt myself', 'harm myself',
       'not worth living', 'punish myself', 'punishing myself',
@@ -93,23 +93,23 @@ export const detectCrisis = (text: string): CrisisDetectionResult => {
     ];
     
     // Check for immediate danger phrases (should always be high severity);
-    const hasImmediateDanger = highSeverityKeywords.some(keyword => ;
+    const hasImmediateDanger = highSeverityKeywords.some(keyword => ;;
       lowerText.includes(keyword)
     );
     
     if (hasImmediateDanger || detectedKeywords.length >= 3) {
-      severity = 'high';;
+      severity = 'high'
   } else if (detectedKeywords.length >= 2 || 
                detectedKeywords.some(k => mediumSeverityKeywords.includes(k))) {
-      severity = 'medium';
-    }
+      severity = 'medium'
+  }
   }
   
   // Reduce severity if past tense or medical context
   if ((isPastTense || isMedicalContext) && severity === 'high') {
-    severity = 'medium';;
+    severity = 'medium'
   } else if ((isPastTense || isMedicalContext) && severity === 'medium') {
-    severity = 'low';
+    severity = 'low'
   }
   
   return {
@@ -130,36 +130,36 @@ export const getCrisisResources = (country?: string | null) => {
       name: '988 Suicide & Crisis Lifeline',
       number: '988',
       text: 'Text HOME to 741741',
-      url: 'https://988lifeline.org';
-    },
+      url: 'https://988lifeline.org'
+  },
     UK: {
       name: 'Samaritans',
       number: '116 123',
       text: 'Text SHOUT to 85258',
-      url: 'https://www.samaritans.org';
-    },
+      url: 'https://www.samaritans.org'
+  },
     CA: {
       name: 'Talk Suicide Canada',
       number: '1-833-456-4566',
       text: 'Text 45645',
-      url: 'https://talksuicide.ca';
-    },
+      url: 'https://talksuicide.ca'
+  },
     AU: {
       name: 'Lifeline Australia',
       number: '13 11 14',
       text: 'Text 0477 13 11 14',
-      url: 'https://www.lifeline.org.au';
-    },
+      url: 'https://www.lifeline.org.au'
+  },
     DEFAULT: {
       name: 'International Crisis Lines',
       number: 'findahelpline.com',
       text: 'Visit website for local resources',
-      url: 'https://findahelpline.com';
-    }
+      url: 'https://findahelpline.com'
+  }
   };
   
   // Handle null, undefined, empty string, and case-insensitive country codes
   if (!country) return resources.DEFAULT;
   const upperCountry = country.toUpperCase();
-  return resources[upperCountry as keyof typeof resources] || resources.DEFAULT;
-};
+  return resources[upperCountry as keyof typeof resources] || resources.DEFAULT
+  };

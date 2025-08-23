@@ -14,8 +14,8 @@ import { useAuth } from '../contexts/AuthContext';
 export const PublicHelperProfileView: React.FC<{
     helperId: string;
     onClose: () => void;
-    setActiveView: (view: ActiveView) => void;
-}> = ({ helperId, onClose, setActiveView }) => {
+    setActiveView: (view: ActiveView) => void
+  }> = ({ helperId, onClose, setActiveView }) => {
     const [helper, setHelper] = useState<Helper | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,35 +31,35 @@ export const PublicHelperProfileView: React.FC<{
             .catch(err => {
                 console.error("Failed to fetch helper profile", err);
                 addToast("Could not load helper profile.", 'error');
-                onClose();
-            })
-            .finally(() => setIsLoading(false));
-    };
+                onClose()
+  })
+            .finally(() => setIsLoading(false))
+  };
   }, [helperId, onClose, addToast]);
     
     const handleSubmitRequest = async () => {
         if (!userToken) {
             addToast('You must have an anonymous ID to make a request.', 'error');
-            return;
-        }
+            return
+  }
         if (helper && requestMessage.trim()) {
             try {
                 await createDirectRequest({ content: requestMessage, category: requestCategory }, userToken, helper.id);
                 addToast(`Your request has been sent to the helper.`, 'success');
                 setIsModalOpen(false);
                 setRequestMessage('');
-                setActiveView({ view: 'my-activity' });
-            } catch(err) {
+                setActiveView({ view: 'my-activity' })
+  } catch(err) {
                 console.error("Failed to submit direct request", err);
-                addToast("Failed to send your request.", 'error');
-            }
+                addToast("Failed to send your request.", 'error')
+  }
         }
     };
 
 
     if (isLoading || !helper) {
-        return <div className="loading-spinner" style={{ margin: '5rem auto' }}></div>;
-    }
+        return <div className="loading-spinner" style={{ margin: '5rem auto' }}></div>
+  }
 
     return (
         <>
@@ -128,7 +128,7 @@ export const PublicHelperProfileView: React.FC<{
                 </div>
             </Card>
         </>
-    );
-};
+    )
+  };
 
 export default PublicHelperProfileView;

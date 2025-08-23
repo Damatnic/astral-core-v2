@@ -105,24 +105,24 @@ describe('ComprehensivePerformanceMonitor', () => {
     (performance.getEntriesByType as jest.Mock).mockReturnValue([mockPerformanceEntry]);
     (document.querySelectorAll as jest.Mock).mockReturnValue([]);
 
-    monitor = new ComprehensivePerformanceMonitor();
+    monitor = new ComprehensivePerformanceMonitor()
   });
 
   afterEach(() => {
     if (monitor) {
-      monitor.destroy();
-    }
+      monitor.destroy()
+  }
   });
 
   describe('Initialization', () => {
     test.skip('should initialize with default configuration', () => {
       expect(monitor).toBeDefined();
-      expect(PerformanceObserver).toHaveBeenCalled();
-    });
+      expect(PerformanceObserver).toHaveBeenCalled()
+  });
 
     test.skip('should set up performance observers', () => {
-      expect(mockPerformanceObserver.observe).toHaveBeenCalled();
-    });
+      expect(mockPerformanceObserver.observe).toHaveBeenCalled()
+  });
 
     test.skip('should detect device type correctly', () => {
       // Test mobile detection
@@ -132,8 +132,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       const budgets = (mobileMonitor as any).getDefaultBudgets();
       expect(budgets.firstContentfulPaint.target).toBe(2000); // Mobile target
       
-      mobileMonitor.destroy();
-    });
+      mobileMonitor.destroy()
+  });
 
     test.skip('should initialize with custom config', () => {
       const customConfig = {
@@ -145,8 +145,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       const customMonitor = new ComprehensivePerformanceMonitor(customConfig);
       
       expect(customMonitor).toBeDefined();
-      customMonitor.destroy();
-    });
+      customMonitor.destroy()
+  })
   });
 
   describe('Performance Budgets', () => {
@@ -160,8 +160,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       expect(budgets.loadTime.target).toBe(3000);
       expect(budgets.bundleSize.target).toBe(500000); // 500KB for mobile
       
-      mobileMonitor.destroy();
-    });
+      mobileMonitor.destroy()
+  });
 
     test.skip('should have appropriate desktop budgets', () => {
       Object.defineProperty(window, 'innerWidth', { value: 1200, writable: true });
@@ -173,15 +173,15 @@ describe('ComprehensivePerformanceMonitor', () => {
       expect(budgets.loadTime.target).toBe(2000);
       expect(budgets.bundleSize.target).toBe(800000); // 800KB for desktop
       
-      desktopMonitor.destroy();
-    });
+      desktopMonitor.destroy()
+  });
 
     test.skip('should have strict crisis detection budgets', () => {
       const budgets = (monitor as any).getDefaultBudgets();
       
       expect(budgets.crisisDetectionResponseTime.target).toBe(100); // Very strict
-      expect(budgets.crisisDetectionResponseTime.critical).toBe(500);
-    });
+      expect(budgets.crisisDetectionResponseTime.critical).toBe(500)
+  })
   });
 
   describe('Metrics Collection', () => {
@@ -192,11 +192,11 @@ describe('ComprehensivePerformanceMonitor', () => {
           return [
             { name: 'first-contentful-paint', startTime: 1500 },
             { name: 'first-paint', startTime: 1200 },
-          ];
-        }
+          ]
+  }
         if (type === 'navigation') {
-          return [mockPerformanceEntry];
-        }
+          return [mockPerformanceEntry]
+  }
         if (type === 'resource') {
           return [
             {
@@ -211,11 +211,11 @@ describe('ComprehensivePerformanceMonitor', () => {
               encodedBodySize: 40000,
               duration: 100,
             },
-          ];
-        }
-        return [];
-      });
-    });
+          ]
+  }
+        return []
+  })
+  });
 
     test.skip('should collect current performance metrics', async () => {
       const metrics = await (monitor as any).collectCurrentMetrics();
@@ -246,22 +246,22 @@ describe('ComprehensivePerformanceMonitor', () => {
       const metrics = await (monitor as any).collectCurrentMetrics();
       
       expect(metrics.networkLatency).toBe(50);
-      expect(metrics.bandwidth).toBe(10);
-    });
+      expect(metrics.bandwidth).toBe(10)
+  });
 
     test.skip('should measure crisis detection time', async () => {
       const crisisTime = await (monitor as any).measureCrisisDetectionTime();
       
       expect(typeof crisisTime).toBe('number');
-      expect(crisisTime).toBeGreaterThan(0);
-    });
+      expect(crisisTime).toBeGreaterThan(0)
+  });
 
     test.skip('should measure chat latency', async () => {
       const chatLatency = await (monitor as any).measureChatLatency();
       
       expect(typeof chatLatency).toBe('number');
       expect(chatLatency).toBeGreaterThanOrEqual(10); // Includes 10ms delay
-    });
+    })
   });
 
   describe('Video Quality Assessment', () => {
@@ -273,8 +273,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       (document.querySelectorAll as jest.Mock).mockReturnValue([mockVideo]);
       
       const quality = (monitor as any).assessVideoQuality();
-      expect(quality).toBe(100);
-    });
+      expect(quality).toBe(100)
+  });
 
     test.skip('should assess video quality with SD videos', () => {
       const mockVideo = document.createElement('video');
@@ -284,15 +284,15 @@ describe('ComprehensivePerformanceMonitor', () => {
       (document.querySelectorAll as jest.Mock).mockReturnValue([mockVideo]);
       
       const quality = (monitor as any).assessVideoQuality();
-      expect(quality).toBe(75);
-    });
+      expect(quality).toBe(75)
+  });
 
     test.skip('should return perfect score with no videos', () => {
       (document.querySelectorAll as jest.Mock).mockReturnValue([]);
       
       const quality = (monitor as any).assessVideoQuality();
-      expect(quality).toBe(100);
-    });
+      expect(quality).toBe(100)
+  })
   });
 
   describe('Offline Capability Check', () => {
@@ -311,8 +311,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       Object.defineProperty(navigator, 'onLine', { value: false, writable: true });
       
       const score = (monitor as any).checkOfflineCapability();
-      expect(score).toBe(0);
-    });
+      expect(score).toBe(0)
+  })
   });
 
   describe('User Experience Scores', () => {
@@ -321,8 +321,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       
       expect(typeof score).toBe('number');
       expect(score).toBeGreaterThanOrEqual(0);
-      expect(score).toBeLessThanOrEqual(100);
-    });
+      expect(score).toBeLessThanOrEqual(100)
+  });
 
     test.skip('should calculate usability score', () => {
       // Add aria labels and alt text
@@ -347,8 +347,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       
       expect(typeof score).toBe('number');
       expect(score).toBeGreaterThanOrEqual(0);
-      expect(score).toBeLessThanOrEqual(100);
-    });
+      expect(score).toBeLessThanOrEqual(100)
+  })
   });
 
   describe('Budget Checking', () => {
@@ -386,8 +386,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       
       const fcpAlert = alerts.find((alert: PerformanceAlert) => alert.metric === 'firstContentfulPaint');
       expect(fcpAlert).toBeDefined();
-      expect(fcpAlert.severity).toBe('high');
-    });
+      expect(fcpAlert.severity).toBe('high')
+  });
 
     test.skip('should handle good performance gracefully', () => {
       const mockMetrics: EnhancedPerformanceMetrics = {
@@ -419,11 +419,11 @@ describe('ComprehensivePerformanceMonitor', () => {
       (monitor as any).checkPerformanceBudgets(mockMetrics);
       
       const alerts = (monitor as any).activeAlerts;
-      const highSeverityAlerts = alerts.filter((alert: PerformanceAlert) => ;
+      const highSeverityAlerts = alerts.filter((alert: PerformanceAlert) => ;;
         alert.severity === 'critical' || alert.severity === 'high'
       );
-      expect(highSeverityAlerts.length).toBe(0);
-    });
+      expect(highSeverityAlerts.length).toBe(0)
+  })
   });
 
   describe('Bottleneck Detection', () => {
@@ -456,13 +456,13 @@ describe('ComprehensivePerformanceMonitor', () => {
 
       const bottlenecks = (monitor as any).detectBottlenecks(mockMetrics);
       
-      const bundleBottleneck = bottlenecks.find((b: PerformanceBottleneck) => ;
+      const bundleBottleneck = bottlenecks.find((b: PerformanceBottleneck) => ;;
         b.metric === 'bundleSize'
       );
       expect(bundleBottleneck).toBeDefined();
       expect(bundleBottleneck.impact).toBe('critical');
-      expect(bundleBottleneck.suggestions).toContain('Implement code splitting for non-critical routes');
-    });
+      expect(bundleBottleneck.suggestions).toContain('Implement code splitting for non-critical routes')
+  });
 
     test.skip('should detect memory usage bottlenecks', () => {
       const mockMetrics: EnhancedPerformanceMetrics = {
@@ -493,13 +493,13 @@ describe('ComprehensivePerformanceMonitor', () => {
 
       const bottlenecks = (monitor as any).detectBottlenecks(mockMetrics);
       
-      const memoryBottleneck = bottlenecks.find((b: PerformanceBottleneck) => ;
+      const memoryBottleneck = bottlenecks.find((b: PerformanceBottleneck) => ;;
         b.metric === 'memoryUsage'
       );
       expect(memoryBottleneck).toBeDefined();
       expect(memoryBottleneck.impact).toBe('critical');
-      expect(memoryBottleneck.suggestions).toContain('Implement virtual scrolling for long lists');
-    });
+      expect(memoryBottleneck.suggestions).toContain('Implement virtual scrolling for long lists')
+  });
 
     test.skip('should detect crisis detection bottlenecks', () => {
       const mockMetrics: EnhancedPerformanceMetrics = {
@@ -530,13 +530,13 @@ describe('ComprehensivePerformanceMonitor', () => {
 
       const bottlenecks = (monitor as any).detectBottlenecks(mockMetrics);
       
-      const crisisBottleneck = bottlenecks.find((b: PerformanceBottleneck) => ;
+      const crisisBottleneck = bottlenecks.find((b: PerformanceBottleneck) => ;;
         b.component === 'Crisis Detection System'
       );
       expect(crisisBottleneck).toBeDefined();
       expect(crisisBottleneck.impact).toBe('critical');
-      expect(crisisBottleneck.suggestions).toContain('Optimize AI model inference time');
-    });
+      expect(crisisBottleneck.suggestions).toContain('Optimize AI model inference time')
+  })
   });
 
   describe('Optimization Recommendations', () => {
@@ -574,8 +574,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       const bundleRec = recommendations.find(r => r.id === 'bundle_optimization');
       expect(bundleRec).toBeDefined();
       expect(bundleRec?.priority).toBe('high');
-      expect(bundleRec?.mentalHealthImpact).toContain('crisis intervention');
-    });
+      expect(bundleRec?.mentalHealthImpact).toContain('crisis intervention')
+  });
 
     test.skip('should generate LCP optimization recommendations', () => {
       const mockMetrics: EnhancedPerformanceMetrics = {
@@ -611,8 +611,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       const lcpRec = recommendations.find(r => r.id === 'lcp_optimization');
       expect(lcpRec).toBeDefined();
       expect(lcpRec?.category).toBe('loading');
-      expect(lcpRec?.priority).toBe('high');
-    });
+      expect(lcpRec?.priority).toBe('high')
+  });
 
     test.skip('should generate crisis detection optimization recommendations', () => {
       const mockMetrics: EnhancedPerformanceMetrics = {
@@ -648,8 +648,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       const crisisRec = recommendations.find(r => r.id === 'crisis_detection_optimization');
       expect(crisisRec).toBeDefined();
       expect(crisisRec?.priority).toBe('critical');
-      expect(crisisRec?.mentalHealthImpact).toContain('save lives');
-    });
+      expect(crisisRec?.mentalHealthImpact).toContain('save lives')
+  });
 
     test.skip('should sort recommendations by priority', () => {
       const mockMetrics: EnhancedPerformanceMetrics = {
@@ -693,9 +693,9 @@ describe('ComprehensivePerformanceMonitor', () => {
       const highIndex = priorities.indexOf('high');
       
       if (criticalIndex !== -1 && highIndex !== -1) {
-        expect(criticalIndex).toBeLessThan(highIndex);
-      }
-    });
+        expect(criticalIndex).toBeLessThan(highIndex)
+  }
+    })
   });
 
   describe('Alert System', () => {
@@ -716,8 +716,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       (monitor as any).createAlert(alert);
       
       const activeAlerts = monitor.getActiveAlerts();
-      expect(activeAlerts).toContain(alert);
-    });
+      expect(activeAlerts).toContain(alert)
+  });
 
     test.skip('should prevent duplicate alerts', () => {
       const alert1: PerformanceAlert = {
@@ -775,8 +775,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       
       expect(mockCallback).toHaveBeenCalledWith(alert);
       
-      unsubscribe();
-    });
+      unsubscribe()
+  });
 
     test.skip('should clear resolved alerts', async () => {
       const mockMetrics: EnhancedPerformanceMetrics = {
@@ -825,8 +825,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       monitor.clearResolvedAlerts();
       
       const activeAlerts = monitor.getActiveAlerts();
-      expect(activeAlerts).not.toContain(alert);
-    });
+      expect(activeAlerts).not.toContain(alert)
+  })
   });
 
   describe('Performance Reports', () => {
@@ -899,14 +899,14 @@ describe('ComprehensivePerformanceMonitor', () => {
       (monitor as any).performanceHistory = [excellentMetrics];
       const report = monitor.generatePerformanceReport();
       
-      expect(report).toContain('Excellent (A+)');
-    });
+      expect(report).toContain('Excellent (A+)')
+  });
 
     test.skip('should handle empty metrics gracefully', () => {
       const report = monitor.generatePerformanceReport();
       
-      expect(report).toBe('No performance data available');
-    });
+      expect(report).toBe('No performance data available')
+  })
   });
 
   describe('Data Management', () => {
@@ -940,8 +940,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       (monitor as any).addMetricsToHistory(mockMetrics);
       
       const history = monitor.getPerformanceHistory();
-      expect(history).toContain(mockMetrics);
-    });
+      expect(history).toContain(mockMetrics)
+  });
 
     test.skip('should limit history size', () => {
       // Add more than 1000 metrics
@@ -971,12 +971,12 @@ describe('ComprehensivePerformanceMonitor', () => {
           accessibilityScore: 80,
           timestamp: Date.now() + i,
         };
-        (monitor as any).addMetricsToHistory(mockMetrics);
-      }
+        (monitor as any).addMetricsToHistory(mockMetrics)
+  }
       
       const history = monitor.getPerformanceHistory();
-      expect(history.length).toBe(1000);
-    });
+      expect(history.length).toBe(1000)
+  });
 
     test.skip('should get current metrics', () => {
       const mockMetrics: EnhancedPerformanceMetrics = {
@@ -1008,8 +1008,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       (monitor as any).addMetricsToHistory(mockMetrics);
       
       const current = monitor.getCurrentMetrics();
-      expect(current).toBe(mockMetrics);
-    });
+      expect(current).toBe(mockMetrics)
+  });
 
     test.skip('should filter history by time range', () => {
       const now = Date.now();
@@ -1049,8 +1049,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       
       const recent = monitor.getPerformanceHistory(24); // Last 24 hours
       expect(recent).toContain(recentMetrics);
-      expect(recent).not.toContain(oldMetrics);
-    });
+      expect(recent).not.toContain(oldMetrics)
+  });
 
     test.skip('should cleanup old data', () => {
       const oldTimestamp = Date.now() - 40 * 24 * 60 * 60 * 1000; // 40 days ago;
@@ -1084,8 +1084,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       (monitor as any).cleanupOldData();
       
       const history = monitor.getPerformanceHistory();
-      expect(history).not.toContain(mockMetrics);
-    });
+      expect(history).not.toContain(mockMetrics)
+  })
   });
 
   describe('Error Handling', () => {
@@ -1094,32 +1094,32 @@ describe('ComprehensivePerformanceMonitor', () => {
       
       // Mock observer creation to throw
       (global.PerformanceObserver as any as jest.Mock).mockImplementation(() => {
-        throw new Error('Observer not supported');
-      });
+        throw new Error('Observer not supported')
+  });
 
       const errorMonitor = new ComprehensivePerformanceMonitor();
       
       expect(consoleSpy).toHaveBeenCalled();
       consoleSpy.mockRestore();
       
-      errorMonitor.destroy();
-    });
+      errorMonitor.destroy()
+  });
 
     test.skip('should handle metrics collection errors', async () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       
       // Mock performance.getEntriesByType to throw
       (performance.getEntriesByType as jest.Mock).mockImplementation(() => {
-        throw new Error('Performance API error');
-      });
+        throw new Error('Performance API error')
+  });
 
       const metrics = await (monitor as any).collectCurrentMetrics();
       
       expect(metrics).toBeDefined();
       expect(metrics.timestamp).toBeDefined();
       expect(consoleSpy).toHaveBeenCalled();
-      consoleSpy.mockRestore();
-    });
+      consoleSpy.mockRestore()
+  });
 
     test.skip('should handle analytics tracking errors', async () => {
       mockAnalyticsService.track.mockRejectedValue(new Error('Analytics error'));
@@ -1129,20 +1129,20 @@ describe('ComprehensivePerformanceMonitor', () => {
       // This shouldn't throw even if analytics fails
       await (monitor as any).collectCurrentMetrics();
       
-      consoleSpy.mockRestore();
-    });
+      consoleSpy.mockRestore()
+  })
   });
 
   describe('Singleton Instance', () => {
     test.skip('should export singleton instance', () => {
-      expect(comprehensivePerformanceMonitor).toBeInstanceOf(ComprehensivePerformanceMonitor);
-    });
+      expect(comprehensivePerformanceMonitor).toBeInstanceOf(ComprehensivePerformanceMonitor)
+  });
 
     test.skip('should maintain same instance', () => {
       const instance1 = comprehensivePerformanceMonitor;
       const instance2 = comprehensivePerformanceMonitor;
-      expect(instance1).toBe(instance2);
-    });
+      expect(instance1).toBe(instance2)
+  })
   });
 
   describe('Cleanup', () => {
@@ -1152,8 +1152,8 @@ describe('ComprehensivePerformanceMonitor', () => {
       monitor.stopMonitoring();
       
       expect(clearIntervalSpy).toHaveBeenCalled();
-      expect(mockPerformanceObserver.disconnect).toHaveBeenCalled();
-    });
+      expect(mockPerformanceObserver.disconnect).toHaveBeenCalled()
+  });
 
     test.skip('should destroy monitor properly', () => {
       const clearIntervalSpy = jest.spyOn(global, 'clearInterval');
@@ -1166,7 +1166,7 @@ describe('ComprehensivePerformanceMonitor', () => {
       // Should clear internal data
       expect((monitor as any).performanceHistory.length).toBe(0);
       expect((monitor as any).activeAlerts.length).toBe(0);
-      expect((monitor as any).alertCallbacks.length).toBe(0);
-    });
+      expect((monitor as any).alertCallbacks.length).toBe(0)
+  })
+  })
   });
-});

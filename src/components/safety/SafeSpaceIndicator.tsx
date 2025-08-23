@@ -7,8 +7,8 @@ interface SafeSpaceIndicatorProps {
   sessionType?: 'anonymous' | 'private' | 'public';
   className?: string;
   theme?: string;
-  children?: React.ReactNode;
-}
+  children?: React.ReactNode
+  }
 
 export const SafeSpaceIndicator: React.FC<SafeSpaceIndicatorProps> = ({
   isPrivateMode = false,
@@ -31,37 +31,37 @@ export const SafeSpaceIndicator: React.FC<SafeSpaceIndicatorProps> = ({
           case 'inhale': return 'hold';
           case 'hold': return 'exhale';
           case 'exhale': return 'inhale';
-          default: return 'inhale';
-        }
-      });
-    }, 4000);
+          default: return 'inhale'
+  }
+      })
+  }, 4000);
 
-    return () => clearInterval(breathingInterval);
+    return () => clearInterval(breathingInterval)
   };
   }, []);
 
   const getIndicatorText = () => {
     if (isPrivateMode || sessionType === 'private') {
-      return '🔒 Private & Safe';
-    }
+      return '🔒 Private & Safe'
+  }
     if (sessionType === 'anonymous') {
-      return '👤 Anonymous Mode';
-    }
-    return '🛡️ Safe Space';
+      return '👤 Anonymous Mode'
+  }
+    return '🛡️ Safe Space'
   };
 
   const getIndicatorColor = () => {
     switch(sessionType) {
       case 'private': return 'var(--safe-accent-cool)';
       case 'anonymous': return 'var(--safe-accent)';
-      default: return 'var(--safe-primary-light)';
-    }
+      default: return 'var(--safe-primary-light)'
+  }
   };
 
   const getBreathingDotColor = () => {
     if (breathingPhase === 'inhale') return 'var(--safe-success)';
     if (breathingPhase === 'hold') return 'var(--safe-warning)';
-    return 'var(--safe-info)';
+    return 'var(--safe-info)'
   };
 
   const getClassNames = () => {
@@ -69,12 +69,11 @@ export const SafeSpaceIndicator: React.FC<SafeSpaceIndicatorProps> = ({
     if (isVisible) classes.push('visible');
     if (className) classes.push(className);
     if (theme) classes.push(`theme-${theme}`);
-    return classes.join(' ');
+    return classes.join(' ')
   };
 
   return (
-    <div; 
-      className={getClassNames()}
+    <div className={getClassNames()}
       data-testid="safe-space-indicator"
       style={{
         position: 'fixed',
@@ -95,8 +94,7 @@ export const SafeSpaceIndicator: React.FC<SafeSpaceIndicatorProps> = ({
         border: '1px solid rgba(255, 255, 255, 0.3)',
       }}
     >
-      <div; 
-        className="breathing-dot"
+      <div className="breathing-dot"
         style={{
           width: '8px',
           height: '8px',
@@ -149,8 +147,8 @@ export const SafeSpaceIndicator: React.FC<SafeSpaceIndicatorProps> = ({
         onMouseLeave={(e) => e.currentTarget.style.color = 'var(--safe-gray-600)'}
         onClick={() => {
           // Handle privacy settings click
-          console.log('Open privacy settings');
-        }}
+          console.log('Open privacy settings')
+  }}
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <circle cx="12" cy="12" r="3" />
@@ -160,7 +158,7 @@ export const SafeSpaceIndicator: React.FC<SafeSpaceIndicatorProps> = ({
       
       {children && <div style={{ marginLeft: '8px' }}>{children}</div>}
     </div>
-  );
-};
+  )
+  };
 
 export default SafeSpaceIndicator;

@@ -18,8 +18,8 @@ import '../styles/ThemeCustomizationDashboard.css';
 
 interface ThemeCustomizationDashboardProps {
   onThemeChange?: (theme: TherapeuticTheme) => void;
-  className?: string;
-}
+  className?: string
+  }
 
 export const ThemeCustomizationDashboard: React.FC<ThemeCustomizationDashboardProps> = ({
   onThemeChange,
@@ -50,14 +50,14 @@ export const ThemeCustomizationDashboard: React.FC<ThemeCustomizationDashboardPr
   // Handle theme selection;
   const handleThemeSelect = useCallback((theme: TherapeuticTheme) => {
     setTherapeuticTheme(theme);
-    onThemeChange?.(theme);
+    onThemeChange?.(theme)
   };
   }, [setTherapeuticTheme, onThemeChange]);
 
   // Handle color override;
   const handleColorChange = useCallback((colorKey: string, color: string) => {
     setColorOverride(colorKey as keyof typeof currentColors, color);
-    setColorPickerOpen(null);
+    setColorPickerOpen(null)
   };
   }, [setColorOverride, currentColors]);
 
@@ -66,10 +66,10 @@ export const ThemeCustomizationDashboard: React.FC<ThemeCustomizationDashboardPr
     const success = importTheme(importData);
     if (success) {
       setImportData('');
-      alert('Theme imported successfully!');;
+      alert('Theme imported successfully!')
   } else {
-      alert('Failed to import theme. Please check the format.');
-    }
+      alert('Failed to import theme. Please check the format.')
+  }
   };
   }, [importTheme, importData]);
 
@@ -77,11 +77,11 @@ export const ThemeCustomizationDashboard: React.FC<ThemeCustomizationDashboardPr
   const handleExportTheme = useCallback(() => {
     const themeData = exportTheme();
     navigator.clipboard.writeText(themeData).then(() => {
-      alert('Theme data copied to clipboard!');
-    }).catch(() => {
+      alert('Theme data copied to clipboard!')
+  }).catch(() => {
       alert('Failed to copy theme data. Please copy manually from the console.');
-      console.log('Theme Export Data:', themeData);
-    });
+      console.log('Theme Export Data:', themeData)
+  })
   };
   }, [exportTheme]);
 
@@ -93,15 +93,13 @@ export const ThemeCustomizationDashboard: React.FC<ThemeCustomizationDashboardPr
       <div className="dashboard-header">
         <h2>🎨 Therapeutic Theme Customization</h2>
         <div className="header-actions">
-          <button; 
-            className="btn-export"
+          <button className="btn-export"
             onClick={handleExportTheme}
             title="Export current theme settings"
           >
             📤 Export Theme
           </button>
-          <button; 
-            className="btn-reset"
+          <button className="btn-reset"
             onClick={resetCustomizations}
             title="Reset to default settings"
           >
@@ -139,8 +137,8 @@ export const ThemeCustomizationDashboard: React.FC<ThemeCustomizationDashboardPr
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
-                  setColorPickerOpen(key);
-                }
+                  setColorPickerOpen(key)
+  }
               }}
               aria-label={`Select ${key} color (${color})`}
             />
@@ -150,26 +148,22 @@ export const ThemeCustomizationDashboard: React.FC<ThemeCustomizationDashboardPr
 
       {/* Tab Navigation */}
       <div className="tab-navigation">
-        <button;
-          className={`tab-button ${activeTab === 'themes' ? 'active' : ''}`}
+        <button className={`tab-button ${activeTab === 'themes' ? 'active' : ''}`}
           onClick={() => setActiveTab('themes')}
         >
           🌈 Themes
         </button>
-        <button;
-          className={`tab-button ${activeTab === 'colors' ? 'active' : ''}`}
+        <button className={`tab-button ${activeTab === 'colors' ? 'active' : ''}`}
           onClick={() => setActiveTab('colors')}
         >
           🎨 Colors
         </button>
-        <button;
-          className={`tab-button ${activeTab === 'accessibility' ? 'active' : ''}`}
+        <button className={`tab-button ${activeTab === 'accessibility' ? 'active' : ''}`}
           onClick={() => setActiveTab('accessibility')}
         >
           ♿ Accessibility
         </button>
-        <button;
-          className={`tab-button ${activeTab === 'psychology' ? 'active' : ''}`}
+        <button className={`tab-button ${activeTab === 'psychology' ? 'active' : ''}`}
           onClick={() => setActiveTab('psychology')}
         >
           🧠 Psychology
@@ -192,23 +186,20 @@ export const ThemeCustomizationDashboard: React.FC<ThemeCustomizationDashboardPr
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        handleThemeSelect(theme.id);
-                      }
+                        handleThemeSelect(theme.id)
+  }
                     }}
                     aria-label={`Select ${theme.name} theme`}
                   >
                     <div className="theme-preview">
                       <div className="preview-colors">
-                        <div; 
-                          className="preview-color primary"
+                        <div className="preview-color primary"
                           style={{ backgroundColor: theme.colors.light.primary }}
                         />
-                        <div; 
-                          className="preview-color secondary"
+                        <div className="preview-color secondary"
                           style={{ backgroundColor: theme.colors.light.secondary }}
                         />
-                        <div; 
-                          className="preview-color background"
+                        <div className="preview-color background"
                           style={{ backgroundColor: theme.colors.light.background }}
                         />
                       </div>
@@ -305,21 +296,19 @@ export const ThemeCustomizationDashboard: React.FC<ThemeCustomizationDashboardPr
                     <div key={key} className="color-control">
                       <label>{key.replace(/([A-Z])/g, ' $1').toLowerCase()}:</label>
                       <div className="color-input-group">
-                        <button;
-                          type="button";
+                        <button type="button";
                           className="color-display"
                           style={{ backgroundColor: color }}
                           onClick={() => setColorPickerOpen(key)}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter' || e.key === ' ') {
                               e.preventDefault();
-                              setColorPickerOpen(key);
-                            }
+                              setColorPickerOpen(key)
+  }
                           }}
                           aria-label={`Select color for ${key}`}
                         />
-                        <input;
-                          type="text"
+                        <input type="text"
                           value={color}
                           onChange={(e) => handleColorChange(key, e.target.value)}
                           className="color-value"
@@ -343,21 +332,19 @@ export const ThemeCustomizationDashboard: React.FC<ThemeCustomizationDashboardPr
 
             {colorPickerOpen && (
               <div className="color-picker-modal">
-                <button;
-                  type="button";
+                <button type="button";
                   className="color-picker-overlay"
                   onClick={() => setColorPickerOpen(null)}
                   onKeyDown={(e) => {
                     if (e.key === 'Escape') {
-                      setColorPickerOpen(null);
-                    }
+                      setColorPickerOpen(null)
+  }
                   }}
                   aria-label="Close color picker"
                 />
                 <div className="color-picker">
                   <h5>Choose Color for {colorPickerOpen}</h5>
-                  <input;
-                    type="color"
+                  <input type="color"
                     value={currentColors[colorPickerOpen as keyof typeof currentColors]}
                     onChange={(e) => handleColorChange(colorPickerOpen, e.target.value)}
                   />
@@ -386,8 +373,7 @@ export const ThemeCustomizationDashboard: React.FC<ThemeCustomizationDashboardPr
                 </div>
 
                 <div className="control-item checkbox-item">
-                  <input;
-                    type="checkbox"
+                  <input type="checkbox"
                     id="high-contrast"
                     checked={preferences.highContrast}
                     onChange={(e) => setAccessibilityLevel(e.target.checked ? 'AAA' : 'AA')}
@@ -396,8 +382,7 @@ export const ThemeCustomizationDashboard: React.FC<ThemeCustomizationDashboardPr
                 </div>
 
                 <div className="control-item checkbox-item">
-                  <input;
-                    type="checkbox"
+                  <input type="checkbox"
                     id="reduce-motion"
                     checked={preferences.reduceMotion}
                     onChange={(_e) => setTherapeuticTheme(preferences.therapeuticTheme)}
@@ -456,8 +441,7 @@ export const ThemeCustomizationDashboard: React.FC<ThemeCustomizationDashboardPr
 
             <div className="control-section">
               <h4>Personalized Recommendations</h4>
-              <button;
-                className="btn-recommendations"
+              <button className="btn-recommendations"
                 onClick={() => setShowRecommendations(!showRecommendations)}
               >
                 {showRecommendations ? 'Hide' : 'Show'} Recommendations
@@ -471,24 +455,22 @@ export const ThemeCustomizationDashboard: React.FC<ThemeCustomizationDashboardPr
                       return (
                         <div key={themeId} className="recommendation-item">
                           <div className="recommendation-preview">
-                            <div; 
-                              className="preview-color"
+                            <div className="preview-color"
                               style={{ backgroundColor: theme.colors.light.primary }}
                             />
                           </div>
                           <div className="recommendation-info">
                             <h6>{theme.name}</h6>
                             <p>{theme.description}</p>
-                            <button;
-                              className="btn-apply"
+                            <button className="btn-apply"
                               onClick={() => handleThemeSelect(themeId)}
                             >
                               Apply Theme
                             </button>
                           </div>
                         </div>
-                      );
-                    })
+                      )
+  })
                   ) : (
                     <p>No specific recommendations available. Consider your current mood and preferences.</p>
                   )}
@@ -512,8 +494,7 @@ export const ThemeCustomizationDashboard: React.FC<ThemeCustomizationDashboardPr
               placeholder="Paste theme data here..."
               rows={4}
             />
-            <button; 
-              className="btn-import"
+            <button className="btn-import"
               onClick={handleImportTheme}
               disabled={!importData.trim()}
             >
@@ -523,7 +504,7 @@ export const ThemeCustomizationDashboard: React.FC<ThemeCustomizationDashboardPr
         </div>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export default ThemeCustomizationDashboard;

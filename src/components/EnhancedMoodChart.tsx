@@ -4,11 +4,11 @@ import './EnhancedMoodChart.css';
 
 interface EnhancedMoodChartProps {
   data: ChartDataPoint[];
-  period: '7days' | '30days' | '90days';
-}
+  period: '7days' | '30days' | '90days'
+  }
 
 const MOOD_EMOJIS = ['😞', '🙁', '😐', '🙂', '😊'];
-const MOOD_COLORS = [;
+const MOOD_COLORS = [;;
   '#FF5722', // Very low
   '#FF9800', // Low
   '#FFC107', // Neutral
@@ -22,18 +22,18 @@ export const EnhancedMoodChart: React.FC<EnhancedMoodChartProps> = ({ data, peri
   
   const getMoodColor = (value: number) => {
     const index = Math.min(Math.floor(value) - 1, 4);
-    return MOOD_COLORS[Math.max(0, index)];
+    return MOOD_COLORS[Math.max(0, index)]
   };
   
   const getMoodEmoji = (value: number) => {
     const index = Math.min(Math.floor(value) - 1, 4);
-    return MOOD_EMOJIS[Math.max(0, index)];
+    return MOOD_EMOJIS[Math.max(0, index)]
   };
   
   const average = useMemo(() => {
     if (data.length === 0) return 0;
     const sum = data.reduce((acc, point) => acc + point.value, 0);
-    return sum / data.length;
+    return sum / data.length
   };
   }, [data]);
   
@@ -47,7 +47,7 @@ export const EnhancedMoodChart: React.FC<EnhancedMoodChartProps> = ({ data, peri
     
     if (secondAvg > firstAvg + 0.3) return 'improving';
     if (secondAvg < firstAvg - 0.3) return 'declining';
-    return 'stable';
+    return 'stable'
   };
   }, [data]);
   
@@ -118,8 +118,7 @@ export const EnhancedMoodChart: React.FC<EnhancedMoodChartProps> = ({ data, peri
             <div className="chart-bars">
               {data.map((point, index) => (
                 <div key={index} className="chart-bar-wrapper">
-                  <div; 
-                    className="chart-bar"
+                  <div className="chart-bar"
                     style={{
                       height: `${((point.value - minValue) / (maxValue - minValue)) * 100}%`,
                       backgroundColor: getMoodColor(point.value),
@@ -139,13 +138,12 @@ export const EnhancedMoodChart: React.FC<EnhancedMoodChartProps> = ({ data, peri
             
             {/* Trend line */}
             <svg className="trend-line-svg">
-              <polyline;
-                className="trend-line"
+              <polyline className="trend-line"
                 points={data.map((point, index) => {
                   const x = (index / (data.length - 1)) * 100;
                   const y = 100 - ((point.value - minValue) / (maxValue - minValue)) * 100;
-                  return `${x},${y}`;
-                }).join(' ')}
+                  return `${x},${y}`
+  }).join(' ')}
                 fill="none"
                 stroke={getMoodColor(average)}
                 strokeWidth="2"
@@ -164,5 +162,5 @@ export const EnhancedMoodChart: React.FC<EnhancedMoodChartProps> = ({ data, peri
         </div>
       )}
     </div>
-  );
-};
+  )
+  };

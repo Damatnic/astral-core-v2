@@ -18,21 +18,21 @@ interface FeedbackMessage {
   duration?: number;
   action?: {
     label: string;
-    onClick: () => void;
+    onClick: () => void
   };
   dismissible?: boolean;
   persistent?: boolean;
   position?: FeedbackPosition;
   icon?: React.ReactNode;
-  progress?: number;
-}
+  progress?: number
+  }
 
 interface FeedbackContextValue {
   showFeedback: (feedback: Omit<FeedbackMessage, 'id'>) => string;
   hideFeedback: (id: string) => void;
   clearAllFeedback: () => void;
-  updateFeedback: (id: string, updates: Partial<FeedbackMessage>) => void;
-}
+  updateFeedback: (id: string, updates: Partial<FeedbackMessage>) => void
+  }
 
 const FeedbackContext = createContext<FeedbackContextValue | undefined>(undefined);
 
@@ -69,8 +69,8 @@ const FeedbackIcons = {
 // Toast Notification Component;
 const Toast: React.FC<{
   feedback: FeedbackMessage;
-  onDismiss: (id: string) => void;
-}> = ({ feedback, onDismiss }) => {
+  onDismiss: (id: string) => void
+  }> = ({ feedback, onDismiss }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [progress, setProgress] = useState(100);
   const { announce } = useAccessibility();
@@ -88,21 +88,21 @@ const Toast: React.FC<{
         setProgress(prev => {
           if (prev <= 0) {
             clearInterval(interval);
-            return 0;
-          }
-          return prev - (100 / (feedback.duration! / 100));
-        });
-      }, 100);
+            return 0
+  }
+          return prev - (100 / (feedback.duration! / 100))
+  })
+  }, 100);
 
       const timer = setTimeout(() => {
         setIsVisible(false);
-        setTimeout(() => onDismiss(feedback.id), 300);
-      }, feedback.duration);
+        setTimeout(() => onDismiss(feedback.id), 300)
+  }, feedback.duration);
 
       return () => {
         clearInterval(interval);
-        clearTimeout(timer);
-      }
+        clearTimeout(timer)
+  }
   };
   }, [feedback, onDismiss, announce]);
 
@@ -115,8 +115,7 @@ const Toast: React.FC<{
   };
 
   return (
-    <div;
-      className={[
+    <div className={[
         'feedback-toast',
         typeClasses[feedback.type],
         isVisible && 'feedback-toast--visible'
@@ -133,8 +132,7 @@ const Toast: React.FC<{
           <div className="feedback-toast__description">{feedback.description}</div>
         )}
         {feedback.action && (
-          <button;
-            className="feedback-toast__action"
+          <button className="feedback-toast__action"
             onClick={feedback.action.onClick}
             aria-label={feedback.action.label}
           >
@@ -143,12 +141,11 @@ const Toast: React.FC<{
         )}
       </div>
       {feedback.dismissible && (
-        <button;
-          className="feedback-toast__dismiss"
+        <button className="feedback-toast__dismiss"
           onClick={() => {
             setIsVisible(false);
-            setTimeout(() => onDismiss(feedback.id), 300);
-          }}
+            setTimeout(() => onDismiss(feedback.id), 300)
+  }}
           aria-label="Dismiss notification"
         >
           ×
@@ -156,23 +153,22 @@ const Toast: React.FC<{
       )}
       {!feedback.persistent && feedback.duration && (
         <div className="feedback-toast__progress">
-          <div;
-            className="feedback-toast__progress-bar"
+          <div className="feedback-toast__progress-bar"
             style={{ width: `${progress}%` }}
           />
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 // Inline Feedback Component;
 export const InlineFeedback: React.FC<{
   type: FeedbackType;
   message: string;
   visible: boolean;
-  className?: string;
-}> = ({ type, message, visible, className = '' }) => {
+  className?: string
+  }> = ({ type, message, visible, className = '' }) => {
   const typeClasses = {
     success: 'inline-feedback--success',
     error: 'inline-feedback--error',
@@ -184,8 +180,7 @@ export const InlineFeedback: React.FC<{
   if (!visible) return null;
 
   return (
-    <div;
-      className={`inline-feedback ${typeClasses[type]} ${className}`}
+    <div className={`inline-feedback ${typeClasses[type]} ${className}`}
       role={type === 'error' ? 'alert' : 'status'}
       aria-live={type === 'error' ? 'assertive' : 'polite'}
     >
@@ -194,16 +189,16 @@ export const InlineFeedback: React.FC<{
       </span>
       <span className="inline-feedback__message">{message}</span>
     </div>
-  );
-};
+  )
+  };
 
 // Form Field Feedback Component;
 export const FieldFeedback: React.FC<{
   error?: string;
   warning?: string;
   success?: string;
-  touched?: boolean;
-}> = ({ error, warning, success, touched }) => {
+  touched?: boolean
+  }> = ({ error, warning, success, touched }) => {
   if (!touched) return null;
 
   if (error) {
@@ -212,7 +207,7 @@ export const FieldFeedback: React.FC<{
         {FeedbackIcons.error}
         <span>{error}</span>
       </div>
-    );
+    )
   }
 
   if (warning) {
@@ -221,7 +216,7 @@ export const FieldFeedback: React.FC<{
         {FeedbackIcons.warning}
         <span>{warning}</span>
       </div>
-    );
+    )
   }
 
   if (success) {
@@ -230,11 +225,11 @@ export const FieldFeedback: React.FC<{
         {FeedbackIcons.success}
         <span>{success}</span>
       </div>
-    );
+    )
   }
 
-  return null;
-};
+  return null
+  };
 
 // Confirmation Dialog Component;
 export const ConfirmationDialog: React.FC<{
@@ -245,8 +240,8 @@ export const ConfirmationDialog: React.FC<{
   cancelLabel?: string;
   type?: 'danger' | 'warning' | 'info';
   onConfirm: () => void;
-  onCancel: () => void;
-}> = ({
+  onCancel: () => void
+  }> = ({
   isOpen,
   title,
   message,
@@ -268,8 +263,7 @@ export const ConfirmationDialog: React.FC<{
 
   return (
     <div className="confirmation-dialog-overlay" onClick={onCancel}>
-      <div;
-        className={`confirmation-dialog ${typeClasses[type]}`}
+      <div className={`confirmation-dialog ${typeClasses[type]}`}
         onClick={(e) => e.stopPropagation()}
         role="alertdialog"
         aria-labelledby="confirmation-title"
@@ -282,15 +276,13 @@ export const ConfirmationDialog: React.FC<{
           {message}
         </p>
         <div className="confirmation-dialog__actions">
-          <button;
-            className="confirmation-dialog__cancel"
+          <button className="confirmation-dialog__cancel"
             onClick={onCancel}
             aria-label={getAriaLabel('button.cancel')}
           >
             {cancelLabel}
           </button>
-          <button;
-            className={`confirmation-dialog__confirm confirmation-dialog__confirm--${type}`}
+          <button className={`confirmation-dialog__confirm confirmation-dialog__confirm--${type}`}
             onClick={onConfirm}
             aria-label={getAriaLabel('button.submit')}
           >
@@ -299,8 +291,8 @@ export const ConfirmationDialog: React.FC<{
         </div>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 // Main Feedback Provider Component;
 export const FeedbackProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -318,24 +310,24 @@ export const FeedbackProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
 
     setFeedbackMessages(prev => [...prev, newFeedback]);
-    return id;
+    return id
   };
   }, []);
 
   const hideFeedback = useCallback((id: string) => {
-    setFeedbackMessages(prev => prev.filter(f => f.id !== id));
+    setFeedbackMessages(prev => prev.filter(f => f.id !== id))
   };
   }, []);
 
   const clearAllFeedback = useCallback(() => {
-    setFeedbackMessages([]);
+    setFeedbackMessages([])
   };
   }, []);
 
   const updateFeedback = useCallback((id: string, updates: Partial<FeedbackMessage>) => {
     setFeedbackMessages(prev =>
       prev.map(f => f.id === id ? { ...f, ...updates } : f)
-    );
+    )
   };
   }, []);
 
@@ -351,7 +343,7 @@ export const FeedbackProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const position = feedback.position || 'top-right';
     if (!acc[position]) acc[position] = [];
     acc[position].push(feedback);
-    return acc;
+    return acc
   }, {} as Record<FeedbackPosition, FeedbackMessage[]>);
 
   return (
@@ -365,17 +357,17 @@ export const FeedbackProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         </div>
       ))}
     </FeedbackContext.Provider>
-  );
-};
+  )
+  };
 
 // Hook to use feedback system;
 export const useFeedback = () => {
   const context = useContext(FeedbackContext);
   if (!context) {
-    throw new Error('useFeedback must be used within FeedbackProvider');
+    throw new Error('useFeedback must be used within FeedbackProvider')
   }
-  return context;
-};
+  return context
+  };
 
 // Utility functions for common feedback scenarios;
 export const feedbackUtils = {
@@ -417,8 +409,8 @@ export const feedbackUtils = {
     messages: {
       loading?: string;
       success?: string | ((result: T) => string);
-      error?: string | ((error: Error) => string);
-    }
+      error?: string | ((error: Error) => string)
+  }
   ) => {
     const { showFeedback, hideFeedback } = useFeedback();
     
@@ -430,22 +422,22 @@ export const feedbackUtils = {
       const result = await promise;
       hideFeedback(loadingId);
       
-      const successMessage = typeof messages.success === 'function';
+      const successMessage = typeof messages.success === 'function';;
         ? messages.success(result)
         : messages.success || 'Operation completed successfully';
       
       showFeedback(feedbackUtils.success(successMessage));
-      return result;
-    } catch (error) {
+      return result
+  } catch (error) {
       hideFeedback(loadingId);
       
-      const errorMessage = typeof messages.error === 'function';
+      const errorMessage = typeof messages.error === 'function';;
         ? messages.error(error as Error)
         : messages.error || 'An error occurred';
       
       showFeedback(feedbackUtils.error(errorMessage, error as Error));
-      throw error;
-    }
+      throw error
+  }
   },
 };
 

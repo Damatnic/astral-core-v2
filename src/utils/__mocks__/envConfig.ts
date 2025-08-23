@@ -19,16 +19,16 @@ export function getEnvVar(key: string, defaultValue: string = ''): string {
     VITE_ENV: 'test',
   };
   
-  return testEnv[key] || defaultValue;
-}
+  return testEnv[key] || defaultValue
+  }
 
 export function isDev(): boolean {
-  return false;
-}
+  return false
+  }
 
 export function isProd(): boolean {
-  return false;
-}
+  return false
+  }
 
 export const ENV = {
   // API Configuration

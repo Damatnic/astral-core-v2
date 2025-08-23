@@ -14,10 +14,10 @@ export const ModerationHistoryView: React.FC<{ userId: string | null; }> = ({ us
             const actions = await ApiClient.moderation.getHistory(userId);
             // For demonstration, always show sample data if no real data exists
             if (!actions || (Array.isArray(actions) && actions.length === 0)) {
-                throw new Error('No moderation history - showing samples');
-            }
-            setHistory(Array.isArray(actions) ? actions : []);
-        } catch (error) {
+                throw new Error('No moderation history - showing samples')
+  }
+            setHistory(Array.isArray(actions) ? actions : [])
+  } catch (error) {
             console.error("Failed to fetch moderation history:", error);
             // Provide sample data for demonstration;
             const sampleHistory: ModerationAction[] = [
@@ -28,8 +28,8 @@ export const ModerationHistoryView: React.FC<{ userId: string | null; }> = ({ us
                     reason: 'Your post about mindfulness techniques was reviewed and approved for community sharing. Great contribution to our wellness community!',
                     timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
                     moderatorId: 'mod-sarah',
-                    relatedContentId: 'post-wellness-123';
-                },
+                    relatedContentId: 'post-wellness-123'
+  },
                 {
                     id: 'mod-2',
                     userId: 'user-demo-456',
@@ -37,8 +37,8 @@ export const ModerationHistoryView: React.FC<{ userId: string | null; }> = ({ us
                     reason: 'Your supportive comment on anxiety management received community recognition. You helped 23 people feel less alone.',
                     timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days ago
                     moderatorId: 'system',
-                    relatedContentId: 'comment-support-456';
-                },
+                    relatedContentId: 'comment-support-456'
+  },
                 {
                     id: 'mod-3',
                     userId: 'helper-demo-789',
@@ -46,8 +46,8 @@ export const ModerationHistoryView: React.FC<{ userId: string | null; }> = ({ us
                     reason: 'Your helper profile has been verified and approved for peer support activities. Welcome to our helper community!',
                     timestamp: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(), // 2 weeks ago
                     moderatorId: 'mod-alex',
-                    relatedContentId: 'profile-verification-789';
-                },
+                    relatedContentId: 'profile-verification-789'
+  },
                 {
                     id: 'mod-4',
                     userId: 'user-demo-101',
@@ -55,8 +55,8 @@ export const ModerationHistoryView: React.FC<{ userId: string | null; }> = ({ us
                     reason: 'Thank you for acknowledging and following our community guidelines. Your commitment to safety helps everyone.',
                     timestamp: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // 1 month ago
                     moderatorId: 'system',
-                    relatedContentId: null;
-                },
+                    relatedContentId: null
+  },
                 {
                     id: 'mod-5',
                     userId: 'creator-demo-202',
@@ -64,8 +64,8 @@ export const ModerationHistoryView: React.FC<{ userId: string | null; }> = ({ us
                     reason: 'Your wellness video on breathing exercises was featured as quality content. It has helped over 100 community members!',
                     timestamp: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 1 week ago
                     moderatorId: 'mod-team',
-                    relatedContentId: 'video-breathing-789';
-                },
+                    relatedContentId: 'video-breathing-789'
+  },
                 {
                     id: 'mod-6',
                     userId: 'user-demo-303',
@@ -73,8 +73,8 @@ export const ModerationHistoryView: React.FC<{ userId: string | null; }> = ({ us
                     reason: 'A post was edited to better align with community guidelines. Remember to avoid medical advice and focus on peer support.',
                     timestamp: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000).toISOString(), // 3 weeks ago
                     moderatorId: 'mod-sarah',
-                    relatedContentId: 'post-edited-456';
-                },
+                    relatedContentId: 'post-edited-456'
+  },
                 {
                     id: 'mod-7',
                     userId: 'helper-demo-404',
@@ -82,19 +82,19 @@ export const ModerationHistoryView: React.FC<{ userId: string | null; }> = ({ us
                     reason: 'You earned the Community Helper badge for consistently providing supportive responses to others in need.',
                     timestamp: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(), // 10 days ago
                     moderatorId: 'system',
-                    relatedContentId: null;
-                }
+                    relatedContentId: null
+  }
             ];
-            setHistory(sampleHistory);
-        } finally {
-            setIsLoading(false);
-        }
+            setHistory(sampleHistory)
+  } finally {
+            setIsLoading(false)
+  }
     };
   }, [userId]);
 
     useEffect(() => {
-        fetchHistory();
-    };
+        fetchHistory()
+  };
   }, [fetchHistory]);
 
     return (
@@ -128,8 +128,8 @@ export const ModerationHistoryView: React.FC<{ userId: string | null; }> = ({ us
                 )}
             </div>
         </div>
-    );
-};
+    )
+  };
 
 
 export default ModerationHistoryView;

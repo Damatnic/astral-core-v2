@@ -5,13 +5,12 @@ import React, { Suspense, lazy, memo } from 'react';
 interface IconProps {
   size?: number;
   className?: string;
-  style?: React.CSSProperties;
-}
+  style?: React.CSSProperties
+  }
 
 // Base Icon Component;
 export const Icon: React.FC<IconProps & { path: string }> = memo(({ path, className, size = 24, style }) => (
-  <svg;
-    className={className}
+  <svg className={className}
     width={size}
     height={size}
     viewBox="0 0 24 24"
@@ -33,8 +32,8 @@ Icon.displayName = 'Icon';
 const createIcon = (path: string, displayName: string) => {
   const IconComponent = memo((props: IconProps) => <Icon path={path} {...props} />);
   IconComponent.displayName = displayName;
-  return IconComponent;
-};
+  return IconComponent
+  };
 
 // Lazy loading for rarely used icons;
 const createLazyIcon = (importFn: () => Promise<{ default: string }>, displayName: string) => {
@@ -44,15 +43,15 @@ const createLazyIcon = (importFn: () => Promise<{ default: string }>, displayNam
   };
   };
   
-  const WrappedIcon = memo((props: IconProps) => (;
+  const WrappedIcon = memo((props: IconProps) => (;;
     <Suspense fallback={<div style={{ width: props.size || 24, height: props.size || 24 }} />}>
       <LazyIcon {...props} />
     </Suspense>
   ));
   
   WrappedIcon.displayName = displayName;
-  return WrappedIcon;
-};
+  return WrappedIcon
+  };
 
 // Frequently used icons - loaded immediately;
 export const HeartIcon = createIcon('M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z', 'HeartIcon');
@@ -228,10 +227,10 @@ export const useIcon = (iconName: string): React.ComponentType<IconProps> | null
       UploadIcon,
     };
     
-    return iconMap[iconName] || null;
+    return iconMap[iconName] || null
   };
-  }, [iconName]);
-};
+  }, [iconName])
+  };
 
 export type { IconProps };
 export default Icon;

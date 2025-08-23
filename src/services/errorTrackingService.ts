@@ -19,13 +19,13 @@ export interface ErrorContext {
   severity: 'low' | 'medium' | 'high' | 'critical';
   userType?: 'seeker' | 'helper' | 'admin';
   feature?: 'chat' | 'crisis-detection' | 'safety-plan' | 'mood-tracking' | 'community';
-  privacyLevel: 'public' | 'private' | 'sensitive';
-}
+  privacyLevel: 'public' | 'private' | 'sensitive'
+  }
 
 // Privacy-safe error filtering;
 const sanitizeErrorData = (error: Error, context?: any) => {
   // Remove sensitive data from error messages and context;
-  const sensitivePatterns = [;
+  const sensitivePatterns = [;;
     /password/gi,
     /token/gi,
     /auth/gi,
@@ -44,7 +44,7 @@ const sanitizeErrorData = (error: Error, context?: any) => {
 
   // Sanitize error message
   sensitivePatterns.forEach(pattern => {
-    sanitizedMessage = sanitizedMessage.replace(pattern, '[REDACTED]');
+    sanitizedMessage = sanitizedMessage.replace(pattern, '[REDACTED]')
   });
 
   // Sanitize context data
@@ -53,17 +53,17 @@ const sanitizeErrorData = (error: Error, context?: any) => {
       if (typeof value === 'string') {
         sensitivePatterns.forEach(pattern => {
           if (pattern.test(key) || pattern.test(value)) {
-            return '[REDACTED]';
-          }
-        });
-      }
-      return value;
-    });
+            return '[REDACTED]'
+  }
+        })
+  }
+      return value
+  })
   }
 
   return {
     message: sanitizedMessage,
-    context: sanitizedContext;
+    context: sanitizedContext
   };
 }
 
@@ -71,14 +71,14 @@ const sanitizeErrorData = (error: Error, context?: any) => {
 const getEnvironmentName = (): string => {
   if (isProduction) return 'production';
   if (isDevelopment) return 'development';
-  return 'staging';
-};
+  return 'staging'
+  };
 
 // Initialize Sentry;
 export const initializeSentry = () => {
   if (!sentryDsn) {
     console.warn('Sentry DSN not configured');
-    return;
+    return
   }
 
   Sentry.init({
@@ -99,12 +99,12 @@ export const initializeSentry = () => {
       
       // Don't send errors in development unless explicitly enabled
       if (isDevelopment && !ENV.SENTRY_DEV_ENABLED) {
-        return null;
-      }
+        return null
+  }
 
       // Filter out non-critical errors in production
       if (isProduction) {
-        const ignoredErrors = [;
+        const ignoredErrors = [;;
           'ResizeObserver loop limit exceeded',
           'Script error',
           'Network request failed',
@@ -115,19 +115,19 @@ export const initializeSentry = () => {
         if (error && ignoredErrors.some(ignored => 
           error.message?.includes(ignored) || error.name?.includes(ignored)
         )) {
-          return null;
-        }
+          return null
+  }
       }
 
       // Sanitize sensitive data
       if (error instanceof Error) {
         const sanitized = sanitizeErrorData(error, event.extra);
         event.message = sanitized.message;
-        event.extra = sanitized.context;
-      }
+        event.extra = sanitized.context
+  }
 
-      return event;
-    },
+      return event
+  },
 
     // User context (privacy-safe)
     beforeSendTransaction(event) {
@@ -138,8 +138,8 @@ export const initializeSentry = () => {
           // Don't include email, username, or other PII
         };
       }
-      return event;
-    },
+      return event
+  },
 
     // Additional privacy settings
     sendDefaultPii: false,
@@ -171,12 +171,12 @@ export class ErrorTrackingService {
       scope.setTag('privacy_level', context.privacyLevel);
       
       if (context.userType) {
-        scope.setTag('user_type', context.userType);
-      }
+        scope.setTag('user_type', context.userType)
+  }
       
       if (context.feature) {
-        scope.setTag('feature', context.feature);
-      }
+        scope.setTag('feature', context.feature)
+  }
 
       // Set context without PII
       scope.setContext('error_details', {
@@ -185,17 +185,17 @@ export class ErrorTrackingService {
         url: window.location.pathname, // Don't include query params
         viewport: {
           width: window.innerWidth,
-          height: window.innerHeight;
-        }
+          height: window.innerHeight
+  }
       });
 
       // Add extra data (sanitized)
       if (sanitized.context) {
-        scope.setExtra('additional_context', sanitized.context);
-      }
+        scope.setExtra('additional_context', sanitized.context)
+  }
 
-      Sentry.captureException(error);
-    });
+      Sentry.captureException(error)
+  })
   }
 
   /**
@@ -206,8 +206,8 @@ export class ErrorTrackingService {
     crisisContext: {
       detectionResult?: any;
       userType: 'seeker' | 'helper';
-      escalationLevel?: 'low' | 'medium' | 'high' | 'critical';
-    },
+      escalationLevel?: 'low' | 'medium' | 'high' | 'critical'
+  },
     extra?: Record<string, any>
   ) {
     this.captureError(error, {
@@ -215,12 +215,12 @@ export class ErrorTrackingService {
       severity: 'critical',
       userType: crisisContext.userType,
       feature: 'crisis-detection',
-      privacyLevel: 'sensitive';
-    }, {
+      privacyLevel: 'sensitive'
+  }, {
       escalation_level: crisisContext.escalationLevel,
       has_detection_result: !!crisisContext.detectionResult,
       ...extra
-    });
+    })
   }
 
   /**
@@ -238,11 +238,11 @@ export class ErrorTrackingService {
       severity: 'medium',
       userType,
       feature,
-      privacyLevel: 'private';
-    }, {
+      privacyLevel: 'private'
+  }, {
       action,
       ...extra
-    });
+    })
   }
 
   /**
@@ -258,13 +258,13 @@ export class ErrorTrackingService {
     this.captureError(error, {
       errorType: 'network',
       severity: statusCode && statusCode >= 500 ? 'high' : 'medium',
-      privacyLevel: 'public';
-    }, {
+      privacyLevel: 'public'
+  }, {
       endpoint: endpoint.replace(/\/\d+/g, '/[ID]'), // Remove IDs from endpoint
       method,
       status_code: statusCode,
       ...extra
-    });
+    })
   }
 
   /**
@@ -282,14 +282,14 @@ export class ErrorTrackingService {
       this.captureError(error, {
         errorType: 'system',
         severity: duration > threshold * 2 ? 'high' : 'medium',
-        privacyLevel: 'public';
-      }, {
+        privacyLevel: 'public'
+  }, {
         performance_metric: name,
         duration,
         threshold,
         ...context
-      });
-    }
+      })
+  }
   }
 
   /**
@@ -299,7 +299,7 @@ export class ErrorTrackingService {
     id?: string;
     userType: 'seeker' | 'helper' | 'admin';
     isAuthenticated: boolean;
-    sessionDuration?: number;
+    sessionDuration?: number
   }) {
     Sentry.setUser({
       id: userContext.id ? '[USER_ID]' : undefined,
@@ -310,15 +310,15 @@ export class ErrorTrackingService {
     Sentry.setTag('authenticated', userContext.isAuthenticated);
     
     if (userContext.sessionDuration) {
-      Sentry.setTag('session_duration', userContext.sessionDuration > 3600 ? 'long' : 'normal');
-    }
+      Sentry.setTag('session_duration', userContext.sessionDuration > 3600 ? 'long' : 'normal')
+  }
   }
 
   /**
    * Clear user context (on logout)
    */
   static clearUserContext() {
-    Sentry.setUser(null);
+    Sentry.setUser(null)
   }
 
   /**
@@ -337,20 +337,20 @@ export class ErrorTrackingService {
         scope.setTag('privacy_level', context.privacyLevel);
         
         if (context.userType) {
-          scope.setTag('user_type', context.userType);
-        }
+          scope.setTag('user_type', context.userType)
+  }
         
         if (context.feature) {
-          scope.setTag('feature', context.feature);
-        }
+          scope.setTag('feature', context.feature)
+  }
       }
 
       if (extra) {
-        scope.setExtra('additional_context', extra);
-      }
+        scope.setExtra('additional_context', extra)
+  }
 
-      Sentry.captureMessage(message, level);
-    });
+      Sentry.captureMessage(message, level)
+  })
   }
 
   /**
@@ -368,7 +368,7 @@ export class ErrorTrackingService {
       level,
       data: data ? sanitizeErrorData(new Error(''), data).context : undefined,
       timestamp: Date.now() / 1000,
-    });
+    })
   }
 
   /**

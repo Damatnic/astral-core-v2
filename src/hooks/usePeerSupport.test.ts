@@ -15,11 +15,11 @@ jest.mock('../services/peerSupportNetworkService', () => ({
     createPeerSupportSession: jest.fn(),
     completePeerSupportSession: jest.fn(),
     getCommunityGroups: jest.fn(),
-    getPeerSupportStatistics: jest.fn();
+    getPeerSupportStatistics: jest.fn()
   }
 }));
 
-const mockPeerMatches = [;
+const mockPeerMatches = [;;
   {
     id: 'peer-1',
     supporterId: 'supporter-123',
@@ -28,8 +28,8 @@ const mockPeerMatches = [;
       languageMatch: 1.0,
       culturalMatch: 0.9,
       availabilityMatch: 0.8,
-      overallScore: 0.87;
-    },
+      overallScore: 0.87
+  },
     peerProfile: {
       id: 'supporter-123',
       anonymizedId: 'peer_abc123',
@@ -40,10 +40,10 @@ const mockPeerMatches = [;
       safetyRating: 4.8,
       totalSupportSessions: 156,
       averageRating: 4.7,
-      lastActive: Date.now() - 3600000;
-    },
+      lastActive: Date.now() - 3600000
+  },
     estimatedWaitTime: 300, // 5 minutes
-    matchReason: 'High experience overlap in anxiety support';
+    matchReason: 'High experience overlap in anxiety support'
   },
   {
     id: 'peer-2',
@@ -53,8 +53,8 @@ const mockPeerMatches = [;
       languageMatch: 1.0,
       culturalMatch: 0.95,
       availabilityMatch: 0.9,
-      overallScore: 0.79;
-    },
+      overallScore: 0.79
+  },
     peerProfile: {
       id: 'supporter-456',
       anonymizedId: 'peer_def456',
@@ -65,14 +65,14 @@ const mockPeerMatches = [;
       safetyRating: 4.9,
       totalSupportSessions: 89,
       averageRating: 4.8,
-      lastActive: Date.now() - 1800000;
-    },
+      lastActive: Date.now() - 1800000
+  },
     estimatedWaitTime: 180,
-    matchReason: 'Strong cultural compatibility and availability';
+    matchReason: 'Strong cultural compatibility and availability'
   }
 ];
 
-const mockCommunityGroups = [;
+const mockCommunityGroups = [;;
   {
     id: 'group-1',
     name: 'Anxiety Support Circle',
@@ -84,7 +84,7 @@ const mockCommunityGroups = [;
     moderationLevel: 'high' as const,
     focusAreas: ['anxiety', 'coping-strategies'],
     meetingSchedule: 'Weekly on Wednesdays',
-    isPublic: true;
+    isPublic: true
   },
   {
     id: 'group-2',
@@ -97,7 +97,7 @@ const mockCommunityGroups = [;
     moderationLevel: 'high' as const,
     focusAreas: ['depression', 'recovery'],
     meetingSchedule: 'Bi-weekly on Sundays',
-    isPublic: true;
+    isPublic: true
   }
 ];
 
@@ -124,12 +124,12 @@ describe('usePeerSupport Hook', () => {
     (peerSupportNetworkService.findCompatiblePeers as jest.Mock).mockResolvedValue(mockPeerMatches);
     (peerSupportNetworkService.registerPeerSupporter as jest.Mock).mockResolvedValue('peer-id-123');
     (peerSupportNetworkService.createPeerSupportSession as jest.Mock).mockResolvedValue('session-456');
-    (peerSupportNetworkService.completePeerSupportSession as jest.Mock).mockResolvedValue(undefined);
+    (peerSupportNetworkService.completePeerSupportSession as jest.Mock).mockResolvedValue(undefined)
   });
 
   afterEach(() => {
     jest.clearAllTimers();
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   it.skip('should initialize with default state', async () => {
@@ -151,7 +151,7 @@ describe('usePeerSupport Hook', () => {
     expect(result.current.error).toBeNull();
     expect(typeof result.current.registerAsPeer).toBe('function');
     expect(typeof result.current.findPeerSupport).toBe('function');
-    expect(typeof result.current.createSupportSession).toBe('function');
+    expect(typeof result.current.createSupportSession).toBe('function')
   });
 
   it.skip('should load initial data on mount', async () => {
@@ -160,27 +160,27 @@ describe('usePeerSupport Hook', () => {
 
     await waitFor(() => {
       expect(result.current.communityGroups).toEqual(mockCommunityGroups);
-      expect(result.current.peerStatistics).toEqual(mockStatistics);
-    }, { timeout: 10000 });
+      expect(result.current.peerStatistics).toEqual(mockStatistics)
+  }, { timeout: 10000 });
 
     expect(peerSupportNetworkService.getCommunityGroups).toHaveBeenCalledWith('en');
     expect(peerSupportNetworkService.getPeerSupportStatistics).toHaveBeenCalled();
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   it.skip('should handle initial data loading errors', async () => {
     jest.useFakeTimers();
     const loadError = new Error('Failed to load community groups');
     (peerSupportNetworkService.getCommunityGroups as jest.Mock).mockImplementation(() => {
-      throw loadError;
-    });
+      throw loadError
+  });
 
     const { result } = renderHook(() => usePeerSupport('user-token-123', 'en'));
 
     await waitFor(() => {
-      expect(result.current.error).toBe('Failed to load community groups');
-    }, { timeout: 10000 });
-    jest.useRealTimers();
+      expect(result.current.error).toBe('Failed to load community groups')
+  }, { timeout: 10000 });
+    jest.useRealTimers()
   });
 
   it.skip('should register as peer supporter successfully', async () => {
@@ -205,21 +205,21 @@ describe('usePeerSupport Hook', () => {
       culturalContexts: ['western'],
       availability: 'available' as const,
       bio: 'Experienced in anxiety and depression support',
-      qualifications: ['Peer Counseling Certificate'];
-    };
+      qualifications: ['Peer Counseling Certificate']
+  };
 
     let peerId: string | null;
     await act(async () => {
-      peerId = await result.current.registerAsPeer(peerData);
-    });
+      peerId = await result.current.registerAsPeer(peerData)
+  });
 
     expect(peerSupportNetworkService.registerPeerSupporter).toHaveBeenCalledWith({
       ...peerData,
-      userToken: 'user-token-123';
-    });
+      userToken: 'user-token-123'
+  });
     expect(peerId!).toBe('peer-id-123');
     expect(result.current.isRegistering).toBe(false);
-    expect(result.current.error).toBeNull();
+    expect(result.current.error).toBeNull()
   });
 
   it.skip('should handle peer registration errors', async () => {
@@ -242,17 +242,17 @@ describe('usePeerSupport Hook', () => {
       supportAreas: ['anxiety'],
       languages: ['en'],
       culturalContexts: ['western'],
-      availability: 'available' as const;
-    };
+      availability: 'available' as const
+  };
 
     let peerId: string | null;
     await act(async () => {
-      peerId = await result.current.registerAsPeer(peerData);
-    });
+      peerId = await result.current.registerAsPeer(peerData)
+  });
 
     expect(peerId!).toBeNull();
     expect(result.current.error).toBe('Registration failed - invalid credentials');
-    expect(result.current.isRegistering).toBe(false);
+    expect(result.current.isRegistering).toBe(false)
   });
 
   it.skip('should find peer support matches successfully', async () => {
@@ -268,19 +268,19 @@ describe('usePeerSupport Hook', () => {
       sessionType: 'text-chat' as const,
       description: 'Need support with anxiety management',
       timestamp: Date.now(),
-      maxWaitTime: 30;
-    };
+      maxWaitTime: 30
+  };
 
     let matches: unknown[];
     await act(async () => {
-      matches = await result.current.findPeerSupport(supportRequest);
-    });
+      matches = await result.current.findPeerSupport(supportRequest)
+  });
 
     expect(peerSupportNetworkService.findCompatiblePeers).toHaveBeenCalledWith(supportRequest);
     expect(matches!).toEqual(mockPeerMatches);
     expect(result.current.peerMatches).toEqual(mockPeerMatches);
     expect(result.current.isFindingMatches).toBe(false);
-    expect(result.current.error).toBeNull();
+    expect(result.current.error).toBeNull()
   });
 
   it.skip('should handle peer matching errors', async () => {
@@ -299,17 +299,17 @@ describe('usePeerSupport Hook', () => {
       sessionType: 'video-call' as const,
       description: 'Need specialized support',
       timestamp: Date.now(),
-      maxWaitTime: 10;
-    };
+      maxWaitTime: 10
+  };
 
     let matches: unknown[];
     await act(async () => {
-      matches = await result.current.findPeerSupport(supportRequest);
-    });
+      matches = await result.current.findPeerSupport(supportRequest)
+  });
 
     expect(matches!).toEqual([]);
     expect(result.current.error).toBe('No compatible peers available');
-    expect(result.current.isFindingMatches).toBe(false);
+    expect(result.current.isFindingMatches).toBe(false)
   });
 
   it.skip('should create support session successfully', async () => {
@@ -317,20 +317,20 @@ describe('usePeerSupport Hook', () => {
 
     let sessionId: string | null;
     await act(async () => {
-      sessionId = await result.current.createSupportSession('request-789', 'supporter-123');
-    });
+      sessionId = await result.current.createSupportSession('request-789', 'supporter-123')
+  });
 
     expect(peerSupportNetworkService.createPeerSupportSession).toHaveBeenCalledWith(
       expect.objectContaining({
         id: 'request-789',
         seekerToken: 'user-token-123',
-        language: 'en';
-      }),
+        language: 'en'
+  }),
       'supporter-123'
     );
     expect(sessionId!).toBe('session-456');
     expect(result.current.isLoading).toBe(false);
-    expect(result.current.error).toBeNull();
+    expect(result.current.error).toBeNull()
   });
 
   it.skip('should handle session creation errors', async () => {
@@ -341,12 +341,12 @@ describe('usePeerSupport Hook', () => {
 
     let sessionId: string | null;
     await act(async () => {
-      sessionId = await result.current.createSupportSession('request-789', 'supporter-123');
-    });
+      sessionId = await result.current.createSupportSession('request-789', 'supporter-123')
+  });
 
     expect(sessionId!).toBeNull();
     expect(result.current.error).toBe('Supporter is no longer available');
-    expect(result.current.isLoading).toBe(false);
+    expect(result.current.isLoading).toBe(false)
   });
 
   it.skip('should complete support session successfully', async () => {
@@ -356,18 +356,18 @@ describe('usePeerSupport Hook', () => {
       seekerRating: 5,
       supporterRating: 4,
       finalRiskLevel: 2,
-      followUpNeeded: false;
-    };
+      followUpNeeded: false
+  };
 
     await act(async () => {
-      await result.current.completeSupportSession('session-456', feedback);
-    });
+      await result.current.completeSupportSession('session-456', feedback)
+  });
 
     expect(peerSupportNetworkService.completePeerSupportSession).toHaveBeenCalledWith('session-456', feedback);
     expect(result.current.isLoading).toBe(false);
     expect(result.current.error).toBeNull();
     // The session should be removed from activeSessions after completion
-    expect(result.current.activeSessions).toEqual([]);
+    expect(result.current.activeSessions).toEqual([])
   });
 
   it.skip('should handle session completion errors', async () => {
@@ -378,15 +378,15 @@ describe('usePeerSupport Hook', () => {
 
     const feedback = {
       finalRiskLevel: 3,
-      followUpNeeded: true;
-    };
+      followUpNeeded: true
+  };
 
     await act(async () => {
-      await result.current.completeSupportSession('session-456', feedback);
-    });
+      await result.current.completeSupportSession('session-456', feedback)
+  });
 
     expect(result.current.error).toBe('Failed to save session data');
-    expect(result.current.isLoading).toBe(false);
+    expect(result.current.isLoading).toBe(false)
   });
 
   it.skip('should get community groups', async () => {
@@ -395,7 +395,7 @@ describe('usePeerSupport Hook', () => {
     const groups = result.current.getCommunityGroups('en', 'western');
 
     expect(peerSupportNetworkService.getCommunityGroups).toHaveBeenCalledWith('en', 'western');
-    expect(groups).toEqual(mockCommunityGroups);
+    expect(groups).toEqual(mockCommunityGroups)
   });
 
   it.skip('should join community group successfully', async () => {
@@ -405,32 +405,32 @@ describe('usePeerSupport Hook', () => {
 
     let joinResult: boolean;
     await act(async () => {
-      joinResult = await result.current.joinCommunityGroup('group-1');
-    });
+      joinResult = await result.current.joinCommunityGroup('group-1')
+  });
 
     expect(joinResult!).toBe(true);
     expect(consoleSpy).toHaveBeenCalledWith('[Peer Support Hook] Joining group: group-1');
     expect(result.current.isLoading).toBe(false);
     expect(result.current.error).toBeNull();
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should handle community group join errors', async () => {
     // Mock console.log to simulate error in joining
     jest.spyOn(console, 'log').mockImplementation(() => {
-      throw new Error('Group is full');
-    });
+      throw new Error('Group is full')
+  });
 
     const { result } = renderHook(() => usePeerSupport('user-token-123', 'en'));
 
     let joinResult: boolean;
     await act(async () => {
-      joinResult = await result.current.joinCommunityGroup('group-1');
-    });
+      joinResult = await result.current.joinCommunityGroup('group-1')
+  });
 
     expect(joinResult!).toBe(false);
-    expect(result.current.error).toBe('Group is full');
+    expect(result.current.error).toBe('Group is full')
   });
 
   it.skip('should refresh peer matches', async () => {
@@ -439,56 +439,56 @@ describe('usePeerSupport Hook', () => {
     const { result } = renderHook(() => usePeerSupport('user-token-123', 'en'));
 
     await act(async () => {
-      await result.current.refreshMatches();
-    });
+      await result.current.refreshMatches()
+  });
 
     expect(consoleSpy).toHaveBeenCalledWith('[Peer Support Hook] Refreshing peer matches...');
     expect(result.current.isFindingMatches).toBe(false);
     expect(result.current.error).toBeNull();
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should handle refresh matches errors', async () => {
     jest.spyOn(console, 'log').mockImplementation(() => {
-      throw new Error('Network timeout');
-    });
+      throw new Error('Network timeout')
+  });
 
     const { result } = renderHook(() => usePeerSupport('user-token-123', 'en'));
 
     await act(async () => {
-      await result.current.refreshMatches();
-    });
+      await result.current.refreshMatches()
+  });
 
     expect(result.current.error).toBe('Network timeout');
-    expect(result.current.isFindingMatches).toBe(false);
+    expect(result.current.isFindingMatches).toBe(false)
   });
 
   it.skip('should refresh statistics', async () => {
     const { result } = renderHook(() => usePeerSupport('user-token-123', 'en'));
 
     act(() => {
-      result.current.refreshStatistics();
-    });
+      result.current.refreshStatistics()
+  });
 
     expect(peerSupportNetworkService.getPeerSupportStatistics).toHaveBeenCalled();
     expect(result.current.peerStatistics).toEqual(mockStatistics);
-    expect(result.current.error).toBeNull();
+    expect(result.current.error).toBeNull()
   });
 
   it.skip('should handle statistics refresh errors', async () => {
     const statsError = new Error('Statistics service unavailable');
     (peerSupportNetworkService.getPeerSupportStatistics as jest.Mock).mockImplementation(() => {
-      throw statsError;
-    });
+      throw statsError
+  });
 
     const { result } = renderHook(() => usePeerSupport('user-token-123', 'en'));
 
     act(() => {
-      result.current.refreshStatistics();
-    });
+      result.current.refreshStatistics()
+  });
 
-    expect(result.current.error).toBe('Statistics service unavailable');
+    expect(result.current.error).toBe('Statistics service unavailable')
   });
 
   it.skip('should update availability status', async () => {
@@ -497,12 +497,12 @@ describe('usePeerSupport Hook', () => {
     const { result } = renderHook(() => usePeerSupport('user-token-123', 'en'));
 
     act(() => {
-      result.current.updateAvailability('busy');
-    });
+      result.current.updateAvailability('busy')
+  });
 
     expect(consoleSpy).toHaveBeenCalledWith('[Peer Support Hook] Updated availability to: busy');
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should refresh statistics periodically', async () => {
@@ -515,12 +515,12 @@ describe('usePeerSupport Hook', () => {
 
     // Fast-forward 30 seconds
     act(() => {
-      jest.advanceTimersByTime(30000);
-    });
+      jest.advanceTimersByTime(30000)
+  });
 
     expect(peerSupportNetworkService.getPeerSupportStatistics).toHaveBeenCalled();
 
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   it.skip('should cleanup periodic statistics refresh on unmount', async () => {
@@ -535,7 +535,7 @@ describe('usePeerSupport Hook', () => {
     expect(clearIntervalSpy).toHaveBeenCalled();
 
     jest.useRealTimers();
-    clearIntervalSpy.mockRestore();
+    clearIntervalSpy.mockRestore()
   });
 
   it.skip('should handle language changes in community groups', async () => {
@@ -543,14 +543,14 @@ describe('usePeerSupport Hook', () => {
     const { result, rerender } = renderHook(
       (props?: { language: string }) => {
         const language = props?.language ?? 'en';
-        return usePeerSupport('user-token-123', language);
-      }
+        return usePeerSupport('user-token-123', language)
+  }
     );
 
     // Initial load
     await waitFor(() => {
-      expect(result.current.communityGroups).toEqual(mockCommunityGroups);
-    }, { timeout: 10000 });
+      expect(result.current.communityGroups).toEqual(mockCommunityGroups)
+  }, { timeout: 10000 });
 
     // Clear mock calls
     (peerSupportNetworkService.getCommunityGroups as jest.Mock).mockClear();
@@ -559,9 +559,9 @@ describe('usePeerSupport Hook', () => {
     rerender({ language: 'es' });
 
     await waitFor(() => {
-      expect(peerSupportNetworkService.getCommunityGroups).toHaveBeenCalledWith('es');
-    }, { timeout: 10000 });
-    jest.useRealTimers();
+      expect(peerSupportNetworkService.getCommunityGroups).toHaveBeenCalledWith('es')
+  }, { timeout: 10000 });
+    jest.useRealTimers()
   });
 
   it.skip('should handle multiple concurrent operations', async () => {
@@ -577,8 +577,8 @@ describe('usePeerSupport Hook', () => {
       sessionType: 'text-chat' as const,
       description: 'Test request',
       timestamp: Date.now(),
-      maxWaitTime: 30;
-    };
+      maxWaitTime: 30
+  };
 
     // Start multiple operations simultaneously;
     const operations = await act(async () => {
@@ -586,19 +586,19 @@ describe('usePeerSupport Hook', () => {
         result.current.findPeerSupport(supportRequest),
         result.current.createSupportSession('request-123', 'supporter-456'),
         // result.current.refreshMatches() // Commented out to avoid console.log conflicts in tests
-      ]);
-    });
+      ])
+  });
 
     expect(operations[0]).toEqual(mockPeerMatches); // findPeerSupport result
     expect(operations[1]).toBe('session-456'); // createSupportSession result
     
-    expect(result.current.error).toBeNull();
+    expect(result.current.error).toBeNull()
+  })
   });
-});
 
 // Dummy test to keep suite active
 describe('Test Suite Active', () => {
   it('Placeholder test to prevent empty suite', () => {
-    expect(true).toBe(true);
+    expect(true).toBe(true)
+  })
   });
-});

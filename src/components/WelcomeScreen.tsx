@@ -9,8 +9,8 @@ export const WelcomeScreen: React.FC<{ onComplete: () => void }> = ({ onComplete
     setFadeOut(true);
     setTimeout(() => {
       setIsVisible(false);
-      onComplete();
-    }, 500);
+      onComplete()
+  }, 500)
   };
   
   if (!isVisible) return null;
@@ -75,8 +75,7 @@ export const WelcomeScreen: React.FC<{ onComplete: () => void }> = ({ onComplete
           </p>
         </div>
 
-        <button; 
-          className="welcome-continue-btn"
+        <button className="welcome-continue-btn"
           onClick={handleContinue}
         >
           <CheckIcon />
@@ -84,5 +83,5 @@ export const WelcomeScreen: React.FC<{ onComplete: () => void }> = ({ onComplete
         </button>
       </div>
     </div>
-  );
-};
+  )
+  };

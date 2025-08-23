@@ -11,8 +11,8 @@ import { useState, useEffect, useCallback } from 'react';/**
 export interface ServiceWorkerMessage {
   type: string;
   data?: any;
-  timestamp: number;
-}
+  timestamp: number
+  }
 
 /**
  * Interface for offline capabilities
@@ -21,8 +21,8 @@ export interface OfflineCapability {
   feature: string;
   available: boolean;
   description: string;
-  fallbackAction: string;
-}
+  fallbackAction: string
+  }
 
 /**
  * Main connection status interface
@@ -35,14 +35,14 @@ export interface ConnectionStatus {
   lastSync: Date | null;
   crisisResourcesAvailable: boolean;
   offlineCapabilities: OfflineCapability[];
-  connectionQuality: "excellent" | "good" | "poor" | "offline";
-}
+  connectionQuality: "excellent" | "good" | "poor" | "offline"
+  }
 
 export interface ServiceWorkerMessage {
   type: "crisis-resources-cached" | "offline-capabilities-updated" | "sync-completed" | "cache-updated";
   data?: any;
-  timestamp: number;
-}
+  timestamp: number
+  }
 
 export interface ConnectionStatus {
   isOnline: boolean,
@@ -52,8 +52,8 @@ export interface ConnectionStatus {
   lastSync: Date | null,
   crisisResourcesAvailable: boolean,
   offlineCapabilities: OfflineCapability[],
-  connectionQuality: "excellent" | "good' | 'poor" | "offline";
-}
+  connectionQuality: "excellent" | "good' | 'poor" | "offline"
+  }
 
 export interface OfflineCapability {
   feature: string,
@@ -65,8 +65,8 @@ export interface OfflineCapability {
 export interface ServiceWorkerMessage {
   type: "crisis-resources-cached" | "offline-capabilities-updated' | 'sync-completed" | "cache-updated",
   data?: any,
-  timestamp: number;
-}
+  timestamp: number
+  }
 
 const DEFAULT_CONNECTION_STATUS: ConnectionStatus={
       isOnline: navigator.onLine,
@@ -76,45 +76,45 @@ const DEFAULT_CONNECTION_STATUS: ConnectionStatus={
   lastSync: null,
   crisisResourcesAvailable: false,
       offlineCapabilities: [],
-    connectionQuality: "offline";
-  };
+    connectionQuality: "offline"
+  }
 
 const DEFAULT_OFFLINE_CAPABILITIES: OfflineCapability[] = [
   {
     feature: "Crisis Resources",
     available: false,
           description: "Emergency contacts and crisis intervention resources",
-          fallbackAction: "Access cached crisis resources";
+          fallbackAction: "Access cached crisis resources"
   },
   {
           feature: "Safety Plan",
     available: false,
           description: "Personal safety planning tools",
-          fallbackAction: "Use offline safety plan template";
+          fallbackAction: "Use offline safety plan template"
   },
   {
           feature: "Coping Strategies",
     available: false,
           description: "Self-help and coping technique resources",
-          fallbackAction: "Browse cached coping strategies";
+          fallbackAction: "Browse cached coping strategies"
   },
   {
           feature: "Community Posts",
     available: false,
           description: "View and create community posts",
-          fallbackAction: "Queue posts for when online";
+          fallbackAction: "Queue posts for when online"
   },
   {
           feature: "AI Assistant",
     available: false,
           description: "AI-powered mental health support",
-          fallbackAction: "Use offline guidance resources";
-    },
+          fallbackAction: "Use offline guidance resources"
+  },
   {
           feature: "Helper Chat",
     available: false,
           description: "Real-time chat with certified helpers",
-    fallbackAction: "Queue messages for when online";
+    fallbackAction: "Queue messages for when online"
   }
 ];
 export const useConnectionStatus = (): string => {
@@ -123,24 +123,24 @@ export const useConnectionStatus = (): string => {
   // Update connection quality based on navigator connection;
       const updateConnectionQuality = useCallback(() => {
       if(!navigator.onLine) {
-        return "offline";
-    }
+        return "offline"
+  }
 
           // Use Network Information API if available;
       const connection = (navigator as unknown).connection || (navigator as unknown).mozConnection || (navigator as unknown).webkitConnection;
     if(connection) {
       const { effectiveType, downlink } = connection;
               if(effectiveType === "4g") {
-        return "excellent";
-      } else if (effectiveType === "3g") {
-        return "good";
-              } else {
-          return "poor";
-      }
+        return "excellent"
+  } else if (effectiveType === "3g") {
+        return "good"
+  } else {
+          return "poor"
+  }
     }
 
     // Fallback: assume good if online but no connection info
-    return "good";
+    return "good"
   };
   }, []);
   
@@ -159,11 +159,11 @@ export const useConnectionStatus = (): string => {
       const availableResources = keys.map(request => new URL(request.url).pathname);
               return requiredResources.every(resource =>
           availableResources.some(available => available.includes(resource))
-      );
-    } catch(error) {
+      )
+  } catch(error) {
 
-      return false;
-    }
+      return false
+  }
   };
   }, []);
 
@@ -177,16 +177,15 @@ export const useConnectionStatus = (): string => {
           return { ...capability, available: swRegistered };
         case "Real-time Chat":
           return { ...capability, available: false }; // Requires online connection
-        default:
-          return capability;
-      }
+        default: return capability
+  }
     };
   };
 
     setConnectionStatus(prev => ({
       ...prev,
-      offlineCapabilities: capabilities;
-    }));
+      offlineCapabilities: capabilities
+  }))
   };
   }, []);
 
@@ -198,33 +197,33 @@ export const useConnectionStatus = (): string => {
         setConnectionStatus(prev => ({
           ...prev,
           crisisResourcesAvailable: true,
-          lastSync: new Date(timestamp);
-        }));
+          lastSync: new Date(timestamp)
+  }));
         break;
       case 'offline-capabilities-updated':
         if(data?.capabilities) {
           setConnectionStatus(prev => ({
             ...prev,
-            offlineCapabilities: data.capabilities;
-          }));
-        }
+            offlineCapabilities: data.capabilities
+  }))
+  }
         break;
       case 'sync-completed':
         setConnectionStatus(prev => ({
           ...prev,
-          lastSync: new Date(timestamp);
-        }));
+          lastSync: new Date(timestamp)
+  }));
         break;
       case 'cache-updated':
         // Refresh crisis resources availability
         checkCrisisResourcesAvailability().then(available => {
           setConnectionStatus(prev => ({
             ...prev,
-            crisisResourcesAvailable: available;
-          }));
-        });
-        break;
-    }
+            crisisResourcesAvailable: available
+  }))
+  });
+        break
+  }
   };
   }, [checkCrisisResourcesAvailability]);
   
@@ -243,32 +242,32 @@ export const useConnectionStatus = (): string => {
             setConnectionStatus(prev => ({
               ...prev,
               isServiceWorkerRegistered: true,
-              serviceWorkerStatus: sw.state as 'waiting' | 'active' | 'installing' | 'redundant' | 'not_registered';
-            }));
-          };
+              serviceWorkerStatus: sw.state as 'waiting' | 'active' | 'installing' | 'redundant' | 'not_registered'
+  }))
+  };
 
           // Monitor service worker state changes
           if(registration.installing) {
             updateStatus(registration.installing);
-            registration.installing.addEventListener('statechange', () => updateStatus(registration.installing));
-          } else if (registration.waiting) {
+            registration.installing.addEventListener('statechange', () => updateStatus(registration.installing))
+  } else if (registration.waiting) {
             updateStatus(registration.waiting);
-            registration.waiting.addEventListener('statechange', () => updateStatus(registration.waiting));
-          } else if (registration.active) {
+            registration.waiting.addEventListener('statechange', () => updateStatus(registration.waiting))
+  } else if (registration.active) {
             updateStatus(registration.active);
-            registration.active.addEventListener('statechange', () => updateStatus(registration.active));
-          }
+            registration.active.addEventListener('statechange', () => updateStatus(registration.active))
+  }
 
           // Listen for service worker messages
-          navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage);
-        }
+          navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage)
+  }
       } catch(error) {}
     };
 
     initializeServiceWorker();
     return () => {
-      navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage);
-    };
+      navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage)
+  };
   };
   }, [handleServiceWorkerMessage]);
 
@@ -278,17 +277,17 @@ export const useConnectionStatus = (): string => {
       setConnectionStatus(prev => ({
         ...prev,
         isOnline: true,
-        connectionQuality: updateConnectionQuality();
-      }));
-    };
+        connectionQuality: updateConnectionQuality()
+  }))
+  };
     
     const handleOffline = (): void => {
       setConnectionStatus(prev => ({
         ...prev,
         isOnline: false,
-        connectionQuality: "offline";
-      }));
-    };
+        connectionQuality: "offline"
+  }))
+  };
     
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
@@ -296,13 +295,13 @@ export const useConnectionStatus = (): string => {
     // Initial connection quality check
     setConnectionStatus(prev => ({
       ...prev,
-      connectionQuality: updateConnectionQuality();
-    }));
+      connectionQuality: updateConnectionQuality()
+  }));
 
     return () => {
       window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
+      window.removeEventListener('offline', handleOffline)
+  };
   };
   }, [updateConnectionQuality]);
 
@@ -314,14 +313,14 @@ export const useConnectionStatus = (): string => {
       const handleConnectionChange = (): void => {
         setConnectionStatus(prev => ({
           ...prev,
-          connectionQuality: updateConnectionQuality();
-        }));
-      };
+          connectionQuality: updateConnectionQuality()
+  }))
+  };
 
       connection.addEventListener('change', handleConnectionChange);
       return () => {
-        connection.removeEventListener('change', handleConnectionChange);
-      };
+        connection.removeEventListener('change', handleConnectionChange)
+  };
     }
   };
   }, [updateConnectionQuality]);
@@ -332,28 +331,28 @@ export const useConnectionStatus = (): string => {
       setConnectionStatus(prev => {
         const updated={
           ...prev,
-          crisisResourcesAvailable: available;
-        };
+          crisisResourcesAvailable: available
+  }
         
         updateOfflineCapabilities(available, prev.isServiceWorkerRegistered);
-        return updated;
-      });
-    });
+        return updated
+  })
+  })
   }, [checkCrisisResourcesAvailability, updateOfflineCapabilities])
   // Send message to service worker;
   const sendMessageToServiceWorker = useCallback(async (message: ChatMessage) => {
     if(!serviceWorkerRegistration?.active) {
 
-      return false;
-    }
+      return false
+  }
 
     try {
       serviceWorkerRegistration.active.postMessage(message);
-      return true;
-    } catch(error) {
+      return true
+  } catch(error) {
 
-      return false;
-    }
+      return false
+  }
   };
   }, [serviceWorkerRegistration]);
 
@@ -361,8 +360,8 @@ export const useConnectionStatus = (): string => {
   const updateCrisisResources = useCallback(async () => {
     return sendMessageToServiceWorker({
       type: "update-crisis-resources",
-      timestamp: Date.now();
-    });
+      timestamp: Date.now()
+  })
   };
   }, [sendMessageToServiceWorker]);
 
@@ -370,8 +369,9 @@ export const useConnectionStatus = (): string => {
   const forceCacheUpdate = useCallback(async () => {
     return sendMessageToServiceWorker({
       type: "force-cache-update",
-      timestamp: Date.now();
-    });
+      timestamp: Date.now()
+  })
+  };
   };
   };
   }, [sendMessageToServiceWorker]);

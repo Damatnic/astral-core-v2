@@ -13,11 +13,11 @@ describe('wellnessStore', () => {
   beforeEach(() => {
     useWellnessStore.setState(initialState);
     jest.clearAllMocks();
-    authState.userToken = 'user123';
+    authState.userToken = 'user123'
   });
 
   afterEach(() => {
-    authState.userToken = null;
+    authState.userToken = null
   });
 
   test('fetchHistory should update state on successful API call', async () => {
@@ -25,12 +25,12 @@ describe('wellnessStore', () => {
     mockedApiClient.mood.getHistory.mockResolvedValue(mockHistory as any);
 
     await act(async () => {
-      await useWellnessStore.getState().fetchHistory();
-    });
+      await useWellnessStore.getState().fetchHistory()
+  });
 
     expect(useWellnessStore.getState().isLoading).toBe(false);
     expect(useWellnessStore.getState().history).toEqual(mockHistory);
-    expect(mockedApiClient.mood.getHistory).toHaveBeenCalledWith('user123');
+    expect(mockedApiClient.mood.getHistory).toHaveBeenCalledWith('user123')
   });
 
   test('postCheckIn should call the API and then refresh history', async () => {
@@ -39,11 +39,11 @@ describe('wellnessStore', () => {
     mockedApiClient.mood.getHistory.mockResolvedValue([]); // For the refresh call
 
     await act(async () => {
-      await useWellnessStore.getState().postCheckIn(checkInData as any);
-    });
+      await useWellnessStore.getState().postCheckIn(checkInData as any)
+  });
 
     expect(mockedApiClient.mood.postCheckIn).toHaveBeenCalledWith(checkInData, 'user123');
-    expect(mockedApiClient.mood.getHistory).toHaveBeenCalledTimes(1);
+    expect(mockedApiClient.mood.getHistory).toHaveBeenCalledTimes(1)
   });
 
   test('fetchHabits should fetch all data and calculate streaks', async () => {
@@ -56,13 +56,13 @@ describe('wellnessStore', () => {
     mockedApiClient.habits.getCompletions.mockResolvedValue(mockCompletions as any);
     
     await act(async () => {
-      await useWellnessStore.getState().fetchHabits();
-    });
+      await useWellnessStore.getState().fetchHabits()
+  });
 
     const state = useWellnessStore.getState();
     expect(state.isLoadingHabits).toBe(false);
     expect(state.predefinedHabits).toEqual(mockPredefined);
     expect(state.trackedHabits).toHaveLength(1);
     expect(state.trackedHabits[0].currentStreak).toBe(1); // From calculateStreaks
+  })
   });
-});

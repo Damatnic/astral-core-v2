@@ -7,8 +7,8 @@ export interface SecureStorageOptions {
   enableEncryption?: boolean;
   enableAuditLogging?: boolean;
   enableDataRetention?: boolean;
-  maxRetentionDays?: number;
-}
+  maxRetentionDays?: number
+  }
 
 export interface StorageMetadata {
   timestamp: number;
@@ -16,8 +16,8 @@ export interface StorageMetadata {
   encrypted: boolean;
   size: number;
   accessCount: number;
-  lastAccessed: number;
-}
+  lastAccessed: number
+  }
 
 class SecureStorageService {
   private encryptionService = getEncryptionService();
@@ -34,7 +34,7 @@ class SecureStorageService {
     };
 
     this.loadAccessLog();
-    this.scheduleDataRetentionCleanup();
+    this.scheduleDataRetentionCleanup()
   }
 
   /**
@@ -45,11 +45,11 @@ class SecureStorageService {
       const storedLog = localStorage.getItem('_secure_storage_log');
       if (storedLog) {
         const parsed = JSON.parse(storedLog);
-        this.accessLog = new Map(Object.entries(parsed));
-      }
+        this.accessLog = new Map(Object.entries(parsed))
+  }
     } catch (error) {
-      console.warn('Failed to load access log:', error);
-    }
+      console.warn('Failed to load access log:', error)
+  }
   }
 
   /**
@@ -58,10 +58,10 @@ class SecureStorageService {
   private saveAccessLog(): void {
     try {
       const logObject = Object.fromEntries(this.accessLog);
-      localStorage.setItem('_secure_storage_log', JSON.stringify(logObject));
-    } catch (error) {
-      console.warn('Failed to save access log:', error);
-    }
+      localStorage.setItem('_secure_storage_log', JSON.stringify(logObject))
+  } catch (error) {
+      console.warn('Failed to save access log:', error)
+  }
   }
 
   /**
@@ -79,11 +79,11 @@ class SecureStorageService {
       encrypted: this.shouldEncrypt(key),
       size: data.length,
       accessCount: (existing?.accessCount || 0) + (isRead ? 1 : 0),
-      lastAccessed: now;
-    };
+      lastAccessed: now
+  };
 
     this.accessLog.set(key, metadata);
-    this.saveAccessLog();
+    this.saveAccessLog()
   }
 
   /**
@@ -92,25 +92,25 @@ class SecureStorageService {
   private getDataClassification(key: string): string {
     // Crisis data
     if (key.includes('crisis') || key.includes('emergency')) {
-      return 'crisis';
-    }
+      return 'crisis'
+  }
     
     // Health data
     if (key.includes('mood') || key.includes('safety') || key.includes('health')) {
-      return 'health';
-    }
+      return 'health'
+  }
     
     // Communication data
     if (key.includes('chat') || key.includes('message')) {
-      return 'communication';
-    }
+      return 'communication'
+  }
     
     // Personal data
     if (key.includes('user') || key.includes('token') || key.includes('profile')) {
-      return 'personal';
-    }
+      return 'personal'
+  }
 
-    return 'general';
+    return 'general'
   }
 
   /**
@@ -120,7 +120,7 @@ class SecureStorageService {
     if (!this.options.enableEncryption) return false;
 
     const classification = this.getDataClassification(key);
-    return ['crisis', 'health', 'communication', 'personal'].includes(classification);
+    return ['crisis', 'health', 'communication', 'personal'].includes(classification)
   }
 
   /**
@@ -134,8 +134,8 @@ class SecureStorageService {
 
     // Schedule daily cleanup
     setInterval(() => {
-      this.performDataRetentionCleanup();
-    }, 24 * 60 * 60 * 1000); // 24 hours
+      this.performDataRetentionCleanup()
+  }, 24 * 60 * 60 * 1000); // 24 hours
   }
 
   /**
@@ -153,14 +153,14 @@ class SecureStorageService {
       if (age > maxAge) {
         this.removeItem(key);
         this.accessLog.delete(key);
-        cleanedCount++;
-      }
+        cleanedCount++
+  }
     });
 
     if (cleanedCount > 0) {
       console.log(`Data retention cleanup: removed ${cleanedCount} expired items`);
-      this.saveAccessLog();
-    }
+      this.saveAccessLog()
+  }
   }
 
   /**
@@ -180,14 +180,14 @@ class SecureStorageService {
           key,
           size: value.length,
           encrypted: this.shouldEncrypt(key),
-          classification: this.getDataClassification(key);
-        });
-      }
+          classification: this.getDataClassification(key)
+  })
+  }
 
     } catch (error) {
       console.error('SecureStorage: Failed to store data:', error);
-      throw new Error(`Failed to store data for key: ${key}`);
-    }
+      throw new Error(`Failed to store data for key: ${key}`)
+  }
   }
 
   /**
@@ -207,18 +207,17 @@ class SecureStorageService {
           this.logStorageEvent('data_accessed', {
             key,
             size: value.length,
-            classification: this.getDataClassification(key);
-          });
-        }
+            classification: this.getDataClassification(key)
+  })
+  }
       }
 
-      return value;
-
-    } catch (error) {
+      return value
+  } catch (error) {
       console.error('SecureStorage: Failed to retrieve data:', error);
       // Return null instead of throwing to maintain localStorage compatibility
-      return null;
-    }
+      return null
+  }
   }
 
   /**
@@ -237,13 +236,13 @@ class SecureStorageService {
       if (this.options.enableAuditLogging) {
         this.logStorageEvent('data_removed', {
           key,
-          classification: this.getDataClassification(key);
-        });
-      }
+          classification: this.getDataClassification(key)
+  })
+  }
 
     } catch (error) {
-      console.error('SecureStorage: Failed to remove data:', error);
-    }
+      console.error('SecureStorage: Failed to remove data:', error)
+  }
   }
 
   /**
@@ -259,33 +258,33 @@ class SecureStorageService {
 
       // Log clear event
       if (this.options.enableAuditLogging) {
-        this.logStorageEvent('storage_cleared', {});
-      }
+        this.logStorageEvent('storage_cleared', {})
+  }
 
     } catch (error) {
-      console.error('SecureStorage: Failed to clear storage:', error);
-    }
+      console.error('SecureStorage: Failed to clear storage:', error)
+  }
   }
 
   /**
    * Get the number of items in storage
    */
   public get length(): number {
-    return localStorage.length;
+    return localStorage.length
   }
 
   /**
    * Get key at specific index
    */
   public key(index: number): string | null {
-    return localStorage.key(index);
+    return localStorage.key(index)
   }
 
   /**
    * Check if a key exists
    */
   public hasItem(key: string): boolean {
-    return localStorage.getItem(key) !== null;
+    return localStorage.getItem(key) !== null
   }
 
   /**
@@ -296,10 +295,10 @@ class SecureStorageService {
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key) {
-        keys.push(key);
-      }
+        keys.push(key)
+  }
     }
-    return keys;
+    return keys
   }
 
   /**
@@ -325,30 +324,30 @@ class SecureStorageService {
 
       if (metadata.encrypted) {
         stats.encryptedKeys++;
-        stats.byEncryption.encrypted++;;
+        stats.byEncryption.encrypted++
   } else {
-        stats.byEncryption.plaintext++;
-      }
+        stats.byEncryption.plaintext++
+  }
 
       stats.byClassification[metadata.classification] = 
-        (stats.byClassification[metadata.classification] || 0) + 1;
-    });
+        (stats.byClassification[metadata.classification] || 0) + 1
+  });
 
-    return stats;
+    return stats
   }
 
   /**
    * Get access metadata for a key
    */
   public getMetadata(key: string): StorageMetadata | null {
-    return this.accessLog.get(key) || null;
+    return this.accessLog.get(key) || null
   }
 
   /**
    * Get all metadata
    */
   public getAllMetadata(): Map<string, StorageMetadata> {
-    return new Map(this.accessLog);
+    return new Map(this.accessLog)
   }
 
   /**
@@ -357,9 +356,9 @@ class SecureStorageService {
   public async validateIntegrity(): Promise<{
     valid: number;
     invalid: number;
-    errors: string[];
+    errors: string[]
   }> {
-    return await this.encryptionService.validateDataIntegrity();
+    return await this.encryptionService.validateDataIntegrity()
   }
 
   /**
@@ -374,8 +373,8 @@ class SecureStorageService {
       if (key && this.shouldEncrypt(key)) {
         const value = await this.getItem(key);
         if (value) {
-          this.updateMetadata(key, value);
-        }
+          this.updateMetadata(key, value)
+  }
       }
     }
   }
@@ -386,9 +385,9 @@ class SecureStorageService {
   public performHIPAAComplianceCheck(): {
     compliant: boolean;
     violations: string[];
-    recommendations: string[];
+    recommendations: string[]
   } {
-    return this.encryptionService.performHIPAAComplianceCheck();
+    return this.encryptionService.performHIPAAComplianceCheck()
   }
 
   /**
@@ -398,7 +397,7 @@ class SecureStorageService {
     data: Record<string, string>;
     metadata?: Record<string, StorageMetadata>;
     exportTime: string;
-    version: string;
+    version: string
   }> {
     const exportData: Record<string, string> = {};
     const keys = this.getAllKeys();
@@ -406,26 +405,26 @@ class SecureStorageService {
     for (const key of keys) {
       const value = await this.getItem(key);
       if (value !== null) {
-        exportData[key] = value;
-      }
+        exportData[key] = value
+  }
     }
 
     const result: {
       data: Record<string, string>;
       exportTime: string;
       version: string;
-      metadata?: Record<string, StorageMetadata>;
-    } = {
+      metadata?: Record<string, StorageMetadata>
+  } = {
       data: exportData,
       exportTime: new Date().toISOString(),
-      version: '1.0';
-    };
+      version: '1.0'
+  };
 
     if (includeMetadata) {
-      result.metadata = Object.fromEntries(this.accessLog);
-    }
+      result.metadata = Object.fromEntries(this.accessLog)
+  }
 
-    return result;
+    return result
   }
 
   /**
@@ -433,7 +432,7 @@ class SecureStorageService {
    */
   public async importData(backup: {
     data: Record<string, string>;
-    metadata?: Record<string, StorageMetadata>;
+    metadata?: Record<string, StorageMetadata>
   }): Promise<void> {
     const importedKeys: string[] = [];
 
@@ -441,26 +440,25 @@ class SecureStorageService {
       // Import data
       for (const [key, value] of Object.entries(backup.data)) {
         await this.setItem(key, value);
-        importedKeys.push(key);
-      }
+        importedKeys.push(key)
+  }
 
       // Import metadata if available
       if (backup.metadata) {
         for (const [key, metadata] of Object.entries(backup.metadata)) {
-          this.accessLog.set(key, metadata);
-        }
-        this.saveAccessLog();
-      }
+          this.accessLog.set(key, metadata)
+  }
+        this.saveAccessLog()
+  }
 
       this.logStorageEvent('data_imported', {
         importedCount: importedKeys.length,
-        keys: importedKeys;
-      });
-
-    } catch (error) {
+        keys: importedKeys
+  })
+  } catch (error) {
       console.error('SecureStorage: Failed to import data:', error);
-      throw new Error('Data import failed');
-    }
+      throw new Error('Data import failed')
+  }
   }
 
   /**
@@ -475,10 +473,10 @@ class SecureStorageService {
       details: {
         ...details,
         userAgent: navigator.userAgent,
-        url: window.location.href;
-      },
-      severity: 'info' as const;
-    };
+        url: window.location.href
+  },
+      severity: 'info' as const
+  };
 
     // Store in security logs
     try {
@@ -487,13 +485,13 @@ class SecureStorageService {
       
       // Keep only last 100 logs
       if (logs.length > 100) {
-        logs.splice(0, logs.length - 100);
-      }
+        logs.splice(0, logs.length - 100)
+  }
       
-      localStorage.setItem('security_logs', JSON.stringify(logs));
-    } catch (error) {
-      console.warn('Failed to log storage event:', error);
-    }
+      localStorage.setItem('security_logs', JSON.stringify(logs))
+  } catch (error) {
+      console.warn('Failed to log storage event:', error)
+  }
   }
 }
 
@@ -505,10 +503,10 @@ let secureStorageInstance: SecureStorageService | null = null;
  */;
 export const getSecureStorage = (options?: SecureStorageOptions): SecureStorageService => {
   if (!secureStorageInstance) {
-    secureStorageInstance = new SecureStorageService(options);
+    secureStorageInstance = new SecureStorageService(options)
   }
-  return secureStorageInstance;
-};
+  return secureStorageInstance
+  };
 
 /**
  * React hook for using secure storage
@@ -517,19 +515,19 @@ export const useSecureStorage = () => {
   const storage = getSecureStorage();
 
   const setSecureItem = async (key: string, value: string) => {
-    await storage.setItem(key, value);
+    await storage.setItem(key, value)
   };
 
   const getSecureItem = async (key: string) => {
-    return await storage.getItem(key);
+    return await storage.getItem(key)
   };
 
   const removeSecureItem = (key: string) => {
-    storage.removeItem(key);
+    storage.removeItem(key)
   };
 
   const clearSecureStorage = () => {
-    storage.clear();
+    storage.clear()
   };
 
   return {
@@ -545,7 +543,7 @@ export const useSecureStorage = () => {
     migrateToEncrypted: () => storage.migrateToEncrypted(),
     checkHIPAACompliance: () => storage.performHIPAAComplianceCheck(),
     exportData: (includeMetadata?: boolean) => storage.exportData(includeMetadata),
-    importData: (backup: any) => storage.importData(backup);
+    importData: (backup: any) => storage.importData(backup)
   };
 
 export { SecureStorageService };

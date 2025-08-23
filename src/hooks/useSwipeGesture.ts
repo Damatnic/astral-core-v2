@@ -2,15 +2,15 @@ import { useEffect, useRef, useState } from 'react';
 
 interface TouchPosition {
   x: number;
-  y: number;
-}
+  y: number
+  }
 
 interface SwipeGesture {
   direction: 'left' | 'right' | 'up' | 'down' | null;
   distance: number;
   velocity: number;
-  duration: number;
-}
+  duration: number
+  }
 
 interface UseSwipeGestureOptions {
   threshold?: number; // Minimum distance for swipe
@@ -20,8 +20,8 @@ interface UseSwipeGestureOptions {
   onSwipeRight?: (gesture: SwipeGesture) => void;
   onSwipeUp?: (gesture: SwipeGesture) => void;
   onSwipeDown?: (gesture: SwipeGesture) => void;
-  onSwipe?: (gesture: SwipeGesture) => void;
-}
+  onSwipe?: (gesture: SwipeGesture) => void
+  }
 
 export const useSwipeGesture = (options: UseSwipeGestureOptions = {}) => {
   const {
@@ -49,15 +49,15 @@ export const useSwipeGesture = (options: UseSwipeGestureOptions = {}) => {
     touchEndRef.current = null; // Reset end position
     startTimeRef.current = Date.now();
     trackingRef.current = true;
-    setIsTracking(true);
+    setIsTracking(true)
   };
 
   const handleTouchMove = (e: TouchEvent) => {
     if (!trackingRef.current || !touchStartRef.current || e.touches.length !== 1) return;
     
     if (preventDefaultTouchMove) {
-      e.preventDefault();
-    }
+      e.preventDefault()
+  }
     
     const touch = e.touches[0];
     touchEndRef.current = { x: touch.clientX, y: touch.clientY };
@@ -68,8 +68,8 @@ export const useSwipeGesture = (options: UseSwipeGestureOptions = {}) => {
       setIsTracking(false);
       touchStartRef.current = null;
       touchEndRef.current = null;
-      return;
-    }
+      return
+  }
 
     // Use the last touch position if we have it, otherwise use start position;
     const endPosition = touchEndRef.current || touchStartRef.current;
@@ -88,8 +88,8 @@ export const useSwipeGesture = (options: UseSwipeGestureOptions = {}) => {
 
     // Check if gesture meets thresholds
     if (distance < threshold || velocity < velocityThreshold) {
-      return;
-    }
+      return
+  }
 
     // Determine direction;
     const absDeltaX = Math.abs(deltaX);
@@ -99,11 +99,11 @@ export const useSwipeGesture = (options: UseSwipeGestureOptions = {}) => {
     
     if (absDeltaX > absDeltaY) {
       // Horizontal swipe
-      direction = deltaX > 0 ? 'right' : 'left';;
+      direction = deltaX > 0 ? 'right' : 'left'
   } else {
       // Vertical swipe
-      direction = deltaY > 0 ? 'down' : 'up';
-    }
+      direction = deltaY > 0 ? 'down' : 'up'
+  }
 
     const gesture: SwipeGesture = {
       direction,
@@ -127,20 +127,20 @@ export const useSwipeGesture = (options: UseSwipeGestureOptions = {}) => {
         break;
       case 'down':
         onSwipeDown?.(gesture);
-        break;
-    }
+        break
+  }
   };
 
   const attachListeners = (element: HTMLElement) => {
     element.addEventListener('touchstart', handleTouchStart, { passive: true });
     element.addEventListener('touchmove', handleTouchMove, { passive: !preventDefaultTouchMove });
-    element.addEventListener('touchend', handleTouchEnd, { passive: true });
+    element.addEventListener('touchend', handleTouchEnd, { passive: true })
   };
 
   const detachListeners = (element: HTMLElement) => {
     element.removeEventListener('touchstart', handleTouchStart);
     element.removeEventListener('touchmove', handleTouchMove);
-    element.removeEventListener('touchend', handleTouchEnd);
+    element.removeEventListener('touchend', handleTouchEnd)
   };
 
   return {
@@ -164,8 +164,9 @@ export const useSwipeRef = <T extends HTMLElement>(
     attachListeners(element);
 
     return () => {
-      detachListeners(element);
-    };
+      detachListeners(element)
+  };
+  };
   };
   };
   }, [attachListeners, detachListeners]);
@@ -182,7 +183,7 @@ export const usePullToRefresh = (
   options: {
     threshold?: number;
     resistance?: number;
-    enabled?: boolean;
+    enabled?: boolean
   } = {}
 ) => {
   const { threshold = 80, resistance = 0.5, enabled = true } = options;
@@ -234,30 +235,30 @@ export const usePullToRefresh = (
         
         // Prevent default scrolling when pulling
         if (distance > 20) {
-          e.preventDefault();
-        }
+          e.preventDefault()
+  }
       }
     };
 
     const handleTouchEnd = async () => {
       if (!touchStartRef.current || !touchMoveRef.current || isRefreshingRef.current) {
         resetPull();
-        return;
-      }
+        return
+  }
 
       if (pullDistanceRef.current >= threshold && !isRefreshingRef.current) {
         isRefreshingRef.current = true;
         setIsRefreshing(true);
         try {
-          await onRefresh();
-        } finally {
+          await onRefresh()
+  } finally {
           isRefreshingRef.current = false;
           setIsRefreshing(false);
-          resetPull();
-        };
+          resetPull()
+  }
   } else {
-        resetPull();
-      }
+        resetPull()
+  }
     };
 
     const resetPull = () => {
@@ -265,8 +266,8 @@ export const usePullToRefresh = (
       setPullDistance(0);
       setIsPulling(false);
       touchStartRef.current = null;
-      touchMoveRef.current = null;
-    };
+      touchMoveRef.current = null
+  };
 
     element.addEventListener('touchstart', handleTouchStart, { passive: true };
   };
@@ -278,8 +279,9 @@ export const usePullToRefresh = (
       element.removeEventListener('touchstart', handleTouchStart);
       element.removeEventListener('touchmove', handleTouchMove);
       element.removeEventListener('touchend', handleTouchEnd);
-      element.removeEventListener('touchcancel', resetPull);
-    };
+      element.removeEventListener('touchcancel', resetPull)
+  };
+  };
   };
   };
   }, [enabled, threshold, resistance, onRefresh]);

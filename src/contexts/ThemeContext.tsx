@@ -15,27 +15,27 @@ interface AppTheme {
         accentPrimaryText: string;
         accentDanger: string;
         accentSuccess: string;
-        borderColor: string;
-    },
+        borderColor: string
+  },
     spacing: {
         xs: string;
         sm: string;
         md: string;
         lg: string;
-        xl: string;
-    },
+        xl: string
+  },
     radius: {
         sm: string;
         md: string;
-        lg: string;
-    }
+        lg: string
+  }
 }
 
 interface ThemeContextType {
   theme: Theme;
   themeConfig: AppTheme;
-  toggleTheme: () => void;
-}
+  toggleTheme: () => void
+  }
 
 const lightTheme: AppTheme = {
     colors: {
@@ -81,17 +81,17 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const savedTheme = localStorage.getItem('theme') as Theme;
     if (savedTheme) return savedTheme;
     
-    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   });
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
+    localStorage.setItem('theme', theme)
   };
   }, [theme]);
 
   const toggleTheme = useCallback(() => {
-    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'))
   };
   }, []);
 
@@ -99,13 +99,13 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const value = useMemo(() => ({ theme, themeConfig, toggleTheme }), [theme, themeConfig, toggleTheme]);
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
-};
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+  };
 
 export const useTheme = (): ThemeContextType => {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error('useTheme must be used within a ThemeProvider')
   }
-  return context;
-};
+  return context
+  };

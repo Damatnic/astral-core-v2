@@ -107,16 +107,16 @@ export const featureBasedSplitting = {
 export const vendorChunkStrategy = (id: string) => {
   // React core - highest priority, smallest chunk
   if (id.includes('react/') && !id.includes('react-dom')) {
-    return 'react-core';
+    return 'react-core'
   }
   
   if (id.includes('react-dom')) {
-    return 'react-dom';
+    return 'react-dom'
   }
   
   // State management - separate for better caching
   if (id.includes('zustand') || id.includes('@reduxjs/toolkit')) {
-    return 'state-management';
+    return 'state-management'
   }
   
   // UI libraries - group together
@@ -124,7 +124,7 @@ export const vendorChunkStrategy = (id: string) => {
       id.includes('react-icons') || 
       id.includes('styled-components') ||
       id.includes('@emotion')) {
-    return 'ui-framework';
+    return 'ui-framework'
   }
   
   // Utility libraries - frequently used together
@@ -132,193 +132,193 @@ export const vendorChunkStrategy = (id: string) => {
       id.includes('lodash') || 
       id.includes('uuid') ||
       id.includes('classnames')) {
-    return 'utilities';
+    return 'utilities'
   }
   
   // Form handling
   if (id.includes('react-hook-form') || 
       id.includes('yup') || 
       id.includes('@hookform')) {
-    return 'forms';
+    return 'forms'
   }
   
   // Routing
   if (id.includes('react-router') || id.includes('@reach/router')) {
-    return 'routing';
+    return 'routing'
   }
   
   // Testing libraries (dev only)
   if (id.includes('@testing-library') || 
       id.includes('jest') || 
       id.includes('vitest')) {
-    return 'testing';
+    return 'testing'
   }
   
   // Large libraries that should be separate
   if (id.includes('recharts') || 
       id.includes('chart.js') || 
       id.includes('d3')) {
-    return 'charts';
+    return 'charts'
   }
   
   // Markdown and rich text
   if (id.includes('react-markdown') || 
       id.includes('remark') || 
       id.includes('rehype')) {
-    return 'markdown';
+    return 'markdown'
   }
   
   // All other vendor code
   if (id.includes('node_modules')) {
-    return 'vendor-misc';
+    return 'vendor-misc'
   }
   
-  return null;
-};
+  return null
+  };
 
 // Helper functions to reduce cognitive complexity;
 const isCrisisRelated = (id: string): boolean => {
   return id.includes('crisis') || 
          id.includes('emergency') || 
          id.includes('safety') ||
-         id.includes('offline');
-};
+         id.includes('offline')
+  };
 
 const getCriticalViewChunk = (id: string): string | null => {
   if (id.includes('Crisis') || 
       id.includes('Emergency') || 
       id.includes('Safety') ||
       id.includes('Offline')) {
-    return 'views-critical';
+    return 'views-critical'
   }
-  return null;
-};
+  return null
+  };
 
 const getCoreViewChunk = (id: string): string | null => {
   if (id.includes('Dashboard') || 
       id.includes('Community') || 
       id.includes('Profile') ||
       id.includes('Chat')) {
-    return 'views-core';
+    return 'views-core'
   }
-  return null;
-};
+  return null
+  };
 
 const getWellnessViewChunk = (id: string): string | null => {
   if (id.includes('Wellness') || 
       id.includes('Goals') || 
       id.includes('Insights') ||
       id.includes('Mood')) {
-    return 'views-wellness';
+    return 'views-wellness'
   }
-  return null;
-};
+  return null
+  };
 
 const getAdminViewChunk = (id: string): string | null => {
   if (id.includes('Admin') || 
       id.includes('Moderation') || 
       id.includes('Analytics')) {
-    return 'views-admin';
+    return 'views-admin'
   }
-  return null;
-};
+  return null
+  };
 
 const getViewChunk = (id: string): string => {
   return getCriticalViewChunk(id) ||
          getCoreViewChunk(id) ||
          getWellnessViewChunk(id) ||
          getAdminViewChunk(id) ||
-         'views-misc';
-};
+         'views-misc'
+  };
 
 const getComponentChunk = (id: string): string => {
   if (isCrisisRelated(id)) {
-    return 'components-critical';
+    return 'components-critical'
   }
   
   if (id.includes('Dashboard') || 
       id.includes('Monitor') || 
       id.includes('Analytics') ||
       id.includes('Performance')) {
-    return 'components-dashboard';
+    return 'components-dashboard'
   }
   
   if (id.includes('Chat') || 
       id.includes('Message') || 
       id.includes('Video') ||
       id.includes('Call')) {
-    return 'components-communication';
+    return 'components-communication'
   }
   
   if (id.includes('Form') || 
       id.includes('Input') || 
       id.includes('Button') ||
       id.includes('Modal')) {
-    return 'components-ui';
+    return 'components-ui'
   }
   
-  return 'components-misc';
-};
+  return 'components-misc'
+  };
 
 const getServiceChunk = (id: string): string => {
   if (isCrisisRelated(id)) {
-    return 'services-critical';
+    return 'services-critical'
   }
   if (id.includes('auth') || id.includes('user')) {
-    return 'services-auth';
+    return 'services-auth'
   }
   if (id.includes('chat') || id.includes('communication')) {
-    return 'services-communication';
+    return 'services-communication'
   }
-  return 'services-misc';
-};
+  return 'services-misc'
+  };
 
 const getStateChunk = (id: string): string => {
   if (isCrisisRelated(id)) {
-    return 'state-critical';
+    return 'state-critical'
   }
   if (id.includes('auth') || id.includes('user')) {
-    return 'state-auth';
+    return 'state-auth'
   }
-  return 'state-misc';
-};
+  return 'state-misc'
+  };
 
 // Advanced chunk splitting with size optimization;
 export const advancedChunkSplitting = (id: string) => {
   // Crisis intervention - highest priority
   if (isCrisisRelated(id)) {
-    return 'crisis-intervention';
+    return 'crisis-intervention'
   }
   
   // Vendor libraries with specific strategy;
   const vendorChunk = vendorChunkStrategy(id);
   if (vendorChunk) {
-    return vendorChunk;
+    return vendorChunk
   }
   
   // Route-based splitting
   if (id.includes('/views/')) {
-    return getViewChunk(id);
+    return getViewChunk(id)
   }
   
   // Component-based splitting
   if (id.includes('/components/')) {
-    return getComponentChunk(id);
+    return getComponentChunk(id)
   }
   
   // Service layer splitting
   if (id.includes('/services/')) {
-    return getServiceChunk(id);
+    return getServiceChunk(id)
   }
   
   // State management splitting
   if (id.includes('/stores/') || id.includes('/contexts/')) {
-    return getStateChunk(id);
+    return getStateChunk(id)
   }
   
   // Utility functions
   if (id.includes('/utils/') || id.includes('/hooks/')) {
-    return 'utils';
+    return 'utils'
   }
   
   return null; // Let Vite decide for everything else

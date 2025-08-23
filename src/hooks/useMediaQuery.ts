@@ -15,17 +15,17 @@ export const useMediaQuery = (query: string): boolean => {
   const [matches, setMatches] = useState<boolean>(() => {
     // Check if window is defined (client-side)
     if (typeof window !== 'undefined') {
-      return window.matchMedia(query).matches;
-    }
+      return window.matchMedia(query).matches
+  }
     // Default to false for SSR
-    return false;
+    return false
   });
 
   useEffect(() => {
     // Skip if not in browser environment
     if (typeof window === 'undefined') {
-      return;
-    }
+      return
+  }
 
     // Create media query list;
     const mediaQueryList = window.matchMedia(query);
@@ -35,26 +35,26 @@ export const useMediaQuery = (query: string): boolean => {
 
     // Define event handler;
     const handleChange = (event: MediaQueryListEvent) => {
-      setMatches(event.matches);
-    };
+      setMatches(event.matches)
+  };
 
     // Modern browsers
     if (mediaQueryList.addEventListener) {
       mediaQueryList.addEventListener('change', handleChange);
       return () => {
-        mediaQueryList.removeEventListener('change', handleChange);
-      } 
+        mediaQueryList.removeEventListener('change', handleChange)
+  } 
     // Legacy browsers
     else if (mediaQueryList.addListener) {
       mediaQueryList.addListener(handleChange);
       return () => {
-        mediaQueryList.removeListener(handleChange);
-      }
+        mediaQueryList.removeListener(handleChange)
+  }
   };
   }, [query]);
 
-  return matches;
-};
+  return matches
+  };
 
 /**
  * Preset media queries for common breakpoints
@@ -91,28 +91,28 @@ export const usePrefersDarkMode = () => useMediaQuery('(prefers-color-scheme: da
 export const useIsTouchDevice = () => {
   const [isTouch, setIsTouch] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
-      return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    }
-    return false;
+      return 'ontouchstart' in window || navigator.maxTouchPoints > 0
+  }
+    return false
   });
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     
     const checkTouch = () => {
-      setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
-    };
+      setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0)
+  };
     
     checkTouch();
     window.addEventListener('resize', checkTouch);
     
     return () => {
-      window.removeEventListener('resize', checkTouch);
-    };
+      window.removeEventListener('resize', checkTouch)
+  };
   };
   }, []);
 
-  return isTouch;
-};
+  return isTouch
+  };
 
 export default useMediaQuery;

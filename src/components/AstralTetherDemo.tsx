@@ -17,8 +17,8 @@ interface TetherMode {
   name: string;
   description: string;
   icon: string;
-  color: string;
-}
+  color: string
+  }
 
 export const AstralTetherDemo: React.FC = () => {
   const { addToast } = useNotification();
@@ -36,26 +36,26 @@ export const AstralTetherDemo: React.FC = () => {
         setSessionTime(prev => prev + 1);
         // Simulate energy fluctuation
         setEnergyLevel(prev => Math.min(100, prev + (Math.random() * 2 - 0.5)));
-        setResonanceStrength(prev => Math.min(100, prev + (Math.random() * 3 - 1)));
-      }, 1000);;
+        setResonanceStrength(prev => Math.min(100, prev + (Math.random() * 3 - 1)))
+  }, 1000)
   } else {
       if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      setSessionTime(0);
-    }
+        clearInterval(intervalRef.current)
+  }
+      setSessionTime(0)
+  }
     
     return () => {
       if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+        clearInterval(intervalRef.current)
+  }
     };
   }, [isActive]);
 
   const startTetherSession = () => {
     setIsActive(true);
     setPulseAnimation(true);
-    addToast(`Starting ${selectedMode.name} session...`, 'success');
+    addToast(`Starting ${selectedMode.name} session...`, 'success')
   };
 
   const endTetherSession = () => {
@@ -63,13 +63,13 @@ export const AstralTetherDemo: React.FC = () => {
     setPulseAnimation(false);
     const minutes = Math.floor(sessionTime / 60);
     const seconds = sessionTime % 60;
-    addToast(`Session ended. Duration: ${minutes}:${seconds.toString().padStart(2, '0')}`, 'info');
+    addToast(`Session ended. Duration: ${minutes}:${seconds.toString().padStart(2, '0')}`, 'info')
   };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}:${secs.toString().padStart(2, '0')}`
   };
 
   return (
@@ -158,8 +158,7 @@ export const AstralTetherDemo: React.FC = () => {
         {/* Action Button */}
         <div className="tether-actions">
           {!isActive ? (
-            <AppButton;
-              variant="primary"
+            <AppButton variant="primary"
               size="lg"
               onClick={startTetherSession}
               className="tether-start-btn"
@@ -169,8 +168,7 @@ export const AstralTetherDemo: React.FC = () => {
               Start {selectedMode.name} Session
             </AppButton>
           ) : (
-            <AppButton;
-              variant="secondary"
+            <AppButton variant="secondary"
               size="lg"
               onClick={endTetherSession}
               className="tether-end-btn"
@@ -280,5 +278,5 @@ export const AstralTetherDemo: React.FC = () => {
         </p>
       </Card>
     </div>
-  );
-};
+  )
+  };

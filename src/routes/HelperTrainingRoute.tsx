@@ -11,14 +11,14 @@ const HelperTrainingRoute: React.FC = () => {
   const handleTrainingComplete = () => {
     // Handle training completion - could navigate to dashboard, show success message
     console.log('Helper training completed');
-    navigate('/helper/dashboard');
+    navigate('/helper/dashboard')
   };
 
   return (
     <HelperTrainingView 
       onTrainingComplete={handleTrainingComplete}
     />
-  );
-};
+  )
+  };
 
 export default HelperTrainingRoute;

@@ -18,8 +18,8 @@ interface UseServiceWorkerReturn {
   clearCache: () => Promise<boolean>;
   cacheCrisisResource: (url: string) => Promise<boolean>;
   precacheCrisisResources: () => Promise<void>;
-  forceReload: () => void;
-}
+  forceReload: () => void
+  }
 
 /**
  * Custom hook for service worker functionality
@@ -32,18 +32,18 @@ export const useServiceWorker = (): UseServiceWorkerReturn => {
 
   // Update online status;
   const handleOnline = useCallback(() => {
-    setIsOnline(true);
+    setIsOnline(true)
   };
   }, []);
 
   const handleOffline = useCallback(() => {
-    setIsOnline(false);
+    setIsOnline(false)
   };
   }, []);
 
   // Handle service worker updates;
   const handleUpdateAvailable = useCallback(() => {
-    setUpdateAvailable(true);
+    setUpdateAvailable(true)
   };
   }, []);
 
@@ -51,11 +51,11 @@ export const useServiceWorker = (): UseServiceWorkerReturn => {
   const checkOfflineReadiness = useCallback(async () => {
     try {
       const ready = await serviceWorkerManager.isOfflineReady();
-      setIsOfflineReady(ready);
-    } catch (error) {
+      setIsOfflineReady(ready)
+  } catch (error) {
       console.error('Failed to check offline readiness:', error);
-      setIsOfflineReady(false);
-    }
+      setIsOfflineReady(false)
+  }
   };
   }, []);
 
@@ -63,10 +63,10 @@ export const useServiceWorker = (): UseServiceWorkerReturn => {
   const updateCacheStatus = useCallback(async () => {
     try {
       const status = await serviceWorkerManager.getCacheStatus();
-      setCacheStatus(status);
-    } catch (error) {
-      console.error('Failed to get cache status:', error);
-    }
+      setCacheStatus(status)
+  } catch (error) {
+      console.error('Failed to get cache status:', error)
+  }
   };
   }, []);
 
@@ -74,10 +74,10 @@ export const useServiceWorker = (): UseServiceWorkerReturn => {
   const skipWaiting = useCallback(async () => {
     try {
       await serviceWorkerManager.skipWaiting();
-      setUpdateAvailable(false);
-    } catch (error) {
-      console.error('Failed to skip waiting:', error);
-    }
+      setUpdateAvailable(false)
+  } catch (error) {
+      console.error('Failed to skip waiting:', error)
+  }
   };
   }, []);
 
@@ -86,11 +86,11 @@ export const useServiceWorker = (): UseServiceWorkerReturn => {
     try {
       const hasUpdate = await serviceWorkerManager.checkForUpdates();
       await updateCacheStatus();
-      return hasUpdate;
-    } catch (error) {
+      return hasUpdate
+  } catch (error) {
       console.error('Failed to check for updates:', error);
-      return false;
-    }
+      return false
+  }
   };
   }, [updateCacheStatus]);
 
@@ -100,13 +100,13 @@ export const useServiceWorker = (): UseServiceWorkerReturn => {
       const success = await serviceWorkerManager.clearCache();
       if (success) {
         await updateCacheStatus();
-        await checkOfflineReadiness();
-      }
-      return success;
-    } catch (error) {
+        await checkOfflineReadiness()
+  }
+      return success
+  } catch (error) {
       console.error('Failed to clear cache:', error);
-      return false;
-    }
+      return false
+  }
   };
   }, [updateCacheStatus, checkOfflineReadiness]);
 
@@ -116,13 +116,13 @@ export const useServiceWorker = (): UseServiceWorkerReturn => {
       const success = await serviceWorkerManager.cacheCrisisResource(url);
       if (success) {
         await updateCacheStatus();
-        await checkOfflineReadiness();
-      }
-      return success;
-    } catch (error) {
+        await checkOfflineReadiness()
+  }
+      return success
+  } catch (error) {
       console.error('Failed to cache crisis resource:', error);
-      return false;
-    }
+      return false
+  }
   };
   }, [updateCacheStatus, checkOfflineReadiness]);
 
@@ -131,16 +131,16 @@ export const useServiceWorker = (): UseServiceWorkerReturn => {
     try {
       await serviceWorkerManager.precacheCrisisResources();
       await updateCacheStatus();
-      await checkOfflineReadiness();
-    } catch (error) {
-      console.error('Failed to pre-cache crisis resources:', error);
-    }
+      await checkOfflineReadiness()
+  } catch (error) {
+      console.error('Failed to pre-cache crisis resources:', error)
+  }
   };
   }, [updateCacheStatus, checkOfflineReadiness]);
 
   // Force reload with new service worker;
   const forceReload = useCallback(() => {
-    serviceWorkerManager.forceReload();
+    serviceWorkerManager.forceReload()
   };
   }, []);
 
@@ -159,8 +159,8 @@ export const useServiceWorker = (): UseServiceWorkerReturn => {
     return () => {
       serviceWorkerManager.removeOnlineListener(handleOnline);
       serviceWorkerManager.removeOfflineListener(handleOffline);
-      serviceWorkerManager.removeUpdateListener(handleUpdateAvailable);
-    };
+      serviceWorkerManager.removeUpdateListener(handleUpdateAvailable)
+  };
   };
   }, [handleOnline, handleOffline, handleUpdateAvailable, updateCacheStatus, checkOfflineReadiness]);
 
@@ -168,8 +168,9 @@ export const useServiceWorker = (): UseServiceWorkerReturn => {
   useEffect(() => {
     const currentStatus = serviceWorkerManager.getNetworkStatus();
     if (currentStatus.isOnline !== isOnline) {
-      setIsOnline(currentStatus.isOnline);
-    }
+      setIsOnline(currentStatus.isOnline)
+  }
+  };
   };
   };
   }, [isOnline]);
@@ -204,8 +205,8 @@ export const useOfflineStatus = () => {
 
     return () => {
       serviceWorkerManager.removeOnlineListener(handleOnline);
-      serviceWorkerManager.removeOfflineListener(handleOffline);
-    };
+      serviceWorkerManager.removeOfflineListener(handleOffline)
+  };
   };
   }, []);
 
@@ -224,12 +225,12 @@ export const useCacheManager = () => {
     try {
       setIsLoading(true);
       const status = await serviceWorkerManager.getCacheStatus();
-      setCacheStatus(status);
-    } catch (error) {
-      console.error('Failed to get cache status:', error);
-    } finally {
-      setIsLoading(false);
-    }
+      setCacheStatus(status)
+  } catch (error) {
+      console.error('Failed to get cache status:', error)
+  } finally {
+      setIsLoading(false)
+  }
   };
   }, []);
 
@@ -238,15 +239,15 @@ export const useCacheManager = () => {
       setIsLoading(true);
       const success = await serviceWorkerManager.clearCache();
       if (success) {
-        await updateCacheStatus();
-      }
-      return success;
-    } catch (error) {
+        await updateCacheStatus()
+  }
+      return success
+  } catch (error) {
       console.error('Failed to clear cache:', error);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
+      return false
+  } finally {
+      setIsLoading(false)
+  }
   };
   }, [updateCacheStatus]);
 
@@ -255,20 +256,21 @@ export const useCacheManager = () => {
       setIsLoading(true);
       const success = await serviceWorkerManager.cacheCrisisResource(url);
       if (success) {
-        await updateCacheStatus();
-      }
-      return success;
-    } catch (error) {
+        await updateCacheStatus()
+  }
+      return success
+  } catch (error) {
       console.error('Failed to cache crisis resource:', error);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
+      return false
+  } finally {
+      setIsLoading(false)
+  }
   };
   }, [updateCacheStatus]);
 
   useEffect(() => {
-    updateCacheStatus();
+    updateCacheStatus()
+  };
   };
   };
   }, [updateCacheStatus]);

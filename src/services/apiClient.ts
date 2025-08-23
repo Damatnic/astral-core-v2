@@ -23,23 +23,23 @@ export interface ApiRequestConfig {
   timeout?: number;
   retries?: number;
   withAuth?: boolean;
-  signal?: AbortSignal;
-}
+  signal?: AbortSignal
+  }
 
 export interface ApiResponse<T = any> {
   data: T;
   status: number;
   statusText: string;
-  headers: Headers;
-}
+  headers: Headers
+  }
 
 export interface ApiError {
   message: string;
   status?: number;
   code?: string;
   details?: any;
-  timestamp: string;
-}
+  timestamp: string
+  }
 
 // Custom API Error;
 export class AstralCoreApiError extends Error {
@@ -54,7 +54,7 @@ export class AstralCoreApiError extends Error {
     this.status = error.status;
     this.code = error.code;
     this.details = error.details;
-    this.timestamp = error.timestamp;
+    this.timestamp = error.timestamp
   }
 }
 
@@ -73,7 +73,7 @@ class ApiClient {
       'X-App-Name': 'Astral-Core',
       'X-App-Version': '2.0.0',
     };
-    this.abortControllers = new Map();
+    this.abortControllers = new Map()
   }
 
   /**
@@ -107,12 +107,12 @@ class ApiClient {
 
     // Set timeout;
     const timeoutId = setTimeout(() => {
-      abortController.abort();
-    }, timeout);
+      abortController.abort()
+  }, timeout);
 
     try {
       // Make request with retry logic;
-      const response = await this.fetchWithRetry(;
+      const response = await this.fetchWithRetry(;;
         url,
         {
           method,
@@ -138,8 +138,8 @@ class ApiClient {
       } catch (error) {
       clearTimeout(timeoutId);
       this.abortControllers.delete(requestId);
-      throw this.handleError(error);
-    }
+      throw this.handleError(error)
+  }
   }
 
   /**
@@ -156,7 +156,7 @@ class ApiClient {
       params,
     };
   };
-    return response.data;
+    return response.data
   }
 
   /**
@@ -172,7 +172,7 @@ class ApiClient {
       method: 'POST',
       body,
     });
-    return response.data;
+    return response.data
   }
 
   /**
@@ -188,7 +188,7 @@ class ApiClient {
       method: 'PUT',
       body,
     });
-    return response.data;
+    return response.data
   }
 
   /**
@@ -204,7 +204,7 @@ class ApiClient {
       method: 'PATCH',
       body,
     });
-    return response.data;
+    return response.data
   }
 
   /**
@@ -218,7 +218,7 @@ class ApiClient {
       ...config,
       method: 'DELETE',
     });
-    return response.data;
+    return response.data
   }
 
   /**
@@ -236,9 +236,9 @@ class ApiClient {
     // Add additional data
     if (additionalData) {
       Object.entries(additionalData).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
-    }
+        formData.append(key, value)
+  })
+  }
 
     // Get auth token;
     const token = await auth0Service.getAccessToken();
@@ -252,37 +252,37 @@ class ApiClient {
         xhr.upload.addEventListener('progress', (event) => {
           if (event.lengthComputable) {
             const progress = (event.loaded / event.total) * 100;
-            onProgress(progress);
-          }
-        });
-      }
+            onProgress(progress)
+  }
+        })
+  }
 
       // Handle response
       xhr.addEventListener('load', () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           try {
             const response = JSON.parse(xhr.responseText);
-            resolve(response);
-          } catch (parseError) {
+            resolve(response)
+  } catch (parseError) {
             console.error('JSON parse error:', parseError);
-            reject(new Error('Failed to parse response'));
-          };
+            reject(new Error('Failed to parse response'))
+  }
   } else {
-          reject(this.handleError(new Error(xhr.statusText)));
-        }
+          reject(this.handleError(new Error(xhr.statusText)))
+  }
       });
 
       // Handle errors
       xhr.addEventListener('error', () => {
-        reject(this.handleError(new Error('Network error')));
-      });
+        reject(this.handleError(new Error('Network error')))
+  });
 
       // Open and send request
       xhr.open('POST', this.buildURL(endpoint));
       xhr.setRequestHeader('Authorization', `Bearer ${token}`);
       xhr.setRequestHeader('X-App-Name', 'Astral-Core');
-      xhr.send(formData);
-    });
+      xhr.send(formData)
+  })
   }
 
   /**
@@ -315,7 +315,7 @@ class ApiClient {
     
     // Cleanup
     document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+    window.URL.revokeObjectURL(url)
   }
 
   /**
@@ -325,8 +325,8 @@ class ApiClient {
     const controller = this.abortControllers.get(requestId);
     if (controller) {
       controller.abort();
-      this.abortControllers.delete(requestId);
-    }
+      this.abortControllers.delete(requestId)
+  }
   }
 
   /**
@@ -334,7 +334,7 @@ class ApiClient {
    */
   cancelAllRequests(): void {
     this.abortControllers.forEach(controller => controller.abort());
-    this.abortControllers.clear();
+    this.abortControllers.clear()
   }
 
   /**
@@ -349,12 +349,12 @@ class ApiClient {
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
-          url.searchParams.append(key, String(value));
-        }
-      });
-    }
+          url.searchParams.append(key, String(value))
+  }
+      })
+  }
 
-    return url.toString();
+    return url.toString()
   }
 
   /**
@@ -373,8 +373,8 @@ class ApiClient {
     if (withAuth) {
       const token = await auth0Service.getAccessToken();
       if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
+        headers['Authorization'] = `Bearer ${token}`
+  }
     }
 
     // Add request ID for tracking
@@ -383,10 +383,10 @@ class ApiClient {
     // Add crisis mode header if active;
     const crisisMode = this.checkCrisisMode();
     if (crisisMode) {
-      headers['X-Crisis-Override'] = 'true';
-    }
+      headers['X-Crisis-Override'] = 'true'
+  }
 
-    return headers;
+    return headers
   }
 
   /**
@@ -405,8 +405,8 @@ class ApiClient {
 
         // Check if response is ok
         if (response.ok) {
-          return response;
-        }
+          return response
+  }
 
         // Handle specific HTTP errors
         if (response.status === 401) {
@@ -416,34 +416,34 @@ class ApiClient {
           if (options.headers && options.headers instanceof Headers) {
             const token = await auth0Service.getAccessToken();
             if (token) {
-              options.headers.set('Authorization', `Bearer ${token}`);
-            }
-          };
+              options.headers.set('Authorization', `Bearer ${token}`)
+  }
+          }
   } else if (response.status === 429) {
           // Rate limited - wait before retry;
           const retryAfter = response.headers.get('Retry-After');
           const delay = retryAfter ? parseInt(retryAfter) * 1000 : RETRY_DELAY * (i + 1);
-          await this.delay(delay);;
+          await this.delay(delay)
   } else if (response.status >= 500) {
           // Server error - retry with exponential backoff
           if (i < retries) {
-            await this.delay(RETRY_DELAY * Math.pow(2, i));
-          };
+            await this.delay(RETRY_DELAY * Math.pow(2, i))
+  }
   } else {
           // Client error - don't retry
-          return response;
-        }
+          return response
+  }
       } catch (error) {
         lastError = error;
         
         // Network error - retry with exponential backoff
         if (i < retries) {
-          await this.delay(RETRY_DELAY * Math.pow(2, i));
-        }
+          await this.delay(RETRY_DELAY * Math.pow(2, i))
+  }
       }
     }
 
-    throw lastError || new Error('Request failed after retries');
+    throw lastError || new Error('Request failed after retries')
   }
 
   /**
@@ -453,12 +453,12 @@ class ApiClient {
     const contentType = response.headers.get('content-type');
 
     if (contentType?.includes('application/json')) {
-      return await response.json();;
+      return await response.json()
   } else if (contentType?.includes('text/')) {
-      return await response.text() as unknown as T;;
+      return await response.text() as unknown as T
   } else {
-      return await response.blob() as unknown as T;
-    }
+      return await response.blob() as unknown as T
+  }
   }
 
   /**
@@ -473,8 +473,8 @@ class ApiClient {
           message: 'Request was cancelled',
           code: 'REQUEST_CANCELLED',
           timestamp: new Date().toISOString(),
-        });
-      }
+        })
+  }
 
       // Network error
       if (error instanceof TypeError && error.message === 'Failed to fetch') {
@@ -482,8 +482,8 @@ class ApiClient {
           message: 'Network error - please check your connection',
           code: 'NETWORK_ERROR',
           timestamp: new Date().toISOString(),
-        });
-      }
+        })
+  }
     }
 
     // API error response with type guard;
@@ -495,11 +495,11 @@ class ApiClient {
         code: errorWithResponse.response.data?.code,
         details: errorWithResponse.response.data?.details,
         timestamp: new Date().toISOString(),
-      });
-    }
+      })
+  }
 
     // Generic error;
-    const errorMessage = error instanceof Error ? error.message : ;
+    const errorMessage = error instanceof Error ? error.message : ;;
                         (typeof error === 'string' ? error : 'An unexpected error occurred');
     
     return new AstralCoreApiError({
@@ -507,14 +507,14 @@ class ApiClient {
       code: 'UNKNOWN_ERROR',
       details: error,
       timestamp: new Date().toISOString(),
-    });
+    })
   }
 
   /**
    * Generate unique request ID
    */
   private generateRequestId(): string {
-    return `req_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+    return `req_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`
   }
 
   /**
@@ -522,14 +522,14 @@ class ApiClient {
    */
   private checkCrisisMode(): boolean {
     // Check localStorage or state for crisis mode
-    return localStorage.getItem('astralcore_crisis_mode') === 'true';
+    return localStorage.getItem('astralcore_crisis_mode') === 'true'
   }
 
   /**
    * Delay helper for retries
    */
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms))
   }
 }
 

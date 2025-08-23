@@ -24,8 +24,8 @@ interface ChatState {
   sendMessage: (dilemmaId: string, text: string) => Promise<void>;
   setTyping: (dilemmaId: string, isTyping: boolean) => void;
   submitFeedback: (wasHelpful: boolean) => Promise<void>;
-  dismissGuidance: () => void;
-}
+  dismissGuidance: () => void
+  }
 
 export const useChatStore = create<ChatState>((set, get) => ({
   chatSessions: {},
@@ -36,11 +36,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
   
   get activeChat() {
     const { activeChatId, chatSessions } = get();
-    return activeChatId ? chatSessions[activeChatId] : null;
+    return activeChatId ? chatSessions[activeChatId] : null
   },
   
   get hasUnreadNotifications() {
-    return Object.values(get().chatSessions).some((s: ChatSession) => s.unread);
+    return Object.values(get().chatSessions).some((s: ChatSession) => s.unread)
   },
 
   openFeedbackModal: () => set({ isFeedbackModalOpen: true }),
@@ -69,10 +69,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
           }
         },
         activeChatId: dilemmaId,
-      }));
-    } catch (error) {
-      console.error("Failed to start chat:", error);
-    }
+      }))
+  } catch (error) {
+      console.error("Failed to start chat:", error)
+  }
   },
 
   closeChat: (dilemmaId) => {
@@ -80,14 +80,14 @@ export const useChatStore = create<ChatState>((set, get) => ({
     const chatSession = chatSessions[dilemmaId];
     if (chatSession?.helpSessionId) {
       // This is now handled by the backend when a dilemma is resolved.
-      // useSessionStore.getState().endHelpSession(chatSession.helpSessionId);
-    }
+      // useSessionStore.getState().endHelpSession(chatSession.helpSessionId)
+  }
     set({
       activeChatId: null,
       lastChatDilemmaId: dilemmaId,
       isFeedbackModalOpen: true,
       guidance: null,
-    });
+    })
   },
 
   sendMessage: async (dilemmaId, text) => {
@@ -98,8 +98,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     if (!senderId) {
         console.error("Could not determine sender ID for chat message.");
-        return;
-    }
+        return
+  }
 
     const optimisticMessage: ChatMessage = {
       id: crypto.randomUUID(),
@@ -135,11 +135,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
         try {
             const guidanceResult = await ApiClient.ai.getHelperGuidance(text);
             if (guidanceResult.isCrisis || (guidanceResult.flagReason && guidanceResult.flagReason !== "none")) {
-                set({ guidance: { ...guidanceResult, dilemmaId } });
-            }
+                set({ guidance: { ...guidanceResult, dilemmaId } })
+  }
         } catch (error) {
-            console.error("Failed to get AI helper guidance:", error);
-        }
+            console.error("Failed to get AI helper guidance:", error)
+  }
     }
 
   },
@@ -150,7 +150,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         ...state.chatSessions,
         [dilemmaId]: { ...state.chatSessions[dilemmaId], isTyping },
       },
-    }));
+    }))
   },
 
   submitFeedback: async (wasHelpful) => {
@@ -158,10 +158,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
     if (lastChatDilemmaId) {
       const dilemma = useDilemmaStore.getState().getDilemmaById(lastChatDilemmaId);
       if (dilemma?.assignedHelperId) {
-        await ApiClient.feedback.submitFeedback(dilemma.id, dilemma.assignedHelperId, wasHelpful);
-      }
+        await ApiClient.feedback.submitFeedback(dilemma.id, dilemma.assignedHelperId, wasHelpful)
+  }
     }
-    set({ lastChatDilemmaId: null, isFeedbackModalOpen: false });
+    set({ lastChatDilemmaId: null, isFeedbackModalOpen: false })
   },
   
   dismissGuidance: () => set({ guidance: null }),

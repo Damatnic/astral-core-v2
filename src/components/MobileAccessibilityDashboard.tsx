@@ -14,16 +14,16 @@ interface DashboardState {
   activeTab: 'preferences' | 'audit' | 'compliance' | 'help';
   auditResults: AccessibilityAuditResult | null;
   isAuditing: boolean;
-  autoAudit: boolean;
-}
+  autoAudit: boolean
+  }
 
 // Audit result interfaces (duplicated to avoid circular imports);
 interface AccessibilityAuditResult {
   score: number;
   issues: AccessibilityIssue[];
   suggestions: string[];
-  compliantAreas: string[];
-}
+  compliantAreas: string[]
+  }
 
 interface AccessibilityIssue {
   type: 'error' | 'warning' | 'info';
@@ -32,8 +32,8 @@ interface AccessibilityIssue {
   element?: string;
   wcagCriterion: string;
   severity: 'low' | 'medium' | 'high' | 'critical';
-  fix?: string;
-}
+  fix?: string
+  }
 
 // Dashboard component;
 export const MobileAccessibilityDashboard: React.FC = () => {
@@ -49,7 +49,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
     activeTab: 'preferences',
     auditResults: null,
     isAuditing: false,
-    autoAudit: false;
+    autoAudit: false
   });
 
   // Toggle dashboard visibility;
@@ -58,13 +58,13 @@ export const MobileAccessibilityDashboard: React.FC = () => {
       const newState = { ...prev, isOpen: !prev.isOpen };
       
       if (newState.isOpen) {
-        announceToScreenReader('Accessibility dashboard opened', 'assertive');;
+        announceToScreenReader('Accessibility dashboard opened', 'assertive')
   } else {
-        announceToScreenReader('Accessibility dashboard closed', 'assertive');
-      }
+        announceToScreenReader('Accessibility dashboard closed', 'assertive')
+  }
       
-      return newState;
-    });
+      return newState
+  })
   };
   }, [announceToScreenReader]);
 
@@ -80,18 +80,18 @@ export const MobileAccessibilityDashboard: React.FC = () => {
       setDashboardState(prev => ({
         ...prev,
         auditResults: results,
-        isAuditing: false;
-      }));
+        isAuditing: false
+  }));
       
       announceToScreenReader(
         `Audit complete. Score: ${results.score}%, ${results.issues.length} issues found`,
         'assertive'
-      );
-    } catch (error) {
+      )
+  } catch (error) {
       console.error('Audit failed:', error);
       setDashboardState(prev => ({ ...prev, isAuditing: false }));
-      announceToScreenReader('Audit failed. Please try again.', 'assertive');
-    }
+      announceToScreenReader('Audit failed. Please try again.', 'assertive')
+  }
   };
   }, [checkWCAGCompliance, announceToScreenReader]);
 
@@ -102,11 +102,11 @@ export const MobileAccessibilityDashboard: React.FC = () => {
     const observer = new MutationObserver(() => {
       // Debounce audit calls;
       const timeoutId = setTimeout(() => {
-        runAudit();
-      }, 2000);
+        runAudit()
+  }, 2000);
       
-      return () => clearTimeout(timeoutId);
-    });
+      return () => clearTimeout(timeoutId)
+  });
     
     observer.observe(document.body, {
       childList: true,
@@ -115,7 +115,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
       attributeFilter: ['aria-label', 'aria-labelledby', 'aria-describedby', 'alt', 'role']
     });
     
-    return () => observer.disconnect();
+    return () => observer.disconnect()
   };
   }, [dashboardState.autoAudit, runAudit]);
 
@@ -125,25 +125,25 @@ export const MobileAccessibilityDashboard: React.FC = () => {
       // Alt + A: Toggle accessibility dashboard
       if (event.altKey && event.key === 'a') {
         event.preventDefault();
-        toggleDashboard();
-      }
+        toggleDashboard()
+  }
       
       // Alt + Shift + A: Run audit
       if (event.altKey && event.shiftKey && event.key === 'A') {
         event.preventDefault();
         if (dashboardState.isOpen) {
-          runAudit();
-        }
+          runAudit()
+  }
       }
     };
     
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown)
   };
   }, [toggleDashboard, runAudit, dashboardState.isOpen]);
 
   // Render preferences tab;
-  const renderPreferencesTab = () => (;
+  const renderPreferencesTab = () => (;;
     <div className="accessibility-tab-content" role="tabpanel" aria-labelledby="preferences-tab">
       <h3>Accessibility Preferences</h3>
       
@@ -151,8 +151,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
         <h4>Visual</h4>
         
         <label className="preference-item">
-          <input;
-            type="checkbox"
+          <input type="checkbox"
             checked={preferences.highContrast}
             onChange={(e) => updatePreferences({ highContrast: e.target.checked })}
             aria-describedby="high-contrast-desc"
@@ -162,8 +161,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
         </label>
         
         <label className="preference-item">
-          <input;
-            type="checkbox"
+          <input type="checkbox"
             checked={preferences.largeText}
             onChange={(e) => updatePreferences({ largeText: e.target.checked })}
             aria-describedby="large-text-desc"
@@ -193,8 +191,8 @@ export const MobileAccessibilityDashboard: React.FC = () => {
             id="colorblind-select"
             value={preferences.colorBlindness}
             onChange={(e) => updatePreferences({ 
-              colorBlindness: e.target.value as typeof preferences.colorBlindness ;
-            })}
+              colorBlindness: e.target.value as typeof preferences.colorBlindness
+  })}
           >
             <option value="none">None</option>
             <option value="protanopia">Protanopia (Red-blind)</option>
@@ -208,8 +206,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
         <h4>Motion & Animation</h4>
         
         <label className="preference-item">
-          <input;
-            type="checkbox"
+          <input type="checkbox"
             checked={preferences.reducedMotion}
             onChange={(e) => updatePreferences({ reducedMotion: e.target.checked })}
             aria-describedby="reduced-motion-desc"
@@ -223,8 +220,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
         <h4>Input & Navigation</h4>
         
         <label className="preference-item">
-          <input;
-            type="checkbox"
+          <input type="checkbox"
             checked={preferences.hapticFeedback}
             onChange={(e) => updatePreferences({ hapticFeedback: e.target.checked })}
             aria-describedby="haptic-desc"
@@ -239,8 +235,8 @@ export const MobileAccessibilityDashboard: React.FC = () => {
             id="focus-style-select"
             value={preferences.focusIndicatorStyle}
             onChange={(e) => updatePreferences({ 
-              focusIndicatorStyle: e.target.value as typeof preferences.focusIndicatorStyle;
-            })}
+              focusIndicatorStyle: e.target.value as typeof preferences.focusIndicatorStyle
+  })}
           >
             <option value="default">Default</option>
             <option value="enhanced">Enhanced</option>
@@ -253,8 +249,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
         <h4>Screen Reader</h4>
         
         <label className="preference-item">
-          <input;
-            type="checkbox"
+          <input type="checkbox"
             checked={preferences.screenReader}
             onChange={(e) => updatePreferences({ screenReader: e.target.checked })}
             aria-describedby="screen-reader-desc"
@@ -264,8 +259,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
         </label>
         
         <label className="preference-item">
-          <input;
-            type="checkbox"
+          <input type="checkbox"
             checked={preferences.voiceControl}
             onChange={(e) => updatePreferences({ voiceControl: e.target.checked })}
             aria-describedby="voice-control-desc"
@@ -278,7 +272,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
   );
 
   // Render audit tab;
-  const renderAuditTab = () => (;
+  const renderAuditTab = () => (;;
     <div className="accessibility-tab-content" role="tabpanel" aria-labelledby="audit-tab">
       <div className="audit-header">
         <h3>Accessibility Audit</h3>
@@ -294,13 +288,12 @@ export const MobileAccessibilityDashboard: React.FC = () => {
           <small id="audit-btn-desc">Performs comprehensive accessibility check</small>
           
           <label className="auto-audit-toggle">
-            <input;
-              type="checkbox"
+            <input type="checkbox"
               checked={dashboardState.autoAudit}
               onChange={(e) => setDashboardState(prev => ({ 
                 ...prev, 
-                autoAudit: e.target.checked ;
-              }))}
+                autoAudit: e.target.checked
+  }))}
             />
             <span>Auto-audit on changes</span>
           </label>
@@ -368,7 +361,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
   );
 
   // Render compliance tab;
-  const renderComplianceTab = () => (;
+  const renderComplianceTab = () => (;;
     <div className="accessibility-tab-content" role="tabpanel" aria-labelledby="compliance-tab">
       <h3>WCAG Compliance</h3>
       
@@ -443,7 +436,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
   );
 
   // Render help tab;
-  const renderHelpTab = () => (;
+  const renderHelpTab = () => (;;
     <div className="accessibility-tab-content" role="tabpanel" aria-labelledby="help-tab">
       <h3>Accessibility Help</h3>
       
@@ -514,32 +507,29 @@ export const MobileAccessibilityDashboard: React.FC = () => {
     if (score >= 90) return 'excellent';
     if (score >= 80) return 'good';
     if (score >= 70) return 'fair';
-    return 'poor';
+    return 'poor'
   };
 
   if (!dashboardState.isOpen) {
     return (
-      <button;
-        className="accessibility-dashboard-toggle"
+      <button className="accessibility-dashboard-toggle"
         onClick={toggleDashboard}
         aria-label="Open accessibility dashboard"
         title="Open accessibility dashboard (Alt + A)"
       >
         <span className="accessibility-icon" aria-hidden="true">♿</span>
       </button>
-    );
+    )
   }
 
   return (
-    <dialog; 
-      className="accessibility-dashboard"
+    <dialog className="accessibility-dashboard"
       aria-labelledby="dashboard-title"
       open={true}
     >
       <div className="dashboard-header">
         <h2 id="dashboard-title">Accessibility Dashboard</h2>
-        <button;
-          className="dashboard-close"
+        <button className="dashboard-close"
           onClick={toggleDashboard}
           aria-label="Close accessibility dashboard"
         >
@@ -585,13 +575,13 @@ export const MobileAccessibilityDashboard: React.FC = () => {
           cursor: pointer;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
           z-index: 1000;
-          transition: all 0.3s ease;
-        }
+          transition: all 0.3s ease
+  }
         
         .accessibility-dashboard-toggle:hover {
           background: #0052a3;
-          transform: scale(1.05);
-        }
+          transform: scale(1.05)
+  }
         
         .accessibility-dashboard {
           position: fixed;
@@ -606,8 +596,8 @@ export const MobileAccessibilityDashboard: React.FC = () => {
           z-index: 1001;
           display: flex;
           flex-direction: column;
-          font-family: system-ui, sans-serif;
-        }
+          font-family: system-ui, sans-serif
+  }
         
         .dashboard-header {
           display: flex;
@@ -616,13 +606,13 @@ export const MobileAccessibilityDashboard: React.FC = () => {
           padding: 16px;
           background: #0066cc;
           color: white;
-          border-radius: 6px 6px 0 0;
-        }
+          border-radius: 6px 6px 0 0
+  }
         
         .dashboard-header h2 {
           margin: 0;
-          font-size: 18px;
-        }
+          font-size: 18px
+  }
         
         .dashboard-close {
           background: none;
@@ -631,18 +621,18 @@ export const MobileAccessibilityDashboard: React.FC = () => {
           font-size: 24px;
           cursor: pointer;
           padding: 4px;
-          border-radius: 4px;
-        }
+          border-radius: 4px
+  }
         
         .dashboard-close:hover {
-          background: rgba(255, 255, 255, 0.2);
-        }
+          background: rgba(255, 255, 255, 0.2)
+  }
         
         .dashboard-tabs {
           display: flex;
           background: #f5f5f5;
-          border-bottom: 1px solid #ddd;
-        }
+          border-bottom: 1px solid #ddd
+  }
         
         .tab-button {
           flex: 1;
@@ -652,34 +642,34 @@ export const MobileAccessibilityDashboard: React.FC = () => {
           cursor: pointer;
           font-size: 14px;
           border-bottom: 3px solid transparent;
-          transition: all 0.2s ease;
-        }
+          transition: all 0.2s ease
+  }
         
         .tab-button:hover {
-          background: #e9e9e9;
-        }
+          background: #e9e9e9
+  }
         
         .tab-button.active {
           background: white;
           border-bottom-color: #0066cc;
-          font-weight: 600;
-        }
+          font-weight: 600
+  }
         
         .dashboard-content {
           flex: 1;
           overflow-y: auto;
-          padding: 16px;
-        }
+          padding: 16px
+  }
         
         .accessibility-tab-content h3 {
           margin: 0 0 16px 0;
           font-size: 16px;
-          color: #333;
-        }
+          color: #333
+  }
         
         .preference-group {
-          margin-bottom: 24px;
-        }
+          margin-bottom: 24px
+  }
         
         .preference-group h4 {
           margin: 0 0 12px 0;
@@ -687,38 +677,38 @@ export const MobileAccessibilityDashboard: React.FC = () => {
           font-weight: 600;
           color: #555;
           padding-bottom: 4px;
-          border-bottom: 1px solid #eee;
-        }
+          border-bottom: 1px solid #eee
+  }
         
         .preference-item {
           display: block;
           margin-bottom: 16px;
-          padding: 8px 0;
-        }
+          padding: 8px 0
+  }
         
         .preference-item input[type="checkbox"] {
-          margin-right: 8px;
-        }
+          margin-right: 8px
+  }
         
         .preference-item input[type="range"] {
           width: 100%;
-          margin: 8px 0;
-        }
+          margin: 8px 0
+  }
         
         .preference-item select {
           width: 100%;
           padding: 8px;
           margin-top: 4px;
           border: 1px solid #ccc;
-          border-radius: 4px;
-        }
+          border-radius: 4px
+  }
         
         .preference-item small {
           display: block;
           color: #666;
           font-size: 12px;
-          margin-top: 4px;
-        }
+          margin-top: 4px
+  }
         
         .audit-header {
           display: flex;
@@ -726,51 +716,51 @@ export const MobileAccessibilityDashboard: React.FC = () => {
           align-items: flex-start;
           margin-bottom: 16px;
           flex-wrap: wrap;
-          gap: 12px;
-        }
+          gap: 12px
+  }
         
         .audit-controls {
           display: flex;
           flex-direction: column;
           gap: 8px;
-          align-items: flex-end;
-        }
+          align-items: flex-end
+  }
         
         .audit-btn {
           padding: 8px 16px;
           border: none;
           border-radius: 4px;
           cursor: pointer;
-          font-weight: 600;
-        }
+          font-weight: 600
+  }
         
         .audit-btn.primary {
           background: #0066cc;
-          color: white;
-        }
+          color: white
+  }
         
         .audit-btn:disabled {
           opacity: 0.6;
-          cursor: not-allowed;
-        }
+          cursor: not-allowed
+  }
         
         .auto-audit-toggle {
           font-size: 12px;
           display: flex;
           align-items: center;
-          gap: 6px;
-        }
+          gap: 6px
+  }
         
         .audit-score {
           text-align: center;
-          margin-bottom: 24px;
-        }
+          margin-bottom: 24px
+  }
         
         .score {
           font-size: 48px;
           font-weight: bold;
-          margin: 8px 0;
-        }
+          margin: 8px 0
+  }
         
         .score.excellent { color: #10b981; }
         .score.good { color: #3b82f6; }
@@ -781,36 +771,36 @@ export const MobileAccessibilityDashboard: React.FC = () => {
           margin-bottom: 16px;
           padding: 12px;
           border-radius: 4px;
-          border-left: 4px solid;
-        }
+          border-left: 4px solid
+  }
         
         .issue-item.error { 
           background: #fef2f2; 
-          border-left-color: #ef4444; 
-        }
+          border-left-color: #ef4444
+  }
         
         .issue-item.warning { 
           background: #fffbeb; 
-          border-left-color: #f59e0b; 
-        }
+          border-left-color: #f59e0b
+  }
         
         .issue-item.info { 
           background: #eff6ff; 
-          border-left-color: #3b82f6; 
-        }
+          border-left-color: #3b82f6
+  }
         
         .issue-header {
           display: flex;
           justify-content: space-between;
           margin-bottom: 8px;
           font-size: 12px;
-          font-weight: 600;
-        }
+          font-weight: 600
+  }
         
         .issue-item h5 {
           margin: 0 0 8px 0;
-          font-size: 14px;
-        }
+          font-size: 14px
+  }
         
         .issue-element {
           display: block;
@@ -818,37 +808,37 @@ export const MobileAccessibilityDashboard: React.FC = () => {
           padding: 4px 8px;
           border-radius: 3px;
           font-size: 12px;
-          margin: 8px 0;
-        }
+          margin: 8px 0
+  }
         
         .issue-fix {
           margin-top: 8px;
-          font-size: 13px;
-        }
+          font-size: 13px
+  }
         
         .compliance-grid {
           display: grid;
           gap: 16px;
-          margin-bottom: 24px;
-        }
+          margin-bottom: 24px
+  }
         
         .compliance-item {
           padding: 16px;
           border: 1px solid #e5e7eb;
-          border-radius: 6px;
-        }
+          border-radius: 6px
+  }
         
         .compliance-item h5 {
-          margin: 0 0 8px 0;
-        }
+          margin: 0 0 8px 0
+  }
         
         .compliance-status {
           display: inline-block;
           padding: 4px 8px;
           border-radius: 12px;
           font-size: 12px;
-          font-weight: 600;
-        }
+          font-weight: 600
+  }
         
         .compliance-status.target { background: #dbeafe; color: #1e40af; }
         .compliance-status.focus { background: #f3e8ff; color: #7c3aed; }
@@ -856,91 +846,91 @@ export const MobileAccessibilityDashboard: React.FC = () => {
         .compliance-status.disabled { background: #fee2e2; color: #dc2626; }
         
         .principle-group {
-          margin-bottom: 20px;
-        }
+          margin-bottom: 20px
+  }
         
         .principle-group h5 {
           margin: 0 0 8px 0;
-          color: #374151;
-        }
+          color: #374151
+  }
         
         .principle-group ul {
           margin: 0;
-          padding-left: 20px;
-        }
+          padding-left: 20px
+  }
         
         .shortcut-list {
           display: grid;
           grid-template-columns: auto 1fr;
           gap: 8px 16px;
-          margin-bottom: 20px;
-        }
+          margin-bottom: 20px
+  }
         
         .shortcut-list dt {
           font-family: monospace;
           background: #f3f4f6;
           padding: 2px 6px;
           border-radius: 3px;
-          font-weight: 600;
-        }
+          font-weight: 600
+  }
         
         .shortcut-list dd {
-          margin: 0;
-        }
+          margin: 0
+  }
         
         .help-section {
-          margin-bottom: 24px;
-        }
+          margin-bottom: 24px
+  }
         
         .help-section h4 {
           margin: 0 0 12px 0;
-          color: #374151;
-        }
+          color: #374151
+  }
         
         .help-section ul {
           margin: 8px 0;
-          padding-left: 20px;
-        }
+          padding-left: 20px
+  }
         
         .help-section li {
-          margin-bottom: 4px;
-        }
+          margin-bottom: 4px
+  }
         
         .compliant-areas,
         .audit-suggestions {
-          margin-top: 20px;
-        }
+          margin-top: 20px
+  }
         
         .compliant-areas h4,
         .audit-suggestions h4 {
           color: #10b981;
-          margin: 0 0 8px 0;
-        }
+          margin: 0 0 8px 0
+  }
         
         @media (max-width: 480px) {
           .accessibility-dashboard {
             width: calc(100vw - 40px);
             right: 20px;
             left: 20px;
-            max-height: calc(100vh - 40px);
-          }
+            max-height: calc(100vh - 40px)
+  }
           
           .audit-header {
             flex-direction: column;
-            align-items: stretch;
-          }
+            align-items: stretch
+  }
           
           .audit-controls {
-            align-items: stretch;
-          }
+            align-items: stretch
+  }
           
           .compliance-grid {
-            grid-template-columns: 1fr;
-          }
+            grid-template-columns: 1fr
+  }
         }
       `}</style>
     </dialog>
-  );
-};
+  )
+  };
 
 export default MobileAccessibilityDashboard;

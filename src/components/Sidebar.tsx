@@ -31,16 +31,16 @@ export const Sidebar: React.FC = React.memo(() => {
     
     const view = pathToView[location.pathname];
     if (view) {
-      setActiveView({ view });
-    }
+      setActiveView({ view })
+  }
   };
   }, [location.pathname]);
 
   const handleSetActiveView = (view: ActiveView) => {
     if (view.view === 'login') {
       login();
-      return;
-    }
+      return
+  }
     
     setActiveView(view);
     
@@ -68,8 +68,8 @@ export const Sidebar: React.FC = React.memo(() => {
     };
     
     if (routeMap[view.view]) {
-      navigate(routeMap[view.view]);
-    }
+      navigate(routeMap[view.view])
+  }
   };
 
   return (
@@ -78,8 +78,7 @@ export const Sidebar: React.FC = React.memo(() => {
         <span>Astral Core</span>
         {isAnonymous && (
           <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <button; 
-              className="signin-btn optional"
+            <button className="signin-btn optional"
               onClick={login}
               title="Sign in to save your data online (optional)"
               style={{
@@ -90,24 +89,23 @@ export const Sidebar: React.FC = React.memo(() => {
                 border: '1px solid var(--border-color)',
                 borderRadius: '15px',
                 cursor: 'pointer',
-                transition: 'all 0.3s ease';
-              }}
+                transition: 'all 0.3s ease'
+  }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = '#667eea';
-                e.currentTarget.style.color = '#667eea';
-              }}
+                e.currentTarget.style.color = '#667eea'
+  }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = 'var(--border-color)';
-                e.currentTarget.style.color = 'var(--text-secondary)';
-              }}
+                e.currentTarget.style.color = 'var(--text-secondary)'
+  }}
             >
               Sign In
             </button>
           </div>
         )}
         {isAuthenticated && (
-          <button; 
-            className="signout-btn"
+          <button className="signout-btn"
             onClick={logout}
             style={{
               padding: '0.25rem 0.75rem',
@@ -117,16 +115,16 @@ export const Sidebar: React.FC = React.memo(() => {
               border: '1px solid var(--border-color)',
               borderRadius: '15px',
               cursor: 'pointer',
-              transition: 'all 0.3s ease';
-            }}
+              transition: 'all 0.3s ease'
+  }}
             onMouseEnter={(e) => {
               e.currentTarget.style.borderColor = '#ef4444';
-              e.currentTarget.style.color = '#ef4444';
-            }}
+              e.currentTarget.style.color = '#ef4444'
+  }}
             onMouseLeave={(e) => {
               e.currentTarget.style.borderColor = 'var(--border-color)';
-              e.currentTarget.style.color = 'var(--text-secondary)';
-            }}
+              e.currentTarget.style.color = 'var(--text-secondary)'
+  }}
           >
             Sign Out
           </button>
@@ -150,8 +148,8 @@ export const Sidebar: React.FC = React.memo(() => {
         />
       )}
     </aside>
-  );
-});
+  )
+  });
 
 Sidebar.displayName = 'Sidebar';
 

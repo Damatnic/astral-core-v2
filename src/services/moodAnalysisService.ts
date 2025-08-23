@@ -9,8 +9,8 @@ export interface MoodAnalysis {
   confidence: number; // 0-1
   keywords: string[];
   suggestions: string[];
-  timestamp: number;
-}
+  timestamp: number
+  }
 
 export type MoodType = 
   | 'happy' | 'sad' | 'anxious' | 'angry' | 'excited' | 'calm' 
@@ -26,8 +26,8 @@ export interface MoodPattern {
     volatility: number; // 0-1
   };
   triggers: string[];
-  recommendations: string[];
-}
+  recommendations: string[]
+  }
 
 export interface PersonalizedRecommendation {
   type: 'activity' | 'resource' | 'technique' | 'professional';
@@ -35,8 +35,8 @@ export interface PersonalizedRecommendation {
   description: string;
   priority: 'low' | 'medium' | 'high';
   category: 'immediate' | 'daily' | 'weekly' | 'long_term';
-  reasoning: string;
-}
+  reasoning: string
+  }
 
 class MoodAnalysisService {
   private moodKeywords: Record<MoodType, string[]> = {
@@ -170,8 +170,8 @@ class MoodAnalysisService {
     
     // Initialize scores
     Object.keys(this.moodKeywords).forEach(mood => {
-      moodScores[mood as MoodType] = 0;
-    });
+      moodScores[mood as MoodType] = 0
+  });
 
     // Analyze sentiment and mood indicators
     words.forEach((word, index) => {
@@ -184,17 +184,17 @@ class MoodAnalysisService {
             const prevWord = words[index - 1];
             if (this.intensityWords.high.includes(prevWord)) score *= 2;
             else if (this.intensityWords.medium.includes(prevWord)) score *= 1.5;
-            else if (this.intensityWords.low.includes(prevWord)) score *= 0.5;
-          }
+            else if (this.intensityWords.low.includes(prevWord)) score *= 0.5
+  }
           
           moodScores[mood as MoodType] += score;
-          detectedKeywords.push(word);
-        }
-      });
-    });
+          detectedKeywords.push(word)
+  }
+      })
+  });
 
     // Find primary and secondary moods;
-    const sortedMoods = Object.entries(moodScores);
+    const sortedMoods = Object.entries(moodScores);;
       .sort(([, a], [, b]) => b - a)
       .filter(([, score]) => score > 0);
 
@@ -206,8 +206,8 @@ class MoodAnalysisService {
         confidence: 0.2,
         keywords: [],
         suggestions: ['Consider sharing more about how you\'re feeling'],
-        timestamp: Date.now();
-      }
+        timestamp: Date.now()
+  }
 
     const [primaryMood, primaryScore] = sortedMoods[0];
     const secondaryMood = sortedMoods.length > 1 ? sortedMoods[1][0] : undefined;
@@ -224,8 +224,8 @@ class MoodAnalysisService {
       confidence,
       keywords: detectedKeywords,
       suggestions: this.moodSuggestions[primaryMood as MoodType] || [],
-      timestamp: Date.now();
-    }
+      timestamp: Date.now()
+  }
 
   public analyzePattern(analyses: MoodAnalysis[]): MoodPattern {
     if (analyses.length === 0) {
@@ -234,20 +234,20 @@ class MoodAnalysisService {
         dominant_moods: [],
         trends: { improving: true, stability: 0.5, volatility: 0.5 },
         triggers: [],
-        recommendations: [];
-      }
+        recommendations: []
+  }
 
     // Count mood frequencies;
     const moodCounts: Record<string, number> = {};
     analyses.forEach(analysis => {
       moodCounts[analysis.primary] = (moodCounts[analysis.primary] || 0) + 1;
       if (analysis.secondary) {
-        moodCounts[analysis.secondary] = (moodCounts[analysis.secondary] || 0) + 0.5;
-      }
+        moodCounts[analysis.secondary] = (moodCounts[analysis.secondary] || 0) + 0.5
+  }
     };
   };
 
-    const dominant_moods = Object.entries(moodCounts);
+    const dominant_moods = Object.entries(moodCounts);;
       .map(([mood, count]) => ({ mood: mood as MoodType, frequency: count / analyses.length }))
       .sort((a, b) => b.frequency - a.frequency)
       .slice(0, 3);
@@ -256,7 +256,7 @@ class MoodAnalysisService {
     const recentAnalyses = analyses.slice(-7); // Last 7 entries;
     const olderAnalyses = analyses.slice(-14, -7); // Previous 7 entries;
     
-    const getAverageIntensity = (items: MoodAnalysis[]) => ;
+    const getAverageIntensity = (items: MoodAnalysis[]) => ;;
       items.reduce((sum, item) => sum + item.intensity, 0) / items.length;
 
     const recentIntensity = getAverageIntensity(recentAnalyses);
@@ -272,8 +272,8 @@ class MoodAnalysisService {
     let moodChanges = 0;
     for (let i = 1; i < analyses.length; i++) {
       if (analyses[i].primary !== analyses[i - 1].primary) {
-        moodChanges++;
-      }
+        moodChanges++
+  }
     }
     const volatility = Math.min(1, moodChanges / analyses.length);
 
@@ -317,8 +317,8 @@ class MoodAnalysisService {
               description: 'Reach out to a friend or join a community activity',
               priority: 'medium',
               category: 'weekly',
-              reasoning: `Your mood patterns suggest you might benefit from more social connection.`;
-            });
+              reasoning: `Your mood patterns suggest you might benefit from more social connection.`
+  });
             break;
             
           case 'angry':
@@ -331,8 +331,8 @@ class MoodAnalysisService {
               category: 'daily',
               reasoning: `Physical activity can help process and release feelings of ${mood}.`
             });
-            break;
-        }
+            break
+  }
       }
     });
 
@@ -344,9 +344,9 @@ class MoodAnalysisService {
         description: 'Keep a detailed mood journal to identify patterns and triggers',
         priority: 'medium',
         category: 'daily',
-        reasoning: 'Your mood patterns show high volatility. Tracking can help identify triggers.';
-      });
-    }
+        reasoning: 'Your mood patterns show high volatility. Tracking can help identify triggers.'
+  })
+  }
 
     if (moodPattern.trends.stability < 0.3) {
       recommendations.push({
@@ -355,24 +355,24 @@ class MoodAnalysisService {
         description: 'Consider speaking with a mental health professional',
         priority: 'high',
         category: 'immediate',
-        reasoning: 'Your mood patterns suggest you might benefit from professional guidance.';
-      });
-    }
+        reasoning: 'Your mood patterns suggest you might benefit from professional guidance.'
+  })
+  }
 
-    return recommendations;
+    return recommendations
   }
 
   private tokenize(text: string): string[] {
     return text
       .replace(/[^\w\s]/g, ' ')
       .split(/\s+/)
-      .filter(word => word.length > 2);
+      .filter(word => word.length > 2)
   }
 
   private calculateVariance(numbers: number[]): number {
     const mean = numbers.reduce((sum, num) => sum + num, 0) / numbers.length;
     const squaredDiffs = numbers.map(num => Math.pow(num - mean, 2));
-    return squaredDiffs.reduce((sum, diff) => sum + diff, 0) / numbers.length;
+    return squaredDiffs.reduce((sum, diff) => sum + diff, 0) / numbers.length
   }
 
   private identifyTriggers(analyses: MoodAnalysis[]): string[] {
@@ -385,15 +385,15 @@ class MoodAnalysisService {
     const keywordCounts: Record<string, number> = {};
     negativeEntries.forEach(entry => {
       entry.keywords.forEach(keyword => {
-        keywordCounts[keyword] = (keywordCounts[keyword] || 0) + 1;
-      });
-    });
+        keywordCounts[keyword] = (keywordCounts[keyword] || 0) + 1
+  })
+  });
 
     return Object.entries(keywordCounts)
       .filter(([, count]) => count >= 2)
       .sort(([, a], [, b]) => b - a)
       .slice(0, 5)
-      .map(([keyword]) => keyword);
+      .map(([keyword]) => keyword)
   }
 
   private generateRecommendations(
@@ -403,28 +403,28 @@ class MoodAnalysisService {
     const recommendations: string[] = [];
     
     if (!trends.improving) {
-      recommendations.push('Consider reaching out for support from friends, family, or professionals');
-    }
+      recommendations.push('Consider reaching out for support from friends, family, or professionals')
+  }
     
     if (trends.stability < 0.5) {
-      recommendations.push('Focus on establishing consistent daily routines');
-    }
+      recommendations.push('Focus on establishing consistent daily routines')
+  }
     
     if (trends.volatility > 0.6) {
-      recommendations.push('Practice grounding techniques during emotional transitions');
-    }
+      recommendations.push('Practice grounding techniques during emotional transitions')
+  }
 
     // Add mood-specific recommendations
     dominantMoods.forEach(({ mood }) => {
       if (mood === 'stressed' || mood === 'overwhelmed') {
-        recommendations.push('Consider time management and stress reduction techniques');
-      }
+        recommendations.push('Consider time management and stress reduction techniques')
+  }
       if (mood === 'lonely' || mood === 'sad') {
-        recommendations.push('Prioritize social connections and community involvement');
-      }
+        recommendations.push('Prioritize social connections and community involvement')
+  }
     });
 
-    return recommendations;
+    return recommendations
   }
 
   // Storage methods
@@ -437,10 +437,10 @@ class MoodAnalysisService {
     
     // Keep only last 100 analyses
     if (stored.length > 100) {
-      stored.splice(0, stored.length - 100);
-    }
+      stored.splice(0, stored.length - 100)
+  }
     
-    await secureStorage.setItem('mood_analyses', JSON.stringify(stored));
+    await secureStorage.setItem('mood_analyses', JSON.stringify(stored))
   }
 
   public async getMoodHistory(): Promise<MoodAnalysis[]> {
@@ -448,14 +448,14 @@ class MoodAnalysisService {
     const secureStorage = getSecureStorage();
     
     const stored = await secureStorage.getItem('mood_analyses');
-    return stored ? JSON.parse(stored) : [];
+    return stored ? JSON.parse(stored) : []
   }
 
   public async clearMoodHistory() {
     const { getSecureStorage } = await import('./secureStorageService');
     const secureStorage = getSecureStorage();
     
-    secureStorage.removeItem('mood_analyses');
+    secureStorage.removeItem('mood_analyses')
   }
 }
 
@@ -467,7 +467,7 @@ export const useMoodAnalysis = () => {
   const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    service.getMoodHistory().then(setMoodHistory);
+    service.getMoodHistory().then(setMoodHistory)
   };
   }, [service]);
 
@@ -479,24 +479,25 @@ export const useMoodAnalysis = () => {
       await service.saveMoodAnalysis(analysis);
       const updatedHistory = await service.getMoodHistory();
       setMoodHistory(updatedHistory);
-      return analysis;
-    } catch (err) {
+      return analysis
+  } catch (err) {
       setError(err instanceof Error ? err.message : 'Analysis failed');
-      throw err;
-    } finally {
-      setIsAnalyzing(false);
-    }
+      throw err
+  } finally {
+      setIsAnalyzing(false)
+  }
   };
   }, [service]);
 
   const getMoodPattern = React.useCallback(() => {
-    return service.analyzePattern(moodHistory);
+    return service.analyzePattern(moodHistory)
   };
   }, [service, moodHistory]);
 
   const getRecommendations = React.useCallback(() => {
     const pattern = getMoodPattern();
-    return service.generatePersonalizedRecommendations(pattern);
+    return service.generatePersonalizedRecommendations(pattern)
+  };
   };
   };
   }, [service, getMoodPattern]);
@@ -510,8 +511,8 @@ export const useMoodAnalysis = () => {
     error,
     clearHistory: async () => {
       await service.clearMoodHistory();
-      setMoodHistory([]);
-    }
+      setMoodHistory([])
+  }
   };
 
 // Singleton instance;
@@ -519,9 +520,9 @@ let moodAnalysisServiceInstance: MoodAnalysisService | null = null;
 
 export const getMoodAnalysisService = () => {
   if (!moodAnalysisServiceInstance) {
-    moodAnalysisServiceInstance = new MoodAnalysisService();
+    moodAnalysisServiceInstance = new MoodAnalysisService()
   }
-  return moodAnalysisServiceInstance;
-};
+  return moodAnalysisServiceInstance
+  };
 
 export default MoodAnalysisService;

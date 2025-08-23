@@ -14,8 +14,8 @@ import { TherapistSelector, Therapist } from '../components/TherapistSelector';
 export const AIChatView: React.FC<{
     session: AIChatSession;
     onSendMessage: (text: string) => Promise<void>;
-    onClose: () => void;
-}> = ({ session, onSendMessage, onClose }) => {
+    onClose: () => void
+  }> = ({ session, onSendMessage, onClose }) => {
     const [newMessage, setNewMessage] = useState('');
     const [isSending, setIsSending] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -24,8 +24,8 @@ export const AIChatView: React.FC<{
     const [showTherapistSelector, setShowTherapistSelector] = useState(false);
 
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    };
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  };
   }, [session.messages, session.isTyping]);
 
     const handleSend = async () => {
@@ -34,22 +34,22 @@ export const AIChatView: React.FC<{
         const textToSend = newMessage;
         setNewMessage('');
         await onSendMessage(textToSend);
-        setIsSending(false);
-    };
+        setIsSending(false)
+  };
 
     const handleAcceptDisclaimer = () => {
         setShowDisclaimer(false);
-        setShowTherapistSelector(true);
-    };
+        setShowTherapistSelector(true)
+  };
 
     const handleSelectTherapist = (therapist: Therapist) => {
         setSelectedTherapist(therapist);
-        setShowTherapistSelector(false);
-    };
+        setShowTherapistSelector(false)
+  };
 
     const handleChangeTherapist = () => {
-        setShowTherapistSelector(true);
-    };
+        setShowTherapistSelector(true)
+  };
 
     if (showDisclaimer) {
         return (
@@ -68,8 +68,8 @@ export const AIChatView: React.FC<{
                         justify-content: center;
                         padding: 2rem;
                         z-index: 10000;
-                        animation: fadeIn 0.3s ease-out;
-                    }
+                        animation: fadeIn 0.3s ease-out
+  }
                     
                     .ai-disclaimer-modal {
                         background: var(--card-bg);
@@ -81,8 +81,8 @@ export const AIChatView: React.FC<{
                         overflow-y: auto;
                         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
                         border: 1px solid var(--border-color);
-                        animation: modalZoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-                    }
+                        animation: modalZoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)
+  }
                     
                     @keyframes fadeIn {
                         from { opacity: 0; }
@@ -92,20 +92,20 @@ export const AIChatView: React.FC<{
                     @keyframes modalZoomIn {
                         from {
                             transform: scale(0.9);
-                            opacity: 0;
-                        }
+                            opacity: 0
+  }
                         to {
                             transform: scale(1);
-                            opacity: 1;
-                        }
+                            opacity: 1
+  }
                     }
                     
                     .ai-disclaimer-header {
                         display: flex;
                         align-items: center;
                         gap: 1rem;
-                        margin-bottom: 1.5rem;
-                    }
+                        margin-bottom: 1.5rem
+  }
                     
                     .ai-disclaimer-icon {
                         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -115,12 +115,12 @@ export const AIChatView: React.FC<{
                         align-items: center;
                         justify-content: center;
                         color: white;
-                        font-size: 1.5rem;
-                    }
+                        font-size: 1.5rem
+  }
                     
                     .ai-disclaimer-title {
-                        flex: 1;
-                    }
+                        flex: 1
+  }
                     
                     .ai-disclaimer-title h2 {
                         margin: 0;
@@ -128,116 +128,116 @@ export const AIChatView: React.FC<{
                         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                         -webkit-background-clip: text;
                         -webkit-text-fill-color: transparent;
-                        background-clip: text;
-                    }
+                        background-clip: text
+  }
                     
                     .ai-disclaimer-subtitle {
                         color: var(--text-secondary);
                         font-size: 0.875rem;
-                        margin-top: 0.25rem;
-                    }
+                        margin-top: 0.25rem
+  }
                     
                     .ai-disclaimer-body {
-                        margin: 1.5rem 0;
-                    }
+                        margin: 1.5rem 0
+  }
                     
                     .ai-disclaimer-body p {
                         line-height: 1.6;
                         color: var(--text-primary);
-                        margin-bottom: 1rem;
-                    }
+                        margin-bottom: 1rem
+  }
                     
                     .ai-disclaimer-list {
                         background: rgba(102, 126, 234, 0.05);
                         border-left: 3px solid #667eea;
                         padding: 1rem;
                         border-radius: 0.5rem;
-                        margin: 1.5rem 0;
-                    }
+                        margin: 1.5rem 0
+  }
                     
                     .ai-disclaimer-list ul {
                         list-style: none;
                         padding: 0;
-                        margin: 0;
-                    }
+                        margin: 0
+  }
                     
                     .ai-disclaimer-list li {
                         padding: 0.5rem 0;
                         color: var(--text-primary);
                         display: flex;
-                        align-items: flex-start;
-                    }
+                        align-items: flex-start
+  }
                     
                     .ai-disclaimer-list li:before {
                         content: '⚠';
                         color: #f59e0b;
                         margin-right: 0.75rem;
-                        font-size: 1.1rem;
-                    }
+                        font-size: 1.1rem
+  }
                     
                     .ai-disclaimer-warning {
                         background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(239, 68, 68, 0.1));
                         border: 1px solid rgba(245, 158, 11, 0.3);
                         border-radius: 0.75rem;
                         padding: 1rem;
-                        margin: 1.5rem 0;
-                    }
+                        margin: 1.5rem 0
+  }
                     
                     .ai-disclaimer-warning p {
                         margin: 0;
                         color: var(--text-primary);
-                        font-size: 0.9rem;
-                    }
+                        font-size: 0.9rem
+  }
                     
                     .ai-disclaimer-actions {
                         display: flex;
                         gap: 1rem;
-                        margin-top: 2rem;
-                    }
+                        margin-top: 2rem
+  }
                     
                     .ai-disclaimer-actions button {
                         flex: 1;
                         padding: 0.75rem 1.5rem;
                         border-radius: 0.75rem;
                         font-weight: 600;
-                        transition: all 0.2s ease;
-                    }
+                        transition: all 0.2s ease
+  }
                     
                     .ai-disclaimer-actions .btn-back {
                         background: var(--bg-secondary);
                         color: var(--text-primary);
-                        border: 1px solid var(--border-color);
-                    }
+                        border: 1px solid var(--border-color)
+  }
                     
                     .ai-disclaimer-actions .btn-back:hover {
-                        background: var(--bg-tertiary);
-                    }
+                        background: var(--bg-tertiary)
+  }
                     
                     .ai-disclaimer-actions .btn-continue {
                         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                         color: white;
-                        border: none;
-                    }
+                        border: none
+  }
                     
                     .ai-disclaimer-actions .btn-continue:hover {
                         transform: translateY(-2px);
-                        box-shadow: 0 10px 20px -5px rgba(102, 126, 234, 0.3);
-                    }
+                        box-shadow: 0 10px 20px -5px rgba(102, 126, 234, 0.3)
+  }
                     
                     @media (max-width: 768px) {
                         .ai-disclaimer-overlay {
                             padding: 1rem;
-                            justify-content: center;
-                        }
+                            justify-content: center
+  }
                         
                         .ai-disclaimer-modal {
                             margin-right: 0;
-                            padding: 1.5rem;
-                        }
+                            padding: 1.5rem
+  }
                         
                         .ai-disclaimer-actions {
-                            flex-direction: column;
-                        }
+                            flex-direction: column
+  }
                     }
                 `}</style>
                 <div className="ai-disclaimer-overlay">
@@ -277,8 +277,8 @@ export const AIChatView: React.FC<{
                     </div>
                 </div>
             </>
-        );
-    }
+        )
+  }
 
     if (showTherapistSelector) {
         return (
@@ -298,13 +298,13 @@ export const AIChatView: React.FC<{
                     selectedTherapist={selectedTherapist}
                 />
             </div>
-        );
-    }
+        )
+  }
 
     if (!selectedTherapist) {
         setShowTherapistSelector(true);
-        return null;
-    }
+        return null
+  }
 
     return (
         <div className="ai-chat-view">
@@ -420,8 +420,7 @@ export const AIChatView: React.FC<{
             
             <div className="ai-chat-composer">
                 <div className="ai-chat-composer-inner">
-                    <AppInput;
-                        type="text"
+                    <AppInput type="text"
                         placeholder="Share what's on your mind..."
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
@@ -446,15 +445,15 @@ export const AIChatView: React.FC<{
                 </p>
             </div>
         </div>
-    );
-};
+    )
+  };
 
 // Route wrapper component for use in AppRoutes;
 export const AIChatRoute: React.FC = () => {
     const [session, setSession] = useState<AIChatSession>({
         messages: [],
-        isTyping: false;
-    });
+        isTyping: false
+  });
 
     const handleSendMessage = async (text: string) => {
         // Implementation would go here
@@ -463,19 +462,19 @@ export const AIChatRoute: React.FC = () => {
             id: `msg-${Date.now()}`,
             sender: 'user' as const,
             text,
-            timestamp: new Date().toISOString();
-        };
+            timestamp: new Date().toISOString()
+  };
         
         setSession(prev => ({
             ...prev,
             messages: [...prev.messages, newMessage]
-        }));
-    };
+        }))
+  };
 
     const handleClose = () => {
         // Navigate back or close - could use router navigation here
-        window.history.back();
-    };
+        window.history.back()
+  };
 
     return (
         <AIChatView 
@@ -483,7 +482,7 @@ export const AIChatRoute: React.FC = () => {
             onSendMessage={handleSendMessage}
             onClose={handleClose}
         />
-    );
-};
+    )
+  };
 
 export default AIChatRoute;

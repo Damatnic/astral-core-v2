@@ -23,16 +23,16 @@ export interface ErrorDetails {
   sessionId?: string;
   recoverable?: boolean;
   retryable?: boolean;
-  userMessage?: string;
-}
+  userMessage?: string
+  }
 
 export interface ErrorRecoveryStrategy {
   type: 'retry' | 'fallback' | 'redirect' | 'reload' | 'ignore';
   maxRetries?: number;
   retryDelay?: number;
   fallbackValue?: any;
-  redirectUrl?: string;
-}
+  redirectUrl?: string
+  }
 
 export interface ErrorReport {
   id: string;
@@ -41,8 +41,8 @@ export interface ErrorReport {
   reportedAt?: Date;
   resolved: boolean;
   resolvedAt?: Date;
-  recovery?: ErrorRecoveryStrategy;
-}
+  recovery?: ErrorRecoveryStrategy
+  }
 
 class ErrorHandlingService {
   private errorQueue: ErrorDetails[] = [];
@@ -59,14 +59,14 @@ class ErrorHandlingService {
     byCategory: new Map<ErrorCategory, number>(),
     bySeverity: new Map<ErrorSeverity, number>(),
     recovered: 0,
-    reported: 0;
+    reported: 0
   };
 
   constructor() {
     this.sessionId = this.generateSessionId();
     this.initializeSentry();
     this.setupEventListeners();
-    this.loadQueuedErrors();
+    this.loadQueuedErrors()
   }
 
   /**
@@ -83,13 +83,13 @@ class ErrorHandlingService {
         tracesSampleRate: 0.1,
         beforeSend: (event, hint) => {
           // Sanitize event for HIPAA compliance
-          return this.sanitizeErrorEvent(event, hint);
-        }
+          return this.sanitizeErrorEvent(event, hint)
+  }
       });
       
       this.sentryInitialized = true;
-      console.log('Sentry error tracking initialized');
-    }
+      console.log('Sentry error tracking initialized')
+  }
   }
 
   /**
@@ -108,13 +108,13 @@ class ErrorHandlingService {
       // Remove sensitive headers
       if (event.request.headers) {
         delete event.request.headers['Authorization'];
-        delete event.request.headers['Cookie'];
-      }
+        delete event.request.headers['Cookie']
+  }
       
       // Remove sensitive data from URL
       if (event.request.url) {
-        event.request.url = this.sanitizeUrl(event.request.url);
-      }
+        event.request.url = this.sanitizeUrl(event.request.url)
+  }
     }
 
     // Sanitize breadcrumbs
@@ -122,18 +122,18 @@ class ErrorHandlingService {
       event.breadcrumbs = event.breadcrumbs.map((breadcrumb: any) => {
         if (breadcrumb.data) {
           // Remove sensitive data from breadcrumb
-          breadcrumb.data = this.sanitizeData(breadcrumb.data);
-        }
-        return breadcrumb;
-      });
-    }
+          breadcrumb.data = this.sanitizeData(breadcrumb.data)
+  }
+        return breadcrumb
+  })
+  }
 
     // Sanitize extra context
     if (event.extra) {
-      event.extra = this.sanitizeData(event.extra);
-    }
+      event.extra = this.sanitizeData(event.extra)
+  }
 
-    return event;
+    return event
   }
 
   /**
@@ -145,12 +145,12 @@ class ErrorHandlingService {
       // Remove sensitive query parameters;
       const sensitiveParams = ['token', 'auth', 'key', 'secret', 'password', 'session'];
       sensitiveParams.forEach(param => {
-        urlObj.searchParams.delete(param);
-      });
-      return urlObj.toString();
-    } catch {
-      return url;
-    }
+        urlObj.searchParams.delete(param)
+  });
+      return urlObj.toString()
+  } catch {
+      return url
+  }
   }
 
   /**
@@ -165,13 +165,13 @@ class ErrorHandlingService {
     Object.keys(sanitized).forEach(key => {
       const lowerKey = key.toLowerCase();
       if (sensitiveKeys.some(sensitive => lowerKey.includes(sensitive))) {
-        (sanitized as any)[key] = '[REDACTED]';;
+        (sanitized as any)[key] = '[REDACTED]'
   } else if (typeof (sanitized as any)[key] === 'object') {
-        (sanitized as any)[key] = this.sanitizeData((sanitized as any)[key]);
-      }
+        (sanitized as any)[key] = this.sanitizeData((sanitized as any)[key])
+  }
     });
     
-    return sanitized;
+    return sanitized
   }
 
   /**
@@ -189,10 +189,10 @@ class ErrorHandlingService {
         context: {
           filename: event.filename,
           lineno: event.lineno,
-          colno: event.colno;
-        }
-      });
-    });
+          colno: event.colno
+  }
+      })
+  });
 
     // Unhandled promise rejection handler
     window.addEventListener('unhandledrejection', (event) => {
@@ -203,20 +203,20 @@ class ErrorHandlingService {
         timestamp: new Date(),
         stack: event.reason?.stack,
         context: {
-          promise: event.promise;
-        }
-      });
-    });
+          promise: event.promise
+  }
+      })
+  });
 
     // Network status listener
     window.addEventListener('online', () => {
       this.isOnline = true;
-      this.flushErrorQueue();
-    });
+      this.flushErrorQueue()
+  });
 
     window.addEventListener('offline', () => {
-      this.isOnline = false;
-    });
+      this.isOnline = false
+  });
 
     // Auth error listener
     window.addEventListener('auth-error', () => {
@@ -226,9 +226,9 @@ class ErrorHandlingService {
         severity: 'high',
         timestamp: new Date(),
         recoverable: true,
-        userMessage: 'Your session has expired. Please log in again.';
-      });
-    });
+        userMessage: 'Your session has expired. Please log in again.'
+  })
+  })
   }
 
   /**
@@ -244,13 +244,13 @@ class ErrorHandlingService {
     
     // Categorize if not provided
     if (!error.category) {
-      error.category = this.categorizeError(error);
-    }
+      error.category = this.categorizeError(error)
+  }
     
     // Determine severity if not provided
     if (!error.severity) {
-      error.severity = this.determineSeverity(error);
-    }
+      error.severity = this.determineSeverity(error)
+  }
     
     // Update statistics
     this.updateErrorStats(error);
@@ -273,35 +273,35 @@ class ErrorHandlingService {
     if (error.severity === 'critical' || error.severity === 'high') {
       this.reportToSentry(error);
       report.reported = true;
-      report.reportedAt = new Date();
-    }
+      report.reportedAt = new Date()
+  }
     
     // Handle crisis errors immediately
     if (error.category === 'crisis') {
-      this.handleCrisisError(error);
-    }
+      this.handleCrisisError(error)
+  }
     
     // Notify user if appropriate
     if (error.userMessage) {
-      this.notifyUser(error);
-    }
+      this.notifyUser(error)
+  }
     
     // Attempt recovery
     if (recovery) {
-      this.attemptRecovery(errorId, error, recovery);
-    }
+      this.attemptRecovery(errorId, error, recovery)
+  }
     
     // Queue for reporting if offline
     if (!this.isOnline) {
-      this.queueError(error);;
+      this.queueError(error)
   } else {
-      this.reportError(error);
-    }
+      this.reportError(error)
+  }
     
     // Notify listeners
     this.notifyListeners(error);
     
-    return errorId;
+    return errorId
   }
 
   /**
@@ -311,26 +311,26 @@ class ErrorHandlingService {
     const message = error.message.toLowerCase();
     
     if (message.includes('network') || message.includes('fetch') || error.code === 'NETWORK_ERROR') {
-      return 'network';
-    }
+      return 'network'
+  }
     
     if (message.includes('auth') || message.includes('unauthorized') || error.statusCode === 401) {
-      return 'auth';
-    }
+      return 'auth'
+  }
     
     if (message.includes('validation') || message.includes('invalid') || error.statusCode === 400) {
-      return 'validation';
-    }
+      return 'validation'
+  }
     
     if (message.includes('crisis') || message.includes('emergency')) {
-      return 'crisis';
-    }
+      return 'crisis'
+  }
     
     if (error.statusCode && error.statusCode >= 500) {
-      return 'system';
-    }
+      return 'system'
+  }
     
-    return 'unknown';
+    return 'unknown'
   }
 
   /**
@@ -339,30 +339,30 @@ class ErrorHandlingService {
   private determineSeverity(error: ErrorDetails): ErrorSeverity {
     // Crisis errors are always critical
     if (error.category === 'crisis') {
-      return 'critical';
-    }
+      return 'critical'
+  }
     
     // Auth errors are high severity
     if (error.category === 'auth') {
-      return 'high';
-    }
+      return 'high'
+  }
     
     // System errors are high severity
     if (error.category === 'system') {
-      return 'high';
-    }
+      return 'high'
+  }
     
     // Network errors are medium severity
     if (error.category === 'network') {
-      return 'medium';
-    }
+      return 'medium'
+  }
     
     // Validation errors are low severity
     if (error.category === 'validation') {
-      return 'low';
-    }
+      return 'low'
+  }
     
-    return 'medium';
+    return 'medium'
   }
 
   /**
@@ -377,7 +377,7 @@ class ErrorHandlingService {
     
     // Update severity stats;
     const severityCount = this.errorStats.bySeverity.get(error.severity) || 0;
-    this.errorStats.bySeverity.set(error.severity, severityCount + 1);
+    this.errorStats.bySeverity.set(error.severity, severityCount + 1)
   }
 
   /**
@@ -390,8 +390,8 @@ class ErrorHandlingService {
     console[logLevel](`[${error.category.toUpperCase()}] ${error.message}`, sanitizedError);
     
     if (this.isDevelopment && error.stack) {
-      console.error('Stack trace:', error.stack);
-    }
+      console.error('Stack trace:', error.stack)
+  }
   }
 
   /**
@@ -404,9 +404,8 @@ class ErrorHandlingService {
         return 'error';
       case 'medium':
         return 'warn';
-      default:
-        return 'log';
-    }
+      default: return 'log'
+  }
   }
 
   /**
@@ -419,10 +418,10 @@ class ErrorHandlingService {
       level: this.mapSeverityToSentryLevel(error.severity),
       tags: {
         category: error.category,
-        sessionId: error.sessionId;
-      },
-      extra: this.sanitizeData(error.context);
-    });
+        sessionId: error.sessionId
+  },
+      extra: this.sanitizeData(error.context)
+  })
   }
 
   /**
@@ -438,9 +437,8 @@ class ErrorHandlingService {
         return 'warning';
       case 'low':
         return 'info';
-      default:
-        return 'error';
-    }
+      default: return 'error'
+  }
   }
 
   /**
@@ -457,8 +455,8 @@ class ErrorHandlingService {
     // Report to backend immediately
     apiService.post('/errors/crisis', {
       error: this.sanitizeData(error),
-      timestamp: new Date().toISOString();
-    }).catch(console.error);
+      timestamp: new Date().toISOString()
+  }).catch(console.error)
   }
 
   /**
@@ -466,7 +464,7 @@ class ErrorHandlingService {
    */
   private notifyUser(error: ErrorDetails) {
     const toastType = error.severity === 'critical' || error.severity === 'high' ? 'error' : 'warning';
-    notificationService.addToast(error.userMessage || 'An error occurred', toastType);
+    notificationService.addToast(error.userMessage || 'An error occurred', toastType)
   }
 
   /**
@@ -487,8 +485,8 @@ class ErrorHandlingService {
       
       case 'redirect':
         if (strategy.redirectUrl) {
-          window.location.href = strategy.redirectUrl;
-        }
+          window.location.href = strategy.redirectUrl
+  }
         break;
       
       case 'reload':
@@ -498,8 +496,8 @@ class ErrorHandlingService {
       case 'ignore':
         report.resolved = true;
         report.resolvedAt = new Date();
-        break;
-    }
+        break
+  }
   }
 
   /**
@@ -515,8 +513,8 @@ class ErrorHandlingService {
       
       if (retryCount > maxRetries) {
         console.error(`Max retries (${maxRetries}) exceeded for error:`, error.message);
-        return;
-      }
+        return
+  }
       
       const timeout = setTimeout(() => {
         // Trigger retry event
@@ -526,14 +524,14 @@ class ErrorHandlingService {
         
         // Schedule next retry if needed
         if (retryCount < maxRetries) {
-          retry();
-        }
+          retry()
+  }
       }, retryDelay * Math.pow(2, retryCount - 1)); // Exponential backoff
       
-      this.retryHandlers.set(errorId, timeout);
-    };
+      this.retryHandlers.set(errorId, timeout)
+  };
     
-    retry();
+    retry()
   }
 
   /**
@@ -544,13 +542,13 @@ class ErrorHandlingService {
     if (report) {
       report.resolved = true;
       report.resolvedAt = new Date();
-      this.errorStats.recovered++;
-    }
+      this.errorStats.recovered++
+  }
     
     // Dispatch fallback event
     window.dispatchEvent(new CustomEvent('error-fallback', {
       detail: { errorId, fallbackValue }
-    }));
+    }))
   }
 
   /**
@@ -561,11 +559,11 @@ class ErrorHandlingService {
     
     // Limit queue size
     if (this.errorQueue.length > this.maxQueueSize) {
-      this.errorQueue.shift();
-    }
+      this.errorQueue.shift()
+  }
     
     // Save to localStorage
-    this.saveQueuedErrors();
+    this.saveQueuedErrors()
   }
 
   /**
@@ -574,10 +572,10 @@ class ErrorHandlingService {
   private saveQueuedErrors() {
     try {
       const sanitizedQueue = this.errorQueue.map(error => this.sanitizeData(error));
-      localStorage.setItem('error_queue', JSON.stringify(sanitizedQueue));
-    } catch (e) {
-      console.error('Failed to save error queue:', e);
-    }
+      localStorage.setItem('error_queue', JSON.stringify(sanitizedQueue))
+  } catch (e) {
+      console.error('Failed to save error queue:', e)
+  }
   }
 
   /**
@@ -591,12 +589,12 @@ class ErrorHandlingService {
         
         // Flush queue if online
         if (this.isOnline) {
-          this.flushErrorQueue();
-        }
+          this.flushErrorQueue()
+  }
       }
     } catch (e) {
-      console.error('Failed to load error queue:', e);
-    }
+      console.error('Failed to load error queue:', e)
+  }
   }
 
   /**
@@ -605,11 +603,11 @@ class ErrorHandlingService {
   private async flushErrorQueue() {
     while (this.errorQueue.length > 0) {
       const error = this.errorQueue.shift()!;
-      await this.reportError(error);
-    }
+      await this.reportError(error)
+  }
     
     // Clear localStorage
-    localStorage.removeItem('error_queue');
+    localStorage.removeItem('error_queue')
   }
 
   /**
@@ -620,15 +618,15 @@ class ErrorHandlingService {
       await apiService.post('/errors/report', {
         error: this.sanitizeData(error),
         sessionId: this.sessionId,
-        timestamp: error.timestamp.toISOString();
-      });
+        timestamp: error.timestamp.toISOString()
+  });
       
-      this.errorStats.reported++;
-    } catch (e) {
+      this.errorStats.reported++
+  } catch (e) {
       // If reporting fails, queue it
       if (!this.isOnline) {
-        this.queueError(error);
-      }
+        this.queueError(error)
+  }
     }
   }
 
@@ -638,11 +636,11 @@ class ErrorHandlingService {
   private notifyListeners(error: ErrorDetails) {
     this.errorListeners.forEach(listener => {
       try {
-        listener(error);
-      } catch (e) {
-        console.error('Error in error listener:', e);
-      }
-    });
+        listener(error)
+  } catch (e) {
+        console.error('Error in error listener:', e)
+  }
+    })
   }
 
   /**
@@ -653,14 +651,14 @@ class ErrorHandlingService {
     
     // Return unsubscribe function
     return () => {
-      this.errorListeners.delete(listener);
-    }
+      this.errorListeners.delete(listener)
+  }
 
   /**
    * Get error report by ID
    */
   getErrorReport(errorId: string): ErrorReport | undefined {
-    return this.errorReports.get(errorId);
+    return this.errorReports.get(errorId)
   }
 
   /**
@@ -671,8 +669,8 @@ class ErrorHandlingService {
       byCategory: Object.fromEntries(this.errorStats.byCategory),
       bySeverity: Object.fromEntries(this.errorStats.bySeverity),
       queuedErrors: this.errorQueue.length,
-      activeRetries: this.retryHandlers.size;
-     }
+      activeRetries: this.retryHandlers.size
+  }
 
   /**
    * Clear error history
@@ -685,9 +683,9 @@ class ErrorHandlingService {
       byCategory: new Map(),
       bySeverity: new Map(),
       recovered: 0,
-      reported: 0;
-    };
-    localStorage.removeItem('error_queue');
+      reported: 0
+  };
+    localStorage.removeItem('error_queue')
   }
 
   /**
@@ -697,22 +695,22 @@ class ErrorHandlingService {
     const timeout = this.retryHandlers.get(errorId);
     if (timeout) {
       clearTimeout(timeout);
-      this.retryHandlers.delete(errorId);
-    }
+      this.retryHandlers.delete(errorId)
+  }
   }
 
   /**
    * Generate session ID
    */
   private generateSessionId(): string {
-    return `session-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+    return `session-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`
   }
 
   /**
    * Generate error ID
    */
   private generateErrorId(): string {
-    return `error-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+    return `error-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`
   }
 
   /**
@@ -720,14 +718,14 @@ class ErrorHandlingService {
    */
   private getCurrentUserId(): string | undefined {
     // This would typically get the user ID from auth service
-    return localStorage.getItem('userId') || undefined;
+    return localStorage.getItem('userId') || undefined
   }
 
   /**
    * Create error boundary wrapper
    */
   createErrorBoundary(_fallback: React.ComponentType<{ error: Error; resetError: () => void }>) {
-    return Sentry.ErrorBoundary;
+    return Sentry.ErrorBoundary
   }
 
   /**
@@ -739,13 +737,13 @@ class ErrorHandlingService {
       category?: ErrorCategory;
       severity?: ErrorSeverity;
       recovery?: ErrorRecoveryStrategy;
-      userMessage?: string;
-    }
+      userMessage?: string
+  }
   ): T {
     return (async (...args: Parameters<T>) => {
       try {
-        return await fn(...args);
-      } catch (error) {
+        return await fn(...args)
+  } catch (error) {
         this.handleError({
           message: (error as any).message || 'An error occurred',
           category: options?.category || 'unknown',
@@ -754,12 +752,12 @@ class ErrorHandlingService {
           stack: (error as any).stack,
           userMessage: options?.userMessage,
           recoverable: true,
-          retryable: true;
-        }, options?.recovery);
+          retryable: true
+  }, options?.recovery);
         
-        throw error;
-      }
-    }) as T;
+        throw error
+  }
+    }) as T
   }
 
   /**
@@ -772,8 +770,8 @@ class ErrorHandlingService {
       severity,
       timestamp: new Date(),
       userMessage: 'This is a test error notification',
-      recoverable: true;
-    };
+      recoverable: true
+  };
   };
   }
 }
@@ -794,7 +792,7 @@ export const useErrorHandler = () => {
       }, recovery),
     onError: (listener: (error: ErrorDetails) => void) => 
       errorHandlingService.onError(listener),
-    getErrorStats: () => errorHandlingService.getErrorStats();
+    getErrorStats: () => errorHandlingService.getErrorStats()
   };
 
 export default errorHandlingService;

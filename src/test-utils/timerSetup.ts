@@ -7,8 +7,8 @@ export interface TimerHelpers {
   advanceAndFlush: (ms: number) => Promise<void>;
   runAllAndFlush: () => Promise<void>;
   flushPromises: () => Promise<void>;
-  tickAsync: (ms?: number) => Promise<void>;
-}
+  tickAsync: (ms?: number) => Promise<void>
+  }
 
 /**
  * Setup fake timers with proper promise handling
@@ -19,27 +19,27 @@ export const setupFakeTimers = (): TimerHelpers => {
   // Flush all pending promises;
   const flushPromises = async (): Promise<void> => {
     await new Promise(process.nextTick);
-    await new Promise(resolve => setImmediate(resolve));
+    await new Promise(resolve => setImmediate(resolve))
   };
 
   // Advance timers and flush promises;
   const advanceAndFlush = async (ms: number): Promise<void> => {
     jest.advanceTimersByTime(ms);
-    await flushPromises();
+    await flushPromises()
   };
 
   // Run all timers and flush promises;
   const runAllAndFlush = async (): Promise<void> => {
     jest.runAllTimers();
-    await flushPromises();
+    await flushPromises()
   };
 
   // Tick with optional time and flush;
   const tickAsync = async (ms: number = 0): Promise<void> => {
     if (ms > 0) {
-      jest.advanceTimersByTime(ms);
-    }
-    await flushPromises();
+      jest.advanceTimersByTime(ms)
+  }
+    await flushPromises()
   };
 
   return {
@@ -61,13 +61,13 @@ export const setupDebounceTest = () => {
     // Make calls at specified times
     for (const callTime of calls) {
       await timers.advanceAndFlush(callTime);
-      spy();
-    }
+      spy()
+  }
     
     // Advance past the debounce delay
     await timers.advanceAndFlush(delay + 100);
     
-    return spy;
+    return spy
   };
   
   const testThrottle = async (fn: Function, delay: number, calls: number[]) => {
@@ -76,13 +76,13 @@ export const setupDebounceTest = () => {
     // Make calls at specified times
     for (const callTime of calls) {
       await timers.advanceAndFlush(callTime);
-      spy();
-    }
+      spy()
+  }
     
     // Advance to ensure all throttled calls complete
     await timers.advanceAndFlush(delay + 100);
     
-    return spy;
+    return spy
   };
   
   return {
@@ -96,8 +96,8 @@ export const setupDebounceTest = () => {
  */;
 export const cleanupTimers = () => {
   jest.clearAllTimers();
-  jest.useRealTimers();
-};
+  jest.useRealTimers()
+  };
 
 /**
  * Mock setTimeout and setInterval with tracking
@@ -111,23 +111,23 @@ export const mockTimersWithTracking = () => {
     const id = nextId++;
     timeouts.push({ id, callback, delay, timestamp: Date.now() };
   };
-    return id;
+    return id
   });
 
   const mockClearTimeout = jest.fn((id: number) => {
     const index = timeouts.findIndex(t => t.id === id);
-    if (index > -1) timeouts.splice(index, 1);
+    if (index > -1) timeouts.splice(index, 1)
   });
 
   const mockSetInterval = jest.fn((callback: Function, delay: number = 0) => {
     const id = nextId++;
     intervals.push({ id, callback, delay, timestamp: Date.now() });
-    return id;
+    return id
   });
 
   const mockClearInterval = jest.fn((id: number) => {
     const index = intervals.findIndex(i => i.id === id);
-    if (index > -1) intervals.splice(index, 1);
+    if (index > -1) intervals.splice(index, 1)
   });
 
   global.setTimeout = mockSetTimeout as any;
@@ -148,20 +148,20 @@ export const mockTimersWithTracking = () => {
       toExecute.forEach(t => {
         t.callback();
         const index = timeouts.indexOf(t);
-        if (index > -1) timeouts.splice(index, 1);
-      };
+        if (index > -1) timeouts.splice(index, 1)
+  };
   };
     },
     executeIntervals: (count: number = 1) => {
       intervals.forEach(i => {
         for (let n = 0; n < count; n++) {
-          i.callback();
-        }
-      });
-    },
+          i.callback()
+  }
+      })
+  },
     reset: () => {
       timeouts.length = 0;
       intervals.length = 0;
-      nextId = 1;
-    }
+      nextId = 1
+  }
   };

@@ -15,15 +15,15 @@ interface ResourceHint {
   type?: string;
   crossorigin?: string;
   priority?: 'critical' | 'high' | 'medium' | 'low';
-  isCrisisCritical?: boolean;
-}
+  isCrisisCritical?: boolean
+  }
 
 interface ResourceHintsConfig {
   criticalResources: ResourceHint[];
   routeSpecificHints: Record<string, ResourceHint[]>;
   crisisResources: ResourceHint[];
-  connectionOptimizations: ResourceHint[];
-}
+  connectionOptimizations: ResourceHint[]
+  }
 
 const ResourceHintsOptimizer: React.FC = () => {
   const location = useSafeLocation();
@@ -39,24 +39,24 @@ const ResourceHintsOptimizer: React.FC = () => {
         as: 'fetch',
         type: 'application/json',
         priority: 'critical',
-        isCrisisCritical: true;
-      },
+        isCrisisCritical: true
+  },
       {
         rel: 'preload',
         href: '/emergency-contacts.json',
         as: 'fetch',
         type: 'application/json',
         priority: 'critical',
-        isCrisisCritical: true;
-      },
+        isCrisisCritical: true
+  },
       {
         rel: 'preload',
         href: '/offline-coping-strategies.json',
         as: 'fetch',
         type: 'application/json',
         priority: 'high',
-        isCrisisCritical: true;
-      }
+        isCrisisCritical: true
+  }
     ],
 
     // Route-specific resource hints
@@ -66,14 +66,14 @@ const ResourceHintsOptimizer: React.FC = () => {
           rel: 'prefetch',
           href: '/api/chat/history',
           as: 'fetch',
-          priority: 'high';
-        },
+          priority: 'high'
+  },
         {
           rel: 'preload',
           href: '/sounds/notification.mp3',
           as: 'audio',
-          priority: 'medium';
-        }
+          priority: 'medium'
+  }
       ],
       '/crisis': [
         {
@@ -81,38 +81,38 @@ const ResourceHintsOptimizer: React.FC = () => {
           href: '/offline-crisis.html',
           as: 'document',
           priority: 'critical',
-          isCrisisCritical: true;
-        },
+          isCrisisCritical: true
+  },
         {
           rel: 'preconnect',
           href: 'https://suicidepreventionlifeline.org',
           priority: 'critical',
-          isCrisisCritical: true;
-        }
+          isCrisisCritical: true
+  }
       ],
       '/safety-plan': [
         {
           rel: 'prefetch',
           href: '/api/safety-plan',
           as: 'fetch',
-          priority: 'high';
-        }
+          priority: 'high'
+  }
       ],
       '/wellness': [
         {
           rel: 'prefetch',
           href: '/Videos/',
           as: 'document',
-          priority: 'low';
-        }
+          priority: 'low'
+  }
       ],
       '/community': [
         {
           rel: 'prefetch',
           href: '/api/posts',
           as: 'fetch',
-          priority: 'medium';
-        }
+          priority: 'medium'
+  }
       ]
     },
 
@@ -122,20 +122,20 @@ const ResourceHintsOptimizer: React.FC = () => {
         rel: 'preconnect',
         href: 'https://988lifeline.org',
         priority: 'critical',
-        isCrisisCritical: true;
-      },
+        isCrisisCritical: true
+  },
       {
         rel: 'preconnect',
         href: 'https://crisistextline.org',
         priority: 'critical',
-        isCrisisCritical: true;
-      },
+        isCrisisCritical: true
+  },
       {
         rel: 'dns-prefetch',
         href: 'https://emergency-services.local',
         priority: 'critical',
-        isCrisisCritical: true;
-      }
+        isCrisisCritical: true
+  }
     ],
 
     // Connection optimizations for external services
@@ -143,13 +143,13 @@ const ResourceHintsOptimizer: React.FC = () => {
       {
         rel: 'dns-prefetch',
         href: 'https://fonts.googleapis.com',
-        priority: 'low';
-      },
+        priority: 'low'
+  },
       {
         rel: 'preconnect',
         href: 'https://cdn.jsdelivr.net',
-        priority: 'medium';
-      }
+        priority: 'medium'
+  }
     ]
   };
 
@@ -172,18 +172,18 @@ const ResourceHintsOptimizer: React.FC = () => {
     
     // Add priority hint for supporting browsers
     if (hint.priority && hint.rel === 'preload') {
-      link.setAttribute('fetchpriority', hint.priority === 'critical' ? 'high' : hint.priority);
-    }
+      link.setAttribute('fetchpriority', hint.priority === 'critical' ? 'high' : hint.priority)
+  }
 
     // Add to head with appropriate position based on priority;
     const head = document.head;
     if (hint.priority === 'critical' || hint.isCrisisCritical) {
       // Insert critical resources at the beginning
-      head.insertBefore(link, head.firstChild);;
+      head.insertBefore(link, head.firstChild)
   } else {
       // Append non-critical resources at the end
-      head.appendChild(link);
-    }
+      head.appendChild(link)
+  }
 
     addedHintsRef.current.add(key);
 
@@ -191,8 +191,8 @@ const ResourceHintsOptimizer: React.FC = () => {
     return () => {
       if (document.head.contains(link)) {
         document.head.removeChild(link);
-        addedHintsRef.current.delete(key);
-      }
+        addedHintsRef.current.delete(key)
+  }
     };
 
   /**
@@ -204,11 +204,11 @@ const ResourceHintsOptimizer: React.FC = () => {
     
     links.forEach(link => {
       if (document.head.contains(link)) {
-        document.head.removeChild(link);
-      }
+        document.head.removeChild(link)
+  }
     });
     
-    addedHintsRef.current.delete(key);
+    addedHintsRef.current.delete(key)
   };
 
   /**
@@ -220,34 +220,34 @@ const ResourceHintsOptimizer: React.FC = () => {
     // Always add critical resources
     config.criticalResources.forEach(hint => {
       const cleanup = addResourceHint(hint);
-      if (cleanup) cleanupFunctions.push(cleanup);
-    });
+      if (cleanup) cleanupFunctions.push(cleanup)
+  });
 
     // Add crisis resources if in crisis situation
     if (isCrisisRoute() || isCrisisDetected()) {
       config.crisisResources.forEach(hint => {
         const cleanup = addResourceHint(hint);
-        if (cleanup) cleanupFunctions.push(cleanup);
-      });
-    }
+        if (cleanup) cleanupFunctions.push(cleanup)
+  })
+  }
 
     // Add route-specific hints;
     const currentPath = location.pathname;
     const routeHints = config.routeSpecificHints[currentPath] || [];
     routeHints.forEach(hint => {
       const cleanup = addResourceHint(hint);
-      if (cleanup) cleanupFunctions.push(cleanup);
-    });
+      if (cleanup) cleanupFunctions.push(cleanup)
+  });
 
     // Add connection optimizations based on network conditions
     if (shouldOptimizeConnections()) {
       config.connectionOptimizations.forEach(hint => {
         const cleanup = addResourceHint(hint);
-        if (cleanup) cleanupFunctions.push(cleanup);
-      });
-    }
+        if (cleanup) cleanupFunctions.push(cleanup)
+  })
+  }
 
-    return cleanupFunctions;
+    return cleanupFunctions
   };
 
   /**
@@ -255,7 +255,7 @@ const ResourceHintsOptimizer: React.FC = () => {
    */;
   const isCrisisRoute = (): boolean => {
     const crisisRoutes = ['/crisis', '/emergency', '/safety-plan', '/offline-crisis'];
-    return crisisRoutes.some(route => location.pathname.startsWith(route));
+    return crisisRoutes.some(route => location.pathname.startsWith(route))
   };
 
   /**
@@ -266,10 +266,10 @@ const ResourceHintsOptimizer: React.FC = () => {
     // For now, check localStorage for crisis indicators
     try {
       const crisisIndicators = localStorage.getItem('crisis_detected');
-      return crisisIndicators === 'true';
-    } catch {
-      return false;
-    }
+      return crisisIndicators === 'true'
+  } catch {
+      return false
+  }
   };
 
   /**
@@ -281,11 +281,11 @@ const ResourceHintsOptimizer: React.FC = () => {
     
     if (connection) {
       // Apply optimizations for slower connections
-      return connection.effectiveType === '3g' || connection.effectiveType === '2g';
-    }
+      return connection.effectiveType === '3g' || connection.effectiveType === '2g'
+  }
     
     // Default to optimizing for unknown connections
-    return true;
+    return true
   };
 
   /**
@@ -300,10 +300,10 @@ const ResourceHintsOptimizer: React.FC = () => {
       config.routeSpecificHints[predictedNextRoute].forEach(hint => {
         // Convert to prefetch for predicted routes
         if (hint.rel === 'preload') {
-          addResourceHint({ ...hint, rel: 'prefetch', priority: 'low' });
-        }
-      });
-    }
+          addResourceHint({ ...hint, rel: 'prefetch', priority: 'low' })
+  }
+      })
+  }
   };
 
   /**
@@ -312,10 +312,10 @@ const ResourceHintsOptimizer: React.FC = () => {
   const getUserJourney = (): string[] => {
     try {
       const journey = localStorage.getItem('user_journey');
-      return journey ? JSON.parse(journey) : [];
-    } catch {
-      return [];
-    }
+      return journey ? JSON.parse(journey) : []
+  } catch {
+      return []
+  }
   };
 
   /**
@@ -337,10 +337,10 @@ const ResourceHintsOptimizer: React.FC = () => {
     
     if (possibleNext && possibleNext.length > 0) {
       // Return first likely destination
-      return possibleNext[0];
-    }
+      return possibleNext[0]
+  }
 
-    return null;
+    return null
   };
 
   /**
@@ -359,18 +359,18 @@ const ResourceHintsOptimizer: React.FC = () => {
               // Remove low-priority hints to free up bandwidth
               config.connectionOptimizations.forEach(hint => {
                 if (hint.priority === 'low') {
-                  removeResourceHint(hint);
-                }
-              });
-            }
+                  removeResourceHint(hint)
+  }
+              })
+  }
           }
         }
       });
 
       observer.observe({ type: 'navigation', buffered: true });
       
-      return () => observer.disconnect();
-    }
+      return () => observer.disconnect()
+  }
   };
 
   // Apply hints on mount and route changes
@@ -387,8 +387,8 @@ const ResourceHintsOptimizer: React.FC = () => {
       // Clean up all resource hints
       cleanupFunctions.forEach(cleanup => cleanup());
       clearTimeout(behaviorTimeout);
-      if (monitorCleanup) monitorCleanup();
-    };
+      if (monitorCleanup) monitorCleanup()
+  };
   };
   }, [location.pathname]);
 
@@ -398,9 +398,9 @@ const ResourceHintsOptimizer: React.FC = () => {
       if (isCrisisDetected()) {
         // Immediately apply crisis resource hints
         config.crisisResources.forEach(hint => {
-          addResourceHint(hint);
-        });
-      }
+          addResourceHint(hint)
+  })
+  }
     };
 
     // Listen for crisis state changes
@@ -409,13 +409,13 @@ const ResourceHintsOptimizer: React.FC = () => {
 
     return () => {
       window.removeEventListener('crisis_detected', handleCrisisStateChange);
-      window.removeEventListener('storage', handleCrisisStateChange);
-    };
+      window.removeEventListener('storage', handleCrisisStateChange)
+  };
   };
   }, []);
 
   // This component doesn't render anything - it only manages resource hints
-  return null;
-};
+  return null
+  };
 
 export default ResourceHintsOptimizer;

@@ -26,7 +26,7 @@ jest.mock('../services/comprehensivePerformanceMonitor', () => ({
     onAlert: jest.fn(),
     generateOptimizationRecommendations: jest.fn(),
     generatePerformanceReport: jest.fn(),
-    getPerformanceHistory: jest.fn();
+    getPerformanceHistory: jest.fn()
   }
 }));
 
@@ -43,10 +43,10 @@ const mockMetrics = {
   performanceScore: 88,
   networkLatency: 80,
   renderTime: 16.7,
-  interactionTime: 35;
-};
+  interactionTime: 35
+  };
 
-const mockAlerts = [;
+const mockAlerts = [;;
   {
     id: 'alert-1',
     metric: 'crisisDetectionResponseTime',
@@ -54,7 +54,7 @@ const mockAlerts = [;
     threshold: 300,
     severity: 'high' as const,
     timestamp: Date.now(),
-    message: 'Crisis detection response time is too high';
+    message: 'Crisis detection response time is too high'
   },
   {
     id: 'alert-2', 
@@ -63,11 +63,11 @@ const mockAlerts = [;
     threshold: 150,
     severity: 'medium' as const,
     timestamp: Date.now() - 30000,
-    message: 'Memory usage approaching limit';
+    message: 'Memory usage approaching limit'
   }
 ];
 
-const mockRecommendations = [;
+const mockRecommendations = [;;
   {
     id: 'rec-1',
     priority: 'high' as const,
@@ -76,7 +76,7 @@ const mockRecommendations = [;
     description: 'Reduce crisis detection response time to under 200ms',
     impact: 'Faster emergency response for users in crisis',
     implementation: 'Use Web Workers for crisis analysis',
-    estimatedImprovement: '40% faster crisis detection';
+    estimatedImprovement: '40% faster crisis detection'
   },
   {
     id: 'rec-2',
@@ -86,7 +86,7 @@ const mockRecommendations = [;
     description: 'Split large bundles and implement lazy loading',
     impact: 'Faster initial page load',
     implementation: 'Code splitting and dynamic imports',
-    estimatedImprovement: '25% reduction in bundle size';
+    estimatedImprovement: '25% reduction in bundle size'
   }
 ];
 
@@ -96,14 +96,14 @@ describe('usePerformanceMetrics Hook', () => {
     jest.clearAllMocks();
     jest.useFakeTimers();
     
-    (comprehensivePerformanceMonitor.getCurrentMetrics as jest.Mock).mockReturnValue(mockMetrics);
+    (comprehensivePerformanceMonitor.getCurrentMetrics as jest.Mock).mockReturnValue(mockMetrics)
   });
 
   afterEach(() => {
     jest.runOnlyPendingTimers();
     jest.clearAllTimers();
     jest.useRealTimers();
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   it.skip('should initialize and fetch metrics', async () => {
@@ -115,46 +115,46 @@ describe('usePerformanceMetrics Hook', () => {
 
     await waitFor(() => {
       expect(result.current.metrics).toEqual(mockMetrics);
-      expect(result.current.isLoading).toBe(false);
-    });
+      expect(result.current.isLoading).toBe(false)
+  });
 
-    expect(comprehensivePerformanceMonitor.getCurrentMetrics).toHaveBeenCalled();
+    expect(comprehensivePerformanceMonitor.getCurrentMetrics).toHaveBeenCalled()
   });
 
   it.skip('should handle metrics fetch errors', async () => {
     const metricsError = new Error('Metrics service unavailable');
     (comprehensivePerformanceMonitor.getCurrentMetrics as jest.Mock).mockImplementation(() => {
-      throw metricsError;
-    });
+      throw metricsError
+  });
 
     const { result } = renderHook(() => usePerformanceMetrics());
 
     await waitFor(() => {
       expect(result.current.error).toEqual(metricsError);
       expect(result.current.isLoading).toBe(false);
-      expect(result.current.metrics).toBeNull();
-    });
+      expect(result.current.metrics).toBeNull()
+  })
   });
 
   it.skip('should refresh metrics at specified interval', async () => {
     const { result } = renderHook(() => usePerformanceMetrics(5000));
 
     await waitFor(() => {
-      expect(result.current.metrics).toEqual(mockMetrics);
-    });
+      expect(result.current.metrics).toEqual(mockMetrics)
+  });
 
     // Clear the initial call
     (comprehensivePerformanceMonitor.getCurrentMetrics as jest.Mock).mockClear();
 
     // Fast-forward 5 seconds
     act(() => {
-      jest.advanceTimersByTime(5000);
-    });
+      jest.advanceTimersByTime(5000)
+  });
 
     // Wait for the mock to be called
     await waitFor(() => {
-      expect(comprehensivePerformanceMonitor.getCurrentMetrics).toHaveBeenCalledTimes(1);
-    });
+      expect(comprehensivePerformanceMonitor.getCurrentMetrics).toHaveBeenCalledTimes(1)
+  })
   }, 20000);
 
   it.skip('should cleanup interval on unmount', () => {
@@ -166,9 +166,9 @@ describe('usePerformanceMetrics Hook', () => {
 
     expect(clearIntervalSpy).toHaveBeenCalled();
 
-    clearIntervalSpy.mockRestore();
+    clearIntervalSpy.mockRestore()
+  })
   });
-});
 
 describe('usePerformanceAlerts Hook', () => {
   beforeEach(() => {
@@ -176,25 +176,25 @@ describe('usePerformanceAlerts Hook', () => {
     jest.useFakeTimers();
     
     (comprehensivePerformanceMonitor.getActiveAlerts as jest.Mock).mockReturnValue(mockAlerts);
-    (comprehensivePerformanceMonitor.onAlert as jest.Mock).mockReturnValue(() => {});
+    (comprehensivePerformanceMonitor.onAlert as jest.Mock).mockReturnValue(() => {})
   });
 
   afterEach(() => {
     jest.runOnlyPendingTimers();
     jest.clearAllTimers();
     jest.useRealTimers();
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   it.skip('should initialize with existing alerts', async () => {
     const { result } = renderHook(() => usePerformanceAlerts());
 
     await waitFor(() => {
-      expect(result.current.alerts).toEqual(mockAlerts);
-    });
+      expect(result.current.alerts).toEqual(mockAlerts)
+  });
 
     expect(comprehensivePerformanceMonitor.getActiveAlerts).toHaveBeenCalled();
-    expect(comprehensivePerformanceMonitor.onAlert).toHaveBeenCalled();
+    expect(comprehensivePerformanceMonitor.onAlert).toHaveBeenCalled()
   });
 
   it.skip('should handle new alerts', async () => {
@@ -206,8 +206,8 @@ describe('usePerformanceAlerts Hook', () => {
     const { result } = renderHook(() => usePerformanceAlerts());
 
     await waitFor(() => {
-      expect(result.current.alerts).toEqual(mockAlerts);
-    });
+      expect(result.current.alerts).toEqual(mockAlerts)
+  });
 
     const newAlert = {
       id: 'alert-3',
@@ -216,15 +216,15 @@ describe('usePerformanceAlerts Hook', () => {
       threshold: 30,
       severity: 'low' as const,
       timestamp: Date.now(),
-      message: 'Render time slightly elevated';
-    };
+      message: 'Render time slightly elevated'
+  };
 
     act(() => {
-      alertHandler!(newAlert);
-    });
+      alertHandler!(newAlert)
+  });
 
     expect(result.current.alerts).toContainEqual(newAlert);
-    expect(result.current.newAlertCount).toBe(1);
+    expect(result.current.newAlertCount).toBe(1)
   });
 
   it.skip('should update existing alerts', async () => {
@@ -236,18 +236,18 @@ describe('usePerformanceAlerts Hook', () => {
     const { result } = renderHook(() => usePerformanceAlerts());
 
     await waitFor(() => {
-      expect(result.current.alerts).toEqual(mockAlerts);
-    });
+      expect(result.current.alerts).toEqual(mockAlerts)
+  });
 
     const updatedAlert = {
       ...mockAlerts[0],
       value: 500,
-      message: 'Crisis detection response time critically high';
-    };
+      message: 'Crisis detection response time critically high'
+  };
 
     act(() => {
-      alertHandler!(updatedAlert);
-    });
+      alertHandler!(updatedAlert)
+  });
 
     expect(result.current.alerts[0]).toEqual(updatedAlert);
     expect(result.current.newAlertCount).toBe(0); // Not a new alert
@@ -257,28 +257,28 @@ describe('usePerformanceAlerts Hook', () => {
     const { result } = renderHook(() => usePerformanceAlerts());
 
     await waitFor(() => {
-      expect(result.current.alerts).toEqual(mockAlerts);
-    });
+      expect(result.current.alerts).toEqual(mockAlerts)
+  });
 
     act(() => {
-      result.current.clearNewAlerts();
-    });
+      result.current.clearNewAlerts()
+  });
 
-    expect(result.current.newAlertCount).toBe(0);
+    expect(result.current.newAlertCount).toBe(0)
   });
 
   it.skip('should dismiss alerts', async () => {
     const { result } = renderHook(() => usePerformanceAlerts());
 
     await waitFor(() => {
-      expect(result.current.alerts).toEqual(mockAlerts);
-    });
+      expect(result.current.alerts).toEqual(mockAlerts)
+  });
 
     act(() => {
-      result.current.dismissAlert('alert-1');
-    });
+      result.current.dismissAlert('alert-1')
+  });
 
-    expect(result.current.alerts.find(a => a.id === 'alert-1')).toBeUndefined();
+    expect(result.current.alerts.find(a => a.id === 'alert-1')).toBeUndefined()
   });
 
   it.skip('should cleanup subscription on unmount', async () => {
@@ -288,77 +288,77 @@ describe('usePerformanceAlerts Hook', () => {
     const { unmount } = renderHook(() => usePerformanceAlerts());
 
     await waitFor(() => {
-      expect(comprehensivePerformanceMonitor.onAlert).toHaveBeenCalled();
-    });
+      expect(comprehensivePerformanceMonitor.onAlert).toHaveBeenCalled()
+  });
 
     unmount();
 
-    expect(mockUnsubscribe).toHaveBeenCalled();
+    expect(mockUnsubscribe).toHaveBeenCalled()
+  })
   });
-});
 
 describe('useOptimizationRecommendations Hook', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.useFakeTimers();
     
-    (comprehensivePerformanceMonitor.generateOptimizationRecommendations as jest.Mock).mockReturnValue(mockRecommendations);
+    (comprehensivePerformanceMonitor.generateOptimizationRecommendations as jest.Mock).mockReturnValue(mockRecommendations)
   });
 
   afterEach(() => {
     jest.runOnlyPendingTimers();
     jest.clearAllTimers();
     jest.useRealTimers();
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   it.skip('should load recommendations on mount', async () => {
     const { result } = renderHook(() => useOptimizationRecommendations());
 
     await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    });
+      expect(result.current.isLoading).toBe(false)
+  });
 
     expect(result.current.recommendations).toEqual(mockRecommendations);
-    expect(comprehensivePerformanceMonitor.generateOptimizationRecommendations).toHaveBeenCalled();
+    expect(comprehensivePerformanceMonitor.generateOptimizationRecommendations).toHaveBeenCalled()
   });
 
   it.skip('should limit recommendations to specified maximum', async () => {
     const { result } = renderHook(() => useOptimizationRecommendations(1));
 
     await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    });
+      expect(result.current.isLoading).toBe(false)
+  });
 
     expect(result.current.recommendations).toHaveLength(1);
-    expect(result.current.recommendations[0]).toEqual(mockRecommendations[0]);
+    expect(result.current.recommendations[0]).toEqual(mockRecommendations[0])
   });
 
   it.skip('should handle recommendation errors', async () => {
     const recError = new Error('Failed to generate recommendations');
     (comprehensivePerformanceMonitor.generateOptimizationRecommendations as jest.Mock).mockImplementation(() => {
-      throw recError;
-    });
+      throw recError
+  });
 
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
     const { result } = renderHook(() => useOptimizationRecommendations());
 
     await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    });
+      expect(result.current.isLoading).toBe(false)
+  });
 
     expect(consoleSpy).toHaveBeenCalledWith('Failed to generate optimization recommendations:', recError);
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should refresh recommendations periodically', async () => {
     const { result } = renderHook(() => useOptimizationRecommendations());
 
     await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    });
+      expect(result.current.isLoading).toBe(false)
+  });
 
     expect(result.current.recommendations).toEqual(mockRecommendations);
 
@@ -367,15 +367,15 @@ describe('useOptimizationRecommendations Hook', () => {
 
     // Fast-forward 30 seconds
     act(() => {
-      jest.advanceTimersByTime(30000);
-    });
+      jest.advanceTimersByTime(30000)
+  });
 
     // Wait for the async operation to complete
     await waitFor(() => {
-      expect(comprehensivePerformanceMonitor.generateOptimizationRecommendations).toHaveBeenCalled();
-    });
-  }, 20000);
-});
+      expect(comprehensivePerformanceMonitor.generateOptimizationRecommendations).toHaveBeenCalled()
+  })
+  }, 20000)
+  });
 
 describe('usePerformanceGrade Hook', () => {
   beforeEach(() => {
@@ -384,29 +384,29 @@ describe('usePerformanceGrade Hook', () => {
     
     (comprehensivePerformanceMonitor.generatePerformanceReport as jest.Mock).mockReturnValue(
       'Performance Report\n## 📈 Performance Grade\nExcellent (A+) - 95/100'
-    );
+    )
   });
 
   afterEach(() => {
     // Clean up timers without running them to avoid act warnings
     jest.clearAllTimers();
     jest.useRealTimers();
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   it.skip('should extract grade from performance report', async () => {
     const { result } = renderHook(() => usePerformanceGrade());
 
     await waitFor(() => {
-      expect(result.current.grade).toBeTruthy();
-    });
+      expect(result.current.grade).toBeTruthy()
+  });
 
     expect(result.current.grade).toBe('Excellent (A+) - 95/100');
     expect(result.current.gradeColor).toBe('#22c55e'); // green
   });
 
   it.skip('should handle different grade levels', async () => {
-    const gradeTestCases = [;
+    const gradeTestCases = [;;
       { report: '## 📈 Performance Grade\nGood (A) - 85/100', expectedColor: '#3b82f6' },
       { report: '## 📈 Performance Grade\nFair (B) - 75/100', expectedColor: '#eab308' },
       { report: '## 📈 Performance Grade\nNeeds Improvement (C) - 65/100', expectedColor: '#f97316' },
@@ -419,19 +419,19 @@ describe('usePerformanceGrade Hook', () => {
       const { result, unmount } = renderHook(() => usePerformanceGrade());
 
       await waitFor(() => {
-        expect(result.current.grade).toBeTruthy();
-      });
+        expect(result.current.grade).toBeTruthy()
+  });
 
       expect(result.current.gradeColor).toBe(testCase.expectedColor);
       
-      unmount();
-    }
+      unmount()
+  }
   });
 
   it.skip('should handle report generation errors', async () => {
     (comprehensivePerformanceMonitor.generatePerformanceReport as jest.Mock).mockImplementation(() => {
-      throw new Error('Report generation failed');
-    });
+      throw new Error('Report generation failed')
+  });
 
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
@@ -439,8 +439,8 @@ describe('usePerformanceGrade Hook', () => {
 
     // Wait for the error state to be set
     await waitFor(() => {
-      expect(result.current.grade).toBe('Error');
-    });
+      expect(result.current.grade).toBe('Error')
+  });
 
     expect(result.current.gradeColor).toBe('#ef4444');
     expect(consoleSpy).toHaveBeenCalledWith(
@@ -448,30 +448,30 @@ describe('usePerformanceGrade Hook', () => {
       expect.any(Error)
     );
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should refresh grade periodically', async () => {
     const { result } = renderHook(() => usePerformanceGrade());
 
     await waitFor(() => {
-      expect(result.current.grade).toBeDefined();
-    });
+      expect(result.current.grade).toBeDefined()
+  });
 
     // Clear the initial call
     (comprehensivePerformanceMonitor.generatePerformanceReport as jest.Mock).mockClear();
 
     // Fast-forward 15 seconds
     act(() => {
-      jest.advanceTimersByTime(15000);
-    });
+      jest.advanceTimersByTime(15000)
+  });
 
     // Wait for the timer to trigger
     await waitFor(() => {
-      expect(comprehensivePerformanceMonitor.generatePerformanceReport).toHaveBeenCalled();
-    });
+      expect(comprehensivePerformanceMonitor.generatePerformanceReport).toHaveBeenCalled()
+  })
+  })
   });
-});
 
 describe('useCrisisPerformanceMonitoring Hook', () => {
   beforeEach(() => {
@@ -480,15 +480,15 @@ describe('useCrisisPerformanceMonitoring Hook', () => {
     
     (comprehensivePerformanceMonitor.getCurrentMetrics as jest.Mock).mockReturnValue({
       ...mockMetrics,
-      crisisDetectionResponseTime: 250;
-    });
+      crisisDetectionResponseTime: 250
+  })
   });
 
   afterEach(() => {
     jest.runOnlyPendingTimers();
     jest.clearAllTimers();
     jest.useRealTimers();
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   it.skip('should monitor crisis performance metrics', async () => {
@@ -496,8 +496,8 @@ describe('useCrisisPerformanceMonitoring Hook', () => {
 
     // Wait for initial state to be set
     await waitFor(() => {
-      expect(result.current).toBeDefined();
-    });
+      expect(result.current).toBeDefined()
+  });
 
     expect(result.current.responseTime).toBe(250);
     expect(result.current.lastCheck).toBeGreaterThan(0);
@@ -507,8 +507,8 @@ describe('useCrisisPerformanceMonitoring Hook', () => {
   it.skip('should detect unhealthy crisis performance', async () => {
     (comprehensivePerformanceMonitor.getCurrentMetrics as jest.Mock).mockReturnValue({
       ...mockMetrics,
-      crisisDetectionResponseTime: 450 // Over 300ms threshold;
-    });
+      crisisDetectionResponseTime: 450 // Over 300ms threshold
+  });
 
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
@@ -516,8 +516,8 @@ describe('useCrisisPerformanceMonitoring Hook', () => {
 
     // Wait for initial state to be set
     await waitFor(() => {
-      expect(result.current).toBeDefined();
-    });
+      expect(result.current).toBeDefined()
+  });
 
     expect(result.current.responseTime).toBe(450);
     expect(result.current.lastCheck).toBeGreaterThan(0);
@@ -526,7 +526,7 @@ describe('useCrisisPerformanceMonitoring Hook', () => {
       expect.stringContaining('🚨 Crisis detection performance degraded: 450ms')
     );
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should check crisis performance frequently', async () => {
@@ -534,8 +534,8 @@ describe('useCrisisPerformanceMonitoring Hook', () => {
 
     // Wait for initial state to be set
     await waitFor(() => {
-      expect(result.current).toBeDefined();
-    });
+      expect(result.current).toBeDefined()
+  });
 
     expect(result.current.responseTime).toBe(250);
     expect(comprehensivePerformanceMonitor.getCurrentMetrics).toHaveBeenCalled();
@@ -545,13 +545,13 @@ describe('useCrisisPerformanceMonitoring Hook', () => {
 
     // Fast-forward 5 seconds
     act(() => {
-      jest.advanceTimersByTime(5000);
-    });
+      jest.advanceTimersByTime(5000)
+  });
 
     // Wait for the timer to trigger
     await waitFor(() => {
-      expect(comprehensivePerformanceMonitor.getCurrentMetrics).toHaveBeenCalled();
-    });
+      expect(comprehensivePerformanceMonitor.getCurrentMetrics).toHaveBeenCalled()
+  })
   });
 
   it.skip('should handle missing crisis metrics gracefully', async () => {
@@ -561,19 +561,19 @@ describe('useCrisisPerformanceMonitoring Hook', () => {
 
     // Wait for initial state to be set
     await waitFor(() => {
-      expect(result.current).toBeDefined();
-    });
+      expect(result.current).toBeDefined()
+  });
 
     // Initial state should be set with defaults when metrics are null
     expect(result.current.lastCheck).toBeGreaterThan(0);
     expect(result.current.responseTime).toBe(0);
-    expect(result.current.isHealthy).toBe(true);
+    expect(result.current.isHealthy).toBe(true)
+  })
   });
-});
 
 describe('Utility Functions', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   it.skip('should generate performance summary', () => {
@@ -583,13 +583,13 @@ describe('Utility Functions', () => {
     const summary = generatePerformanceSummary();
 
     expect(comprehensivePerformanceMonitor.generatePerformanceReport).toHaveBeenCalled();
-    expect(summary).toBe(mockReport);
+    expect(summary).toBe(mockReport)
   });
 
   it.skip('should handle performance summary errors', () => {
     (comprehensivePerformanceMonitor.generatePerformanceReport as jest.Mock).mockImplementation(() => {
-      throw new Error('Summary generation failed');
-    });
+      throw new Error('Summary generation failed')
+  });
 
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
@@ -598,7 +598,7 @@ describe('Utility Functions', () => {
     expect(summary).toBe('Performance summary unavailable');
     expect(consoleSpy).toHaveBeenCalled();
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should export performance data', () => {
@@ -615,14 +615,14 @@ describe('Utility Functions', () => {
       metrics: mockHistory,
       alerts: mockAlerts,
       recommendations: mockRecommendations,
-      summary: expect.any(String);
-    });
+      summary: expect.any(String)
+  })
   });
 
   it.skip('should handle export errors', () => {
     (comprehensivePerformanceMonitor.getPerformanceHistory as jest.Mock).mockImplementation(() => {
-      throw new Error('Export failed');
-    });
+      throw new Error('Export failed')
+  });
 
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
@@ -631,7 +631,7 @@ describe('Utility Functions', () => {
     expect(exportData).toBeNull();
     expect(consoleSpy).toHaveBeenCalled();
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should check performance monitoring health', () => {
@@ -642,7 +642,7 @@ describe('Utility Functions', () => {
 
     const isHealthy = isPerformanceMonitoringHealthy();
 
-    expect(isHealthy).toBe(true);
+    expect(isHealthy).toBe(true)
   });
 
   it.skip('should detect stale performance monitoring', () => {
@@ -653,13 +653,13 @@ describe('Utility Functions', () => {
 
     const isHealthy = isPerformanceMonitoringHealthy();
 
-    expect(isHealthy).toBe(false);
+    expect(isHealthy).toBe(false)
   });
 
   it.skip('should handle health check errors', () => {
     (comprehensivePerformanceMonitor.getCurrentMetrics as jest.Mock).mockImplementation(() => {
-      throw new Error('Health check failed');
-    });
+      throw new Error('Health check failed')
+  });
 
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
@@ -668,20 +668,20 @@ describe('Utility Functions', () => {
     expect(isHealthy).toBe(false);
     expect(consoleSpy).toHaveBeenCalled();
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
+  })
   });
-});
 
 describe('PerformanceProvider Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.useFakeTimers();
-    (comprehensivePerformanceMonitor.getCurrentMetrics as jest.Mock).mockReturnValue(mockMetrics);
+    (comprehensivePerformanceMonitor.getCurrentMetrics as jest.Mock).mockReturnValue(mockMetrics)
   });
   
   afterEach(() => {
     jest.clearAllTimers();
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   it.skip('should monitor critical performance issues', async () => {
@@ -689,8 +689,8 @@ describe('PerformanceProvider Component', () => {
       ...mockMetrics,
       crisisDetectionResponseTime: 600, // Critical
       memoryUsage: 220, // Critical
-      largestContentfulPaint: 6000 // Critical;
-    };
+      largestContentfulPaint: 6000 // Critical
+  };
 
     (comprehensivePerformanceMonitor.getCurrentMetrics as jest.Mock).mockReturnValue(criticalMetrics);
 
@@ -698,18 +698,18 @@ describe('PerformanceProvider Component', () => {
 
     const TestComponent = () => {
       const { metrics } = usePerformanceMetrics();
-      return React.createElement('div', { 'data-testid': 'test-component' }, metrics ? 'Metrics loaded' : 'Loading');
-    };
+      return React.createElement('div', { 'data-testid': 'test-component' }, metrics ? 'Metrics loaded' : 'Loading')
+  };
 
     const { getByTestId } = testRender(
       React.createElement(PerformanceProvider, { 
-        children: React.createElement(TestComponent) ;
-      })
+        children: React.createElement(TestComponent)
+  })
     );
 
     await waitFor(() => {
-      expect(getByTestId('test-component')).toHaveTextContent('Metrics loaded');
-    });
+      expect(getByTestId('test-component')).toHaveTextContent('Metrics loaded')
+  });
 
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
@@ -719,10 +719,10 @@ describe('PerformanceProvider Component', () => {
           'Memory usage critically high',
           'Page loading extremely slow'
         ])
-      );
-    });
+      )
+  });
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should not log when performance is healthy', async () => {
@@ -730,38 +730,38 @@ describe('PerformanceProvider Component', () => {
 
     const TestComponent = () => {
       const { metrics } = usePerformanceMetrics();
-      return React.createElement('div', { 'data-testid': 'test' }, metrics ? 'Loaded' : 'Loading');
-    };
+      return React.createElement('div', { 'data-testid': 'test' }, metrics ? 'Loaded' : 'Loading')
+  };
 
     const { getByTestId } = testRender(
       React.createElement(PerformanceProvider, { 
-        children: React.createElement(TestComponent) ;
-      })
+        children: React.createElement(TestComponent)
+  })
     );
 
     // Wait for metrics to load
     await waitFor(() => {
-      expect(getByTestId('test')).toHaveTextContent('Loaded');
-    });
+      expect(getByTestId('test')).toHaveTextContent('Loaded')
+  });
 
     // Ensure no error logs for healthy metrics
     expect(consoleSpy).not.toHaveBeenCalled();
 
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
+  })
   });
-});
 
 describe('PerformanceDebugInfo Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.useFakeTimers();
     (comprehensivePerformanceMonitor.getCurrentMetrics as jest.Mock).mockReturnValue(mockMetrics);
-    (comprehensivePerformanceMonitor.getActiveAlerts as jest.Mock).mockReturnValue(mockAlerts);
+    (comprehensivePerformanceMonitor.getActiveAlerts as jest.Mock).mockReturnValue(mockAlerts)
   });
   
   afterEach(() => {
     jest.clearAllTimers();
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   it.skip('should not render in production', () => {
@@ -775,7 +775,7 @@ describe('PerformanceDebugInfo Component', () => {
     const debugInfo = container.querySelector('.performance-debug-info');
     expect(debugInfo).toBeNull();
 
-    process.env.NODE_ENV = originalEnv;
+    process.env.NODE_ENV = originalEnv
   });
 
   it('should render in development when metrics are available', async () => {
@@ -789,10 +789,10 @@ describe('PerformanceDebugInfo Component', () => {
       const debugElement = container.querySelector('div');
       expect(debugElement).toBeTruthy();
       if (debugElement) {
-        expect(debugElement.textContent).toContain('Performance');
-      }
+        expect(debugElement.textContent).toContain('Performance')
+  }
     });
 
-    process.env.NODE_ENV = originalEnv;
+    process.env.NODE_ENV = originalEnv
+  })
   });
-});

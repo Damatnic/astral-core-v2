@@ -18,14 +18,14 @@ describe('MultilingualCrisisDetectionService', () => {
         es: 'Quiero terminar con mi vida',
         fr: 'Je veux mourir',
         zh: '我想结束生命',
-        ar: 'أريد أن أنهي حياتي';
-      };
+        ar: 'أريد أن أنهي حياتي'
+  };
 
       for (const [lang, text] of Object.entries(texts)) {
         const result = await multilingualCrisisDetectionService.detectCrisis(text);
         expect(result.detectedLanguage).toBe(lang);
-        expect(result.languageConfidence).toBeGreaterThan(0.8);
-      }
+        expect(result.languageConfidence).toBeGreaterThan(0.8)
+  }
     });
 
     it.skip('should handle mixed language content', async () => {
@@ -36,26 +36,26 @@ describe('MultilingualCrisisDetectionService', () => {
       // Test only available properties
       expect(result.detectedLanguage).toBeDefined();
       expect(result.languageConfidence).toBeGreaterThan(0);
-      expect(result.riskLevel).toBeDefined();
-    });
+      expect(result.riskLevel).toBeDefined()
+  });
 
     it.skip('should detect dialects and variants', async () => {
       const brazilianText = 'Não aguento mais, quero morrer';
       const europeanText = 'Não aguento mais, quero morrer';
       
-      const brResult = await multilingualCrisisDetectionService.detectCrisis(;
+      const brResult = await multilingualCrisisDetectionService.detectCrisis(;;
         brazilianText,
         'pt'
       );
-      const ptResult = await multilingualCrisisDetectionService.detectCrisis(;
+      const ptResult = await multilingualCrisisDetectionService.detectCrisis(;;
         europeanText,
         'pt'
       );
       
       // Test only available properties
       expect(brResult.detectedLanguage).toBe('pt');
-      expect(ptResult.detectedLanguage).toBe('pt');
-    });
+      expect(ptResult.detectedLanguage).toBe('pt')
+  })
   });
 
   describe('Crisis Detection Across Languages', () => {
@@ -66,8 +66,8 @@ describe('MultilingualCrisisDetectionService', () => {
       
       // Test only available properties
       expect(result.riskLevel).toBeDefined();
-      expect(result.confidence).toBeGreaterThan(0);
-    });
+      expect(result.confidence).toBeGreaterThan(0)
+  });
 
     it.skip('should detect crisis in Chinese', async () => {
       const text = '我不想活了，太痛苦了';
@@ -76,8 +76,8 @@ describe('MultilingualCrisisDetectionService', () => {
       
       // Test only available properties
       expect(result.riskLevel).toBeDefined();
-      expect(result.triggers).toBeDefined();
-    });
+      expect(result.triggers).toBeDefined()
+  });
 
     it.skip('should detect crisis in Arabic', async () => {
       const text = 'لا أريد العيش بعد الآن';
@@ -86,8 +86,8 @@ describe('MultilingualCrisisDetectionService', () => {
       
       // Test only available properties
       expect(result.riskLevel).toBeDefined();
-      expect(result.detectedLanguage).toBe('ar');
-    });
+      expect(result.detectedLanguage).toBe('ar')
+  });
 
     it.skip('should detect crisis in Hindi', async () => {
       const text = 'मैं अब और नहीं जी सकता';
@@ -96,8 +96,8 @@ describe('MultilingualCrisisDetectionService', () => {
       
       // Test only available properties
       expect(result.riskLevel).toBeDefined();
-      expect(result.detectedLanguage).toBe('hi');
-    });
+      expect(result.detectedLanguage).toBe('hi')
+  })
   });
 
   describe('Translation and Understanding', () => {
@@ -108,8 +108,8 @@ describe('MultilingualCrisisDetectionService', () => {
       
       // Test only available properties
       expect(result.detectedLanguage).toBe('fr');
-      expect(result.culturalRecommendations).toBeDefined();
-    });
+      expect(result.culturalRecommendations).toBeDefined()
+  });
 
     it.skip('should preserve meaning in translation', async () => {
       const text = 'Estoy pensando en hacerme daño';
@@ -118,8 +118,8 @@ describe('MultilingualCrisisDetectionService', () => {
       
       // Test only available properties
       expect(result.riskLevel).toBeDefined();
-      expect(result.triggers).toBeDefined();
-    });
+      expect(result.triggers).toBeDefined()
+  });
 
     it.skip('should handle untranslatable expressions', async () => {
       const text = 'Tengo el mal de vivir'; // French expression in Spanish;
@@ -128,8 +128,8 @@ describe('MultilingualCrisisDetectionService', () => {
       
       // Test only available properties
       expect(result.riskLevel).toBeDefined();
-      expect(result.detectedLanguage).toBe('es');
-    });
+      expect(result.detectedLanguage).toBe('es')
+  })
   });
 
   describe('Colloquialisms and Slang', () => {
@@ -140,8 +140,8 @@ describe('MultilingualCrisisDetectionService', () => {
       
       // Test only available properties
       expect(result.riskLevel).toBeDefined();
-      expect(result.confidence).toBeGreaterThan(0);
-    });
+      expect(result.confidence).toBeGreaterThan(0)
+  });
 
     it.skip('should understand youth slang', async () => {
       const text = 'Im so over it, might just yeet myself';
@@ -150,8 +150,8 @@ describe('MultilingualCrisisDetectionService', () => {
       
       // Test only available properties
       expect(result.riskLevel).toBeDefined();
-      expect(result.triggers).toBeDefined();
-    });
+      expect(result.triggers).toBeDefined()
+  });
 
     it.skip('should handle internet language', async () => {
       const text = 'kms tbh, cant do this anymore';
@@ -160,8 +160,8 @@ describe('MultilingualCrisisDetectionService', () => {
       
       // Test only available properties
       expect(result.riskLevel).toBeDefined();
-      expect(result.triggers).toBeDefined();
-    });
+      expect(result.triggers).toBeDefined()
+  })
   });
 
   describe('Regional Variations', () => {
@@ -176,8 +176,8 @@ describe('MultilingualCrisisDetectionService', () => {
       expect(ukResult.riskLevel).toBeDefined();
       expect(usResult.riskLevel).toBeDefined();
       expect(ukResult.detectedLanguage).toBe('en');
-      expect(usResult.detectedLanguage).toBe('en');
-    });
+      expect(usResult.detectedLanguage).toBe('en')
+  });
 
     it.skip('should handle Latin American vs European Spanish', async () => {
       const mexicanText = 'Ya valió madre, me quiero morir';
@@ -189,8 +189,8 @@ describe('MultilingualCrisisDetectionService', () => {
       // Test only available properties
       expect(mxResult.riskLevel).toBeDefined();
       expect(esResult.riskLevel).toBeDefined();
-      expect(mxResult.triggers).toBeDefined();
-    });
+      expect(mxResult.triggers).toBeDefined()
+  })
   });
 
   describe('Script and Character Support', () => {
@@ -201,8 +201,8 @@ describe('MultilingualCrisisDetectionService', () => {
       
       // Test only available properties
       expect(result.riskLevel).toBeDefined();
-      expect(result.detectedLanguage).toBe('ru');
-    });
+      expect(result.detectedLanguage).toBe('ru')
+  });
 
     it.skip('should handle right-to-left languages', async () => {
       const hebrewText = 'אני לא רוצה לחיות יותר';
@@ -215,8 +215,8 @@ describe('MultilingualCrisisDetectionService', () => {
       expect(heResult.riskLevel).toBeDefined();
       expect(arResult.riskLevel).toBeDefined();
       expect(heResult.detectedLanguage).toBe('he');
-      expect(arResult.detectedLanguage).toBe('ar');
-    });
+      expect(arResult.detectedLanguage).toBe('ar')
+  });
 
     it.skip('should handle emoji and emoticons', async () => {
       const text = 'Feeling 💔 want to ☠️ myself 😢';
@@ -225,8 +225,8 @@ describe('MultilingualCrisisDetectionService', () => {
       
       // Test only available properties
       expect(result.riskLevel).toBeDefined();
-      expect(result.triggers).toBeDefined();
-    });
+      expect(result.triggers).toBeDefined()
+  })
   });
 
   describe('Confidence and Accuracy', () => {
@@ -237,8 +237,8 @@ describe('MultilingualCrisisDetectionService', () => {
       
       // Test only available properties
       expect(result.languageConfidence).toBeGreaterThan(0.5);
-      expect(result.confidence).toBeGreaterThan(0);
-    });
+      expect(result.confidence).toBeGreaterThan(0)
+  });
 
     it.skip('should handle low-resource languages', async () => {
       const text = 'Crisis text in Swahili'; // Simulated;
@@ -247,8 +247,8 @@ describe('MultilingualCrisisDetectionService', () => {
       
       // Test only available properties
       expect(result.riskLevel).toBeDefined();
-      expect(result.confidence).toBeGreaterThanOrEqual(0);
-    });
+      expect(result.confidence).toBeGreaterThanOrEqual(0)
+  })
   });
 
   describe('Response Localization', () => {
@@ -259,8 +259,8 @@ describe('MultilingualCrisisDetectionService', () => {
       
       // Test only available properties
       expect(result.culturalRecommendations).toBeDefined();
-      expect(result.detectedLanguage).toBe('es');
-    });
+      expect(result.detectedLanguage).toBe('es')
+  });
 
     it.skip('should provide culturally appropriate responses', async () => {
       const text = '我需要帮助';
@@ -270,8 +270,8 @@ describe('MultilingualCrisisDetectionService', () => {
       // Test only available properties
       expect(result.riskLevel).toBeDefined();
       expect(result.detectedLanguage).toBe('zh');
-      expect(result.culturalRecommendations).toBeDefined();
-    });
+      expect(result.culturalRecommendations).toBeDefined()
+  })
   });
 
   describe('Performance Across Languages', () => {
@@ -302,7 +302,7 @@ describe('MultilingualCrisisDetectionService', () => {
       const secondDuration = Date.now() - secondStart;
       
       expect(secondDuration).toBeLessThan(firstDuration + 1000); // Reasonable comparison
-    });
+    })
   });
 
   describe('Error Handling', () => {
@@ -313,8 +313,8 @@ describe('MultilingualCrisisDetectionService', () => {
       
       // Test only available properties
       expect(result.riskLevel).toBeDefined();
-      expect(result.detectedLanguage).toBeDefined();
-    });
+      expect(result.detectedLanguage).toBeDefined()
+  });
 
     it.skip('should handle encoding issues', async () => {
       const malformedText = 'Broken encoding text';
@@ -323,7 +323,7 @@ describe('MultilingualCrisisDetectionService', () => {
       
       // Test only available properties
       expect(result).toBeDefined();
-      expect(result.riskLevel).toBeDefined();
-    });
+      expect(result.riskLevel).toBeDefined()
+  })
+  })
   });
-});

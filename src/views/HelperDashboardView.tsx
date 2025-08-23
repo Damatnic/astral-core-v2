@@ -22,8 +22,8 @@ const iconMap: { [key: string]: React.FC } = {
 };
 
 export const HelperDashboardView: React.FC<{
-    setActiveView: (view: ActiveView) => void;
-}> = ({ setActiveView }) => {
+    setActiveView: (view: ActiveView) => void
+  }> = ({ setActiveView }) => {
     const { helperProfile, updateHelperProfile } = useAuth();
     const { allDilemmas, acceptDilemma, summarizeDilemma, declineRequest } = useDilemmaStore();
     const { helpSessions, generateHelperPerformanceSummary, startVideoChat } = useSessionStore();
@@ -45,15 +45,15 @@ export const HelperDashboardView: React.FC<{
         if (!helperProfile?.id) return;
         try {
             const updatedProfile = await ApiClient.helpers.setAvailability(helperProfile.id, isAvailable);
-            updateHelperProfile(updatedProfile);
-        } catch(error) {
-            console.error("Failed to set helper availability", error);
-        }
+            updateHelperProfile(updatedProfile)
+  } catch(error) {
+            console.error("Failed to set helper availability", error)
+  }
     };
 
     const handleSummarize = async (dilemmaId: string) => {
-        await summarizeDilemma(dilemmaId);
-    };
+        await summarizeDilemma(dilemmaId)
+  };
 
     useEffect(() => {
         if (helperId && activeTab === 'stats') {
@@ -61,8 +61,8 @@ export const HelperDashboardView: React.FC<{
             ApiClient.feedback.getFeedbackForHelper(helperId)
                 .then(feedback => setFeedbackCount(feedback.length))
                 .catch(err => console.error("Failed to load feedback count", err))
-                .finally(() => setIsLoadingFeedback(false));
-        }
+                .finally(() => setIsLoadingFeedback(false))
+  }
     };
   }, [helperId, activeTab]);
     
@@ -72,8 +72,8 @@ export const HelperDashboardView: React.FC<{
             ApiClient.helpers.getHelperAchievements(helperId)
                 .then(setAchievements)
                 .catch(err => console.error("Failed to load achievements", err))
-                .finally(() => setIsLoadingAchievements(false));
-        }
+                .finally(() => setIsLoadingAchievements(false))
+  }
     };
   }, [helperId, activeTab]);
 
@@ -81,47 +81,47 @@ export const HelperDashboardView: React.FC<{
         if (helperProfile && isAvailable) {
             try {
                 const matched = await ApiClient.ai.getAiMatchedDilemmas(helperProfile, allDilemmas);
-                setMatchedDilemmas(matched);
-            } catch (error) {
-                console.error("Failed to fetch matched dilemmas", error);
-            };
+                setMatchedDilemmas(matched)
+  } catch (error) {
+                console.error("Failed to fetch matched dilemmas", error)
+  }
   } else {
-            setMatchedDilemmas([]);
-        }
+            setMatchedDilemmas([])
+  }
     };
   }, [helperProfile, isAvailable, allDilemmas]);
 
     useEffect(() => {
         if (activeTab === 'forYou') {
-            fetchMatchedDilemmas();
-        }
+            fetchMatchedDilemmas()
+  }
     };
   }, [activeTab, fetchMatchedDilemmas]);
 
-    const directRequests = useMemo(() => ;
+    const directRequests = useMemo(() => ;;
         allDilemmas.filter(d => d.status === 'direct_request' && d.requestedHelperId === helperId).sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()), 
     [allDilemmas, helperId]);
 
-    const availableDilemmas = useMemo(() => ;
+    const availableDilemmas = useMemo(() => ;;
         allDilemmas.filter(d => d.status === 'active' && !d.isReported && !d.assignedHelperId).sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()), 
     [allDilemmas]);
     
-    const myDilemmas = useMemo(() => ;
+    const myDilemmas = useMemo(() => ;;
         allDilemmas.filter(d => d.assignedHelperId === helperId && d.status === 'in_progress').sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()), 
     [allDilemmas, helperId]);
     
-    const myPastSessions = useMemo(() =>;
+    const myPastSessions = useMemo(() =>;;
         helpSessions.filter(s => s.helperId === helperId && s.endedAt).sort((a,b) => new Date(b.endedAt!).getTime() - new Date(a.endedAt!).getTime()),
     [helpSessions, helperId]);
 
-    const supportedPostsCount = useMemo(() => ;
+    const supportedPostsCount = useMemo(() => ;;
         helpSessions.filter(s => s.helperId === helperId).length,
     [helpSessions, helperId]);
 
     const viewSummary = (summary: string) => {
         setSelectedSummary(summary);
-        setIsSummaryModalOpen(true);
-    };
+        setIsSummaryModalOpen(true)
+  };
 
 
     if (!helperProfile) {
@@ -130,8 +130,8 @@ export const HelperDashboardView: React.FC<{
 
     const renderTabContent = () => {
         if (!isAvailable && ['forYou', 'requests', 'available'].includes(activeTab)) {
-            return <div className="card"><EmptyState title="You are Offline" message="Go online to see and accept new dilemmas from the community."/></div>;
-        }
+            return <div className="card"><EmptyState title="You are Offline" message="Go online to see and accept new dilemmas from the community."/></div>
+  }
 
         switch (activeTab) {
             case 'forYou':
@@ -154,8 +154,8 @@ export const HelperDashboardView: React.FC<{
                  return <div className="stats-grid"><div className="card stat-card"><div className="stat-header"><ThumbsUpIcon/><h3>Reputation Score</h3></div><div className="stat-number"><AnimatedNumber value={helperProfile.reputation} /><span style={{fontSize: '1.5rem', color: 'var(--text-secondary)'}}>/ 5.0</span></div><p>Based on {feedbackCount} user feedback ratings.</p></div><div className="card stat-card"><div className="stat-header"><PostsIcon/><h3>Posts Supported</h3></div><div className="stat-number"><AnimatedNumber value={supportedPostsCount} /></div><p>Total posts you've engaged with.</p></div><div className="card stat-card"><div className="stat-header"><KudosIcon/><h3>Kudos Received</h3></div><div className="stat-number"><AnimatedNumber value={helperProfile.kudosCount || 0} /></div><p>Total "Kudos" from seekers you've helped.</p></div><div className="card stat-card"><div className="stat-header"><CertifiedIcon/><h3>Tier</h3></div><div className="stat-number text">{helperProfile.helperType}</div><p>Completed training & verification</p></div></div>;
             case 'achievements':
                 return <div className="card"><h2>My Achievements</h2>{isLoadingAchievements ? <div className="loading-spinner"></div> : achievements.length > 0 ? (<div className="stats-grid">{achievements.map(ach => { const Icon = iconMap[ach.icon] || HeartIcon; return (<div key={ach.id} className="card stat-card"><div className="stat-header"><Icon /><h3>{ach.name}</h3></div><p>{ach.description}</p></div>)})}</div>) : (<p>You haven't earned any achievements yet. Keep supporting the community!</p>)}</div>;
-            default: return null;
-        }
+            default: return null
+  }
     };
 
     return (
@@ -167,7 +167,7 @@ export const HelperDashboardView: React.FC<{
             <div className="dashboard-tabs"><AppButton className={activeTab === 'forYou' ? 'active' : ''} onClick={() => setActiveTab('forYou')}>For You</AppButton><AppButton className={activeTab === 'requests' ? 'active' : ''} onClick={() => setActiveTab('requests')}>Requests ({directRequests.length})</AppButton><AppButton className={activeTab === 'available' ? 'active' : ''} onClick={() => setActiveTab('available')}>Available ({availableDilemmas.length})</AppButton><AppButton className={activeTab === 'myDilemmas' ? 'active' : ''} onClick={() => setActiveTab('myDilemmas')}>My Active ({myDilemmas.length})</AppButton><AppButton className={activeTab === 'history' ? 'active' : ''} onClick={() => setActiveTab('history')}>Session History</AppButton><AppButton className={activeTab === 'stats' ? 'active' : ''} onClick={() => setActiveTab('stats')}>My Stats</AppButton><AppButton className={activeTab === 'achievements' ? 'active' : ''} onClick={() => setActiveTab('achievements')}>Achievements</AppButton></div>
             <div className="dashboard-content">{renderTabContent()}</div>
         </>
-    );
-}
+    )
+  }
 
 export default HelperDashboardView;

@@ -42,8 +42,8 @@ import { performanceMonitoringService } from './services/performanceMonitoringSe
 
 // Validate environment variables on startup
 try {
-  loadAndValidateEnv();
-} catch (error) {
+  loadAndValidateEnv()
+  } catch (error) {
   logger.error('Environment validation failed:', error, 'main');
   if (process.env.NODE_ENV === 'production') {
     // In production, show a friendly error page
@@ -56,21 +56,21 @@ try {
         </div>
       </div>
     `;
-    throw error;
+    throw error
   }
 }
 
 // Initialize error tracking
 if (process.env.NODE_ENV === 'production') {
-  initializeErrorTracking();
-}
+  initializeErrorTracking()
+  }
 
 // Initialize OpenTelemetry (using stub)
 if (import.meta.env.VITE_OTEL_ENABLED === 'true') {
   openTelemetryService.initialize().catch(error => {
-    logger.error('Failed to initialize OpenTelemetry:', error, 'main');
-  });
-}
+    logger.error('Failed to initialize OpenTelemetry:', error, 'main')
+  })
+  }
 
 // Initialize performance monitoring
 performanceMonitoringService.initialize();
@@ -84,8 +84,8 @@ performanceMonitoringService.initialize();
 const rootElement = document.getElementById('root');
 
 if (!rootElement) {
-  throw new Error('Failed to find root element. Make sure index.html contains a div with id="root"');
-}
+  throw new Error('Failed to find root element. Make sure index.html contains a div with id="root"')
+  }
 
 // Create React root and render app with Optional Auth;
 const root = ReactDOM.createRoot(rootElement);
@@ -101,14 +101,14 @@ root.render(
 // Register service worker for PWA support
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    registerServiceWorker();
-  });
-}
+    registerServiceWorker()
+  })
+  }
 
 // Enable hot module replacement in development
 if (import.meta.hot) {
-  import.meta.hot.accept();
-}
+  import.meta.hot.accept()
+  }
 
 // Performance monitoring
 if (process.env.NODE_ENV === 'production') {
@@ -118,9 +118,9 @@ if (process.env.NODE_ENV === 'production') {
     onINP((metric) => logger.debug('INP metric', metric, 'web-vitals'));
     onFCP((metric) => logger.debug('FCP metric', metric, 'web-vitals'));
     onLCP((metric) => logger.debug('LCP metric', metric, 'web-vitals'));
-    onTTFB((metric) => logger.debug('TTFB metric', metric, 'web-vitals'));
-  });
-}
+    onTTFB((metric) => logger.debug('TTFB metric', metric, 'web-vitals'))
+  })
+  }
 
 // Accessibility: Announce app ready to screen readers
 if (typeof window !== 'undefined') {
@@ -135,10 +135,10 @@ if (typeof window !== 'undefined') {
     
     // Remove after announcement
     setTimeout(() => {
-      document.body.removeChild(announcement);
-    }, 1000);
-  });
-}
+      document.body.removeChild(announcement)
+  }, 1000)
+  })
+  }
 
 // Handle unhandled promise rejections
 window.addEventListener('unhandledrejection', event => {
@@ -148,13 +148,13 @@ window.addEventListener('unhandledrejection', event => {
   if (process.env.NODE_ENV === 'production') {
     // Report to error tracking service
     if (window.Sentry) {
-      window.Sentry.captureException(event.reason);
-    }
+      window.Sentry.captureException(event.reason)
+  }
   }
   
   // Prevent default browser behavior
-  event.preventDefault();
-});
+  event.preventDefault()
+  });
 
 // Export for testing;
 export { root };

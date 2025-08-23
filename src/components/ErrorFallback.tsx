@@ -6,8 +6,8 @@ import React from 'react';
 
 interface ErrorFallbackProps {
   error: Error;
-  resetError: () => void;
-}
+  resetError: () => void
+  }
 
 export const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, resetError }) => {
   return (
@@ -20,7 +20,7 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, resetError 
         <pre>{error.message}</pre>
       </details>
     </div>
-  );
-};
+  )
+  };
 
 export default ErrorFallback;

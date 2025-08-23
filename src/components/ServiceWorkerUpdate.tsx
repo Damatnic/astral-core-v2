@@ -21,7 +21,7 @@ const ServiceWorkerUpdate: React.FC = () => {
   const [isUpdating, setIsUpdating] = useState(false);
 
   if (!updateAvailable && !isOfflineReady) {
-    return null;
+    return null
   }
 
   const handleUpdate = async () => {
@@ -39,8 +39,7 @@ const ServiceWorkerUpdate: React.FC = () => {
           </svg>
           {updateAvailable ? 'Update Available' : 'Ready for Offline'}
         </div>
-        <button; 
-          className="sw-update-btn-secondary"
+        <button className="sw-update-btn-secondary"
           onClick={() => setShowDetails(!showDetails)}
           style={{ padding: '4px 8px', fontSize: '12px' }}
         >
@@ -57,23 +56,20 @@ const ServiceWorkerUpdate: React.FC = () => {
       <div className="sw-update-actions">
         {updateAvailable ? (
           <div style={{ display: 'flex', gap: '8px' }}>
-            <button; 
-              className="sw-update-btn sw-update-btn-primary"
+            <button className="sw-update-btn sw-update-btn-primary"
               onClick={handleUpdate}
               disabled={isUpdating}
             >
               {isUpdating ? 'Updating...' : 'Update Now'}
             </button>
-            <button; 
-              className="sw-update-btn sw-update-btn-secondary"
+            <button className="sw-update-btn sw-update-btn-secondary"
               onClick={() => window.location.reload()}
             >
               Later
             </button>
           </div>
         ) : isOfflineReady ? (
-          <button; 
-            className="sw-update-btn sw-update-btn-primary"
+          <button className="sw-update-btn sw-update-btn-primary"
             onClick={() => window.location.reload()}
           >
             Got it
@@ -106,7 +102,7 @@ const ServiceWorkerUpdate: React.FC = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 export default ServiceWorkerUpdate;

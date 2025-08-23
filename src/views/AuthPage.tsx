@@ -9,15 +9,15 @@ const AuthPage: React.FC = () => {
 
   const handleAuthSuccess = () => {
     // Navigate to dashboard after successful auth
-    navigate('/dashboard');
+    navigate('/dashboard')
   };
 
   const switchToRegister = () => {
-    setIsLogin(false);
+    setIsLogin(false)
   };
 
   const switchToLogin = () => {
-    setIsLogin(true);
+    setIsLogin(true)
   };
 
   return (
@@ -34,7 +34,7 @@ const AuthPage: React.FC = () => {
         />
       )}
     </div>
-  );
-};
+  )
+  };
 
 export default AuthPage;

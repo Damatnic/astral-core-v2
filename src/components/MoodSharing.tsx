@@ -7,8 +7,8 @@ interface MoodOption {
   value: number;
   label: string;
   emoji: string;
-  color: string;
-}
+  color: string
+  }
 
 interface SharedMood {
   userId: string;
@@ -17,11 +17,11 @@ interface SharedMood {
     value: number;
     label: string;
     emoji?: string;
-    color?: string;
+    color?: string
   };
   timestamp: number;
-  message?: string;
-}
+  message?: string
+  }
 
 const MOOD_OPTIONS: MoodOption[] = [
   { value: 1, label: 'Very Sad', emoji: '😢', color: '#ef4444' },
@@ -35,8 +35,8 @@ interface MoodSharingProps {
   userId: string;
   username: string;
   showFeed?: boolean;
-  allowSharing?: boolean;
-}
+  allowSharing?: boolean
+  }
 
 export const MoodSharing: React.FC<MoodSharingProps> = ({
   userId,
@@ -58,19 +58,19 @@ export const MoodSharing: React.FC<MoodSharingProps> = ({
       setSharedMoods(prev => {
         const updated = [data, ...prev];
         // Keep only last 20 moods
-        return updated.slice(0, 20);
-      });
-    });
+        return updated.slice(0, 20)
+  })
+  });
 
-    return () => unsubscribe();
+    return () => unsubscribe()
   };
   }, []);
 
   const handleMoodSelect = (mood: MoodOption) => {
     setSelectedMood(mood);
     if (!showShareForm) {
-      setShowShareForm(true);
-    }
+      setShowShareForm(true)
+  }
   };
 
   const handleShareMood = async () => {
@@ -84,8 +84,8 @@ export const MoodSharing: React.FC<MoodSharingProps> = ({
           value: selectedMood.value,
           label: selectedMood.label,
           emoji: selectedMood.emoji,
-          color: selectedMood.color;
-        },
+          color: selectedMood.color
+  },
         isPublic
       );
 
@@ -98,13 +98,13 @@ export const MoodSharing: React.FC<MoodSharingProps> = ({
             value: selectedMood.value,
             label: selectedMood.label,
             emoji: selectedMood.emoji,
-            color: selectedMood.color;
-          },
+            color: selectedMood.color
+  },
           timestamp: Date.now(),
-          message: moodMessage;
-        };
-        setSharedMoods(prev => [sharedMood, ...prev]);
-      }
+          message: moodMessage
+  };
+        setSharedMoods(prev => [sharedMood, ...prev])
+  }
 
       // Reset form
       setShowShareForm(false);
@@ -112,12 +112,12 @@ export const MoodSharing: React.FC<MoodSharingProps> = ({
       setIsPublic(false);
       
       // Show success feedback
-      showSuccessFeedback();
-    } catch (error) {
-      console.error('Failed to share mood:', error);
-    } finally {
-      setIsSharing(false);
-    }
+      showSuccessFeedback()
+  } catch (error) {
+      console.error('Failed to share mood:', error)
+  } finally {
+      setIsSharing(false)
+  }
   };
 
   const showSuccessFeedback = () => {
@@ -128,19 +128,19 @@ export const MoodSharing: React.FC<MoodSharingProps> = ({
     document.body.appendChild(feedback);
     
     setTimeout(() => {
-      feedback.remove();
-    }, 3000);
+      feedback.remove()
+  }, 3000)
   };
 
   const getMoodGradient = (value: number) => {
-    const gradients = [;
+    const gradients = [;;
       'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
       'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
       'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
       'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
     ];
-    return gradients[value - 1] || gradients[2];
+    return gradients[value - 1] || gradients[2]
   };
 
   return (
@@ -156,8 +156,8 @@ export const MoodSharing: React.FC<MoodSharingProps> = ({
                 className={`mood-option ${selectedMood?.value === mood.value ? 'selected' : ''}`}
                 onClick={() => handleMoodSelect(mood)}
                 style={{
-                  borderColor: selectedMood?.value === mood.value ? mood.color : 'transparent';
-                }}
+                  borderColor: selectedMood?.value === mood.value ? mood.color : 'transparent'
+  }}
               >
                 <span className="mood-emoji">{mood.emoji}</span>
                 <span className="mood-label">{mood.label}</span>
@@ -174,8 +174,7 @@ export const MoodSharing: React.FC<MoodSharingProps> = ({
                 </span>
               </div>
 
-              <textarea;
-                className="mood-message-input"
+              <textarea className="mood-message-input"
                 placeholder="Add a message (optional)..."
                 value={moodMessage}
                 onChange={(e) => setMoodMessage(e.target.value)}
@@ -184,8 +183,7 @@ export const MoodSharing: React.FC<MoodSharingProps> = ({
 
               <div className="mood-share-options">
                 <label className="mood-public-toggle">
-                  <input;
-                    type="checkbox"
+                  <input type="checkbox"
                     checked={isPublic}
                     onChange={(e) => setIsPublic(e.target.checked)}
                   />
@@ -193,17 +191,15 @@ export const MoodSharing: React.FC<MoodSharingProps> = ({
                 </label>
 
                 <div className="mood-share-actions">
-                  <button;
-                    className="mood-cancel-button"
+                  <button className="mood-cancel-button"
                     onClick={() => {
                       setShowShareForm(false);
-                      setMoodMessage('');
-                    }}
+                      setMoodMessage('')
+  }}
                   >
                     Cancel
                   </button>
-                  <button;
-                    className="mood-share-button"
+                  <button className="mood-share-button"
                     onClick={handleShareMood}
                     disabled={isSharing}
                   >
@@ -234,8 +230,8 @@ export const MoodSharing: React.FC<MoodSharingProps> = ({
                   key={`${sharedMood.userId}-${sharedMood.timestamp}-${index}`}
                   className="mood-feed-item"
                   style={{
-                    background: getMoodGradient(sharedMood.mood.value);
-                  }}
+                    background: getMoodGradient(sharedMood.mood.value)
+  }}
                 >
                   <div className="mood-feed-item-header">
                     <span className="mood-feed-emoji">
@@ -259,12 +255,11 @@ export const MoodSharing: React.FC<MoodSharingProps> = ({
                   </div>
 
                   <div className="mood-feed-actions">
-                    <button;
-                      className="mood-feed-support"
+                    <button className="mood-feed-support"
                       onClick={() => {
                         // Send supportive message
-                        console.log('Sending support to', sharedMood.userId);
-                      }}
+                        console.log('Sending support to', sharedMood.userId)
+  }}
                     >
                       💙 Send Support
                     </button>
@@ -291,19 +286,18 @@ export const MoodSharing: React.FC<MoodSharingProps> = ({
                   <span>{count}</span>
                 </div>
                 <div className="mood-bar-track">
-                  <div;
-                    className="mood-bar-fill"
+                  <div className="mood-bar-fill"
                     style={{
                       width: `${percentage}%`,
-                      backgroundColor: mood.color;
-                    }}
+                      backgroundColor: mood.color
+  }}
                   />
                 </div>
               </div>
-            );
-          })}
+            )
+  })}
         </div>
       </div>
     </div>
-  );
-};
+  )
+  };

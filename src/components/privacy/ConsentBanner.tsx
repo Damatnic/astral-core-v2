@@ -4,15 +4,15 @@ import { AppButton } from '../AppButton';
 import { Modal } from '../Modal';
 
 interface ConsentBannerProps {
-  onConsentChange?: (consent: ConsentStatus) => void;
-}
+  onConsentChange?: (consent: ConsentStatus) => void
+  }
 
 interface ConsentPreferences {
   analytics: boolean;
   performance: boolean;
   functionality: boolean;
-  marketing: boolean;
-}
+  marketing: boolean
+  }
 
 const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsentChange }) => {
   const [showBanner, setShowBanner] = useState(false);
@@ -21,7 +21,7 @@ const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsentChange }) => {
     analytics: false,
     performance: true,
     functionality: true,
-    marketing: false;
+    marketing: false
   });
 
   const analyticsService = getAnalyticsService();
@@ -31,15 +31,15 @@ const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsentChange }) => {
     const consentStatus = analyticsService.getConsentStatus();
     
     if (!consentStatus || !consentStatus.timestamp) {
-      setShowBanner(true);;
+      setShowBanner(true)
   } else {
       setPreferences({
         analytics: consentStatus.analytics,
         performance: consentStatus.performance,
         functionality: consentStatus.functionality,
-        marketing: consentStatus.marketing;
-      });
-    }
+        marketing: consentStatus.marketing
+  })
+  }
   };
   }, [analyticsService]);
 
@@ -50,12 +50,12 @@ const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsentChange }) => {
       functionality: true,
       marketing: true,
       timestamp: Date.now(),
-      version: '1.0.0';
-    };
+      version: '1.0.0'
+  };
 
     analyticsService.updateConsent(consent);
     onConsentChange?.(consent);
-    setShowBanner(false);
+    setShowBanner(false)
   };
 
   const handleAcceptEssential = () => {
@@ -65,25 +65,25 @@ const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsentChange }) => {
       functionality: true,
       marketing: false,
       timestamp: Date.now(),
-      version: '1.0.0';
-    };
+      version: '1.0.0'
+  };
 
     analyticsService.updateConsent(consent);
     onConsentChange?.(consent);
-    setShowBanner(false);
+    setShowBanner(false)
   };
 
   const handleSavePreferences = () => {
     const consent: ConsentStatus = {
       ...preferences,
       timestamp: Date.now(),
-      version: '1.0.0';
-    };
+      version: '1.0.0'
+  };
 
     analyticsService.updateConsent(consent);
     onConsentChange?.(consent);
     setShowBanner(false);
-    setShowPreferences(false);
+    setShowPreferences(false)
   };
 
   if (!showBanner) return null;
@@ -107,8 +107,7 @@ const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsentChange }) => {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-2 min-w-max">
-              <AppButton;
-                variant="secondary"
+              <AppButton variant="secondary"
                 size="sm"
                 onClick={() => setShowPreferences(true)}
                 className="text-xs"
@@ -116,8 +115,7 @@ const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsentChange }) => {
                 Customize Preferences
               </AppButton>
               
-              <AppButton;
-                variant="secondary"
+              <AppButton variant="secondary"
                 size="sm"
                 onClick={handleAcceptEssential}
                 className="text-xs"
@@ -125,8 +123,7 @@ const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsentChange }) => {
                 Essential Only
               </AppButton>
               
-              <AppButton;
-                variant="primary"
+              <AppButton variant="primary"
                 size="sm"
                 onClick={handleAcceptAll}
                 className="text-xs"
@@ -159,8 +156,7 @@ const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsentChange }) => {
           <div className="space-y-4">
             {/* Functionality - Required */}
             <div className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <input;
-                type="checkbox"
+              <input type="checkbox"
                 id="functionality"
                 checked={true}
                 disabled={true}
@@ -181,8 +177,7 @@ const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsentChange }) => {
 
             {/* Performance - Required */}
             <div className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <input;
-                type="checkbox"
+              <input type="checkbox"
                 id="performance"
                 checked={true}
                 disabled={true}
@@ -203,8 +198,7 @@ const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsentChange }) => {
 
             {/* Analytics - Optional */}
             <div className="flex items-start space-x-3 p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
-              <input;
-                type="checkbox"
+              <input type="checkbox"
                 id="analytics"
                 checked={preferences.analytics}
                 onChange={(e) => setPreferences(prev => ({ ...prev, analytics: e.target.checked }))}
@@ -225,8 +219,7 @@ const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsentChange }) => {
 
             {/* Marketing - Optional */}
             <div className="flex items-start space-x-3 p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
-              <input;
-                type="checkbox"
+              <input type="checkbox"
                 id="marketing"
                 checked={preferences.marketing}
                 onChange={(e) => setPreferences(prev => ({ ...prev, marketing: e.target.checked }))}
@@ -256,14 +249,12 @@ const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsentChange }) => {
           </div>
 
           <div className="flex justify-end space-x-3">
-            <AppButton;
-              variant="secondary"
+            <AppButton variant="secondary"
               onClick={() => setShowPreferences(false)}
             >
               Cancel
             </AppButton>
-            <AppButton;
-              variant="primary"
+            <AppButton variant="primary"
               onClick={handleSavePreferences}
             >
               Save Preferences
@@ -272,7 +263,7 @@ const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsentChange }) => {
         </div>
       </Modal>
     </>
-  );
-};
+  )
+  };
 
 export default ConsentBanner;

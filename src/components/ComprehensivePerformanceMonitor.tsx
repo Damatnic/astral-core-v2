@@ -19,8 +19,8 @@ interface ComprehensivePerformanceMonitorProps {
   showDetails?: boolean;
   enableRealTimeAlerts?: boolean;
   className?: string;
-  onAlert?: (alert: PerformanceAlert) => void;
-}
+  onAlert?: (alert: PerformanceAlert) => void
+  }
 
 export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePerformanceMonitorProps> = ({
   showDetails = false,
@@ -48,10 +48,10 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
       // Generate performance report and extract grade;
       const report = comprehensivePerformanceMonitor.generatePerformanceReport();
       const gradeMatch = report.match(/## 📈 Performance Grade\n(.+)/);
-      setPerformanceGrade(gradeMatch ? gradeMatch[1] : 'Unknown');
-    }
+      setPerformanceGrade(gradeMatch ? gradeMatch[1] : 'Unknown')
+  }
     
-    setIsLoading(false);
+    setIsLoading(false)
   };
   }, []);
 
@@ -62,16 +62,16 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
       const existingIndex = updated.findIndex(a => a.id === alert.id);
       
       if (existingIndex >= 0) {
-        updated[existingIndex] = alert;;
+        updated[existingIndex] = alert
   } else {
-        updated.push(alert);
-      }
+        updated.push(alert)
+  }
       
-      return updated;
-    });
+      return updated
+  });
     
     // Notify parent component
-    onAlert?.(alert);
+    onAlert?.(alert)
   };
   }, [onAlert]);
 
@@ -87,13 +87,13 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
     let unsubscribeAlert: (() => void) | undefined;
     
     if (enableRealTimeAlerts) {
-      unsubscribeAlert = comprehensivePerformanceMonitor.onAlert(handleAlertUpdate);
-    }
+      unsubscribeAlert = comprehensivePerformanceMonitor.onAlert(handleAlertUpdate)
+  }
 
     return () => {
       clearInterval(interval);
-      unsubscribeAlert?.();
-    };
+      unsubscribeAlert?.()
+  };
   };
   }, [updatePerformanceData, enableRealTimeAlerts, handleAlertUpdate]);
 
@@ -103,7 +103,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
     if (unit === 'MB') return `${value.toFixed(precision)}MB`;
     if (unit === 'KB') return `${(value / 1024).toFixed(precision)}KB`;
     if (unit === '%') return `${value.toFixed(precision)}%`;
-    return `${value.toFixed(precision)}`;
+    return `${value.toFixed(precision)}`
   };
 
   // Get severity color;
@@ -132,7 +132,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
           <p>Collecting comprehensive performance metrics...</p>
         </div>
       </div>
-    );
+    )
   }
 
   if (!metrics) {
@@ -142,7 +142,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
           <p>Unable to collect performance metrics</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -165,8 +165,8 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
                 if (!a.isCrisisRelated && b.isCrisisRelated) return 1;
                 
                 const severityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
-                return severityOrder[b.severity] - severityOrder[a.severity];
-              })
+                return severityOrder[b.severity] - severityOrder[a.severity]
+  })
               .slice(0, 5) // Show top 5 alerts
               .map((alert) => (
                 <div 
@@ -202,8 +202,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
           <div className="metrics-grid">
             <div className="metric-card">
               <span className="metric-label">First Contentful Paint</span>
-              <span; 
-                className="metric-value"
+              <span className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.firstContentfulPaint, 1500, 3000) }}
               >
                 {formatMetric(metrics.firstContentfulPaint, 'ms')}
@@ -211,8 +210,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
             </div>
             <div className="metric-card">
               <span className="metric-label">Largest Contentful Paint</span>
-              <span; 
-                className="metric-value"
+              <span className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.largestContentfulPaint, 2500, 4000) }}
               >
                 {formatMetric(metrics.largestContentfulPaint, 'ms')}
@@ -220,8 +218,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
             </div>
             <div className="metric-card">
               <span className="metric-label">First Input Delay</span>
-              <span; 
-                className="metric-value"
+              <span className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.firstInputDelay, 50, 100) }}
               >
                 {formatMetric(metrics.firstInputDelay, 'ms')}
@@ -229,8 +226,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
             </div>
             <div className="metric-card">
               <span className="metric-label">Cumulative Layout Shift</span>
-              <span; 
-                className="metric-value"
+              <span className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.cumulativeLayoutShift, 0.05, 0.1) }}
               >
                 {formatMetric(metrics.cumulativeLayoutShift, '', 3)}
@@ -244,8 +240,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
           <div className="metrics-grid">
             <div className="metric-card crisis-metric">
               <span className="metric-label">Crisis Detection Response</span>
-              <span; 
-                className="metric-value"
+              <span className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.crisisDetectionResponseTime, 100, 300) }}
               >
                 {formatMetric(metrics.crisisDetectionResponseTime, 'ms')}
@@ -254,8 +249,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
             </div>
             <div className="metric-card">
               <span className="metric-label">Chat Message Latency</span>
-              <span; 
-                className="metric-value"
+              <span className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.chatMessageLatency, 200, 500) }}
               >
                 {formatMetric(metrics.chatMessageLatency, 'ms')}
@@ -281,8 +275,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
           <div className="metrics-grid">
             <div className="metric-card">
               <span className="metric-label">Bundle Size</span>
-              <span; 
-                className="metric-value"
+              <span className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.bundleSize, 500000, 1000000) }}
               >
                 {formatMetric(metrics.bundleSize, 'KB')}
@@ -290,8 +283,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
             </div>
             <div className="metric-card">
               <span className="metric-label">Memory Usage</span>
-              <span; 
-                className="metric-value"
+              <span className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.memoryUsage, 50, 100) }}
               >
                 {formatMetric(metrics.memoryUsage, 'MB')}
@@ -299,8 +291,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
             </div>
             <div className="metric-card">
               <span className="metric-label">Load Time</span>
-              <span; 
-                className="metric-value"
+              <span className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.loadTime, 2000, 4000) }}
               >
                 {formatMetric(metrics.loadTime, 'ms')}
@@ -332,8 +323,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
             </div>
             <div className="metric-card">
               <span className="metric-label">Accessibility Score</span>
-              <span; 
-                className="metric-value"
+              <span className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.accessibilityScore, 85, 70) }}
               >
                 {formatMetric(metrics.accessibilityScore, '%')}
@@ -387,8 +377,8 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 // CSS styles for the comprehensive performance monitor;
 export const comprehensivePerformanceMonitorStyles = `
@@ -399,14 +389,14 @@ export const comprehensivePerformanceMonitorStyles = `
     border-radius: 12px;
     padding: 24px;
     margin: 16px 0;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1)
   }
 
   .loading-state,
   .error-state {
     text-align: center;
     padding: 40px 20px;
-    color: var(--text-secondary, #64748b);
+    color: var(--text-secondary, #64748b)
   }
 
   .loading-spinner {
@@ -416,7 +406,7 @@ export const comprehensivePerformanceMonitorStyles = `
     border: 3px solid var(--border-light, #e2e8f0);
     border-top: 3px solid var(--primary-500, #3b82f6);
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite
   }
 
   @keyframes spin {
@@ -429,66 +419,66 @@ export const comprehensivePerformanceMonitorStyles = `
     margin-bottom: 24px;
     padding: 20px;
     background: linear-gradient(135deg, var(--primary-50, #eff6ff), var(--primary-100, #dbeafe));
-    border-radius: 8px;
+    border-radius: 8px
   }
 
   .performance-grade h3 {
     margin: 0 0 12px 0;
     color: var(--text-primary, #1e293b);
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 600
   }
 
   .grade-display {
     font-size: 24px;
     font-weight: 700;
-    color: var(--primary-600, #2563eb);
+    color: var(--primary-600, #2563eb)
   }
 
   .alerts-section {
-    margin-bottom: 24px;
+    margin-bottom: 24px
   }
 
   .alerts-section h4 {
     margin: 0 0 16px 0;
     color: var(--text-primary, #1e293b);
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 600
   }
 
   .alerts-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 12px
   }
 
   .alert-item {
     padding: 16px;
     border-left: 4px solid;
     border-radius: 6px;
-    background-color: var(--bg-secondary, #f8fafc);
+    background-color: var(--bg-secondary, #f8fafc)
   }
 
   .alert-critical {
     background-color: var(--red-50, #fef2f2);
-    border-left-color: var(--red-500, #ef4444);
+    border-left-color: var(--red-500, #ef4444)
   }
 
   .alert-high {
     background-color: var(--orange-50, #fff7ed);
-    border-left-color: var(--orange-500, #f97316);
+    border-left-color: var(--orange-500, #f97316)
   }
 
   .alert-medium {
     background-color: var(--amber-50, #fffbeb);
-    border-left-color: var(--amber-500, #f59e0b);
+    border-left-color: var(--amber-500, #f59e0b)
   }
 
   .alert-header {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 8px
   }
 
   .alert-severity {
@@ -497,7 +487,7 @@ export const comprehensivePerformanceMonitorStyles = `
     padding: 2px 6px;
     border-radius: 4px;
     background-color: var(--gray-200, #e5e7eb);
-    color: var(--gray-800, #1f2937);
+    color: var(--gray-800, #1f2937)
   }
 
   .crisis-badge {
@@ -506,30 +496,30 @@ export const comprehensivePerformanceMonitorStyles = `
     padding: 2px 6px;
     border-radius: 4px;
     background-color: var(--red-100, #fee2e2);
-    color: var(--red-800, #991b1b);
+    color: var(--red-800, #991b1b)
   }
 
   .alert-description {
     margin: 0 0 8px 0;
     color: var(--text-primary, #1e293b);
-    font-size: 14px;
+    font-size: 14px
   }
 
   .alert-recommendations {
     font-size: 13px;
-    color: var(--text-secondary, #64748b);
+    color: var(--text-secondary, #64748b)
   }
 
   .alert-recommendations ul {
     margin: 4px 0 0 0;
-    padding-left: 16px;
+    padding-left: 16px
   }
 
   .metrics-dashboard {
     display: flex;
     flex-direction: column;
     gap: 24px;
-    margin-bottom: 24px;
+    margin-bottom: 24px
   }
 
   .metrics-section h4 {
@@ -539,13 +529,13 @@ export const comprehensivePerformanceMonitorStyles = `
     font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 8px
   }
 
   .metrics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
+    gap: 16px
   }
 
   .metric-card {
@@ -557,16 +547,16 @@ export const comprehensivePerformanceMonitorStyles = `
     flex-direction: column;
     align-items: center;
     text-align: center;
-    transition: all 0.2s ease;
+    transition: all 0.2s ease
   }
 
   .metric-card:hover {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1)
   }
 
   .crisis-metric {
     border: 2px solid var(--red-200, #fecaca);
-    background-color: var(--red-50, #fef2f2);
+    background-color: var(--red-50, #fef2f2)
   }
 
   .metric-label {
@@ -575,7 +565,7 @@ export const comprehensivePerformanceMonitorStyles = `
     color: var(--text-secondary, #64748b);
     margin-bottom: 8px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.5px
   }
 
   .metric-value {
@@ -584,12 +574,12 @@ export const comprehensivePerformanceMonitorStyles = `
     color: var(--text-primary, #1e293b);
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 4px
   }
 
   .warning-icon {
     font-size: 14px;
-    animation: pulse 2s infinite;
+    animation: pulse 2s infinite
   }
 
   @keyframes pulse {
@@ -598,55 +588,55 @@ export const comprehensivePerformanceMonitorStyles = `
   }
 
   .recommendations-section {
-    margin-bottom: 24px;
+    margin-bottom: 24px
   }
 
   .recommendations-section h4 {
     margin: 0 0 16px 0;
     color: var(--text-primary, #1e293b);
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 600
   }
 
   .recommendations-list {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 16px
   }
 
   .recommendation-item {
     padding: 20px;
     border-radius: 8px;
     border: 1px solid var(--border-light, #e2e8f0);
-    background-color: var(--white, #ffffff);
+    background-color: var(--white, #ffffff)
   }
 
   .priority-critical {
     border-left: 4px solid var(--red-500, #ef4444);
-    background-color: var(--red-50, #fef2f2);
+    background-color: var(--red-50, #fef2f2)
   }
 
   .priority-high {
     border-left: 4px solid var(--orange-500, #f97316);
-    background-color: var(--orange-50, #fff7ed);
+    background-color: var(--orange-50, #fff7ed)
   }
 
   .priority-medium {
     border-left: 4px solid var(--amber-500, #f59e0b);
-    background-color: var(--amber-50, #fffbeb);
+    background-color: var(--amber-50, #fffbeb)
   }
 
   .recommendation-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 12px;
+    margin-bottom: 12px
   }
 
   .recommendation-title {
     font-size: 16px;
     font-weight: 600;
-    color: var(--text-primary, #1e293b);
+    color: var(--text-primary, #1e293b)
   }
 
   .priority-badge {
@@ -655,29 +645,29 @@ export const comprehensivePerformanceMonitorStyles = `
     padding: 4px 8px;
     border-radius: 4px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.5px
   }
 
   .priority-badge.priority-critical {
     background-color: var(--red-100, #fee2e2);
-    color: var(--red-800, #991b1b);
+    color: var(--red-800, #991b1b)
   }
 
   .priority-badge.priority-high {
     background-color: var(--orange-100, #ffedd5);
-    color: var(--orange-800, #9a3412);
+    color: var(--orange-800, #9a3412)
   }
 
   .priority-badge.priority-medium {
     background-color: var(--amber-100, #fef3c7);
-    color: var(--amber-800, #92400e);
+    color: var(--amber-800, #92400e)
   }
 
   .recommendation-description {
     margin: 0 0 12px 0;
     color: var(--text-primary, #1e293b);
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.5
   }
 
   .recommendation-details {
@@ -685,7 +675,7 @@ export const comprehensivePerformanceMonitorStyles = `
     flex-direction: column;
     gap: 8px;
     font-size: 13px;
-    color: var(--text-secondary, #64748b);
+    color: var(--text-secondary, #64748b)
   }
 
   .recommendation-implementation {
@@ -693,19 +683,19 @@ export const comprehensivePerformanceMonitorStyles = `
     padding-top: 12px;
     border-top: 1px solid var(--border-light, #e2e8f0);
     font-size: 13px;
-    color: var(--text-secondary, #64748b);
+    color: var(--text-secondary, #64748b)
   }
 
   .trends-section {
     padding-top: 24px;
-    border-top: 1px solid var(--border-light, #e2e8f0);
+    border-top: 1px solid var(--border-light, #e2e8f0)
   }
 
   .trends-section h4 {
     margin: 0 0 16px 0;
     color: var(--text-primary, #1e293b);
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 600
   }
 
   .trends-info {
@@ -713,59 +703,59 @@ export const comprehensivePerformanceMonitorStyles = `
     background-color: var(--gray-50, #f9fafb);
     border-radius: 8px;
     color: var(--text-secondary, #64748b);
-    font-size: 14px;
+    font-size: 14px
   }
 
   /* Responsive design */
   @media (max-width: 768px) {
     .comprehensive-performance-monitor {
-      padding: 16px;
-    }
+      padding: 16px
+  }
 
     .metrics-grid {
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 12px;
-    }
+      gap: 12px
+  }
 
     .metric-card {
-      padding: 12px;
-    }
+      padding: 12px
+  }
 
     .recommendation-header {
       flex-direction: column;
       gap: 8px;
-      align-items: flex-start;
-    }
+      align-items: flex-start
+  }
   }
 
   /* Dark mode support */
   @media (prefers-color-scheme: dark) {
     .comprehensive-performance-monitor {
       background-color: var(--bg-primary-dark, #1e293b);
-      border-color: var(--border-dark, #374151);
-    }
+      border-color: var(--border-dark, #374151)
+  }
 
     .metric-card,
     .recommendation-item {
       background-color: var(--bg-secondary-dark, #1e293b);
-      border-color: var(--border-dark, #374151);
-    }
+      border-color: var(--border-dark, #374151)
+  }
 
     .performance-grade {
-      background: linear-gradient(135deg, var(--primary-900, #1e3a8a), var(--primary-800, #1e40af));
-    }
+      background: linear-gradient(135deg, var(--primary-900, #1e3a8a), var(--primary-800, #1e40af))
+  }
 
     .grade-display {
-      color: var(--primary-300, #93c5fd);
-    }
+      color: var(--primary-300, #93c5fd)
+  }
 
     .metric-label {
-      color: var(--text-secondary-dark, #94a3b8);
-    }
+      color: var(--text-secondary-dark, #94a3b8)
+  }
 
     .metric-value {
-      color: var(--text-primary-dark, #f1f5f9);
-    }
+      color: var(--text-primary-dark, #f1f5f9)
+  }
   }
 `;
 

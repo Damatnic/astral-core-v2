@@ -22,23 +22,23 @@ export const ModerationDashboardView: React.FC = () => {
     const handleDismissReport = async (dilemmaId: string) => {
         try {
             await dismissReport(dilemmaId);
-            addToast('Report dismissed.', 'info');
-        } catch (error) {
+            addToast('Report dismissed.', 'info')
+  } catch (error) {
             console.error(error);
             const errorMessage = isError(error) ? error.message : 'Failed to dismiss report. Please try again.';
-            addToast(errorMessage, 'error');
-        }
+            addToast(errorMessage, 'error')
+  }
     };
 
     const handleRemovePost = async (dilemmaId: string) => {
         try {
             await removePost(dilemmaId);
-            addToast('Post removed.', 'success');
-        } catch (error) {
+            addToast('Post removed.', 'success')
+  } catch (error) {
             console.error(error);
             const errorMessage = isError(error) ? error.message : 'Failed to remove post. Please try again.';
-            addToast(errorMessage, 'error');
-        }
+            addToast(errorMessage, 'error')
+  }
     };
 
     const handleUserSearch = async (e: React.FormEvent) => {
@@ -49,13 +49,13 @@ export const ModerationDashboardView: React.FC = () => {
         setSearchedUserStatus(null);
         try {
             const status = await ApiClient.moderation.getUserStatus(searchUserId.trim());
-            setSearchedUserStatus(status);
-        } catch (err) {
+            setSearchedUserStatus(status)
+  } catch (err) {
             const errorMessage = isError(err) ? err.message : "Failed to find user.";
-            setSearchError(errorMessage);
-        } finally {
-            setIsSearching(false);
-        }
+            setSearchError(errorMessage)
+  } finally {
+            setIsSearching(false)
+  }
     };
     
     const handleIssueWarning = async (userId: string) => {
@@ -63,11 +63,11 @@ export const ModerationDashboardView: React.FC = () => {
         try {
             const updatedStatus = await ApiClient.moderation.issueWarning(userId);
             setSearchedUserStatus(updatedStatus);
-            alert("Warning issued.");
-        } catch (err) {
+            alert("Warning issued.")
+  } catch (err) {
             const errorMessage = isError(err) ? err.message : "Failed to issue warning.";
-            alert(errorMessage);
-        }
+            alert(errorMessage)
+  }
     }
     
     const handleBanUser = async (userId: string) => {
@@ -78,14 +78,14 @@ export const ModerationDashboardView: React.FC = () => {
         try {
             const updatedStatus = await ApiClient.moderation.banUser(userId, reason, duration ? parseInt(duration) : undefined);
             setSearchedUserStatus(updatedStatus);
-            alert("User has been banned.");
-        } catch (err) {
+            alert("User has been banned.")
+  } catch (err) {
             const errorMessage = isError(err) ? err.message : "Failed to ban user.";
-            alert(errorMessage);
-        }
+            alert(errorMessage)
+  }
     }
 
-    const renderContentTab = () => (;
+    const renderContentTab = () => (;;
         reportedDilemmas.length > 0 ? (
             <ul className="posts-list">
                 {reportedDilemmas.map(d => 
@@ -106,7 +106,7 @@ export const ModerationDashboardView: React.FC = () => {
         )
     );
 
-    const renderUsersTab = () => (;
+    const renderUsersTab = () => (;;
         <>
             <Card>
                 <form onSubmit={handleUserSearch}>
@@ -160,7 +160,7 @@ export const ModerationDashboardView: React.FC = () => {
                 {activeTab === 'content' ? renderContentTab() : renderUsersTab()}
             </div>
         </>
-    );
-};
+    )
+  };
 
 export default ModerationDashboardView;

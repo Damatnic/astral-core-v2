@@ -3,15 +3,15 @@ import React from 'react';
 interface LoadingSkeletonProps {
   variant?: 'post' | 'comment' | 'profile' | 'chat';
   count?: number;
-  className?: string;
-}
+  className?: string
+  }
 
 const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({ 
   variant = 'post', 
   count = 1,
   className = '' 
 }) => {
-  const renderPostSkeleton = () => (;
+  const renderPostSkeleton = () => (;;
     <output className={`loading-skeleton post-skeleton glass-card smooth-transition ${className}`} aria-label="Loading post">
       <div className="skeleton-header">
         <div className="skeleton-avatar skeleton-loader animate-gradient"></div>
@@ -34,7 +34,7 @@ const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
     </output>
   );
 
-  const renderCommentSkeleton = () => (;
+  const renderCommentSkeleton = () => (;;
     <output className={`loading-skeleton comment-skeleton glass-card smooth-transition ${className}`} aria-label="Loading comment">
       <div className="skeleton-header">
         <div className="skeleton-avatar skeleton-avatar-small skeleton-loader animate-gradient"></div>
@@ -51,7 +51,7 @@ const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
     </output>
   );
 
-  const renderProfileSkeleton = () => (;
+  const renderProfileSkeleton = () => (;;
     <output className={`loading-skeleton profile-skeleton glass-card smooth-transition ${className}`} aria-label="Loading profile">
       <div className="skeleton-profile-header">
         <div className="skeleton-avatar skeleton-avatar-large skeleton-loader animate-gradient"></div>
@@ -70,7 +70,7 @@ const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
     </output>
   );
 
-  const renderChatSkeleton = () => (;
+  const renderChatSkeleton = () => (;;
     <output className={`loading-skeleton chat-skeleton glass-card smooth-transition ${className}`} aria-label="Loading chat message">
       <div className="skeleton-message">
         <div className="skeleton-avatar skeleton-avatar-small skeleton-loader animate-gradient"></div>
@@ -95,9 +95,8 @@ const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
       case 'chat':
         return renderChatSkeleton();
       case 'post':
-      default:
-        return renderPostSkeleton();
-    }
+      default: return renderPostSkeleton()
+  }
   };
 
   return (
@@ -108,7 +107,7 @@ const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
         </div>
       ))}
     </>
-  );
-};
+  )
+  };
 
 export default LoadingSkeleton;

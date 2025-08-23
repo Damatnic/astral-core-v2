@@ -13,15 +13,15 @@ interface UseIntelligentPreloadingOptions {
   enabled?: boolean;
   maxPredictions?: number;
   minConfidence?: number;
-  trackUserBehavior?: boolean;
-}
+  trackUserBehavior?: boolean
+  }
 
 interface PreloadingState {
   isActive: boolean;
   currentPredictions: number;
   totalResourcesPreloaded: number;
-  lastPredictionTime: number | null;
-}
+  lastPredictionTime: number | null
+  }
 
 export const useIntelligentPreloading = (
   options: UseIntelligentPreloadingOptions = {}
@@ -41,7 +41,7 @@ export const useIntelligentPreloading = (
     isActive: false,
     currentPredictions: 0,
     totalResourcesPreloaded: 0,
-    lastPredictionTime: null;
+    lastPredictionTime: null
   });
 
   // Initialize preloading engine
@@ -54,9 +54,9 @@ export const useIntelligentPreloading = (
       
       setPreloadingState(prev => ({
         ...prev,
-        isActive: true;
-      }));
-    }
+        isActive: true
+  }))
+  }
   };
   }, [enabled]);
 
@@ -73,10 +73,10 @@ export const useIntelligentPreloading = (
       );
 
       // Trigger predictions for new route
-      triggerPredictions();
-    };
+      triggerPredictions()
+  };
 
-    trackRoute();
+    trackRoute()
   };
   }, [location.pathname, enabled, trackUserBehavior]);
 
@@ -88,7 +88,7 @@ export const useIntelligentPreloading = (
       const predictions = await engineRef.current.generatePredictions();
       
       // Filter by confidence threshold;
-      const filteredPredictions = predictions;
+      const filteredPredictions = predictions;;
         .filter(p => p.confidence >= minConfidence)
         .slice(0, maxPredictions);
 
@@ -97,32 +97,32 @@ export const useIntelligentPreloading = (
         ...prev,
         currentPredictions: filteredPredictions.length,
         totalResourcesPreloaded: prev.totalResourcesPreloaded + filteredPredictions.length,
-        lastPredictionTime: Date.now();
-      }));
+        lastPredictionTime: Date.now()
+  }));
 
       // Log prediction results for debugging
       if (process.env.NODE_ENV === 'development') {
         console.group('🧠 Intelligent Preloading Results');
         console.log(`Generated ${predictions.length} predictions, executing ${filteredPredictions.length}`);
         filteredPredictions.forEach(p => {
-          console.log(`📦 ${p.resource} (${(p.confidence * 100).toFixed(1)}% confidence, ${p.priority} priority)`);
-        });
-        console.groupEnd();
-      }
+          console.log(`📦 ${p.resource} (${(p.confidence * 100).toFixed(1)}% confidence, ${p.priority} priority)`)
+  });
+        console.groupEnd()
+  }
     } catch (error) {
-      console.error('Intelligent preloading failed:', error);
-    }
+      console.error('Intelligent preloading failed:', error)
+  }
   };
   }, [enabled, minConfidence, maxPredictions]);
 
   // Force predictions (useful for manual triggers);
   const forcePredictions = useCallback(() => {
-    triggerPredictions();
+    triggerPredictions()
   };
   }, [triggerPredictions]);
 
   // Track user interaction for behavior analysis;
-  const trackInteraction = useCallback((;
+  const trackInteraction = useCallback((;;
     action: string,
     target?: string,
     metadata?: Record<string, any>
@@ -131,13 +131,14 @@ export const useIntelligentPreloading = (
 
     // For now, log the interaction for future enhancement
     if (process.env.NODE_ENV === 'development') {
-      console.log('📊 User Interaction:', { action, target, metadata, route: location.pathname });
-    }
+      console.log('📊 User Interaction:', { action, target, metadata, route: location.pathname })
+  }
 
     // Trigger new predictions after significant interactions
     if (['click', 'form_submit', 'modal_open'].includes(action)) {
-      setTimeout(triggerPredictions, 100);
-    }
+      setTimeout(triggerPredictions, 100)
+  }
+  };
   };
   };
   }, [enabled, trackUserBehavior, location.pathname, triggerPredictions]);
@@ -153,14 +154,14 @@ export const useIntelligentPreloading = (
     forcePredictions,
     
     // Engine access (for advanced usage)
-    engine: engineRef.current;
+    engine: engineRef.current
   };
 
 // Higher-order component for automatic interaction tracking;
 export const withIntelligentPreloading = <P extends object>(
   Component: React.ComponentType<P>,
   trackingOptions?: {
-    trackClicks?: boolean;
+    trackClicks?: boolean
   }
 ) => {
   const { trackClicks = true } = trackingOptions || {};
@@ -173,12 +174,12 @@ export const withIntelligentPreloading = <P extends object>(
       onClick: trackClicks ? (e: React.MouseEvent) => {
         trackInteraction('click', (e.target as HTMLElement)?.tagName);
         if ((props as any).onClick) {
-          (props as any).onClick(e);
-        }
+          (props as any).onClick(e)
+  }
       } : (props as any).onClick,
     };
 
-    return React.createElement(Component, enhancedProps);
+    return React.createElement(Component, enhancedProps)
   };
 
 export default useIntelligentPreloading;

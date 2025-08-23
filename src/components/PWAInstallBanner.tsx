@@ -10,8 +10,8 @@ import { pwaService, PWAStatus } from "../services/pwaService";
 import "./PWAInstallBanner.css";
 interface PWAInstallBannerProps {
   className?: string;
-  showForCrisis?: boolean;
-}
+  showForCrisis?: boolean
+  }
 
 export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
    className = "",
@@ -29,20 +29,20 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
 
     // Subscribe to status changes;
     const unsubscribe = pwaService.onStatusChange((newStatus: unknown) => {
-      setPwaStatus(newStatus);
-    });
+      setPwaStatus(newStatus)
+  });
 
     // Check if banner should be visible
     updateVisibility(status);
 
-    return unsubscribe;
+    return unsubscribe
   };
   }, [showForCrisis, dismissed]);
 
   useEffect(() => {
     if(pwaStatus) {
-      updateVisibility(pwaStatus);
-    }
+      updateVisibility(pwaStatus)
+  }
   };
   }, [pwaStatus, showForCrisis, dismissed]);
 
@@ -50,8 +50,8 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
     // Don't show if already dismissed or installed
     if(dismissed || status.isInstalled || !status.isInstallable) {
       setIsVisible(false);
-      return;
-    }
+      return
+  }
 
     // Show immediately for crisis scenarios
     if(showForCrisis) {
@@ -81,11 +81,11 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
         setDismissed(true)
         // Track successful installation
                   localStorage.setItem("pwaInstalled", "true");
-        localStorage.setItem("pwaInstalledAt", new Date().toISOString());
-      }
+        localStorage.setItem("pwaInstalledAt", new Date().toISOString())
+  }
     } catch(error) {
-      console.error("[PWA] Error during installation: ", error);
-    } finally {
+      console.error("[PWA] Error during installation: ", error)
+  } finally {
       setIsInstalling(false)
     }
   }
@@ -97,7 +97,7 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
     // Remember dismissal for 7 days;
     const dismissedUntil = new Date();
     dismissedUntil.setDate(dismissedUntil.getDate() + 7);
-    localStorage.setItem("pwaBannerDismissedUntil", dismissedUntil.toISOString());
+    localStorage.setItem("pwaBannerDismissedUntil", dismissedUntil.toISOString())
   }
 
   const getBannerContent = (): Record<string, unknown> => {
@@ -110,8 +110,8 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
           "📱 Faster than browser",
           "🔔 Crisis notifications"        ],
         installText: "Install for Emergencies",
-        urgency: true;
-      }
+        urgency: true
+  }
     }
 
     return {
@@ -123,8 +123,8 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
         "🔔 Important notifications",
         "📱 Works offline"      ],
       installText: "Install App",
-      urgency: false;
-    }
+      urgency: false
+  }
   }
 
   // Early return if not visible or PWA not supported
@@ -139,8 +139,7 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
         <div className="banner-content">
         <div className="banner-header">
           <h4 className="banner-title">{content.title}</h4>
-          <button;
-            className="banner-close"            onClick={handleDismiss}
+          <button className="banner-close"            onClick={handleDismiss}
             aria-label="Dismiss install banner"          >
             ×
           </button>
@@ -155,13 +154,11 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
         </ul>
 
         <div className="banner-actions">
-          <button;
-            className="btn-secondary banner-btn"            onClick={handleDismiss}
+          <button className="btn-secondary banner-btn"            onClick={handleDismiss}
           >
             Maybe Later
           </button>
-          <button;
-            className={`}`}
+          <button className={`}`}
             onClick={handleInstall}
             disabled={isInstalling}
           >

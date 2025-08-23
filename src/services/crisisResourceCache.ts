@@ -20,15 +20,15 @@ export interface CrisisResource {
     chat?: string;
     website?: string;
     email?: string;
-    address?: string;
+    address?: string
   };
   description: string;
   languages: string[];
   region: string;
   features: string[];
   lastUpdated: Date;
-  verified: boolean;
-}
+  verified: boolean
+  }
 
 export interface CrisisGuide {
   id: string;
@@ -37,15 +37,15 @@ export interface CrisisGuide {
   content: string;
   steps?: string[];
   keywords: string[];
-  lastUpdated: Date;
-}
+  lastUpdated: Date
+  }
 
 export interface CachedData<T> {
   data: T;
   timestamp: number;
   expires: number;
-  version: string;
-}
+  version: string
+  }
 
 class CrisisResourceCacheService {
   private readonly CACHE_VERSION = '1.0.0';
@@ -71,15 +71,15 @@ class CrisisResourceCacheService {
         phone: '988',
         text: '988',
         chat: 'https://988lifeline.org/chat',
-        website: 'https://988lifeline.org';
-      },
+        website: 'https://988lifeline.org'
+  },
       description: 'Free, confidential 24/7 support for people in distress',
       languages: ['English', 'Spanish'],
       region: 'USA',
       features: ['Immediate support', 'Trained counselors', 'Text available', 'Chat available'],
       lastUpdated: new Date(),
-      verified: true;
-    },
+      verified: true
+  },
     {
       id: 'crisis-text',
       name: 'Crisis Text Line',
@@ -89,15 +89,15 @@ class CrisisResourceCacheService {
       availability: '24/7',
       contact: {
         text: '741741',
-        website: 'https://www.crisistextline.org';
-      },
+        website: 'https://www.crisistextline.org'
+  },
       description: 'Free 24/7 support via text message',
       languages: ['English', 'Spanish'],
       region: 'USA',
       features: ['Anonymous', 'Text-based', 'Trained volunteers'],
       lastUpdated: new Date(),
-      verified: true;
-    },
+      verified: true
+  },
     {
       id: 'trevor-project',
       name: 'The Trevor Project',
@@ -109,15 +109,15 @@ class CrisisResourceCacheService {
         phone: '1-866-488-7386',
         text: 'START to 678-678',
         chat: 'https://www.thetrevorproject.org/get-help',
-        website: 'https://www.thetrevorproject.org';
-      },
+        website: 'https://www.thetrevorproject.org'
+  },
       description: 'Crisis intervention for LGBTQ youth',
       languages: ['English'],
       region: 'USA',
       features: ['LGBTQ specialized', 'Youth focused', 'Multiple contact methods'],
       lastUpdated: new Date(),
-      verified: true;
-    },
+      verified: true
+  },
     {
       id: 'veterans-crisis',
       name: 'Veterans Crisis Line',
@@ -129,15 +129,15 @@ class CrisisResourceCacheService {
         phone: '988 then Press 1',
         text: '838255',
         chat: 'https://www.veteranscrisisline.net/get-help/chat',
-        website: 'https://www.veteranscrisisline.net';
-      },
+        website: 'https://www.veteranscrisisline.net'
+  },
       description: 'Confidential crisis support for Veterans and their families',
       languages: ['English', 'Spanish'],
       region: 'USA',
       features: ['Veteran specialized', 'Military understanding', 'Family support'],
       lastUpdated: new Date(),
-      verified: true;
-    }
+      verified: true
+  }
   ];
 
   // Essential crisis guides
@@ -156,8 +156,8 @@ class CrisisResourceCacheService {
         'Ensure your environment is safe'
       ],
       keywords: ['safety', 'plan', 'suicide', 'prevention', 'coping'],
-      lastUpdated: new Date();
-    },
+      lastUpdated: new Date()
+  },
     {
       id: 'grounding-techniques',
       title: 'Grounding Techniques for Crisis',
@@ -171,8 +171,8 @@ class CrisisResourceCacheService {
         'Focus on a calming image or memory'
       ],
       keywords: ['grounding', 'anxiety', 'panic', 'coping', 'techniques'],
-      lastUpdated: new Date();
-    },
+      lastUpdated: new Date()
+  },
     {
       id: 'warning-signs',
       title: 'Recognize Crisis Warning Signs',
@@ -192,12 +192,12 @@ class CrisisResourceCacheService {
         'Displaying extreme mood swings'
       ],
       keywords: ['warning', 'signs', 'suicide', 'crisis', 'recognition'],
-      lastUpdated: new Date();
-    }
+      lastUpdated: new Date()
+  }
   ];
 
   constructor() {
-    this.initialize();
+    this.initialize()
   }
 
   /**
@@ -220,13 +220,13 @@ class CrisisResourceCacheService {
       // Track initialization
       astralCoreAnalytics.track('crisis_cache_initialized', 'crisis_intervention', {
         cachedResources: this.criticalResources.length,
-        cachedGuides: this.essentialGuides.length;
-      });
-    } catch (error) {
+        cachedGuides: this.essentialGuides.length
+  })
+  } catch (error) {
       console.error('Failed to initialize crisis resource cache:', error);
       // Fall back to localStorage if IndexedDB fails
-      this.fallbackToLocalStorage();
-    }
+      this.fallbackToLocalStorage()
+  }
   }
 
   /**
@@ -238,14 +238,14 @@ class CrisisResourceCacheService {
       
       request.onerror = () => {
         console.error('Failed to open IndexedDB');
-        reject(request.error);
-      };
+        reject(request.error)
+  };
       
       request.onsuccess = () => {
         this.db = request.result;
         console.log('Crisis cache database initialized');
-        resolve();
-      };
+        resolve()
+  };
       
       request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
@@ -255,18 +255,18 @@ class CrisisResourceCacheService {
           const resourceStore = db.createObjectStore('resources', { keyPath: 'id' });
           resourceStore.createIndex('category', 'category', { unique: false });
           resourceStore.createIndex('priority', 'priority', { unique: false });
-          resourceStore.createIndex('type', 'type', { unique: false });
-        }
+          resourceStore.createIndex('type', 'type', { unique: false })
+  }
         
         if (!db.objectStoreNames.contains('guides')) {
           const guideStore = db.createObjectStore('guides', { keyPath: 'id' });
-          guideStore.createIndex('type', 'type', { unique: false });
-        }
+          guideStore.createIndex('type', 'type', { unique: false })
+  }
         
         if (!db.objectStoreNames.contains('metadata')) {
-          db.createObjectStore('metadata', { keyPath: 'key' });
-        }
-      });
+          db.createObjectStore('metadata', { keyPath: 'key' })
+  }
+      })
   }
 
   /**
@@ -275,22 +275,22 @@ class CrisisResourceCacheService {
   private async cacheCriticalResources() {
     // Cache in IndexedDB
     for (const resource of this.criticalResources) {
-      await this.cacheResource(resource, true);
-    }
+      await this.cacheResource(resource, true)
+  }
     
     // Cache essential guides
     for (const guide of this.essentialGuides) {
-      await this.cacheGuide(guide);
-    }
+      await this.cacheGuide(guide)
+  }
     
     // Also cache in memory for instant access
     this.criticalResources.forEach(resource => {
-      this.memoryCache.set(`resource_${resource.id}`, resource);
-    });
+      this.memoryCache.set(`resource_${resource.id}`, resource)
+  });
     
     this.essentialGuides.forEach(guide => {
-      this.memoryCache.set(`guide_${guide.id}`, guide);
-    });
+      this.memoryCache.set(`guide_${guide.id}`, guide)
+  })
   }
 
   /**
@@ -299,15 +299,15 @@ class CrisisResourceCacheService {
   async cacheResource(resource: CrisisResource, isCritical: boolean = false): Promise<void> {
     if (!this.db) {
       this.cacheInLocalStorage('resource', resource);
-      return;
-    }
+      return
+  }
     
     const cached: CachedData<CrisisResource> = {
       data: resource,
       timestamp: Date.now(),
       expires: Date.now() + (isCritical ? this.CRITICAL_CACHE_DURATION : this.CACHE_DURATION),
-      version: this.CACHE_VERSION;
-    };
+      version: this.CACHE_VERSION
+  };
     
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction(['resources'], 'readwrite');
@@ -317,13 +317,13 @@ class CrisisResourceCacheService {
       request.onsuccess = () => {
         // Also update memory cache
         this.memoryCache.set(`resource_${resource.id}`, resource);
-        resolve();
-      };
+        resolve()
+  };
       
       request.onerror = () => {
         console.error('Failed to cache resource:', request.error);
-        reject(request.error);
-      });
+        reject(request.error)
+  })
   }
 
   /**
@@ -332,8 +332,8 @@ class CrisisResourceCacheService {
   async cacheGuide(guide: CrisisGuide): Promise<void> {
     if (!this.db) {
       this.cacheInLocalStorage('guide', guide);
-      return;
-    }
+      return
+  }
     
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction(['guides'], 'readwrite');
@@ -343,13 +343,13 @@ class CrisisResourceCacheService {
       request.onsuccess = () => {
         // Also update memory cache
         this.memoryCache.set(`guide_${guide.id}`, guide);
-        resolve();
-      };
+        resolve()
+  };
       
       request.onerror = () => {
         console.error('Failed to cache guide:', request.error);
-        reject(request.error);
-      });
+        reject(request.error)
+  })
   }
 
   /**
@@ -371,18 +371,18 @@ class CrisisResourceCacheService {
           const resource = request.result;
           if (resource) {
             // Update memory cache
-            this.memoryCache.set(`resource_${id}`, resource);
-          }
-          resolve(resource || null);
-        };
+            this.memoryCache.set(`resource_${id}`, resource)
+  }
+          resolve(resource || null)
+  };
         
         request.onerror = () => {
-          reject(request.error);
-        });
-    }
+          reject(request.error)
+  })
+  }
     
     // Fall back to localStorage
-    return this.getFromLocalStorage('resource', id);
+    return this.getFromLocalStorage('resource', id)
   }
 
   /**
@@ -390,8 +390,8 @@ class CrisisResourceCacheService {
    */
   async getResourcesByCategory(category: string): Promise<CrisisResource[]> {
     if (!this.db) {
-      return this.getAllResourcesFromLocalStorage().filter(r => r.category === category);
-    }
+      return this.getAllResourcesFromLocalStorage().filter(r => r.category === category)
+  }
     
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction(['resources'], 'readonly');
@@ -400,12 +400,12 @@ class CrisisResourceCacheService {
       const request = index.getAll(category);
       
       request.onsuccess = () => {
-        resolve(request.result || []);
-      };
+        resolve(request.result || [])
+  };
       
       request.onerror = () => {
-        reject(request.error);
-      });
+        reject(request.error)
+  })
   }
 
   /**
@@ -413,8 +413,8 @@ class CrisisResourceCacheService {
    */
   async getImmediateResources(): Promise<CrisisResource[]> {
     if (!this.db) {
-      return this.getAllResourcesFromLocalStorage().filter(r => r.priority === 'immediate');
-    }
+      return this.getAllResourcesFromLocalStorage().filter(r => r.priority === 'immediate')
+  }
     
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction(['resources'], 'readonly');
@@ -423,12 +423,12 @@ class CrisisResourceCacheService {
       const request = index.getAll('immediate');
       
       request.onsuccess = () => {
-        resolve(request.result || []);
-      };
+        resolve(request.result || [])
+  };
       
       request.onerror = () => {
-        reject(request.error);
-      });
+        reject(request.error)
+  })
   }
 
   /**
@@ -450,18 +450,18 @@ class CrisisResourceCacheService {
           const guide = request.result;
           if (guide) {
             // Update memory cache
-            this.memoryCache.set(`guide_${id}`, guide);
-          }
-          resolve(guide || null);
-        };
+            this.memoryCache.set(`guide_${id}`, guide)
+  }
+          resolve(guide || null)
+  };
         
         request.onerror = () => {
-          reject(request.error);
-        });
-    }
+          reject(request.error)
+  })
+  }
     
     // Fall back to localStorage
-    return this.getFromLocalStorage('guide', id);
+    return this.getFromLocalStorage('guide', id)
   }
 
   /**
@@ -477,12 +477,12 @@ class CrisisResourceCacheService {
       
       // Update cache
       for (const resource of resources) {
-        await this.cacheResource(resource);
-      }
+        await this.cacheResource(resource)
+  }
       
       for (const guide of guides) {
-        await this.cacheGuide(guide);
-      }
+        await this.cacheGuide(guide)
+  }
       
       // Update metadata
       await this.updateMetadata('lastUpdate', Date.now());
@@ -490,11 +490,11 @@ class CrisisResourceCacheService {
       // Track update
       astralCoreAnalytics.track('crisis_cache_updated', 'crisis_intervention', {
         resourceCount: resources.length,
-        guideCount: guides.length;
-      });
+        guideCount: guides.length
+  });
       
-      console.log('Crisis resources updated successfully');
-    } catch (error) {
+      console.log('Crisis resources updated successfully')
+  } catch (error) {
       console.error('Failed to update crisis resources:', error);
       // Continue using cached data
     }
@@ -507,22 +507,22 @@ class CrisisResourceCacheService {
     // Listen for online/offline events
     window.addEventListener('online', () => {
       this.isOnline = true;
-      this.updateResourcesFromServer();
-    });
+      this.updateResourcesFromServer()
+  });
     
     window.addEventListener('offline', () => {
       this.isOnline = false;
-      notificationService.addToast('Offline mode: Crisis resources available from cache', 'info');
-    });
+      notificationService.addToast('Offline mode: Crisis resources available from cache', 'info')
+  });
     
     // Listen for storage events (sync across tabs)
     window.addEventListener('storage', (event) => {
       if (event.key?.startsWith('crisis_cache_')) {
         // Invalidate memory cache for changed items;
         const id = event.key.replace('crisis_cache_', '');
-        this.memoryCache.delete(id);
-      }
-    });
+        this.memoryCache.delete(id)
+  }
+    })
   }
 
   /**
@@ -531,8 +531,8 @@ class CrisisResourceCacheService {
   private startPeriodicUpdates() {
     // Update every 6 hours
     this.updateInterval = setInterval(() => {
-      this.updateResourcesFromServer();
-    }, 6 * 60 * 60 * 1000);
+      this.updateResourcesFromServer()
+  }, 6 * 60 * 60 * 1000);
     
     // Also update when app becomes active
     document.addEventListener('visibilitychange', () => {
@@ -541,10 +541,10 @@ class CrisisResourceCacheService {
         const hoursSinceUpdate = (Date.now() - lastUpdate) / (1000 * 60 * 60);
         
         if (hoursSinceUpdate > 1) {
-          this.updateResourcesFromServer();
-        }
+          this.updateResourcesFromServer()
+  }
       }
-    });
+    })
   }
 
   /**
@@ -555,12 +555,12 @@ class CrisisResourceCacheService {
     
     // Cache critical resources in localStorage
     this.criticalResources.forEach(resource => {
-      this.cacheInLocalStorage('resource', resource);
-    });
+      this.cacheInLocalStorage('resource', resource)
+  });
     
     this.essentialGuides.forEach(guide => {
-      this.cacheInLocalStorage('guide', guide);
-    });
+      this.cacheInLocalStorage('guide', guide)
+  })
   }
 
   /**
@@ -569,12 +569,12 @@ class CrisisResourceCacheService {
   private cacheInLocalStorage(type: 'resource' | 'guide', data: any) {
     const key = `crisis_cache_${type}_${data.id}`;
     try {
-      localStorage.setItem(key, JSON.stringify(data));
-    } catch (error) {
+      localStorage.setItem(key, JSON.stringify(data))
+  } catch (error) {
       console.error('Failed to cache in localStorage:', error);
       // Clear old items if storage is full
-      this.clearOldLocalStorageItems();
-    }
+      this.clearOldLocalStorageItems()
+  }
   }
 
   /**
@@ -583,7 +583,7 @@ class CrisisResourceCacheService {
   private getFromLocalStorage(type: 'resource' | 'guide', id: string): any {
     const key = `crisis_cache_${type}_${id}`;
     const stored = localStorage.getItem(key);
-    return stored ? JSON.parse(stored) : null;
+    return stored ? JSON.parse(stored) : null
   }
 
   /**
@@ -597,12 +597,12 @@ class CrisisResourceCacheService {
       if (key?.startsWith('crisis_cache_resource_')) {
         const stored = localStorage.getItem(key);
         if (stored) {
-          resources.push(JSON.parse(stored));
-        }
+          resources.push(JSON.parse(stored))
+  }
       }
     }
     
-    return resources;
+    return resources
   }
 
   /**
@@ -614,20 +614,20 @@ class CrisisResourceCacheService {
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key?.startsWith('crisis_cache_')) {
-        keys.push(key);
-      }
+        keys.push(key)
+  }
     }
     
     // Remove oldest items (keep critical resources)
     keys.forEach(key => {
-      const isCritical = this.criticalResources.some(r => ;
+      const isCritical = this.criticalResources.some(r => ;;
         key.includes(r.id)
       );
       
       if (!isCritical) {
-        localStorage.removeItem(key);
-      }
-    });
+        localStorage.removeItem(key)
+  }
+    })
   }
 
   /**
@@ -638,8 +638,8 @@ class CrisisResourceCacheService {
     
     if (!this.db) {
       localStorage.setItem(`crisis_cache_meta_${key}`, JSON.stringify(value));
-      return;
-    }
+      return
+  }
     
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction(['metadata'], 'readwrite');
@@ -647,8 +647,8 @@ class CrisisResourceCacheService {
       const request = store.put({ key, value });
       
       request.onsuccess = () => resolve();
-      request.onerror = () => reject(request.error);
-    });
+      request.onerror = () => reject(request.error)
+  })
   }
 
   /**
@@ -664,22 +664,22 @@ class CrisisResourceCacheService {
       
       transaction.objectStore('resources').clear();
       transaction.objectStore('guides').clear();
-      transaction.objectStore('metadata').clear();
-    }
+      transaction.objectStore('metadata').clear()
+  }
     
     // Clear localStorage;
     const keys: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key?.startsWith('crisis_cache_')) {
-        keys.push(key);
-      }
+        keys.push(key)
+  }
     }
     
     keys.forEach(key => localStorage.removeItem(key));
     
     // Re-cache critical resources
-    await this.cacheCriticalResources();
+    await this.cacheCriticalResources()
   }
 
   /**
@@ -690,7 +690,7 @@ class CrisisResourceCacheService {
     totalGuides: number;
     memorySize: number;
     lastUpdate: number;
-    isOnline: boolean;
+    isOnline: boolean
   }> {
     let totalResources = 0;
     let totalGuides = 0;
@@ -699,38 +699,38 @@ class CrisisResourceCacheService {
       const resourceTx = this.db.transaction(['resources'], 'readonly');
       const resourceCount = await new Promise<number>((resolve) => {
         const request = resourceTx.objectStore('resources').count();
-        request.onsuccess = () => resolve(request.result);
-      });
+        request.onsuccess = () => resolve(request.result)
+  });
       totalResources = resourceCount;
       
       const guideTx = this.db.transaction(['guides'], 'readonly');
       const guideCount = await new Promise<number>((resolve) => {
         const request = guideTx.objectStore('guides').count();
-        request.onsuccess = () => resolve(request.result);
-      });
-      totalGuides = guideCount;
-    }
+        request.onsuccess = () => resolve(request.result)
+  });
+      totalGuides = guideCount
+  }
     
     return { totalResources,
       totalGuides,
       memorySize: this.memoryCache.size,
       lastUpdate: this.memoryCache.get('lastUpdate') || 0,
-      isOnline: this.isOnline;
-     }
+      isOnline: this.isOnline
+  }
 
   /**
    * Cleanup on destroy
    */
   destroy() {
     if (this.updateInterval) {
-      clearInterval(this.updateInterval);
-    }
+      clearInterval(this.updateInterval)
+  }
     
     if (this.db) {
-      this.db.close();
-    }
+      this.db.close()
+  }
     
-    this.memoryCache.clear();
+    this.memoryCache.clear()
   }
 }
 

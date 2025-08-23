@@ -56,14 +56,14 @@ class Auth0Service {
       const isAuthenticated = await this.auth0Client.isAuthenticated();
       
       if (isAuthenticated) {
-        await this.handleAuthentication();
-      }
+        await this.handleAuthentication()
+  }
       
-      this.isInitialized = true;
-    } catch (error) {
+      this.isInitialized = true
+  } catch (error) {
       console.error('Failed to initialize Auth0:', error);
-      throw new Error('Authentication service initialization failed');
-    }
+      throw new Error('Authentication service initialization failed')
+  }
   }
 
   /**
@@ -72,18 +72,18 @@ class Auth0Service {
   async login(options?: { 
     screen_hint?: 'signup' | 'login';
     prompt?: 'none' | 'login' | 'consent' | 'select_account';
-    connection?: string;
+    connection?: string
   }): Promise<void> {
     if (!this.auth0Client) {
-      throw new Error('Auth0 client not initialized');
-    }
+      throw new Error('Auth0 client not initialized')
+  }
 
     await this.auth0Client.loginWithRedirect({
       ...options,
       appState: {
         returnTo: window.location.pathname,
       },
-    });
+    })
   }
 
   /**
@@ -91,16 +91,16 @@ class Auth0Service {
    */
   async loginWithPopup(options?: any): Promise<void> {
     if (!this.auth0Client) {
-      throw new Error('Auth0 client not initialized');
-    }
+      throw new Error('Auth0 client not initialized')
+  }
 
     try {
       await this.auth0Client.loginWithPopup(options);
-      await this.handleAuthentication();
-    } catch (error) {
+      await this.handleAuthentication()
+  } catch (error) {
       console.error('Popup login failed:', error);
-      throw error;
-    }
+      throw error
+  }
   }
 
   /**
@@ -108,15 +108,15 @@ class Auth0Service {
    */
   async handleCallback(): Promise<void> {
     if (!this.auth0Client) {
-      throw new Error('Auth0 client not initialized');
-    }
+      throw new Error('Auth0 client not initialized')
+  }
 
     const result = await this.auth0Client.handleRedirectCallback();
     await this.handleAuthentication();
     
     // Redirect to return URL or home;
     const returnTo = result.appState?.returnTo || '/';
-    window.history.replaceState({}, document.title, returnTo);
+    window.history.replaceState({}, document.title, returnTo)
   }
 
   /**
@@ -143,11 +143,11 @@ class Auth0Service {
       this.setupTokenRefresh();
       
       // Emit authentication event
-      this.emitAuthEvent('authenticated', this.currentUser);
-    } catch (error) {
+      this.emitAuthEvent('authenticated', this.currentUser)
+  } catch (error) {
       console.error('Authentication handling failed:', error);
-      throw error;
-    }
+      throw error
+  }
   }
 
   /**
@@ -173,7 +173,7 @@ class Auth0Service {
                   auth0User.app_metadata?.roles || 
                   [UserRole.USER];
     
-    return Array.isArray(roles) ? roles : [roles];
+    return Array.isArray(roles) ? roles : [roles]
   }
 
   /**
@@ -184,12 +184,12 @@ class Auth0Service {
     if (isProduction()) {
       // Store in memory only
       sessionStorage.setItem(TOKEN_STORAGE_KEY, token);
-      sessionStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));;
+      sessionStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user))
   } else {
       // Development: use localStorage for persistence
       localStorage.setItem(TOKEN_STORAGE_KEY, token);
-      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
-    }
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user))
+  }
   }
 
   /**
@@ -204,8 +204,8 @@ class Auth0Service {
     
     if (this.tokenRefreshTimer) {
       clearInterval(this.tokenRefreshTimer);
-      this.tokenRefreshTimer = null;
-    }
+      this.tokenRefreshTimer = null
+  }
   }
 
   /**
@@ -213,19 +213,19 @@ class Auth0Service {
    */
   private setupTokenRefresh(): void {
     if (this.tokenRefreshTimer) {
-      clearInterval(this.tokenRefreshTimer);
-    }
+      clearInterval(this.tokenRefreshTimer)
+  }
 
     // Refresh token every 10 minutes
     this.tokenRefreshTimer = setInterval(async () => {
       try {
-        await this.refreshToken();
-      } catch (error) {
+        await this.refreshToken()
+  } catch (error) {
         console.error('Token refresh failed:', error);
         // If refresh fails, logout user
-        await this.logout();
-      }
-    }, 10 * 60 * 1000);
+        await this.logout()
+  }
+    }, 10 * 60 * 1000)
   }
 
   /**
@@ -233,18 +233,18 @@ class Auth0Service {
    */
   async refreshToken(): Promise<string | null> {
     if (!this.auth0Client) {
-      throw new Error('Auth0 client not initialized');
-    }
+      throw new Error('Auth0 client not initialized')
+  }
 
     try {
       const token = await this.auth0Client.getTokenSilently();
       
       this.storeAuthData(token, this.currentUser!);
-      return token;
-    } catch (error) {
+      return token
+  } catch (error) {
       console.error('Token refresh failed:', error);
-      throw error;
-    }
+      throw error
+  }
   }
 
   /**
@@ -252,15 +252,15 @@ class Auth0Service {
    */
   async getAccessToken(): Promise<string | null> {
     if (!this.auth0Client) {
-      return null;
-    }
+      return null
+  }
 
     try {
-      return await this.auth0Client.getTokenSilently();
-    } catch (error) {
+      return await this.auth0Client.getTokenSilently()
+  } catch (error) {
       console.error('Failed to get access token:', error);
-      return null;
-    }
+      return null
+  }
   }
 
   /**
@@ -268,8 +268,8 @@ class Auth0Service {
    */
   async getCurrentUser(): Promise<User | null> {
     if (this.currentUser) {
-      return this.currentUser;
-    }
+      return this.currentUser
+  }
 
     // Try to get from storage;
     const storage = isProduction() ? sessionStorage : localStorage;
@@ -277,19 +277,19 @@ class Auth0Service {
     
     if (storedUser) {
       this.currentUser = JSON.parse(storedUser);
-      return this.currentUser;
-    }
+      return this.currentUser
+  }
 
     // Try to get from Auth0
     if (this.auth0Client && await this.auth0Client.isAuthenticated()) {
       const auth0User = await this.auth0Client.getUser();
       if (auth0User) {
         this.currentUser = this.transformAuth0User(auth0User);
-        return this.currentUser;
-      }
+        return this.currentUser
+  }
     }
 
-    return null;
+    return null
   }
 
   /**
@@ -297,10 +297,10 @@ class Auth0Service {
    */
   async isAuthenticated(): Promise<boolean> {
     if (!this.auth0Client) {
-      return false;
-    }
+      return false
+  }
 
-    return await this.auth0Client.isAuthenticated();
+    return await this.auth0Client.isAuthenticated()
   }
 
   /**
@@ -310,7 +310,7 @@ class Auth0Service {
     const user = await this.getCurrentUser();
     if (!user) return false;
     
-    return user.roles?.includes(role) || false;
+    return user.roles?.includes(role) || false
   }
 
   /**
@@ -320,7 +320,7 @@ class Auth0Service {
     const user = await this.getCurrentUser();
     if (!user?.roles) return false;
     
-    return roles.some(role => user.roles!.includes(role));
+    return roles.some(role => user.roles!.includes(role))
   }
 
   /**
@@ -330,7 +330,7 @@ class Auth0Service {
     const user = await this.getCurrentUser();
     if (!user?.roles) return false;
     
-    return roles.every(role => user.roles!.includes(role));
+    return roles.every(role => user.roles!.includes(role))
   }
 
   /**
@@ -338,8 +338,8 @@ class Auth0Service {
    */
   async updateProfile(updates: Partial<User>): Promise<void> {
     if (!this.auth0Client || !this.currentUser) {
-      throw new Error('User not authenticated');
-    }
+      throw new Error('User not authenticated')
+  }
 
     // Update in Auth0;
     const token = await this.getAccessToken();
@@ -359,13 +359,13 @@ class Auth0Service {
   };
 
     if (!response.ok) {
-      throw new Error('Failed to update profile');
-    }
+      throw new Error('Failed to update profile')
+  }
 
     // Update local user
     this.currentUser = { ...this.currentUser, ...updates };
     this.storeAuthData(token, this.currentUser);
-    this.emitAuthEvent('profileUpdated', this.currentUser);
+    this.emitAuthEvent('profileUpdated', this.currentUser)
   }
 
   /**
@@ -374,8 +374,8 @@ class Auth0Service {
   async logout(options?: { returnTo?: string }): Promise<void> {
     if (!this.auth0Client) {
       this.clearAuthData();
-      return;
-    }
+      return
+  }
 
     this.clearAuthData();
     this.currentUser = null;
@@ -386,7 +386,7 @@ class Auth0Service {
       }
     });
     
-    this.emitAuthEvent('logout', null);
+    this.emitAuthEvent('logout', null)
   }
 
   /**
@@ -406,8 +406,8 @@ class Auth0Service {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to request password reset');
-    }
+      throw new Error('Failed to request password reset')
+  }
   }
 
   /**
@@ -429,15 +429,15 @@ class Auth0Service {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to enable 2FA');
-    }
+      throw new Error('Failed to enable 2FA')
+  }
   }
 
   /**
    * Emit authentication events
    */
   private emitAuthEvent(type: string, data: any): void {
-    window.dispatchEvent(new CustomEvent(`auth:${type}`, { detail: data }));
+    window.dispatchEvent(new CustomEvent(`auth:${type}`, { detail: data }))
   }
 
   /**
@@ -455,16 +455,16 @@ class Auth0Service {
     return () => {
       window.removeEventListener('auth:authenticated', handleAuth as EventListener);
       window.removeEventListener('auth:profileUpdated', handleAuth as EventListener);
-      window.removeEventListener('auth:logout', handleLogout);
-    }
+      window.removeEventListener('auth:logout', handleLogout)
+  }
 
   /**
    * Get Auth0 management API token (admin only)
    */
   async getManagementToken(): Promise<string | null> {
     if (!await this.hasRole(UserRole.ADMIN)) {
-      throw new Error('Admin access required');
-    }
+      throw new Error('Admin access required')
+  }
 
     const token = await this.getAccessToken();
     if (!token) return null;
@@ -484,11 +484,11 @@ class Auth0Service {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to get management token');
-    }
+      throw new Error('Failed to get management token')
+  }
 
     const data = await response.json();
-    return data.access_token;
+    return data.access_token
   }
 }
 
@@ -512,13 +512,13 @@ export const authService = {
     // Convert to new auth system
     auth0Service.onAuthStateChange((user) => {
       if (user?.roles?.includes(UserRole.HELPER)) {
-        updater(user as unknown as Helper);
-      }
-    });
+        updater(user as unknown as Helper)
+  }
+    })
   },
   
   updateHelperProfile(profile: Helper) {
-    auth0Service.updateProfile(profile as Partial<User>);
+    auth0Service.updateProfile(profile as Partial<User>)
   },
 };
 

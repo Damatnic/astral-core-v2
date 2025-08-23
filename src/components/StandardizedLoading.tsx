@@ -7,8 +7,8 @@ export interface LoadingStateConfig {
   text?: string;
   showText?: boolean;
   fullScreen?: boolean;
-  className?: string;
-}
+  className?: string
+  }
 
 const LoadingSpinner: React.FC<LoadingStateConfig> = ({
   size = 'medium',
@@ -22,18 +22,18 @@ const LoadingSpinner: React.FC<LoadingStateConfig> = ({
   const sizeClasses = {
     small: 'loading-small',
     medium: 'loading-medium',
-    large: 'loading-large';
+    large: 'loading-large'
   };
 
   const colorClasses = {
     primary: 'loading-primary',
     secondary: 'loading-secondary',
-    white: 'loading-white';
+    white: 'loading-white'
   };
 
   const baseClasses = `loading-container ${sizeClasses[size]} ${colorClasses[color]} ${fullScreen ? 'loading-fullscreen' : ''} ${className}`;
 
-  const renderSpinner = () => (;
+  const renderSpinner = () => (;;
     <output className={`${baseClasses} loading-spinner`} aria-live="polite">
       <div className="spinner-element">
         <svg viewBox="0 0 50 50" className="spinner-svg">
@@ -57,7 +57,7 @@ const LoadingSpinner: React.FC<LoadingStateConfig> = ({
     </output>
   );
 
-  const renderDots = () => (;
+  const renderDots = () => (;;
     <output className={`${baseClasses} loading-dots`} aria-live="polite">
       <div className="dots-container">
         <div className="dot dot-1"></div>
@@ -73,7 +73,7 @@ const LoadingSpinner: React.FC<LoadingStateConfig> = ({
     </output>
   );
 
-  const renderPulse = () => (;
+  const renderPulse = () => (;;
     <output className={`${baseClasses} loading-pulse`} aria-live="polite">
       <div className="pulse-element"></div>
       {showText && (
@@ -85,7 +85,7 @@ const LoadingSpinner: React.FC<LoadingStateConfig> = ({
     </output>
   );
 
-  const renderSkeleton = () => (;
+  const renderSkeleton = () => (;;
     <output className={`${baseClasses} loading-skeleton`} aria-live="polite">
       <div className="skeleton-lines">
         <div className="skeleton-line skeleton-line-1"></div>
@@ -104,8 +104,7 @@ const LoadingSpinner: React.FC<LoadingStateConfig> = ({
     case 'skeleton':
       return renderSkeleton();
     case 'spinner':
-    default:
-      return renderSpinner();
+    default: return renderSpinner()
   }
 };
 
@@ -147,8 +146,7 @@ export const InlineLoader: React.FC<Partial<LoadingStateConfig>> = (props) => (
 );
 
 export const SkeletonLoader: React.FC<Partial<LoadingStateConfig>> = (props) => (
-  <LoadingSpinner;
-    variant="skeleton"
+  <LoadingSpinner variant="skeleton"
     showText={false}
     {...props}
   />
@@ -161,8 +159,8 @@ interface LoadingWrapperProps {
   error?: string | null;
   empty?: boolean;
   emptyMessage?: string;
-  children: React.ReactNode;
-}
+  children: React.ReactNode
+  }
 
 export const LoadingWrapper: React.FC<LoadingWrapperProps> = ({
   loading,
@@ -173,7 +171,7 @@ export const LoadingWrapper: React.FC<LoadingWrapperProps> = ({
   children
 }) => {
   if (loading) {
-    return <ComponentLoader {...loadingConfig} />;
+    return <ComponentLoader {...loadingConfig} />
   }
 
   if (error) {
@@ -185,7 +183,7 @@ export const LoadingWrapper: React.FC<LoadingWrapperProps> = ({
           <p>{error}</p>
         </div>
       </div>
-    );
+    )
   }
 
   if (empty) {
@@ -197,11 +195,11 @@ export const LoadingWrapper: React.FC<LoadingWrapperProps> = ({
           <p>{emptyMessage}</p>
         </div>
       </div>
-    );
+    )
   }
 
-  return <>{children}</>;
-};
+  return <>{children}</>
+  };
 
 // Hook for managing loading states;
 export const useLoadingState = (initialLoading = false) => {
@@ -210,23 +208,23 @@ export const useLoadingState = (initialLoading = false) => {
 
   const startLoading = React.useCallback(() => {
     setLoading(true);
-    setError(null);
+    setError(null)
   };
   }, []);
 
   const stopLoading = React.useCallback(() => {
-    setLoading(false);
+    setLoading(false)
   };
   }, []);
 
   const setLoadingError = React.useCallback((errorMessage: string) => {
     setLoading(false);
-    setError(errorMessage);
+    setError(errorMessage)
   };
   }, []);
 
   const clearError = React.useCallback(() => {
-    setError(null);
+    setError(null)
   };
   }, []);
 

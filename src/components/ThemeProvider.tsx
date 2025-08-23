@@ -25,8 +25,8 @@ interface ThemeProviderProps {
   storageKey?: string;
   defaultTheme?: TherapeuticTheme;
   enableSystemDetection?: boolean;
-  enableColorPsychologyRecommendations?: boolean;
-}
+  enableColorPsychologyRecommendations?: boolean
+  }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   children,
@@ -44,7 +44,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     reduceMotion: false,
     highContrast: false,
     fontSize: "medium",
-    spacing: "comfortable";
+    spacing: "comfortable"
   };
   const [preferences, setPreferences] = useState<UserThemePreferences>(defaultPreferences);
   const [systemColorMode, setSystemColorMode] = useState<'light' | 'dark'>('light')
@@ -55,8 +55,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       case 'subtle': return 0.7
       case 'balanced': return 1.0
       case 'vibrant': return 1.3
-      default: return 1.0;
-    }
+      default: return 1.0
+  }
   }
 
   const applyIntensityToColors = (colors: ThemeColors, multiplier: number): ThemeColors => {
@@ -64,7 +64,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     // Only adjust certain color types, preserve others for accessibility;
     const adjustableKeys: (keyof ThemeColors)[] = ["primary", "primaryLight", "secondary", "secondaryLight", "calm", "hope", "support", "growth"];
 
-    const adjustedColors={ ...colors };
+    const adjustedColors={ ...colors }
     adjustableKeys.forEach(key => {
       const color = colors[key];
       if(color && typeof color === 'string') {
@@ -78,11 +78,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
         const adjustedG = Math.min(255, Math.floor(g * multiplier));
         const adjustedB = Math.min(255, Math.floor(b * multiplier));
 
-        adjustedColors[key] = `#${adjustedR.toString(16).padStart(2, '0')}${adjustedG.toString(16).padStart(2, '0')}${adjustedB.toString(16).padStart(2, '0')}`;
-      }
+        adjustedColors[key] = `#${adjustedR.toString(16).padStart(2, '0')}${adjustedG.toString(16).padStart(2, '0')}${adjustedB.toString(16).padStart(2, '0')}`
+  }
     });
 
-    return adjustedColors;
+    return adjustedColors
   };
 
   // Load preferences from localStorage on mount
@@ -91,8 +91,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       const stored = localStorage.getItem(storageKey);
       if(stored) {
         const parsedPreferences = JSON.parse(stored);
-        setPreferences({ ...defaultPreferences, ...parsedPreferences });
-      }
+        setPreferences({ ...defaultPreferences, ...parsedPreferences })
+  }
     } catch(error) {
 
     }
@@ -102,8 +102,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   // Save preferences to localStorage when they change
   useEffect(() => {
     try {
-      localStorage.setItem(storageKey, JSON.stringify(preferences));
-    } catch(error) {
+      localStorage.setItem(storageKey, JSON.stringify(preferences))
+  } catch(error) {
 
     }
   };
@@ -114,11 +114,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     if (!enableSystemDetection) return;
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e: MediaQueryListEvent): void => {
-      setSystemColorMode(e.matches ? 'dark' : 'light');
-    };
+      setSystemColorMode(e.matches ? 'dark' : 'light')
+  };
     setSystemColorMode(mediaQuery.matches ? 'dark' : 'light');
     mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange)
   };
   }, [enableSystemDetection]);
 
@@ -127,15 +127,15 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const handleChange = (e: MediaQueryListEvent): void => {
       if(e.matches) {
-        setPreferences(prev => ({ ...prev, reduceMotion: true }));
-      }
+        setPreferences(prev => ({ ...prev, reduceMotion: true }))
+  }
     };
 
     if(mediaQuery.matches) {
-      setPreferences(prev => ({ ...prev, reduceMotion: true }));
-    }
+      setPreferences(prev => ({ ...prev, reduceMotion: true }))
+  }
     mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange)
   };
   }, []);
 
@@ -144,15 +144,15 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     const mediaQuery = window.matchMedia('(prefers-contrast: high)');
     const handleChange = (e: MediaQueryListEvent): void => {
       if(e.matches) {
-        setPreferences(prev => ({ ...prev, highContrast: true }));
-      }
+        setPreferences(prev => ({ ...prev, highContrast: true }))
+  }
     };
 
     if(mediaQuery.matches) {
-      setPreferences(prev => ({ ...prev, highContrast: true }));
-    }
+      setPreferences(prev => ({ ...prev, highContrast: true }))
+  }
     mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange)
   };
   }, []);
 
@@ -161,19 +161,19 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     let themeId = preferences.therapeuticTheme;
           // Override with high contrast if needed
       if(preferences.highContrast) {
-        themeId = "high-contrast";
-      }
+        themeId = "high-contrast"
+  }
 
-    return THERAPEUTIC_THEMES[themeId];
+    return THERAPEUTIC_THEMES[themeId]
   };
   }, [preferences.therapeuticTheme, preferences.highContrast]);
 
      // Get current color mode;
    const currentColorMode = useMemo((): "light" | "dark" => {
     if(preferences.colorMode === "auto") {
-      return systemColorMode;
-    }
-    return preferences.colorMode === "dark" ? "dark" : "light";
+      return systemColorMode
+  }
+    return preferences.colorMode === "dark" ? "dark" : "light"
   };
   }, [preferences.colorMode, systemColorMode]);
 
@@ -186,9 +186,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     const adjustedColors = applyIntensityToColors(baseColors, intensityMultiplier);
 
     // Apply user color overrides;
-    const finalColors={ ...adjustedColors, ...preferences.colorOverrides };
+    const finalColors={ ...adjustedColors, ...preferences.colorOverrides }
 
-    return finalColors;
+    return finalColors
   };
   }, [currentTheme, currentColorMode, preferences.intensity, preferences.colorOverrides]);
 
@@ -202,20 +202,20 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       xl: "2rem",
       '2xl': '3rem',
       '3xl': '4rem'
-    };
+    }
     let multiplier = 1;
     if(spacing === "compact") {
-      multiplier = 0.75;;
+      multiplier = 0.75
   } else if (spacing === "spacious") {
-      multiplier = 1.25;
-    }
+      multiplier = 1.25
+  }
 
           return Object.fromEntries(
         Object.entries(baseScale).map(([key, value]) => [
           key,
           `${parseFloat(value) * multiplier}rem`
         ])
-    );
+    )
   };
   
   const getFontSizeScale = (fontSize: "small" | "medium" | "large" | "extra-large"): Record<string, string> => {
@@ -226,11 +226,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       'extra-large': { base: "20px", sm: "18px", md: "20px", lg: "24px", xl: "28px", "2xl": "32px" }
     };
 
-    return scales[fontSize];
+    return scales[fontSize]
   };
 
   const kebabCase = (str: string): string => {
-    return str.replace(/([A-Z])/g, '-$1').toLowerCase();
+    return str.replace(/([A-Z])/g, '-$1').toLowerCase()
   };
 
   // Apply CSS custom properties
@@ -239,28 +239,28 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
 
     // Apply color variables
     Object.entries(currentColors).forEach(([key, value]) => {
-      root.style.setProperty(`--color-${kebabCase(key)}`, value);
-    });
+      root.style.setProperty(`--color-${kebabCase(key)}`, value)
+  });
 
     // Apply spacing variables;
     const spacingScale = getSpacingScale(preferences.spacing);
     Object.entries(spacingScale).forEach(([key, value]) => {
-      root.style.setProperty(`--spacing-${key}`, value);
-    });
+      root.style.setProperty(`--spacing-${key}`, value)
+  });
 
     // Apply font size variables;
     const fontSizeScale = getFontSizeScale(preferences.fontSize);
     Object.entries(fontSizeScale).forEach(([key, value]) => {
-      root.style.setProperty(`--font-size-${key}`, value);
-    });
+      root.style.setProperty(`--font-size-${key}`, value)
+  });
 
           // Apply animation duration;
       let animationDuration = "200ms";
     if(preferences.reduceMotion) {
-      animationDuration = "0.01ms";
+      animationDuration = "0.01ms"
   } else if (preferences.customAnimationDuration) {
-      animationDuration = `${preferences.customAnimationDuration}ms`;
-    }
+      animationDuration = `${preferences.customAnimationDuration}ms`
+  }
     root.style.setProperty('--animation-duration', animationDuration);
 
     // Apply theme class to body
@@ -271,11 +271,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     document.body.classList.add(`theme-${currentTheme.id}`, `mode-${currentColorMode}`);
 
           if(preferences.highContrast) {
-        document.body.classList.add("high-contrast");
-    }
+        document.body.classList.add("high-contrast")
+  }
     if(preferences.reduceMotion) {
-      document.body.classList.add("reduce-motion");
-    }
+      document.body.classList.add("reduce-motion")
+  }
   };
   }, [currentColors, currentTheme.id, currentColorMode, preferences]);
 
@@ -293,15 +293,15 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
 
       const toLinear = (val: number) => val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4);
 
-      return 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
-    };
+      return 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b)
+  };
 
     const l1 = getLuminance(color1);
     const l2 = getLuminance(color2);
     const lighter = Math.max(l1, l2);
     const darker = Math.min(l1, l2);
 
-    return (lighter + 0.05) / (darker + 0.05);
+    return (lighter + 0.05) / (darker + 0.05)
   };
   }, []);
 
@@ -309,28 +309,28 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   const isAccessibilityCompliant = useCallback((foreground: string, background: string): boolean => {
     const ratio = getContrastRatio(foreground, background);
     const threshold = preferences.accessibilityLevel === 'AAA' ? 7 : 4.5;
-    return ratio >= threshold;
+    return ratio >= threshold
   };
   }, [getContrastRatio, preferences.accessibilityLevel]);
 
   // Theme management functions;
   const setTherapeuticTheme = useCallback((theme: TherapeuticTheme) => {
-    setPreferences(prev => ({ ...prev, therapeuticTheme: theme }));
+    setPreferences(prev => ({ ...prev, therapeuticTheme: theme }))
   };
   }, []);
 
   const setColorMode = useCallback((mode: ColorMode) => {
-    setPreferences(prev => ({ ...prev, colorMode: mode }));
+    setPreferences(prev => ({ ...prev, colorMode: mode }))
   };
   }, []);
 
   const setIntensity = useCallback((intensity: ColorIntensity) => {
-    setPreferences(prev => ({ ...prev, intensity }));
+    setPreferences(prev => ({ ...prev, intensity }))
   };
   }, []);
 
   const setAccessibilityLevel = useCallback((level: AccessibilityLevel) => {
-    setPreferences(prev => ({ ...prev, accessibilityLevel: level }));
+    setPreferences(prev => ({ ...prev, accessibilityLevel: level }))
   };
   }, []);
 
@@ -338,7 +338,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     setPreferences(prev => ({
       ...prev,
       colorOverrides: { ...prev.colorOverrides, [colorKey]: color }
-    }));
+    }))
   };
   }, []);
 
@@ -347,8 +347,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
               ...prev,
         colorOverrides: undefined,
         intensity: "balanced",
-        customAnimationDuration: undefined;
-    }));
+        customAnimationDuration: undefined
+  }))
   };
   }, []);
   
@@ -358,8 +358,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
               preferences,
         currentTheme: currentTheme.id,
         version: "1.0.0",
-        exportDate: new Date().toISOString();
-    }, null, 2);
+        exportDate: new Date().toISOString()
+  }, null, 2)
   };
   }, [preferences, currentTheme.id]);
 
@@ -368,12 +368,12 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       const parsed = JSON.parse(themeData);
       if(parsed.preferences && parsed.version) {
         setPreferences({ ...defaultPreferences, ...parsed.preferences });
-        return true;
-      }
-      return false;
-    } catch {
-      return false;
-    }
+        return true
+  }
+      return false
+  } catch {
+      return false
+  }
   };
   }, []);
 
@@ -393,7 +393,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   }, [currentColors]);
 
   const getCrisisSafeColors = useCallback((): ThemeColors => {
-    return THERAPEUTIC_THEMES["crisis-safe"].colors[currentColorMode];
+    return THERAPEUTIC_THEMES["crisis-safe"].colors[currentColorMode]
   };
   }, [currentColorMode]);
 
@@ -402,23 +402,23 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
           // Basic recommendations based on common mental health needs;
       const recommendations: TherapeuticTheme[] = ["calm-sanctuary", "nature-healing"];
     if (userProfile?.conditions?.includes("anxiety")) {
-      recommendations.unshift("calm-sanctuary");
-    }
+      recommendations.unshift("calm-sanctuary")
+  }
     if (userProfile?.conditions?.includes("depression")) {
-      recommendations.unshift("warm-embrace");
-    }
+      recommendations.unshift("warm-embrace")
+  }
     if (userProfile?.conditions?.includes("adhd")) {
-      recommendations.unshift("minimal-zen", "gentle-focus");
-    }
+      recommendations.unshift("minimal-zen", "gentle-focus")
+  }
     if(userProfile?.accessibility?.visualImpairment) {
-      recommendations.unshift("high-contrast");
-    }
+      recommendations.unshift("high-contrast")
+  }
     if(userProfile?.preferences?.highEnergy) {
-      recommendations.push("energizing-hope");
-    }
+      recommendations.push("energizing-hope")
+  }
 
     // Remove duplicates and limit to 5 recommendations
-    return [...new Set(recommendations)].slice(0, 5);
+    return [...new Set(recommendations)].slice(0, 5)
   };
   }, [enableColorPsychologyRecommendations]);
 
@@ -463,8 +463,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
-  );
-};
+  )
+  };
 
 export default ThemeProvider;
 

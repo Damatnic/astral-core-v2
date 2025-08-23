@@ -8,8 +8,8 @@ import './EnhancedTetherView.css';
 
 interface BreathingGuideProps {
   pattern: 'box' | '478' | 'coherent' | 'custom';
-  isActive: boolean;
-}
+  isActive: boolean
+  }
 
 const BreathingGuide: React.FC<BreathingGuideProps> = ({ pattern, isActive }) => {
   const [phase, setPhase] = useState<'inhale' | 'hold' | 'exhale' | 'pause'>('inhale');
@@ -30,7 +30,7 @@ const BreathingGuide: React.FC<BreathingGuideProps> = ({ pattern, isActive }) =>
     let timer: NodeJS.Timeout;
 
     const cyclePhases = () => {
-      const phases = ['inhale', 'hold', 'exhale', 'pause'].filter(;
+      const phases = ['inhale', 'hold', 'exhale', 'pause'].filter(;;
         p => currentPattern[p as keyof typeof currentPattern] > 0
       );
       
@@ -47,16 +47,16 @@ const BreathingGuide: React.FC<BreathingGuideProps> = ({ pattern, isActive }) =>
         const elapsed = Date.now() - start;
         setProgress(Math.min(elapsed / duration, 1));
         if (elapsed < duration) {
-          requestAnimationFrame(animate);
-        }
+          requestAnimationFrame(animate)
+  }
       };
       animate();
       
-      timer = setTimeout(cyclePhases, duration);
-    };
+      timer = setTimeout(cyclePhases, duration)
+  };
 
     cyclePhases();
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timer)
   };
   }, [pattern, isActive]);
 
@@ -73,13 +73,13 @@ const BreathingGuide: React.FC<BreathingGuideProps> = ({ pattern, isActive }) =>
         <div className="progress-fill" style={{ width: `${progress * 100}%` }} />
       </div>
     </div>
-  );
-};
+  )
+  };
 
 interface DrawingCanvasProps {
   sessionId: string;
-  isEnabled: boolean;
-}
+  isEnabled: boolean
+  }
 
 const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ sessionId, isEnabled }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -102,14 +102,14 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ sessionId, isEnabled }) =
           ctx.beginPath();
           ctx.moveTo(data.from.x, data.from.y);
           ctx.lineTo(data.to.x, data.to.y);
-          ctx.stroke();
-        }
+          ctx.stroke()
+  }
       }
     };
 
     return () => {
-      wsRef.current?.close();
-    };
+      wsRef.current?.close()
+  };
   };
   }, [sessionId, isEnabled]);
 
@@ -130,20 +130,20 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ sessionId, isEnabled }) =
       
       if (e.type === 'mousedown' || e.type === 'touchstart') {
         ctx.beginPath();
-        ctx.moveTo(x, y);;
+        ctx.moveTo(x, y)
   } else {
         ctx.lineTo(x, y);
-        ctx.stroke();
-      }
+        ctx.stroke()
+  }
 
       // Send to partner
       wsRef.current?.send(JSON.stringify({
         type: 'draw',
         from: { x, y },
         to: { x, y },
-        color: '#6B46C1';
-      }));
-    }
+        color: '#6B46C1'
+  }))
+  }
   };
   }, [isDrawing, isEnabled]);
 
@@ -163,20 +163,19 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ sessionId, isEnabled }) =
         onTouchEnd={() => setIsDrawing(false)}
         onTouchMove={handleDraw}
       />
-      <button;
-        className="clear-canvas-btn"
+      <button className="clear-canvas-btn"
         onClick={() => {
           const ctx = canvasRef.current?.getContext('2d');
           if (ctx && canvasRef.current) {
-            ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-          }
+            ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
+  }
         }}
       >
         Clear
       </button>
     </div>
-  );
-};
+  )
+  };
 
 const EnhancedTetherView: React.FC = () => {
   const { addToast } = useNotification();
@@ -212,8 +211,8 @@ const EnhancedTetherView: React.FC = () => {
       addToast(
         `${latest.fromName} wants to connect with you`,
         'info'
-      );
-    }
+      )
+  }
   };
   }, [pendingRequests, addToast]);
 
@@ -228,20 +227,20 @@ const EnhancedTetherView: React.FC = () => {
       setPressIntensity(intensity);
       
       if (activeTether && intensity > 0) {
-        sendHapticPulse(intensity);
-      }
+        sendHapticPulse(intensity)
+  }
     }, 100);
 
     const cleanup = () => {
       clearInterval(interval);
-      setPressIntensity(0);
-    };
+      setPressIntensity(0)
+  };
 
     if ('touches' in e) {
-      e.currentTarget.addEventListener('touchend', cleanup, { once: true });;
+      e.currentTarget.addEventListener('touchend', cleanup, { once: true })
   } else {
-      window.addEventListener('mouseup', cleanup, { once: true });
-    }
+      window.addEventListener('mouseup', cleanup, { once: true })
+  }
   };
 
   const handleQuickTether = async () => {
@@ -249,16 +248,16 @@ const EnhancedTetherView: React.FC = () => {
     const available = tetherCircle.find(m => m.availability === 'available');
     if (available) {
       await initiateTether(available.id, 'crisis');
-      addToast(`Connecting with ${available.name}...`, 'info');;
+      addToast(`Connecting with ${available.name}...`, 'info')
   } else {
       addToast('No one available in your circle right now', 'warning');
       // Trigger escalation if enabled
       if (autoEscalation) {
         setTimeout(() => {
           escalateToCrisis();
-          addToast('Notifying emergency contacts...', 'info');
-        }, 3000);
-      }
+          addToast('Notifying emergency contacts...', 'info')
+  }, 3000)
+  }
     }
   };
 
@@ -267,7 +266,7 @@ const EnhancedTetherView: React.FC = () => {
     setShowEndDialog(false);
     setSessionNotes('');
     setSessionRating(5);
-    addToast('Tether session ended', 'success');
+    addToast('Tether session ended', 'success')
   };
 
   if (activeTether) {
@@ -282,8 +281,7 @@ const EnhancedTetherView: React.FC = () => {
           {/* Connection Strength Indicator */}
           <div className="connection-indicator">
             <div className="strength-bar">
-              <div; 
-                className="strength-fill"
+              <div className="strength-fill"
                 style={{ width: `${activeTether.connectionStrength}%` }}
               />
             </div>
@@ -299,14 +297,13 @@ const EnhancedTetherView: React.FC = () => {
           />
 
           {/* Haptic Touch Area */}
-          <div; 
-            className="haptic-touch-area"
+          <div className="haptic-touch-area"
             onTouchStart={handlePressStart}
             onMouseDown={handlePressStart}
             style={{
               backgroundColor: tetherProfile?.color || '#6B46C1',
-              opacity: 0.1 + (pressIntensity * 0.09);
-            }}
+              opacity: 0.1 + (pressIntensity * 0.09)
+  }}
           >
             <div className="touch-indicator">
               <span>Press and hold to send comfort</span>
@@ -335,11 +332,11 @@ const EnhancedTetherView: React.FC = () => {
                       },
                       body: JSON.stringify({
                         sessionId: activeTether.id,
-                        message: msg;
-                      })
+                        message: msg
+  })
                     });
-                    addToast('Message sent', 'success');
-                  }}
+                    addToast('Message sent', 'success')
+  }}
                 >
                   {msg}
                 </button>
@@ -355,26 +352,23 @@ const EnhancedTetherView: React.FC = () => {
 
           {/* Session Controls */}
           <div className="session-controls">
-            <AppButton;
-              variant="secondary"
+            <AppButton variant="secondary"
               onClick={toggleDrawing}
             >
               {activeTether.drawingEnabled ? 'Hide' : 'Show'} Drawing
             </AppButton>
 
-            <AppButton;
-              variant="secondary"
+            <AppButton variant="secondary"
               onClick={() => {
                 const newMode = silentMode ? 'normal' : 'silent';
                 useTetherStore.setState({ silentMode: !silentMode });
-                addToast(`Switched to ${newMode} mode`, 'info');
-              }}
+                addToast(`Switched to ${newMode} mode`, 'info')
+  }}
             >
               {silentMode ? 'Enable' : 'Disable'} Sound
             </AppButton>
 
-            <AppButton;
-              variant="danger"
+            <AppButton variant="danger"
               onClick={() => setShowEndDialog(true)}
             >
               End Tether
@@ -395,8 +389,7 @@ const EnhancedTetherView: React.FC = () => {
               
               <div className="form-group">
                 <label>How helpful was this session?</label>
-                <input;
-                  type="range"
+                <input type="range"
                   min="1"
                   max="10"
                   value={sessionRating}
@@ -416,14 +409,12 @@ const EnhancedTetherView: React.FC = () => {
               </div>
 
               <div className="dialog-actions">
-                <AppButton;
-                  variant="secondary"
+                <AppButton variant="secondary"
                   onClick={() => setShowEndDialog(false)}
                 >
                   Continue Session
                 </AppButton>
-                <AppButton;
-                  variant="primary"
+                <AppButton variant="primary"
                   onClick={handleEndTether}
                 >
                   End Session
@@ -433,7 +424,7 @@ const EnhancedTetherView: React.FC = () => {
           </div>
         )}
       </div>
-    );
+    )
   }
 
   // No active tether - show circle and options
@@ -449,8 +440,7 @@ const EnhancedTetherView: React.FC = () => {
         <Card className="quick-tether-card">
           <h3>Need Support Now?</h3>
           <p>Connect instantly with someone from your tether circle</p>
-          <AppButton;
-            variant="primary"
+          <AppButton variant="primary"
             size="lg"
             onClick={handleQuickTether}
             className="quick-tether-btn"
@@ -465,12 +455,11 @@ const EnhancedTetherView: React.FC = () => {
           {tetherCircle.length === 0 ? (
             <div className="empty-circle">
               <p>Your tether circle is empty</p>
-              <AppButton;
-                variant="secondary"
+              <AppButton variant="secondary"
                 onClick={() => {
                   // Navigate to add members
-                  window.location.href = '/settings#tether-circle';
-                }}
+                  window.location.href = '/settings#tether-circle'
+  }}
               >
                 Add Trusted Contacts
               </AppButton>
@@ -499,16 +488,14 @@ const EnhancedTetherView: React.FC = () => {
                   </div>
                   {selectedMember === member.id && (
                     <div className="member-actions">
-                      <AppButton;
-                        variant="primary"
+                      <AppButton variant="primary"
                         size="sm"
                         onClick={() => initiateTether(member.id, 'support')}
                         disabled={member.availability !== 'available'}
                       >
                         Request Tether
                       </AppButton>
-                      <AppButton;
-                        variant="secondary"
+                      <AppButton variant="secondary"
                         size="sm"
                         onClick={() => triggerWellnessCheck(member.id)}
                       >
@@ -532,8 +519,8 @@ const EnhancedTetherView: React.FC = () => {
                 className={`availability-btn ${status}`}
                 onClick={() => {
                   updateAvailability(status);
-                  addToast(`Status updated to ${status}`, 'success');
-                }}
+                  addToast(`Status updated to ${status}`, 'success')
+  }}
               >
                 {status}
               </button>
@@ -555,15 +542,13 @@ const EnhancedTetherView: React.FC = () => {
                   </span>
                 </div>
                 <div className="request-actions">
-                  <AppButton;
-                    variant="primary"
+                  <AppButton variant="primary"
                     size="sm"
                     onClick={() => acceptTether(request.id)}
                   >
                     Accept
                   </AppButton>
-                  <AppButton;
-                    variant="secondary"
+                  <AppButton variant="secondary"
                     size="sm"
                     onClick={() => declineTether(request.id)}
                   >
@@ -576,7 +561,7 @@ const EnhancedTetherView: React.FC = () => {
         )}
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export default EnhancedTetherView;

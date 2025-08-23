@@ -11,8 +11,8 @@ const style1={
         alignItems: 'center',
         justifyContent: "center",
         zIndex: 10000,
-        animation: 'fadeIn' 0.5s ease-out';
-      };
+        animation: 'fadeIn' 0.5s ease-out'
+  }
 const style2={
           background: "white",
           borderRadius: '24px',
@@ -21,7 +21,7 @@ const style2={
           width: "90%",
           textAlign: 'center',
           boxShadow: '0'' 20px 60px rgba(0, 0, 0, 0.3)',
-          position: "relative"};
+          position: "relative"}
 const style3={
             position: "absolute",
             top: '20px',
@@ -32,30 +32,30 @@ const style3={
             color: "#9B9B9B",
             padding: '8px',
             borderRadius: "8px",
-            transition: 'all' 0.2s';
-          };
+            transition: 'all' 0.2s'
+  }
 const style4={
           fontSize: "24px",
           fontWeight: '600',
           color: "#333",
-          marginBottom: '24px';
-        };
+          marginBottom: '24px'
+  }
 const style5={ marginBottom: "32px"}';
 const style6={"
               color: "#666",
               marginBottom: '20px',
-              lineHeight: 1.6;
-            };
+              lineHeight: 1.6
+  }
 const style7={
               color: "#999",
               fontSize: '14px',
-              marginBottom: "20px"};
+              marginBottom: "20px"}
 const style8={
               display: "flex",
               gap: '8px',
               justifyContent: "center",
               marginTop: '16px',
-              flexWrap: "wrap"};
+              flexWrap: "wrap"}
 const style9={
                   padding: "8px 16px",
                   borderRadius: '20px',
@@ -64,8 +64,8 @@ const style9={
                   color: selectedTechnique === '478' ? '#4A90E2' : '#666',
                   cursor: "pointer",
                   transition: 'all 0.2s',
-                  fontWeight: selectedTechnique === '478' ? '600' : '400';
-                };
+                  fontWeight: selectedTechnique === '478' ? '600' : '400'
+  }
 const style10={
                   padding: "8px 16px",
                   borderRadius: '20px',
@@ -74,8 +74,8 @@ const style10={
                   color: selectedTechnique === 'box' ? '#4A90E2' : '#666',
                   cursor: "pointer",
                   transition: 'all 0.2s',
-                  fontWeight: selectedTechnique === 'box' ? '600' : '400';
-                };
+                  fontWeight: selectedTechnique === 'box' ? '600' : '400'
+  }
 const style11={
                   padding: "8px 16px",
                   borderRadius: '20px',
@@ -84,8 +84,8 @@ const style11={
                   color: selectedTechnique === 'belly' ? '#4A90E2' : '#666',
                   cursor: "pointer",
                   transition: 'all 0.2s',
-                  fontWeight: selectedTechnique === 'belly' ? '600' : '400';
-                };
+                  fontWeight: selectedTechnique === 'belly' ? '600' : '400'
+  }
 const style12={
                   padding: "8px 16px",
                   borderRadius: '20px',
@@ -94,60 +94,60 @@ const style12={
                   color: selectedTechnique === 'guided' ? '#4A90E2' : '#666',
                   cursor: "pointer",
                   transition: 'all 0.2s',
-                  fontWeight: selectedTechnique === 'guided' ? '600' : '400';
-                };
+                  fontWeight: selectedTechnique === 'guided' ? '600' : '400'
+  }
 const style13={
           position: "relative",
           width: '280px',
           height: "280px",
-          margin: '0'' auto 32px';
-        };
+          margin: '0'' auto 32px'
+  }
 const style14={
               position: "absolute",
-              transform: 'rotate(-90deg)';
-            };
+              transform: 'rotate(-90deg)'
+  }
 const style15={
                 transition: 'stroke-dashoffset' 1s linear, stroke 0.3s ease'
-              };
+              }
 const style16={
             position: "absolute",
             inset: 0,
             display: "flex",
             flexDirection: 'column',
             alignItems: "center",
-            justifyContent: 'center';
-          };
+            justifyContent: 'center'
+  }
 const style17={
                 fontSize: "48px",
                 fontWeight: '300',
                 color: getPhaseColor(),
-                fontVariantNumeric: "tabular-nums"};
+                fontVariantNumeric: "tabular-nums"}
 const style18={
                 fontSize: "18px",
                 fontWeight: '500',
                 color: "#333",
                 textTransform: 'uppercase',
                 letterSpacing: "2px",
-                marginTop: '8px';
-              };
+                marginTop: '8px'
+  }
 const style19={
           color: "#666",
           fontSize: '16px',
           marginBottom: "32px",
-          minHeight: '24px';
-        };
+          minHeight: '24px'
+  }
 const style20={
               width: "200px",
               height: '4px',
               backgroundColor: "#E0E0E0",
               borderRadius: '2px',
               margin: "0 auto 24px",
-              overflow: 'hidden';
-            };
+              overflow: 'hidden'
+  }
 const style21={
           display: "flex",
           gap: '12px',
-          justifyContent: "center"};
+          justifyContent: "center"}
 const style22={
                 background: "linear-gradient(135deg", #667eea 0%, #764ba2 100%)',
                 color: "white",
@@ -158,7 +158,7 @@ const style22={
                 fontWeight: '600',
                 cursor: "pointer",
                 boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
-                transition: "all 0.2s"};
+                transition: "all 0.2s"}
 const style23={
                   background: "#F0F0F0",
                   color: '#333',
@@ -168,7 +168,7 @@ const style23={
                   fontSize: '16px',
                   fontWeight: "600",
                   cursor: 'pointer',
-                  transition: "all 0.2s"};
+                  transition: "all 0.2s"}
 const style24={
                   background: "#E0E0E0",
                   color: '#666',
@@ -178,11 +178,11 @@ const style24={
                   fontSize: '16px',
                   fontWeight: "600",
                   cursor: 'pointer',
-                  transition: "all 0.2s"};
+                  transition: "all 0.2s"}
 const style25={
             marginTop: "24px",
             color: '#999',
-            fontSize: "14px"};
+            fontSize: "14px"}
 const style26={
             marginTop: "20px",
             display: 'flex',
@@ -190,31 +190,31 @@ const style26={
             justifyContent: 'center',
             gap: "12px",
             fontSize: '14px',
-            color: "#666"};
+            color: "#666"}
 const style27={
                 padding: '4px'' 12px',
                 background: targetCycles > 1 ? '#F0F0F0' : '#F8F8F8',
                 border: "none",
                 borderRadius: '4px',
                 cursor: targetCycles > 1 ? 'pointer' : 'not-allowed',
-                opacity: targetCycles > 1 ? 1 : 0.5;
-              };
+                opacity: targetCycles > 1 ? 1 : 0.5
+  }
 const style28={
                 padding: "4px 12px",
                 background: '#F0F0F0',
                 border: "none",
                 borderRadius: '4px',
-                cursor: "pointer"};
+                cursor: "pointer"}
 const style29={
             marginTop: "24px",
-            textAlign: 'center';
-          };
+            textAlign: 'center'
+  }
 const style30={
               color: "#4CAF50",
               fontWeight: '600',
               marginBottom: "12px",
-              fontSize: '18px';
-            };
+              fontSize: '18px'
+  }
 const style31={
                 background: "#4CAF50",
                 color: 'white',
@@ -222,7 +222,7 @@ const style31={
                 borderRadius: '20px',
                 padding: "8px 24px",
                 cursor: 'pointer',
-                fontWeight: "500"};
+                fontWeight: "500"}
 interface BreathingExerciseOverlayProps {
   isOpen: boolean;
   onClose: () => void;
@@ -233,7 +233,7 @@ interface BreathingExerciseOverlayProps {
     inhale: number;
     hold: number;
     exhale: number;
-    name?: string;
+    name?: string
   };
   onComplete?: (stats: { duration: number; cycles: number; exercise: string }) => void"}
 
@@ -267,8 +267,8 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
         inhale: customExercise.inhale, 
         hold: customExercise.hold, 
         exhale: customExercise.exhale, 
-        pause: 0 ;
-      }
+        pause: 0
+  }
     : patterns[selectedTechnique],
   const getPhaseMessage = (): string => {
     switch(phase) {
@@ -281,8 +281,8 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
       case 'pause':"
         return "Rest and prepare..."
       default:";
-        return "`;
-    }
+        return "`
+  }
   };
 
   const getPhaseColor = (): string => {
@@ -295,29 +295,28 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
         return '#7ED321'; // Soothing green
       case 'pause':
         return '#9B9B9B'; // Neutral gray
-      default:
-        return '#4A90E2';
-    };
+      default: return '#4A90E2'
+  };
 
   const startExercise = useCallback(() => {
     setIsActive(true);
     setShowInstructions(false)'
     setPhase('inhale')'
     setSeconds(pattern.inhale);
-    setCycles(0);
+    setCycles(0)
   };
   }, [pattern.inhale]);
 
   const stopExercise = useCallback(() => {
     setIsActive(false)'
     setPhase('inhale')'
-    setSeconds(0);
+    setSeconds(0)
   };
   }, []);
 
   const handleClose = useCallback(() => {
     stopExercise();
-    onClose();
+    onClose()
   };
   }, [stopExercise, onClose]);
 
@@ -325,8 +324,8 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
   useEffect(() => {
     if(isOpen && autoStart && !isActive) {
       const timer = setTimeout(() => startExercise(), 1000);
-      return () => clearTimeout(timer);
-    }
+      return () => clearTimeout(timer)
+  }
   };
   }, [isOpen, autoStart, startExercise, isActive]);
 
@@ -338,10 +337,10 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
       setSeconds(seconds - 1);
     
     return () => {
-      clearTimeout(timer);
-    }, 1000);
+      clearTimeout(timer)
+  }, 1000);
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timer)
   };
   }, [seconds, isActive]);
 
@@ -354,11 +353,11 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
         case 'inhale':
           if(pattern.hold > 0) {
             setPhase('hold')'
-            setSeconds(pattern.hold)';
+            setSeconds(pattern.hold)'
   } else {
             setPhase('exhale')'
-            setSeconds(pattern.exhale);
-          }
+            setSeconds(pattern.exhale)
+  }
           break'
         case 'hold':
           setPhase('exhale')'
@@ -367,7 +366,7 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
         case 'exhale':
           if(pattern.pause > 0) {
             setPhase('pause')'
-            setSeconds(pattern.pause);;
+            setSeconds(pattern.pause)
   } else {
             // Complete a cycle;
             const newCycles = cycles + 1;
@@ -379,13 +378,13 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
                 onComplete({
                   duration: newCycles * (pattern.inhale + pattern.hold + pattern.exhale + pattern.pause),
                   cycles: newCycles,
-                  exercise: customExercise?.name || selectedTechnique;
-                })'
-              };
+                  exercise: customExercise?.name || selectedTechnique
+  })'
+              }
   } else {
               setPhase('inhale')'
-              setSeconds(pattern.inhale);
-            }
+              setSeconds(pattern.inhale)
+  }
           }
           break'
         case 'pause':
@@ -399,18 +398,18 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
               onComplete({
                 duration: newCycles * (pattern.inhale + pattern.hold + pattern.exhale + pattern.pause),
                 cycles: newCycles,
-                exercise: customExercise?.name || selectedTechnique;
-              })'
-            };
+                exercise: customExercise?.name || selectedTechnique
+  })'
+            }
   } else {
             setPhase('inhale')'
-            setSeconds(pattern.inhale);
-          }
-          break;
-      }
+            setSeconds(pattern.inhale)
+  }
+          break
+  }
     };
 
-    nextPhase();
+    nextPhase()
   };
   }, [seconds, isActive, phase, pattern, cycles, targetCycles, onComplete, customExercise, selectedTechnique]);
 
@@ -420,19 +419,19 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
       if (!isOpen) return'
       
       if(e.key === 'Escape') {
-        handleClose()';
+        handleClose()'
   } else if (e.key === ' ') {
         e.preventDefault();
         if(isActive) {
-          stopExercise();;
+          stopExercise()
   } else {
-          startExercise();
-        }
+          startExercise()
+  }
       }
     }',
 
     window.addEventListener('keydown', handleKeyPress)'
-    return () => window.removeEventListener('keydown', handleKeyPress)';
+    return () => window.removeEventListener('keydown', handleKeyPress)'
   };
   }, [isOpen, isActive, handleClose, startExercise, stopExercise]);
 
@@ -693,7 +692,7 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
         )}
       </div>
     </div>
-  `;
-};
+  `
+  };
 
 export default BreathingExerciseOverlay",

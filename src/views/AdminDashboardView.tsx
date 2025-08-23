@@ -9,8 +9,8 @@ import { demoDataService } from '../services/demoDataService';
 import '../styles/admin-dashboard.css';
 
 export const AdminDashboardView: React.FC<{
-    onUpdateApplicationStatus: (helperId: string, status: Helper['applicationStatus'], notes?: string) => void;
-}> = ({ onUpdateApplicationStatus }) => {
+    onUpdateApplicationStatus: (helperId: string, status: Helper['applicationStatus'], notes?: string) => void
+  }> = ({ onUpdateApplicationStatus }) => {
     const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'moderation' | 'analytics' | 'system'>('overview');
     const [applications, setApplications] = useState<Helper[]>([]);
     const [adminData, setAdminData] = useState<any>(null);
@@ -28,33 +28,33 @@ export const AdminDashboardView: React.FC<{
             const demoData = demoDataService.getDemoData('admin');
             setAdminData(demoData);
             setApplications(demoData.helperApplications || []);
-            setStats(demoData.communityStats);
-        } catch(err) {
+            setStats(demoData.communityStats)
+  } catch(err) {
             console.error(err);
-            alert("Failed to load admin data.");
-        } finally {
-            setIsLoading(false);
-        }
+            alert("Failed to load admin data.")
+  } finally {
+            setIsLoading(false)
+  }
     };
   }, []);
 
     useEffect(() => {
-        fetchAdminData();
-    };
+        fetchAdminData()
+  };
   }, [fetchAdminData]);
 
     const handleViewApplicant = async (applicant: Helper) => {
         setSelectedApplicant(applicant);
         setIsModalOpen(true);
-        setApplicantDetails(applicant);
-    };
+        setApplicantDetails(applicant)
+  };
 
     const handleApprove = () => {
         if (selectedApplicant) {
             onUpdateApplicationStatus(selectedApplicant.id, 'approved');
             setIsModalOpen(false);
-            fetchAdminData();
-        }
+            fetchAdminData()
+  }
     };
 
     const handleReject = () => {
@@ -62,13 +62,13 @@ export const AdminDashboardView: React.FC<{
             onUpdateApplicationStatus(selectedApplicant.id, 'rejected', rejectionNotes);
             setIsModalOpen(false);
             setRejectionNotes('');
-            fetchAdminData();;
+            fetchAdminData()
   } else {
-            alert("Please provide rejection notes.");
-        }
+            alert("Please provide rejection notes.")
+  }
     };
 
-    const renderOverviewTab = () => (;
+    const renderOverviewTab = () => (;;
         <div className="admin-overview">
             {adminData?.profile && (
                 <Card className="admin-profile-card">
@@ -134,7 +134,7 @@ export const AdminDashboardView: React.FC<{
         </div>
     );
 
-    const renderApplicationsTab = () => (;
+    const renderApplicationsTab = () => (;;
         <Card>
             <h3>Helper Applications Review</h3>
             {isLoading ? <div className="loading-spinner" /> : adminData?.profile?.helperApplications?.length > 0 ? (
@@ -187,7 +187,7 @@ export const AdminDashboardView: React.FC<{
         </Card>
     );
 
-    const renderModerationTab = () => (;
+    const renderModerationTab = () => (;;
         <div className="moderation-section">
             {adminData?.profile?.escalatedCases && (
                 <Card>
@@ -248,7 +248,7 @@ export const AdminDashboardView: React.FC<{
         </div>
     );
     
-    const renderAnalyticsTab = () => (;
+    const renderAnalyticsTab = () => (;;
         adminData?.analytics ? (
             <div className="analytics-section">
                 <Card>
@@ -353,7 +353,7 @@ export const AdminDashboardView: React.FC<{
         )
     );
 
-    const renderSystemTab = () => (;
+    const renderSystemTab = () => (;;
         <div className="system-section">
             {adminData?.analytics?.platformHealth && (
                 <Card>
@@ -489,7 +489,7 @@ export const AdminDashboardView: React.FC<{
                 {activeTab === 'system' && renderSystemTab()}
             </div>
         </>
-    );
-};
+    )
+  };
 
 export default AdminDashboardView;

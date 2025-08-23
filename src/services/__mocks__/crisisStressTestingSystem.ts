@@ -12,7 +12,7 @@ export const CRISIS_TEST_SCENARIOS = [
     targetComponents: ['emergency-button'],
     expectedOutcome: 'All tests pass',
     failureConditions: [],
-    recoveryTime: 500;
+    recoveryTime: 500
   },
   {
     id: 'scenario-2', 
@@ -23,15 +23,15 @@ export const CRISIS_TEST_SCENARIOS = [
     targetComponents: ['crisis-chat'],
     expectedOutcome: 'All tests pass',
     failureConditions: [],
-    recoveryTime: 500;
+    recoveryTime: 500
   }
 ];
 
 export const crisisStressTestingSystem = {
   runCrisisStressTests: jest.fn().mockResolvedValue([]),
   runEmergencyFailoverTests: jest.fn().mockResolvedValue([]),
-  scenarios: CRISIS_TEST_SCENARIOS;
-};
+  scenarios: CRISIS_TEST_SCENARIOS
+  };
 
 export interface CrisisTestResult {
   id: string;
@@ -41,7 +41,7 @@ export interface CrisisTestResult {
   availability: number;
   timestamp: number;
   impactAssessment: {
-    safetyImpact: 'none' | 'low' | 'moderate' | 'severe' | 'life-threatening';
+    safetyImpact: 'none' | 'low' | 'moderate' | 'severe' | 'life-threatening'
   };
 }
 export interface EmergencyFailoverTest {
@@ -49,8 +49,8 @@ export interface EmergencyFailoverTest {
   systemComponent: string;
   success: boolean;
   failoverTime: number;
-  timestamp: number;
-}
+  timestamp: number
+  }
 
 export interface CrisisStressTestConfig {
   maxConcurrentUsers: number;
@@ -60,7 +60,7 @@ export interface CrisisStressTestConfig {
   failureThresholds: {
     responseTime: number;
     errorRate: number;
-    availability: number;
+    availability: number
   };
-  emergencyBreakConditions: string[];
-}
+  emergencyBreakConditions: string[]
+  }

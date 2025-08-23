@@ -21,8 +21,8 @@ interface EmotionalState {
   valence: number;
   arousal: number;
   dominance: number;
-  timestamp: number;
-}
+  timestamp: number
+  }
 
 interface EnhancedCrisisDetectionState {
   isAnalyzing: boolean;
@@ -34,7 +34,7 @@ interface EnhancedCrisisDetectionState {
   modelMetrics: {
     accuracy: number;
     confidence: number;
-    totalAnalyses: number;
+    totalAnalyses: number
   }
 
 interface EnhancedCrisisDetectionOptions {
@@ -48,8 +48,8 @@ interface EnhancedCrisisDetectionOptions {
   userId?: string;
   onCrisisDetected?: (result: MLCrisisAnalysisResult) => void;
   onRiskEscalation?: (riskLevel: number) => void;
-  onInterventionRecommended?: (recommendations: string[]) => void;
-}
+  onInterventionRecommended?: (recommendations: string[]) => void
+  }
 
 interface CrisisAlert {
   show: boolean;
@@ -58,8 +58,8 @@ interface CrisisAlert {
   riskLevel: number;
   interventions: string[];
   culturallyAdapted: boolean;
-  emergencyMode: boolean;
-}
+  emergencyMode: boolean
+  }
 
 export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptions = {}) {
   const {
@@ -86,8 +86,8 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
     modelMetrics: {
       accuracy: 0,
       confidence: 0,
-      totalAnalyses: 0;
-    }
+      totalAnalyses: 0
+  }
   });
 
   const [crisisAlert, setCrisisAlert] = useState<CrisisAlert>({
@@ -97,7 +97,7 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
     riskLevel: 0,
     interventions: [],
     culturallyAdapted: false,
-    emergencyMode: false;
+    emergencyMode: false
   });
 
   const debounceRef = useRef<NodeJS.Timeout>();
@@ -107,24 +107,24 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
   /**
    * Analyze text using enhanced AI crisis detection
    */;
-  const analyzeText = useCallback(async (;
+  const analyzeText = useCallback(async (;;
     text: string, 
     options: { immediate?: boolean; trackHistory?: boolean } = {}
   ): Promise<MLCrisisAnalysisResult | null> => {
     if (!text || text.trim().length < minAnalysisLength) {
-      return null;
-    }
+      return null
+  }
 
     if (!enableMLFeatures) {
       console.warn('[Enhanced Crisis Detection] ML features disabled');
-      return null;
-    }
+      return null
+  }
 
     setState(prev => ({ ...prev, isAnalyzing: true }));
 
     try {
       // Perform enhanced AI crisis analysis;
-      const result = await enhancedAICrisisDetectionService.analyzeCrisisWithML(;
+      const result = await enhancedAICrisisDetectionService.analyzeCrisisWithML(;;
         text,
         { userId, languageCode, culturalContext }
       );
@@ -133,15 +133,15 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
 
       // Update state with results
       setState(prev => {
-        const newEmotionalHistory = options.trackHistory !== false ;
+        const newEmotionalHistory = options.trackHistory !== false ;;
           ? [...prev.emotionalHistory.slice(-(maxHistorySize - 1)), result.emotionalState]
           : prev.emotionalHistory;
 
-        const newRiskTrend = options.trackHistory !== false && result.realTimeRisk;
+        const newRiskTrend = options.trackHistory !== false && result.realTimeRisk;;
           ? [...prev.riskTrend.slice(-(maxHistorySize - 1)), result.realTimeRisk.immediateRisk]
           : prev.riskTrend;
 
-        const newAnalysisHistory = options.trackHistory !== false;
+        const newAnalysisHistory = options.trackHistory !== false;;
           ? [...prev.analysisHistory.slice(-(maxHistorySize - 1)), result]
           : prev.analysisHistory;
 
@@ -156,39 +156,39 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
           modelMetrics: {
             accuracy: 0.85, // Default values since getModelMetrics doesn't exist
             confidence: result.mlConfidence || 0.5,
-            totalAnalyses: analysisCountRef.current;
-          }
+            totalAnalyses: analysisCountRef.current
+  }
         };
   };
 
       // Handle crisis detection callbacks
       if (result.hasCrisisIndicators && onCrisisDetected) {
-        onCrisisDetected(result);
-      }
+        onCrisisDetected(result)
+  }
 
       // Check for risk escalation
       if (result.realTimeRisk) {
         const currentRisk = result.realTimeRisk.immediateRisk;
         if (currentRisk > lastRiskLevelRef.current + 20 && onRiskEscalation) {
-          onRiskEscalation(currentRisk);
-        }
+          onRiskEscalation(currentRisk)
+  }
         lastRiskLevelRef.current = currentRisk;
 
         // Handle intervention recommendations
         if (result.realTimeRisk.recommendedInterventions && result.realTimeRisk.recommendedInterventions.length > 0 && onInterventionRecommended) {
-          onInterventionRecommended(result.realTimeRisk.recommendedInterventions.map(i => i.description));
-        }
+          onInterventionRecommended(result.realTimeRisk.recommendedInterventions.map(i => i.description))
+  }
       }
 
       // Update crisis alert
       updateCrisisAlert(result);
 
-      return result;
-    } catch (error) {
+      return result
+  } catch (error) {
       console.error('[Enhanced Crisis Detection] Analysis failed:', error);
       setState(prev => ({ ...prev, isAnalyzing: false }));
-      return null;
-    }
+      return null
+  }
   };
   }, [
     minAnalysisLength, enableMLFeatures, userId, languageCode, culturalContext,
@@ -200,12 +200,12 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
    */;
   const analyzeTextDebounced = useCallback((text: string) => {
     if (debounceRef.current) {
-      clearTimeout(debounceRef.current);
-    }
+      clearTimeout(debounceRef.current)
+  }
 
     debounceRef.current = setTimeout(() => {
-      analyzeText(text, { trackHistory: true });
-    }, debounceMs);
+      analyzeText(text, { trackHistory: true })
+  }, debounceMs)
   };
   }, [analyzeText, debounceMs]);
 
@@ -218,8 +218,8 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
     const handleInput = (event: Event) => {
       const target = event.target as HTMLInputElement | HTMLTextAreaElement;
       if (target?.value) {
-        analyzeTextDebounced(target.value);
-      }
+        analyzeTextDebounced(target.value)
+  }
     };
 
     inputElement.addEventListener('input', handleInput);
@@ -227,8 +227,8 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
 
     return () => {
       inputElement.removeEventListener('input', handleInput);
-      inputElement.removeEventListener('paste', handleInput);
-    };
+      inputElement.removeEventListener('paste', handleInput)
+  };
   };
   }, [autoAnalyze, analyzeTextDebounced]);
 
@@ -244,26 +244,26 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
         riskLevel: 0,
         interventions: [],
         culturallyAdapted: false,
-        emergencyMode: false;
-      });
-      return;
-    }
+        emergencyMode: false
+  });
+      return
+  }
 
     const riskLevel = result.realTimeRisk.immediateRisk;
     let severity: CrisisAlert['severity'] = 'none';
 
     // Note: interventionUrgency appears to be a number, not a string
     if (riskLevel >= 90) {
-      severity = 'immediate';;
+      severity = 'immediate'
   } else if (riskLevel >= 80) {
-      severity = 'critical';;
+      severity = 'critical'
   } else if (riskLevel >= 60) {
-      severity = 'high';;
+      severity = 'high'
   } else if (riskLevel >= 40) {
-      severity = 'medium';;
+      severity = 'medium'
   } else if (riskLevel >= 20) {
-      severity = 'low';
-    }
+      severity = 'low'
+  }
 
     setCrisisAlert({
       show: severity !== 'none',
@@ -272,8 +272,8 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
       riskLevel,
       interventions: result.realTimeRisk.recommendedInterventions?.map(i => i.description) || [],
       culturallyAdapted: (result.biasAdjustments?.length || 0) > 0,
-      emergencyMode: severity === 'immediate' || severity === 'critical';
-    });
+      emergencyMode: severity === 'immediate' || severity === 'critical'
+  })
   };
   }, []);
 
@@ -281,7 +281,7 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
    * Dismiss crisis alert
    */;
   const dismissAlert = useCallback(() => {
-    setCrisisAlert(prev => ({ ...prev, show: false }));
+    setCrisisAlert(prev => ({ ...prev, show: false }))
   };
   }, []);
 
@@ -303,10 +303,10 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
     let trend: 'improving' | 'deteriorating' | 'stable' = 'stable';
     
     if (valenceSlope > 0.1 && arousalSlope < 0.1) {
-      trend = 'improving';;
+      trend = 'improving'
   } else if (valenceSlope < -0.1 || arousalSlope > 0.2) {
-      trend = 'deteriorating';
-    }
+      trend = 'deteriorating'
+  }
 
     const confidence = Math.min(1, recentEmotions.length / 10);
 
@@ -330,10 +330,10 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
 
     let trend: 'increasing' | 'decreasing' | 'stable' = 'stable';
     if (riskSlope > 2) {
-      trend = 'increasing';;
+      trend = 'increasing'
   } else if (riskSlope < -2) {
-      trend = 'decreasing';
-    }
+      trend = 'decreasing'
+  }
 
     const confidence = Math.min(1, recentRisks.length / 5);
 
@@ -342,8 +342,8 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
       confidence, 
       trend, 
       currentRisk, 
-      riskChange: currentRisk - previousRisk ;
-    };
+      riskChange: currentRisk - previousRisk
+  };
   }, [state.riskTrend]);
 
   /**
@@ -351,15 +351,15 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
    */;
   const getPersonalizedInterventions = useCallback((): InterventionRecommendation[] => {
     if (!state.lastAnalysis?.realTimeRisk) {
-      return [];
-    }
+      return []
+  }
 
     const { realTimeRisk, culturalContext } = state.lastAnalysis;
     
     // Handle case where recommendedInterventions might not exist
     if (!realTimeRisk.recommendedInterventions || realTimeRisk.recommendedInterventions.length === 0) {
-      return [];
-    }
+      return []
+  }
     
     return realTimeRisk.recommendedInterventions
       .map((intervention): InterventionRecommendation => {
@@ -368,15 +368,15 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
           if (priority >= 6) return 'urgent';
           if (priority >= 4) return 'supportive';
           if (priority >= 2) return 'monitoring';
-          return 'resources';
-        };
+          return 'resources'
+  };
 
         const getTimeframe = (priority: number): string => {
           if (priority >= 8) return 'Immediate';
           if (priority >= 6) return 'Within 2 hours';
           if (priority >= 4) return 'Within 24 hours';
-          return 'Within week';
-        };
+          return 'Within week'
+  };
 
         return {
           type: getInterventionType(intervention.priority),
@@ -407,11 +407,11 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
       emotionalHistory: [],
       riskTrend: [],
       analysisHistory: [],
-      lastAnalysis: null;
-    };
+      lastAnalysis: null
+  };
   });
     analysisCountRef.current = 0;
-    lastRiskLevelRef.current = 0;
+    lastRiskLevelRef.current = 0
   };
   }, []);
 
@@ -419,8 +419,8 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
   useEffect(() => {
     return () => {
       if (debounceRef.current) {
-        clearTimeout(debounceRef.current);
-      }
+        clearTimeout(debounceRef.current)
+  }
     };
   }, []);
 
@@ -454,7 +454,7 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
     interventionUrgency: state.lastAnalysis?.realTimeRisk?.interventionUrgency || 0,
     isEmergency: crisisAlert.emergencyMode,
     mlConfidence: state.lastAnalysis?.mlConfidence || 0,
-    analysisCount: analysisCountRef.current;
+    analysisCount: analysisCountRef.current
   }
 
 export default useEnhancedCrisisDetection;

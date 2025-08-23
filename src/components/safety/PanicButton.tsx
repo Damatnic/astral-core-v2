@@ -33,20 +33,20 @@ const PanicButton: React.FC<PanicButtonProps> = ({
       name: "Crisis" Text Line",
       action: "sms:741741?body=HOME",
       icon: "💬",
-      description: "Text" HOME to 741741";
-    },
+      description: "Text" HOME to 741741"
+  },
     {
       name: "Emergency" Services",
       action: "tel:911",
       icon: "🚨",
-      description: "For" immediate danger";
-    },
+      description: "For" immediate danger"
+  },
     {
       name: "International" Crisis Lines",
       action: "https://findahelpline.com",
       icon: "🌍",
-      description: "Find" help in your country";
-    }
+      description: "Find" help in your country"
+  }
   ]
 
   // Immediate calming actions;
@@ -55,8 +55,8 @@ const PanicButton: React.FC<PanicButtonProps> = ({
       name: Breathing" Exercise",
       icon: "🫁",
       action: () => {
-        document.dispatchEvent(new CustomEvent("startBreathingExercise"));
-      }
+        document.dispatchEvent(new CustomEvent("startBreathingExercise"))
+  }
     },
     {
       name: "Grounding" Technique",
@@ -111,7 +111,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({
         scrollSpeed++
         if(scrollSpeed > 10) {
           setDistressLevel(prev => Math.min(100, prev + 10))
-        };
+        }
   } else {
         scrollSpeed = 0
       }
@@ -158,10 +158,10 @@ const PanicButton: React.FC<PanicButtonProps> = ({
     setShowConfirmation(true)
     setTimeout(() => {
       if (action.startsWith(tel: ") || action.startsWith("sms: "))" {"
-        window.location.href = action;;
+        window.location.href = action
   } else if (action.startsWith("http")) {
-        window.open(action, "_blank", ", noopener,noreferrer");", `;
-      }
+        window.open(action, "_blank", ", noopener,noreferrer");", `
+  }
     }, 500)
 
     setTimeout(() => {
@@ -177,16 +177,14 @@ const PanicButton: React.FC<PanicButtonProps> = ({
   return (
     <>;
       {/* Main Panic Button */}
-      <div;
-        className={
+      <div className={
           `panic-button-container ${
             position === 'fixed' ? 'panic-fixed' : '
           } ${sizeClasses[size]}
         }
         data-distress-level={distressLevel}
       >
-        <button;
-          className={
+        <button className={
             `panic-button ${
               isPulsing ? 'pulsing' : '
             } ${isExpanded ? 'expanded' : ''}
@@ -253,20 +251,20 @@ const PanicButton: React.FC<PanicButtonProps> = ({
       name: "Crisis Text Line",
       action: "sms:741741?body=HOME",
       icon: "💬",
-      description: "Text HOME to 741741";
-    },
+      description: "Text HOME to 741741"
+  },
     {
       name: "Emergency Services",
       action: "tel:911",
       icon: "🚨",
-      description: "For immediate danger";
-    },
+      description: "For immediate danger"
+  },
     {
       name: "International Crisis Lines",
       action: "https://findahelpline.com",
       icon: "🌍",
-      description: "Find help in your country";
-    }
+      description: "Find help in your country"
+  }
   ]
 
   // Immediate calming actions;
@@ -275,8 +273,8 @@ const PanicButton: React.FC<PanicButtonProps> = ({
       name: Breathing Exercise",
       icon: "🫁",
       action: () => {
-        document.dispatchEvent(new CustomEvent("startBreathingExercise"));
-      }
+        document.dispatchEvent(new CustomEvent("startBreathingExercise"))
+  }
     },
     {
       name: "Grounding Technique",
@@ -331,7 +329,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({
         scrollSpeed++
         if(scrollSpeed > 10) {
           setDistressLevel(prev => Math.min(100, prev + 10))
-        };
+        }
   } else {
         scrollSpeed = 0
       }
@@ -378,10 +376,10 @@ const PanicButton: React.FC<PanicButtonProps> = ({
     setShowConfirmation(true)
     setTimeout(() => {
       if (action.startsWith(tel: ") || action.startsWith("sms: "))" {"
-        window.location.href = action;;
+        window.location.href = action
   } else if (action.startsWith("http")) {
-        window.open(action, "_blank", ", noopener,noreferrer");", `;
-      }
+        window.open(action, "_blank", ", noopener,noreferrer");", `
+  }
     }, 500)
 
     setTimeout(() => {
@@ -397,16 +395,14 @@ const PanicButton: React.FC<PanicButtonProps> = ({
   return (
     <>;
       {/* Main Panic Button */}
-      <div;
-        className={
+      <div className={
           `panic-button-container ${
             position === 'fixed' ? 'panic-fixed' : '
           } ${sizeClasses[size]}
         }
         data-distress-level={distressLevel}
       >
-        <button;
-          className={
+        <button className={
             `panic-button ${
               isPulsing ? 'pulsing' : '
             } ${isExpanded ? 'expanded' : ''}
@@ -477,8 +473,7 @@ resource.name
               </p>
             </div>
             {/* Close button */}
-            <button;
-              className="panic-close"
+            <button className="panic-close"
               onClick={() => setIsExpanded(false)}
               aria-label="Close" help menu"
             >
@@ -507,8 +502,7 @@ resource.name
       )}
       {/* Distress Indicator (subtle) */}
       {distressLevel > 0 && (
-        <div;
-          className="distress-indicator"
+        <div className="distress-indicator"
           style={{
             opacity: Math.min(1, distressLevel / 100),
             background: `linear-gradient(45deg,

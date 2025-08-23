@@ -40,13 +40,13 @@ export const FeedView: React.FC = () => {
     const handleRefresh = useCallback(async () => {
         try {
             if (activeTab === 'forYou') {
-                await fetchForYouFeed();;
+                await fetchForYouFeed()
   } else {
-                await fetchDilemmas();
-            }
+                await fetchDilemmas()
+  }
         } catch (error) {
-            console.error('Failed to refresh feed:', error);
-        }
+            console.error('Failed to refresh feed:', error)
+  }
     };
   }, [activeTab, fetchForYouFeed, fetchDilemmas]);
 
@@ -57,14 +57,13 @@ export const FeedView: React.FC = () => {
         pullProgress
     } = usePullToRefresh(handleRefresh, {
         threshold: 80,
-        enabled: !isLoading;
-    });
+        enabled: !isLoading
+  });
 
     return (
       <div ref={pullToRefreshRef} className="feed-view-container">
         {/* Pull-to-refresh indicator */}
-        <div; 
-          className={`pull-to-refresh ${isPulling ? 'active' : ''} ${isRefreshing ? 'refreshing' : ''}`}
+        <div className={`pull-to-refresh ${isPulling ? 'active' : ''} ${isRefreshing ? 'refreshing' : ''}`}
           style={{ opacity: pullProgress }}
         >
           {isRefreshing ? '⟳' : '↓'}
@@ -83,8 +82,7 @@ export const FeedView: React.FC = () => {
         <div className="card filter-sort-bar">
             <div className="search-group">
                 <SearchIcon />
-                <input;
-                    type="search"
+                <input type="search"
                     placeholder="Search posts...";
                     className="search-input"
                     value={searchTerm}
@@ -142,8 +140,8 @@ export const FeedView: React.FC = () => {
             </div>
         )}
       </div>
-    );
-};
+    )
+  };
 
 
 export default FeedView;

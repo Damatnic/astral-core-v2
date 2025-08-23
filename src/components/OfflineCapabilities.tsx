@@ -13,8 +13,8 @@ export interface OfflineCapabilitiesProps {
   variant?: 'compact' | 'detailed' | 'list';
   showActions?: boolean;
   onFeatureClick?: (feature: string) => void;
-  className?: string;
-}
+  className?: string
+  }
 
 export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
   variant = 'detailed',
@@ -33,9 +33,8 @@ export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
         return <ChatIcon />;
       case 'ai assistant':
         return <SparkleIcon />;
-      default:
-        return <CheckIcon />;
-    }
+      default: return <CheckIcon />
+  }
   };
 
   const getFeatureStatus = (feature: string) => {
@@ -47,35 +46,35 @@ export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
         status: 'online',
         icon: <CheckIcon />,
         text: 'Available',
-        color: 'green';
-      }
+        color: 'green'
+  }
 
     if (available) {
       return {
         status: 'offline-available',
         icon: <CheckIcon />,
         text: 'Available offline',
-        color: 'blue';
-      }
+        color: 'blue'
+  }
 
     return {
       status: 'offline-unavailable',
       icon: <AlertIcon />,
       text: capability?.fallbackAction || 'Not available offline',
-      color: 'amber';
-    };
+      color: 'amber'
+  };
 
   const handleFeatureToggle = (feature: string) => {
     if (expandedFeature === feature) {
-      setExpandedFeature(null);;
+      setExpandedFeature(null)
   } else {
-      setExpandedFeature(feature);
-    }
+      setExpandedFeature(feature)
+  }
   };
 
   const handleFeatureAction = (feature: string) => {
     if (onFeatureClick) {
-      onFeatureClick(feature);;
+      onFeatureClick(feature)
   } else {
       // Default actions
       switch (feature.toLowerCase()) {
@@ -88,9 +87,8 @@ export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
         case 'coping strategies':
           window.location.href = '/coping';
           break;
-        default:
-          break;
-      }
+        default: break
+  }
     }
   };
 
@@ -115,7 +113,7 @@ export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
           )}
         </div>
       </div>
-    );
+    )
   }
 
   // List variant - simple list with status
@@ -144,8 +142,7 @@ export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
                     </div>
                   </div>
                   {showActions && available && (
-                    <button;
-                      className="capability-action"
+                    <button className="capability-action"
                       onClick={() => handleFeatureAction(capability.feature)}
                       aria-label={`Access ${capability.feature}`}
                     >
@@ -154,11 +151,11 @@ export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
                   )}
                 </div>
               </li>
-            );
-          })}
+            )
+  })}
         </ul>
       </div>
-    );
+    )
   }
 
   // Detailed variant - full feature cards
@@ -218,16 +215,14 @@ export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
 
               <div className="capability-actions">
                 {available && showActions && (
-                  <button;
-                    className="capability-primary-action"
+                  <button className="capability-primary-action"
                     onClick={() => handleFeatureAction(capability.feature)}
                   >
                     {connectionStatus.isOnline ? 'Use Feature' : 'Access Offline'}
                   </button>
                 )}
                 
-                <button;
-                  className="capability-details-toggle"
+                <button className="capability-details-toggle"
                   onClick={() => handleFeatureToggle(capability.feature)}
                   aria-expanded={isExpanded}
                 >
@@ -254,8 +249,8 @@ export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
                 </div>
               )}
             </div>
-          );
-        })}
+          )
+  })}
       </div>
 
       {!connectionStatus.isOnline && (
@@ -268,13 +263,13 @@ export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 // CSS styles for the component;
 export const offlineCapabilitiesStyles = `
   .offline-capabilities {
-    font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+    font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif)
   }
 
   /* Compact Variant */
@@ -282,31 +277,31 @@ export const offlineCapabilitiesStyles = `
     padding: 12px 16px;
     background-color: var(--bg-secondary, #f8fafc);
     border: 1px solid var(--border-light, #e2e8f0);
-    border-radius: 8px;
+    border-radius: 8px
   }
 
   .capabilities-summary {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: 16px
   }
 
   .summary-item {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 8px
   }
 
   .summary-label {
     font-size: 14px;
-    color: var(--text-secondary, #64748b);
+    color: var(--text-secondary, #64748b)
   }
 
   .summary-count {
     font-size: 14px;
     font-weight: 600;
-    color: var(--text-primary, #1e293b);
+    color: var(--text-primary, #1e293b)
   }
 
   .summary-offline {
@@ -314,40 +309,40 @@ export const offlineCapabilitiesStyles = `
     align-items: center;
     gap: 4px;
     font-size: 12px;
-    color: var(--amber-600, #d97706);
+    color: var(--amber-600, #d97706)
   }
 
   .summary-offline svg {
     width: 14px;
-    height: 14px;
+    height: 14px
   }
 
   /* List Variant */
   .offline-capabilities--list {
     border: 1px solid var(--border-light, #e2e8f0);
     border-radius: 8px;
-    overflow: hidden;
+    overflow: hidden
   }
 
   .capabilities-list {
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 0
   }
 
   .capability-item {
-    border-bottom: 1px solid var(--border-light, #e2e8f0);
+    border-bottom: 1px solid var(--border-light, #e2e8f0)
   }
 
   .capability-item:last-child {
-    border-bottom: none;
+    border-bottom: none
   }
 
   .capability-content {
     display: flex;
     align-items: center;
     padding: 12px 16px;
-    gap: 12px;
+    gap: 12px
   }
 
   .capability-icon {
@@ -357,12 +352,12 @@ export const offlineCapabilitiesStyles = `
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    color: var(--text-secondary, #64748b);
+    color: var(--text-secondary, #64748b)
   }
 
   .capability-text {
     flex: 1;
-    min-width: 0;
+    min-width: 0
   }
 
   .capability-name {
@@ -370,31 +365,31 @@ export const offlineCapabilitiesStyles = `
     font-weight: 500;
     color: var(--text-primary, #1e293b);
     display: block;
-    margin-bottom: 2px;
+    margin-bottom: 2px
   }
 
   .capability-status {
     display: flex;
     align-items: center;
     gap: 4px;
-    font-size: 12px;
+    font-size: 12px
   }
 
   .capability-status svg {
     width: 12px;
-    height: 12px;
+    height: 12px
   }
 
   .capability-item--online-available .capability-status {
-    color: var(--green-600, #059669);
+    color: var(--green-600, #059669)
   }
 
   .capability-item--offline-available .capability-status {
-    color: var(--blue-600, #2563eb);
+    color: var(--blue-600, #2563eb)
   }
 
   .capability-item--offline-unavailable .capability-status {
-    color: var(--amber-600, #d97706);
+    color: var(--amber-600, #d97706)
   }
 
   .capability-action {
@@ -411,35 +406,35 @@ export const offlineCapabilitiesStyles = `
     min-width: 44px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center
   }
 
   .capability-action:hover {
-    background-color: var(--blue-600, #2563eb);
+    background-color: var(--blue-600, #2563eb)
   }
 
   .capability-action:focus {
     outline: 2px solid var(--blue-500, #3b82f6);
-    outline-offset: 2px;
+    outline-offset: 2px
   }
 
   /* Detailed Variant */
   .offline-capabilities--detailed {
-    padding: 20px;
+    padding: 20px
   }
 
   .capabilities-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 20px
   }
 
   .capabilities-header h3 {
     margin: 0;
     font-size: 18px;
     font-weight: 600;
-    color: var(--text-primary, #1e293b);
+    color: var(--text-primary, #1e293b)
   }
 
   .connection-status {
@@ -447,33 +442,33 @@ export const offlineCapabilitiesStyles = `
     align-items: center;
     gap: 6px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 500
   }
 
   .status-online {
     color: var(--green-600, #059669);
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 4px
   }
 
   .status-offline {
     color: var(--amber-600, #d97706);
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 4px
   }
 
   .connection-status svg {
     width: 16px;
-    height: 16px;
+    height: 16px
   }
 
   .capabilities-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 16px;
-    margin-bottom: 20px;
+    margin-bottom: 20px
   }
 
   .capability-card {
@@ -481,17 +476,17 @@ export const offlineCapabilitiesStyles = `
     border: 1px solid var(--border-light, #e2e8f0);
     border-radius: 12px;
     padding: 16px;
-    transition: all 0.2s ease;
+    transition: all 0.2s ease
   }
 
   .capability-card:hover {
     border-color: var(--border-hover, #cbd5e1);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1)
   }
 
   .capability-card--offline-unavailable {
     background-color: var(--gray-50, #f9fafb);
-    opacity: 0.8;
+    opacity: 0.8
   }
 
   .capability-header {
@@ -499,38 +494,38 @@ export const offlineCapabilitiesStyles = `
     align-items: flex-start;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 12px;
+    margin-bottom: 12px
   }
 
   .capability-main {
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    flex: 1;
+    flex: 1
   }
 
   .capability-card .capability-icon {
     width: 24px;
     height: 24px;
-    color: var(--blue-500, #3b82f6);
+    color: var(--blue-500, #3b82f6)
   }
 
   .capability-info {
-    flex: 1;
+    flex: 1
   }
 
   .capability-card .capability-name {
     font-size: 16px;
     font-weight: 600;
     color: var(--text-primary, #1e293b);
-    margin: 0 0 4px 0;
+    margin: 0 0 4px 0
   }
 
   .capability-description {
     font-size: 14px;
     color: var(--text-secondary, #64748b);
     line-height: 1.4;
-    margin: 0;
+    margin: 0
   }
 
   .status-indicator {
@@ -540,33 +535,33 @@ export const offlineCapabilitiesStyles = `
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    margin-bottom: 4px;
+    margin-bottom: 4px
   }
 
   .status-indicator--green {
     background-color: var(--green-100, #dcfce7);
-    color: var(--green-600, #059669);
+    color: var(--green-600, #059669)
   }
 
   .status-indicator--blue {
     background-color: var(--blue-100, #dbeafe);
-    color: var(--blue-600, #2563eb);
+    color: var(--blue-600, #2563eb)
   }
 
   .status-indicator--amber {
     background-color: var(--amber-100, #fef3c7);
-    color: var(--amber-600, #d97706);
+    color: var(--amber-600, #d97706)
   }
 
   .status-indicator svg {
     width: 12px;
-    height: 12px;
+    height: 12px
   }
 
   .status-text {
     font-size: 12px;
     font-weight: 500;
-    text-align: center;
+    text-align: center
   }
 
   .capability-fallback {
@@ -574,19 +569,19 @@ export const offlineCapabilitiesStyles = `
     border: 1px solid var(--amber-200, #fde68a);
     border-radius: 6px;
     padding: 8px 12px;
-    margin-bottom: 12px;
+    margin-bottom: 12px
   }
 
   .capability-fallback p {
     margin: 0;
     font-size: 13px;
-    color: var(--amber-700, #b45309);
+    color: var(--amber-700, #b45309)
   }
 
   .capability-actions {
     display: flex;
     gap: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 8px
   }
 
   .capability-primary-action {
@@ -603,16 +598,16 @@ export const offlineCapabilitiesStyles = `
     min-height: 44px; /* WCAG 2.1 AA touch target */
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center
   }
 
   .capability-primary-action:hover {
-    background-color: var(--blue-600, #2563eb);
+    background-color: var(--blue-600, #2563eb)
   }
 
   .capability-primary-action:focus {
     outline: 2px solid var(--blue-500, #3b82f6);
-    outline-offset: 2px;
+    outline-offset: 2px
   }
 
   .capability-details-toggle {
@@ -628,18 +623,18 @@ export const offlineCapabilitiesStyles = `
     min-width: 44px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center
   }
 
   .capability-details-toggle:hover {
     background-color: var(--gray-50, #f9fafb);
-    border-color: var(--border-hover, #cbd5e1);
+    border-color: var(--border-hover, #cbd5e1)
   }
 
   .capability-details {
     border-top: 1px solid var(--border-light, #e2e8f0);
     padding-top: 12px;
-    margin-top: 12px;
+    margin-top: 12px
   }
 
   .detail-item {
@@ -647,19 +642,19 @@ export const offlineCapabilitiesStyles = `
     justify-content: space-between;
     align-items: center;
     margin-bottom: 8px;
-    font-size: 13px;
+    font-size: 13px
   }
 
   .detail-item:last-child {
-    margin-bottom: 0;
+    margin-bottom: 0
   }
 
   .detail-item strong {
-    color: var(--text-primary, #1e293b);
+    color: var(--text-primary, #1e293b)
   }
 
   .detail-item span {
-    color: var(--text-secondary, #64748b);
+    color: var(--text-secondary, #64748b)
   }
 
   .offline-notice {
@@ -669,7 +664,7 @@ export const offlineCapabilitiesStyles = `
     background-color: var(--amber-50, #fffbeb);
     border: 1px solid var(--amber-200, #fde68a);
     border-radius: 8px;
-    padding: 16px;
+    padding: 16px
   }
 
   .offline-notice svg {
@@ -677,84 +672,84 @@ export const offlineCapabilitiesStyles = `
     height: 20px;
     color: var(--amber-600, #d97706);
     margin-top: 2px;
-    flex-shrink: 0;
+    flex-shrink: 0
   }
 
   .notice-content p {
     margin: 0 0 8px 0;
     font-size: 14px;
-    color: var(--amber-800, #92400e);
+    color: var(--amber-800, #92400e)
   }
 
   .notice-content p:last-child {
-    margin-bottom: 0;
+    margin-bottom: 0
   }
 
   /* Responsive design */
   @media (max-width: 640px) {
     .capabilities-grid {
-      grid-template-columns: 1fr;
-    }
+      grid-template-columns: 1fr
+  }
 
     .capabilities-header {
       flex-direction: column;
       align-items: flex-start;
-      gap: 8px;
-    }
+      gap: 8px
+  }
 
     .capability-actions {
-      flex-direction: column;
-    }
+      flex-direction: column
+  }
 
     .offline-notice {
       flex-direction: column;
-      gap: 8px;
-    }
+      gap: 8px
+  }
   }
 
   /* Dark mode support */
   @media (prefers-color-scheme: dark) {
     .offline-capabilities--compact {
       background-color: var(--bg-secondary-dark, #1e293b);
-      border-color: var(--border-dark, #374151);
-    }
+      border-color: var(--border-dark, #374151)
+  }
 
     .offline-capabilities--list {
-      border-color: var(--border-dark, #374151);
-    }
+      border-color: var(--border-dark, #374151)
+  }
 
     .capability-item {
-      border-color: var(--border-dark, #374151);
-    }
+      border-color: var(--border-dark, #374151)
+  }
 
     .capability-card {
       background-color: var(--bg-secondary-dark, #1e293b);
-      border-color: var(--border-dark, #374151);
-    }
+      border-color: var(--border-dark, #374151)
+  }
 
     .capability-card--offline-unavailable {
-      background-color: var(--gray-800, #1f2937);
-    }
+      background-color: var(--gray-800, #1f2937)
+  }
 
     .capability-name,
     .capabilities-header h3 {
-      color: var(--text-primary-dark, #f1f5f9);
-    }
+      color: var(--text-primary-dark, #f1f5f9)
+  }
 
     .capability-description,
     .summary-label {
-      color: var(--text-secondary-dark, #94a3b8);
-    }
+      color: var(--text-secondary-dark, #94a3b8)
+  }
 
     .capability-details-toggle {
       background-color: transparent;
       color: var(--text-secondary-dark, #94a3b8);
-      border-color: var(--border-dark, #374151);
-    }
+      border-color: var(--border-dark, #374151)
+  }
 
     .capability-details-toggle:hover {
-      background-color: var(--gray-700, #374151);
-    }
+      background-color: var(--gray-700, #374151)
+  }
   }
 
   /* Reduced motion support */
@@ -763,8 +758,8 @@ export const offlineCapabilitiesStyles = `
     .capability-action,
     .capability-primary-action,
     .capability-details-toggle {
-      transition: none;
-    }
+      transition: none
+  }
   }
 `;
 

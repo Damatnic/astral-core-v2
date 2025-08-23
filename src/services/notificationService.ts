@@ -20,14 +20,14 @@ export interface NotificationOptions {
   actions?: NotificationAction[];
   urgency?: 'low' | 'normal' | 'high' | 'crisis';
   category?: 'message' | 'reminder' | 'alert' | 'crisis' | 'achievement' | 'system';
-  scheduledTime?: Date;
-}
+  scheduledTime?: Date
+  }
 
 export interface NotificationAction {
   action: string;
   title: string;
-  icon?: string;
-}
+  icon?: string
+  }
 
 export interface NotificationPreferences {
   enabled: boolean;
@@ -41,10 +41,10 @@ export interface NotificationPreferences {
   quietHours: {
     enabled: boolean;
     start: string; // "22:00"
-    end: string; // "08:00"
+    end: string; // "08: 00"
   };
-  frequency: 'all' | 'important' | 'crisis-only';
-}
+  frequency: 'all' | 'important' | 'crisis-only'
+  }
 
 export interface ScheduledNotification {
   id: string;
@@ -72,9 +72,9 @@ class NotificationService {
     quietHours: {
       enabled: false,
       start: '22:00',
-      end: '08:00';
-    },
-    frequency: 'all';
+      end: '08:00'
+  },
+    frequency: 'all'
   };
   private isOnline: boolean = navigator.onLine;
   private vapidPublicKey: string = ENV.VAPID_PUBLIC_KEY || '';
@@ -83,7 +83,7 @@ class NotificationService {
   constructor() {
     this.init();
     this.setupEventListeners();
-    this.loadPreferences();
+    this.loadPreferences()
   }
 
   /**
@@ -93,22 +93,22 @@ class NotificationService {
     // Check browser support
     if (!('Notification' in window)) {
       console.warn('This browser does not support notifications');
-      return;
-    }
+      return
+  }
 
     // Check service worker support
     if (!('serviceWorker' in navigator)) {
       console.warn('Service workers are not supported');
-      return;
-    }
+      return
+  }
 
     // Register service worker
     try {
       this.serviceWorkerRegistration = await navigator.serviceWorker.ready;
-      console.log('Notification service initialized');
-    } catch (error) {
-      console.error('Failed to initialize notification service:', error);
-    }
+      console.log('Notification service initialized')
+  } catch (error) {
+      console.error('Failed to initialize notification service:', error)
+  }
   }
 
   /**
@@ -118,28 +118,28 @@ class NotificationService {
     // Listen for online/offline events
     window.addEventListener('online', () => {
       this.isOnline = true;
-      this.flushNotificationQueue();
-    });
+      this.flushNotificationQueue()
+  });
 
     window.addEventListener('offline', () => {
-      this.isOnline = false;
-    });
+      this.isOnline = false
+  });
 
     // Listen for notification clicks from service worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', (event) => {
         if (event.data.type === 'notification-click') {
-          this.handleNotificationClick(event.data);
-        }
-      });
-    }
+          this.handleNotificationClick(event.data)
+  }
+      })
+  }
 
     // Listen for visibility change to handle background notifications
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
-        this.checkMissedNotifications();
-      }
-    });
+        this.checkMissedNotifications()
+  }
+    })
   }
 
   /**
@@ -155,7 +155,7 @@ class NotificationService {
    * Save notification preferences
    */
   private savePreferences() {
-    localStorage.setItem('notification_preferences', JSON.stringify(this.preferences));
+    localStorage.setItem('notification_preferences', JSON.stringify(this.preferences))
   }
 
   /**
@@ -163,23 +163,23 @@ class NotificationService {
    */
   async requestPermission(): Promise<NotificationPermission> {
     if (!('Notification' in window)) {
-      return 'denied';
-    }
+      return 'denied'
+  }
 
     // Already have permission
     if (Notification.permission === 'granted') {
-      return 'granted';
-    }
+      return 'granted'
+  }
 
     // Request permission;
     const permission = await Notification.requestPermission();
     
     if (permission === 'granted') {
       // Subscribe to push notifications
-      await this.subscribeToPushNotifications();
-    }
+      await this.subscribeToPushNotifications()
+  }
 
-    return permission;
+    return permission
   }
 
   /**
@@ -187,8 +187,8 @@ class NotificationService {
    */
   private async subscribeToPushNotifications() {
     if (!this.serviceWorkerRegistration || !this.vapidPublicKey) {
-      return;
-    }
+      return
+  }
 
     try {
       // Convert VAPID key to Uint8Array;
@@ -197,19 +197,19 @@ class NotificationService {
       // Subscribe to push service;
       const subscription = await this.serviceWorkerRegistration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: convertedVapidKey;
-      });
+        applicationServerKey: convertedVapidKey
+  });
 
       // Send subscription to backend
       await apiService.post('/notifications/subscribe', {
         subscription: subscription.toJSON(),
-        preferences: this.preferences;
-      });
+        preferences: this.preferences
+  });
 
-      console.log('Successfully subscribed to push notifications');
-    } catch (error) {
-      console.error('Failed to subscribe to push notifications:', error);
-    }
+      console.log('Successfully subscribed to push notifications')
+  } catch (error) {
+      console.error('Failed to subscribe to push notifications:', error)
+  }
   }
 
   /**
@@ -217,7 +217,7 @@ class NotificationService {
    */
   private urlBase64ToUint8Array(base64String: string): ArrayBuffer {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding);
+    const base64 = (base64String + padding);;
       .replace(/\-/g, '+')
       .replace(/_/g, '/');
 
@@ -225,9 +225,9 @@ class NotificationService {
     const outputArray = new Uint8Array(rawData.length);
 
     for (let i = 0; i < rawData.length; ++i) {
-      outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray.buffer;
+      outputArray[i] = rawData.charCodeAt(i)
+  }
+    return outputArray.buffer
   }
 
   /**
@@ -236,38 +236,38 @@ class NotificationService {
   async show(options: NotificationOptions): Promise<void> {
     // Check if notifications are enabled
     if (!this.preferences.enabled) {
-      return;
-    }
+      return
+  }
 
     // Check permission
     if (Notification.permission !== 'granted') {
       const permission = await this.requestPermission();
       if (permission !== 'granted') {
-        return;
-      }
+        return
+  }
     }
 
     // Check quiet hours
     if (this.isInQuietHours() && options.urgency !== 'crisis') {
       this.queueNotification(options);
-      return;
-    }
+      return
+  }
 
     // Check frequency preferences
     if (!this.shouldShowNotification(options)) {
-      return;
-    }
+      return
+  }
 
     // Add default icon if not provided
     if (!options.icon) {
-      options.icon = '/icon-192.png';
-    }
+      options.icon = '/icon-192.png'
+  }
 
     // Add vibration pattern for crisis notifications
     if (options.urgency === 'crisis' && this.preferences.vibration) {
       options.vibrate = [200, 100, 200, 100, 200];
-      options.requireInteraction = true;
-    }
+      options.requireInteraction = true
+  }
 
     // Show notification
     try {
@@ -282,8 +282,8 @@ class NotificationService {
           requireInteraction: options.requireInteraction,
           silent: options.silent || !this.preferences.sound,
           // vibrate: this.preferences.vibration ? options.vibrate : undefined,
-          // actions: options.actions;
-        });;
+          // actions: options.actions
+  })
   } else {
         // Fallback to Notification API
         new Notification(options.title, {
@@ -294,19 +294,19 @@ class NotificationService {
           data: options.data,
           requireInteraction: options.requireInteraction,
           silent: options.silent || !this.preferences.sound
-          // vibrate: this.preferences.vibration ? options.vibrate : undefined;
-        });
-      }
+          // vibrate: this.preferences.vibration ? options.vibrate : undefined
+  })
+  }
 
       // Track notification shown
-      this.trackNotification('shown', options);
-    } catch (error) {
+      this.trackNotification('shown', options)
+  } catch (error) {
       console.error('Failed to show notification:', error);
       
       // Queue for later if offline
       if (!this.isOnline) {
-        this.queueNotification(options);
-      }
+        this.queueNotification(options)
+  }
     }
   }
 
@@ -315,8 +315,8 @@ class NotificationService {
    */
   private isInQuietHours(): boolean {
     if (!this.preferences.quietHours.enabled) {
-      return false;
-    }
+      return false
+  }
 
     const now = new Date();
     const currentTime = now.getHours() * 60 + now.getMinutes();
@@ -328,11 +328,11 @@ class NotificationService {
     const endTime = endHour * 60 + endMin;
 
     if (startTime <= endTime) {
-      return currentTime >= startTime && currentTime < endTime;;
+      return currentTime >= startTime && currentTime < endTime
   } else {
       // Quiet hours span midnight
-      return currentTime >= startTime || currentTime < endTime;
-    }
+      return currentTime >= startTime || currentTime < endTime
+  }
   }
 
   /**
@@ -342,12 +342,12 @@ class NotificationService {
     const { frequency } = this.preferences;
     
     if (frequency === 'crisis-only' && options.urgency !== 'crisis') {
-      return false;
-    }
+      return false
+  }
 
     if (frequency === 'important' && options.urgency === 'low') {
-      return false;
-    }
+      return false
+  }
 
     // Check category preferences
     switch (options.category) {
@@ -361,9 +361,8 @@ class NotificationService {
         return this.preferences.achievements;
       case 'system':
         return this.preferences.systemUpdates;
-      default:
-        return true;
-    }
+      default: return true
+  }
   }
 
   /**
@@ -373,7 +372,7 @@ class NotificationService {
     this.notificationQueue.push(options);
     
     // Store in localStorage for persistence
-    localStorage.setItem('notification_queue', JSON.stringify(this.notificationQueue));
+    localStorage.setItem('notification_queue', JSON.stringify(this.notificationQueue))
   }
 
   /**
@@ -383,17 +382,17 @@ class NotificationService {
     // Load queue from localStorage;
     const stored = localStorage.getItem('notification_queue');
     if (stored) {
-      this.notificationQueue = JSON.parse(stored);
-    }
+      this.notificationQueue = JSON.parse(stored)
+  }
 
     // Show all queued notifications
     for (const notification of this.notificationQueue) {
-      await this.show(notification);
-    }
+      await this.show(notification)
+  }
 
     // Clear queue
     this.notificationQueue = [];
-    localStorage.removeItem('notification_queue');
+    localStorage.removeItem('notification_queue')
   }
 
   /**
@@ -412,8 +411,8 @@ class NotificationService {
         
         // Schedule next occurrence if recurring
         if (recurring) {
-          this.scheduleNextOccurrence(id, notification, scheduledTime, recurring);
-        };
+          this.scheduleNextOccurrence(id, notification, scheduledTime, recurring)
+  }
   } else {
         // Schedule for future;
         const timeout = setTimeout(() => {
@@ -421,14 +420,14 @@ class NotificationService {
           
           // Schedule next occurrence if recurring
           if (recurring) {
-            this.scheduleNextOccurrence(id, notification, scheduledTime, recurring);;
+            this.scheduleNextOccurrence(id, notification, scheduledTime, recurring)
   } else {
-            this.scheduledNotifications.delete(id);
-          }
+            this.scheduledNotifications.delete(id)
+  }
         }, delay);
 
-        this.scheduledNotifications.set(id, timeout);
-      }
+        this.scheduledNotifications.set(id, timeout)
+  }
     };
 
     schedule();
@@ -436,7 +435,7 @@ class NotificationService {
     // Store scheduled notification
     this.storeScheduledNotification({ id, notification, scheduledTime, recurring });
     
-    return id;
+    return id
   }
 
   /**
@@ -459,25 +458,25 @@ class NotificationService {
             const checkDay = (currentDay + i) % 7;
             if (recurring.daysOfWeek.includes(checkDay)) {
               daysToAdd = i;
-              break;
-            }
+              break
+  }
           }
-          nextTime.setDate(nextTime.getDate() + daysToAdd);;
+          nextTime.setDate(nextTime.getDate() + daysToAdd)
   } else {
-          nextTime.setDate(nextTime.getDate() + 7);
-        }
+          nextTime.setDate(nextTime.getDate() + 7)
+  }
         break;
       case 'monthly':
         if (recurring.dayOfMonth) {
           nextTime.setMonth(nextTime.getMonth() + 1);
-          nextTime.setDate(recurring.dayOfMonth);;
+          nextTime.setDate(recurring.dayOfMonth)
   } else {
-          nextTime.setMonth(nextTime.getMonth() + 1);
-        }
-        break;
-    }
+          nextTime.setMonth(nextTime.getMonth() + 1)
+  }
+        break
+  }
 
-    this.scheduleNotification(notification, nextTime, recurring);
+    this.scheduleNotification(notification, nextTime, recurring)
   }
 
   /**
@@ -487,11 +486,11 @@ class NotificationService {
     const timeout = this.scheduledNotifications.get(id);
     if (timeout) {
       clearTimeout(timeout);
-      this.scheduledNotifications.delete(id);
-    }
+      this.scheduledNotifications.delete(id)
+  }
     
     // Remove from storage
-    this.removeScheduledNotification(id);
+    this.removeScheduledNotification(id)
   }
 
   /**
@@ -501,7 +500,7 @@ class NotificationService {
     const stored = localStorage.getItem('scheduled_notifications');
     const notifications: ScheduledNotification[] = stored ? JSON.parse(stored) : [];
     notifications.push(scheduled);
-    localStorage.setItem('scheduled_notifications', JSON.stringify(notifications));
+    localStorage.setItem('scheduled_notifications', JSON.stringify(notifications))
   }
 
   /**
@@ -512,8 +511,8 @@ class NotificationService {
     if (stored) {
       const notifications: ScheduledNotification[] = JSON.parse(stored);
       const filtered = notifications.filter(n => n.id !== id);
-      localStorage.setItem('scheduled_notifications', JSON.stringify(filtered));
-    }
+      localStorage.setItem('scheduled_notifications', JSON.stringify(filtered))
+  }
   }
 
   /**
@@ -528,8 +527,8 @@ class NotificationService {
           scheduled.notification,
           new Date(scheduled.scheduledTime),
           scheduled.recurring
-        );
-      }
+        )
+  }
     }
   }
 
@@ -547,8 +546,8 @@ class NotificationService {
         case 'view':
           // Navigate to relevant page
           if (notificationData.url) {
-            window.location.href = notificationData.url;
-          }
+            window.location.href = notificationData.url
+  }
           break;
         case 'dismiss':
           // Just close the notification
@@ -560,12 +559,12 @@ class NotificationService {
           break;
         default:
           // Custom action handling
-          window.dispatchEvent(new CustomEvent('notification-action', { detail: notificationData }));
-      };
+          window.dispatchEvent(new CustomEvent('notification-action', { detail: notificationData }))
+  }
   } else if (notificationData.url) {
       // Default click behavior
-      window.location.href = notificationData.url;
-    }
+      window.location.href = notificationData.url
+  }
   }
 
   /**
@@ -575,11 +574,11 @@ class NotificationService {
     try {
       const missed = await apiService.get('/notifications/missed');
       for (const notification of missed) {
-        await this.show(notification);
-      }
+        await this.show(notification)
+  }
     } catch (error) {
-      console.error('Failed to check missed notifications:', error);
-    }
+      console.error('Failed to check missed notifications:', error)
+  }
   }
 
   /**
@@ -591,8 +590,8 @@ class NotificationService {
       event,
       category: options.category,
       urgency: options.urgency,
-      timestamp: new Date().toISOString();
-    }).catch(console.error);
+      timestamp: new Date().toISOString()
+  }).catch(console.error)
   }
 
   /**
@@ -603,7 +602,7 @@ class NotificationService {
     this.savePreferences();
     
     // Update backend
-    apiService.post('/notifications/preferences', this.preferences).catch(console.error);
+    apiService.post('/notifications/preferences', this.preferences).catch(console.error)
   }
 
   /**
@@ -628,8 +627,8 @@ class NotificationService {
       ],
       data: {
         ...data,
-        url: '/crisis-support';
-      }
+        url: '/crisis-support'
+  }
     };
   };
   }
@@ -651,7 +650,7 @@ class NotificationService {
       data: {
         url: `/chat/${conversationId}`
       }
-    });
+    })
   }
 
   /**
@@ -669,7 +668,7 @@ class NotificationService {
         { action: 'snooze', title: 'Snooze' },
         { action: 'dismiss', title: 'Dismiss' }
       ]
-    });
+    })
   }
 
   /**
@@ -681,8 +680,8 @@ class NotificationService {
       body: description,
       category: 'achievement',
       urgency: 'low',
-      icon: '/achievements-icon.png';
-    });
+      icon: '/achievements-icon.png'
+  })
   }
 
   /**
@@ -691,8 +690,8 @@ class NotificationService {
   async clearAll() {
     if (this.serviceWorkerRegistration) {
       const notifications = await this.serviceWorkerRegistration.getNotifications();
-      notifications.forEach(n => n.close());
-    }
+      notifications.forEach(n => n.close())
+  }
   }
 
   /**
@@ -701,22 +700,22 @@ class NotificationService {
   async clearByTag(tag: string) {
     if (this.serviceWorkerRegistration) {
       const notifications = await this.serviceWorkerRegistration.getNotifications({ tag });
-      notifications.forEach(n => n.close());
-    }
+      notifications.forEach(n => n.close())
+  }
   }
 
   /**
    * Check if notifications are supported
    */
   isSupported(): boolean {
-    return 'Notification' in window && 'serviceWorker' in navigator;
+    return 'Notification' in window && 'serviceWorker' in navigator
   }
 
   /**
    * Get permission status
    */
   getPermissionStatus(): NotificationPermission {
-    return Notification.permission;
+    return Notification.permission
   }
 
   /**
@@ -727,22 +726,22 @@ class NotificationService {
       title: 'Test Notification',
       body: 'This is a test notification from Astral Core',
       category: 'system',
-      urgency: 'low';
-    });
+      urgency: 'low'
+  })
   }
 
   // Legacy toast support
   setToastFunction(addToastFn: (message: string, type?: Toast['type']) => void) {
-    this._addToast = addToastFn;
+    this._addToast = addToastFn
   }
 
   addToast(message: string, type: Toast['type'] = 'success') {
     if (this._addToast) {
-      this._addToast(message, type);;
+      this._addToast(message, type)
   } else {
       console.warn('Toast function not set, falling back to alert');
-      alert(message);
-    }
+      alert(message)
+  }
   }
 }
 
@@ -752,8 +751,8 @@ export const notificationService = new NotificationService();
 // Load scheduled notifications on startup
 if (typeof window !== 'undefined') {
   window.addEventListener('load', () => {
-    notificationService.loadScheduledNotifications();
-  });
-}
+    notificationService.loadScheduledNotifications()
+  })
+  }
 
 export default notificationService;

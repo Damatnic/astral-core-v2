@@ -7,8 +7,8 @@ import i18n from '../i18n';
 import { ThemeProvider } from '../components/ThemeProvider';
 
 interface AllTheProvidersProps {
-  children: React.ReactNode;
-}
+  children: React.ReactNode
+  }
 
 const AllTheProviders: React.FC<AllTheProvidersProps> = ({ children }) => {
   return (
@@ -21,30 +21,30 @@ const AllTheProviders: React.FC<AllTheProvidersProps> = ({ children }) => {
         </AuthProvider>
       </I18nextProvider>
     </BrowserRouter>
-  );
-};
+  )
+  };
 
-const customRender = (;
+const customRender = (;;
   ui: ReactElement,
   options?: Omit<RenderOptions, 'wrapper'>
 ) => render(ui, { wrapper: AllTheProviders, ...options });
 
 // Custom renderHook with providers - properly typed for React 18;
-const customRenderHook = <TProps = unknown, TResult = unknown>(;
+const customRenderHook = <TProps = unknown, TResult = unknown>(;;
   hook: (props?: TProps) => TResult,
   options?: RenderHookOptions<TProps>
 ) => {
   // For React 18 compatibility, ensure document.body is ready
   if (!document.body) {
     const body = document.createElement('body');
-    document.documentElement.appendChild(body);
+    document.documentElement.appendChild(body)
   }
   
   // Ensure there's a container in the body
   if (!document.body.firstChild) {
     const container = document.createElement('div');
     container.setAttribute('id', 'rtl-root');
-    document.body.appendChild(container);
+    document.body.appendChild(container)
   }
   
   // Use provided wrapper or default to AllTheProviders;
@@ -53,8 +53,8 @@ const customRenderHook = <TProps = unknown, TResult = unknown>(;
     ...options
   };
   
-  return renderHookBase(hook, finalOptions);
-};
+  return renderHookBase(hook, finalOptions)
+  };
 
 export * from '@testing-library/react';
 export { customRender as render };
@@ -98,7 +98,7 @@ export const createMockReflection = (overrides = {}) => ({
   reactions: {
     heart: 5,
     support: 3,
-    empathy: 2;
+    empathy: 2
   },
   ...overrides
 });
@@ -123,23 +123,23 @@ export const mockLocalStorage = () => {
   const mockLocalStorage = {
     getItem: jest.fn((key: string) => store[key] || null),
     setItem: jest.fn((key: string, value: string) => {
-      store[key] = value;
-    }),
+      store[key] = value
+  }),
     removeItem: jest.fn((key: string) => {
-      delete store[key];
-    }),
+      delete store[key]
+  }),
     clear: jest.fn(() => {
-      Object.keys(store).forEach(key => delete store[key]);
-    })
+      Object.keys(store).forEach(key => delete store[key])
+  })
   };
 
   Object.defineProperty(window, 'localStorage', {
     value: mockLocalStorage,
-    writable: true;
+    writable: true
   });
 
-  return mockLocalStorage;
-};
+  return mockLocalStorage
+  };
 
 export const mockSessionStorage = () => {
   const store: Record<string, string> = {};
@@ -147,23 +147,23 @@ export const mockSessionStorage = () => {
   const mockSessionStorage = {
     getItem: jest.fn((key: string) => store[key] || null),
     setItem: jest.fn((key: string, value: string) => {
-      store[key] = value;
-    }),
+      store[key] = value
+  }),
     removeItem: jest.fn((key: string) => {
-      delete store[key];
-    }),
+      delete store[key]
+  }),
     clear: jest.fn(() => {
-      Object.keys(store).forEach(key => delete store[key]);
-    })
+      Object.keys(store).forEach(key => delete store[key])
+  })
   };
 
   Object.defineProperty(window, 'sessionStorage', {
     value: mockSessionStorage,
-    writable: true;
+    writable: true
   });
 
-  return mockSessionStorage;
-};
+  return mockSessionStorage
+  };
 
 export const mockFetch = (response: any, options = {}) => {
   const mockFetchFn = jest.fn().mockResolvedValue({
@@ -175,47 +175,47 @@ export const mockFetch = (response: any, options = {}) => {
   });
 
   global.fetch = mockFetchFn;
-  return mockFetchFn;
-};
+  return mockFetchFn
+  };
 
 export const mockNavigator = () => {
   Object.defineProperty(window.navigator, 'onLine', {
     writable: true,
-    value: true;
+    value: true
   });
 
   Object.defineProperty(window.navigator, 'vibrate', {
     writable: true,
-    value: jest.fn();
+    value: jest.fn()
   });
 
   Object.defineProperty(window.navigator, 'share', {
     writable: true,
-    value: jest.fn().mockResolvedValue(undefined);
-  });
-};
+    value: jest.fn().mockResolvedValue(undefined)
+  })
+  };
 
 export const mockIntersectionObserver = () => {
   const mockIntersectionObserver = jest.fn();
   mockIntersectionObserver.mockReturnValue({
     observe: jest.fn(),
     unobserve: jest.fn(),
-    disconnect: jest.fn();
+    disconnect: jest.fn()
   });
   window.IntersectionObserver = mockIntersectionObserver as any;
-  return mockIntersectionObserver;
-};
+  return mockIntersectionObserver
+  };
 
 export const mockResizeObserver = () => {
   const mockResizeObserver = jest.fn();
   mockResizeObserver.mockReturnValue({
     observe: jest.fn(),
     unobserve: jest.fn(),
-    disconnect: jest.fn();
+    disconnect: jest.fn()
   });
   window.ResizeObserver = mockResizeObserver as any;
-  return mockResizeObserver;
-};
+  return mockResizeObserver
+  };
 
 export const mockMatchMedia = (matches = false) => {
   Object.defineProperty(window, 'matchMedia', {
@@ -228,10 +228,10 @@ export const mockMatchMedia = (matches = false) => {
       removeListener: jest.fn(),
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn();
-    }))
-  });
-};
+      dispatchEvent: jest.fn()
+  }))
+  })
+  };
 
 // Crisis detection test helpers;
 export const mockCrisisDetection = () => ({
@@ -239,11 +239,11 @@ export const mockCrisisDetection = () => ({
     severity: 'none',
     confidence: 0.95,
     keywords: [],
-    suggestions: [];
+    suggestions: []
   }),
   analyzePattern: jest.fn().mockResolvedValue({
     trend: 'stable',
-    riskLevel: 'low';
+    riskLevel: 'low'
   })
 });
 
@@ -254,8 +254,8 @@ export const mockAuth = () => ({
   login: jest.fn().mockResolvedValue(true),
   logout: jest.fn().mockResolvedValue(true),
   register: jest.fn().mockResolvedValue(true),
-  updateProfile: jest.fn().mockResolvedValue(true);
-});
+  updateProfile: jest.fn().mockResolvedValue(true)
+  });
 
 // WebSocket test helpers;
 export class MockWebSocket {
@@ -271,36 +271,36 @@ export class MockWebSocket {
     setTimeout(() => {
       this.readyState = WebSocket.OPEN;
       if (this.onopen) {
-        this.onopen(new Event('open'));
-      }
-    }, 0);
+        this.onopen(new Event('open'))
+  }
+    }, 0)
   }
 
   send = jest.fn();
   close = jest.fn(() => {
     this.readyState = WebSocket.CLOSED;
     if (this.onclose) {
-      this.onclose(new CloseEvent('close'));
-    }
+      this.onclose(new CloseEvent('close'))
+  }
   });
 
   simulateMessage(data: unknown) {
     if (this.onmessage) {
-      this.onmessage(new MessageEvent('message', { data: JSON.stringify(data) }));
-    }
+      this.onmessage(new MessageEvent('message', { data: JSON.stringify(data) }))
+  }
   }
 
   simulateError() {
     if (this.onerror) {
-      this.onerror(new Event('error'));
-    }
+      this.onerror(new Event('error'))
+  }
   }
 }
 
 export const mockWebSocket = () => {
   global.WebSocket = MockWebSocket as any;
-  return MockWebSocket;
-};
+  return MockWebSocket
+  };
 
 // Service Worker test helpers;
 export const mockServiceWorker = () => {
@@ -308,10 +308,10 @@ export const mockServiceWorker = () => {
     installing: null,
     waiting: null,
     active: {
-      postMessage: jest.fn();
-    },
+      postMessage: jest.fn()
+  },
     update: jest.fn().mockResolvedValue(undefined),
-    unregister: jest.fn().mockResolvedValue(true);
+    unregister: jest.fn().mockResolvedValue(true)
   };
 
   Object.defineProperty(navigator, 'serviceWorker', {
@@ -321,12 +321,12 @@ export const mockServiceWorker = () => {
       ready: Promise.resolve(mockRegistration),
       controller: null,
       addEventListener: jest.fn(),
-      removeEventListener: jest.fn();
-    }
+      removeEventListener: jest.fn()
+  }
   });
 
-  return mockRegistration;
-};
+  return mockRegistration
+  };
 
 // Performance test helpers;
 export const mockPerformance = () => {
@@ -342,19 +342,19 @@ export const mockPerformance = () => {
       getEntriesByName: jest.fn(() => entries),
       clearMarks: jest.fn(),
       clearMeasures: jest.fn(),
-      clearResourceTimings: jest.fn();
-    }
+      clearResourceTimings: jest.fn()
+  }
   });
 
   return {
     addEntry: (entry: any) => entries.push(entry),
-    clearEntries: () => entries.length = 0;
+    clearEntries: () => entries.length = 0
   };
 
 // Accessibility test helpers;
 export const expectToBeAccessible = (element: HTMLElement) => {
   // Check for proper ARIA attributes;
-  const interactiveElements = element.querySelectorAll(;
+  const interactiveElements = element.querySelectorAll(;;
     'button, a, input, select, textarea, [role="button"], [role="link"]'
   );
   
@@ -364,7 +364,7 @@ export const expectToBeAccessible = (element: HTMLElement) => {
     const hasAriaLabelledBy = el.hasAttribute('aria-labelledby');
     const hasText = el.textContent?.trim();
     
-    expect(hasAriaLabel || hasAriaLabelledBy || hasText).toBeTruthy();
+    expect(hasAriaLabel || hasAriaLabelledBy || hasText).toBeTruthy()
   };
   };
 
@@ -375,15 +375,15 @@ export const expectToBeAccessible = (element: HTMLElement) => {
   headings.forEach(heading => {
     const level = parseInt(heading.tagName[1]);
     expect(level - previousLevel).toBeLessThanOrEqual(1);
-    previousLevel = level;
-  });
-};
+    previousLevel = level
+  })
+  };
 
 // Snapshot testing helpers;
 export const createSnapshotSerializer = () => ({
   test: (val: any) => val && val._isReactElement,
-  print: (val: any, serialize: any) => serialize(val);
-});
+  print: (val: any, serialize: any) => serialize(val)
+  });
 
 // Async test helpers;
 export const flushPromises = () => new Promise(setImmediate);
@@ -393,9 +393,9 @@ export const waitForAsync = async (callback: () => boolean, timeout = 1000) => {
   
   while (!callback()) {
     if (Date.now() - startTime > timeout) {
-      throw new Error('Timeout waiting for condition');
-    }
-    await new Promise(resolve => setTimeout(resolve, 50));
+      throw new Error('Timeout waiting for condition')
+  }
+    await new Promise(resolve => setTimeout(resolve, 50))
   }
 };
 
@@ -404,7 +404,7 @@ export const mockConsole = () => {
   const originalConsole = {
     log: console.log,
     warn: console.warn,
-    error: console.error;
+    error: console.error
   };
 
   console.log = jest.fn();
@@ -415,11 +415,11 @@ export const mockConsole = () => {
     restore: () => {
       console.log = originalConsole.log;
       console.warn = originalConsole.warn;
-      console.error = originalConsole.error;
-    },
+      console.error = originalConsole.error
+  },
     getLogs: () => (console.log as jest.Mock).mock.calls,
     getWarnings: () => (console.warn as jest.Mock).mock.calls,
-    getErrors: () => (console.error as jest.Mock).mock.calls;
+    getErrors: () => (console.error as jest.Mock).mock.calls
   };
 
 // Additional mock helpers for component tests;
@@ -444,8 +444,8 @@ export const mockWindowMethods = () => ({
   open: jest.fn(),
   close: jest.fn(),
   focus: jest.fn(),
-  blur: jest.fn();
-});
+  blur: jest.fn()
+  });
 
 export const createMockFormInputProps = (overrides = {}) => ({
   label: 'Test Input',
@@ -459,8 +459,8 @@ export const mockUseFormAnimations = () => ({
   shake: false,
   success: false,
   triggerShake: jest.fn(),
-  triggerSuccess: jest.fn();
-});
+  triggerSuccess: jest.fn()
+  });
 
 export const createMockModalProps = (overrides = {}) => ({
   isOpen: true,
@@ -474,8 +474,8 @@ export const mockHTMLElementMethods = () => {
   HTMLElement.prototype.focus = jest.fn();
   HTMLElement.prototype.blur = jest.fn();
   HTMLElement.prototype.click = jest.fn();
-  HTMLElement.prototype.scrollIntoView = jest.fn();
-};
+  HTMLElement.prototype.scrollIntoView = jest.fn()
+  };
 
 // User event helpers;
 export const user = {
@@ -483,5 +483,5 @@ export const user = {
   type: jest.fn(),
   clear: jest.fn(),
   selectOptions: jest.fn(),
-  tab: jest.fn();
-};
+  tab: jest.fn()
+  };

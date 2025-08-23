@@ -3,8 +3,8 @@ import React, { forwardRef } from 'react';
 export interface AppTextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
   error?: string;
-  helperText?: string;
-}
+  helperText?: string
+  }
 
 export const AppTextArea = forwardRef<HTMLTextAreaElement, AppTextAreaProps>(({
   label,
@@ -42,8 +42,8 @@ export const AppTextArea = forwardRef<HTMLTextAreaElement, AppTextAreaProps>(({
         </span>
       )}
     </div>
-  );
-});
+  )
+  });
 
 AppTextArea.displayName = 'AppTextArea';
 

@@ -8,8 +8,8 @@ import { FavoriteHelpersView } from './FavoriteHelpersView';
 export const MyActivityView: React.FC<{
     setActiveView: (view: ActiveView) => void;
     onViewHelperProfile: (helperId: string) => void;
-    userToken: string | null;
-}> = (props) => {
+    userToken: string | null
+  }> = (props) => {
     const [activeTab, setActiveTab] = useState<'my-posts' | 'past-sessions' | 'favorite-helpers'>('my-posts');
 
     const renderTabContent = () => {
@@ -20,9 +20,8 @@ export const MyActivityView: React.FC<{
                 return <PastSessionsView />;
             case 'favorite-helpers':
                 return <FavoriteHelpersView onViewHelperProfile={props.onViewHelperProfile} userToken={props.userToken} />;
-            default:
-                return null;
-        }
+            default: return null
+  }
     }
 
     return (
@@ -40,7 +39,7 @@ export const MyActivityView: React.FC<{
                {renderTabContent()}
             </div>
         </>
-    );
-};
+    )
+  };
 
 export default MyActivityView;

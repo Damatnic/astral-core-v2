@@ -21,7 +21,7 @@ const mockedChatStore = useChatStore as jest.Mocked<any>;
 const mockedUseAuth = useAuth as jest.Mock;
 
 describe('HelperDashboardView user flow', () => {
-  const mockDilemmas = [;
+  const mockDilemmas = [;;
     { id: 'd1', status: 'active', content: 'Available Dilemma 1' },
     { id: 'd2', status: 'direct_request', requestedHelperId: 'helper1', content: 'Direct Request' },
   ];
@@ -63,13 +63,13 @@ describe('HelperDashboardView user flow', () => {
     await userEvent.click(acceptButton);
     
     // 4. Assert that the correct actions were called
-    expect(acceptDilemmaMock).toHaveBeenCalledWith('d1');
+    expect(acceptDilemmaMock).toHaveBeenCalledWith('d1')
+  })
   });
-});
 
 // Dummy test to keep suite active
 describe('Test Suite Active', () => {
   it('Placeholder test to prevent empty suite', () => {
-    expect(true).toBe(true);
+    expect(true).toBe(true)
+  })
   });
-});

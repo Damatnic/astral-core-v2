@@ -18,8 +18,8 @@ interface AppButtonProps {
   enhanced?: boolean;
   iconOnly?: boolean;
   animate?: 'breathe' | 'glow' | 'none';
-  ripple?: boolean;
-}
+  ripple?: boolean
+  }
 
 export const AppButton: React.FC<AppButtonProps> = ({
   children,
@@ -71,10 +71,10 @@ export const AppButton: React.FC<AppButtonProps> = ({
         break;
       default:
         baseClass = 'glass-button';
-        variantClass = variant;
-    };
+        variantClass = variant
+  }
   } else {
-    variantClass = `btn-${variant}`;
+    variantClass = `btn-${variant}`
   }
   
   // Size classes;
@@ -92,7 +92,7 @@ export const AppButton: React.FC<AppButtonProps> = ({
   // Touch and transition classes;
   const touchClasses = 'touch-optimized touch-feedback smooth-transition';
   
-  const classes = [;
+  const classes = [;;
     baseClass,
     variantClass,
     sizeClass,
@@ -115,8 +115,7 @@ export const AppButton: React.FC<AppButtonProps> = ({
   };
 
   return (
-    <button;
-      type={type}
+    <button type={type}
       className={classes}
       onClick={onClick}
       disabled={disabled || isLoading}
@@ -136,5 +135,5 @@ export const AppButton: React.FC<AppButtonProps> = ({
         </>
       )}
     </button>
-  );
-};
+  )
+  };

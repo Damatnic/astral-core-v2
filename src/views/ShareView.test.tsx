@@ -19,14 +19,14 @@ describe('ShareView user flow', () => {
     // Setup ApiClient mocks
     (mockedApiClient as any).ai = {
       chat: jest.fn(),
-      draftPostFromChat: jest.fn();
-    });
+      draftPostFromChat: jest.fn()
+  });
 
   test.skip('user can chat with AI, draft a post, and submit it', async () => {
     // Mock AI responses - the chat function returns an object with response property
     (ApiClient.ai.chat as jest.Mock).mockResolvedValue({
-      response: "That sounds really tough. Could you tell me more?";
-    });
+      response: "That sounds really tough. Could you tell me more?"
+  });
     (ApiClient.ai.draftPostFromChat as jest.Mock).mockResolvedValue({
       postContent: "This is the drafted post from the AI.",
       category: "Stress",
@@ -70,13 +70,13 @@ describe('ShareView user flow', () => {
     expect(onPostSubmitMock).toHaveBeenCalledWith(expect.objectContaining({
       content: "This is the drafted post from the AI. And I added this extra text.",
       category: "Stress",
-    }));
+    }))
+  })
   });
-});
 
 // Dummy test to keep suite active
 describe('Test Suite Active', () => {
   it('Placeholder test to prevent empty suite', () => {
-    expect(true).toBe(true);
+    expect(true).toBe(true)
+  })
   });
-});

@@ -36,8 +36,8 @@ interface EmergencyContact {
   number: string;
   description: string;
   available: string;
-  type: 'call' | 'text' | 'chat';
-}
+  type: 'call' | 'text' | 'chat'
+  }
 
 const emergencyContacts: EmergencyContact[] = [
   {
@@ -45,21 +45,21 @@ const emergencyContacts: EmergencyContact[] = [
     number: '988',
     description: 'Free, confidential crisis counseling',
     available: '24/7',
-    type: 'call';
+    type: 'call'
   },
   {
     name: 'Crisis Text Line',
     number: '741741',
     description: 'Text HOME for immediate support',
     available: '24/7',
-    type: 'text';
+    type: 'text'
   },
   {
     name: 'Emergency Services',
     number: '911',
     description: 'Immediate emergency assistance',
     available: '24/7',
-    type: 'call';
+    type: 'call'
   }
 ];
 
@@ -88,12 +88,12 @@ export function CrisisAlert({
       // Auto-focus for screen readers;
       const alertElement = document.getElementById('crisis-alert');
       if (alertElement) {
-        alertElement.focus();
-      };
+        alertElement.focus()
+  }
   } else {
       const timer = setTimeout(() => setIsVisible(false), 300);
-      return () => clearTimeout(timer);
-    }
+      return () => clearTimeout(timer)
+  }
   };
   }, [show]);
 
@@ -101,30 +101,30 @@ export function CrisisAlert({
     onDismiss();
     // Call onClose if provided for backward compatibility
     if (onClose) {
-      onClose();
-    }
+      onClose()
+  }
   };
 
   const handleEmergencyCall = (contact: EmergencyContact) => {
     if (onEmergencyCall) {
-      onEmergencyCall();
-    }
+      onEmergencyCall()
+  }
     
     // For web, we can try to open the phone app
     if (contact.type === 'call') {
-      window.open(`tel:${contact.number}`, '_self');;
+      window.open(`tel:${contact.number}`, '_self')
   } else if (contact.type === 'text') {
-      window.open(`sms:${contact.number}`, '_self');
-    }
+      window.open(`sms:${contact.number}`, '_self')
+  }
   };
 
   const handleCrisisChat = () => {
     if (onCrisisChat) {
-      onCrisisChat();;
+      onCrisisChat()
   } else {
       // Open crisis chat website
-      window.open('https://suicidepreventionlifeline.org/chat/', '_blank');
-    }
+      window.open('https://suicidepreventionlifeline.org/chat/', '_blank')
+  }
   };
 
   const getSeverityConfig = () => {
@@ -135,40 +135,40 @@ export function CrisisAlert({
           icon: AlertTriangle,
           color: '#dc2626',
           pulse: true,
-          title: 'IMMEDIATE ATTENTION NEEDED';
-        };
+          title: 'IMMEDIATE ATTENTION NEEDED'
+  };
       case 'high':
         return {
           className: 'crisis-alert--high',
           icon: AlertTriangle,
           color: '#ea580c',
           pulse: true,
-          title: 'Crisis Support Needed';
-        };
+          title: 'Crisis Support Needed'
+  };
       case 'medium':
         return {
           className: 'crisis-alert--medium',
           icon: ShieldIcon,
           color: '#d97706',
           pulse: false,
-          title: 'Support Recommended';
-        };
+          title: 'Support Recommended'
+  };
       case 'low':
         return {
           className: 'crisis-alert--low',
           icon: ShieldIcon,
           color: '#059669',
           pulse: false,
-          title: 'Resources Available';
-        };
+          title: 'Resources Available'
+  };
       default:
         return {
           className: 'crisis-alert--none',
           icon: ShieldIcon,
           color: '#6b7280',
           pulse: false,
-          title: 'Support Available';
-        }
+          title: 'Support Available'
+  }
   };
 
   const config = getSeverityConfig();
@@ -177,8 +177,7 @@ export function CrisisAlert({
   if (!isVisible) return null;
 
   return (
-    <div; 
-      className={[
+    <div className={[
         'crisis-alert',
         config.className,
         show ? 'crisis-alert--show' : 'crisis-alert--hide'
@@ -195,8 +194,7 @@ export function CrisisAlert({
         {/* Header */}
         <div className="crisis-alert__header">
           <div className="crisis-alert__icon-container">
-            <IconComponent; 
-              className={config.pulse ? 'crisis-alert__icon crisis-alert__icon--pulse' : 'crisis-alert__icon'}
+            <IconComponent className={config.pulse ? 'crisis-alert__icon crisis-alert__icon--pulse' : 'crisis-alert__icon'}
               style={{ color: config.color }}
               size={24}
               aria-hidden="true"
@@ -216,8 +214,7 @@ export function CrisisAlert({
           </div>
 
           {!emergencyMode && (
-            <button;
-              className="crisis-alert__close"
+            <button className="crisis-alert__close"
               onClick={handleDismiss}
               aria-label="Close alert";
               type="button"
@@ -282,8 +279,7 @@ export function CrisisAlert({
 
         {/* Crisis Chat Button */}
         <div className="crisis-alert__chat-section">
-          <button;
-            className="crisis-alert__chat-button"
+          <button className="crisis-alert__chat-button"
             onClick={handleCrisisChat}
             type="button"
           >
@@ -319,14 +315,13 @@ export function CrisisAlert({
         {/* Footer Actions */}
         {!emergencyMode && (
           <div className="crisis-alert__footer">
-            <button;
-              className="crisis-alert__dismiss-button"
+            <button className="crisis-alert__dismiss-button"
               onClick={handleDismiss}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
-                  handleDismiss();
-                }
+                  handleDismiss()
+  }
               }}
               type="button"
             >
@@ -336,7 +331,7 @@ export function CrisisAlert({
         )}
       </div>
     </div>
-  );
-}
+  )
+  }
 
 export default CrisisAlert;

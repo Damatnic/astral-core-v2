@@ -12,19 +12,19 @@ describe('MoodAnalysisService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    service = getMoodAnalysisService();
+    service = getMoodAnalysisService()
   });
 
   describe('Service Initialization', () => {
     it.skip('should create service instance', () => {
-      expect(service).toBeDefined();
-    });
+      expect(service).toBeDefined()
+  });
 
     it.skip('should return same instance on multiple calls', () => {
       const service1 = getMoodAnalysisService();
       const service2 = getMoodAnalysisService();
-      expect(service1).toBe(service2);
-    });
+      expect(service1).toBe(service2)
+  })
   });
 
   describe('Mood Analysis', () => {
@@ -44,11 +44,11 @@ describe('MoodAnalysisService', () => {
       expect(typeof result.intensity).toBe('number');
       expect(typeof result.confidence).toBe('number');
       expect(Array.isArray(result.keywords)).toBe(true);
-      expect(Array.isArray(result.suggestions)).toBe(true);
-    });
+      expect(Array.isArray(result.suggestions)).toBe(true)
+  });
 
     it.skip('should detect different mood types', () => {
-      const testCases = [;
+      const testCases = [;;
         { text: 'I am so happy and joyful!', expectedMood: 'happy' },
         { text: 'I feel really sad and down today', expectedMood: 'sad' },
         { text: 'I am very anxious and worried', expectedMood: 'anxious' },
@@ -59,9 +59,9 @@ describe('MoodAnalysisService', () => {
       testCases.forEach(testCase => {
         const result = service.analyzeMood(testCase.text);
         expect(result.primary).toBeDefined();
-        expect(typeof result.primary).toBe('string');
-      });
-    });
+        expect(typeof result.primary).toBe('string')
+  })
+  });
 
     it.skip('should handle empty or short text', () => {
       const emptyResult = service.analyzeMood('');
@@ -70,8 +70,8 @@ describe('MoodAnalysisService', () => {
 
       const shortResult = service.analyzeMood('ok');
       expect(shortResult).toBeDefined();
-      expect(shortResult).toHaveProperty('primary');
-    });
+      expect(shortResult).toHaveProperty('primary')
+  });
 
     it.skip('should provide intensity and confidence scores', () => {
       const text = 'I am extremely excited and thrilled about this!';
@@ -81,37 +81,37 @@ describe('MoodAnalysisService', () => {
       expect(result.intensity).toBeGreaterThanOrEqual(0);
       expect(result.intensity).toBeLessThanOrEqual(1);
       expect(result.confidence).toBeGreaterThanOrEqual(0);
-      expect(result.confidence).toBeLessThanOrEqual(1);
-    });
+      expect(result.confidence).toBeLessThanOrEqual(1)
+  })
   });
 
   describe('Pattern Analysis', () => {
     it.skip('should analyze mood patterns from multiple analyses', () => {
-      const moodAnalyses = [;
+      const moodAnalyses = [;;
         {
           primary: 'happy' as const,
           intensity: 0.8,
           confidence: 0.9,
           keywords: ['joy', 'excited'],
           suggestions: ['keep it up'],
-          timestamp: Date.now() - 86400000 // 1 day ago;
-        },
+          timestamp: Date.now() - 86400000 // 1 day ago
+  },
         {
           primary: 'calm' as const,
           intensity: 0.6,
           confidence: 0.8,
           keywords: ['peaceful', 'relaxed'],
           suggestions: ['meditation'],
-          timestamp: Date.now() - 43200000 // 12 hours ago;
-        },
+          timestamp: Date.now() - 43200000 // 12 hours ago
+  },
         {
           primary: 'anxious' as const,
           intensity: 0.7,
           confidence: 0.85,
           keywords: ['worried', 'nervous'],
           suggestions: ['breathing exercises'],
-          timestamp: Date.now();
-        }
+          timestamp: Date.now()
+  }
       ];
 
       const pattern = service.analyzePattern(moodAnalyses);
@@ -125,8 +125,8 @@ describe('MoodAnalysisService', () => {
       
       expect(Array.isArray(pattern.dominant_moods)).toBe(true);
       expect(Array.isArray(pattern.triggers)).toBe(true);
-      expect(Array.isArray(pattern.recommendations)).toBe(true);
-    });
+      expect(Array.isArray(pattern.recommendations)).toBe(true)
+  });
 
     it.skip('should handle single mood analysis', () => {
       const singleAnalysis = [{
@@ -135,20 +135,20 @@ describe('MoodAnalysisService', () => {
         confidence: 0.9,
         keywords: ['joy'],
         suggestions: ['celebrate'],
-        timestamp: Date.now();
-      }];
+        timestamp: Date.now()
+  }];
 
       const pattern = service.analyzePattern(singleAnalysis);
       expect(pattern).toBeDefined();
-      expect(pattern.dominant_moods.length).toBeGreaterThan(0);
-    });
+      expect(pattern.dominant_moods.length).toBeGreaterThan(0)
+  });
 
     it.skip('should handle empty analysis array', () => {
       const pattern = service.analyzePattern([]);
       expect(pattern).toBeDefined();
       expect(Array.isArray(pattern.dominant_moods)).toBe(true);
-      expect(Array.isArray(pattern.triggers)).toBe(true);
-    });
+      expect(Array.isArray(pattern.triggers)).toBe(true)
+  })
   });
 
   describe('Personalized Recommendations', () => {
@@ -162,11 +162,11 @@ describe('MoodAnalysisService', () => {
         trends: {
           improving: false,
           stability: 0.4,
-          volatility: 0.7;
-        },
+          volatility: 0.7
+  },
         triggers: ['work', 'social situations'],
-        recommendations: [];
-      };
+        recommendations: []
+  };
 
       const recommendations = service.generatePersonalizedRecommendations(mockPattern);
       
@@ -182,9 +182,9 @@ describe('MoodAnalysisService', () => {
         
         expect(['activity', 'resource', 'technique', 'professional']).toContain(rec.type);
         expect(['low', 'medium', 'high']).toContain(rec.priority);
-        expect(['immediate', 'daily', 'weekly', 'long_term']).toContain(rec.category);
-      });
-    });
+        expect(['immediate', 'daily', 'weekly', 'long_term']).toContain(rec.category)
+  })
+  });
 
     it.skip('should prioritize recommendations based on mood severity', () => {
       const severePattern = {
@@ -195,11 +195,11 @@ describe('MoodAnalysisService', () => {
         trends: {
           improving: false,
           stability: 0.1,
-          volatility: 0.9;
-        },
+          volatility: 0.9
+  },
         triggers: ['everything'],
-        recommendations: [];
-      };
+        recommendations: []
+  };
 
       const recommendations = service.generatePersonalizedRecommendations(severePattern);
       
@@ -207,31 +207,31 @@ describe('MoodAnalysisService', () => {
       
       // Should have high priority recommendations for severe cases;
       const highPriorityRecs = recommendations.filter((rec: any) => rec.priority === 'high');
-      expect(highPriorityRecs.length).toBeGreaterThan(0);
-    });
+      expect(highPriorityRecs.length).toBeGreaterThan(0)
+  })
   });
 
   describe('Mood History', () => {
     it.skip('should get mood history', async () => {
       const history = await service.getMoodHistory();
       
-      expect(Array.isArray(history)).toBe(true);
-    });
+      expect(Array.isArray(history)).toBe(true)
+  });
 
     it.skip('should handle empty mood history', async () => {
       // Clear any existing history
       if (service.clearMoodHistory) {
-        await service.clearMoodHistory();
-      }
+        await service.clearMoodHistory()
+  }
       
       const history = await service.getMoodHistory();
-      expect(Array.isArray(history)).toBe(true);
-    });
+      expect(Array.isArray(history)).toBe(true)
+  })
   });
 
   describe('Different Mood Types Coverage', () => {
     it.skip('should handle all supported mood types', () => {
-      const moodTypes = [;
+      const moodTypes = [;;
         'happy', 'sad', 'anxious', 'angry', 'excited', 'calm',
         'frustrated', 'hopeful', 'lonely', 'grateful', 'overwhelmed',
         'peaceful', 'worried', 'content', 'stressed', 'optimistic'
@@ -243,12 +243,12 @@ describe('MoodAnalysisService', () => {
         
         expect(result).toBeDefined();
         expect(result.primary).toBeDefined();
-        expect(typeof result.primary).toBe('string');
-      });
-    });
+        expect(typeof result.primary).toBe('string')
+  })
+  });
 
     it.skip('should provide relevant keywords for different moods', () => {
-      const testCases = [;
+      const testCases = [;;
         { text: 'I am incredibly joyful and delighted', mood: 'happy' },
         { text: 'I feel so down and melancholy', mood: 'sad' },
         { text: 'I am worried and nervous about everything', mood: 'anxious' },
@@ -258,9 +258,9 @@ describe('MoodAnalysisService', () => {
       testCases.forEach(testCase => {
         const result = service.analyzeMood(testCase.text);
         expect(result.keywords.length).toBeGreaterThan(0);
-        expect(result.suggestions.length).toBeGreaterThan(0);
-      });
-    });
+        expect(result.suggestions.length).toBeGreaterThan(0)
+  })
+  })
   });
 
   describe('Edge Cases and Error Handling', () => {
@@ -269,16 +269,16 @@ describe('MoodAnalysisService', () => {
       
       const result = service.analyzeMood(text);
       expect(result).toBeDefined();
-      expect(result.primary).toBeDefined();
-    });
+      expect(result.primary).toBeDefined()
+  });
 
     it.skip('should handle very long text', () => {
       const longText = 'I am feeling happy '.repeat(100);
       
       const result = service.analyzeMood(longText);
       expect(result).toBeDefined();
-      expect(result.primary).toBeDefined();
-    });
+      expect(result.primary).toBeDefined()
+  });
 
     it.skip('should handle mixed emotions in text', () => {
       const mixedText = 'I am happy but also a bit sad and anxious about the future';
@@ -288,12 +288,12 @@ describe('MoodAnalysisService', () => {
       expect(result.primary).toBeDefined();
       // Should handle secondary mood if available
       if (result.secondary) {
-        expect(typeof result.secondary).toBe('string');
-      }
+        expect(typeof result.secondary).toBe('string')
+  }
     });
 
     it.skip('should handle non-English or unclear text', () => {
-      const unclearTexts = [;
+      const unclearTexts = [;;
         'asdfghjkl',
         '12345',
         'lorem ipsum dolor sit amet'
@@ -302,9 +302,9 @@ describe('MoodAnalysisService', () => {
       unclearTexts.forEach(text => {
         const result = service.analyzeMood(text);
         expect(result).toBeDefined();
-        expect(result.primary).toBeDefined();
-      });
-    });
+        expect(result.primary).toBeDefined()
+  })
+  })
   });
 
   describe('Performance and Reliability', () => {
@@ -314,8 +314,8 @@ describe('MoodAnalysisService', () => {
       const end = performance.now();
       
       // Should complete within reasonable time (less than 100ms)
-      expect(end - start).toBeLessThan(100);
-    });
+      expect(end - start).toBeLessThan(100)
+  });
 
     it.skip('should be consistent with same input', () => {
       const text = 'I am feeling wonderfully happy today!';
@@ -324,7 +324,7 @@ describe('MoodAnalysisService', () => {
       const result2 = service.analyzeMood(text);
       
       expect(result1.primary).toBe(result2.primary);
-      expect(result1.intensity).toBe(result2.intensity);
-    });
+      expect(result1.intensity).toBe(result2.intensity)
+  })
+  })
   });
-});

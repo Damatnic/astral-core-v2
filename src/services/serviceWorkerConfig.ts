@@ -20,16 +20,16 @@ interface ServiceWorkerOptions {
   criticalResources?: string[];
   pushNotifications?: {
     enabled: boolean;
-    vapidKey: string;
+    vapidKey: string
   };
   backgroundSync?: {
     enabled: boolean;
-    tags: string[];
+    tags: string[]
   };
   preloadResources?: string[];
   resourceHints?: {
     preconnect: string[];
-    prefetch: string[];
+    prefetch: string[]
   };
 }
 
@@ -37,26 +37,26 @@ export const registerServiceWorker = async (options?: ServiceWorkerOptions) => {
   // Only register service worker in production
   if (process.env.NODE_ENV !== 'production') {
     console.log('[ServiceWorker] Skipping registration in development mode');
-    return null;
+    return null
   }
 
   if ('serviceWorker' in navigator) {
     try {
       const registration = await navigator.serviceWorker.register('/sw.js', {
         scope: '/'
-      });
+  });
 
       console.log('[ServiceWorker] Registration successful:', registration.scope);
 
       // Call success callback if provided
       if (options?.onSuccess) {
-        options.onSuccess(registration);
-      }
+        options.onSuccess(registration)
+  }
 
       // Check for updates periodically
       setInterval(() => {
-        registration.update();
-      }, 60000); // Check every minute
+        registration.update()
+  }, 60000); // Check every minute
 
       // Handle updates
       registration.addEventListener('updatefound', () => {
@@ -66,43 +66,42 @@ export const registerServiceWorker = async (options?: ServiceWorkerOptions) => {
             if (newWorker.state === 'activated') {
               // Call update callback if provided
               if (options?.onUpdate) {
-                options.onUpdate(registration);
-;
+                options.onUpdate(registration)
   } else if (window.confirm('New version available! Reload to update?')) {
                 // Default behavior
-                window.location.reload();
-              }
+                window.location.reload()
+  }
             }
-          });
-        }
+          })
+  }
       });
 
-      return registration;
-    } catch (error) {
+      return registration
+  } catch (error) {
       console.error('[ServiceWorker] Registration failed:', error);
-      return null;
-    }
+      return null
+  }
   }
 
-  return null;
-};
+  return null
+  };
 
 export const unregisterServiceWorker = async (): Promise<boolean> => {
   if ('serviceWorker' in navigator) {
     try {
       const registrations = await navigator.serviceWorker.getRegistrations();
       for (const registration of registrations) {
-        await registration.unregister();
-      }
-      console.log('[ServiceWorker] Unregistered successfully');
-      return true;
-    } catch (error) {
-      console.error('[ServiceWorker] Unregistration failed:', error);
-      return false;
-    }
+        await registration.unregister()
   }
-  return false;
-};
+      console.log('[ServiceWorker] Unregistered successfully');
+      return true
+  } catch (error) {
+      console.error('[ServiceWorker] Unregistration failed:', error);
+      return false
+  }
+  }
+  return false
+  };
 
 // For development: clear any existing service workers that might cause issues;
 export const updateServiceWorker = async () => {
@@ -111,11 +110,11 @@ export const updateServiceWorker = async () => {
       const registration = await navigator.serviceWorker.getRegistration();
       if (registration) {
         await registration.update();
-        console.log('[ServiceWorker] Update check completed');
-      }
+        console.log('[ServiceWorker] Update check completed')
+  }
     }
   } catch (error) {
-    console.error('[ServiceWorker] Update check failed:', error);
+    console.error('[ServiceWorker] Update check failed:', error)
   }
 };
 
@@ -125,8 +124,8 @@ export const clearServiceWorkersInDev = async () => {
       const registrations = await navigator.serviceWorker.getRegistrations();
       for (const registration of registrations) {
         await registration.unregister();
-        console.log('[ServiceWorker] Cleared development service worker');
-      }
+        console.log('[ServiceWorker] Cleared development service worker')
+  }
       
       // Also clear all caches
       if ('caches' in window) {
@@ -134,10 +133,10 @@ export const clearServiceWorkersInDev = async () => {
         await Promise.all(
           cacheNames.map(cacheName => {
             console.log('[ServiceWorker] Clearing cache:', cacheName);
-            return caches.delete(cacheName);
-          })
-        );
-      }
+            return caches.delete(cacheName)
+  })
+        )
+  }
     }
   }
 };

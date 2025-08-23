@@ -9,7 +9,7 @@ describe('CulturalContextService', () => {
   let service: CulturalContextService;
 
   beforeEach(() => {
-    service = culturalContextService;
+    service = culturalContextService
   });
 
   describe('Cultural Context Data Structure', () => {
@@ -19,9 +19,9 @@ describe('CulturalContextService', () => {
       // Check that all expected languages are present;
       const expectedLanguages = ['en', 'es', 'pt-BR', 'pt', 'ar', 'zh', 'vi', 'tl'];
       expectedLanguages.forEach(lang => {
-        expect(contexts).toHaveProperty(lang);
-      });
-    });
+        expect(contexts).toHaveProperty(lang)
+  })
+  });
 
     test.skip('should have consistent structure across all cultural contexts', () => {
       const contexts = (service as any).culturalContexts;
@@ -41,9 +41,9 @@ describe('CulturalContextService', () => {
         expect(['low', 'medium', 'high']).toContain(context.mentalHealthStigma);
         expect(['individual', 'family-centered', 'community-based']).toContain(context.familyInvolvement);
         expect(['direct', 'gradual', 'authority-based']).toContain(context.crisisEscalation);
-        expect(['direct', 'indirect', 'contextual']).toContain(context.communicationStyle);
-      });
-    });
+        expect(['direct', 'indirect', 'contextual']).toContain(context.communicationStyle)
+  })
+  })
   });
 
   describe('English (Western) Cultural Context', () => {
@@ -54,8 +54,8 @@ describe('CulturalContextService', () => {
       expect(context.mentalHealthStigma).toBe('medium');
       expect(context.familyInvolvement).toBe('individual');
       expect(context.crisisEscalation).toBe('direct');
-      expect(context.communicationStyle).toBe('direct');
-    });
+      expect(context.communicationStyle).toBe('direct')
+  })
   });
 
   describe('Spanish (Hispanic/Latino) Cultural Context', () => {
@@ -66,8 +66,8 @@ describe('CulturalContextService', () => {
       expect(context.mentalHealthStigma).toBe('high');
       expect(context.familyInvolvement).toBe('family-centered');
       expect(context.crisisEscalation).toBe('gradual');
-      expect(context.communicationStyle).toBe('contextual');
-    });
+      expect(context.communicationStyle).toBe('contextual')
+  })
   });
 
   describe('Portuguese (Brazilian) Cultural Context', () => {
@@ -78,8 +78,8 @@ describe('CulturalContextService', () => {
       expect(context.mentalHealthStigma).toBe('high');
       expect(context.familyInvolvement).toBe('family-centered');
       expect(context.crisisEscalation).toBe('gradual');
-      expect(context.communicationStyle).toBe('contextual');
-    });
+      expect(context.communicationStyle).toBe('contextual')
+  })
   });
 
   describe('Portuguese (European) Cultural Context', () => {
@@ -90,8 +90,8 @@ describe('CulturalContextService', () => {
       expect(context.mentalHealthStigma).toBe('medium');
       expect(context.familyInvolvement).toBe('family-centered');
       expect(context.crisisEscalation).toBe('gradual');
-      expect(context.communicationStyle).toBe('contextual');
-    });
+      expect(context.communicationStyle).toBe('contextual')
+  })
   });
 
   describe('Arabic Cultural Context', () => {
@@ -102,8 +102,8 @@ describe('CulturalContextService', () => {
       expect(context.mentalHealthStigma).toBe('high');
       expect(context.familyInvolvement).toBe('family-centered');
       expect(context.crisisEscalation).toBe('authority-based');
-      expect(context.communicationStyle).toBe('indirect');
-    });
+      expect(context.communicationStyle).toBe('indirect')
+  })
   });
 
   describe('Chinese Cultural Context', () => {
@@ -114,8 +114,8 @@ describe('CulturalContextService', () => {
       expect(context.mentalHealthStigma).toBe('high');
       expect(context.familyInvolvement).toBe('family-centered');
       expect(context.crisisEscalation).toBe('gradual');
-      expect(context.communicationStyle).toBe('indirect');
-    });
+      expect(context.communicationStyle).toBe('indirect')
+  })
   });
 
   describe('Vietnamese Cultural Context', () => {
@@ -126,8 +126,8 @@ describe('CulturalContextService', () => {
       expect(context.mentalHealthStigma).toBe('high');
       expect(context.familyInvolvement).toBe('family-centered');
       expect(context.crisisEscalation).toBe('authority-based');
-      expect(context.communicationStyle).toBe('indirect');
-    });
+      expect(context.communicationStyle).toBe('indirect')
+  })
   });
 
   describe('Filipino Cultural Context', () => {
@@ -138,8 +138,8 @@ describe('CulturalContextService', () => {
       expect(context.mentalHealthStigma).toBe('high');
       expect(context.familyInvolvement).toBe('family-centered');
       expect(context.crisisEscalation).toBe('gradual');
-      expect(context.communicationStyle).toBe('contextual');
-    });
+      expect(context.communicationStyle).toBe('contextual')
+  })
   });
 
   describe('Fallback Behavior', () => {
@@ -153,23 +153,23 @@ describe('CulturalContextService', () => {
         expect(context.mentalHealthStigma).toBe('medium');
         expect(context.familyInvolvement).toBe('individual');
         expect(context.crisisEscalation).toBe('direct');
-        expect(context.communicationStyle).toBe('direct');
-      });
-    });
+        expect(context.communicationStyle).toBe('direct')
+  })
+  });
 
     test.skip('should handle null and undefined language codes', () => {
       const nullContext = service.getCulturalContext(null as any);
       const undefinedContext = service.getCulturalContext(undefined as any);
       
       expect(nullContext.region).toBe('Western');
-      expect(undefinedContext.region).toBe('Western');
-    });
+      expect(undefinedContext.region).toBe('Western')
+  });
 
     test.skip('should handle empty string language code', () => {
       const emptyContext = service.getCulturalContext('');
       
-      expect(emptyContext.region).toBe('Western');
-    });
+      expect(emptyContext.region).toBe('Western')
+  })
   });
 
   describe('Mental Health Stigma Patterns', () => {
@@ -178,28 +178,28 @@ describe('CulturalContextService', () => {
       
       highStigmaCultures.forEach(lang => {
         const context = service.getCulturalContext(lang);
-        expect(context.mentalHealthStigma).toBe('high');
-      });
-    });
+        expect(context.mentalHealthStigma).toBe('high')
+  })
+  });
 
     test.skip('should identify medium stigma cultures correctly', () => {
       const mediumStigmaCultures = ['en', 'pt'];
       
       mediumStigmaCultures.forEach(lang => {
         const context = service.getCulturalContext(lang);
-        expect(context.mentalHealthStigma).toBe('medium');
-      });
-    });
+        expect(context.mentalHealthStigma).toBe('medium')
+  })
+  });
 
     test.skip('should not have any low stigma cultures in current configuration', () => {
       const allContexts = service.getAllCulturalContexts();
       
-      const lowStigmaCultures = Object.values(allContexts).filter(;
+      const lowStigmaCultures = Object.values(allContexts).filter(;;
         context => context.mentalHealthStigma === 'low'
       );
       
-      expect(lowStigmaCultures).toHaveLength(0);
-    });
+      expect(lowStigmaCultures).toHaveLength(0)
+  })
   });
 
   describe('Family Involvement Patterns', () => {
@@ -208,28 +208,28 @@ describe('CulturalContextService', () => {
       
       individualCultures.forEach(lang => {
         const context = service.getCulturalContext(lang);
-        expect(context.familyInvolvement).toBe('individual');
-      });
-    });
+        expect(context.familyInvolvement).toBe('individual')
+  })
+  });
 
     test.skip('should identify family-centered cultures correctly', () => {
       const familyCenteredCultures = ['es', 'pt-BR', 'pt', 'ar', 'zh', 'vi', 'tl'];
       
       familyCenteredCultures.forEach(lang => {
         const context = service.getCulturalContext(lang);
-        expect(context.familyInvolvement).toBe('family-centered');
-      });
-    });
+        expect(context.familyInvolvement).toBe('family-centered')
+  })
+  });
 
     test.skip('should not have community-based cultures in current configuration', () => {
       const allContexts = service.getAllCulturalContexts();
       
-      const communityBasedCultures = Object.values(allContexts).filter(;
+      const communityBasedCultures = Object.values(allContexts).filter(;;
         context => context.familyInvolvement === 'community-based'
       );
       
-      expect(communityBasedCultures).toHaveLength(0);
-    });
+      expect(communityBasedCultures).toHaveLength(0)
+  })
   });
 
   describe('Crisis Escalation Patterns', () => {
@@ -238,27 +238,27 @@ describe('CulturalContextService', () => {
       
       directCultures.forEach(lang => {
         const context = service.getCulturalContext(lang);
-        expect(context.crisisEscalation).toBe('direct');
-      });
-    });
+        expect(context.crisisEscalation).toBe('direct')
+  })
+  });
 
     test.skip('should identify gradual escalation cultures correctly', () => {
       const gradualCultures = ['es', 'pt-BR', 'pt', 'zh', 'tl'];
       
       gradualCultures.forEach(lang => {
         const context = service.getCulturalContext(lang);
-        expect(context.crisisEscalation).toBe('gradual');
-      });
-    });
+        expect(context.crisisEscalation).toBe('gradual')
+  })
+  });
 
     test.skip('should identify authority-based escalation cultures correctly', () => {
       const authorityCultures = ['ar', 'vi'];
       
       authorityCultures.forEach(lang => {
         const context = service.getCulturalContext(lang);
-        expect(context.crisisEscalation).toBe('authority-based');
-      });
-    });
+        expect(context.crisisEscalation).toBe('authority-based')
+  })
+  })
   });
 
   describe('Communication Style Patterns', () => {
@@ -267,27 +267,27 @@ describe('CulturalContextService', () => {
       
       directCultures.forEach(lang => {
         const context = service.getCulturalContext(lang);
-        expect(context.communicationStyle).toBe('direct');
-      });
-    });
+        expect(context.communicationStyle).toBe('direct')
+  })
+  });
 
     test.skip('should identify indirect communication cultures correctly', () => {
       const indirectCultures = ['ar', 'zh', 'vi'];
       
       indirectCultures.forEach(lang => {
         const context = service.getCulturalContext(lang);
-        expect(context.communicationStyle).toBe('indirect');
-      });
-    });
+        expect(context.communicationStyle).toBe('indirect')
+  })
+  });
 
     test.skip('should identify contextual communication cultures correctly', () => {
       const contextualCultures = ['es', 'pt-BR', 'pt', 'tl'];
       
       contextualCultures.forEach(lang => {
         const context = service.getCulturalContext(lang);
-        expect(context.communicationStyle).toBe('contextual');
-      });
-    });
+        expect(context.communicationStyle).toBe('contextual')
+  })
+  })
   });
 
   describe('All Cultural Contexts Method', () => {
@@ -302,8 +302,8 @@ describe('CulturalContextService', () => {
       expect(allContexts).toHaveProperty('ar');
       expect(allContexts).toHaveProperty('zh');
       expect(allContexts).toHaveProperty('vi');
-      expect(allContexts).toHaveProperty('tl');
-    });
+      expect(allContexts).toHaveProperty('tl')
+  });
 
     test.skip('should return deep copy to prevent modification', () => {
       const allContexts = service.getAllCulturalContexts();
@@ -314,8 +314,8 @@ describe('CulturalContextService', () => {
       
       // Original should be unchanged;
       const currentEnContext = service.getCulturalContext('en');
-      expect(currentEnContext.mentalHealthStigma).toBe(originalEnContext.mentalHealthStigma);
-    });
+      expect(currentEnContext.mentalHealthStigma).toBe(originalEnContext.mentalHealthStigma)
+  })
   });
 
   describe('Cultural Regions Method', () => {
@@ -333,15 +333,15 @@ describe('CulturalContextService', () => {
       
       // Should be unique;
       const uniqueRegions = [...new Set(regions)];
-      expect(regions).toEqual(uniqueRegions);
-    });
+      expect(regions).toEqual(uniqueRegions)
+  });
 
     test.skip('should return correct number of regions', () => {
       const regions = service.getCulturalRegions();
       
       // All 8 cultures have different regions in current configuration
-      expect(regions).toHaveLength(8);
-    });
+      expect(regions).toHaveLength(8)
+  })
   });
 
   describe('Cultural Context Validation', () => {
@@ -355,9 +355,9 @@ describe('CulturalContextService', () => {
         expect(['low', 'medium', 'high']).toContain(context.mentalHealthStigma);
         expect(['individual', 'family-centered', 'community-based']).toContain(context.familyInvolvement);
         expect(['direct', 'gradual', 'authority-based']).toContain(context.crisisEscalation);
-        expect(['direct', 'indirect', 'contextual']).toContain(context.communicationStyle);
-      });
-    });
+        expect(['direct', 'indirect', 'contextual']).toContain(context.communicationStyle)
+  })
+  });
 
     test.skip('should have meaningful region names', () => {
       const regions = service.getCulturalRegions();
@@ -367,8 +367,8 @@ describe('CulturalContextService', () => {
         expect(region.length).toBeGreaterThan(3); // No abbreviations
         expect(region).not.toMatch(/^\d+$/); // Not just numbers
         expect(region.charAt(0)).toMatch(/[A-Z]/); // Starts with capital
-      });
-    });
+      })
+  })
   });
 
   describe('Language Code Variations', () => {
@@ -378,8 +378,8 @@ describe('CulturalContextService', () => {
       
       // Should fall back to default (English) for unknown codes
       expect(upperCaseContext.region).toBe('Western');
-      expect(mixedCaseContext.region).toBe('Western');
-    });
+      expect(mixedCaseContext.region).toBe('Western')
+  });
 
     test.skip('should handle language codes with country suffixes', () => {
       const brContext = service.getCulturalContext('pt-BR');
@@ -387,8 +387,8 @@ describe('CulturalContextService', () => {
       
       expect(brContext.region).toBe('Brazilian');
       expect(regularPtContext.region).toBe('Portuguese');
-      expect(brContext.region).not.toBe(regularPtContext.region);
-    });
+      expect(brContext.region).not.toBe(regularPtContext.region)
+  });
 
     test.skip('should handle various Chinese language codes consistently', () => {
       const zhContext = service.getCulturalContext('zh');
@@ -396,7 +396,7 @@ describe('CulturalContextService', () => {
       
       expect(zhContext.region).toBe('Chinese');
       expect(unknownZhContext.region).toBe('Western'); // Falls back to default
-    });
+    })
   });
 
   describe('Regional Cultural Characteristics', () => {
@@ -406,9 +406,9 @@ describe('CulturalContextService', () => {
       
       highContextLanguages.forEach(lang => {
         const context = service.getCulturalContext(lang);
-        expect(['indirect', 'contextual']).toContain(context.communicationStyle);
-      });
-    });
+        expect(['indirect', 'contextual']).toContain(context.communicationStyle)
+  })
+  });
 
     test.skip('should have culturally appropriate collectivist family involvement', () => {
       // Most non-Western cultures tend to be more collectivist;
@@ -416,9 +416,9 @@ describe('CulturalContextService', () => {
       
       collectivistLanguages.forEach(lang => {
         const context = service.getCulturalContext(lang);
-        expect(context.familyInvolvement).toBe('family-centered');
-      });
-    });
+        expect(context.familyInvolvement).toBe('family-centered')
+  })
+  });
 
     test.skip('should reflect research-based mental health stigma levels', () => {
       // Based on research, these cultures typically have higher mental health stigma;
@@ -426,28 +426,28 @@ describe('CulturalContextService', () => {
       
       highStigmaLanguages.forEach(lang => {
         const context = service.getCulturalContext(lang);
-        expect(context.mentalHealthStigma).toBe('high');
-      });
-    });
+        expect(context.mentalHealthStigma).toBe('high')
+  })
+  })
   });
 
   describe('Singleton Instance', () => {
     test.skip('should export singleton instance', () => {
-      expect(culturalContextService).toBeInstanceOf(CulturalContextService);
-    });
+      expect(culturalContextService).toBeInstanceOf(CulturalContextService)
+  });
 
     test.skip('should maintain same instance', () => {
       const instance1 = culturalContextService;
       const instance2 = culturalContextService;
-      expect(instance1).toBe(instance2);
-    });
+      expect(instance1).toBe(instance2)
+  });
 
     test.skip('should provide consistent data across calls', () => {
       const context1 = culturalContextService.getCulturalContext('es');
       const context2 = culturalContextService.getCulturalContext('es');
       
-      expect(context1).toEqual(context2);
-    });
+      expect(context1).toEqual(context2)
+  })
   });
 
   describe('Performance and Immutability', () => {
@@ -463,8 +463,8 @@ describe('CulturalContextService', () => {
       
       // Internal data should remain unchanged;
       const currentContexts = (service as any).culturalContexts;
-      expect(currentContexts).toEqual(originalContexts);
-    });
+      expect(currentContexts).toEqual(originalContexts)
+  });
 
     test.skip('should handle rapid successive calls efficiently', () => {
       const startTime = Date.now();
@@ -473,21 +473,21 @@ describe('CulturalContextService', () => {
       for (let i = 0; i < 1000; i++) {
         service.getCulturalContext('es');
         service.getCulturalContext('zh');
-        service.getCulturalRegions();
-      }
+        service.getCulturalRegions()
+  }
       
       const endTime = Date.now();
       const duration = endTime - startTime;
       
       // Should complete within reasonable time (less than 1 second)
-      expect(duration).toBeLessThan(1000);
-    });
+      expect(duration).toBeLessThan(1000)
+  })
+  })
   });
-});
 
 // Dummy test to keep suite active
 describe('Test Suite Active', () => {
   it.skip('Placeholder test to prevent empty suite', () => {
-    expect(true).toBe(true);
+    expect(true).toBe(true)
+  })
   });
-});

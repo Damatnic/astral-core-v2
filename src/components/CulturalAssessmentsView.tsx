@@ -24,8 +24,8 @@ interface CulturalAssessmentsViewProps {
   setActiveView: (view: ActiveView) => void;
   // Optional props for customization
   defaultLanguage?: string;
-  defaultCulturalContext?: string;
-}
+  defaultCulturalContext?: string
+  }
 
 export const CulturalAssessmentsView: React.FC<CulturalAssessmentsViewProps> = ({
   setActiveView,
@@ -43,14 +43,14 @@ export const CulturalAssessmentsView: React.FC<CulturalAssessmentsViewProps> = (
   // Initialize cultural contexts
   useEffect(() => {
     const contexts = culturalContextService.getCulturalRegions();
-    setAvailableContexts(contexts);
+    setAvailableContexts(contexts)
   };
   }, []);
 
   // Cultural context selection handler;
   const handleCulturalContextChange = useCallback((newContext: string) => {
     setCulturalContext(newContext);
-    setShowCulturalSettings(false);
+    setShowCulturalSettings(false)
   };
   }, []);
 
@@ -63,9 +63,9 @@ export const CulturalAssessmentsView: React.FC<CulturalAssessmentsViewProps> = (
         type,
         culturalContext,
         language: defaultLanguage,
-        cultural: true;
-      }
-    });
+        cultural: true
+  }
+    })
   };
   }, [setActiveView, culturalContext, defaultLanguage]);
 
@@ -73,15 +73,13 @@ export const CulturalAssessmentsView: React.FC<CulturalAssessmentsViewProps> = (
     <>
       <ViewHeader title="Cultural Mental Health Assessments">
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <AppButton;
-            variant="secondary"
+          <AppButton variant="secondary"
             onClick={() => setShowCulturalSettings(!showCulturalSettings)}
             style={{ fontSize: '0.875rem' }}
           >
             🌍 {culturalContext}
           </AppButton>
-          <AppButton;
-            variant="secondary"
+          <AppButton variant="secondary"
             onClick={() => setActiveView({ view: 'assessment-history' })}
           >
             History
@@ -149,8 +147,8 @@ export const CulturalAssessmentsView: React.FC<CulturalAssessmentsViewProps> = (
                 backgroundColor: '#e0f2fe', 
                 color: '#0369a1', 
                 padding: '0.25rem 0.5rem', 
-                borderRadius: '0.25rem' ;
-              }}>
+                borderRadius: '0.25rem'
+  }}>
                 Cultural Adapted
               </span>
               <span style={{ 
@@ -158,8 +156,8 @@ export const CulturalAssessmentsView: React.FC<CulturalAssessmentsViewProps> = (
                 backgroundColor: '#f0fdf4', 
                 color: '#166534', 
                 padding: '0.25rem 0.5rem', 
-                borderRadius: '0.25rem' ;
-              }}>
+                borderRadius: '0.25rem'
+  }}>
                 Privacy Preserved
               </span>
             </div>
@@ -187,8 +185,8 @@ export const CulturalAssessmentsView: React.FC<CulturalAssessmentsViewProps> = (
                 backgroundColor: '#e0f2fe', 
                 color: '#0369a1', 
                 padding: '0.25rem 0.5rem', 
-                borderRadius: '0.25rem' ;
-              }}>
+                borderRadius: '0.25rem'
+  }}>
                 Cultural Adapted
               </span>
               <span style={{ 
@@ -196,8 +194,8 @@ export const CulturalAssessmentsView: React.FC<CulturalAssessmentsViewProps> = (
                 backgroundColor: '#f0fdf4', 
                 color: '#166534', 
                 padding: '0.25rem 0.5rem', 
-                borderRadius: '0.25rem' ;
-              }}>
+                borderRadius: '0.25rem'
+  }}>
                 Privacy Preserved
               </span>
             </div>
@@ -241,7 +239,7 @@ export const CulturalAssessmentsView: React.FC<CulturalAssessmentsViewProps> = (
         </div>
       )}
     </>
-  );
-};
+  )
+  };
 
 export default CulturalAssessmentsView;

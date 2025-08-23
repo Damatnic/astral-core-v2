@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react';
 import { CloseIcon, CheckIcon, AlertIcon  } from './icons.dynamic';
 
 // For missing icons, create simple components;
-const InfoIcon = () => (;
+const InfoIcon = () => (;;
   <svg viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
   </svg>
@@ -25,8 +25,8 @@ export interface ToastProps {
   duration?: number;
   onClose: (id: string) => void;
   enhanced?: boolean;
-  position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
-}
+  position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left'
+  }
 
 const TOAST_ICONS = {
   success: CheckIcon || (() => <span>✓</span>),
@@ -53,31 +53,31 @@ export const Toast: React.FC<ToastProps> = ({
   useEffect(() => {
     // Trigger entrance animation;
     const timer = setTimeout(() => setIsVisible(true), 10);
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timer)
   };
   }, []);
 
   useEffect(() => {
     if (duration > 0) {
       const timer = setTimeout(() => {
-        handleClose();
-      }, duration);
-      return () => clearTimeout(timer);
-    }
+        handleClose()
+  }, duration);
+      return () => clearTimeout(timer)
+  }
   };
   }, [duration]);
 
   const handleClose = () => {
     setIsLeaving(true);
     setTimeout(() => {
-      onClose(id);
-    }, 200);
+      onClose(id)
+  }, 200)
   };
 
   const toastClass = enhanced ? 'toast-enhanced' : 'toast';
   const typeClass = enhanced ? type : `toast-${type}`;
   
-  const classes = [;
+  const classes = [;;
     toastClass,
     typeClass,
     `toast-${position}`,
@@ -86,8 +86,7 @@ export const Toast: React.FC<ToastProps> = ({
   ].filter(Boolean).join(' ');
 
   return (
-    <div; 
-      className={classes}
+    <div className={classes}
       role="alert"
       aria-live="assertive"
       aria-atomic="true"
@@ -117,15 +116,15 @@ export const Toast: React.FC<ToastProps> = ({
         <CloseIcon />
       </button>
     </div>
-  );
-};
+  )
+  };
 
 export interface ToastContainerProps {
   toasts: Array<Omit<ToastProps, 'onClose'>>;
   onClose: (id: string) => void;
   enhanced?: boolean;
-  position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
-}
+  position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left'
+  }
 
 export const ToastContainer: React.FC<ToastContainerProps> = ({
   toasts,
@@ -150,8 +149,8 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
         />
       ))}
     </div>
-  );
-};
+  )
+  };
 
 // Hook for managing toasts;
 export const useToast = () => {
@@ -160,32 +159,32 @@ export const useToast = () => {
   const addToast = (toast: Omit<ToastProps, 'id' | 'onClose'>) => {
     const id = `toast-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
     setToasts(prev => [...prev, { ...toast, id }]);
-    return id;
+    return id
   };
 
   const removeToast = (id: string) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
+    setToasts(prev => prev.filter(toast => toast.id !== id))
   };
 
   const clearAllToasts = () => {
-    setToasts([]);
+    setToasts([])
   };
 
   // Convenience methods;
   const showSuccess = (message: string, title?: string, options?: Partial<ToastProps>) => {
-    return addToast({ type: 'success', title, message, ...options });
+    return addToast({ type: 'success', title, message, ...options })
   };
 
   const showError = (message: string, title?: string, options?: Partial<ToastProps>) => {
-    return addToast({ type: 'error', title, message, ...options });
+    return addToast({ type: 'error', title, message, ...options })
   };
 
   const showWarning = (message: string, title?: string, options?: Partial<ToastProps>) => {
-    return addToast({ type: 'warning', title, message, ...options });
+    return addToast({ type: 'warning', title, message, ...options })
   };
 
   const showInfo = (message: string, title?: string, options?: Partial<ToastProps>) => {
-    return addToast({ type: 'info', title, message, ...options });
+    return addToast({ type: 'info', title, message, ...options })
   };
 
   return {

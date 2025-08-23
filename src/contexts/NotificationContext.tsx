@@ -7,8 +7,8 @@ interface NotificationContextType {
   removeToast: (id: string) => void;
   confirmationModal: ConfirmationModalState | null;
   showConfirmationModal: (config: ConfirmationModalState) => void;
-  hideConfirmationModal: () => void;
-}
+  hideConfirmationModal: () => void
+  }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
@@ -18,25 +18,25 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
 
   const addToast = useCallback((message: string, type: ToastType['type'] = 'success') => {
     const id = crypto.randomUUID();
-    setToasts(prev => [...prev, { id, message, type }]);
+    setToasts(prev => [...prev, { id, message, type }])
   };
   }, []);
 
   const removeToast = useCallback((id: string) => {
-    setToasts(prev => prev.filter(t => t.id !== id));
+    setToasts(prev => prev.filter(t => t.id !== id))
   };
   }, []);
 
   const showConfirmationModal = useCallback((config: ConfirmationModalState) => {
-    setConfirmationModal(config);
+    setConfirmationModal(config)
   };
   }, []);
 
   const hideConfirmationModal = useCallback(() => {
     if (confirmationModal?.onCancel) {
-        confirmationModal.onCancel();
-    }
-    setConfirmationModal(null);
+        confirmationModal.onCancel()
+  }
+    setConfirmationModal(null)
   };
   }, [confirmationModal]);
   
@@ -53,16 +53,16 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
     <NotificationContext.Provider value={value}>
       {children}
     </NotificationContext.Provider>
-  );
-};
+  )
+  };
 
 export const useNotification = (): NotificationContextType => {
   const context = useContext(NotificationContext);
   if (!context) {
-    throw new Error('useNotification must be used within a NotificationProvider');
+    throw new Error('useNotification must be used within a NotificationProvider')
   }
-  return context;
-};
+  return context
+  };
 
 // Export NotificationContext for testing purposes;
 export { NotificationContext };

@@ -28,8 +28,8 @@ interface CopyToClipboardProps {
   /** Disable the copy functionality */
   disabled?: boolean;
   /** Truncate displayed text */
-  truncateLength?: number;
-}
+  truncateLength?: number
+  }
 
 const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
   text,
@@ -52,17 +52,17 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
 
   const truncateText = useCallback((str: string, length?: number): string => {
     if (!length || str.length <= length) return str;
-    return `${str.substring(0, length)}...`;
+    return `${str.substring(0, length)}...`
   };
   }, []);
 
   const resetCopyState = useCallback(() => {
     if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+      clearTimeout(timeoutRef.current)
+  }
     timeoutRef.current = setTimeout(() => {
-      setCopyState('idle');
-    }, timeout);
+      setCopyState('idle')
+  }, timeout)
   };
   }, [timeout]);
 
@@ -74,7 +74,7 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
     try {
       // Try modern clipboard API first
       if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(text);;
+        await navigator.clipboard.writeText(text)
   } else {
         // Fallback for older browsers or non-secure contexts;
         const textArea = document.createElement('textarea');
@@ -86,8 +86,8 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
         textArea.focus();
         textArea.select();
         document.execCommand('copy');
-        textArea.remove();
-      }
+        textArea.remove()
+  }
 
       setCopyState('success');
       onCopy?.(text, true);
@@ -100,11 +100,11 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
         announcement.className = 'sr-only';
         announcement.textContent = `${successMessage} "${truncateText(text, 50)}"`;
         document.body.appendChild(announcement);
-        setTimeout(() => document.body.removeChild(announcement), 1000);
-      }
+        setTimeout(() => document.body.removeChild(announcement), 1000)
+  }
 
-      resetCopyState();
-    } catch (error) {
+      resetCopyState()
+  } catch (error) {
       console.error('Failed to copy text:', error);
       setCopyState('error');
       onCopy?.(text, false);
@@ -117,20 +117,20 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
         announcement.className = 'sr-only';
         announcement.textContent = errorMessage;
         document.body.appendChild(announcement);
-        setTimeout(() => document.body.removeChild(announcement), 1000);
-      }
+        setTimeout(() => document.body.removeChild(announcement), 1000)
+  }
   }
 
-  resetCopyState();
-    }
+  resetCopyState()
+  }
   };
   }, [text, disabled, copyState, onCopy, successMessage, errorMessage, showFeedback, resetCopyState, truncateText]);
 
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      handleCopyClick();
-    }
+      handleCopyClick()
+  }
   };
   }, [handleCopyClick]);
 
@@ -138,7 +138,7 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
   const isSuccess = copyState === 'success';
   const isError = copyState === 'error';
 
-  const baseClasses = [;
+  const baseClasses = [;;
     'copy-to-clipboard',
     `copy-to-clipboard--${variant}`,
     `copy-to-clipboard--${size}`,
@@ -187,7 +187,7 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
           </output>
         )}
       </div>
-    );
+    )
   }
 
   return (
@@ -228,8 +228,8 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
         </output>
       )}
     </div>
-  );
-};
+  )
+  };
 
 export { CopyToClipboard };
 export default CopyToClipboard;

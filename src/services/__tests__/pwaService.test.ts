@@ -11,7 +11,7 @@ describe('PWAService', () => {
   let mockNavigator: any;
 
   it.skip('should have at least one test', () => {
-    expect(true).toBe(true);
+    expect(true).toBe(true)
   });
 
   beforeEach(() => {
@@ -61,7 +61,7 @@ describe('PWAService', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   // Removed Service Worker Registration tests for missing methods

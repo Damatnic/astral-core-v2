@@ -28,11 +28,11 @@ describe('AccessibilityUtils', () => {
       display: 'block',
       visibility: 'visible',
       opacity: '1',
-    });
+    })
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    jest.restoreAllMocks()
   });
 
   describe('getElementAttributes', () => {
@@ -53,8 +53,8 @@ describe('AccessibilityUtils', () => {
         class: 'test-class',
         'aria-label': 'Test label',
         role: 'button',
-      });
-    });
+      })
+  });
 
     it('should return empty object for element with no attributes', () => {
       const mockElement = {
@@ -63,8 +63,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.getElementAttributes(mockElement);
 
-      expect(result).toEqual({});
-    });
+      expect(result).toEqual({})
+  });
 
     it('should handle attributes with empty values', () => {
       const mockElement = {
@@ -79,8 +79,8 @@ describe('AccessibilityUtils', () => {
       expect(result).toEqual({
         'data-test': '',
         hidden: '',
-      });
-    });
+      })
+  });
 
     it('should handle special characters in attribute names and values', () => {
       const mockElement = {
@@ -95,8 +95,8 @@ describe('AccessibilityUtils', () => {
       expect(result).toEqual({
         'data-special-chars': 'Test & < > " \' chars',
         'aria-describedby': 'id-with-dashes_and_underscores',
-      });
-    });
+      })
+  })
   });
 
   describe('getElementSelector', () => {
@@ -109,8 +109,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.getElementSelector(mockElement);
 
-      expect(result).toBe('#unique-id');
-    });
+      expect(result).toBe('#unique-id')
+  });
 
     it('should return class selector when element has class but no ID', () => {
       const mockElement = {
@@ -121,8 +121,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.getElementSelector(mockElement);
 
-      expect(result).toBe('.primary-class');
-    });
+      expect(result).toBe('.primary-class')
+  });
 
     it('should return tag name when element has no ID or class', () => {
       const mockElement = {
@@ -133,8 +133,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.getElementSelector(mockElement);
 
-      expect(result).toBe('span');
-    });
+      expect(result).toBe('span')
+  });
 
     it('should handle mixed case tag names', () => {
       const mockElement = {
@@ -145,8 +145,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.getElementSelector(mockElement);
 
-      expect(result).toBe('div');
-    });
+      expect(result).toBe('div')
+  });
 
     it('should handle whitespace in class names', () => {
       const mockElement = {
@@ -157,20 +157,20 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.getElementSelector(mockElement);
 
-      expect(result).toBe('.class-with-spaces');
-    });
+      expect(result).toBe('.class-with-spaces')
+  })
   });
 
   describe('generateElementId', () => {
     beforeEach(() => {
       // Mock Date.now and Math.random for consistent results
       jest.spyOn(Date, 'now').mockReturnValue(1234567890000);
-      jest.spyOn(Math, 'random').mockReturnValue(0.123456789);
-    });
+      jest.spyOn(Math, 'random').mockReturnValue(0.123456789)
+  });
 
     afterEach(() => {
-      jest.restoreAllMocks();
-    });
+      jest.restoreAllMocks()
+  });
 
     it('should generate unique ID with tag name, timestamp, and random string', () => {
       const mockElement = {
@@ -180,8 +180,8 @@ describe('AccessibilityUtils', () => {
       const result = AccessibilityUtils.generateElementId(mockElement);
 
       expect(result).toMatch(/^div-\d+-[a-z0-9]+$/);
-      expect(result).toContain('div-1234567890000-');
-    });
+      expect(result).toContain('div-1234567890000-')
+  });
 
     it('should handle different tag names', () => {
       const mockElement = {
@@ -190,8 +190,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.generateElementId(mockElement);
 
-      expect(result).toMatch(/^button-\d+-[a-z0-9]+$/);
-    });
+      expect(result).toMatch(/^button-\d+-[a-z0-9]+$/)
+  });
 
     it('should generate different IDs for multiple calls', () => {
       const mockElement = {
@@ -206,8 +206,8 @@ describe('AccessibilityUtils', () => {
       const id1 = AccessibilityUtils.generateElementId(mockElement);
       const id2 = AccessibilityUtils.generateElementId(mockElement);
 
-      expect(id1).not.toBe(id2);
-    });
+      expect(id1).not.toBe(id2)
+  })
   });
 
   describe('isVisible', () => {
@@ -221,8 +221,8 @@ describe('AccessibilityUtils', () => {
       const mockElement = {} as Element;
       const result = AccessibilityUtils.isVisible(mockElement);
 
-      expect(result).toBe(true);
-    });
+      expect(result).toBe(true)
+  });
 
     it('should return false for element with display: none', () => {
       mockGetComputedStyle.mockReturnValue({
@@ -234,8 +234,8 @@ describe('AccessibilityUtils', () => {
       const mockElement = {} as Element;
       const result = AccessibilityUtils.isVisible(mockElement);
 
-      expect(result).toBe(false);
-    });
+      expect(result).toBe(false)
+  });
 
     it('should return false for element with visibility: hidden', () => {
       mockGetComputedStyle.mockReturnValue({
@@ -247,8 +247,8 @@ describe('AccessibilityUtils', () => {
       const mockElement = {} as Element;
       const result = AccessibilityUtils.isVisible(mockElement);
 
-      expect(result).toBe(false);
-    });
+      expect(result).toBe(false)
+  });
 
     it('should return false for element with opacity: 0', () => {
       mockGetComputedStyle.mockReturnValue({
@@ -260,8 +260,8 @@ describe('AccessibilityUtils', () => {
       const mockElement = {} as Element;
       const result = AccessibilityUtils.isVisible(mockElement);
 
-      expect(result).toBe(false);
-    });
+      expect(result).toBe(false)
+  });
 
     it('should handle partial opacity', () => {
       mockGetComputedStyle.mockReturnValue({
@@ -273,8 +273,8 @@ describe('AccessibilityUtils', () => {
       const mockElement = {} as Element;
       const result = AccessibilityUtils.isVisible(mockElement);
 
-      expect(result).toBe(true);
-    });
+      expect(result).toBe(true)
+  });
 
     it('should handle different display values', () => {
       const displayValues = ['inline', 'inline-block', 'flex', 'grid', 'table'];
@@ -289,14 +289,14 @@ describe('AccessibilityUtils', () => {
         const mockElement = {} as Element;
         const result = AccessibilityUtils.isVisible(mockElement);
 
-        expect(result).toBe(true);
-      });
-    });
+        expect(result).toBe(true)
+  })
+  })
   });
 
   describe('getFocusableElements', () => {
     it('should return focusable elements that are visible', () => {
-      const mockElements = [;
+      const mockElements = [;;
         { tagName: 'A', getAttribute: jest.fn().mockReturnValue('#'), tabIndex: 0 },
         { tagName: 'BUTTON', getAttribute: jest.fn(), tabIndex: 0 },
         { tagName: 'INPUT', getAttribute: jest.fn(), tabIndex: 0 },
@@ -312,8 +312,8 @@ describe('AccessibilityUtils', () => {
       expect(result).toEqual(mockElements);
       expect(mockQuerySelectorAll).toHaveBeenCalledWith(
         'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]), [contenteditable="true"]'
-      );
-    });
+      )
+  });
 
     it('should filter out invisible elements', () => {
       const visibleElement = { tagName: 'BUTTON' };
@@ -327,16 +327,16 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.getFocusableElements();
 
-      expect(result).toEqual([visibleElement]);
-    });
+      expect(result).toEqual([visibleElement])
+  });
 
     it('should handle empty result', () => {
       mockQuerySelectorAll.mockReturnValue([]);
 
       const result = AccessibilityUtils.getFocusableElements();
 
-      expect(result).toEqual([]);
-    });
+      expect(result).toEqual([])
+  });
 
     it('should include elements with positive tabindex', () => {
       const mockElement = { tagName: 'DIV', getAttribute: jest.fn().mockReturnValue('1') };
@@ -345,8 +345,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.getFocusableElements();
 
-      expect(result).toContain(mockElement);
-    });
+      expect(result).toContain(mockElement)
+  });
 
     it('should include contenteditable elements', () => {
       const mockElement = { tagName: 'DIV', getAttribute: jest.fn().mockReturnValue('true') };
@@ -355,8 +355,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.getFocusableElements();
 
-      expect(result).toContain(mockElement);
-    });
+      expect(result).toContain(mockElement)
+  })
   });
 
   describe('hasTextContent', () => {
@@ -367,8 +367,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.hasTextContent(mockElement);
 
-      expect(result).toBe(true);
-    });
+      expect(result).toBe(true)
+  });
 
     it('should return false for element with no text content', () => {
       const mockElement = {
@@ -377,8 +377,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.hasTextContent(mockElement);
 
-      expect(result).toBe(false);
-    });
+      expect(result).toBe(false)
+  });
 
     it('should return false for element with empty text content', () => {
       const mockElement = {
@@ -387,8 +387,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.hasTextContent(mockElement);
 
-      expect(result).toBe(false);
-    });
+      expect(result).toBe(false)
+  });
 
     it('should return false for element with only whitespace', () => {
       const mockElement = {
@@ -397,8 +397,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.hasTextContent(mockElement);
 
-      expect(result).toBe(false);
-    });
+      expect(result).toBe(false)
+  });
 
     it('should return true for element with text after trimming', () => {
       const mockElement = {
@@ -407,8 +407,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.hasTextContent(mockElement);
 
-      expect(result).toBe(true);
-    });
+      expect(result).toBe(true)
+  });
 
     it('should handle undefined textContent', () => {
       const mockElement = {
@@ -417,8 +417,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.hasTextContent(mockElement);
 
-      expect(result).toBe(false);
-    });
+      expect(result).toBe(false)
+  })
   });
 
   describe('isCrisisElement', () => {
@@ -434,8 +434,8 @@ describe('AccessibilityUtils', () => {
       const result = AccessibilityUtils.isCrisisElement(mockElement);
 
       expect(result).toBe(true);
-      expect(mockElement.classList.contains).toHaveBeenCalledWith('crisis');
-    });
+      expect(mockElement.classList.contains).toHaveBeenCalledWith('crisis')
+  });
 
     it('should return true for element with data-crisis attribute', () => {
       const mockElement = {
@@ -449,8 +449,8 @@ describe('AccessibilityUtils', () => {
       const result = AccessibilityUtils.isCrisisElement(mockElement);
 
       expect(result).toBe(true);
-      expect(mockElement.getAttribute).toHaveBeenCalledWith('data-crisis');
-    });
+      expect(mockElement.getAttribute).toHaveBeenCalledWith('data-crisis')
+  });
 
     it('should return true for element inside crisis container', () => {
       const mockCrisisContainer = { classList: { contains: () => true } };
@@ -465,8 +465,8 @@ describe('AccessibilityUtils', () => {
       const result = AccessibilityUtils.isCrisisElement(mockElement);
 
       expect(result).toBe(true);
-      expect(mockElement.closest).toHaveBeenCalledWith('.crisis');
-    });
+      expect(mockElement.closest).toHaveBeenCalledWith('.crisis')
+  });
 
     it('should return false for non-crisis element', () => {
       const mockElement = {
@@ -479,11 +479,11 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.isCrisisElement(mockElement);
 
-      expect(result).toBe(false);
-    });
+      expect(result).toBe(false)
+  });
 
     it('should handle data-crisis attribute with different values', () => {
-      const testCases = [;
+      const testCases = [;;
         { value: 'true', expected: true },
         { value: 'false', expected: false },
         { value: 'yes', expected: false },
@@ -501,9 +501,9 @@ describe('AccessibilityUtils', () => {
 
         const result = AccessibilityUtils.isCrisisElement(mockElement);
 
-        expect(result).toBe(expected);
-      });
-    });
+        expect(result).toBe(expected)
+  })
+  })
   });
 
   describe('getComplianceThresholds', () => {
@@ -513,8 +513,8 @@ describe('AccessibilityUtils', () => {
       expect(result).toEqual({
         maxCritical: 0,
         maxHigh: 0,
-      });
-    });
+      })
+  });
 
     it('should return AA thresholds for AA level', () => {
       const result = AccessibilityUtils.getComplianceThresholds('AA');
@@ -522,8 +522,8 @@ describe('AccessibilityUtils', () => {
       expect(result).toEqual({
         maxCritical: 0,
         maxHigh: 2,
-      });
-    });
+      })
+  });
 
     it('should return A thresholds for A level', () => {
       const result = AccessibilityUtils.getComplianceThresholds('A');
@@ -531,8 +531,8 @@ describe('AccessibilityUtils', () => {
       expect(result).toEqual({
         maxCritical: 0,
         maxHigh: 5,
-      });
-    });
+      })
+  });
 
     it('should return A thresholds for unknown level', () => {
       const result = AccessibilityUtils.getComplianceThresholds('UNKNOWN');
@@ -540,8 +540,8 @@ describe('AccessibilityUtils', () => {
       expect(result).toEqual({
         maxCritical: 0,
         maxHigh: 5,
-      });
-    });
+      })
+  });
 
     it('should handle empty string', () => {
       const result = AccessibilityUtils.getComplianceThresholds('');
@@ -549,8 +549,8 @@ describe('AccessibilityUtils', () => {
       expect(result).toEqual({
         maxCritical: 0,
         maxHigh: 5,
-      });
-    });
+      })
+  });
 
     it('should handle case-insensitive input', () => {
       const result = AccessibilityUtils.getComplianceThresholds('aaa');
@@ -558,14 +558,14 @@ describe('AccessibilityUtils', () => {
       expect(result).toEqual({
         maxCritical: 0,
         maxHigh: 5,
-      });
-    });
+      })
+  })
   });
 
   describe('findComplexText', () => {
     beforeEach(() => {
       // Mock document.querySelectorAll for text elements;
-      const mockTextElements = [;
+      const mockTextElements = [;;
         {
           textContent: 'This is a very long sentence that contains more than twenty words and should be flagged as complex text for accessibility purposes.',
         },
@@ -583,16 +583,16 @@ describe('AccessibilityUtils', () => {
         },
       ];
 
-      mockQuerySelectorAll.mockReturnValue(mockTextElements);
-    });
+      mockQuerySelectorAll.mockReturnValue(mockTextElements)
+  });
 
     it('should identify complex sentences with more than 20 words', () => {
       const result = AccessibilityUtils.findComplexText();
 
       expect(result).toHaveLength(2);
       expect(result[0]).toContain('This is a very long sentence');
-      expect(result[1]).toContain('Another extremely long and complex');
-    });
+      expect(result[1]).toContain('Another extremely long and complex')
+  });
 
     it('should handle empty text elements', () => {
       mockQuerySelectorAll.mockReturnValue([
@@ -603,8 +603,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.findComplexText();
 
-      expect(result).toHaveLength(0);
-    });
+      expect(result).toHaveLength(0)
+  });
 
     it.skip('should handle multiple sentences in one element', () => {
       // Skipped: Implementation issue with sentence splitting
@@ -617,8 +617,8 @@ describe('AccessibilityUtils', () => {
       const result = AccessibilityUtils.findComplexText();
 
       expect(result).toHaveLength(1);
-      expect(result[0]).toContain('This is another very long sentence');
-    });
+      expect(result[0]).toContain('This is another very long sentence')
+  });
 
     it.skip('should handle different sentence terminators', () => {
       // Skipped: Implementation issue with sentence parsing
@@ -630,14 +630,14 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.findComplexText();
 
-      expect(result).toHaveLength(2);
-    });
+      expect(result).toHaveLength(2)
+  });
 
     it('should query the correct text elements', () => {
       AccessibilityUtils.findComplexText();
 
-      expect(mockQuerySelectorAll).toHaveBeenCalledWith('p, div, span, li');
-    });
+      expect(mockQuerySelectorAll).toHaveBeenCalledWith('p, div, span, li')
+  });
 
     it('should handle elements with only punctuation', () => {
       mockQuerySelectorAll.mockReturnValue([
@@ -648,8 +648,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.findComplexText();
 
-      expect(result).toHaveLength(0);
-    });
+      expect(result).toHaveLength(0)
+  });
 
     it('should trim whitespace from sentences', () => {
       mockQuerySelectorAll.mockReturnValue([
@@ -661,8 +661,8 @@ describe('AccessibilityUtils', () => {
       const result = AccessibilityUtils.findComplexText();
 
       expect(result).toHaveLength(1);
-      expect(result[0]).not.toMatch(/^\s+|\s+$/);
-    });
+      expect(result[0]).not.toMatch(/^\s+|\s+$/)
+  })
   });
 
   describe('getTextContent', () => {
@@ -673,8 +673,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.getTextContent(mockElement, 50);
 
-      expect(result).toBe('This is some text content');
-    });
+      expect(result).toBe('This is some text content')
+  });
 
     it('should truncate text content to max length', () => {
       const mockElement = {
@@ -684,8 +684,8 @@ describe('AccessibilityUtils', () => {
       const result = AccessibilityUtils.getTextContent(mockElement, 20);
 
       expect(result).toBe('This is a very long ');
-      expect(result?.length).toBe(20);
-    });
+      expect(result?.length).toBe(20)
+  });
 
     it('should use default max length of 50', () => {
       const longText = 'This is a very long text content that exceeds fifty characters and should be truncated by default';
@@ -696,8 +696,8 @@ describe('AccessibilityUtils', () => {
       const result = AccessibilityUtils.getTextContent(mockElement);
 
       expect(result).toBe(longText.substring(0, 50));
-      expect(result?.length).toBe(50);
-    });
+      expect(result?.length).toBe(50)
+  });
 
     it('should return undefined for null text content', () => {
       const mockElement = {
@@ -706,8 +706,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.getTextContent(mockElement);
 
-      expect(result).toBeUndefined();
-    });
+      expect(result).toBeUndefined()
+  });
 
     it('should return empty string for empty text content', () => {
       const mockElement = {
@@ -716,8 +716,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.getTextContent(mockElement);
 
-      expect(result).toBe('');
-    });
+      expect(result).toBe('')
+  });
 
     it('should handle whitespace-only content', () => {
       const mockElement = {
@@ -726,8 +726,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.getTextContent(mockElement);
 
-      expect(result).toBe('');
-    });
+      expect(result).toBe('')
+  });
 
     it('should handle zero max length', () => {
       const mockElement = {
@@ -736,8 +736,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.getTextContent(mockElement, 0);
 
-      expect(result).toBe('');
-    });
+      expect(result).toBe('')
+  });
 
     it('should handle negative max length', () => {
       const mockElement = {
@@ -746,8 +746,8 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.getTextContent(mockElement, -5);
 
-      expect(result).toBe('');
-    });
+      expect(result).toBe('')
+  });
 
     it('should preserve text when shorter than max length', () => {
       const mockElement = {
@@ -756,16 +756,16 @@ describe('AccessibilityUtils', () => {
 
       const result = AccessibilityUtils.getTextContent(mockElement, 100);
 
-      expect(result).toBe('Short text');
-    });
+      expect(result).toBe('Short text')
+  })
   });
 
   describe('edge cases and error handling', () => {
     it('should handle null elements gracefully', () => {
       expect(() => {
-        AccessibilityUtils.getElementAttributes(null as any);
-      }).toThrow();
-    });
+        AccessibilityUtils.getElementAttributes(null as any)
+  }).toThrow()
+  });
 
     it('should handle elements without classList', () => {
       const mockElement = {
@@ -774,37 +774,37 @@ describe('AccessibilityUtils', () => {
       } as unknown as Element;
 
       expect(() => {
-        AccessibilityUtils.isCrisisElement(mockElement);
-      }).toThrow();
-    });
+        AccessibilityUtils.isCrisisElement(mockElement)
+  }).toThrow()
+  });
 
     it('should handle getComputedStyle failures', () => {
       mockGetComputedStyle.mockImplementation(() => {
-        throw new Error('Style computation failed');
-      });
+        throw new Error('Style computation failed')
+  });
 
       const mockElement = {} as Element;
 
       expect(() => {
-        AccessibilityUtils.isVisible(mockElement);
-      }).toThrow();
-    });
+        AccessibilityUtils.isVisible(mockElement)
+  }).toThrow()
+  });
 
     it('should handle querySelectorAll failures', () => {
       mockQuerySelectorAll.mockImplementation(() => {
-        throw new Error('Query failed');
-      });
+        throw new Error('Query failed')
+  });
 
       expect(() => {
-        AccessibilityUtils.getFocusableElements();
-      }).toThrow();
-    });
+        AccessibilityUtils.getFocusableElements()
+  }).toThrow()
+  })
   });
 
   describe('integration scenarios', () => {
     it('should work with real-like DOM structures', () => {
       // Mock a realistic DOM structure;
-      const focusableElements = [;
+      const focusableElements = [;;
         {
           tagName: 'A',
           getAttribute: jest.fn().mockReturnValue('#home'),
@@ -828,8 +828,8 @@ describe('AccessibilityUtils', () => {
       const hasCrisisElement = focusables.some(el => AccessibilityUtils.isCrisisElement(el));
 
       expect(focusables).toHaveLength(2);
-      expect(hasCrisisElement).toBe(true);
-    });
+      expect(hasCrisisElement).toBe(true)
+  });
 
     it('should handle accessibility audit workflow', () => {
       const mockElement = {
@@ -857,7 +857,7 @@ describe('AccessibilityUtils', () => {
       expect(selector).toBe('#test-button');
       expect(hasText).toBe(true);
       expect(isCrisis).toBe(true);
-      expect(textContent).toBe('Click me for help');
-    });
+      expect(textContent).toBe('Click me for help')
+  })
+  })
   });
-});

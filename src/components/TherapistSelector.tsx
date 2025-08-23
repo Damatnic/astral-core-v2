@@ -10,13 +10,13 @@ export interface Therapist {
   approach?: string;
   languages?: string[];
   availability?: 'always' | 'limited';
-  tags?: string[];
-}
+  tags?: string[]
+  }
 
 export interface TherapistSelectorProps {
   onSelectTherapist: (therapist: Therapist) => void;
-  selectedTherapist: Therapist | null;
-}
+  selectedTherapist: Therapist | null
+  }
 
 const therapists: Therapist[] = [
   {
@@ -165,7 +165,7 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
 
   // Filter therapists based on search and tag;
   const filteredTherapists = therapists.filter(therapist => {
-    const matchesSearch = searchTerm === '' || ;
+    const matchesSearch = searchTerm === '' || ;;
       therapist.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       therapist.specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
       therapist.bio.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -173,7 +173,7 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
     
     const matchesTag = !selectedTag || therapist.tags?.includes(selectedTag);
     
-    return matchesSearch && matchesTag;
+    return matchesSearch && matchesTag
   });
 
   return (
@@ -182,13 +182,13 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
         .therapist-selector {
           padding: 1.5rem;
           max-width: 1200px;
-          margin: 0 auto;
-        }
+          margin: 0 auto
+  }
 
         .therapist-selector-header {
           text-align: center;
-          margin-bottom: 2rem;
-        }
+          margin-bottom: 2rem
+  }
 
         .therapist-selector-header h2 {
           font-size: 2rem;
@@ -196,17 +196,17 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
+          background-clip: text
+  }
 
         .therapist-selector-header p {
           color: var(--text-secondary);
-          font-size: 1.1rem;
-        }
+          font-size: 1.1rem
+  }
 
         .therapist-search {
-          margin-bottom: 1.5rem;
-        }
+          margin-bottom: 1.5rem
+  }
 
         .search-input {
           width: 100%;
@@ -216,21 +216,21 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
           font-size: 1rem;
           background: var(--bg-secondary);
           color: var(--text-primary);
-          transition: all 0.3s ease;
-        }
+          transition: all 0.3s ease
+  }
 
         .search-input:focus {
           outline: none;
           border-color: var(--accent-primary);
-          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1)
+  }
 
         .therapist-tags {
           display: flex;
           flex-wrap: wrap;
           gap: 0.5rem;
-          margin-bottom: 2rem;
-        }
+          margin-bottom: 2rem
+  }
 
         .tag-filter {
           padding: 0.5rem 1rem;
@@ -240,25 +240,25 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
           border: 1px solid var(--border-color);
           cursor: pointer;
           transition: all 0.3s ease;
-          font-size: 0.9rem;
-        }
+          font-size: 0.9rem
+  }
 
         .tag-filter:hover {
           border-color: var(--accent-primary);
-          color: var(--accent-primary);
-        }
+          color: var(--accent-primary)
+  }
 
         .tag-filter.active {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           color: white;
-          border-color: transparent;
-        }
+          border-color: transparent
+  }
 
         .therapist-list {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-          gap: 1.5rem;
-        }
+          gap: 1.5rem
+  }
 
         .therapist-card {
           background: var(--card-bg);
@@ -268,8 +268,8 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
           transition: all 0.3s ease;
           border: 2px solid transparent;
           position: relative;
-          overflow: hidden;
-        }
+          overflow: hidden
+  }
 
         .therapist-card::before {
           content: '';
@@ -280,33 +280,33 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
           height: 4px;
           background: linear-gradient(90deg, #667eea, #764ba2, #f27121, #e94057);
           opacity: 0;
-          transition: opacity 0.3s ease;
-        }
+          transition: opacity 0.3s ease
+  }
 
         .therapist-card:hover {
           transform: translateY(-4px);
           box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-          border-color: var(--accent-primary);
-        }
+          border-color: var(--accent-primary)
+  }
 
         .therapist-card:hover::before {
-          opacity: 1;
-        }
+          opacity: 1
+  }
 
         .therapist-card.selected {
           border-color: var(--accent-primary);
-          background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-        }
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%)
+  }
 
         .therapist-card.selected::before {
-          opacity: 1;
-        }
+          opacity: 1
+  }
 
         .therapist-card-header {
           display: flex;
           align-items: center;
-          margin-bottom: 1rem;
-        }
+          margin-bottom: 1rem
+  }
 
         .therapist-avatar {
           width: 60px;
@@ -317,12 +317,12 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
           align-items: center;
           justify-content: center;
           margin-right: 1rem;
-          position: relative;
-        }
+          position: relative
+  }
 
         .therapist-emoji {
-          font-size: 2rem;
-        }
+          font-size: 2rem
+  }
 
         .availability-badge {
           position: absolute;
@@ -332,32 +332,32 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
           height: 16px;
           background: #10b981;
           border-radius: 50%;
-          border: 2px solid var(--card-bg);
-        }
+          border: 2px solid var(--card-bg)
+  }
 
         .therapist-info {
-          flex: 1;
-        }
+          flex: 1
+  }
 
         .therapist-info h3 {
           margin: 0 0 0.25rem 0;
           font-size: 1.1rem;
-          color: var(--text-primary);
-        }
+          color: var(--text-primary)
+  }
 
         .therapist-specialty {
           color: var(--accent-primary);
           font-weight: 600;
           font-size: 0.9rem;
-          margin-bottom: 0.5rem;
-        }
+          margin-bottom: 0.5rem
+  }
 
         .therapist-bio {
           color: var(--text-secondary);
           line-height: 1.5;
           font-size: 0.95rem;
-          margin-bottom: 0.75rem;
-        }
+          margin-bottom: 0.75rem
+  }
 
         .therapist-approach {
           display: flex;
@@ -365,57 +365,57 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
           gap: 0.5rem;
           color: var(--text-secondary);
           font-size: 0.85rem;
-          margin-bottom: 0.5rem;
-        }
+          margin-bottom: 0.5rem
+  }
 
         .therapist-languages {
           display: flex;
           gap: 0.5rem;
           flex-wrap: wrap;
-          margin-bottom: 0.75rem;
-        }
+          margin-bottom: 0.75rem
+  }
 
         .language-badge {
           padding: 0.25rem 0.5rem;
           background: rgba(102, 126, 234, 0.1);
           color: var(--accent-primary);
           border-radius: 8px;
-          font-size: 0.8rem;
-        }
+          font-size: 0.8rem
+  }
 
         .therapist-tags-list {
           display: flex;
           flex-wrap: wrap;
-          gap: 0.5rem;
-        }
+          gap: 0.5rem
+  }
 
         .therapist-tag {
           padding: 0.25rem 0.75rem;
           background: var(--bg-secondary);
           color: var(--text-secondary);
           border-radius: 12px;
-          font-size: 0.8rem;
-        }
+          font-size: 0.8rem
+  }
 
         .no-results {
           text-align: center;
           padding: 3rem;
-          color: var(--text-secondary);
-        }
+          color: var(--text-secondary)
+  }
 
         .no-results h3 {
           margin-bottom: 1rem;
-          color: var(--text-primary);
-        }
+          color: var(--text-primary)
+  }
 
         @media (max-width: 768px) {
           .therapist-list {
-            grid-template-columns: 1fr;
-          }
+            grid-template-columns: 1fr
+  }
 
           .therapist-selector-header h2 {
-            font-size: 1.5rem;
-          }
+            font-size: 1.5rem
+  }
         }
       `}</style>
 
@@ -426,8 +426,7 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
         </div>
 
         <div className="therapist-search">
-          <input;
-            type="text";
+          <input type="text";
             className="search-input"
             placeholder="Search by name, specialty, or concern..."
             value={searchTerm}
@@ -436,8 +435,7 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
         </div>
 
         <div className="therapist-tags">
-          <button;
-            className={`tag-filter ${!selectedTag ? 'active' : ''}`}
+          <button className={`tag-filter ${!selectedTag ? 'active' : ''}`}
             onClick={() => setSelectedTag(null)}
           >
             All Specialties
@@ -507,7 +505,7 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
         </div>
       </div>
     </>
-  );
-};
+  )
+  };
 
 export default TherapistSelector;

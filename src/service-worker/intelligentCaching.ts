@@ -17,13 +17,13 @@ export interface CacheStrategy {
     expiration?: {
       maxEntries: number;
       maxAgeSeconds: number;
-      purgeOnQuotaError: boolean;
-    };
-    networkTimeoutSeconds?: number;
-    plugins?: unknown[];
+      purgeOnQuotaError: boolean
   };
-  priority: 'crisis' | 'high' | 'medium' | 'low';
-}
+    networkTimeoutSeconds?: number;
+    plugins?: unknown[]
+  };
+  priority: 'crisis' | 'high' | 'medium' | 'low'
+  }
 
 export interface UserBehaviorMetrics {
   visitedRoutes: string[];
@@ -36,7 +36,7 @@ export interface UserBehaviorMetrics {
   deviceCapabilities: {
     memory: number;
     connection: string;
-    isLowEnd: boolean;
+    isLowEnd: boolean
   };
 }
 export class IntelligentCachingManager {
@@ -48,7 +48,7 @@ export class IntelligentCachingManager {
   constructor() {
     this.userMetrics = this.initializeUserMetrics();
     this.setupCacheStrategies();
-    this.setupEventListeners();
+    this.setupEventListeners()
   }
 
   /**
@@ -67,11 +67,11 @@ export class IntelligentCachingManager {
       deviceCapabilities: {
         memory: (navigator as any).deviceMemory || 4,
         connection: (navigator as any).connection?.effectiveType || '4g',
-        isLowEnd: (navigator as any).deviceMemory < 2;
-      }
+        isLowEnd: (navigator as any).deviceMemory < 2
+  }
     };
 
-    return stored ? { ...defaults, ...JSON.parse(stored) } : defaults;
+    return stored ? { ...defaults, ...JSON.parse(stored) } : defaults
   }
 
   /**
@@ -89,12 +89,12 @@ export class IntelligentCachingManager {
           expiration: {
             maxEntries: 50,
             maxAgeSeconds: 60 * 60 * 24 * 180, // 6 months
-            purgeOnQuotaError: false;
-          },
-          plugins: [this.createCrisisPlugin()];
-        },
-        priority: 'crisis';
-      },
+            purgeOnQuotaError: false
+  },
+          plugins: [this.createCrisisPlugin()]
+  },
+        priority: 'crisis'
+  },
 
       // MENTAL HEALTH CORE - High Priority
       {
@@ -106,12 +106,12 @@ export class IntelligentCachingManager {
           expiration: {
             maxEntries: 100,
             maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-            purgeOnQuotaError: false;
-          },
-          plugins: [this.createPerformancePlugin()];
-        },
-        priority: 'high';
-      },
+            purgeOnQuotaError: false
+  },
+          plugins: [this.createPerformancePlugin()]
+  },
+        priority: 'high'
+  },
 
       // API RESPONSES - Intelligent caching based on content type
       {
@@ -123,13 +123,13 @@ export class IntelligentCachingManager {
           expiration: {
             maxEntries: 200,
             maxAgeSeconds: 60 * 60 * 6, // 6 hours
-            purgeOnQuotaError: true;
-          },
+            purgeOnQuotaError: true
+  },
           networkTimeoutSeconds: this.getAdaptiveTimeout(),
-          plugins: [this.createAPIPlugin()];
-        },
-        priority: 'high';
-      },
+          plugins: [this.createAPIPlugin()]
+  },
+        priority: 'high'
+  },
 
       // USER-SPECIFIC DATA - Based on behavior patterns
       {
@@ -141,12 +141,12 @@ export class IntelligentCachingManager {
           expiration: {
             maxEntries: 50,
             maxAgeSeconds: 60 * 60 * 24, // 24 hours
-            purgeOnQuotaError: true;
-          },
-          plugins: [this.createUserDataPlugin()];
-        },
-        priority: 'high';
-      },
+            purgeOnQuotaError: true
+  },
+          plugins: [this.createUserDataPlugin()]
+  },
+        priority: 'high'
+  },
 
       // STATIC ASSETS - Optimized for device capabilities
       {
@@ -158,12 +158,12 @@ export class IntelligentCachingManager {
           expiration: {
             maxEntries: this.userMetrics.deviceCapabilities.isLowEnd ? 50 : 150,
             maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-            purgeOnQuotaError: true;
-          },
-          plugins: [this.createAssetPlugin()];
-        },
-        priority: 'medium';
-      },
+            purgeOnQuotaError: true
+  },
+          plugins: [this.createAssetPlugin()]
+  },
+        priority: 'medium'
+  },
 
       // IMAGES - Progressive loading with format optimization
       {
@@ -175,12 +175,12 @@ export class IntelligentCachingManager {
           expiration: {
             maxEntries: this.userMetrics.deviceCapabilities.isLowEnd ? 75 : 200,
             maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-            purgeOnQuotaError: true;
-          },
-          plugins: [this.createImagePlugin()];
-        },
-        priority: 'medium';
-      },
+            purgeOnQuotaError: true
+  },
+          plugins: [this.createImagePlugin()]
+  },
+        priority: 'medium'
+  },
 
       // PREFETCHED CONTENT - Based on user behavior
       {
@@ -192,12 +192,12 @@ export class IntelligentCachingManager {
           expiration: {
             maxEntries: 30,
             maxAgeSeconds: 60 * 60 * 2, // 2 hours
-            purgeOnQuotaError: true;
-          }
+            purgeOnQuotaError: true
+  }
         },
-        priority: 'low';
-      }
-    ];
+        priority: 'low'
+  }
+    ]
   }
 
   /**
@@ -207,7 +207,7 @@ export class IntelligentCachingManager {
     const { networkCondition, deviceCapabilities } = this.userMetrics;
     
     if (networkCondition === 'slow' || deviceCapabilities.isLowEnd) {
-      return 30; // 30 seconds for slow networks/devices;
+      return 30; // 30 seconds for slow networks/devices
   } else if (networkCondition === 'fast') {
       return 8; // 8 seconds for fast networks
     }
@@ -221,20 +221,20 @@ export class IntelligentCachingManager {
     return {
       cacheKeyWillBeUsed: async ({ request }: { request: Request }) => {
         // Add crisis priority marker to cache key
-        return `crisis-priority-${request.url}`;
-      },
+        return `crisis-priority-${request.url}`
+  },
       
       requestWillFetch: async ({ request }: { request: Request }) => {
         // Log crisis resource access for analytics
         this.userMetrics.crisisInteractions++;
         this.saveUserMetrics();
-        return request;
-      },
+        return request
+  },
       
       cacheWillUpdate: async ({ response }: { response: Response }) => {
         // Always cache crisis resources, even with errors
-        return response.status < 500 ? response : null;
-      }
+        return response.status < 500 ? response : null
+  }
     }
 
   /**
@@ -246,17 +246,17 @@ export class IntelligentCachingManager {
         const startTime = performance.now();
         this.analyticsCache.set(request.url, { startTime };
   };
-        return request;
-      },
+        return request
+  },
       
       requestDidSucceed: async ({ request, response }: { request: Request; response: Response }) => {
         const data = this.analyticsCache.get(request.url);
         if (data) {
           const loadTime = performance.now() - data.startTime;
-          this.updatePerformanceMetrics(request.url, loadTime);
-        }
-        return response;
-      }
+          this.updatePerformanceMetrics(request.url, loadTime)
+  }
+        return response
+  }
     }
 
   /**
@@ -271,25 +271,25 @@ export class IntelligentCachingManager {
           
           // Always cache crisis-related API responses
           if (response.url.includes('/crisis') || response.url.includes('/emergency')) {
-            return response;
-          }
+            return response
+  }
           
           // Cache JSON responses for longer
           if (contentType?.includes('application/json')) {
-            return response;
-          }
+            return response
+  }
           
           // Don't cache large payloads on low-end devices;
           const contentLength = response.headers.get('content-length');
           if (this.userMetrics.deviceCapabilities.isLowEnd && 
               contentLength && parseInt(contentLength) > 100000) {
-            return null;
-          }
+            return null
+  }
           
-          return response;
-        }
-        return null;
-      }
+          return response
+  }
+        return null
+  }
     }
 
   /**
@@ -302,15 +302,15 @@ export class IntelligentCachingManager {
         const timeSinceActive = Date.now() - this.userMetrics.lastActiveTime;
         const isRecentlyActive = timeSinceActive < 60 * 60 * 1000; // 1 hour
         
-        return isRecentlyActive && response.status === 200 ? response : null;
-      },
+        return isRecentlyActive && response.status === 200 ? response : null
+  },
       
       requestWillFetch: async ({ request }: { request: Request }) => {
         // Update last active time on user data requests
         this.userMetrics.lastActiveTime = Date.now();
         this.saveUserMetrics();
-        return request;
-      }
+        return request
+  }
     }
 
   /**
@@ -323,12 +323,12 @@ export class IntelligentCachingManager {
         if (this.userMetrics.deviceCapabilities.isLowEnd) {
           const contentLength = response.headers.get('content-length');
           if (contentLength && parseInt(contentLength) > 500000) { // 500KB limit
-            return null;
-          }
+            return null
+  }
         }
         
-        return response.status === 200 ? response : null;
-      }
+        return response.status === 200 ? response : null
+  }
     }
 
   /**
@@ -343,8 +343,8 @@ export class IntelligentCachingManager {
           
           // Add format hints for better caching
           if (this.supportsWebP() && !url.pathname.includes('.webp')) {
-            url.searchParams.set('format', 'webp');
-          }
+            url.searchParams.set('format', 'webp')
+  }
           
           if (this.userMetrics.deviceCapabilities.isLowEnd) {
             url.searchParams.set('quality', '75'); // Lower quality for low-end devices
@@ -358,13 +358,13 @@ export class IntelligentCachingManager {
             credentials: request.credentials,
             cache: request.cache,
             redirect: request.redirect,
-            referrer: request.referrer;
-          };
+            referrer: request.referrer
+  };
   };
         }
         
-        return request;
-      }
+        return request
+  }
     }
 
   /**
@@ -375,8 +375,8 @@ export class IntelligentCachingManager {
     
     for (const resource of predictions) {
       if (this.shouldPrefetch(resource)) {
-        await this.prefetchResource(resource);
-      }
+        await this.prefetchResource(resource)
+  }
     }
   }
 
@@ -393,23 +393,23 @@ export class IntelligentCachingManager {
         '/crisis-resources.json',
         '/emergency-contacts.json',
         '/offline-crisis.html'
-      );
-    }
+      )
+  }
 
     // Route-based predictions;
-    const frequentRoutes = Object.entries(timeSpentOnRoutes);
+    const frequentRoutes = Object.entries(timeSpentOnRoutes);;
       .sort(([,a], [,b]) => b - a)
       .slice(0, 3)
       .map(([route]) => route);
 
     for (const route of frequentRoutes) {
       if (route.includes('mood-tracker')) {
-        predictions.push('/mood-data.json', '/mood-insights.json');;
+        predictions.push('/mood-data.json', '/mood-insights.json')
   } else if (route.includes('journal')) {
-        predictions.push('/journal-prompts.json', '/reflection-templates.json');;
+        predictions.push('/journal-prompts.json', '/reflection-templates.json')
   } else if (route.includes('helpers')) {
-        predictions.push('/helper-availability.json', '/chat-templates.json');
-      }
+        predictions.push('/helper-availability.json', '/chat-templates.json')
+  }
     }
 
     // Feature-based predictions
@@ -423,8 +423,8 @@ export class IntelligentCachingManager {
           break;
         case 'wellness':
           predictions.push('/wellness-tips.json', '/self-care-activities.json');
-          break;
-      }
+          break
+  }
     }
 
     return [...new Set(predictions)]; // Remove duplicates
@@ -438,16 +438,16 @@ export class IntelligentCachingManager {
     if (this.userMetrics.networkCondition === 'slow' || 
         this.userMetrics.deviceCapabilities.isLowEnd) {
       // Only prefetch crisis resources
-      return resourceUrl.includes('crisis') || resourceUrl.includes('emergency');
-    }
+      return resourceUrl.includes('crisis') || resourceUrl.includes('emergency')
+  }
 
     // Don't prefetch if already in queue
     if (this.prefetchQueue.includes(resourceUrl)) {
-      return false;
-    }
+      return false
+  }
 
     // Limit prefetch queue size
-    return this.prefetchQueue.length < 10;
+    return this.prefetchQueue.length < 10
   }
 
   /**
@@ -471,13 +471,13 @@ export class IntelligentCachingManager {
       }
       
     } catch (error) {
-      console.warn(`[Intelligent Cache] Prefetch failed for ${resourceUrl}:`, error);
-    } finally {
+      console.warn(`[Intelligent Cache] Prefetch failed for ${resourceUrl}:`, error)
+  } finally {
       // Remove from queue;
       const index = this.prefetchQueue.indexOf(resourceUrl);
       if (index > -1) {
-        this.prefetchQueue.splice(index, 1);
-      }
+        this.prefetchQueue.splice(index, 1)
+  }
     }
   }
 
@@ -486,11 +486,11 @@ export class IntelligentCachingManager {
    */
   private getPrefetchPriority(resourceUrl: string): string {
     if (resourceUrl.includes('crisis') || resourceUrl.includes('emergency')) {
-      return 'high';;
+      return 'high'
   } else if (resourceUrl.includes('mood') || resourceUrl.includes('journal')) {
-      return 'medium';
-    }
-    return 'low';
+      return 'medium'
+  }
+    return 'low'
   }
 
   /**
@@ -508,7 +508,7 @@ export class IntelligentCachingManager {
     this.saveUserMetrics();
     
     // Trigger intelligent prefetching
-    this.intelligentPrefetch();
+    this.intelligentPrefetch()
   }
 
   /**
@@ -527,14 +527,14 @@ export class IntelligentCachingManager {
 
     for (const [routePart, feature] of Object.entries(featureMap)) {
       if (route.includes(routePart) && !this.userMetrics.preferredFeatures.includes(feature)) {
-        this.userMetrics.preferredFeatures.push(feature);
-      }
+        this.userMetrics.preferredFeatures.push(feature)
+  }
     }
 
     // Keep only top 5 preferred features
     if (this.userMetrics.preferredFeatures.length > 5) {
-      this.userMetrics.preferredFeatures = this.userMetrics.preferredFeatures.slice(-5);
-    }
+      this.userMetrics.preferredFeatures = this.userMetrics.preferredFeatures.slice(-5)
+  }
   }
 
   /**
@@ -545,8 +545,8 @@ export class IntelligentCachingManager {
       url,
       loadTime,
       timestamp: Date.now(),
-      networkCondition: this.userMetrics.networkCondition;
-    };
+      networkCondition: this.userMetrics.networkCondition
+  };
 
     // Store performance data for analysis;
     const perfHistory = JSON.parse(localStorage.getItem('astral-performance') || '[]');
@@ -554,10 +554,10 @@ export class IntelligentCachingManager {
     
     // Keep only last 100 entries
     if (perfHistory.length > 100) {
-      perfHistory.splice(0, perfHistory.length - 100);
-    }
+      perfHistory.splice(0, perfHistory.length - 100)
+  }
     
-    localStorage.setItem('astral-performance', JSON.stringify(perfHistory));
+    localStorage.setItem('astral-performance', JSON.stringify(perfHistory))
   }
 
   /**
@@ -565,14 +565,14 @@ export class IntelligentCachingManager {
    */
   private supportsWebP(): boolean {
     const canvas = document.createElement('canvas');
-    return canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+    return canvas.toDataURL('image/webp').indexOf('data: image/webp') === 0
   }
 
   /**
    * Save user metrics to localStorage
    */
   private saveUserMetrics(): void {
-    localStorage.setItem('astral-cache-metrics', JSON.stringify(this.userMetrics));
+    localStorage.setItem('astral-cache-metrics', JSON.stringify(this.userMetrics))
   }
 
   /**
@@ -583,8 +583,8 @@ export class IntelligentCachingManager {
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
         this.userMetrics.lastActiveTime = Date.now();
-        this.saveUserMetrics();
-      }
+        this.saveUserMetrics()
+  }
     });
 
     // Track network changes
@@ -595,24 +595,24 @@ export class IntelligentCachingManager {
         
         let networkCondition: 'fast' | 'slow' | 'offline';
         if (effectiveType === '4g') {
-          networkCondition = 'fast';;
+          networkCondition = 'fast'
   } else if (effectiveType === 'slow-2g') {
-          networkCondition = 'slow';;
+          networkCondition = 'slow'
   } else {
-          networkCondition = 'fast';
-        }
+          networkCondition = 'fast'
+  }
         
         this.userMetrics.networkCondition = networkCondition;
-        this.saveUserMetrics();
-      });
-    }
+        this.saveUserMetrics()
+  })
+  }
   }
 
   /**
    * Get cache strategies for workbox configuration
    */
   public getCacheStrategies(): CacheStrategy[] {
-    return this.cacheStrategies;
+    return this.cacheStrategies
   }
 
   /**
@@ -645,8 +645,8 @@ export class IntelligentCachingManager {
           // Keep only the 10 most recent prefetched items
           return Promise.all(
             keys.slice(10).map(request => prefetchCache.delete(request))
-          );
-        }
+          )
+  }
       };
   };
     }

@@ -14,8 +14,8 @@ interface PerformanceMetrics {
   cls: number | null;
   fcp: number | null;
   ttfb: number | null;
-  inp: number | null;
-}
+  inp: number | null
+  }
 
 interface PerformanceState {
   metrics: PerformanceMetrics;
@@ -23,29 +23,29 @@ interface PerformanceState {
   performanceScore: number;
   recommendations: string[];
   crisisOptimized: boolean;
-  mobileOptimized: boolean;
-}
+  mobileOptimized: boolean
+  }
 
 interface UsePerformanceMonitorOptions {
   enableRealTimeAlerts?: boolean;
   enableCrisisOptimization?: boolean;
   enableAutomaticReporting?: boolean;
-  reportingInterval?: number;
-}
+  reportingInterval?: number
+  }
 
 interface CrisisPerformanceThresholds {
   criticalLCP: number;
   criticalFID: number;
   criticalTTFB: number;
-  emergencyResponseTime: number;
-}
+  emergencyResponseTime: number
+  }
 
 const CRISIS_THRESHOLDS: CrisisPerformanceThresholds = {
   criticalLCP: 1500, // 1.5s for crisis pages
   criticalFID: 50,   // 50ms for crisis interactions
   criticalTTFB: 500, // 500ms for crisis resources
-  emergencyResponseTime: 100 // 100ms for emergency buttons;
-};
+  emergencyResponseTime: 100 // 100ms for emergency buttons
+  };
 
 const DEFAULT_THRESHOLDS = {
   goodLCP: 2500,
@@ -53,8 +53,8 @@ const DEFAULT_THRESHOLDS = {
   goodCLS: 0.1,
   goodFCP: 1800,
   goodTTFB: 800,
-  goodINP: 200;
-};
+  goodINP: 200
+  };
 
 export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}) => {
   const {
@@ -70,7 +70,7 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
     search: window.location.search, 
     hash: window.location.hash, 
     state: null, 
-    key: 'default' ;
+    key: 'default'
   };
   
   const reportingIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -82,13 +82,13 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
       cls: null,
       fcp: null,
       ttfb: null,
-      inp: null;
-    },
+      inp: null
+  },
     isLoading: true,
     performanceScore: 0,
     recommendations: [],
     crisisOptimized: false,
-    mobileOptimized: false;
+    mobileOptimized: false
   });
 
   /**
@@ -96,7 +96,7 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
    */;
   const isCrisisRoute = useCallback((): boolean => {
     const crisisRoutes = ['/crisis', '/emergency', '/safety-plan', '/offline-crisis'];
-    return crisisRoutes.some(route => location.pathname.startsWith(route));
+    return crisisRoutes.some(route => location.pathname.startsWith(route))
   };
   }, [location.pathname]);
 
@@ -104,7 +104,7 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
    * Check if current device is mobile
    */;
   const isMobileDevice = useCallback((): boolean => {
-    return window.innerWidth < 768;
+    return window.innerWidth < 768
   };
   }, []);
 
@@ -116,7 +116,7 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
     const threshold = isCrisis ? CRISIS_THRESHOLDS.criticalLCP : DEFAULT_THRESHOLDS.goodLCP;
     if (lcp > threshold) return -25;
     if (lcp > threshold * 0.8) return -10;
-    return 0;
+    return 0
   };
   }, []);
 
@@ -128,7 +128,7 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
     const threshold = isCrisis ? CRISIS_THRESHOLDS.criticalFID : DEFAULT_THRESHOLDS.goodFID;
     if (fid > threshold) return -20;
     if (fid > threshold * 0.8) return -8;
-    return 0;
+    return 0
   };
   }, []);
 
@@ -142,7 +142,7 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
     const lightPenalty = isCrisis ? 15 : 6;
     if (ttfb > threshold) return -penalty;
     if (ttfb > threshold * 0.8) return -lightPenalty;
-    return 0;
+    return 0
   };
   }, []);
 
@@ -162,16 +162,16 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
     // CLS scoring
     if (metrics.cls !== null) {
       if (metrics.cls > DEFAULT_THRESHOLDS.goodCLS) score -= 15;
-      else if (metrics.cls > DEFAULT_THRESHOLDS.goodCLS * 0.8) score -= 6;
-    }
+      else if (metrics.cls > DEFAULT_THRESHOLDS.goodCLS * 0.8) score -= 6
+  }
 
     // Mobile-specific penalties
     if (isMobile) {
       if (metrics.lcp && metrics.lcp > 3000) score -= 10;
-      if (metrics.fid && metrics.fid > 200) score -= 10;
-    }
+      if (metrics.fid && metrics.fid > 200) score -= 10
+  }
 
-    return Math.max(0, Math.round(score));
+    return Math.max(0, Math.round(score))
   };
   }, [isCrisisRoute, isMobileDevice, calculateLCPScore, calculateFIDScore, calculateTTFBScore]);
 
@@ -184,9 +184,9 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
     if (lcp > threshold) {
       return [isCrisis 
         ? 'Crisis page LCP too slow - prioritize critical resources'
-        : 'Large Contentful Paint too slow - optimize images and critical resources'];
-    }
-    return [];
+        : 'Large Contentful Paint too slow - optimize images and critical resources']
+  }
+    return []
   };
   }, []);
 
@@ -199,9 +199,9 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
     if (fid > threshold) {
       return [isCrisis
         ? 'Crisis interaction response too slow - reduce JavaScript execution time'
-        : 'First Input Delay too high - reduce main thread blocking'];
-    }
-    return [];
+        : 'First Input Delay too high - reduce main thread blocking']
+  }
+    return []
   };
   }, []);
 
@@ -214,9 +214,9 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
     if (ttfb > threshold) {
       return [isCrisis
         ? 'Crisis resource server response too slow - optimize backend'
-        : 'Server response time too slow - optimize backend performance'];
-    }
-    return [];
+        : 'Server response time too slow - optimize backend performance']
+  }
+    return []
   };
   }, []);
 
@@ -236,19 +236,19 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
 
     // CLS recommendations
     if (metrics.cls && metrics.cls > DEFAULT_THRESHOLDS.goodCLS) {
-      recommendations.push('Layout shifts detected - ensure stable page layouts');
-    }
+      recommendations.push('Layout shifts detected - ensure stable page layouts')
+  }
 
     // Mobile and crisis context recommendations
     if (isMobile && score < 80) {
-      recommendations.push('Mobile performance suboptimal - implement mobile-specific optimizations');
-    }
+      recommendations.push('Mobile performance suboptimal - implement mobile-specific optimizations')
+  }
 
     if (isCrisis && score < 90) {
-      recommendations.push('Crisis page performance critical - implement emergency optimizations');
-    }
+      recommendations.push('Crisis page performance critical - implement emergency optimizations')
+  }
 
-    return recommendations;
+    return recommendations
   };
   }, [isCrisisRoute, isMobileDevice, generateLCPRecommendations, generateFIDRecommendations, generateTTFBRecommendations]);
 
@@ -313,15 +313,15 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
               name: 'FID',
               value: responseTime,
               id: `emergency-${Date.now()}`,
-              isCrisisCritical: true;
-            });
-          }
-        });
-      }
+              isCrisisCritical: true
+  })
+  }
+        })
+  }
     };
 
     document.addEventListener('click', handleEmergencyClick);
-    return () => document.removeEventListener('click', handleEmergencyClick);
+    return () => document.removeEventListener('click', handleEmergencyClick)
   };
   }, [handleMetricUpdate]);
 
@@ -333,8 +333,8 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
 
     // Clear any existing interval
     if (reportingIntervalRef.current) {
-      clearInterval(reportingIntervalRef.current);
-    }
+      clearInterval(reportingIntervalRef.current)
+  }
 
     reportingIntervalRef.current = setInterval(() => {
       const report = coreWebVitalsService.generateReport();
@@ -342,8 +342,8 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
       // Log performance summary
       console.log('📊 Performance Report:', {
         route: window.location.pathname,
-        timestamp: Date.now();
-      });
+        timestamp: Date.now()
+  });
       
       // Store performance data locally for analysis
       try {
@@ -352,25 +352,25 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
         reports.push({
           ...report,
           pathname: window.location.pathname,
-          timestamp: Date.now();
-        });
+          timestamp: Date.now()
+  });
         
         // Keep only last 50 reports
         if (reports.length > 50) {
-          reports.splice(0, reports.length - 50);
-        }
+          reports.splice(0, reports.length - 50)
+  }
         
-        localStorage.setItem('performance_reports', JSON.stringify(reports));
-      } catch (error) {
-        console.warn('Could not store performance report:', error);
-      }
+        localStorage.setItem('performance_reports', JSON.stringify(reports))
+  } catch (error) {
+        console.warn('Could not store performance report:', error)
+  }
     }, reportingInterval);
     
     // Return cleanup function
     return () => {
       if (reportingIntervalRef.current) {
-        clearInterval(reportingIntervalRef.current);
-      }
+        clearInterval(reportingIntervalRef.current)
+  }
     };
   }, [enableAutomaticReporting, reportingInterval]);
 
@@ -390,12 +390,11 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
         emergencyCleanup = monitorEmergencyButtons();
         
         // Start automatic reporting
-        reportingCleanup = startAutomaticReporting();
-        
-      } catch (error) {
+        reportingCleanup = startAutomaticReporting()
+  } catch (error) {
         console.warn('Performance monitoring initialization failed:', error);
-        setPerformanceState(prev => ({ ...prev, isLoading: false }));
-      }
+        setPerformanceState(prev => ({ ...prev, isLoading: false }))
+  }
     };
 
     initializeMonitoring();
@@ -404,8 +403,8 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
       if (emergencyCleanup) emergencyCleanup();
       if (reportingCleanup) reportingCleanup();
       if (reportingIntervalRef.current) {
-        clearInterval(reportingIntervalRef.current);
-      }
+        clearInterval(reportingIntervalRef.current)
+  }
     };
   }, [monitorEmergencyButtons, startAutomaticReporting]);
 
@@ -421,10 +420,10 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
         cls: null,
         fcp: null,
         ttfb: null,
-        inp: null;
-      },
-      isLoading: true;
-    }));
+        inp: null
+  },
+      isLoading: true
+  }))
   };
   }, [location.pathname]);
 
@@ -441,8 +440,8 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
 
       return () => {
         if (document.head.contains(link)) {
-          document.head.removeChild(link);
-        }
+          document.head.removeChild(link)
+  }
       }
   };
   }, [enableCrisisOptimization, isCrisisRoute]);
@@ -455,15 +454,15 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
       ...performanceState,
       webVitalsSummary: coreWebVitalsService.getPerformanceSummary(),
       isCrisisRoute: isCrisisRoute(),
-      isMobileDevice: isMobileDevice();
-    };
+      isMobileDevice: isMobileDevice()
+  };
   }, [performanceState, isCrisisRoute, isMobileDevice]);
 
   /**
    * Force generate performance report
    */;
   const generateReport = useCallback(() => {
-    return coreWebVitalsService.generateReport();
+    return coreWebVitalsService.generateReport()
   };
   }, []);
 
@@ -479,10 +478,11 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
         (metrics.lcp !== null && metrics.lcp > CRISIS_THRESHOLDS.criticalLCP) ||
         (metrics.fid !== null && metrics.fid > CRISIS_THRESHOLDS.criticalFID) ||
         (metrics.ttfb !== null && metrics.ttfb > CRISIS_THRESHOLDS.criticalTTFB)
-      );
-    }
+      )
+  }
     
-    return performanceState.performanceScore < 70;
+    return performanceState.performanceScore < 70
+  };
   };
   };
   }, [performanceState, isCrisisRoute]);
@@ -494,5 +494,5 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
     isPerformanceCritical,
     handleMetricUpdate,
     isCrisisRoute: isCrisisRoute(),
-    isMobileDevice: isMobileDevice();
+    isMobileDevice: isMobileDevice()
   };

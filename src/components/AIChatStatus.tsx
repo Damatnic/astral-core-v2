@@ -4,15 +4,15 @@ import './AIChatStatus.css';
 
 interface AIChatStatusProps {
   userId?: string;
-  className?: string;
-}
+  className?: string
+  }
 
 interface ProviderStatus {
   name: string;
   available: boolean;
   responseTime?: number;
-  lastChecked: Date;
-}
+  lastChecked: Date
+  }
 
 export const AIChatStatus: React.FC<AIChatStatusProps> = ({ className = '' }) => {
   const [providers, setProviders] = useState<ProviderStatus[]>([]);
@@ -22,7 +22,7 @@ export const AIChatStatus: React.FC<AIChatStatusProps> = ({ className = '' }) =>
   useEffect(() => {
     checkProviderStatus();
     const interval = setInterval(checkProviderStatus, 60000); // Check every minute
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   };
   }, []);
   
@@ -40,27 +40,27 @@ export const AIChatStatus: React.FC<AIChatStatusProps> = ({ className = '' }) =>
             name: 'OpenAI',
             available: data.providers.includes('openai'),
             responseTime,
-            lastChecked: new Date();
-          },
+            lastChecked: new Date()
+  },
           {
             name: 'Claude',
             available: data.providers.includes('claude'),
             responseTime,
-            lastChecked: new Date();
-          }
+            lastChecked: new Date()
+  }
         ];
         
         setProviders(providerStatuses);
-        setConnectionStatus('connected');;
+        setConnectionStatus('connected')
   } else {
-        setConnectionStatus('error');
-      }
+        setConnectionStatus('error')
+  }
     } catch (error) {
       console.error('Failed to check provider status:', error);
-      setConnectionStatus('error');
-    } finally {
-      setIsChecking(false);
-    }
+      setConnectionStatus('error')
+  } finally {
+      setIsChecking(false)
+  }
   };
   
   const getStatusColor = () => {
@@ -71,9 +71,8 @@ export const AIChatStatus: React.FC<AIChatStatusProps> = ({ className = '' }) =>
         return 'var(--color-warning)';
       case 'error':
         return 'var(--color-error)';
-      default:
-        return 'var(--text-secondary)';
-    }
+      default: return 'var(--text-secondary)'
+  }
   };
   
   const getStatusText = () => {
@@ -84,9 +83,8 @@ export const AIChatStatus: React.FC<AIChatStatusProps> = ({ className = '' }) =>
         return 'Connecting to AI...';
       case 'error':
         return 'AI Services Unavailable';
-      default:
-        return 'Unknown Status';
-    }
+      default: return 'Unknown Status'
+  }
   };
   
   return (
@@ -94,8 +92,7 @@ export const AIChatStatus: React.FC<AIChatStatusProps> = ({ className = '' }) =>
       <div className="ai-status-header">
         <div className="ai-status-indicator" style={{ backgroundColor: getStatusColor() }}></div>
         <span className="ai-status-text">{getStatusText()}</span>
-        <button; 
-          className="ai-status-refresh"
+        <button className="ai-status-refresh"
           onClick={checkProviderStatus}
           disabled={isChecking}
           aria-label="Refresh status"
@@ -129,7 +126,7 @@ export const AIChatStatus: React.FC<AIChatStatusProps> = ({ className = '' }) =>
         <span>Powered by advanced AI for mental health support</span>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export default AIChatStatus;

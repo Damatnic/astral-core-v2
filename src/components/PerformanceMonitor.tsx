@@ -17,8 +17,8 @@ export interface PerformanceMetrics {
   firstInputDelay: number;
   bundleSize: number;
   chunkCount: number;
-  cacheHitRate: number;
-}
+  cacheHitRate: number
+  }
 
 export interface PerformanceMonitorProps {
   showDetails?: boolean;
@@ -26,11 +26,11 @@ export interface PerformanceMonitorProps {
     loadTime?: number;
     bundleSize?: number;
     lcp?: number;
-    cls?: number;
+    cls?: number
   };
   onThresholdExceeded?: (metric: string, value: number, threshold: number) => void;
-  className?: string;
-}
+  className?: string
+  }
 
 export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
   showDetails = false,
@@ -38,7 +38,7 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
     loadTime: 3000,
     bundleSize: 1048576, // 1MB
     lcp: 2500,
-    cls: 0.1;
+    cls: 0.1
   },
   onThresholdExceeded,
   className = ''
@@ -72,7 +72,7 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
         const chunkCount = bundleInfo?.jsResources || 0;
         
         // Estimate cache hit rate (simplified);
-        const cacheHitRate = bundleInfo ? ;
+        const cacheHitRate = bundleInfo ? ;;
           (bundleInfo.jsResources / Math.max(bundleInfo.totalResources, 1)) * 100 : 0;
         
         const newMetrics: PerformanceMetrics = {
@@ -94,57 +94,56 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
         
         if (loadTime > (threshold.loadTime || 3000)) {
           newWarnings.push(`Load time (${loadTime}ms) exceeds threshold`);
-          onThresholdExceeded?.('loadTime', loadTime, threshold.loadTime || 3000);
-        }
+          onThresholdExceeded?.('loadTime', loadTime, threshold.loadTime || 3000)
+  }
         
         if (bundleSize > (threshold.bundleSize || 1048576)) {
           newWarnings.push(`Bundle size (${(bundleSize / 1024).toFixed(0)}KB) exceeds threshold`);
-          onThresholdExceeded?.('bundleSize', bundleSize, threshold.bundleSize || 1048576);
-        }
+          onThresholdExceeded?.('bundleSize', bundleSize, threshold.bundleSize || 1048576)
+  }
         
         if (lcp > (threshold.lcp || 2500)) {
           newWarnings.push(`LCP (${lcp.toFixed(0)}ms) exceeds threshold`);
-          onThresholdExceeded?.('lcp', lcp, threshold.lcp || 2500);
-        }
+          onThresholdExceeded?.('lcp', lcp, threshold.lcp || 2500)
+  }
         
         if (cls > (threshold.cls || 0.1)) {
           newWarnings.push(`CLS (${cls.toFixed(3)}) exceeds threshold`);
-          onThresholdExceeded?.('cls', cls, threshold.cls || 0.1);
-        }
+          onThresholdExceeded?.('cls', cls, threshold.cls || 0.1)
+  }
         
-        setWarnings(newWarnings);
-        
-      } catch (error) {
-        console.warn('Performance metrics collection failed:', error);
-      }
+        setWarnings(newWarnings)
+  } catch (error) {
+        console.warn('Performance metrics collection failed:', error)
+  }
     };
 
     // Collect metrics after page load
     if (document.readyState === 'complete') {
-      collectMetrics();;
+      collectMetrics()
   } else {
       window.addEventListener('load', collectMetrics);
-      return () => window.removeEventListener('load', collectMetrics);
-    }
+      return () => window.removeEventListener('load', collectMetrics)
+  }
 
     // Periodic updates for dynamic metrics;
     const interval = setInterval(collectMetrics, 30000); // Every 30 seconds
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   };
   }, [threshold, onThresholdExceeded, bundleInfo]);
 
   // Format metrics for display;
   const formatMetric = (value: number, unit: string, precision = 0) => {
     if (unit === 'ms') {
-      return `${value.toFixed(precision)}ms`;
-    }
+      return `${value.toFixed(precision)}ms`
+  }
     if (unit === 'KB') {
-      return `${(value / 1024).toFixed(precision)}KB`;
-    }
+      return `${(value / 1024).toFixed(precision)}KB`
+  }
     if (unit === '%') {
-      return `${value.toFixed(precision)}%`;
-    }
-    return `${value.toFixed(precision)}${unit}`;
+      return `${value.toFixed(precision)}%`
+  }
+    return `${value.toFixed(precision)}${unit}`
   };
 
   // Performance thresholds configuration;
@@ -162,12 +161,12 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
     if (!thresholds) return 'good';
     
     if (value <= thresholds.good) {
-      return 'good';;
+      return 'good'
   } else if (value <= thresholds.needsImprovement) {
-      return 'needs-improvement';;
+      return 'needs-improvement'
   } else {
-      return 'poor';
-    }
+      return 'poor'
+  }
   };
 
   if (!metrics) {
@@ -177,7 +176,7 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
           Collecting performance metrics...
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -285,8 +284,8 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 // CSS styles for the performance monitor;
 export const performanceMonitorStyles = `
@@ -296,14 +295,14 @@ export const performanceMonitorStyles = `
     border: 1px solid var(--border-light, #e2e8f0);
     border-radius: 8px;
     padding: 16px;
-    margin: 16px 0;
+    margin: 16px 0
   }
 
   .performance-loading {
     text-align: center;
     color: var(--text-secondary, #64748b);
     font-size: 14px;
-    padding: 20px;
+    padding: 20px
   }
 
   .performance-warnings {
@@ -311,20 +310,20 @@ export const performanceMonitorStyles = `
     border: 1px solid var(--amber-200, #fde68a);
     border-radius: 6px;
     padding: 12px;
-    margin-bottom: 16px;
+    margin-bottom: 16px
   }
 
   .performance-warnings h4 {
     margin: 0 0 8px 0;
     color: var(--amber-800, #92400e);
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 600
   }
 
   .performance-warnings ul {
     margin: 0;
     padding: 0;
-    list-style: none;
+    list-style: none
   }
 
   .warning-item {
@@ -332,33 +331,33 @@ export const performanceMonitorStyles = `
     font-size: 12px;
     margin-bottom: 4px;
     padding-left: 16px;
-    position: relative;
+    position: relative
   }
 
   .warning-item::before {
     content: '⚠';
     position: absolute;
     left: 0;
-    color: var(--amber-600, #d97706);
+    color: var(--amber-600, #d97706)
   }
 
   .performance-summary {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 16px
   }
 
   .metric-group h4 {
     margin: 0 0 8px 0;
     font-size: 14px;
     font-weight: 600;
-    color: var(--text-primary, #1e293b);
+    color: var(--text-primary, #1e293b)
   }
 
   .metrics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 8px;
+    gap: 8px
   }
 
   .metric {
@@ -367,22 +366,22 @@ export const performanceMonitorStyles = `
     border-radius: 6px;
     padding: 8px 12px;
     text-align: center;
-    transition: all 0.2s ease;
+    transition: all 0.2s ease
   }
 
   .metric--good {
     border-color: var(--green-300, #86efac);
-    background-color: var(--green-50, #f0fdf4);
+    background-color: var(--green-50, #f0fdf4)
   }
 
   .metric--needs-improvement {
     border-color: var(--amber-300, #fcd34d);
-    background-color: var(--amber-50, #fffbeb);
+    background-color: var(--amber-50, #fffbeb)
   }
 
   .metric--poor {
     border-color: var(--red-300, #fca5a5);
-    background-color: var(--red-50, #fef2f2);
+    background-color: var(--red-50, #fef2f2)
   }
 
   .metric-label {
@@ -392,45 +391,45 @@ export const performanceMonitorStyles = `
     color: var(--text-secondary, #64748b);
     margin-bottom: 2px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.5px
   }
 
   .metric-value {
     display: block;
     font-size: 14px;
     font-weight: 600;
-    color: var(--text-primary, #1e293b);
+    color: var(--text-primary, #1e293b)
   }
 
   .metric--good .metric-value {
-    color: var(--green-700, #15803d);
+    color: var(--green-700, #15803d)
   }
 
   .metric--needs-improvement .metric-value {
-    color: var(--amber-700, #b45309);
+    color: var(--amber-700, #b45309)
   }
 
   .metric--poor .metric-value {
-    color: var(--red-700, #b91c1c);
+    color: var(--red-700, #b91c1c)
   }
 
   .performance-details {
     margin-top: 16px;
     padding-top: 16px;
-    border-top: 1px solid var(--border-light, #e2e8f0);
+    border-top: 1px solid var(--border-light, #e2e8f0)
   }
 
   .performance-details h4 {
     margin: 0 0 12px 0;
     font-size: 14px;
     font-weight: 600;
-    color: var(--text-primary, #1e293b);
+    color: var(--text-primary, #1e293b)
   }
 
   .bundle-info {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 8px;
+    gap: 8px
   }
 
   .bundle-stat {
@@ -441,67 +440,67 @@ export const performanceMonitorStyles = `
     border: 1px solid var(--border-light, #e2e8f0);
     border-radius: 4px;
     padding: 6px 10px;
-    font-size: 12px;
+    font-size: 12px
   }
 
   .bundle-stat span:first-child {
     color: var(--text-secondary, #64748b);
-    font-weight: 500;
+    font-weight: 500
   }
 
   .bundle-stat span:last-child {
     color: var(--text-primary, #1e293b);
-    font-weight: 600;
+    font-weight: 600
   }
 
   /* Responsive design */
   @media (max-width: 640px) {
     .performance-summary {
-      gap: 12px;
-    }
+      gap: 12px
+  }
 
     .metrics-grid {
       grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 6px;
-    }
+      gap: 6px
+  }
 
     .metric {
-      padding: 6px 8px;
-    }
+      padding: 6px 8px
+  }
 
     .bundle-info {
-      grid-template-columns: 1fr;
-    }
+      grid-template-columns: 1fr
+  }
   }
 
   /* Dark mode support */
   @media (prefers-color-scheme: dark) {
     .performance-monitor {
       background-color: var(--bg-secondary-dark, #1e293b);
-      border-color: var(--border-dark, #374151);
-    }
+      border-color: var(--border-dark, #374151)
+  }
 
     .metric,
     .bundle-stat {
       background-color: var(--bg-secondary-dark, #1e293b);
-      border-color: var(--border-dark, #374151);
-    }
+      border-color: var(--border-dark, #374151)
+  }
 
     .metric-label {
-      color: var(--text-secondary-dark, #94a3b8);
-    }
+      color: var(--text-secondary-dark, #94a3b8)
+  }
 
     .metric-value {
-      color: var(--text-primary-dark, #f1f5f9);
-    }
+      color: var(--text-primary-dark, #f1f5f9)
+  }
 
     .bundle-stat span:first-child {
-      color: var(--text-secondary-dark, #94a3b8);
-    }
+      color: var(--text-secondary-dark, #94a3b8)
+  }
 
     .bundle-stat span:last-child {
-      color: var(--text-primary-dark, #f1f5f9);
-    }
+      color: var(--text-primary-dark, #f1f5f9)
+  }
   }
 `;
 

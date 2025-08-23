@@ -16,8 +16,8 @@ export function setupProductionEnvironment() {
       protocol: 'https:',
       pathname: '/',
       search: '',
-      hash: '';
-    },
+      hash: ''
+  },
     writable: true,
     configurable: true,
   });
@@ -26,8 +26,8 @@ export function setupProductionEnvironment() {
   jest.spyOn(sessionStorage, 'getItem').mockReturnValue(null);
   
   // Reset the netlifyFunctionsAvailable flag
-  (global as any).netlifyFunctionsAvailable = null;
-}
+  (global as any).netlifyFunctionsAvailable = null
+  }
 
 export function setupDevelopmentEnvironment() {
   process.env.NODE_ENV = 'development';
@@ -43,8 +43,8 @@ export function setupDevelopmentEnvironment() {
       protocol: 'http:',
       pathname: '/',
       search: '',
-      hash: '';
-    },
+      hash: ''
+  },
     writable: true,
     configurable: true,
   });
@@ -53,8 +53,8 @@ export function setupDevelopmentEnvironment() {
   jest.spyOn(sessionStorage, 'getItem').mockReturnValue(null);
   
   // Reset the netlifyFunctionsAvailable flag
-  (global as any).netlifyFunctionsAvailable = null;
-}
+  (global as any).netlifyFunctionsAvailable = null
+  }
 
 export function setupNetlifyDevEnvironment() {
   process.env.NODE_ENV = 'development';
@@ -70,8 +70,8 @@ export function setupNetlifyDevEnvironment() {
       protocol: 'http:',
       pathname: '/',
       search: '',
-      hash: '';
-    },
+      hash: ''
+  },
     writable: true,
     configurable: true,
   });
@@ -80,5 +80,5 @@ export function setupNetlifyDevEnvironment() {
   jest.spyOn(sessionStorage, 'getItem').mockReturnValue(null);
   
   // Reset the netlifyFunctionsAvailable flag
-  (global as any).netlifyFunctionsAvailable = null;
-}
+  (global as any).netlifyFunctionsAvailable = null
+  }

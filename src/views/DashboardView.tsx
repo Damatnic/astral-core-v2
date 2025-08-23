@@ -10,7 +10,7 @@ interface DashboardCard {
   href: string;
   stats?: {
     label: string;
-    value: string;
+    value: string
   };
 }
 
@@ -26,7 +26,7 @@ const DashboardView: React.FC = () => {
     else setTimeOfDay('Good evening');
 
     // Get user name (this would come from auth context in real app)
-    setUserName('Friend');
+    setUserName('Friend')
   };
   }, []);
 
@@ -40,8 +40,8 @@ const DashboardView: React.FC = () => {
       href: '/crisis',
       stats: {
         label: '24/7 Available',
-        value: 'Always';
-      }
+        value: 'Always'
+  }
     },
     {
       id: 'peer-support',
@@ -52,8 +52,8 @@ const DashboardView: React.FC = () => {
       href: '/peer-support',
       stats: {
         label: 'Active Helpers',
-        value: '200+';
-      }
+        value: '200+'
+  }
     },
     {
       id: 'wellness-tracking',
@@ -64,8 +64,8 @@ const DashboardView: React.FC = () => {
       href: '/wellness',
       stats: {
         label: 'Current Streak',
-        value: '5 days';
-      }
+        value: '5 days'
+  }
     },
     {
       id: 'ai-assistant',
@@ -76,8 +76,8 @@ const DashboardView: React.FC = () => {
       href: '/ai-assistant',
       stats: {
         label: 'Conversations',
-        value: '12';
-      }
+        value: '12'
+  }
     },
     {
       id: 'reflections',
@@ -88,8 +88,8 @@ const DashboardView: React.FC = () => {
       href: '/reflections',
       stats: {
         label: 'This Week',
-        value: '3 entries';
-      }
+        value: '3 entries'
+  }
     },
     {
       id: 'progress',
@@ -100,8 +100,8 @@ const DashboardView: React.FC = () => {
       href: '/analytics',
       stats: {
         label: 'Overall Trend',
-        value: '↗ Improving';
-      }
+        value: '↗ Improving'
+  }
     }
   ];
 
@@ -112,9 +112,9 @@ const DashboardView: React.FC = () => {
       pink: 'gradient-wellness',
       purple: 'gradient-calm',
       green: 'gradient-forest',
-      indigo: 'gradient-aurora';
-    };
-    return gradientMap[color] || 'gradient-ocean';
+      indigo: 'gradient-aurora'
+  };
+    return gradientMap[color] || 'gradient-ocean'
   };
   
 
@@ -168,13 +168,13 @@ const DashboardView: React.FC = () => {
                 className={`therapy-card smooth-transition-slow cursor-pointer text-left ${getGradientClass(card.color)} animate-gradient`}
                 onClick={() => {
                   // In a real app, this would use React Router
-                  console.log(`Navigate to ${card.href}`);
-                }}
+                  console.log(`Navigate to ${card.href}`)
+  }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    console.log(`Navigate to ${card.href}`);
-                  }
+                    console.log(`Navigate to ${card.href}`)
+  }
                 }}
                 style={{
                   background: `var(--${getGradientClass(card.color)})`,
@@ -202,8 +202,8 @@ const DashboardView: React.FC = () => {
                   {card.description}
                 </p>
               </button>
-            );
-          })}
+            )
+  })}
         </div>
 
         {/* Recent Activity */}
@@ -262,8 +262,7 @@ const DashboardView: React.FC = () => {
                 Crisis support is available 24/7. You're not alone.
               </p>
             </div>
-            <button; 
-              className="crisis-button smooth-transition ripple-button"
+            <button className="crisis-button smooth-transition ripple-button"
               onClick={() => console.log('Navigate to /crisis')}
             >
               Get Help Now
@@ -272,7 +271,7 @@ const DashboardView: React.FC = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export default DashboardView;

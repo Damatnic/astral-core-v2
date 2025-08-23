@@ -12,8 +12,8 @@ interface MobileSidebarNavProps {
   onLogout: () => void;
   onlineHelperCount: number;
   userToken: string | null;
-  helperProfile: Helper | null;
-}
+  helperProfile: Helper | null
+  }
 
 export const MobileSidebarNav: React.FC<MobileSidebarNavProps> = React.memo(({
   activeView,
@@ -35,12 +35,12 @@ export const MobileSidebarNav: React.FC<MobileSidebarNavProps> = React.memo(({
       if (event.key === 'Escape' && isSidebarOpen) {
         closeSidebar();
         // Return focus to hamburger menu
-        hamburgerRef.current?.focus();
-      }
+        hamburgerRef.current?.focus()
+  }
     };
 
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown)
   };
   }, [isSidebarOpen, closeSidebar]);
 
@@ -49,8 +49,8 @@ export const MobileSidebarNav: React.FC<MobileSidebarNavProps> = React.memo(({
     if (isSidebarOpen) {
       // Focus first interactive element in sidebar;
       const firstButton = sidebarRef.current?.querySelector('button');
-      firstButton?.focus();
-    }
+      firstButton?.focus()
+  }
   };
   }, [isSidebarOpen]);
 
@@ -59,18 +59,18 @@ export const MobileSidebarNav: React.FC<MobileSidebarNavProps> = React.memo(({
     if (isSidebarOpen) {
       document.body.style.overflow = 'hidden';
       document.body.style.position = 'fixed';
-      document.body.style.width = '100%';;
+      document.body.style.width = '100%'
   } else {
       document.body.style.overflow = '';
       document.body.style.position = '';
-      document.body.style.width = '';
-    }
+      document.body.style.width = ''
+  }
 
     return () => {
       document.body.style.overflow = '';
       document.body.style.position = '';
-      document.body.style.width = '';
-    };
+      document.body.style.width = ''
+  };
   };
   }, [isSidebarOpen]);
 
@@ -78,13 +78,13 @@ export const MobileSidebarNav: React.FC<MobileSidebarNavProps> = React.memo(({
     closeSidebar();
     // Return focus to hamburger menu for keyboard users
     setTimeout(() => {
-      hamburgerRef.current?.focus();
-    }, 100);
+      hamburgerRef.current?.focus()
+  }, 100)
   };
 
   const handleOverlayClick = () => {
     closeSidebar();
-    hamburgerRef.current?.focus();
+    hamburgerRef.current?.focus()
   };
 
   return (
@@ -131,8 +131,8 @@ export const MobileSidebarNav: React.FC<MobileSidebarNavProps> = React.memo(({
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault();
-              handleOverlayClick();
-            }
+              handleOverlayClick()
+  }
           }}
           aria-label="Close navigation menu";
           type="button"
@@ -153,12 +153,11 @@ export const MobileSidebarNav: React.FC<MobileSidebarNavProps> = React.memo(({
             <h2>Navigation</h2>
             <span className="mobile-sidebar-subtitle">Peer Support</span>
           </div>
-          <button; 
-            className="mobile-sidebar-close touch-optimized"
+          <button className="mobile-sidebar-close touch-optimized"
             onClick={() => {
               closeSidebar();
-              hamburgerRef.current?.focus();
-            }}
+              hamburgerRef.current?.focus()
+  }}
             aria-label="Close navigation menu";
             type="button"
           >
@@ -174,8 +173,8 @@ export const MobileSidebarNav: React.FC<MobileSidebarNavProps> = React.memo(({
               setActiveView={setActiveView}
               onLogout={() => {
                 onLogout();
-                handleSidebarNavigation();
-              }}
+                handleSidebarNavigation()
+  }}
               helperProfile={helperProfile}
               onlineHelperCount={onlineHelperCount}
               isMobile={true}
@@ -229,7 +228,7 @@ export const MobileSidebarNav: React.FC<MobileSidebarNavProps> = React.memo(({
         </div>
       </aside>
     </>
-  );
-});
+  )
+  });
 
 MobileSidebarNav.displayName = 'MobileSidebarNav';

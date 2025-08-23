@@ -9,16 +9,16 @@ interface User {
   status: 'online' | 'away' | 'busy' | 'offline';
   mood?: string;
   lastSeen?: Date;
-  avatar?: string;
-}
+  avatar?: string
+  }
 
 interface PresenceIndicatorProps {
   channelName?: string;
   showMood?: boolean;
   showLastSeen?: boolean;
   compact?: boolean;
-  maxUsers?: number;
-}
+  maxUsers?: number
+  }
 
 export const PresenceIndicator: React.FC<PresenceIndicatorProps> = ({
   channelName = 'presence-global',
@@ -58,10 +58,10 @@ export const PresenceIndicator: React.FC<PresenceIndicatorProps> = ({
       grateful: '🙏',
       hopeful: '🌟',
       tired: '😴',
-      energetic: '⚡';
-    };
+      energetic: '⚡'
+  };
 
-    return moodMap[mood.toLowerCase()] || '💭';
+    return moodMap[mood.toLowerCase()] || '💭'
   };
 
   const sortedMembers = [...members].sort((a, b) => {
@@ -70,10 +70,10 @@ export const PresenceIndicator: React.FC<PresenceIndicatorProps> = ({
       online: 0,
       away: 1,
       busy: 2,
-      offline: 3;
-    };
+      offline: 3
+  };
 
-    return statusPriority[a.status] - statusPriority[b.status];
+    return statusPriority[a.status] - statusPriority[b.status]
   });
 
   const displayMembers = expandedView ? sortedMembers : sortedMembers.slice(0, maxUsers);
@@ -90,7 +90,7 @@ export const PresenceIndicator: React.FC<PresenceIndicatorProps> = ({
           {onlineCount} / {totalCount} online
         </span>
       </div>
-    );
+    )
   }
 
   return (
@@ -111,8 +111,7 @@ export const PresenceIndicator: React.FC<PresenceIndicatorProps> = ({
                   {member.username.charAt(0).toUpperCase()}
                 </div>
               )}
-              <div; 
-                className="presence-status-dot"
+              <div className="presence-status-dot"
                 style={{ backgroundColor: getStatusColor(member.status) }}
                 title={member.status}
               ></div>
@@ -150,8 +149,7 @@ export const PresenceIndicator: React.FC<PresenceIndicatorProps> = ({
         ))}
 
         {!expandedView && hiddenCount > 0 && (
-          <button;
-            className="presence-show-more"
+          <button className="presence-show-more"
             onClick={() => setExpandedView(true)}
           >
             Show {hiddenCount} more
@@ -159,8 +157,7 @@ export const PresenceIndicator: React.FC<PresenceIndicatorProps> = ({
         )}
 
         {expandedView && sortedMembers.length > maxUsers && (
-          <button;
-            className="presence-show-less"
+          <button className="presence-show-less"
             onClick={() => setExpandedView(false)}
           >
             Show less
@@ -174,8 +171,8 @@ export const PresenceIndicator: React.FC<PresenceIndicatorProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 export const PresenceBadge: React.FC<{ userId: string; size?: 'small' | 'medium' | 'large' }> = ({
   userId,
@@ -187,22 +184,21 @@ export const PresenceBadge: React.FC<{ userId: string; size?: 'small' | 'medium'
   useEffect(() => {
     const user = members.find((m: User) => m.id === userId);
     if (user) {
-      setUserStatus(user.status);
-    }
+      setUserStatus(user.status)
+  }
   };
   }, [members, userId]);
 
   const sizeMap = {
     small: 8,
     medium: 12,
-    large: 16;
+    large: 16
   };
 
   const dotSize = sizeMap[size];
 
   return (
-    <div; 
-      className={`presence-badge presence-badge-${size}`}
+    <div className={`presence-badge presence-badge-${size}`}
       style={{
         width: dotSize,
         height: dotSize,
@@ -212,5 +208,5 @@ export const PresenceBadge: React.FC<{ userId: string; size?: 'small' | 'medium'
       }}
       title={userStatus}
     ></div>
-  );
-};
+  )
+  };

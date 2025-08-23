@@ -11,18 +11,19 @@ export const useScrollAnimation = (threshold = 0.1) => {
     const element = elementRef.current;
     if (!element) return;
 
-    const observer = new IntersectionObserver(;
+    const observer = new IntersectionObserver(;;
       ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
+        setIsVisible(entry.isIntersecting)
+  },
       { threshold }
     );
 
     observer.observe(element);
 
     return () => {
-      observer.unobserve(element);
-    };
+      observer.unobserve(element)
+  };
+  };
   };
   }, [threshold]);
 
@@ -39,14 +40,15 @@ export const useStaggeredAnimation = (itemCount: number, baseDelay = 100) => {
     
     for (let i = 0; i < itemCount; i++) {
       setTimeout(() => {
-        setAnimatedItems(prev => new Set([...prev, i]));
-      }, i * baseDelay);
-    }
+        setAnimatedItems(prev => new Set([...prev, i]))
+  }, i * baseDelay)
+  }
   };
   }, [itemCount, baseDelay]);
 
   const isItemAnimated = useCallback((index: number) => {
-    return animatedItems.has(index);
+    return animatedItems.has(index)
+  };
   };
   };
   }, [animatedItems]);
@@ -60,7 +62,7 @@ export const useRippleEffect = () => {
   const [ripples, setRipples] = useState<Array<{ x: number; y: number; id: number }>>([]);
 
   const removeRipple = useCallback((id: number) => {
-    setRipples(prev => prev.filter(ripple => ripple.id !== id));
+    setRipples(prev => prev.filter(ripple => ripple.id !== id))
   };
   }, []);
 
@@ -74,7 +76,8 @@ export const useRippleEffect = () => {
     setRipples(prev => [...prev, { x, y, id }]);
 
     // Remove ripple after animation completes
-    setTimeout(() => removeRipple(id), 600);
+    setTimeout(() => removeRipple(id), 600)
+  };
   };
   };
   }, [removeRipple]);
@@ -90,31 +93,31 @@ export const useDelayedHover = (enterDelay = 0, leaveDelay = 300) => {
 
   const handleMouseEnter = useCallback(() => {
     if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+      clearTimeout(timeoutRef.current)
+  }
     
     timeoutRef.current = setTimeout(() => {
-      setIsHovered(true);
-    }, enterDelay);
+      setIsHovered(true)
+  }, enterDelay)
   };
   }, [enterDelay]);
 
   const handleMouseLeave = useCallback(() => {
     if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+      clearTimeout(timeoutRef.current)
+  }
     
     timeoutRef.current = setTimeout(() => {
-      setIsHovered(false);
-    }, leaveDelay);
+      setIsHovered(false)
+  }, leaveDelay)
   };
   }, [leaveDelay]);
 
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+        clearTimeout(timeoutRef.current)
+  }
     };
   }, []);
 
@@ -131,7 +134,7 @@ export const useLoadingState = (minDuration = 500) => {
   const startLoading = useCallback(() => {
     startTimeRef.current = Date.now();
     setIsLoading(true);
-    setShowLoading(true);
+    setShowLoading(true)
   };
   }, []);
 
@@ -143,11 +146,12 @@ export const useLoadingState = (minDuration = 500) => {
       const remainingTime = Math.max(0, minDuration - elapsed);
       
       setTimeout(() => {
-        setShowLoading(false);
-      }, remainingTime);;
+        setShowLoading(false)
+  }, remainingTime)
   } else {
-      setShowLoading(false);
-    }
+      setShowLoading(false)
+  }
+  };
   };
   };
   }, [minDuration]);
@@ -166,8 +170,8 @@ export const useAnimationSequence = () => {
     setCurrentStep(index + 1);
     
     if (index === totalSteps - 1) {
-      setIsPlaying(false);
-    }
+      setIsPlaying(false)
+  }
   };
   }, []);
 
@@ -181,15 +185,15 @@ export const useAnimationSequence = () => {
     
     steps.forEach((step, index) => {
       setTimeout(() => executeStep(step, index, steps.length), totalDelay);
-      totalDelay += delays[index] || 0;
-    };
+      totalDelay += delays[index] || 0
+  };
   };
   };
   }, [isPlaying, executeStep]);
 
   const resetSequence = useCallback(() => {
     setCurrentStep(0);
-    setIsPlaying(false);
+    setIsPlaying(false)
   };
   }, []);
 
@@ -207,8 +211,8 @@ export const useFormAnimations = () => {
     setErrors(prev => {
       const newErrors = { ...prev };
       delete newErrors[fieldName];
-      return newErrors;
-    });
+      return newErrors
+  })
   };
   }, []);
 
@@ -216,8 +220,8 @@ export const useFormAnimations = () => {
     setSuccessFields(prev => {
       const newSet = new Set(prev);
       newSet.delete(fieldName);
-      return newSet;
-    });
+      return newSet
+  })
   };
   }, []);
 
@@ -225,7 +229,7 @@ export const useFormAnimations = () => {
     setErrors(prev => ({ ...prev, [fieldName]: errorMessage }));
     
     // Auto-clear error after delay
-    setTimeout(() => clearError(fieldName), 5000);
+    setTimeout(() => clearError(fieldName), 5000)
   };
   }, [clearError]);
 
@@ -233,13 +237,14 @@ export const useFormAnimations = () => {
     setSuccessFields(prev => new Set([...prev, fieldName]));
     
     // Auto-clear success after delay
-    setTimeout(() => clearSuccess(fieldName), 3000);
+    setTimeout(() => clearSuccess(fieldName), 3000)
   };
   }, [clearSuccess]);
 
   const clearFieldState = useCallback((fieldName: string) => {
     clearError(fieldName);
-    clearSuccess(fieldName);
+    clearSuccess(fieldName)
+  };
   };
   };
   }, [clearError, clearSuccess]);
@@ -265,14 +270,14 @@ export const usePageTransition = () => {
     
     // Switch to enter stage after exit animation
     setTimeout(() => {
-      setTransitionStage('enter');
-    }, 250);
+      setTransitionStage('enter')
+  }, 250);
     
     // Complete transition
     setTimeout(() => {
       setIsTransitioning(false);
-      setTransitionStage('idle');
-    }, 500);
+      setTransitionStage('idle')
+  }, 500)
   };
   }, []);
 
@@ -289,16 +294,16 @@ export const useReducedMotion = () => {
     setPrefersReducedMotion(mediaQuery.matches);
 
     const handleChange = (event: MediaQueryListEvent) => {
-      setPrefersReducedMotion(event.matches);
-    };
+      setPrefersReducedMotion(event.matches)
+  };
 
     mediaQuery.addEventListener('change', handleChange);
     
     return () => {
-      mediaQuery.removeEventListener('change', handleChange);
-    };
+      mediaQuery.removeEventListener('change', handleChange)
+  };
   };
   }, []);
 
-  return prefersReducedMotion;
-};
+  return prefersReducedMotion
+  };

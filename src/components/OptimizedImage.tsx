@@ -10,8 +10,8 @@ interface OptimizedImageProps {
   onLoad?: () => void;
   onError?: () => void;
   style?: React.CSSProperties;
-  onClick?: () => void;
-}
+  onClick?: () => void
+  }
 
 /**
  * Optimized Image Component with Progressive Loading
@@ -46,51 +46,50 @@ export const OptimizedImageComponent: React.FC<OptimizedImageProps> = ({
         priority,
         loading
       });
-      setOptimizedImage(optimized);
-    }
+      setOptimizedImage(optimized)
+  }
   };
   }, [src, alt, priority, loading]);
 
   useEffect(() => {
     if (optimizedImage && imgRef.current && loading === 'lazy') {
-      imageOptimizer.setupLazyLoading(imgRef.current);
-    }
+      imageOptimizer.setupLazyLoading(imgRef.current)
+  }
   };
   }, [optimizedImage, loading]);
 
   const handleLoad = () => {
     setIsLoaded(true);
-    onLoad?.();
+    onLoad?.()
   };
 
   const handleError = () => {
     setHasError(true);
-    onError?.();
+    onError?.()
   };
 
   const handleClick = () => {
-    onClick?.();
+    onClick?.()
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      onClick?.();
-    }
+      onClick?.()
+  }
   };
 
   if (!optimizedImage) {
     return (
-      <div; 
-        className={`optimized-image-loading ${className}`}
+      <div className={`optimized-image-loading ${className}`}
         style={{ ...style, backgroundColor: '#f3f4f6' }}
       >
         <div className="loading-spinner" />
       </div>
-    );
+    )
   }
 
-  const containerClass = [;
+  const containerClass = [;;
     'optimized-image-container',
     className,
     isLoaded ? 'loaded' : 'loading',
@@ -111,22 +110,20 @@ export const OptimizedImageComponent: React.FC<OptimizedImageProps> = ({
   } : {};
 
   return (
-    <div; 
-      className={containerClass} 
+    <div className={containerClass} 
       style={style} 
       {...containerProps}
     >
       {/* Blur placeholder */}
       {!isLoaded && (
-        <img;
-          className="optimized-image-placeholder"
+        <img className="optimized-image-placeholder"
           src={optimizedImage.placeholder}
           alt=""
           style={{
             filter: 'blur(10px)',
             transform: 'scale(1.1)',
-            transition: 'opacity 0.3s ease-out';
-          }}
+            transition: 'opacity 0.3s ease-out'
+  }}
         />
       )}
 
@@ -153,8 +150,8 @@ export const OptimizedImageComponent: React.FC<OptimizedImageProps> = ({
           onError={handleError}
           style={{
             transition: 'opacity 0.3s ease-out',
-            opacity: isLoaded ? 1 : 0;
-          }}
+            opacity: isLoaded ? 1 : 0
+  }}
         />
       </picture>
 
@@ -172,8 +169,8 @@ export const OptimizedImageComponent: React.FC<OptimizedImageProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 /**
  * Video Thumbnail Component
@@ -184,8 +181,8 @@ interface VideoThumbnailProps extends OptimizedImageProps {
   videoDuration?: string;
   isPlaying?: boolean;
   showPlayButton?: boolean;
-  overlayContent?: React.ReactNode;
-}
+  overlayContent?: React.ReactNode
+  }
 
 export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
   videoId,
@@ -196,7 +193,7 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
   className = '',
   ...imageProps
 }) => {
-  const thumbnailClass = [;
+  const thumbnailClass = [;;
     'video-thumbnail',
     className,
     isPlaying ? 'playing' : ''
@@ -215,13 +212,11 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
       <div className="video-thumbnail-overlay">
         {/* Play button */}
         {showPlayButton && !isPlaying && (
-          <button; 
-            className="video-play-button"
+          <button className="video-play-button"
             aria-label="Play video"
             onClick={imageProps.onClick}
           >
-            <svg; 
-              className="play-icon" 
+            <svg className="play-icon" 
               viewBox="0 0 24 24" 
               fill="currentColor"
               width="24" 
@@ -254,8 +249,8 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 /**
  * Image Grid Component for multiple thumbnails
@@ -265,12 +260,12 @@ interface ImageGridProps {
     id: string;
     src: string;
     alt: string;
-    priority?: number;
+    priority?: number
   }>;
   className?: string;
   onImageClick?: (imageId: string) => void;
-  maxImages?: number;
-}
+  maxImages?: number
+  }
 
 export const ImageGrid: React.FC<ImageGridProps> = ({
   images,
@@ -282,15 +277,15 @@ export const ImageGrid: React.FC<ImageGridProps> = ({
   
   useEffect(() => {
     // Preload critical images (first 3);
-    const criticalImages = visibleImages;
+    const criticalImages = visibleImages;;
       .slice(0, 3)
       .map(img => imageOptimizer.generateOptimizedImages(img.src, {
         alt: img.alt,
         priority: img.priority || 8,
-        loading: 'eager';
-      }));
+        loading: 'eager'
+  }));
     
-    imageOptimizer.preloadCriticalImages(criticalImages);
+    imageOptimizer.preloadCriticalImages(criticalImages)
   };
   }, [visibleImages]);
 
@@ -308,5 +303,5 @@ export const ImageGrid: React.FC<ImageGridProps> = ({
         />
       ))}
     </div>
-  );
-};
+  )
+  };

@@ -11,8 +11,8 @@ type UploadStatus = 'idle' | 'uploading' | 'error' | 'success';
 
 interface UploadVideoViewProps {
   onUploadComplete: () => void;
-  userToken: string | null;
-}
+  userToken: string | null
+  }
 
 export const UploadVideoView: React.FC<UploadVideoViewProps> = ({ onUploadComplete, userToken }) => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -28,29 +28,29 @@ export const UploadVideoView: React.FC<UploadVideoViewProps> = ({ onUploadComple
     if (file) {
       if (file.size > 50 * 1024 * 1024) { // 50MB limit
         setError('File is too large. Please select a video under 50MB.');
-        return;
-      }
+        return
+  }
       setError(null);
       setStatus('idle');
       setVideoFile(file);
 
       if (previewUrl) {
-          URL.revokeObjectURL(previewUrl);
-      }
+          URL.revokeObjectURL(previewUrl)
+  }
       const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
-    }
+      setPreviewUrl(url)
+  }
   };
 
   const handlePost = async () => {
     if (!videoFile || !userToken) {
       setError('Please select a video file to upload.');
-      return;
-    }
+      return
+  }
     if (!description.trim()) {
       setError('Please add a description for your video.');
-      return;
-    }
+      return
+  }
     
     setError(null);
     setStatus('uploading');
@@ -59,13 +59,13 @@ export const UploadVideoView: React.FC<UploadVideoViewProps> = ({ onUploadComple
 
         setStatus('success');
         addToast('Video posted successfully!', 'success');
-        onUploadComplete();
-    } catch (err) {
+        onUploadComplete()
+  } catch (err) {
       setStatus('error');
       const errorMessage = isError(err) ? err.message : 'An unexpected error occurred during upload.';
       setError(errorMessage);
-      setStatus('idle');
-    }
+      setStatus('idle')
+  }
   };
   
   const isUploading = status === 'uploading';
@@ -119,8 +119,7 @@ export const UploadVideoView: React.FC<UploadVideoViewProps> = ({ onUploadComple
             {error && <p className="api-error">{error}</p>}
             
             <div className="form-actions">
-                <AppButton;
-                    variant="primary"
+                <AppButton variant="primary"
                     onClick={handlePost}
                     isLoading={isUploading}
                     disabled={isUploading || !videoFile}
@@ -130,7 +129,7 @@ export const UploadVideoView: React.FC<UploadVideoViewProps> = ({ onUploadComple
             </div>
         </Card>
     </div>
-  );
-};
+  )
+  };
 
 export default UploadVideoView;

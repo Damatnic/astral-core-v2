@@ -7,15 +7,15 @@ interface User {
   id: string;
   email: string;
   name: string;
-  role: string;
-}
+  role: string
+  }
 
 interface AuthResponse {
   success: boolean;
   token?: string;
   user?: User;
-  error?: string;
-}
+  error?: string
+  }
 
 class SimpleAuthService {
   private token: string | null = null;
@@ -24,7 +24,7 @@ class SimpleAuthService {
 
   constructor() {
     // Load token from localStorage on init
-    this.loadFromStorage();
+    this.loadFromStorage()
   }
 
   /**
@@ -37,10 +37,10 @@ class SimpleAuthService {
     if (storedToken && storedUser) {
       this.token = storedToken;
       try {
-        this.user = JSON.parse(storedUser);
-      } catch {
-        this.clearStorage();
-      }
+        this.user = JSON.parse(storedUser)
+  } catch {
+        this.clearStorage()
+  }
     }
   }
 
@@ -50,8 +50,8 @@ class SimpleAuthService {
   private saveToStorage(): void {
     if (this.token && this.user) {
       localStorage.setItem('auth_token', this.token);
-      localStorage.setItem('auth_user', JSON.stringify(this.user));
-    }
+      localStorage.setItem('auth_user', JSON.stringify(this.user))
+  }
   }
 
   /**
@@ -61,7 +61,7 @@ class SimpleAuthService {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('auth_user');
     this.token = null;
-    this.user = null;
+    this.user = null
   }
 
   /**
@@ -73,8 +73,8 @@ class SimpleAuthService {
     };
 
     if (this.token) {
-      headers['Authorization'] = `Bearer ${this.token}`;
-    }
+      headers['Authorization'] = `Bearer ${this.token}`
+  }
 
     const options: RequestInit = {
       method,
@@ -82,22 +82,22 @@ class SimpleAuthService {
     };
 
     if (body && method !== 'GET') {
-      options.body = JSON.stringify(body);
-    }
+      options.body = JSON.stringify(body)
+  }
 
     try {
       const response = await fetch(`${this.baseUrl}${endpoint}`, options);
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.error || 'Request failed');
-      }
+        throw new Error(data.error || 'Request failed')
+  }
       
-      return data;
-    } catch (error) {
+      return data
+  } catch (error) {
       console.error('API request failed:', error);
-      throw error;
-    }
+      throw error
+  }
   }
 
   /**
@@ -115,15 +115,15 @@ class SimpleAuthService {
         this.saveToStorage();
         
         // Dispatch auth event for React components
-        window.dispatchEvent(new CustomEvent('auth:login', { detail: this.user }));
-      }
+        window.dispatchEvent(new CustomEvent('auth:login', { detail: this.user }))
+  }
       
-      return authResponse;
-    } catch (error) {
+      return authResponse
+  } catch (error) {
       return { 
         success: false, 
-        error: error instanceof Error ? error.message : 'Login failed' ;
-      }
+        error: error instanceof Error ? error.message : 'Login failed'
+  }
   }
 
   /**
@@ -147,15 +147,15 @@ class SimpleAuthService {
         this.saveToStorage();
         
         // Dispatch auth event for React components
-        window.dispatchEvent(new CustomEvent('auth:register', { detail: this.user }));
-      }
+        window.dispatchEvent(new CustomEvent('auth:register', { detail: this.user }))
+  }
       
-      return authResponse;
-    } catch (error) {
+      return authResponse
+  } catch (error) {
       return { 
         success: false, 
-        error: error instanceof Error ? error.message : 'Registration failed' ;
-      }
+        error: error instanceof Error ? error.message : 'Registration failed'
+  }
   }
 
   /**
@@ -165,8 +165,8 @@ class SimpleAuthService {
     try {
       // Call logout endpoint (optional, mainly for server-side cleanup)
       if (this.token) {
-        await this.apiRequest('/logout', 'POST');
-      }
+        await this.apiRequest('/logout', 'POST')
+  }
     } catch {
       // Ignore logout API errors
     } finally {
@@ -177,8 +177,8 @@ class SimpleAuthService {
       window.dispatchEvent(new CustomEvent('auth:logout'));
       
       // Redirect to home
-      window.location.href = '/';
-    }
+      window.location.href = '/'
+  }
   }
 
   /**
@@ -186,8 +186,8 @@ class SimpleAuthService {
    */
   async verifyToken(): Promise<boolean> {
     if (!this.token) {
-      return false;
-    }
+      return false
+  }
 
     try {
       const response = await this.apiRequest('/verify', 'GET');
@@ -197,15 +197,15 @@ class SimpleAuthService {
       if (authResponse.success && authResponse.user) {
         this.user = authResponse.user;
         this.saveToStorage();
-        return true;
-      }
+        return true
+  }
       
       this.clearStorage();
-      return false;
-    } catch {
+      return false
+  } catch {
       this.clearStorage();
-      return false;
-    }
+      return false
+  }
   }
 
   /**
@@ -213,13 +213,13 @@ class SimpleAuthService {
    */
   async getCurrentUser(): Promise<User | null> {
     if (!this.token) {
-      return null;
-    }
+      return null
+  }
 
     // If we have a cached user, return it
     if (this.user) {
-      return this.user;
-    }
+      return this.user
+  }
 
     // Otherwise fetch from API
     try {
@@ -230,34 +230,34 @@ class SimpleAuthService {
       if (authResponse.success && authResponse.user) {
         this.user = authResponse.user;
         this.saveToStorage();
-        return this.user;
-      }
+        return this.user
+  }
       
-      return null;
-    } catch {
-      return null;
-    }
+      return null
+  } catch {
+      return null
+  }
   }
 
   /**
    * Check if user is authenticated
    */
   isAuthenticated(): boolean {
-    return !!this.token && !!this.user;
+    return !!this.token && !!this.user
   }
 
   /**
    * Get current token
    */
   getToken(): string | null {
-    return this.token;
+    return this.token
   }
 
   /**
    * Check if user has specific role
    */
   hasRole(role: string): boolean {
-    return this.user?.role === role;
+    return this.user?.role === role
   }
 
   /**
@@ -268,22 +268,22 @@ class SimpleAuthService {
       if (!this.user) {
         return { 
           success: false, 
-          error: 'User not authenticated' ;
-        }
+          error: 'User not authenticated'
+  }
 
       // Validate updates
       if (updates.email && !this.isValidEmail(updates.email)) {
         return {
           success: false,
-          error: 'Invalid email format';
-        }
+          error: 'Invalid email format'
+  }
 
       // Update local user data
       this.user = {
         ...this.user,
         ...updates,
-        id: this.user.id // Prevent ID change;
-      };
+        id: this.user.id // Prevent ID change
+  };
 
       // Save to localStorage
       localStorage.setItem('simple_auth_user', JSON.stringify(this.user));
@@ -306,13 +306,13 @@ class SimpleAuthService {
 
       return {
         success: true,
-        user: this.user;
-      } catch (error) {
+        user: this.user
+  } catch (error) {
       logger.error('Profile update failed:', error, 'SimpleAuthService');
       return {
         success: false,
-        error: 'Failed to update profile';
-      }
+        error: 'Failed to update profile'
+  }
   }
 
   /**
@@ -320,7 +320,7 @@ class SimpleAuthService {
    */
   private isValidEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    return emailRegex.test(email)
   }
 
   /**
@@ -332,8 +332,8 @@ class SimpleAuthService {
       if (!email || !this.isValidEmail(email)) {
         return {
           success: false,
-          error: 'Please provide a valid email address';
-        }
+          error: 'Please provide a valid email address'
+  }
 
       // In production, this would send a reset email via API
       // const response = await fetch('/api/auth/reset-password', {
@@ -348,8 +348,8 @@ class SimpleAuthService {
       const resetData = {
         email,
         token: resetToken,
-        expiry: Date.now() + 3600000 // 1 hour expiry;
-      };
+        expiry: Date.now() + 3600000 // 1 hour expiry
+  };
 
       // Store reset token temporarily
       localStorage.setItem('password_reset_' + email, JSON.stringify(resetData));
@@ -361,13 +361,13 @@ class SimpleAuthService {
 
       return {
         success: true,
-        message: 'Password reset instructions have been sent to your email';
-      } catch (error) {
+        message: 'Password reset instructions have been sent to your email'
+  } catch (error) {
       logger.error('Password reset request failed:', error, 'SimpleAuthService');
       return {
         success: false,
-        error: 'Failed to process password reset request';
-      }
+        error: 'Failed to process password reset request'
+  }
   }
 
   /**
@@ -379,30 +379,30 @@ class SimpleAuthService {
       if (!email || !token || !newPassword) {
         return {
           success: false,
-          error: 'Missing required information';
-        }
+          error: 'Missing required information'
+  }
 
       // Check password strength
       if (newPassword.length < 8) {
         return {
           success: false,
-          error: 'Password must be at least 8 characters long';
-        }
+          error: 'Password must be at least 8 characters long'
+  }
 
       // Verify reset token;
       const resetDataStr = localStorage.getItem('password_reset_' + email);
       if (!resetDataStr) {
         return {
           success: false,
-          error: 'Invalid or expired reset token';
-        }
+          error: 'Invalid or expired reset token'
+  }
 
       const resetData = JSON.parse(resetDataStr);
       if (resetData.token !== token || resetData.expiry < Date.now()) {
         return {
           success: false,
-          error: 'Invalid or expired reset token';
-        }
+          error: 'Invalid or expired reset token'
+  }
 
       // In production, this would update the password via API
       // const response = await fetch('/api/auth/reset-password/confirm', {
@@ -419,13 +419,13 @@ class SimpleAuthService {
 
       return {
         success: true,
-        message: 'Password has been reset successfully';
-      } catch (error) {
+        message: 'Password has been reset successfully'
+  } catch (error) {
       logger.error('Password reset failed:', error, 'SimpleAuthService');
       return {
         success: false,
-        error: 'Failed to reset password';
-      }
+        error: 'Failed to reset password'
+  }
   }
 
   /**
@@ -444,21 +444,21 @@ class SimpleAuthService {
     return () => {
       window.removeEventListener('auth:login', handleLogin as EventListener);
       window.removeEventListener('auth:logout', handleLogout);
-      window.removeEventListener('auth:register', handleRegister as EventListener);
-    }
+      window.removeEventListener('auth:register', handleRegister as EventListener)
+  }
 }
 
 // Export singleton instance;
 export const simpleAuthService = new SimpleAuthService();
 
 // Export for convenience;
-export default simpleAuthService;
-      } catch (error) {
+export default simpleAuthService
+  } catch (error) {
       logger.error('Profile update failed:', error, 'SimpleAuthService');
       return {
         success: false,
-        error: 'Failed to update profile';
-      }
+        error: 'Failed to update profile'
+  }
   }
 
   /**
@@ -466,7 +466,7 @@ export default simpleAuthService;
    */
   private isValidEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    return emailRegex.test(email)
   }
 
   /**
@@ -478,8 +478,8 @@ export default simpleAuthService;
       if (!email || !this.isValidEmail(email)) {
         return {
           success: false,
-          error: 'Please provide a valid email address';
-        }
+          error: 'Please provide a valid email address'
+  }
 
       // In production, this would send a reset email via API
       // const response = await fetch('/api/auth/reset-password', {
@@ -494,8 +494,8 @@ export default simpleAuthService;
       const resetData = {
         email,
         token: resetToken,
-        expiry: Date.now() + 3600000 // 1 hour expiry;
-      };
+        expiry: Date.now() + 3600000 // 1 hour expiry
+  };
 
       // Store reset token temporarily
       localStorage.setItem('password_reset_' + email, JSON.stringify(resetData));
@@ -507,13 +507,13 @@ export default simpleAuthService;
 
       return {
         success: true,
-        message: 'Password reset instructions have been sent to your email';
-      } catch (error) {
+        message: 'Password reset instructions have been sent to your email'
+  } catch (error) {
       logger.error('Password reset request failed:', error, 'SimpleAuthService');
       return {
         success: false,
-        error: 'Failed to process password reset request';
-      }
+        error: 'Failed to process password reset request'
+  }
   }
 
   /**
@@ -525,30 +525,30 @@ export default simpleAuthService;
       if (!email || !token || !newPassword) {
         return {
           success: false,
-          error: 'Missing required information';
-        }
+          error: 'Missing required information'
+  }
 
       // Check password strength
       if (newPassword.length < 8) {
         return {
           success: false,
-          error: 'Password must be at least 8 characters long';
-        }
+          error: 'Password must be at least 8 characters long'
+  }
 
       // Verify reset token;
       const resetDataStr = localStorage.getItem('password_reset_' + email);
       if (!resetDataStr) {
         return {
           success: false,
-          error: 'Invalid or expired reset token';
-        }
+          error: 'Invalid or expired reset token'
+  }
 
       const resetData = JSON.parse(resetDataStr);
       if (resetData.token !== token || resetData.expiry < Date.now()) {
         return {
           success: false,
-          error: 'Invalid or expired reset token';
-        }
+          error: 'Invalid or expired reset token'
+  }
 
       // In production, this would update the password via API
       // const response = await fetch('/api/auth/reset-password/confirm', {
@@ -565,13 +565,13 @@ export default simpleAuthService;
 
       return {
         success: true,
-        message: 'Password has been reset successfully';
-      } catch (error) {
+        message: 'Password has been reset successfully'
+  } catch (error) {
       logger.error('Password reset failed:', error, 'SimpleAuthService');
       return {
         success: false,
-        error: 'Failed to reset password';
-      }
+        error: 'Failed to reset password'
+  }
   }
 
   /**
@@ -590,8 +590,8 @@ export default simpleAuthService;
     return () => {
       window.removeEventListener('auth:login', handleLogin as EventListener);
       window.removeEventListener('auth:logout', handleLogout);
-      window.removeEventListener('auth:register', handleRegister as EventListener);
-    }
+      window.removeEventListener('auth:register', handleRegister as EventListener)
+  }
 }
 
 // Export singleton instance;

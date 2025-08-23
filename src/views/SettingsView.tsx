@@ -15,8 +15,8 @@ import { PreferencesManager } from '../components/PreferencesManager';
 export const SettingsView: React.FC<{ 
     userToken?: string | null; 
     onResetId?: () => void;
-    setActiveView?: (view: View) => void;
-}> = ({ userToken: propUserToken, onResetId, setActiveView }) => {
+    setActiveView?: (view: View) => void
+  }> = ({ userToken: propUserToken, onResetId, setActiveView }) => {
     const { user, userToken: contextUserToken } = useAuth();
     const { theme, toggleTheme } = useTheme();
     const { contentFilters, setFilters } = usePreferenceStore();
@@ -31,31 +31,31 @@ export const SettingsView: React.FC<{
         const currentUserId = user?.sub || userToken;
         if (currentUserId) {
             ApiClient.preferences.getPreferences(currentUserId).then(prefs => {
-                setResearchConsent(prefs.researchConsent);
-            });
-        }
+                setResearchConsent(prefs.researchConsent)
+  })
+  }
     };
   }, [user, userToken]);
 
     const handleReset = () => {
         onResetId?.();
-        setIsResetModalOpen(false);
-    }
+        setIsResetModalOpen(false)
+  }
 
     const handleConsentChange = (consent: boolean) => {
         const currentUserId = user?.sub || userToken;
         if (currentUserId) {
             setResearchConsent(consent);
-            ApiClient.preferences.updatePreferences(currentUserId, { researchConsent: consent });
-        }
+            ApiClient.preferences.updatePreferences(currentUserId, { researchConsent: consent })
+  }
     }
 
     const handleFilterChange = (category: string) => {
-        const newFilters = contentFilters.includes(category);
+        const newFilters = contentFilters.includes(category);;
             ? contentFilters.filter(c => c !== category)
             : [...contentFilters, category];
-        setFilters(newFilters);
-    };
+        setFilters(newFilters)
+  };
 
     return (
         <div className="settings-view">
@@ -89,8 +89,7 @@ export const SettingsView: React.FC<{
                         <p>Switch between light and dark themes for comfortable viewing</p>
                     </div>
                     <div className="theme-toggle">
-                        <input; 
-                            type="checkbox" 
+                        <input type="checkbox" 
                             id="theme-toggle"
                             checked={theme === 'dark'}
                             onChange={toggleTheme}
@@ -106,8 +105,7 @@ export const SettingsView: React.FC<{
                 <div className="expertise-options">
                     {CATEGORIES.map(option => (
                         <div key={option} className="radio-group">
-                            <input;
-                                type="checkbox"
+                            <input type="checkbox"
                                 id={`filter-${option}`}
                                 name="filter"
                                 value={option}
@@ -128,8 +126,7 @@ export const SettingsView: React.FC<{
                         <p>Help researchers by contributing your fully anonymized data to improve mental health support systems globally.</p>
                     </div>
                     <div className="theme-toggle">
-                        <input; 
-                            type="checkbox" 
+                        <input type="checkbox" 
                             id="research-consent-toggle"
                             checked={researchConsent}
                             onChange={e => handleConsentChange(e.target.checked)}
@@ -182,8 +179,8 @@ export const SettingsView: React.FC<{
                 <PreferencesManager />
             </div>
         </div>
-    );
-}
+    )
+  }
 
 
 export default SettingsView;

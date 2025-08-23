@@ -35,8 +35,8 @@ interface CulturalCrisisAlertProps {
   /** Crisis chat callback */
   onCrisisChat?: () => void;
   /** Dismiss callback */
-  onDismiss?: () => void;
-}
+  onDismiss?: () => void
+  }
 
 export const CulturalCrisisAlert: React.FC<CulturalCrisisAlertProps> = ({
   analysisText,
@@ -61,7 +61,7 @@ export const CulturalCrisisAlert: React.FC<CulturalCrisisAlertProps> = ({
     resources: string[];
     emergencyMode: boolean;
     culturalFactors: string[];
-    culturallyAdapted: boolean;
+    culturallyAdapted: boolean
   }>({
     show: false,
     severity: 'none',
@@ -70,7 +70,7 @@ export const CulturalCrisisAlert: React.FC<CulturalCrisisAlertProps> = ({
     resources: [],
     emergencyMode: false,
     culturalFactors: [],
-    culturallyAdapted: false;
+    culturallyAdapted: false
   });
 
   // Use cultural crisis detection hook;
@@ -94,8 +94,8 @@ export const CulturalCrisisAlert: React.FC<CulturalCrisisAlertProps> = ({
   // Auto-analyze text when it changes
   useEffect(() => {
     if (analysisText && analysisText.trim().length > 10) {
-      analyzeCulturalCrisis(analysisText, { immediate: true, trackHistory: true });
-    }
+      analyzeCulturalCrisis(analysisText, { immediate: true, trackHistory: true })
+  }
   };
   }, [analysisText, analyzeCulturalCrisis]);
 
@@ -111,13 +111,13 @@ export const CulturalCrisisAlert: React.FC<CulturalCrisisAlertProps> = ({
       if (culturallyAdapted && culturalFactors.length > 0) {
         message = t('crisis.cultural_alert_message', {
           factors: culturalFactors.join(', '),
-          defaultValue: 'Help is available. Your cultural background has been considered in these recommendations.';
-        });;
+          defaultValue: 'Help is available. Your cultural background has been considered in these recommendations.'
+  })
   } else {
         message = t('crisis.standard_alert_message', {
-          defaultValue: 'Help is available. You are not alone.';
-        });
-      }
+          defaultValue: 'Help is available. You are not alone.'
+  })
+  }
 
       // Get cultural interventions (returns string array);
       const interventions = getCulturalInterventions();
@@ -130,24 +130,24 @@ export const CulturalCrisisAlert: React.FC<CulturalCrisisAlertProps> = ({
           // Handle both test mock structure (type) and actual service structure (indicator);
           const indicatorText = (indicator as any).type || indicator.indicator;
           if (indicatorText) {
-            actions.push(indicatorText);
-          }
-        });
-      }
+            actions.push(indicatorText)
+  }
+        })
+  }
 
       // Add cultural interventions as actions
       if (interventions && interventions.length > 0) {
-        actions.push(...interventions);
-      }
+        actions.push(...interventions)
+  }
 
       // Add language-specific resources
       if (languageCode === 'es') {
-        resources.push(t('crisis.resource.spanish_lifeline', { defaultValue: 'Línea Nacional de Prevención del Suicidio: 988' }));;
+        resources.push(t('crisis.resource.spanish_lifeline', { defaultValue: 'Línea Nacional de Prevención del Suicidio: 988' }))
   } else if (languageCode === 'zh') {
-        resources.push(t('crisis.resource.chinese_support', { defaultValue: 'Chinese Mental Health Helpline: 1-844-292-4357' }));;
+        resources.push(t('crisis.resource.chinese_support', { defaultValue: 'Chinese Mental Health Helpline: 1-844-292-4357' }))
   } else if (languageCode === 'ar') {
-        resources.push(t('crisis.resource.arabic_support', { defaultValue: 'Arabic Crisis Support: 988 (Arabic available)' }));
-      }
+        resources.push(t('crisis.resource.arabic_support', { defaultValue: 'Arabic Crisis Support: 988 (Arabic available)' }))
+  }
 
       // Always include general resources
       resources.push(
@@ -164,33 +164,33 @@ export const CulturalCrisisAlert: React.FC<CulturalCrisisAlertProps> = ({
         emergencyMode: severity === 'critical' || culturalAlert.emergencyMode,
         culturalFactors,
         culturallyAdapted
-      });;
+      })
   } else {
-      setAlertData(prev => ({ ...prev, show: false }));
-    }
+      setAlertData(prev => ({ ...prev, show: false }))
+  }
   };
   }, [culturalAlert, show, t, languageCode, getCulturalInterventions]);
 
   const handleDismiss = () => {
     dismissCulturalAlert();
     setAlertData(prev => ({ ...prev, show: false }));
-    onDismiss?.();
+    onDismiss?.()
   };
 
   const handleEmergencyCall = () => {
     // Track cultural context in emergency call
     if (lastAnalysis && lastAnalysis.culturalContext) {
-      console.log('[Cultural Crisis Alert] Emergency call with cultural context:', lastAnalysis.culturalContext);
-    }
-    onEmergencyCall?.();
+      console.log('[Cultural Crisis Alert] Emergency call with cultural context:', lastAnalysis.culturalContext)
+  }
+    onEmergencyCall?.()
   };
 
   const handleCrisisChat = () => {
     // Include cultural context in crisis chat
     if (lastAnalysis && lastAnalysis.culturalContext) {
-      console.log('[Cultural Crisis Alert] Crisis chat with cultural context:', lastAnalysis.culturalContext);
-    }
-    onCrisisChat?.();
+      console.log('[Cultural Crisis Alert] Crisis chat with cultural context:', lastAnalysis.culturalContext)
+  }
+    onCrisisChat?.()
   };
 
   // Show loading state while analyzing
@@ -200,11 +200,11 @@ export const CulturalCrisisAlert: React.FC<CulturalCrisisAlertProps> = ({
         <div className="loading-content">
           <div className="loading-spinner"></div>
           <span>{t('crisis.analyzing_with_cultural_context', { 
-            defaultValue: 'Analyzing with cultural context...' ;
-          })}</span>
+            defaultValue: 'Analyzing with cultural context...'
+  })}</span>
         </div>
       </output>
-    );
+    )
   }
 
   // Render the enhanced crisis alert
@@ -230,8 +230,8 @@ export const CulturalCrisisAlert: React.FC<CulturalCrisisAlertProps> = ({
             <span className="cultural-indicator-icon">🌍</span>
             <span className="cultural-indicator-text">
               {t('crisis.cultural_awareness_active', {
-                defaultValue: 'Cultural awareness active';
-              })}
+                defaultValue: 'Cultural awareness active'
+  })}
             </span>
             <div className="cultural-factors-list">
               {alertData.culturalFactors.map((factor, index) => (
@@ -244,7 +244,7 @@ export const CulturalCrisisAlert: React.FC<CulturalCrisisAlertProps> = ({
         </aside>
       )}
     </>
-  );
-};
+  )
+  };
 
 export default CulturalCrisisAlert;

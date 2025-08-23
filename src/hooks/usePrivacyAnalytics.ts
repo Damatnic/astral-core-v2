@@ -25,7 +25,7 @@ export interface UsePrivacyAnalyticsReturn {
     used: number;
     remaining: number;
     dataPoints: number;
-    retentionCompliant: boolean;
+    retentionCompliant: boolean
   };
   
   // Loading States
@@ -41,7 +41,7 @@ export interface UsePrivacyAnalyticsReturn {
     initialRiskLevel: number;
     finalRiskLevel: number;
     sessionDuration: number;
-    feedback?: number;
+    feedback?: number
   }) => Promise<void>;
   
   recordFollowUp: (userToken: string, sessionId: string) => Promise<void>;
@@ -50,13 +50,13 @@ export interface UsePrivacyAnalyticsReturn {
     summary: string;
     culturalInsights: string[];
     recommendations: string[];
-    limitations: string[];
+    limitations: string[]
   } | null>;
   
   exportData: () => Promise<unknown>;
   refreshInsights: () => Promise<void>;
-  resetPrivacyBudget: () => void;
-}
+  resetPrivacyBudget: () => void
+  }
 
 export const usePrivacyAnalytics = (): UsePrivacyAnalyticsReturn => {
   const [insights, setInsights] = useState<AnalyticsInsights | null>(null);
@@ -65,7 +65,7 @@ export const usePrivacyAnalytics = (): UsePrivacyAnalyticsReturn => {
     used: 0,
     remaining: 10,
     dataPoints: 0,
-    retentionCompliant: true;
+    retentionCompliant: true
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -79,8 +79,8 @@ export const usePrivacyAnalytics = (): UsePrivacyAnalyticsReturn => {
       used: privacyMetrics.budgetUsed,
       remaining: privacyMetrics.budgetRemaining,
       dataPoints: privacyMetrics.dataPoints,
-      retentionCompliant: privacyMetrics.retentionCompliance;
-    });
+      retentionCompliant: privacyMetrics.retentionCompliance
+  })
   };
   }, []);
 
@@ -97,14 +97,13 @@ export const usePrivacyAnalytics = (): UsePrivacyAnalyticsReturn => {
       setCulturalMetrics(analyticsInsights.culturalComparisons);
       
       // Update privacy metrics
-      updatePrivacyBudget();
-      
-    } catch (err) {
+      updatePrivacyBudget()
+  } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load analytics insights');
-      console.error('[Privacy Analytics Hook] Failed to load insights:', err);
-    } finally {
-      setIsLoading(false);
-    }
+      console.error('[Privacy Analytics Hook] Failed to load insights:', err)
+  } finally {
+      setIsLoading(false)
+  }
   };
   }, []);
 
@@ -119,18 +118,17 @@ export const usePrivacyAnalytics = (): UsePrivacyAnalyticsReturn => {
     initialRiskLevel: number;
     finalRiskLevel: number;
     sessionDuration: number;
-    feedback?: number;
+    feedback?: number
   }) => {
     try {
       await privacyPreservingAnalyticsService.recordInterventionOutcome(outcomeData);
       
       // Update privacy metrics
-      updatePrivacyBudget();
-      
-    } catch (err) {
+      updatePrivacyBudget()
+  } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to record intervention');
-      console.error('[Privacy Analytics Hook] Failed to record intervention:', err);
-    }
+      console.error('[Privacy Analytics Hook] Failed to record intervention:', err)
+  }
   };
   }, []);
 
@@ -142,12 +140,11 @@ export const usePrivacyAnalytics = (): UsePrivacyAnalyticsReturn => {
       await privacyPreservingAnalyticsService.recordFollowUpEngagement(userToken, sessionId);
       
       // Update privacy metrics
-      updatePrivacyBudget();
-      
-    } catch (err) {
+      updatePrivacyBudget()
+  } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to record follow-up');
-      console.error('[Privacy Analytics Hook] Failed to record follow-up:', err);
-    }
+      console.error('[Privacy Analytics Hook] Failed to record follow-up:', err)
+  }
   };
   }, []);
 
@@ -158,14 +155,14 @@ export const usePrivacyAnalytics = (): UsePrivacyAnalyticsReturn => {
     try {
       setIsLoading(true);
       const report = await privacyPreservingAnalyticsService.generateEffectivenessReport();
-      return report;
-    } catch (err) {
+      return report
+  } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to generate report');
       console.error('[Privacy Analytics Hook] Failed to generate report:', err);
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
+      return null
+  } finally {
+      setIsLoading(false)
+  }
   };
   }, []);
 
@@ -176,14 +173,14 @@ export const usePrivacyAnalytics = (): UsePrivacyAnalyticsReturn => {
     try {
       setIsLoading(true);
       const exportedData = await privacyPreservingAnalyticsService.exportAnonymizedData();
-      return exportedData;
-    } catch (err) {
+      return exportedData
+  } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to export data');
       console.error('[Privacy Analytics Hook] Failed to export data:', err);
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
+      return null
+  } finally {
+      setIsLoading(false)
+  }
   };
   }, []);
 
@@ -191,7 +188,7 @@ export const usePrivacyAnalytics = (): UsePrivacyAnalyticsReturn => {
    * Refresh insights
    */;
   const refreshInsights = useCallback(async () => {
-    await loadInsights();
+    await loadInsights()
   };
   }, [loadInsights]);
 
@@ -200,13 +197,14 @@ export const usePrivacyAnalytics = (): UsePrivacyAnalyticsReturn => {
    */;
   const resetPrivacyBudget = useCallback(() => {
     privacyPreservingAnalyticsService.resetPrivacyBudget();
-    updatePrivacyBudget();
+    updatePrivacyBudget()
   };
   }, [updatePrivacyBudget]);
 
   // Load initial insights
   useEffect(() => {
-    loadInsights();
+    loadInsights()
+  };
   };
   };
   }, [loadInsights]);

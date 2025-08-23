@@ -14,8 +14,8 @@ import {
 describe('assessmentUtils', () => {
   describe('PHQ-9 Questions', () => {
     test('should have exactly 9 questions for PHQ-9', () => {
-      expect(phq9Questions).toHaveLength(9);
-    });
+      expect(phq9Questions).toHaveLength(9)
+  });
 
     test('should have proper structure for each PHQ-9 question', () => {
       phq9Questions.forEach((question, index) => {
@@ -27,9 +27,9 @@ describe('assessmentUtils', () => {
         expect(typeof question.text).toBe('string');
         expect(question.text.length).toBeGreaterThan(0);
         expect(Array.isArray(question.options)).toBe(true);
-        expect(question.options).toHaveLength(4);
-      });
-    });
+        expect(question.options).toHaveLength(4)
+  })
+  });
 
     test('should have consistent option structure for PHQ-9', () => {
       const expectedValues = [0, 1, 2, 3];
@@ -40,13 +40,13 @@ describe('assessmentUtils', () => {
           expect(option).toHaveProperty('value');
           expect(option).toHaveProperty('text');
           expect(option.value).toBe(expectedValues[index]);
-          expect(option.text).toBe(expectedTexts[index]);
-        });
-      });
-    });
+          expect(option.text).toBe(expectedTexts[index])
+  })
+  })
+  });
 
     test('should have valid PHQ-9 question content', () => {
-      const expectedQuestionContent = [;
+      const expectedQuestionContent = [;;
         'Little interest or pleasure in doing things',
         'Feeling down, depressed, or hopeless',
         'Trouble falling or staying asleep, or sleeping too much',
@@ -59,21 +59,21 @@ describe('assessmentUtils', () => {
       ];
 
       expectedQuestionContent.forEach((expectedText, index) => {
-        expect(phq9Questions[index].text).toBe(expectedText);
-      });
-    });
+        expect(phq9Questions[index].text).toBe(expectedText)
+  })
+  });
 
     test('should have unique IDs for PHQ-9 questions', () => {
       const ids = phq9Questions.map(q => q.id);
       const uniqueIds = [...new Set(ids)];
-      expect(uniqueIds).toHaveLength(ids.length);
-    });
+      expect(uniqueIds).toHaveLength(ids.length)
+  })
   });
 
   describe('GAD-7 Questions', () => {
     test('should have exactly 7 questions for GAD-7', () => {
-      expect(gad7Questions).toHaveLength(7);
-    });
+      expect(gad7Questions).toHaveLength(7)
+  });
 
     test('should have proper structure for each GAD-7 question', () => {
       gad7Questions.forEach((question, index) => {
@@ -85,9 +85,9 @@ describe('assessmentUtils', () => {
         expect(typeof question.text).toBe('string');
         expect(question.text.length).toBeGreaterThan(0);
         expect(Array.isArray(question.options)).toBe(true);
-        expect(question.options).toHaveLength(4);
-      });
-    });
+        expect(question.options).toHaveLength(4)
+  })
+  });
 
     test('should have consistent option structure for GAD-7', () => {
       const expectedValues = [0, 1, 2, 3];
@@ -98,13 +98,13 @@ describe('assessmentUtils', () => {
           expect(option).toHaveProperty('value');
           expect(option).toHaveProperty('text');
           expect(option.value).toBe(expectedValues[index]);
-          expect(option.text).toBe(expectedTexts[index]);
-        });
-      });
-    });
+          expect(option.text).toBe(expectedTexts[index])
+  })
+  })
+  });
 
     test('should have valid GAD-7 question content', () => {
-      const expectedQuestionContent = [;
+      const expectedQuestionContent = [;;
         'Feeling nervous, anxious, or on edge',
         'Not being able to stop or control worrying',
         'Worrying too much about different things',
@@ -115,15 +115,15 @@ describe('assessmentUtils', () => {
       ];
 
       expectedQuestionContent.forEach((expectedText, index) => {
-        expect(gad7Questions[index].text).toBe(expectedText);
-      });
-    });
+        expect(gad7Questions[index].text).toBe(expectedText)
+  })
+  });
 
     test('should have unique IDs for GAD-7 questions', () => {
       const ids = gad7Questions.map(q => q.id);
       const uniqueIds = [...new Set(ids)];
-      expect(uniqueIds).toHaveLength(ids.length);
-    });
+      expect(uniqueIds).toHaveLength(ids.length)
+  })
   });
 
   describe('getPhq9Result', () => {
@@ -137,9 +137,9 @@ describe('assessmentUtils', () => {
         expect(result.severity).toBe('Minimal Depression');
         expect(result.recommendation).toContain('minimal depression');
         expect(result.recommendation).toContain('monitoring');
-        expect(result.recommendation).toContain('healthy lifestyle');
-      });
-    });
+        expect(result.recommendation).toContain('healthy lifestyle')
+  })
+  });
 
     test('should classify mild depression (5-9)', () => {
       const testCases = [5, 7, 9];
@@ -151,9 +151,9 @@ describe('assessmentUtils', () => {
         expect(result.severity).toBe('Mild Depression');
         expect(result.recommendation).toContain('mild depression');
         expect(result.recommendation).toContain('mental health professional');
-        expect(result.recommendation).toContain('support and guidance');
-      });
-    });
+        expect(result.recommendation).toContain('support and guidance')
+  })
+  });
 
     test('should classify moderate depression (10-14)', () => {
       const testCases = [10, 12, 14];
@@ -165,9 +165,9 @@ describe('assessmentUtils', () => {
         expect(result.severity).toBe('Moderate Depression');
         expect(result.recommendation).toContain('moderate depression');
         expect(result.recommendation).toContain('healthcare provider');
-        expect(result.recommendation).toContain('treatment options');
-      });
-    });
+        expect(result.recommendation).toContain('treatment options')
+  })
+  });
 
     test('should classify moderately severe depression (15-19)', () => {
       const testCases = [15, 17, 19];
@@ -179,9 +179,9 @@ describe('assessmentUtils', () => {
         expect(result.severity).toBe('Moderately Severe Depression');
         expect(result.recommendation).toContain('moderately severe depression');
         expect(result.recommendation).toContain('professional help soon');
-        expect(result.recommendation).toContain('evaluation and treatment');
-      });
-    });
+        expect(result.recommendation).toContain('evaluation and treatment')
+  })
+  });
 
     test('should classify severe depression (20+)', () => {
       const testCases = [20, 22, 25, 27]; // Max possible is 27
@@ -194,12 +194,12 @@ describe('assessmentUtils', () => {
         expect(result.recommendation).toContain('severe depression');
         expect(result.recommendation).toContain('strongly recommend');
         expect(result.recommendation).toContain('immediately');
-        expect(result.recommendation).toContain('mental health professional');
-      });
-    });
+        expect(result.recommendation).toContain('mental health professional')
+  })
+  });
 
     test('should handle boundary cases correctly', () => {
-      const boundaryTests = [;
+      const boundaryTests = [;;
         { score: 4, expectedSeverity: 'Minimal Depression' },
         { score: 5, expectedSeverity: 'Mild Depression' },
         { score: 9, expectedSeverity: 'Mild Depression' },
@@ -213,9 +213,9 @@ describe('assessmentUtils', () => {
       boundaryTests.forEach(({ score, expectedSeverity }) => {
         const result = getPhq9Result(score);
         expect(result.severity).toBe(expectedSeverity);
-        expect(result.score).toBe(score);
-      });
-    });
+        expect(result.score).toBe(score)
+  })
+  });
 
     test('should handle edge cases and invalid inputs', () => {
       // Negative scores (though shouldn't happen in real use);
@@ -231,8 +231,8 @@ describe('assessmentUtils', () => {
       // Zero score;
       const zeroResult = getPhq9Result(0);
       expect(zeroResult.severity).toBe('Minimal Depression');
-      expect(zeroResult.score).toBe(0);
-    });
+      expect(zeroResult.score).toBe(0)
+  });
 
     test('should return AssessmentResult with all required properties', () => {
       const result = getPhq9Result(10);
@@ -246,8 +246,8 @@ describe('assessmentUtils', () => {
       expect(typeof result.recommendation).toBe('string');
       
       expect(result.severity.length).toBeGreaterThan(0);
-      expect(result.recommendation.length).toBeGreaterThan(0);
-    });
+      expect(result.recommendation.length).toBeGreaterThan(0)
+  })
   });
 
   describe('getGad7Result', () => {
@@ -261,9 +261,9 @@ describe('assessmentUtils', () => {
         expect(result.severity).toBe('Minimal Anxiety');
         expect(result.recommendation).toContain('minimal anxiety');
         expect(result.recommendation).toContain('stress management');
-        expect(result.recommendation).toContain('healthy coping strategies');
-      });
-    });
+        expect(result.recommendation).toContain('healthy coping strategies')
+  })
+  });
 
     test('should classify mild anxiety (5-9)', () => {
       const testCases = [5, 7, 9];
@@ -275,9 +275,9 @@ describe('assessmentUtils', () => {
         expect(result.severity).toBe('Mild Anxiety');
         expect(result.recommendation).toContain('mild anxiety');
         expect(result.recommendation).toContain('relaxation techniques');
-        expect(result.recommendation).toContain('mental health professional');
-      });
-    });
+        expect(result.recommendation).toContain('mental health professional')
+  })
+  });
 
     test('should classify moderate anxiety (10-14)', () => {
       const testCases = [10, 12, 14];
@@ -290,9 +290,9 @@ describe('assessmentUtils', () => {
         expect(result.recommendation).toContain('moderate anxiety');
         expect(result.recommendation).toContain('healthcare provider');
         expect(result.recommendation).toContain('treatment options');
-        expect(result.recommendation).toContain('coping strategies');
-      });
-    });
+        expect(result.recommendation).toContain('coping strategies')
+  })
+  });
 
     test('should classify severe anxiety (15+)', () => {
       const testCases = [15, 18, 21]; // Max possible is 21
@@ -305,12 +305,12 @@ describe('assessmentUtils', () => {
         expect(result.recommendation).toContain('severe anxiety');
         expect(result.recommendation).toContain('professional help soon');
         expect(result.recommendation).toContain('evaluation and treatment');
-        expect(result.recommendation).toContain('quality of life');
-      });
-    });
+        expect(result.recommendation).toContain('quality of life')
+  })
+  });
 
     test('should handle boundary cases correctly', () => {
-      const boundaryTests = [;
+      const boundaryTests = [;;
         { score: 4, expectedSeverity: 'Minimal Anxiety' },
         { score: 5, expectedSeverity: 'Mild Anxiety' },
         { score: 9, expectedSeverity: 'Mild Anxiety' },
@@ -322,9 +322,9 @@ describe('assessmentUtils', () => {
       boundaryTests.forEach(({ score, expectedSeverity }) => {
         const result = getGad7Result(score);
         expect(result.severity).toBe(expectedSeverity);
-        expect(result.score).toBe(score);
-      });
-    });
+        expect(result.score).toBe(score)
+  })
+  });
 
     test('should handle edge cases and invalid inputs', () => {
       // Negative scores;
@@ -340,8 +340,8 @@ describe('assessmentUtils', () => {
       // Zero score;
       const zeroResult = getGad7Result(0);
       expect(zeroResult.severity).toBe('Minimal Anxiety');
-      expect(zeroResult.score).toBe(0);
-    });
+      expect(zeroResult.score).toBe(0)
+  });
 
     test('should return AssessmentResult with all required properties', () => {
       const result = getGad7Result(8);
@@ -355,8 +355,8 @@ describe('assessmentUtils', () => {
       expect(typeof result.recommendation).toBe('string');
       
       expect(result.severity.length).toBeGreaterThan(0);
-      expect(result.recommendation.length).toBeGreaterThan(0);
-    });
+      expect(result.recommendation.length).toBeGreaterThan(0)
+  })
   });
 
   describe('Assessment scoring calculation', () => {
@@ -367,23 +367,23 @@ describe('assessmentUtils', () => {
 
       // GAD-7 has 7 questions, each with max score of 3;
       const maxGad7Score = gad7Questions.length * 3;
-      expect(maxGad7Score).toBe(21);
-    });
+      expect(maxGad7Score).toBe(21)
+  });
 
     test('should have valid score ranges for all categories', () => {
       // Test all possible PHQ-9 scores
       for (let score = 0; score <= 27; score++) {
         const result = getPhq9Result(score);
         expect(result.score).toBe(score);
-        expect(['Minimal Depression', 'Mild Depression', 'Moderate Depression', 'Moderately Severe Depression', 'Severe Depression']).toContain(result.severity);
-      }
+        expect(['Minimal Depression', 'Mild Depression', 'Moderate Depression', 'Moderately Severe Depression', 'Severe Depression']).toContain(result.severity)
+  }
 
       // Test all possible GAD-7 scores
       for (let score = 0; score <= 21; score++) {
         const result = getGad7Result(score);
         expect(result.score).toBe(score);
-        expect(['Minimal Anxiety', 'Mild Anxiety', 'Moderate Anxiety', 'Severe Anxiety']).toContain(result.severity);
-      }
+        expect(['Minimal Anxiety', 'Mild Anxiety', 'Moderate Anxiety', 'Severe Anxiety']).toContain(result.severity)
+  }
     });
 
     test('should calculate actual assessment scores from answers', () => {
@@ -401,8 +401,8 @@ describe('assessmentUtils', () => {
       expect(gad7Score).toBe(11);
 
       const gad7Result = getGad7Result(gad7Score);
-      expect(gad7Result.severity).toBe('Moderate Anxiety');
-    });
+      expect(gad7Result.severity).toBe('Moderate Anxiety')
+  })
   });
 
   describe('Assessment question validation', () => {
@@ -415,36 +415,36 @@ describe('assessmentUtils', () => {
       
       sampleQuestion.options.forEach(option => {
         expect(typeof option.value).toBe('number');
-        expect(typeof option.text).toBe('string');
-      });
-    });
+        expect(typeof option.text).toBe('string')
+  })
+  });
 
     test('should have proper AssessmentResult interface compliance', () => {
       const sampleResult: AssessmentResult = getPhq9Result(10);
       expect(typeof sampleResult.score).toBe('number');
       expect(typeof sampleResult.severity).toBe('string');
-      expect(typeof sampleResult.recommendation).toBe('string');
-    });
+      expect(typeof sampleResult.recommendation).toBe('string')
+  });
 
     test('should ensure all question options have ascending values', () => {
       [...phq9Questions, ...gad7Questions].forEach(question => {
         for (let i = 1; i < question.options.length; i++) {
-          expect(question.options[i].value).toBeGreaterThan(question.options[i - 1].value);
-        }
-      });
-    });
+          expect(question.options[i].value).toBeGreaterThan(question.options[i - 1].value)
+  }
+      })
+  });
 
     test('should ensure all question options start with value 0', () => {
       [...phq9Questions, ...gad7Questions].forEach(question => {
-        expect(question.options[0].value).toBe(0);
-      });
-    });
+        expect(question.options[0].value).toBe(0)
+  })
+  })
   });
 
   describe('Clinical validity and guidelines', () => {
     test('should follow PHQ-9 clinical scoring guidelines', () => {
       // Based on standard PHQ-9 interpretation guidelines;
-      const clinicalCategories = [;
+      const clinicalCategories = [;;
         { range: [0, 4], severity: 'Minimal Depression', description: 'no significant depression' },
         { range: [5, 9], severity: 'Mild Depression', description: 'mild depression symptoms' },
         { range: [10, 14], severity: 'Moderate Depression', description: 'moderate depression requiring intervention' },
@@ -461,13 +461,13 @@ describe('assessmentUtils', () => {
         
         // Test middle values;
         const mid = Math.floor((min + max) / 2);
-        expect(getPhq9Result(mid).severity).toBe(severity);
-      });
-    });
+        expect(getPhq9Result(mid).severity).toBe(severity)
+  })
+  });
 
     test('should follow GAD-7 clinical scoring guidelines', () => {
       // Based on standard GAD-7 interpretation guidelines;
-      const clinicalCategories = [;
+      const clinicalCategories = [;;
         { range: [0, 4], severity: 'Minimal Anxiety', description: 'no significant anxiety' },
         { range: [5, 9], severity: 'Mild Anxiety', description: 'mild anxiety symptoms' },
         { range: [10, 14], severity: 'Moderate Anxiety', description: 'moderate anxiety requiring intervention' },
@@ -483,9 +483,9 @@ describe('assessmentUtils', () => {
         
         // Test middle values;
         const mid = Math.floor((min + max) / 2);
-        expect(getGad7Result(mid).severity).toBe(severity);
-      });
-    });
+        expect(getGad7Result(mid).severity).toBe(severity)
+  })
+  });
 
     test('should provide appropriate clinical recommendations', () => {
       // Minimal levels should encourage self-monitoring
@@ -502,8 +502,8 @@ describe('assessmentUtils', () => {
 
       // Severe levels should indicate urgency
       expect(getPhq9Result(22).recommendation).toMatch(/strongly recommend.*immediately/i);
-      expect(getGad7Result(18).recommendation).toMatch(/professional help soon/i);
-    });
+      expect(getGad7Result(18).recommendation).toMatch(/professional help soon/i)
+  })
   });
 
   describe('Integration and usage scenarios', () => {
@@ -521,11 +521,11 @@ describe('assessmentUtils', () => {
       // Verify the assessment can be stored/serialized;
       const serialized = JSON.stringify(result);
       const deserialized = JSON.parse(serialized);
-      expect(deserialized).toEqual(result);
-    });
+      expect(deserialized).toEqual(result)
+  });
 
     test('should handle assessment comparison over time', () => {
-      const assessmentHistory = [;
+      const assessmentHistory = [;;
         { date: '2024-01-01', score: 15 },
         { date: '2024-01-15', score: 12 },
         { date: '2024-02-01', score: 8 },
@@ -534,8 +534,8 @@ describe('assessmentUtils', () => {
 
       const results = assessmentHistory.map(assessment => ({
         ...assessment,
-        result: getPhq9Result(assessment.score);
-      }));
+        result: getPhq9Result(assessment.score)
+  }));
 
       // Should show improvement over time
       expect(results[0].result.severity).toBe('Moderately Severe Depression');
@@ -545,12 +545,12 @@ describe('assessmentUtils', () => {
 
       // Each assessment should be independent
       results.forEach(({ score, result }) => {
-        expect(result.score).toBe(score);
-      });
-    });
+        expect(result.score).toBe(score)
+  })
+  });
 
     test('should support both assessment types in same system', () => {
-      const userScenarios = [;
+      const userScenarios = [;;
         { phq9Score: 6, gad7Score: 12, expectedPhq9: 'Mild Depression', expectedGad7: 'Moderate Anxiety' },
         { phq9Score: 16, gad7Score: 7, expectedPhq9: 'Moderately Severe Depression', expectedGad7: 'Mild Anxiety' },
         { phq9Score: 3, gad7Score: 2, expectedPhq9: 'Minimal Depression', expectedGad7: 'Minimal Anxiety' },
@@ -565,9 +565,9 @@ describe('assessmentUtils', () => {
 
         // Both assessments should be independent
         expect(phq9Result.score).toBe(phq9Score);
-        expect(gad7Result.score).toBe(gad7Score);
-      });
-    });
+        expect(gad7Result.score).toBe(gad7Score)
+  })
+  })
   });
 
   describe('Performance and memory considerations', () => {
@@ -580,15 +580,15 @@ describe('assessmentUtils', () => {
         const gad7Score = i % 22; // 0-21
         
         getPhq9Result(phq9Score);
-        getGad7Result(gad7Score);
-      }
+        getGad7Result(gad7Score)
+  }
 
       const endTime = performance.now();
       const duration = endTime - startTime;
 
       // Should complete 2000 assessments quickly (< 100ms)
-      expect(duration).toBeLessThan(100);
-    });
+      expect(duration).toBeLessThan(100)
+  });
 
     test('should not mutate original question arrays', () => {
       const originalPhq9 = JSON.parse(JSON.stringify(phq9Questions));
@@ -600,8 +600,8 @@ describe('assessmentUtils', () => {
 
       // Arrays should remain unchanged
       expect(phq9Questions).toEqual(originalPhq9);
-      expect(gad7Questions).toEqual(originalGad7);
-    });
+      expect(gad7Questions).toEqual(originalGad7)
+  });
 
     test('should create new result objects each time', () => {
       const result1 = getPhq9Result(10);
@@ -609,6 +609,6 @@ describe('assessmentUtils', () => {
 
       expect(result1).toEqual(result2);
       expect(result1).not.toBe(result2); // Different object references
-    });
+    })
+  })
   });
-});

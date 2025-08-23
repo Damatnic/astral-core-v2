@@ -34,8 +34,8 @@ interface UserPreferences {
   
   // Data
   autoSave: boolean;
-  backupFrequency: 'daily' | 'weekly' | 'monthly';
-}
+  backupFrequency: 'daily' | 'weekly' | 'monthly'
+  }
 
 const defaultPreferences: UserPreferences = {
   theme: 'auto',
@@ -58,8 +58,8 @@ const defaultPreferences: UserPreferences = {
   keyboardShortcuts: true,
   focusIndicators: true,
   autoSave: true,
-  backupFrequency: 'weekly';
-};
+  backupFrequency: 'weekly'
+  };
 
 export const PreferencesManager: React.FC = () => {
   const [preferences, setPreferences] = useState<UserPreferences>(defaultPreferences);
@@ -71,10 +71,10 @@ export const PreferencesManager: React.FC = () => {
     const saved = localStorage.getItem('userPreferences');
     if (saved) {
       try {
-        setPreferences(JSON.parse(saved));
-      } catch (e) {
-        console.error('Failed to load preferences:', e);
-      }
+        setPreferences(JSON.parse(saved))
+  } catch (e) {
+        console.error('Failed to load preferences:', e)
+  }
     }
     
     // Check for system preferences
@@ -86,9 +86,9 @@ export const PreferencesManager: React.FC = () => {
         setPreferences(prev => ({
           ...prev,
           reducedMotion: prefersReducedMotion,
-          highContrast: prefersHighContrast;
-        }));
-      }
+          highContrast: prefersHighContrast
+  }))
+  }
     }
   };
   }, []);
@@ -99,21 +99,21 @@ export const PreferencesManager: React.FC = () => {
     setTimeout(() => setSaved(false), 2000);
     
     // Apply preferences
-    applyPreferences(preferences);
+    applyPreferences(preferences)
   };
   
   const applyPreferences = (prefs: UserPreferences) => {
     // Apply theme
     if (prefs.theme === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark');;
+      document.documentElement.setAttribute('data-theme', 'dark')
   } else if (prefs.theme === 'light') {
-      document.documentElement.removeAttribute('data-theme');;
+      document.documentElement.removeAttribute('data-theme')
   } else {
       // Auto theme based on system;
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       if (prefersDark) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
+        document.documentElement.setAttribute('data-theme', 'dark')
+  }
     }
     
     // Apply font size
@@ -124,22 +124,22 @@ export const PreferencesManager: React.FC = () => {
     
     // Apply motion preferences
     if (prefs.reducedMotion) {
-      document.documentElement.classList.add('reduced-motion');;
+      document.documentElement.classList.add('reduced-motion')
   } else {
-      document.documentElement.classList.remove('reduced-motion');
-    }
+      document.documentElement.classList.remove('reduced-motion')
+  }
     
     // Apply high contrast
     if (prefs.highContrast) {
-      document.documentElement.classList.add('high-contrast');;
+      document.documentElement.classList.add('high-contrast')
   } else {
-      document.documentElement.classList.remove('high-contrast');
-    }
+      document.documentElement.classList.remove('high-contrast')
+  }
     
     // Apply screen reader mode
     if (prefs.screenReaderMode) {
-      document.documentElement.setAttribute('aria-live', 'polite');
-    }
+      document.documentElement.setAttribute('aria-live', 'polite')
+  }
   };
   
   const exportData = () => {
@@ -148,8 +148,8 @@ export const PreferencesManager: React.FC = () => {
       wellnessHistory: localStorage.getItem('wellnessHistory'),
       reflections: localStorage.getItem('reflections'),
       journalPrompts: localStorage.getItem('usedJournalPrompts'),
-      timestamp: new Date().toISOString();
-    };
+      timestamp: new Date().toISOString()
+  };
     
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -157,7 +157,7 @@ export const PreferencesManager: React.FC = () => {
     a.href = url;
     a.download = `astralcore-backup-${new Date().toISOString().split('T')[0]}.json`;
     a.click();
-    URL.revokeObjectURL(url);
+    URL.revokeObjectURL(url)
   };
   
   const importData = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -171,35 +171,35 @@ export const PreferencesManager: React.FC = () => {
         
         if (data.preferences) {
           setPreferences(data.preferences);
-          localStorage.setItem('userPreferences', JSON.stringify(data.preferences));
-        }
+          localStorage.setItem('userPreferences', JSON.stringify(data.preferences))
+  }
         
         if (data.wellnessHistory) {
-          localStorage.setItem('wellnessHistory', data.wellnessHistory);
-        }
+          localStorage.setItem('wellnessHistory', data.wellnessHistory)
+  }
         
         if (data.reflections) {
-          localStorage.setItem('reflections', data.reflections);
-        }
+          localStorage.setItem('reflections', data.reflections)
+  }
         
         if (data.journalPrompts) {
-          localStorage.setItem('usedJournalPrompts', data.journalPrompts);
-        }
+          localStorage.setItem('usedJournalPrompts', data.journalPrompts)
+  }
         
         setSaved(true);
-        setTimeout(() => setSaved(false), 2000);
-      } catch (error) {
-        console.error('Failed to import data:', error);
-      }
+        setTimeout(() => setSaved(false), 2000)
+  } catch (error) {
+        console.error('Failed to import data:', error)
+  }
     };
-    reader.readAsText(file);
+    reader.readAsText(file)
   };
   
-  const updatePreference = <K extends keyof UserPreferences>(;
+  const updatePreference = <K extends keyof UserPreferences>(;;
     key: K,
     value: UserPreferences[K]
   ) => {
-    setPreferences(prev => ({ ...prev, [key]: value }));
+    setPreferences(prev => ({ ...prev, [key]: value }))
   };
   
   return (
@@ -213,38 +213,32 @@ export const PreferencesManager: React.FC = () => {
       </div>
       
       <div className="preferences-tabs">
-        <button;
-          className={`tab-btn ${activeTab === 'appearance' ? 'active' : ''}`}
+        <button className={`tab-btn ${activeTab === 'appearance' ? 'active' : ''}`}
           onClick={() => setActiveTab('appearance')}
         >
           <SunIcon /> Appearance
         </button>
-        <button;
-          className={`tab-btn ${activeTab === 'notifications' ? 'active' : ''}`}
+        <button className={`tab-btn ${activeTab === 'notifications' ? 'active' : ''}`}
           onClick={() => setActiveTab('notifications')}
         >
           <BellIcon /> Notifications
         </button>
-        <button;
-          className={`tab-btn ${activeTab === 'privacy' ? 'active' : ''}`}
+        <button className={`tab-btn ${activeTab === 'privacy' ? 'active' : ''}`}
           onClick={() => setActiveTab('privacy')}
         >
           <ShieldIcon /> Privacy
         </button>
-        <button;
-          className={`tab-btn ${activeTab === 'wellness' ? 'active' : ''}`}
+        <button className={`tab-btn ${activeTab === 'wellness' ? 'active' : ''}`}
           onClick={() => setActiveTab('wellness')}
         >
           <HeartIcon /> Wellness
         </button>
-        <button;
-          className={`tab-btn ${activeTab === 'accessibility' ? 'active' : ''}`}
+        <button className={`tab-btn ${activeTab === 'accessibility' ? 'active' : ''}`}
           onClick={() => setActiveTab('accessibility')}
         >
           <VolumeIcon /> Accessibility
         </button>
-        <button;
-          className={`tab-btn ${activeTab === 'data' ? 'active' : ''}`}
+        <button className={`tab-btn ${activeTab === 'data' ? 'active' : ''}`}
           onClick={() => setActiveTab('data')}
         >
           <DownloadIcon /> Data
@@ -284,8 +278,7 @@ export const PreferencesManager: React.FC = () => {
             
             <div className="preference-group">
               <label className="preference-toggle">
-                <input;
-                  type="checkbox"
+                <input type="checkbox"
                   checked={preferences.reducedMotion}
                   onChange={(e) => updatePreference('reducedMotion', e.target.checked)}
                 />
@@ -295,8 +288,7 @@ export const PreferencesManager: React.FC = () => {
             
             <div className="preference-group">
               <label className="preference-toggle">
-                <input;
-                  type="checkbox"
+                <input type="checkbox"
                   checked={preferences.highContrast}
                   onChange={(e) => updatePreference('highContrast', e.target.checked)}
                 />
@@ -312,8 +304,7 @@ export const PreferencesManager: React.FC = () => {
             
             <div className="preference-group">
               <label className="preference-toggle">
-                <input;
-                  type="checkbox"
+                <input type="checkbox"
                   checked={preferences.enableNotifications}
                   onChange={(e) => updatePreference('enableNotifications', e.target.checked)}
                 />
@@ -323,8 +314,7 @@ export const PreferencesManager: React.FC = () => {
             
             <div className="preference-group">
               <label className="preference-toggle">
-                <input;
-                  type="checkbox"
+                <input type="checkbox"
                   checked={preferences.wellnessReminders}
                   onChange={(e) => updatePreference('wellnessReminders', e.target.checked)}
                 />
@@ -348,8 +338,7 @@ export const PreferencesManager: React.FC = () => {
             
             <div className="preference-group">
               <label className="preference-label">Quiet hours start</label>
-              <input;
-                type="time"
+              <input type="time"
                 value={preferences.quietHoursStart}
                 onChange={(e) => updatePreference('quietHoursStart', e.target.value)}
                 className="preference-input"
@@ -358,8 +347,7 @@ export const PreferencesManager: React.FC = () => {
             
             <div className="preference-group">
               <label className="preference-label">Quiet hours end</label>
-              <input;
-                type="time"
+              <input type="time"
                 value={preferences.quietHoursEnd}
                 onChange={(e) => updatePreference('quietHoursEnd', e.target.value)}
                 className="preference-input"
@@ -374,8 +362,7 @@ export const PreferencesManager: React.FC = () => {
             
             <div className="preference-group">
               <label className="preference-toggle">
-                <input;
-                  type="checkbox"
+                <input type="checkbox"
                   checked={preferences.shareAnalytics}
                   onChange={(e) => updatePreference('shareAnalytics', e.target.checked)}
                 />
@@ -386,8 +373,7 @@ export const PreferencesManager: React.FC = () => {
             
             <div className="preference-group">
               <label className="preference-toggle">
-                <input;
-                  type="checkbox"
+                <input type="checkbox"
                   checked={preferences.showOnlineStatus}
                   onChange={(e) => updatePreference('showOnlineStatus', e.target.checked)}
                 />
@@ -397,8 +383,7 @@ export const PreferencesManager: React.FC = () => {
             
             <div className="preference-group">
               <label className="preference-toggle">
-                <input;
-                  type="checkbox"
+                <input type="checkbox"
                   checked={preferences.allowPeerMessages}
                   onChange={(e) => updatePreference('allowPeerMessages', e.target.checked)}
                 />
@@ -428,8 +413,7 @@ export const PreferencesManager: React.FC = () => {
             
             <div className="preference-group">
               <label className="preference-label">Default meditation duration (minutes)</label>
-              <input;
-                type="number"
+              <input type="number"
                 min="3"
                 max="60"
                 value={preferences.meditationDuration}
@@ -454,8 +438,7 @@ export const PreferencesManager: React.FC = () => {
             
             <div className="preference-group">
               <label className="preference-toggle">
-                <input;
-                  type="checkbox"
+                <input type="checkbox"
                   checked={preferences.moodTracking}
                   onChange={(e) => updatePreference('moodTracking', e.target.checked)}
                 />
@@ -471,8 +454,7 @@ export const PreferencesManager: React.FC = () => {
             
             <div className="preference-group">
               <label className="preference-toggle">
-                <input;
-                  type="checkbox"
+                <input type="checkbox"
                   checked={preferences.screenReaderMode}
                   onChange={(e) => updatePreference('screenReaderMode', e.target.checked)}
                 />
@@ -483,8 +465,7 @@ export const PreferencesManager: React.FC = () => {
             
             <div className="preference-group">
               <label className="preference-toggle">
-                <input;
-                  type="checkbox"
+                <input type="checkbox"
                   checked={preferences.keyboardShortcuts}
                   onChange={(e) => updatePreference('keyboardShortcuts', e.target.checked)}
                 />
@@ -494,8 +475,7 @@ export const PreferencesManager: React.FC = () => {
             
             <div className="preference-group">
               <label className="preference-toggle">
-                <input;
-                  type="checkbox"
+                <input type="checkbox"
                   checked={preferences.focusIndicators}
                   onChange={(e) => updatePreference('focusIndicators', e.target.checked)}
                 />
@@ -524,8 +504,7 @@ export const PreferencesManager: React.FC = () => {
             
             <div className="preference-group">
               <label className="preference-toggle">
-                <input;
-                  type="checkbox"
+                <input type="checkbox"
                   checked={preferences.autoSave}
                   onChange={(e) => updatePreference('autoSave', e.target.checked)}
                 />
@@ -555,8 +534,7 @@ export const PreferencesManager: React.FC = () => {
               <label className="data-btn import-btn">
                 <UploadIcon />
                 Import Data
-                <input;
-                  type="file"
+                <input type="file"
                   accept=".json"
                   onChange={importData}
                   style={{ display: 'none' }}
@@ -587,5 +565,5 @@ export const PreferencesManager: React.FC = () => {
         </button>
       </div>
     </div>
-  );
-};
+  )
+  };

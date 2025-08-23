@@ -2,7 +2,7 @@ import React from 'react';
 import { HeartIcon, MessageCircleIcon, ShieldIcon, BookIcon } from '../components/icons.dynamic';
 
 const HelpView: React.FC = () => {
-  const helpSections = [;
+  const helpSections = [;;
     {
       title: 'Getting Started',
       icon: HeartIcon,
@@ -115,8 +115,8 @@ const HelpView: React.FC = () => {
                   ))}
                 </ul>
               </div>
-            );
-          })}
+            )
+  })}
         </div>
 
         {/* FAQ Section */}
@@ -180,7 +180,7 @@ const HelpView: React.FC = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export default HelpView;

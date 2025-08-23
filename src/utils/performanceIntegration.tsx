@@ -18,8 +18,8 @@ interface PerformanceConfig {
   enableRouteOptimization: boolean;
   enablePerformanceMonitoring: boolean;
   enablePreloading: boolean;
-  debugMode: boolean;
-}
+  debugMode: boolean
+  }
 
 // Default configuration;
 const defaultConfig: PerformanceConfig = {
@@ -42,16 +42,16 @@ export const withMobilePerformance = <P extends object>(
     useEffect(() => {
       // Initialize performance optimizations
       if (mergedConfig.enableBundleAnalysis) {
-        initializeBundleOptimization();
-      }
+        initializeBundleOptimization()
+  }
 
       if (mergedConfig.enableRouteOptimization) {
-        EnhancedRouteManager.initialize();
-      }
+        EnhancedRouteManager.initialize()
+  }
 
       if (mergedConfig.debugMode) {
-        console.log('🚀 Mobile performance optimizations initialized');
-      }
+        console.log('🚀 Mobile performance optimizations initialized')
+  }
     };
   }, []);
 
@@ -64,15 +64,15 @@ export const withMobilePerformance = <P extends object>(
         >
           <WrappedComponent {...props} />
         </MobilePerformanceProvider>
-      );
-    }
+      )
+  }
 
-    return <WrappedComponent {...props} />;
+    return <WrappedComponent {...props} />
   };
 
   EnhancedComponent.displayName = `withMobilePerformance(${WrappedComponent.displayName || WrappedComponent.name})`;
-  return EnhancedComponent;
-};
+  return EnhancedComponent
+  };
 
 // Migration helper for existing React.lazy components;
 export const migrateLazyComponent = <T extends ComponentType<any>>(;
@@ -89,12 +89,12 @@ export const migrateLazyComponent = <T extends ComponentType<any>>(;
       priority: 'medium',
       maxRetries: 2,
       retryDelay: 1000,
-    });
+    })
   }
 
   // Fallback to standard React.lazy
-  return React.lazy(importFn) as ComponentType<any>;
-};
+  return React.lazy(importFn) as ComponentType<any>
+  };
 
 // Enhanced index.tsx utilities - provides factory for mobile-optimized routes;
 export const createMobileOptimizedRoutes = () => {
@@ -104,7 +104,7 @@ export const createMobileOptimizedRoutes = () => {
     componentName: string,
     _priority: 'low' | 'medium' | 'high' = 'medium'
   ) => {
-    return migrateLazyComponent(importFn, componentName, true);
+    return migrateLazyComponent(importFn, componentName, true)
   };
 
   return {
@@ -142,12 +142,12 @@ export const PerformanceMonitor: React.FC<{ enabled?: boolean }> = ({
       if ('performance' in window && 'measure' in performance) {
         const marks = performance.getEntriesByType('measure');
         if (marks.length > 0) {
-          console.log('Performance Marks:', marks);
-        }
+          console.log('Performance Marks:', marks)
+  }
       }
       
-      console.groupEnd();
-    };
+      console.groupEnd()
+  };
 
     // Log metrics periodically;
     const interval = setInterval(logPerformanceMetrics, 30000);
@@ -155,27 +155,27 @@ export const PerformanceMonitor: React.FC<{ enabled?: boolean }> = ({
     // Log metrics on visibility change;
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'hidden') {
-        logPerformanceMetrics();
-      }
+        logPerformanceMetrics()
+  }
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
       clearInterval(interval);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+  };
   };
   }, [enabled]);
 
-  return null;
-};
+  return null
+  };
 
 // Mobile-specific optimizations activator;
 export const MobileOptimizationsProvider: React.FC<{
   children: React.ReactNode;
-  config?: Partial<PerformanceConfig>;
-}> = ({ children, config = {} }) => {
+  config?: Partial<PerformanceConfig>
+  }> = ({ children, config = {} }) => {
   const mergedConfig = { ...defaultConfig, ...config };
 
   return (
@@ -187,8 +187,8 @@ export const MobileOptimizationsProvider: React.FC<{
       {children}
       <PerformanceMonitor enabled={mergedConfig.debugMode} />
     </MobilePerformanceProvider>
-  );
-};
+  )
+  };
 
 // Hook for performance integration;
 export const usePerformanceIntegration = (config: Partial<PerformanceConfig> = {}) => {
@@ -197,16 +197,17 @@ export const usePerformanceIntegration = (config: Partial<PerformanceConfig> = {
   useEffect(() => {
     // Initialize all performance systems
     if (mergedConfig.enableBundleAnalysis) {
-      initializeBundleOptimization();
-    }
+      initializeBundleOptimization()
+  }
 
     if (mergedConfig.enableRouteOptimization) {
-      EnhancedRouteManager.initialize();
-    }
+      EnhancedRouteManager.initialize()
+  }
 
     if (mergedConfig.debugMode) {
-      console.log('🚀 Performance integration initialized', mergedConfig);
-    }
+      console.log('🚀 Performance integration initialized', mergedConfig)
+  }
+  };
   };
   };
   }, [mergedConfig]);
@@ -223,8 +224,8 @@ export const enhanceAppWithMobilePerformance = (
   AppComponent: ComponentType<any>,
   config: Partial<PerformanceConfig> = {}
 ) => {
-  return withMobilePerformance(AppComponent, config);
-};
+  return withMobilePerformance(AppComponent, config)
+  };
 
 export default {
   withMobilePerformance,

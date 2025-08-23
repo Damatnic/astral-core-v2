@@ -44,38 +44,38 @@ global.caches = {
 
 describe('ServiceWorkerManager', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   describe('initialization', () => {
     it.skip('should initialize service worker manager', async () => {
       const result = await serviceWorkerManager.initialize();
-      expect(result).toHaveProperty('supported');
-    });
+      expect(result).toHaveProperty('supported')
+  });
 
     it.skip('should return supported status', async () => {
       const result = await serviceWorkerManager.initialize();
-      expect(result.supported).toBe(true);
-    });
+      expect(result.supported).toBe(true)
+  })
   });
 
   describe('caching', () => {
     it.skip('should cache resources', async () => {
       const resources = ['/static/js/main.js', '/static/css/main.css'];
       const result = await serviceWorkerManager.cacheResources(resources);
-      expect(typeof result).toBe('boolean');
-    });
+      expect(typeof result).toBe('boolean')
+  });
 
     it.skip('should clear cache', async () => {
       const result = await serviceWorkerManager.clearCache('static-assets');
-      expect(typeof result).toBe('boolean');
-    });
+      expect(typeof result).toBe('boolean')
+  });
 
     it.skip('should get cache status', async () => {
       const status = await serviceWorkerManager.getCacheStatus();
       expect(status).toHaveProperty('cached');
-      expect(status).toHaveProperty('size');
-    });
+      expect(status).toHaveProperty('size')
+  })
   });
 
   describe('critical resources', () => {
@@ -83,7 +83,7 @@ describe('ServiceWorkerManager', () => {
       const criticalResources = ['/emergency-contacts', '/crisis-resources'];
       await serviceWorkerManager.preloadCriticalResources(criticalResources);
       // Should complete without throwing
-    });
+    })
   });
 
   describe('background sync', () => {
@@ -104,7 +104,7 @@ describe('ServiceWorkerManager', () => {
       };
       await serviceWorkerManager.queueOfflineAction(action);
       // Should complete without throwing
-    });
+    })
   });
 
   describe('push notifications', () => {
@@ -118,18 +118,18 @@ describe('ServiceWorkerManager', () => {
       const notification = {
         title: 'Mental Health Check',
         body: 'How are you feeling today?',
-        icon: '/icon-192x192.png';
-      };
+        icon: '/icon-192x192.png'
+  };
       await serviceWorkerManager.sendNotification(notification);
       // Should complete without throwing
-    });
+    })
   });
 
   describe('offline status', () => {
     it.skip('should check offline readiness', async () => {
       const isReady = await serviceWorkerManager.isOfflineReady();
-      expect(typeof isReady).toBe('boolean');
-    });
+      expect(typeof isReady).toBe('boolean')
+  })
   });
 
   describe('updates', () => {
@@ -141,18 +141,18 @@ describe('ServiceWorkerManager', () => {
     it.skip('should skip waiting', async () => {
       await serviceWorkerManager.skipWaiting();
       // Should complete without throwing
-    });
+    })
   });
 
   describe('crisis features', () => {
     it.skip('should cache crisis resource', async () => {
       const result = await serviceWorkerManager.cacheCrisisResource('/crisis-helpline');
-      expect(typeof result).toBe('boolean');
-    });
+      expect(typeof result).toBe('boolean')
+  });
 
     it.skip('should precache crisis resources', async () => {
       await serviceWorkerManager.precacheCrisisResources();
       // Should complete without throwing
-    });
+    })
+  })
   });
-});

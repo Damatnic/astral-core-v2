@@ -8,15 +8,15 @@ interface QuickHelpOption {
   description: string;
   action: () => void;
   type: 'call' | 'text' | 'navigate' | 'exercise';
-  priority: boolean;
-}
+  priority: boolean
+  }
 
 export const CrisisSupportWidget: React.FC = () => {
   const [activeExercise, setActiveExercise] = useState<string | null>(null);
   const [showGrounding, setShowGrounding] = useState(false);
   const [groundingStep, setGroundingStep] = useState(0);
   
-  const groundingSteps = [;
+  const groundingSteps = [;;
     { sense: 'See', count: 5, prompt: 'Name 5 things you can see around you', icon: '👁️' },
     { sense: 'Touch', count: 4, prompt: 'Touch 4 things and describe their texture', icon: '✋' },
     { sense: 'Hear', count: 3, prompt: 'Listen for 3 sounds you can hear', icon: '👂' },
@@ -31,54 +31,54 @@ export const CrisisSupportWidget: React.FC = () => {
       description: 'Immediate crisis support',
       action: () => window.open('tel:988', '_blank'),
       type: 'call',
-      priority: true;
-    },
+      priority: true
+  },
     {
       icon: <ChatIcon />,
       title: 'Text HOME to 741741',
       description: 'Crisis text support',
       action: () => window.open('sms:741741?body=HOME', '_blank'),
       type: 'text',
-      priority: true;
-    },
+      priority: true
+  },
     {
       icon: <HeartIcon />,
       title: 'Breathing Exercise',
       description: 'Calm your anxiety',
       action: () => setActiveExercise('breathing'),
       type: 'exercise',
-      priority: false;
-    },
+      priority: false
+  },
     {
       icon: <SparkleIcon />,
       title: 'Grounding Exercise',
       description: '5-4-3-2-1 technique',
       action: () => {
         setShowGrounding(true);
-        setGroundingStep(0);
-      },
+        setGroundingStep(0)
+  },
       type: 'exercise',
-      priority: false;
-    },
+      priority: false
+  },
     {
       icon: <ShieldIcon />,
       title: 'My Safety Plan',
       description: 'Access your personal plan',
       action: () => window.location.href = '#/safety-plan',
       type: 'navigate',
-      priority: false;
-    },
+      priority: false
+  },
     {
       icon: <ClockIcon />,
       title: 'Quiet Space',
       description: 'Find a moment of peace',
       action: () => window.location.href = '#/quiet-space',
       type: 'navigate',
-      priority: false;
-    }
+      priority: false
+  }
   ];
   
-  const affirmations = [;
+  const affirmations = [;;
     "You are stronger than you know",
     "This feeling will pass",
     "You deserve support and care",
@@ -92,7 +92,7 @@ export const CrisisSupportWidget: React.FC = () => {
   const [currentAffirmation, setCurrentAffirmation] = useState(0);
   
   const nextAffirmation = () => {
-    setCurrentAffirmation((prev) => (prev + 1) % affirmations.length);
+    setCurrentAffirmation((prev) => (prev + 1) % affirmations.length)
   };
   
   return (
@@ -150,29 +150,26 @@ export const CrisisSupportWidget: React.FC = () => {
             </div>
             <div className="grounding-actions">
               {groundingStep < groundingSteps.length - 1 ? (
-                <button; 
-                  className="next-step-btn"
+                <button className="next-step-btn"
                   onClick={() => setGroundingStep(groundingStep + 1)}
                 >
                   Next Step →
                 </button>
               ) : (
-                <button; 
-                  className="complete-btn"
+                <button className="complete-btn"
                   onClick={() => {
                     setShowGrounding(false);
-                    setGroundingStep(0);
-                  }}
+                    setGroundingStep(0)
+  }}
                 >
                   Complete ✓
                 </button>
               )}
-              <button; 
-                className="close-btn"
+              <button className="close-btn"
                 onClick={() => {
                   setShowGrounding(false);
-                  setGroundingStep(0);
-                }}
+                  setGroundingStep(0)
+  }}
               >
                 Close
               </button>
@@ -187,8 +184,7 @@ export const CrisisSupportWidget: React.FC = () => {
             <div className="breath-circle"></div>
             <p className="breath-instruction">Breathe with the circle</p>
           </div>
-          <button; 
-            className="close-exercise"
+          <button className="close-exercise"
             onClick={() => setActiveExercise(null)}
           >
             Close
@@ -203,5 +199,5 @@ export const CrisisSupportWidget: React.FC = () => {
         </p>
       </div>
     </div>
-  );
-};
+  )
+  };

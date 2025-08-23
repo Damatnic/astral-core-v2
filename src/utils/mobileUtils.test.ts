@@ -52,7 +52,7 @@ describe('mobileUtils', () => {
     });
 
     // Clear event listeners
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   describe('initMobileViewport', () => {
@@ -66,8 +66,8 @@ describe('mobileUtils', () => {
       initMobileViewport();
 
       expect(mockSetProperty).toHaveBeenCalledWith('--vh', expect.stringContaining('px'));
-      expect(mockSetProperty).toHaveBeenCalledWith('--mobile-vh', expect.stringContaining('px'));
-    });
+      expect(mockSetProperty).toHaveBeenCalledWith('--mobile-vh', expect.stringContaining('px'))
+  });
 
     test('should calculate vh correctly', () => {
       const mockSetProperty = jest.fn();
@@ -81,8 +81,8 @@ describe('mobileUtils', () => {
       initMobileViewport();
 
       const expectedVh = (800 * 0.01).toString() + 'px';
-      expect(mockSetProperty).toHaveBeenCalledWith('--vh', expectedVh);
-    });
+      expect(mockSetProperty).toHaveBeenCalledWith('--vh', expectedVh)
+  });
 
     test('should use visual viewport when available', () => {
       const mockSetProperty = jest.fn();
@@ -102,8 +102,8 @@ describe('mobileUtils', () => {
 
       initMobileViewport();
 
-      expect(mockSetProperty).toHaveBeenCalledWith('--mobile-vh', '600px');
-    });
+      expect(mockSetProperty).toHaveBeenCalledWith('--mobile-vh', '600px')
+  });
 
     test('should add resize event listener', () => {
       const mockAddEventListener = jest.fn();
@@ -111,8 +111,8 @@ describe('mobileUtils', () => {
 
       initMobileViewport();
 
-      expect(mockAddEventListener).toHaveBeenCalledWith('resize', expect.any(Function));
-    });
+      expect(mockAddEventListener).toHaveBeenCalledWith('resize', expect.any(Function))
+  });
 
     test('should add visual viewport event listeners when available', () => {
       const mockAddEventListener = jest.fn();
@@ -128,8 +128,8 @@ describe('mobileUtils', () => {
       initMobileViewport();
 
       expect(mockAddEventListener).toHaveBeenCalledWith('resize', expect.any(Function));
-      expect(mockAddEventListener).toHaveBeenCalledWith('scroll', expect.any(Function));
-    });
+      expect(mockAddEventListener).toHaveBeenCalledWith('scroll', expect.any(Function))
+  });
 
     test('should add orientation change listener with delay', () => {
       jest.useFakeTimers();
@@ -141,7 +141,7 @@ describe('mobileUtils', () => {
       expect(mockAddEventListener).toHaveBeenCalledWith('orientationchange', expect.any(Function));
 
       // Test orientation change handler;
-      const orientationHandler = mockAddEventListener.mock.calls.find(;
+      const orientationHandler = mockAddEventListener.mock.calls.find(;;
         call => call[0] === 'orientationchange'
       )[1];
 
@@ -160,14 +160,14 @@ describe('mobileUtils', () => {
       jest.advanceTimersByTime(100);
       expect(mockSetProperty).toHaveBeenCalled();
 
-      jest.useRealTimers();
-    });
+      jest.useRealTimers()
+  });
 
     test('should return cleanup function', () => {
       const cleanup = initMobileViewport();
 
-      expect(typeof cleanup).toBe('function');
-    });
+      expect(typeof cleanup).toBe('function')
+  });
 
     test('cleanup function should remove event listeners', () => {
       const mockRemoveEventListener = jest.fn();
@@ -185,17 +185,17 @@ describe('mobileUtils', () => {
       const cleanup = initMobileViewport();
       cleanup();
 
-      expect(mockRemoveEventListener).toHaveBeenCalledWith('resize', expect.any(Function));
-    });
+      expect(mockRemoveEventListener).toHaveBeenCalledWith('resize', expect.any(Function))
+  });
 
     test('should handle missing visual viewport gracefully', () => {
       Object.defineProperty(window, 'visualViewport', { value: undefined, writable: true });
 
       expect(() => {
         const cleanup = initMobileViewport();
-        cleanup();
-      }).not.toThrow();
-    });
+        cleanup()
+  }).not.toThrow()
+  })
   });
 
   describe('enhanceMobileFocus', () => {
@@ -216,16 +216,15 @@ describe('mobileUtils', () => {
           switch (property) {
             case 'font-size':
               return '12px';
-            default:
-              return '';
-          }
+            default: return ''
+  }
         })
       });
 
       enhanceMobileFocus();
 
-      expect(input.style.fontSize).toBe('16px');
-    });
+      expect(input.style.fontSize).toBe('16px')
+  });
 
     test('should not change font size for iOS inputs already 16px or larger', () => {
       Object.defineProperty(navigator, 'userAgent', {
@@ -243,16 +242,15 @@ describe('mobileUtils', () => {
           switch (property) {
             case 'font-size':
               return '18px';
-            default:
-              return '';
-          }
+            default: return ''
+  }
         })
       });
 
       enhanceMobileFocus();
 
-      expect(input.style.fontSize).toBe('18px');
-    });
+      expect(input.style.fontSize).toBe('18px')
+  });
 
     test('should not modify fonts on non-iOS devices', () => {
       Object.defineProperty(navigator, 'userAgent', {
@@ -266,8 +264,8 @@ describe('mobileUtils', () => {
 
       enhanceMobileFocus();
 
-      expect(input.style.fontSize).toBe('12px');
-    });
+      expect(input.style.fontSize).toBe('12px')
+  });
 
     test('should add focus event listeners to inputs', () => {
       const input = document.createElement('input');
@@ -278,8 +276,8 @@ describe('mobileUtils', () => {
       enhanceMobileFocus();
 
       expect(mockAddEventListener).toHaveBeenCalledWith('focus', expect.any(Function));
-      expect(mockAddEventListener).toHaveBeenCalledWith('blur', expect.any(Function));
-    });
+      expect(mockAddEventListener).toHaveBeenCalledWith('blur', expect.any(Function))
+  });
 
     test('should add focus class and scroll into view on focus', () => {
       jest.useFakeTimers();
@@ -290,8 +288,8 @@ describe('mobileUtils', () => {
       let focusHandler: any;
       input.addEventListener = jest.fn((event, handler) => {
         if (event === 'focus') {
-          focusHandler = handler as (event: FocusEvent) => void;
-        }
+          focusHandler = handler as (event: FocusEvent) => void
+  }
       });
       
       document.body.appendChild(input);
@@ -311,8 +309,8 @@ describe('mobileUtils', () => {
         inline: 'nearest',
       });
 
-      jest.useRealTimers();
-    });
+      jest.useRealTimers()
+  });
 
     test('should remove focus class on blur', () => {
       const input = document.createElement('input');
@@ -320,8 +318,8 @@ describe('mobileUtils', () => {
       
       input.addEventListener = jest.fn((event, handler) => {
         if (event === 'blur') {
-          blurHandler = handler as (event: FocusEvent) => void;
-        }
+          blurHandler = handler as (event: FocusEvent) => void
+  }
       });
       
       document.body.appendChild(input);
@@ -332,8 +330,8 @@ describe('mobileUtils', () => {
       // Trigger blur event
       blurHandler!({ target: input } as unknown as FocusEvent);
 
-      expect(input.classList.contains('mobile-input-focused')).toBe(false);
-    });
+      expect(input.classList.contains('mobile-input-focused')).toBe(false)
+  });
 
     test('should handle both inputs and textareas', () => {
       const input = document.createElement('input');
@@ -368,16 +366,15 @@ describe('mobileUtils', () => {
           switch (property) {
             case 'font-size':
               return '12px';
-            default:
-              return '';
-          }
+            default: return ''
+  }
         })
       });
 
       enhanceMobileFocus();
 
-      expect(input.style.fontSize).toBe('16px');
-    });
+      expect(input.style.fontSize).toBe('16px')
+  })
   });
 
   describe('isMobileDevice', () => {
@@ -387,8 +384,8 @@ describe('mobileUtils', () => {
         writable: true,
       });
 
-      expect(isMobileDevice()).toBe(true);
-    });
+      expect(isMobileDevice()).toBe(true)
+  });
 
     test('should detect Android devices', () => {
       Object.defineProperty(navigator, 'userAgent', {
@@ -396,8 +393,8 @@ describe('mobileUtils', () => {
         writable: true,
       });
 
-      expect(isMobileDevice()).toBe(true);
-    });
+      expect(isMobileDevice()).toBe(true)
+  });
 
     test('should detect by window width', () => {
       Object.defineProperty(navigator, 'userAgent', {
@@ -407,8 +404,8 @@ describe('mobileUtils', () => {
 
       Object.defineProperty(window, 'innerWidth', { value: 500, writable: true });
 
-      expect(isMobileDevice()).toBe(true);
-    });
+      expect(isMobileDevice()).toBe(true)
+  });
 
     test('should detect by touch support', () => {
       Object.defineProperty(navigator, 'userAgent', {
@@ -420,8 +417,8 @@ describe('mobileUtils', () => {
       Object.defineProperty(window, 'ontouchstart', { value: true, writable: true });
 
       // Desktop with touch support and large screen should NOT be considered mobile
-      expect(isMobileDevice()).toBe(false);
-    });
+      expect(isMobileDevice()).toBe(false)
+  });
 
     test('should return false for desktop', () => {
       Object.defineProperty(navigator, 'userAgent', {
@@ -432,11 +429,11 @@ describe('mobileUtils', () => {
       Object.defineProperty(window, 'innerWidth', { value: 1200, writable: true });
       delete (window as any).ontouchstart;
 
-      expect(isMobileDevice()).toBe(false);
-    });
+      expect(isMobileDevice()).toBe(false)
+  });
 
     test('should detect various mobile user agents', () => {
-      const mobileUserAgents = [;
+      const mobileUserAgents = [;;
         'Mozilla/5.0 (webOS/1.4.0; U; en-US) AppleWebKit/532.2',
         'Mozilla/5.0 (compatible; MSIE 10.0; Windows Phone 8.0; Trident/6.0; IEMobile/10.0)',
         'Opera/9.80 (BlackBerry; Opera Mini/6.5.27452/28.2725; U; en) Presto/2.8.119',
@@ -445,9 +442,9 @@ describe('mobileUtils', () => {
 
       mobileUserAgents.forEach(ua => {
         Object.defineProperty(navigator, 'userAgent', { value: ua, writable: true });
-        expect(isMobileDevice()).toBe(true);
-      });
-    });
+        expect(isMobileDevice()).toBe(true)
+  })
+  })
   });
 
   describe('isVirtualKeyboardOpen', () => {
@@ -459,8 +456,8 @@ describe('mobileUtils', () => {
 
       Object.defineProperty(window, 'innerHeight', { value: 800, writable: true });
 
-      expect(isVirtualKeyboardOpen()).toBe(true);
-    });
+      expect(isVirtualKeyboardOpen()).toBe(true)
+  });
 
     test('should detect keyboard closed with visual viewport', () => {
       Object.defineProperty(window, 'visualViewport', {
@@ -470,24 +467,24 @@ describe('mobileUtils', () => {
 
       Object.defineProperty(window, 'innerHeight', { value: 800, writable: true });
 
-      expect(isVirtualKeyboardOpen()).toBe(false);
-    });
+      expect(isVirtualKeyboardOpen()).toBe(false)
+  });
 
     test('should fallback to screen height comparison', () => {
       Object.defineProperty(window, 'visualViewport', { value: undefined, writable: true });
       Object.defineProperty(window, 'screen', { value: { height: 800 }, writable: true });
       Object.defineProperty(window, 'innerHeight', { value: 600, writable: true });
 
-      expect(isVirtualKeyboardOpen()).toBe(true);
-    });
+      expect(isVirtualKeyboardOpen()).toBe(true)
+  });
 
     test('should return false when height difference is small', () => {
       Object.defineProperty(window, 'visualViewport', { value: undefined, writable: true });
       Object.defineProperty(window, 'screen', { value: { height: 800 }, writable: true });
       Object.defineProperty(window, 'innerHeight', { value: 750, writable: true });
 
-      expect(isVirtualKeyboardOpen()).toBe(false);
-    });
+      expect(isVirtualKeyboardOpen()).toBe(false)
+  });
 
     test('should handle edge case at 80% threshold', () => {
       Object.defineProperty(window, 'visualViewport', {
@@ -497,8 +494,8 @@ describe('mobileUtils', () => {
 
       Object.defineProperty(window, 'innerHeight', { value: 800, writable: true });
 
-      expect(isVirtualKeyboardOpen()).toBe(false);
-    });
+      expect(isVirtualKeyboardOpen()).toBe(false)
+  });
 
     test('should detect keyboard when visual viewport is just below 80%', () => {
       Object.defineProperty(window, 'visualViewport', {
@@ -508,8 +505,8 @@ describe('mobileUtils', () => {
 
       Object.defineProperty(window, 'innerHeight', { value: 800, writable: true });
 
-      expect(isVirtualKeyboardOpen()).toBe(true);
-    });
+      expect(isVirtualKeyboardOpen()).toBe(true)
+  })
   });
 
   describe('addTouchFeedback', () => {
@@ -519,8 +516,8 @@ describe('mobileUtils', () => {
       
       element.addEventListener = jest.fn((event, handler) => {
         if (event === 'touchstart') {
-          touchStartHandler = handler as () => void;
-        }
+          touchStartHandler = handler as () => void
+  }
       });
 
       addTouchFeedback(element);
@@ -528,8 +525,8 @@ describe('mobileUtils', () => {
       touchStartHandler!();
 
       expect(element.style.transform).toBe('scale(0.95)');
-      expect(element.style.transition).toBe('transform 0.1s ease');
-    });
+      expect(element.style.transition).toBe('transform 0.1s ease')
+  });
 
     test('should restore scale on touchend for quick taps', () => {
       jest.useFakeTimers();
@@ -539,10 +536,10 @@ describe('mobileUtils', () => {
       
       element.addEventListener = jest.fn((event, handler) => {
         if (event === 'touchstart') {
-          touchStartHandler = handler as () => void;;
+          touchStartHandler = handler as () => void
   } else if (event === 'touchend') {
-          touchEndHandler = handler as () => void;
-        }
+          touchEndHandler = handler as () => void
+  }
       });
 
       // Mock Date.now for consistent timing;
@@ -561,8 +558,8 @@ describe('mobileUtils', () => {
       expect(element.style.transform).toBe('scale(1)');
 
       Date.now = originalDateNow;
-      jest.useRealTimers();
-    });
+      jest.useRealTimers()
+  });
 
     test('should restore scale immediately for long taps', () => {
       const element = document.createElement('button');
@@ -571,10 +568,10 @@ describe('mobileUtils', () => {
       
       element.addEventListener = jest.fn((event, handler) => {
         if (event === 'touchstart') {
-          touchStartHandler = handler as () => void;;
+          touchStartHandler = handler as () => void
   } else if (event === 'touchend') {
-          touchEndHandler = handler as () => void;
-        }
+          touchEndHandler = handler as () => void
+  }
       });
 
       // Mock Date.now for consistent timing;
@@ -591,8 +588,8 @@ describe('mobileUtils', () => {
       // Should restore scale immediately for long taps
       expect(element.style.transform).toBe('scale(1)');
 
-      Date.now = originalDateNow;
-    });
+      Date.now = originalDateNow
+  });
 
     test('should restore scale on touchcancel', () => {
       const element = document.createElement('button');
@@ -600,8 +597,8 @@ describe('mobileUtils', () => {
       
       element.addEventListener = jest.fn((event, handler) => {
         if (event === 'touchcancel') {
-          touchCancelHandler = handler as () => void;
-        }
+          touchCancelHandler = handler as () => void
+  }
       });
 
       addTouchFeedback(element);
@@ -609,8 +606,8 @@ describe('mobileUtils', () => {
       element.style.transform = 'scale(0.95)';
       touchCancelHandler!();
 
-      expect(element.style.transform).toBe('scale(1)');
-    });
+      expect(element.style.transform).toBe('scale(1)')
+  });
 
     test('should record touch start time correctly', () => {
       const element = document.createElement('button');
@@ -618,8 +615,8 @@ describe('mobileUtils', () => {
       
       element.addEventListener = jest.fn((event, handler) => {
         if (event === 'touchstart') {
-          touchStartHandler = handler as () => void;
-        }
+          touchStartHandler = handler as () => void
+  }
       });
 
       const mockDateNow = jest.spyOn(Date, 'now').mockReturnValue(12345);
@@ -628,8 +625,8 @@ describe('mobileUtils', () => {
       touchStartHandler!();
 
       expect(mockDateNow).toHaveBeenCalled();
-      mockDateNow.mockRestore();
-    });
+      mockDateNow.mockRestore()
+  })
   });
 
   describe('initMobileEnhancements', () => {
@@ -644,8 +641,8 @@ describe('mobileUtils', () => {
 
       // Should return a no-op cleanup function for non-mobile
       expect(typeof result).toBe('function');
-      expect(() => result()).not.toThrow();
-    });
+      expect(() => result()).not.toThrow()
+  });
 
     test('should initialize viewport and enhance focus for mobile devices', () => {
       Object.defineProperty(navigator, 'userAgent', {
@@ -674,8 +671,8 @@ describe('mobileUtils', () => {
       expect(mockSetProperty).toHaveBeenCalled();
       
       // Should return cleanup function
-      expect(typeof result).toBe('function');
-    });
+      expect(typeof result).toBe('function')
+  });
 
     test('should add touch feedback to buttons', () => {
       Object.defineProperty(navigator, 'userAgent', {
@@ -706,8 +703,8 @@ describe('mobileUtils', () => {
       // All button-like elements should have touch feedback
       expect(mockAddEventListener1).toHaveBeenCalledWith('touchstart', expect.any(Function));
       expect(mockAddEventListener2).toHaveBeenCalledWith('touchstart', expect.any(Function));
-      expect(mockAddEventListener3).toHaveBeenCalledWith('touchstart', expect.any(Function));
-    });
+      expect(mockAddEventListener3).toHaveBeenCalledWith('touchstart', expect.any(Function))
+  });
 
     test('should handle cleanup function', () => {
       Object.defineProperty(navigator, 'userAgent', {
@@ -718,9 +715,9 @@ describe('mobileUtils', () => {
       const cleanup = initMobileEnhancements();
 
       expect(() => {
-        if (cleanup) cleanup();
-      }).not.toThrow();
-    });
+        if (cleanup) cleanup()
+  }).not.toThrow()
+  });
 
     test('should handle elements without addEventListener method', () => {
       Object.defineProperty(navigator, 'userAgent', {
@@ -734,9 +731,9 @@ describe('mobileUtils', () => {
       document.querySelectorAll = jest.fn().mockReturnValue([mockElement]);
 
       expect(() => {
-        initMobileEnhancements();
-      }).not.toThrow();
-    });
+        initMobileEnhancements()
+  }).not.toThrow()
+  })
   });
 
   describe('Auto-initialization', () => {
@@ -754,8 +751,8 @@ describe('mobileUtils', () => {
       jest.resetModules();
       require('./mobileUtils');
 
-      expect(mockAddEventListener).toHaveBeenCalledWith('DOMContentLoaded', expect.any(Function));
-    });
+      expect(mockAddEventListener).toHaveBeenCalledWith('DOMContentLoaded', expect.any(Function))
+  });
 
     test('should initialize immediately when DOM is already ready', () => {
       Object.defineProperty(document, 'readyState', {
@@ -779,8 +776,8 @@ describe('mobileUtils', () => {
       require('./mobileUtils');
 
       // Should have been called during import
-      expect(mockSetProperty).toHaveBeenCalled();
-    });
+      expect(mockSetProperty).toHaveBeenCalled()
+  });
 
     test('should handle missing document gracefully', () => {
       // Mock missing document;
@@ -789,12 +786,12 @@ describe('mobileUtils', () => {
 
       expect(() => {
         jest.resetModules();
-        require('./mobileUtils');
-      }).not.toThrow();
+        require('./mobileUtils')
+  }).not.toThrow();
 
       // Restore document
-      global.document = originalDocument;
-    });
+      global.document = originalDocument
+  })
   });
 
   describe('Edge Cases and Error Handling', () => {
@@ -804,9 +801,9 @@ describe('mobileUtils', () => {
       document.body.appendChild(input);
 
       expect(() => {
-        enhanceMobileFocus();
-      }).not.toThrow();
-    });
+        enhanceMobileFocus()
+  }).not.toThrow()
+  });
 
     test('should handle missing getComputedStyle', () => {
       Object.defineProperty(navigator, 'userAgent', {
@@ -821,18 +818,18 @@ describe('mobileUtils', () => {
       window.getComputedStyle = jest.fn().mockReturnValue(null);
 
       expect(() => {
-        enhanceMobileFocus();
-      }).not.toThrow();
-    });
+        enhanceMobileFocus()
+  }).not.toThrow()
+  });
 
     test('should handle extreme viewport dimensions', () => {
       Object.defineProperty(window, 'innerWidth', { value: 0, writable: true });
       Object.defineProperty(window, 'innerHeight', { value: 0, writable: true });
 
       expect(() => {
-        initMobileViewport();
-      }).not.toThrow();
-    });
+        initMobileViewport()
+  }).not.toThrow()
+  });
 
     test('should handle missing visualViewport properties', () => {
       Object.defineProperty(window, 'visualViewport', {
@@ -841,18 +838,18 @@ describe('mobileUtils', () => {
       });
 
       expect(() => {
-        isVirtualKeyboardOpen();
-      }).not.toThrow();
-    });
+        isVirtualKeyboardOpen()
+  }).not.toThrow()
+  });
 
     test('should handle missing screen property', () => {
       Object.defineProperty(window, 'visualViewport', { value: undefined, writable: true });
       Object.defineProperty(window, 'screen', { value: undefined, writable: true });
 
       expect(() => {
-        isVirtualKeyboardOpen();
-      }).not.toThrow();
-    });
+        isVirtualKeyboardOpen()
+  }).not.toThrow()
+  })
   });
 
   describe('Performance Considerations', () => {
@@ -862,8 +859,8 @@ describe('mobileUtils', () => {
       // Multiple initializations
       for (let i = 0; i < 10; i++) {
         const cleanup2 = initMobileViewport();
-        if (cleanup2) cleanup2();
-      }
+        if (cleanup2) cleanup2()
+  }
 
       if (cleanup) cleanup();
       
@@ -876,19 +873,19 @@ describe('mobileUtils', () => {
       
       element.addEventListener = jest.fn((event, handler) => {
         if (event === 'touchstart') {
-          touchStartHandler = handler as () => void;
-        }
+          touchStartHandler = handler as () => void
+  }
       });
 
       addTouchFeedback(element);
 
       // Rapid touch events
       for (let i = 0; i < 100; i++) {
-        touchStartHandler!();
-      }
+        touchStartHandler!()
+  }
 
-      expect(element.style.transform).toBe('scale(0.95)');
-    });
+      expect(element.style.transform).toBe('scale(0.95)')
+  });
 
     test('should handle rapid focus/blur events', () => {
       const input = document.createElement('input');
@@ -897,10 +894,10 @@ describe('mobileUtils', () => {
       
       input.addEventListener = jest.fn((event, handler) => {
         if (event === 'focus') {
-          focusHandler = handler as (event: FocusEvent) => void;;
+          focusHandler = handler as (event: FocusEvent) => void
   } else if (event === 'blur') {
-          blurHandler = handler as (event: FocusEvent) => void;
-        }
+          blurHandler = handler as (event: FocusEvent) => void
+  }
       });
       
       document.body.appendChild(input);
@@ -911,13 +908,13 @@ describe('mobileUtils', () => {
       if (focusHandler && blurHandler) {
         for (let i = 0; i < 100; i++) {
           focusHandler({ target: input } as unknown as FocusEvent);
-          blurHandler({ target: input } as unknown as FocusEvent);
-        }
-        expect(input.classList.contains('mobile-input-focused')).toBe(false);;
+          blurHandler({ target: input } as unknown as FocusEvent)
+  }
+        expect(input.classList.contains('mobile-input-focused')).toBe(false)
   } else {
         // If handlers weren't assigned, the element was skipped (valid behavior)
-        expect(true).toBe(true);
-      }
-    });
+        expect(true).toBe(true)
+  }
+    })
+  })
   });
-});

@@ -10,26 +10,26 @@ import { ShareIcon  } from '../components/icons.dynamic';
 
 export const MyPostsView: React.FC<{
     userToken: string | null;
-    setActiveView: (view: ActiveView) => void;
-}> = ({ userToken, setActiveView }) => {
+    setActiveView: (view: ActiveView) => void
+  }> = ({ userToken, setActiveView }) => {
     const { allDilemmas, resolveDilemma, openReportModal } = useDilemmaStore();
     const { chatSessions, startChat } = useChatStore();
 
     const myDilemmas = useMemo(() => {
         if (!userToken) return [];
-        return allDilemmas.filter(d => d.userToken === userToken).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-    };
+        return allDilemmas.filter(d => d.userToken === userToken).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+  };
   }, [allDilemmas, userToken]);
 
     const handleResolve = (dilemmaId: string) => {
         if(userToken) {
-            resolveDilemma(dilemmaId, userToken);
-        }
+            resolveDilemma(dilemmaId, userToken)
+  }
     }
 
     const handleShareClick = () => {
-        setActiveView({ view: 'share' });
-    };
+        setActiveView({ view: 'share' })
+  };
 
     return (
         <Card>
@@ -57,7 +57,7 @@ export const MyPostsView: React.FC<{
                 </EmptyState>
             )}
         </Card>
-    );
-};
+    )
+  };
 
 export default MyPostsView;

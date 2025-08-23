@@ -14,14 +14,14 @@ export function renderWithReact18(
 ): RenderResult {
   // Ensure we have a document.body
   if (typeof document === 'undefined') {
-    throw new Error('document is not defined');
+    throw new Error('document is not defined')
   }
   
   if (!document.body) {
     const body = document.createElement('body');
     if (document.documentElement) {
-      document.documentElement.appendChild(body);
-    }
+      document.documentElement.appendChild(body)
+  }
   }
   
   // Create container;
@@ -35,7 +35,7 @@ export function renderWithReact18(
   act(() => {
     root = createRoot(container);
     const Wrapper = options?.wrapper || React.Fragment;
-    root.render(<Wrapper>{ui}</Wrapper>);
+    root.render(<Wrapper>{ui}</Wrapper>)
   });
   
   // Return RTL-compatible result
@@ -49,30 +49,30 @@ export function renderWithReact18(
           require('pretty-format').plugins.DOMCollection,
         ],
       };
-  });
-    },
+  })
+  },
     unmount: () => {
       act(() => {
-        root?.unmount();
-      });
-    },
+        root?.unmount()
+  })
+  },
     rerender: (newUi: ReactElement) => {
       act(() => {
         const Wrapper = options?.wrapper || React.Fragment;
-        root?.render(<Wrapper>{newUi}</Wrapper>);
-      });
-    },
+        root?.render(<Wrapper>{newUi}</Wrapper>)
+  })
+  },
     asFragment: () => {
       const template = document.createElement('template');
       template.innerHTML = container.innerHTML;
-      return template.content;
-    },
+      return template.content
+  },
     ...queries.getAllByBoundAttribute(container, 'data-testid'),
     ...Object.entries(queries).reduce((acc, [key, query]) => {
       if (typeof query === 'function') {
-        acc[key] = query.bind(null, container);
-      }
-      return acc;
-    }, {} as any),
-  } as RenderResult;
-}
+        acc[key] = query.bind(null, container)
+  }
+      return acc
+  }, {} as any),
+  } as RenderResult
+  }

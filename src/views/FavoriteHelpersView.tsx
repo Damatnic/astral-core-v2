@@ -14,8 +14,8 @@ import { isError } from '../types/common';
 
 export const FavoriteHelpersView: React.FC<{
     onViewHelperProfile: (helperId: string) => void;
-    userToken: string | null;
-}> = ({ onViewHelperProfile, userToken }) => {
+    userToken: string | null
+  }> = ({ onViewHelperProfile, userToken }) => {
     const { helpSessions } = useSessionStore();
     const { createDirectRequest } = useDilemmaStore();
     const [favoriteHelpers, setFavoriteHelpers] = useState<Helper[]>([]);
@@ -30,8 +30,8 @@ export const FavoriteHelpersView: React.FC<{
             setIsLoading(true);
             ApiClient.helpers.getFavoriteHelpersDetails(userToken)
                 .then(helpers => {
-                    setFavoriteHelpers(Array.isArray(helpers) ? helpers : []);
-                })
+                    setFavoriteHelpers(Array.isArray(helpers) ? helpers : [])
+  })
                 .catch(error => {
                     console.error('Failed to load favorite helpers:', error);
                     // Fallback to mock data for demo
@@ -54,8 +54,8 @@ export const FavoriteHelpersView: React.FC<{
                             level: 5,
                             nextLevelXp: 3000,
                             applicationStatus: 'approved',
-                            trainingCompleted: true;
-                        },
+                            trainingCompleted: true
+  },
                         {
                             id: 'helper-2',
                             auth0UserId: 'demo-helper-2',
@@ -74,8 +74,8 @@ export const FavoriteHelpersView: React.FC<{
                             level: 6,
                             nextLevelXp: 4000,
                             applicationStatus: 'approved',
-                            trainingCompleted: true;
-                        },
+                            trainingCompleted: true
+  },
                         {
                             id: 'helper-3',
                             auth0UserId: 'demo-helper-3',
@@ -94,19 +94,19 @@ export const FavoriteHelpersView: React.FC<{
                             level: 4,
                             nextLevelXp: 2500,
                             applicationStatus: 'approved',
-                            trainingCompleted: true;
-                        }
-                    ]);
-                })
-                .finally(() => setIsLoading(false));
-        }
+                            trainingCompleted: true
+  }
+                    ])
+  })
+                .finally(() => setIsLoading(false))
+  }
     };
   }, [userToken, helpSessions]);
 
     const handleRequestClick = (helper: Helper) => {
         setSelectedHelper(helper);
-        setIsModalOpen(true);
-    };
+        setIsModalOpen(true)
+  };
 
     const handleSubmitRequest = async () => {
         if (selectedHelper && requestMessage.trim() && userToken) {
@@ -114,12 +114,12 @@ export const FavoriteHelpersView: React.FC<{
                 await createDirectRequest({ content: requestMessage, category: requestCategory }, userToken, selectedHelper.id);
                 alert('Your direct request has been sent to the helper.');
                 setIsModalOpen(false);
-                setRequestMessage('');
-            } catch (error) {
+                setRequestMessage('')
+  } catch (error) {
                 console.error(error);
                 const errorMessage = isError(error) ? error.message : 'An error occurred';
-                alert('Failed to send request: ' + errorMessage);
-            }
+                alert('Failed to send request: ' + errorMessage)
+  }
         }
     };
     

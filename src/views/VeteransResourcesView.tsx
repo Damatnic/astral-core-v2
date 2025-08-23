@@ -10,8 +10,8 @@ interface ResourceCategory {
   title: string;
   icon: string;
   description: string;
-  priority: 'human' | 'hybrid' | 'ai';
-}
+  priority: 'human' | 'hybrid' | 'ai'
+  }
 
 interface Resource {
   id: string;
@@ -25,8 +25,8 @@ interface Resource {
   isFree?: boolean;
   waitTime?: string;
   services?: string[];
-  locations?: string[];
-}
+  locations?: string[]
+  }
 
 const VeteransResourcesView: React.FC = () => {
   const { addToast } = useNotification();
@@ -40,71 +40,71 @@ const VeteransResourcesView: React.FC = () => {
       title: 'Crisis Support',
       icon: '🚨',
       description: 'Immediate human support when you need it most',
-      priority: 'human';
-    },
+      priority: 'human'
+  },
     {
       id: 'counseling',
       title: 'Counseling & Therapy',
       icon: '💬',
       description: 'Professional mental health support from trained counselors',
-      priority: 'human';
-    },
+      priority: 'human'
+  },
     {
       id: 'peer',
       title: 'Peer Support',
       icon: '🤝',
       description: 'Connect with fellow veterans who understand your journey',
-      priority: 'human';
-    },
+      priority: 'human'
+  },
     {
       id: 'va',
       title: 'VA Services',
       icon: '🏥',
       description: 'Official VA healthcare and benefits assistance',
-      priority: 'human';
-    },
+      priority: 'human'
+  },
     {
       id: 'family',
       title: 'Family Support',
       icon: '👨‍👩‍👧‍👦',
       description: 'Resources for veterans and their families',
-      priority: 'human';
-    },
+      priority: 'human'
+  },
     {
       id: 'employment',
       title: 'Career & Education',
       icon: '💼',
       description: 'Job placement and educational opportunities',
-      priority: 'human';
-    },
+      priority: 'human'
+  },
     {
       id: 'housing',
       title: 'Housing Assistance',
       icon: '🏠',
       description: 'Help finding stable housing and shelter',
-      priority: 'human';
-    },
+      priority: 'human'
+  },
     {
       id: 'legal',
       title: 'Legal Aid',
       icon: '⚖️',
       description: 'Free legal assistance for veterans',
-      priority: 'human';
-    },
+      priority: 'human'
+  },
     {
       id: 'wellness',
       title: 'Wellness Programs',
       icon: '🌱',
       description: 'Holistic health and wellness support',
-      priority: 'hybrid';
-    },
+      priority: 'hybrid'
+  },
     {
       id: 'ai',
       title: 'AI Assistant',
       icon: '🤖',
       description: 'Supplemental AI support when human help is unavailable',
-      priority: 'ai';
-    }
+      priority: 'ai'
+  }
   ];
 
   const resources: Resource[] = [
@@ -165,8 +165,8 @@ const VeteransResourcesView: React.FC = () => {
       isFree: true,
       waitTime: '1-3 days',
       services: ['Readjustment counseling', 'PTSD treatment', 'MST counseling', 'Bereavement counseling', 'Employment assistance'],
-      locations: ['300+ locations nationwide'];
-    },
+      locations: ['300+ locations nationwide']
+  },
     {
       id: 'cohen-clinics',
       categoryId: 'counseling',
@@ -417,8 +417,8 @@ const VeteransResourcesView: React.FC = () => {
       title: 'AI Support Companion',
       description: 'Available 24/7 when human support is unavailable. Not a replacement for professional care.',
       services: ['Resource navigation', 'Coping strategies', 'Appointment reminders', 'Symptom tracking'],
-      isFree: true;
-    },
+      isFree: true
+  },
     {
       id: 'va-chatbot',
       categoryId: 'ai',
@@ -426,8 +426,8 @@ const VeteransResourcesView: React.FC = () => {
       description: 'Quick answers about VA benefits and services. For complex issues, connects you with a human.',
       website: 'https://www.va.gov',
       services: ['Benefits eligibility', 'Form assistance', 'Appointment scheduling', 'Prescription refills'],
-      isFree: true;
-    }
+      isFree: true
+  }
   ];
 
   useEffect(() => {
@@ -437,28 +437,28 @@ const VeteransResourcesView: React.FC = () => {
         (position) => {
           setUserLocation({
             lat: position.coords.latitude,
-            lng: position.coords.longitude;
-          });
-        },
+            lng: position.coords.longitude
+  })
+  },
         (error) => {
-          console.error('Location error:', error);
-        }
-      );
-    }
+          console.error('Location error:', error)
+  }
+      )
+  }
   };
   }, []);
 
   const handleCallResource = (phone: string) => {
     if (phone) {
       window.location.href = `tel:${phone.replace(/\D/g, '')}`;
-      addToast('Connecting you to support...', 'info');
-    }
+      addToast('Connecting you to support...', 'info')
+  }
   };
 
   const handleVisitWebsite = (website: string) => {
     if (website) {
-      window.open(website, '_blank');
-    }
+      window.open(website, '_blank')
+  }
   };
 
   const filteredResources = resources.filter(r => r.categoryId === selectedCategory);
@@ -478,8 +478,7 @@ const VeteransResourcesView: React.FC = () => {
             <strong>Need immediate help?</strong>
             <p>Veterans Crisis Line: Call 988, Press 1</p>
           </div>
-          <AppButton;
-            variant="danger"
+          <AppButton variant="danger"
             onClick={() => handleCallResource('988')}
             className="emergency-btn"
           >
@@ -533,8 +532,7 @@ const VeteransResourcesView: React.FC = () => {
                   ))}
                 </ul>
                 {resource.services.length > 3 && expandedResource !== resource.id && (
-                  <button; 
-                    className="show-more-btn"
+                  <button className="show-more-btn"
                     onClick={() => setExpandedResource(resource.id)}
                   >
                     Show {resource.services.length - 3} more...
@@ -563,8 +561,7 @@ const VeteransResourcesView: React.FC = () => {
 
             <div className="resource-actions">
               {resource.phone && (
-                <AppButton;
-                  variant="primary"
+                <AppButton variant="primary"
                   onClick={() => handleCallResource(resource.phone!)}
                   className="call-btn"
                 >
@@ -572,8 +569,7 @@ const VeteransResourcesView: React.FC = () => {
                 </AppButton>
               )}
               {resource.website && (
-                <AppButton;
-                  variant="secondary"
+                <AppButton variant="secondary"
                   onClick={() => handleVisitWebsite(resource.website!)}
                   className="website-btn"
                 >
@@ -590,12 +586,11 @@ const VeteransResourcesView: React.FC = () => {
         <Card className="local-resources">
           <h3>Find Local Resources</h3>
           <p>Based on your location, here are nearby options:</p>
-          <AppButton;
-            variant="secondary"
+          <AppButton variant="secondary"
             onClick={() => {
               const query = selectedCategory === 'va' ? 'VA hospital' : 'veteran services';
-              window.open(`https://maps.google.com/maps?q=${query} near me`, '_blank');
-            }}
+              window.open(`https://maps.google.com/maps?q=${query} near me`, '_blank')
+  }}
           >
             Open in Maps
           </AppButton>
@@ -617,8 +612,7 @@ const VeteransResourcesView: React.FC = () => {
             someone who truly understands. If you're struggling, please consider 
             reaching out to one of our human support options first.
           </p>
-          <AppButton;
-            variant="primary"
+          <AppButton variant="primary"
             onClick={() => setSelectedCategory('crisis')}
           >
             View Human Support Options
@@ -631,26 +625,22 @@ const VeteransResourcesView: React.FC = () => {
         <h3>Quick Connect</h3>
         <p>Not sure where to start? These organizations can help you navigate all available resources:</p>
         <div className="quick-connect-grid">
-          <AppButton;
-            variant="primary"
+          <AppButton variant="primary"
             onClick={() => handleCallResource('988')}
           >
             Veterans Crisis Line
           </AppButton>
-          <AppButton;
-            variant="primary"
+          <AppButton variant="primary"
             onClick={() => handleCallResource('18008279100')}
           >
             VA Benefits Hotline
           </AppButton>
-          <AppButton;
-            variant="primary"
+          <AppButton variant="primary"
             onClick={() => handleCallResource('18889972586')}
           >
             Wounded Warrior Project
           </AppButton>
-          <AppButton;
-            variant="primary"
+          <AppButton variant="primary"
             onClick={() => handleCallResource('18339238387')}
           >
             VFW Help Line
@@ -658,7 +648,7 @@ const VeteransResourcesView: React.FC = () => {
         </div>
       </Card>
     </div>
-  );
-};
+  )
+  };
 
 export default VeteransResourcesView;

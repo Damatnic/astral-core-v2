@@ -41,15 +41,15 @@ export interface ResponsiveProps {
     top: number;
     bottom: number;
     left: number;
-    right: number;
+    right: number
   };
   
   // Touch target size
   touchTargetSize: number;
   
   // Responsive class helper
-  getResponsiveClass: (baseClass: string) => string;
-}
+  getResponsiveClass: (baseClass: string) => string
+  }
 
 /**
  * HOC that provides responsive props to wrapped component
@@ -79,8 +79,8 @@ export function withMobileResponsive<P extends object>(
         if (isMobileViewport()) classes.push(`${baseClass}--mobile`);
         else if (isTabletViewport()) classes.push(`${baseClass}--tablet`);
         else classes.push(`${baseClass}--desktop`);
-        return classes.join(' ');
-      },
+        return classes.join(' ')
+  },
     }));
 
     useEffect(() => {
@@ -106,10 +106,10 @@ export function withMobileResponsive<P extends object>(
             if (isMobileViewport()) classes.push(`${baseClass}--mobile`);
             else if (isTabletViewport()) classes.push(`${baseClass}--tablet`);
             else classes.push(`${baseClass}--desktop`);
-            return classes.join(' ');
-          },
-        });
-      };
+            return classes.join(' ')
+  },
+        })
+  };
 
       // Set up resize listener;
       const cleanup = onResponsiveResize(updateResponsiveState);
@@ -119,18 +119,18 @@ export function withMobileResponsive<P extends object>(
       
       return () => {
         cleanup();
-        window.removeEventListener('orientationchange', updateResponsiveState);
-      };
+        window.removeEventListener('orientationchange', updateResponsiveState)
+  };
   };
   }, []);
 
-    return <Component {...props} {...responsiveState} />;
+    return <Component {...props} {...responsiveState} />
   };
 
   ResponsiveComponent.displayName = `withMobileResponsive(${Component.displayName || Component.name})`;
 
-  return ResponsiveComponent;
-}
+  return ResponsiveComponent
+  }
 
 /**
  * Hook version for functional components
@@ -157,8 +157,8 @@ export const useResponsive = (): ResponsiveProps => {
       if (isMobileViewport()) classes.push(`${baseClass}--mobile`);
       else if (isTabletViewport()) classes.push(`${baseClass}--tablet`);
       else classes.push(`${baseClass}--desktop`);
-      return classes.join(' ');
-    },
+      return classes.join(' ')
+  },
   }));
 
   useEffect(() => {
@@ -184,23 +184,23 @@ export const useResponsive = (): ResponsiveProps => {
           if (isMobileViewport()) classes.push(`${baseClass}--mobile`);
           else if (isTabletViewport()) classes.push(`${baseClass}--tablet`);
           else classes.push(`${baseClass}--desktop`);
-          return classes.join(' ');
-        },
-      });
-    };
+          return classes.join(' ')
+  },
+      })
+  };
 
     const cleanup = onResponsiveResize(updateResponsiveState);
     window.addEventListener('orientationchange', updateResponsiveState);
     
     return () => {
       cleanup();
-      window.removeEventListener('orientationchange', updateResponsiveState);
-    };
+      window.removeEventListener('orientationchange', updateResponsiveState)
+  };
   };
   }, []);
 
-  return responsiveState;
-};
+  return responsiveState
+  };
 
 /**
  * Responsive container component
@@ -209,8 +209,8 @@ export const ResponsiveContainer: React.FC<{
   children: React.ReactNode;
   className?: string;
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
-  padding?: boolean;
-}> = ({ children, className = '', maxWidth = 'lg', padding = true }) => {
+  padding?: boolean
+  }> = ({ children, className = '', maxWidth = 'lg', padding = true }) => {
   const { getResponsiveClass, safeAreaInsets } = useResponsive();
   
   const maxWidthClasses = {
@@ -222,8 +222,7 @@ export const ResponsiveContainer: React.FC<{
   };
   
   return (
-    <div;
-      className={`
+    <div className={`
         ${getResponsiveClass('container')}
         ${maxWidthClasses[maxWidth]}
         ${padding ? 'px-4 sm:px-6 lg:px-8' : ''}
@@ -236,8 +235,8 @@ export const ResponsiveContainer: React.FC<{
     >
       {children}
     </div>
-  );
-};
+  )
+  };
 
 /**
  * Responsive grid component
@@ -251,10 +250,10 @@ export const ResponsiveGrid: React.FC<{
     md?: number;
     lg?: number;
     xl?: number;
-    xxl?: number;
+    xxl?: number
   };
-  gap?: number;
-}> = ({ children, className = '', cols = {}, gap = 4 }) => {
+  gap?: number
+  }> = ({ children, className = '', cols = {}, gap = 4 }) => {
   const { breakpoint } = useResponsive();
   
   const defaultCols = {
@@ -269,8 +268,7 @@ export const ResponsiveGrid: React.FC<{
   const colCount = cols[breakpoint] ?? defaultCols[breakpoint] ?? 1;
   
   return (
-    <div;
-      className={`grid ${className}`}
+    <div className={`grid ${className}`}
       style={{
         gridTemplateColumns: `repeat(${colCount}, 1fr)`,
         gap: `${gap * 0.25}rem`,
@@ -278,39 +276,39 @@ export const ResponsiveGrid: React.FC<{
     >
       {children}
     </div>
-  );
-};
+  )
+  };
 
 /**
  * Mobile-only wrapper component
  */;
 export const MobileOnly: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isMobile } = useResponsive();
-  return isMobile ? <>{children}</> : null;
-};
+  return isMobile ? <>{children}</> : null
+  };
 
 /**
  * Tablet-only wrapper component
  */;
 export const TabletOnly: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isTablet } = useResponsive();
-  return isTablet ? <>{children}</> : null;
-};
+  return isTablet ? <>{children}</> : null
+  };
 
 /**
  * Desktop-only wrapper component
  */;
 export const DesktopOnly: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isDesktop } = useResponsive();
-  return isDesktop ? <>{children}</> : null;
-};
+  return isDesktop ? <>{children}</> : null
+  };
 
 /**
  * Touch-device-only wrapper component
  */;
 export const TouchOnly: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isTouchDevice } = useResponsive();
-  return isTouchDevice ? <>{children}</> : null;
-};
+  return isTouchDevice ? <>{children}</> : null
+  };
 
 export default withMobileResponsive;

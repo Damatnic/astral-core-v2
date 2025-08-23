@@ -19,7 +19,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 const useMobileViewport = () => ({
   isMobile: window.innerWidth <= 768,
   scrollIntoView: (element: HTMLElement, _options: any) => {
-    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
 });
 
@@ -55,8 +55,8 @@ type InputTypeKey = keyof typeof INPUT_TYPES;
 
 interface ValidationResult {
   isValid: boolean;
-  errors: string[];
-}
+  errors: string[]
+  }
 
 interface MobileFormInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label: string;
@@ -66,7 +66,7 @@ interface MobileFormInputProps extends Omit<React.InputHTMLAttributes<HTMLInputE
     minLength?: number;
     maxLength?: number;
     pattern?: RegExp;
-    custom?: (value: string) => boolean | string;
+    custom?: (value: string) => boolean | string
   };
   helpText?: string;
   floatingLabel?: boolean;
@@ -74,8 +74,8 @@ interface MobileFormInputProps extends Omit<React.InputHTMLAttributes<HTMLInputE
   onValidationChange?: (isValid: boolean, errors: string[]) => void;
   showValidationIcon?: boolean;
   autoFormat?: boolean;
-  containerClassName?: string;
-}
+  containerClassName?: string
+  }
 
 export const MobileFormInput: React.FC<MobileFormInputProps> = ({
   label,
@@ -118,21 +118,21 @@ export const MobileFormInput: React.FC<MobileFormInputProps> = ({
     tel: (value: string) => {
       const cleaned = value.replace(/\D/g, '');
       if (cleaned.length >= 10) {
-        return cleaned.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
-      }
-      return cleaned;
-    },
+        return cleaned.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')
+  }
+      return cleaned
+  },
     number: (value: string) => {
-      return value.replace(/[^\d.-]/g, '');
-    },
+      return value.replace(/[^\d.-]/g, '')
+  },
     email: (value: string) => value.toLowerCase().trim(),
     url: (value: string) => {
       const trimmed = value.trim();
       if (trimmed && !trimmed.startsWith('http')) {
-        return `https://${trimmed}`;
-      }
-      return trimmed;
-    },
+        return `https://${trimmed}`
+  }
+      return trimmed
+  },
   };
 
   // Validation function;
@@ -143,18 +143,18 @@ export const MobileFormInput: React.FC<MobileFormInputProps> = ({
 
     // Required validation
     if (validation.required && !value.trim()) {
-      errors.push(`${label} is required`);
-    }
+      errors.push(`${label} is required`)
+  }
 
     if (value.trim()) {
       // Length validations
       if (validation.minLength && value.length < validation.minLength) {
-        errors.push(`${label} must be at least ${validation.minLength} characters`);
-      }
+        errors.push(`${label} must be at least ${validation.minLength} characters`)
+  }
 
       if (validation.maxLength && value.length > validation.maxLength) {
-        errors.push(`${label} must be no more than ${validation.maxLength} characters`);
-      }
+        errors.push(`${label} must be no more than ${validation.maxLength} characters`)
+  }
 
       // Pattern validation
       if (validation.pattern && !validation.pattern.test(value)) {
@@ -163,8 +163,8 @@ export const MobileFormInput: React.FC<MobileFormInputProps> = ({
           tel: 'Please enter a valid phone number',
           url: 'Please enter a valid URL',
         };
-        errors.push(patternMessages[inputType] || `${label} format is invalid`);
-      }
+        errors.push(patternMessages[inputType] || `${label} format is invalid`)
+  }
 
       // Security validation;
       const securityResult = securityService.validateInput(value, {
@@ -176,17 +176,17 @@ export const MobileFormInput: React.FC<MobileFormInputProps> = ({
   };
 
       if (!securityResult.isValid) {
-        errors.push(...securityResult.errors);
-      }
+        errors.push(...securityResult.errors)
+  }
 
       // Custom validation
       if (validation.custom) {
         const customResult = validation.custom(value);
         if (typeof customResult === 'string') {
-          errors.push(customResult);;
+          errors.push(customResult)
   } else if (!customResult) {
-          errors.push(`${label} is invalid`);
-        }
+          errors.push(`${label} is invalid`)
+  }
       }
     }
 
@@ -205,10 +205,10 @@ export const MobileFormInput: React.FC<MobileFormInputProps> = ({
       const result = validateInput(localValue as string);
       setValidationResult(result);
       onValidationChange?.(result.isValid, result.errors);
-      setIsValidating(false);
-    }, 300);
+      setIsValidating(false)
+  }, 300);
 
-    return () => clearTimeout(timeoutId);
+    return () => clearTimeout(timeoutId)
   };
   }, [localValue, isTouched, validateInput, onValidationChange]);
 
@@ -218,13 +218,13 @@ export const MobileFormInput: React.FC<MobileFormInputProps> = ({
 
     // Auto-format if enabled
     if (autoFormat && formatters[inputType as keyof typeof formatters]) {
-      newValue = formatters[inputType as keyof typeof formatters](newValue);
-    }
+      newValue = formatters[inputType as keyof typeof formatters](newValue)
+  }
 
     // Apply custom formatter
     if (formatValue) {
-      newValue = formatValue(newValue);
-    }
+      newValue = formatValue(newValue)
+  }
 
     setLocalValue(newValue);
     
@@ -234,7 +234,7 @@ export const MobileFormInput: React.FC<MobileFormInputProps> = ({
       target: { ...e.target, value: newValue },
     };
     
-    onChange?.(syntheticEvent);
+    onChange?.(syntheticEvent)
   };
 
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -250,10 +250,10 @@ export const MobileFormInput: React.FC<MobileFormInputProps> = ({
           offset: 20,
         };
   };
-      }, 300);
-    }
+      }, 300)
+  }
 
-    onFocus?.(e);
+    onFocus?.(e)
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -265,7 +265,7 @@ export const MobileFormInput: React.FC<MobileFormInputProps> = ({
     setValidationResult(result);
     onValidationChange?.(result.isValid, result.errors);
 
-    onBlur?.(e);
+    onBlur?.(e)
   };
 
   // Determine input state classes;
@@ -273,7 +273,7 @@ export const MobileFormInput: React.FC<MobileFormInputProps> = ({
   const showFloatingLabel = floatingLabel && (isFocused || hasValue);
   const hasErrors = isTouched && !validationResult.isValid;
 
-  const containerClasses = [;
+  const containerClasses = [;;
     'mobile-form-input-container',
     floatingLabel ? 'floating-label' : '',
     hasErrors ? 'error' : '',
@@ -282,7 +282,7 @@ export const MobileFormInput: React.FC<MobileFormInputProps> = ({
     containerClassName,
   ].filter(Boolean).join(' ');
 
-  const inputClasses = [;
+  const inputClasses = [;;
     'mobile-form-input',
     className,
     hasErrors ? 'error' : '',
@@ -359,8 +359,8 @@ export const MobileFormInput: React.FC<MobileFormInputProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 // Enhanced TextArea component for mobile;
 interface MobileFormTextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -369,15 +369,15 @@ interface MobileFormTextAreaProps extends React.TextareaHTMLAttributes<HTMLTextA
     required?: boolean;
     minLength?: number;
     maxLength?: number;
-    custom?: (value: string) => boolean | string;
+    custom?: (value: string) => boolean | string
   };
   helpText?: string;
   floatingLabel?: boolean;
   showCharacterCount?: boolean;
   onValidationChange?: (isValid: boolean, errors: string[]) => void;
   autoResize?: boolean;
-  containerClassName?: string;
-}
+  containerClassName?: string
+  }
 
 export const MobileFormTextArea: React.FC<MobileFormTextAreaProps> = ({
   label,
@@ -413,13 +413,13 @@ export const MobileFormTextArea: React.FC<MobileFormTextAreaProps> = ({
   const adjustHeight = useCallback(() => {
     if (autoResize && textareaRef.current) {
       textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-    }
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+  }
   };
   }, [autoResize]);
 
   useEffect(() => {
-    adjustHeight();
+    adjustHeight()
   };
   }, [localValue, adjustHeight]);
 
@@ -430,17 +430,17 @@ export const MobileFormTextArea: React.FC<MobileFormTextAreaProps> = ({
     const errors: string[] = [];
 
     if (validation.required && !value.trim()) {
-      errors.push(`${label} is required`);
-    }
+      errors.push(`${label} is required`)
+  }
 
     if (value.trim()) {
       if (validation.minLength && value.length < validation.minLength) {
-        errors.push(`${label} must be at least ${validation.minLength} characters`);
-      }
+        errors.push(`${label} must be at least ${validation.minLength} characters`)
+  }
 
       if (validation.maxLength && value.length > validation.maxLength) {
-        errors.push(`${label} must be no more than ${validation.maxLength} characters`);
-      }
+        errors.push(`${label} must be no more than ${validation.maxLength} characters`)
+  }
 
       // Security validation;
       const securityResult = securityService.validateInput(value, {
@@ -451,16 +451,16 @@ export const MobileFormTextArea: React.FC<MobileFormTextAreaProps> = ({
   };
 
       if (!securityResult.isValid) {
-        errors.push(...securityResult.errors);
-      }
+        errors.push(...securityResult.errors)
+  }
 
       if (validation.custom) {
         const customResult = validation.custom(value);
         if (typeof customResult === 'string') {
-          errors.push(customResult);;
+          errors.push(customResult)
   } else if (!customResult) {
-          errors.push(`${label} is invalid`);
-        }
+          errors.push(`${label} is invalid`)
+  }
       }
     }
 
@@ -477,17 +477,17 @@ export const MobileFormTextArea: React.FC<MobileFormTextAreaProps> = ({
     const timeoutId = setTimeout(() => {
       const result = validateTextArea(localValue as string);
       setValidationResult(result);
-      onValidationChange?.(result.isValid, result.errors);
-    }, 300);
+      onValidationChange?.(result.isValid, result.errors)
+  }, 300);
 
-    return () => clearTimeout(timeoutId);
+    return () => clearTimeout(timeoutId)
   };
   }, [localValue, isTouched, validateTextArea, onValidationChange]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     setLocalValue(newValue);
-    onChange?.(e);
+    onChange?.(e)
   };
 
   const handleFocus = (e: React.FocusEvent<HTMLTextAreaElement>) => {
@@ -502,10 +502,10 @@ export const MobileFormTextArea: React.FC<MobileFormTextAreaProps> = ({
           offset: 20,
         };
   };
-      }, 300);
-    }
+      }, 300)
+  }
 
-    onFocus?.(e);
+    onFocus?.(e)
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
@@ -516,7 +516,7 @@ export const MobileFormTextArea: React.FC<MobileFormTextAreaProps> = ({
     setValidationResult(result);
     onValidationChange?.(result.isValid, result.errors);
 
-    onBlur?.(e);
+    onBlur?.(e)
   };
 
   const hasValue = localValue && localValue.toString().length > 0;
@@ -524,7 +524,7 @@ export const MobileFormTextArea: React.FC<MobileFormTextAreaProps> = ({
   const hasErrors = isTouched && !validationResult.isValid;
   const characterCount = (localValue as string).length;
 
-  const containerClasses = [;
+  const containerClasses = [;;
     'mobile-form-textarea-container',
     floatingLabel ? 'floating-label' : '',
     hasErrors ? 'error' : '',
@@ -600,21 +600,21 @@ export const MobileFormTextArea: React.FC<MobileFormTextAreaProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 // Enhanced Select component for mobile;
 interface MobileFormSelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
   options: Array<{ value: string; label: string; disabled?: boolean }>;
   validation?: {
-    required?: boolean;
+    required?: boolean
   };
   helpText?: string;
   floatingLabel?: boolean;
   onValidationChange?: (isValid: boolean, errors: string[]) => void;
-  containerClassName?: string;
-}
+  containerClassName?: string
+  }
 
 export const MobileFormSelect: React.FC<MobileFormSelectProps> = ({
   label,
@@ -647,8 +647,8 @@ export const MobileFormSelect: React.FC<MobileFormSelectProps> = ({
     const errors: string[] = [];
 
     if (validation.required && (!value || value === '')) {
-      errors.push(`${label} is required`);
-    }
+      errors.push(`${label} is required`)
+  }
 
     return {
       isValid: errors.length === 0,
@@ -662,13 +662,13 @@ export const MobileFormSelect: React.FC<MobileFormSelectProps> = ({
     if (isTouched) {
       const result = validateSelect(e.target.value);
       setValidationResult(result);
-      onValidationChange?.(result.isValid, result.errors);
-    }
+      onValidationChange?.(result.isValid, result.errors)
+  }
   };
 
   const handleFocus = (e: React.FocusEvent<HTMLSelectElement>) => {
     setIsFocused(true);
-    onFocus?.(e);
+    onFocus?.(e)
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLSelectElement>) => {
@@ -679,14 +679,14 @@ export const MobileFormSelect: React.FC<MobileFormSelectProps> = ({
     setValidationResult(result);
     onValidationChange?.(result.isValid, result.errors);
 
-    onBlur?.(e);
+    onBlur?.(e)
   };
 
   const hasValue = value && value !== '';
   const showFloatingLabel = floatingLabel && (isFocused || hasValue);
   const hasErrors = isTouched && !validationResult.isValid;
 
-  const containerClasses = [;
+  const containerClasses = [;;
     'mobile-form-select-container',
     floatingLabel ? 'floating-label' : '',
     hasErrors ? 'error' : '',
@@ -770,8 +770,8 @@ export const MobileFormSelect: React.FC<MobileFormSelectProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 // Form container with validation state management;
 interface MobileFormContainerProps {
@@ -779,8 +779,8 @@ interface MobileFormContainerProps {
   onSubmit?: (e: React.FormEvent) => void;
   onValidationChange?: (isValid: boolean) => void;
   className?: string;
-  autoValidate?: boolean;
-}
+  autoValidate?: boolean
+  }
 
 export const MobileFormContainer: React.FC<MobileFormContainerProps> = ({
   children,
@@ -796,8 +796,8 @@ export const MobileFormContainer: React.FC<MobileFormContainerProps> = ({
     setFieldValidations(prev => {
       const newMap = new Map(prev);
       newMap.set(fieldId, isValid);
-      return newMap;
-    };
+      return newMap
+  };
   };
   };
   }, []);
@@ -806,8 +806,8 @@ export const MobileFormContainer: React.FC<MobileFormContainerProps> = ({
   useEffect(() => {
     if (autoValidate && onValidationChange) {
       const allValid = Array.from(fieldValidations.values()).every(valid => valid);
-      onValidationChange(allValid && fieldValidations.size > 0);
-    }
+      onValidationChange(allValid && fieldValidations.size > 0)
+  }
   };
   }, [fieldValidations, autoValidate, onValidationChange]);
 
@@ -817,13 +817,13 @@ export const MobileFormContainer: React.FC<MobileFormContainerProps> = ({
     // Blur active input to trigger final validation;
     const activeElement = document.activeElement as HTMLElement;
     if (activeElement && ['INPUT', 'TEXTAREA', 'SELECT'].includes(activeElement.tagName)) {
-      activeElement.blur();
-    }
+      activeElement.blur()
+  }
 
     // Small delay to allow validation to complete
     setTimeout(() => {
-      onSubmit?.(e);
-    }, 100);
+      onSubmit?.(e)
+  }, 100)
   };
 
   return (
@@ -846,15 +846,15 @@ export const MobileFormContainer: React.FC<MobileFormContainerProps> = ({
             id: fieldId,
             onValidationChange: (isValid: boolean, errors: string[]) => {
               handleFieldValidation(fieldId, isValid);
-              child.props.onValidationChange?.(isValid, errors);
-            },
-          });
-        }
-        return child;
-      })}
+              child.props.onValidationChange?.(isValid, errors)
+  },
+          })
+  }
+        return child
+  })}
     </form>
-  );
-};
+  )
+  };
 
 // Pre-configured validation rules;
 export const MobileFormValidation = {

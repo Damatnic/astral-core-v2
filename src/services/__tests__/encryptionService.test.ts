@@ -9,7 +9,7 @@ describe('EncryptionService', () => {
   beforeEach(() => {
     // Clear any stored keys
     localStorage.clear();
-    sessionStorage.clear();
+    sessionStorage.clear()
   });
 
   describe('Encryption and Decryption', () => {
@@ -22,8 +22,8 @@ describe('EncryptionService', () => {
       expect(typeof encrypted).toBe('object');
       
       const decrypted = await getEncryptionService().decrypt(encrypted, 'test-key');
-      expect(JSON.parse(decrypted)).toEqual(originalData);
-    });
+      expect(JSON.parse(decrypted)).toEqual(originalData)
+  });
 
     it.skip('should handle string data', async () => {
       const originalData = 'This is a test string';
@@ -31,8 +31,8 @@ describe('EncryptionService', () => {
       const encrypted = await getEncryptionService().encrypt(originalData, 'test-key');
       const decrypted = await getEncryptionService().decrypt(encrypted, 'test-key');
       
-      expect(decrypted).toBe(originalData);
-    });
+      expect(decrypted).toBe(originalData)
+  });
 
     it.skip('should handle complex objects', async () => {
       const complexData = {
@@ -42,20 +42,20 @@ describe('EncryptionService', () => {
           preferences: ['privacy', 'security'],
           metadata: {
             lastLogin: new Date().toISOString(),
-            sessions: 5;
-          }
+            sessions: 5
+  }
         },
         sensitive: {
           ssn: '123-45-6789',
-          creditCard: '4111111111111111';
-        }
+          creditCard: '4111111111111111'
+  }
       };
       
       const encrypted = await getEncryptionService().encrypt(JSON.stringify(complexData), 'test-key');
       const decrypted = JSON.parse(await getEncryptionService().decrypt(encrypted, 'test-key'));
       
-      expect(decrypted).toEqual(complexData);
-    });
+      expect(decrypted).toEqual(complexData)
+  });
 
     it.skip('should generate different encrypted values for same data', async () => {
       const data = 'test data';
@@ -68,22 +68,22 @@ describe('EncryptionService', () => {
       
       // But both should decrypt to same value
       expect(await getEncryptionService().decrypt(encrypted1, 'test-key')).toBe(data);
-      expect(await getEncryptionService().decrypt(encrypted2, 'test-key')).toBe(data);
-    });
+      expect(await getEncryptionService().decrypt(encrypted2, 'test-key')).toBe(data)
+  })
   });
 
   describe('Key Management', () => {
     it.skip('should handle encrypted keys', () => {
       const encryptedKeys = getEncryptionService().getEncryptedKeys();
       expect(encryptedKeys).toBeDefined();
-      expect(Array.isArray(encryptedKeys)).toBe(true);
-    });
+      expect(Array.isArray(encryptedKeys)).toBe(true)
+  });
 
     it.skip('should clear encryption keys', () => {
       getEncryptionService().clearEncryptionKeys();
       const encryptedKeys = getEncryptionService().getEncryptedKeys();
-      expect(encryptedKeys.length).toBe(0);
-    });
+      expect(encryptedKeys.length).toBe(0)
+  })
   });
 
   describe('Encryption Stats', () => {
@@ -94,8 +94,8 @@ describe('EncryptionService', () => {
       expect(stats).toHaveProperty('totalEncrypted');
       expect(stats).toHaveProperty('totalDecrypted');
       expect(stats).toHaveProperty('encryptionErrors');
-      expect(stats).toHaveProperty('decryptionErrors');
-    });
+      expect(stats).toHaveProperty('decryptionErrors')
+  })
   });
 
   describe('Secure Storage', () => {
@@ -111,13 +111,13 @@ describe('EncryptionService', () => {
       
       const retrieved = await getEncryptionService().secureGetItem(key);
       const parsedRetrieved = retrieved ? JSON.parse(retrieved) : null;
-      expect(parsedRetrieved).toEqual(data);
-    });
+      expect(parsedRetrieved).toEqual(data)
+  });
 
     it.skip('should handle missing data gracefully', async () => {
       const retrieved = await getEncryptionService().secureGetItem('nonexistent');
-      expect(retrieved).toBeNull();
-    });
+      expect(retrieved).toBeNull()
+  });
 
     it.skip('should remove encrypted data', async () => {
       const key = 'temp_data';
@@ -126,8 +126,8 @@ describe('EncryptionService', () => {
       expect(localStorage.getItem(key)).toBeDefined();
       
       getEncryptionService().secureRemoveItem(key);
-      expect(localStorage.getItem(key)).toBeNull();
-    });
+      expect(localStorage.getItem(key)).toBeNull()
+  })
   });
 
   describe('HIPAA Compliance', () => {
@@ -136,8 +136,8 @@ describe('EncryptionService', () => {
       
       expect(complianceCheck).toBeDefined();
       expect(complianceCheck).toHaveProperty('compliant');
-      expect(complianceCheck).toHaveProperty('checks');
-    });
+      expect(complianceCheck).toHaveProperty('checks')
+  })
   });
 
   describe('Data Validation', () => {
@@ -148,25 +148,25 @@ describe('EncryptionService', () => {
       expect(result).toHaveProperty('valid');
       expect(result).toHaveProperty('invalid');
       expect(result).toHaveProperty('errors');
-      expect(Array.isArray(result.errors)).toBe(true);
-    });
+      expect(Array.isArray(result.errors)).toBe(true)
+  })
   });
 
   describe('Error Handling', () => {
     it.skip('should handle decryption with invalid data', async () => {
       const invalidData = { data: 'invalid', iv: '', salt: '', version: '1.0', algorithm: 'AES-GCM' };
-      await expect(getEncryptionService().decrypt(invalidData, 'test-key')).rejects.toThrow();
-    });
+      await expect(getEncryptionService().decrypt(invalidData, 'test-key')).rejects.toThrow()
+  });
 
     it.skip('should handle encryption of undefined data', async () => {
-      await expect(getEncryptionService().encrypt(undefined as any, 'test-key')).rejects.toThrow();
-    });
+      await expect(getEncryptionService().encrypt(undefined as any, 'test-key')).rejects.toThrow()
+  });
 
     it.skip('should handle corrupted stored data', async () => {
       localStorage.setItem('corrupted', 'not-encrypted-data');
       const result = await getEncryptionService().secureGetItem('corrupted');
-      expect(result).toBeNull();
-    });
+      expect(result).toBeNull()
+  })
   });
 
   describe('Data Migration', () => {
@@ -178,14 +178,14 @@ describe('EncryptionService', () => {
       await getEncryptionService().migrateExistingData();
       
       // Data migration should be handled
-      expect(true).toBe(true);
-    });
+      expect(true).toBe(true)
+  })
+  })
   });
-});
 
 // Dummy test to keep suite active
 describe('Test Suite Active', () => {
   it.skip('Placeholder test to prevent empty suite', () => {
-    expect(true).toBe(true);
+    expect(true).toBe(true)
+  })
   });
-});

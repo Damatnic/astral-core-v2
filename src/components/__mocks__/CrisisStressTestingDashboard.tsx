@@ -10,8 +10,8 @@ import React from 'react';
 interface CrisisStressTestingDashboardProps {
   onEmergencyBreak?: (reason: string) => void;
   onTestComplete?: (results: any[]) => void;
-  className?: string;
-}
+  className?: string
+  }
 
 export const CrisisStressTestingDashboard: React.FC<CrisisStressTestingDashboardProps> = ({
   className = ''
@@ -21,7 +21,7 @@ export const CrisisStressTestingDashboard: React.FC<CrisisStressTestingDashboard
       <h2>Crisis Stress Testing Dashboard (Mocked)</h2>
       <p>Stress testing is disabled in test environment</p>
     </div>
-  );
-};
+  )
+  };
 
 export default CrisisStressTestingDashboard;

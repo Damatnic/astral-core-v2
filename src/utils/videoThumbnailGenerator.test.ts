@@ -58,9 +58,9 @@ Object.defineProperty(document, 'createElement', {
       return { ...mockVideoElement }
     if (tagName === 'canvas') {
       // Return the mockCanvas directly so we can track property changes
-      return mockCanvas;
-    }
-    return originalCreateElement.call(document, tagName);
+      return mockCanvas
+  }
+    return originalCreateElement.call(document, tagName)
   }),
   writable: true,
 };
@@ -88,30 +88,30 @@ describe('VideoThumbnailGenerator', () => {
     const freshLocalStorageMock = {
       getItem: jest.fn((key: string) => localStorageStore[key] || null),
       setItem: jest.fn((key: string, value: string) => {
-        localStorageStore[key] = value.toString();
-      }),
+        localStorageStore[key] = value.toString()
+  }),
       removeItem: jest.fn((key: string) => {
-        delete localStorageStore[key];
-      }),
+        delete localStorageStore[key]
+  }),
       clear: jest.fn(() => {
-        Object.keys(localStorageStore).forEach(key => delete localStorageStore[key]);
-      }),
+        Object.keys(localStorageStore).forEach(key => delete localStorageStore[key])
+  }),
       get length() {
-        return Object.keys(localStorageStore).length;
-      },
+        return Object.keys(localStorageStore).length
+  },
       key: jest.fn((index: number) => {
         const keys = Object.keys(localStorageStore);
-        return keys[index] || null;
-      })
+        return keys[index] || null
+  })
     };
     
     Object.defineProperty(window, 'localStorage', {
       value: freshLocalStorageMock,
       writable: true,
-      configurable: true;
-    });
+      configurable: true
+  });
     
-    generator = new VideoThumbnailGenerator();
+    generator = new VideoThumbnailGenerator()
   });
 
   afterEach(() => {
@@ -124,15 +124,15 @@ describe('VideoThumbnailGenerator', () => {
     Object.defineProperty(window, 'localStorage', {
       value: originalLocalStorage,
       writable: true,
-      configurable: true;
-    });
+      configurable: true
+  })
   });
 
   describe('constructor', () => {
     it('should create canvas and context on initialization', () => {
       expect(document.createElement).toHaveBeenCalledWith('canvas');
-      expect(mockCanvas.getContext).toHaveBeenCalledWith('2d');
-    });
+      expect(mockCanvas.getContext).toHaveBeenCalledWith('2d')
+  })
   });
 
   describe('generateThumbnails', () => {
@@ -147,8 +147,8 @@ describe('VideoThumbnailGenerator', () => {
       
       // Mock video seeked event
       setTimeout(() => {
-        createdVideo.onseeked();
-      }, 0);
+        createdVideo.onseeked()
+  }, 0);
       
       jest.runOnlyPendingTimers();
       
@@ -158,8 +158,8 @@ describe('VideoThumbnailGenerator', () => {
       expect(result).toHaveProperty('sizes');
       expect(result).toHaveProperty('placeholder');
       expect(result).toHaveProperty('aspectRatio');
-      expect(result).toHaveProperty('duration');
-    });
+      expect(result).toHaveProperty('duration')
+  });
 
     it('should generate thumbnails with custom options', async () => {
       const options: VideoThumbnailOptions = {
@@ -179,16 +179,16 @@ describe('VideoThumbnailGenerator', () => {
       createdVideo.onloadedmetadata();
       
       setTimeout(() => {
-        createdVideo.onseeked();
-      }, 0);
+        createdVideo.onseeked()
+  }, 0);
       
       jest.runOnlyPendingTimers();
       
       const result = await videoPromise;
       
       expect(result.sizes).toHaveProperty('custom');
-      expect(result.placeholder).toBeUndefined();
-    });
+      expect(result.placeholder).toBeUndefined()
+  });
 
     it('should handle video loading errors', async () => {
       const videoPromise = generator.generateThumbnails(mockVideoSrc);
@@ -200,8 +200,8 @@ describe('VideoThumbnailGenerator', () => {
       
       createdVideo.onerror();
       
-      await expect(videoPromise).rejects.toThrow('Failed to load video');
-    });
+      await expect(videoPromise).rejects.toThrow('Failed to load video')
+  });
 
     it('should set correct video currentTime based on frameTime and duration', async () => {
       const videoPromise = generator.generateThumbnails(mockVideoSrc, { frameTime: 150 });
@@ -215,16 +215,16 @@ describe('VideoThumbnailGenerator', () => {
       createdVideo.onloadedmetadata();
       
       setTimeout(() => {
-        createdVideo.onseeked();
-      }, 0);
+        createdVideo.onseeked()
+  }, 0);
       
       jest.runOnlyPendingTimers();
       
       await videoPromise;
       
       // Should use duration/2 when frameTime > duration
-      expect(createdVideo.currentTime).toBe(50);
-    });
+      expect(createdVideo.currentTime).toBe(50)
+  })
   });
 
   describe('generateThumbnailFromElement', () => {
@@ -241,22 +241,22 @@ describe('VideoThumbnailGenerator', () => {
       
       expect(result).not.toBeNull();
       expect(result?.original).toBe('test-video.mp4');
-      expect(result?.aspectRatio).toBeCloseTo(16/9, 2);
-    });
+      expect(result?.aspectRatio).toBeCloseTo(16/9, 2)
+  });
 
     it('should return null for unready video element', () => {
       const unreadyVideo = { ...mockVideoElement, readyState: 1 } as HTMLVideoElement;
       
       const result = generator.generateThumbnailFromElement(unreadyVideo);
       
-      expect(result).toBeNull();
-    });
+      expect(result).toBeNull()
+  });
 
     it('should handle errors during thumbnail generation', () => {
       // Mock canvas toDataURL to throw error for this test only
       mockCanvas.toDataURL.mockImplementationOnce(() => {
-        throw new Error('Canvas error');
-      });
+        throw new Error('Canvas error')
+  });
       
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       
@@ -265,28 +265,28 @@ describe('VideoThumbnailGenerator', () => {
       expect(result).toBeNull();
       expect(consoleSpy).toHaveBeenCalled();
       
-      consoleSpy.mockRestore();
-    });
+      consoleSpy.mockRestore()
+  })
   });
 
   describe('generateBatchThumbnails', () => {
     it('should generate thumbnails for multiple videos in batches', async () => {
       jest.useRealTimers(); // Use real timers for this async test;
       
-      const videoSources = [;
+      const videoSources = [;;
         'video1.mp4',
         'video2.mp4', 
         'video3.mp4',
         'video4.mp4'
       ];
 
-      const generateSpy = jest.spyOn(generator, 'generateThumbnails');
+      const generateSpy = jest.spyOn(generator, 'generateThumbnails');;
         .mockResolvedValue({
           original: 'test.mp4',
           sizes: { medium: 'data:image/jpeg;base64,test' },
           aspectRatio: 16/9,
-          duration: 60;
-        });
+          duration: 60
+  });
 
       const results = await generator.generateBatchThumbnails(videoSources);
       
@@ -301,13 +301,13 @@ describe('VideoThumbnailGenerator', () => {
       
       const videoSources = ['video1.mp4', 'video2.mp4'];
       
-      const generateSpy = jest.spyOn(generator, 'generateThumbnails');
+      const generateSpy = jest.spyOn(generator, 'generateThumbnails');;
         .mockResolvedValueOnce({
           original: 'video1.mp4',
           sizes: { medium: 'data:image/jpeg;base64,test' },
           aspectRatio: 16/9,
-          duration: 60;
-        })
+          duration: 60
+  })
         .mockRejectedValueOnce(new Error('Failed to load video'));
 
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
@@ -323,7 +323,7 @@ describe('VideoThumbnailGenerator', () => {
       generateSpy.mockRestore();
       consoleSpy.mockRestore();
       jest.useFakeTimers(); // Restore fake timers
-    });
+    })
   });
 
   describe('cache operations', () => {
@@ -332,15 +332,15 @@ describe('VideoThumbnailGenerator', () => {
         original: 'video1.mp4',
         sizes: { medium: 'data:image/jpeg;base64,test1' },
         aspectRatio: 16/9,
-        duration: 60;
-      },
+        duration: 60
+  },
       {
         original: 'video2.mp4', 
         sizes: { medium: 'data:image/jpeg;base64,test2' },
         placeholder: 'data:image/jpeg;base64,placeholder',
         aspectRatio: 16/9,
-        duration: 120;
-      }
+        duration: 120
+  }
     ];
 
     describe('saveThumbnailsToCache', () => {
@@ -350,13 +350,13 @@ describe('VideoThumbnailGenerator', () => {
         expect(localStorage.setItem).toHaveBeenCalledWith(
           'video-thumbnails-cache',
           expect.stringContaining('"videoSrc":"video1.mp4"')
-        );
-      });
+        )
+  });
 
       it('should handle localStorage errors', () => {
         (localStorage.setItem as jest.Mock).mockImplementationOnce(() => {
-          throw new Error('Storage quota exceeded');
-        });
+          throw new Error('Storage quota exceeded')
+  });
         
         const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
         
@@ -367,9 +367,9 @@ describe('VideoThumbnailGenerator', () => {
           expect.any(Error)
         );
         
-        consoleSpy.mockRestore();
-      });
-    });
+        consoleSpy.mockRestore()
+  })
+  });
 
     describe('loadThumbnailsFromCache', () => {
       it('should load valid cached thumbnails', () => {
@@ -380,8 +380,8 @@ describe('VideoThumbnailGenerator', () => {
             sizes: thumb.sizes,
             placeholder: thumb.placeholder,
             aspectRatio: thumb.aspectRatio,
-            duration: thumb.duration;
-          }))
+            duration: thumb.duration
+  }))
         };
         
         (localStorage.getItem as jest.Mock).mockReturnValueOnce(JSON.stringify(cacheData));
@@ -389,22 +389,22 @@ describe('VideoThumbnailGenerator', () => {
         const result = generator.loadThumbnailsFromCache();
         
         expect(result).toHaveLength(2);
-        expect(result[0].original).toBe('video1.mp4');
-      });
+        expect(result[0].original).toBe('video1.mp4')
+  });
 
       it('should return empty array for expired cache', () => {
         const expiredCacheData = {
           timestamp: Date.now() - 25 * 60 * 60 * 1000, // 25 hours ago
-          thumbnails: [];
-        };
+          thumbnails: []
+  };
         
         (localStorage.getItem as jest.Mock).mockReturnValueOnce(JSON.stringify(expiredCacheData));
         
         const result = generator.loadThumbnailsFromCache();
         
         expect(result).toHaveLength(0);
-        expect(localStorage.removeItem).toHaveBeenCalledWith('video-thumbnails-cache');
-      });
+        expect(localStorage.removeItem).toHaveBeenCalledWith('video-thumbnails-cache')
+  });
 
       it('should handle malformed cache data', () => {
         (localStorage.getItem as jest.Mock).mockReturnValueOnce('invalid json');
@@ -416,25 +416,25 @@ describe('VideoThumbnailGenerator', () => {
         expect(result).toHaveLength(0);
         expect(consoleSpy).toHaveBeenCalled();
         
-        consoleSpy.mockRestore();
-      });
+        consoleSpy.mockRestore()
+  });
 
       it('should return empty array when no cache exists', () => {
         (localStorage.getItem as jest.Mock).mockReturnValueOnce(null);
         
         const result = generator.loadThumbnailsFromCache();
         
-        expect(result).toHaveLength(0);
-      });
-    });
+        expect(result).toHaveLength(0)
+  })
+  });
 
     describe('clearCache', () => {
       it('should remove cache from localStorage', () => {
         generator.clearCache();
         
-        expect(localStorage.removeItem).toHaveBeenCalledWith('video-thumbnails-cache');
-      });
-    });
+        expect(localStorage.removeItem).toHaveBeenCalledWith('video-thumbnails-cache')
+  })
+  })
   });
 
   describe('getThumbnailUrl', () => {
@@ -447,13 +447,13 @@ describe('VideoThumbnailGenerator', () => {
         xl: 'data:image/jpeg;base64,xl'
       },
       aspectRatio: 16/9,
-      duration: 60;
-    };
+      duration: 60
+  };
 
     it('should return URL for preferred size when available', () => {
       const result = generator.getThumbnailUrl(mockThumbnail, 'large');
-      expect(result).toBe('data:image/jpeg;base64,large');
-    });
+      expect(result).toBe('data:image/jpeg;base64,large')
+  });
 
     it('should fallback to medium when preferred size unavailable', () => {
       const thumbnailWithoutLarge = {
@@ -462,8 +462,8 @@ describe('VideoThumbnailGenerator', () => {
       };
       
       const result = generator.getThumbnailUrl(thumbnailWithoutLarge, 'large');
-      expect(result).toBe('data:image/jpeg;base64,medium');
-    });
+      expect(result).toBe('data:image/jpeg;base64,medium')
+  });
 
     it('should fallback to small when medium unavailable', () => {
       const thumbnailWithOnlySmall = {
@@ -472,8 +472,8 @@ describe('VideoThumbnailGenerator', () => {
       };
       
       const result = generator.getThumbnailUrl(thumbnailWithOnlySmall, 'xl');
-      expect(result).toBe('data:image/jpeg;base64,small');
-    });
+      expect(result).toBe('data:image/jpeg;base64,small')
+  });
 
     it('should return first available size as last resort', () => {
       const thumbnailWithCustomSize = {
@@ -482,8 +482,8 @@ describe('VideoThumbnailGenerator', () => {
       };
       
       const result = generator.getThumbnailUrl(thumbnailWithCustomSize, 'large');
-      expect(result).toBe('data:image/jpeg;base64,custom');
-    });
+      expect(result).toBe('data:image/jpeg;base64,custom')
+  });
 
     it('should return empty string when no sizes available', () => {
       const thumbnailWithNoSizes = {
@@ -492,8 +492,8 @@ describe('VideoThumbnailGenerator', () => {
       };
       
       const result = generator.getThumbnailUrl(thumbnailWithNoSizes);
-      expect(result).toBe('');
-    });
+      expect(result).toBe('')
+  })
   });
 
   describe('generateFallbackThumbnail', () => {
@@ -504,16 +504,16 @@ describe('VideoThumbnailGenerator', () => {
       expect(mockCanvas.height).toBe(270);
       expect(mockCanvasContext.fillRect).toHaveBeenCalledWith(0, 0, 480, 270);
       expect(mockCanvasContext.fillText).toHaveBeenCalledWith('Video', 240, 135);
-      expect(result).toBe('data:image/jpeg;base64,mockImageData');
-    });
+      expect(result).toBe('data:image/jpeg;base64,mockImageData')
+  });
 
     it('should generate fallback thumbnail with custom parameters', () => {
       const result = generator.generateFallbackThumbnail(320, 180, 'Custom Text');
       
       expect(mockCanvas.width).toBe(320);
       expect(mockCanvas.height).toBe(180);
-      expect(mockCanvasContext.fillText).toHaveBeenCalledWith('Custom Text', 160, 90);
-    });
+      expect(mockCanvasContext.fillText).toHaveBeenCalledWith('Custom Text', 160, 90)
+  });
 
     it('should draw play icon overlay', () => {
       generator.generateFallbackThumbnail();
@@ -521,15 +521,15 @@ describe('VideoThumbnailGenerator', () => {
       expect(mockCanvasContext.beginPath).toHaveBeenCalled();
       expect(mockCanvasContext.moveTo).toHaveBeenCalled();
       expect(mockCanvasContext.lineTo).toHaveBeenCalled();
-      expect(mockCanvasContext.fill).toHaveBeenCalled();
-    });
+      expect(mockCanvasContext.fill).toHaveBeenCalled()
+  })
   });
 
   describe('singleton instance', () => {
     it('should export a singleton instance', () => {
       expect(videoThumbnailGenerator).toBeInstanceOf(VideoThumbnailGenerator);
-      expect(videoThumbnailGenerator).toBe(videoThumbnailGenerator);
-    });
+      expect(videoThumbnailGenerator).toBe(videoThumbnailGenerator)
+  })
   });
 
   describe('edge cases and error handling', () => {
@@ -538,32 +538,32 @@ describe('VideoThumbnailGenerator', () => {
         width: 0,
         height: 0,
         getContext: jest.fn(() => null),
-        toDataURL: jest.fn();
-      };
+        toDataURL: jest.fn()
+  };
       
       const originalCreateElement = document.createElement;
       (document.createElement as jest.Mock).mockImplementationOnce((tagName: string) => {
         if (tagName === 'canvas') {
-          return mockCanvasWithoutContext;
-        }
-        return originalCreateElement.call(document, tagName);
-      });
+          return mockCanvasWithoutContext
+  }
+        return originalCreateElement.call(document, tagName)
+  });
       
-      expect(() => new VideoThumbnailGenerator()).toThrow('Failed to create canvas 2D context');
-    });
+      expect(() => new VideoThumbnailGenerator()).toThrow('Failed to create canvas 2D context')
+  });
 
     it('should handle very small thumbnail dimensions', () => {
       const result = generator.generateFallbackThumbnail(1, 1, 'X');
       
       expect(mockCanvas.width).toBe(1);
-      expect(mockCanvas.height).toBe(1);
-    });
+      expect(mockCanvas.height).toBe(1)
+  });
 
     it('should handle empty text in fallback thumbnail', () => {
       generator.generateFallbackThumbnail(100, 100, '');
       
-      expect(mockCanvasContext.fillText).toHaveBeenCalledWith('', 50, 50);
-    });
+      expect(mockCanvasContext.fillText).toHaveBeenCalledWith('', 50, 50)
+  });
 
     it('should handle video with zero duration', async () => {
       const videoPromise = generator.generateThumbnails('test.mp4', { frameTime: 30 });
@@ -573,15 +573,15 @@ describe('VideoThumbnailGenerator', () => {
       createdVideo.onloadedmetadata();
       
       setTimeout(() => {
-        createdVideo.onseeked();
-      }, 0);
+        createdVideo.onseeked()
+  }, 0);
       
       jest.runOnlyPendingTimers();
       
       await videoPromise;
       
-      expect(createdVideo.currentTime).toBe(0);
-    });
+      expect(createdVideo.currentTime).toBe(0)
+  })
   });
 
   describe('performance considerations', () => {
@@ -594,8 +594,8 @@ describe('VideoThumbnailGenerator', () => {
         original: 'test.mp4',
         sizes: { medium: 'data:image/jpeg;base64,test' },
         aspectRatio: 16/9,
-        duration: 60;
-      });
+        duration: 60
+  });
       
       const promise = generator.generateBatchThumbnails(manyVideos);
       
@@ -610,14 +610,14 @@ describe('VideoThumbnailGenerator', () => {
         original: `video${i}.mp4`,
         sizes: { medium: `data:image/jpeg;base64,test${i}` },
         aspectRatio: 16/9,
-        duration: 60 + i;
-      }));
+        duration: 60 + i
+  }));
       
       const startTime = performance.now();
       generator.saveThumbnailsToCache(largeThumbnailSet);
       const endTime = performance.now();
       
       expect(endTime - startTime).toBeLessThan(100); // Should complete quickly
-    });
+    })
+  })
   });
-});

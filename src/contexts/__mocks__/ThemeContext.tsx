@@ -13,26 +13,26 @@ interface AppTheme {
     accentPrimaryText: string;
     accentDanger: string;
     accentSuccess: string;
-    borderColor: string;
+    borderColor: string
   };
   spacing: {
     xs: string;
     sm: string;
     md: string;
     lg: string;
-    xl: string;
+    xl: string
   };
   radius: {
     sm: string;
     md: string;
-    lg: string;
+    lg: string
   }
 
 interface ThemeContextType {
   theme: Theme;
   themeConfig: AppTheme;
-  toggleTheme: () => void;
-}
+  toggleTheme: () => void
+  }
 
 const mockThemeConfig: AppTheme = {
   colors: {
@@ -53,12 +53,12 @@ const mockThemeConfig: AppTheme = {
     sm: '0.5rem', 
     md: '1rem', 
     lg: '1.5rem', 
-    xl: '2.5rem' ;
+    xl: '2.5rem'
   },
   radius: { 
     sm: '4px', 
     md: '8px', 
-    lg: '12px' ;
+    lg: '12px'
   },
 };
 
@@ -81,13 +81,13 @@ export const ThemeProvider: React.FC<{ children: ReactNode; value?: Partial<Them
     <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
-  );
-};
+  )
+  };
 
 export const useTheme = (): ThemeContextType => {
   const context = useContext(ThemeContext);
   if (!context) {
-    return defaultThemeContext;
+    return defaultThemeContext
   }
-  return context;
-};
+  return context
+  };

@@ -18,17 +18,17 @@ interface PerformanceReport {
     effectiveType: string;
     downlink: number;
     rtt: number;
-    saveData: boolean;
+    saveData: boolean
   };
   errors: Array<{
     message: string;
     stack?: string;
-    timestamp: number;
+    timestamp: number
   }>;
   memory?: {
     usedJSHeapSize: number;
     totalJSHeapSize: number;
-    jsHeapSizeLimit: number;
+    jsHeapSizeLimit: number
   };
 }
 
@@ -44,20 +44,20 @@ class PerformanceMonitoringService {
       sessionId: this.sessionId,
       timestamp: Date.now(),
       webVitals: {},
-      errors: [];
-    };
-    this.initialize();
+      errors: []
+  };
+    this.initialize()
   }
 
   static getInstance(): PerformanceMonitoringService {
     if (!PerformanceMonitoringService.instance) {
-      PerformanceMonitoringService.instance = new PerformanceMonitoringService();
-    }
-    return PerformanceMonitoringService.instance;
+      PerformanceMonitoringService.instance = new PerformanceMonitoringService()
+  }
+    return PerformanceMonitoringService.instance
   }
 
   private generateSessionId(): string {
-    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
   }
 
   private initialize(): void {
@@ -65,12 +65,12 @@ class PerformanceMonitoringService {
     this.monitorWebVitals();
     this.monitorErrors();
     this.monitorMemory();
-    this.monitorConnection();
+    this.monitorConnection()
   }
 
   setUserId(userId: string): void {
     this.userId = userId;
-    this.report.userId = userId;
+    this.report.userId = userId
   }
 
   private monitorWebVitals(): void {
@@ -84,13 +84,13 @@ class PerformanceMonitoringService {
           if (lastEntry) {
             this.report.webVitals.LCP = {
               value: lastEntry.startTime,
-              rating: lastEntry.startTime < 2500 ? 'good' : lastEntry.startTime < 4000 ? 'needs-improvement' : 'poor';
-            };
+              rating: lastEntry.startTime < 2500 ? 'good' : lastEntry.startTime < 4000 ? 'needs-improvement' : 'poor'
+  };
           }
-        }).observe({ type: 'largest-contentful-paint', buffered: true });
-      } catch (error) {
-        console.warn('Web Vitals monitoring not supported:', error);
-      }
+        }).observe({ type: 'largest-contentful-paint', buffered: true })
+  } catch (error) {
+        console.warn('Web Vitals monitoring not supported:', error)
+  }
     }
   }
 
@@ -100,18 +100,18 @@ class PerformanceMonitoringService {
         this.report.errors.push({
           message: event.message,
           stack: event.error?.stack,
-          timestamp: Date.now();
-        });
-      });
+          timestamp: Date.now()
+  })
+  });
 
       window.addEventListener('unhandledrejection', (event) => {
         this.report.errors.push({
           message: event.reason?.message || 'Unhandled promise rejection',
           stack: event.reason?.stack,
-          timestamp: Date.now();
-        });
-      });
-    }
+          timestamp: Date.now()
+  })
+  })
+  }
   }
 
   private monitorMemory(): void {
@@ -122,8 +122,8 @@ class PerformanceMonitoringService {
           this.report.memory = {
             usedJSHeapSize: performance.memory.usedJSHeapSize,
             totalJSHeapSize: performance.memory.totalJSHeapSize,
-            jsHeapSizeLimit: performance.memory.jsHeapSizeLimit;
-          };
+            jsHeapSizeLimit: performance.memory.jsHeapSizeLimit
+  };
         }
       }, 30000); // Every 30 seconds
     }
@@ -137,18 +137,18 @@ class PerformanceMonitoringService {
           effectiveType: connection.effectiveType,
           downlink: connection.downlink,
           rtt: connection.rtt,
-          saveData: connection.saveData;
-        };
+          saveData: connection.saveData
+  };
 
         connection.addEventListener('change', () => {
           this.report.connection = {
             effectiveType: connection.effectiveType,
             downlink: connection.downlink,
             rtt: connection.rtt,
-            saveData: connection.saveData;
-          };
-        });
-      }
+            saveData: connection.saveData
+  };
+        })
+  }
     }
   }
 
@@ -165,23 +165,23 @@ class PerformanceMonitoringService {
     
     if (webVitals.LCP?.rating === 'poor') {
       score -= 20;
-      recommendations.push('Optimize Largest Contentful Paint');
-    }
+      recommendations.push('Optimize Largest Contentful Paint')
+  }
     
     if (webVitals.FID?.rating === 'poor') {
       score -= 20;
-      recommendations.push('Optimize First Input Delay');
-    }
+      recommendations.push('Optimize First Input Delay')
+  }
     
     if (webVitals.CLS?.rating === 'poor') {
       score -= 20;
-      recommendations.push('Fix Cumulative Layout Shift');
-    }
+      recommendations.push('Fix Cumulative Layout Shift')
+  }
 
     if (this.report.errors.length > 0) {
       score -= Math.min(this.report.errors.length * 5, 30);
-      recommendations.push('Fix JavaScript errors');
-    }
+      recommendations.push('Fix JavaScript errors')
+  }
 
     return { score: Math.max(score, 0), recommendations };
   }
@@ -190,10 +190,10 @@ class PerformanceMonitoringService {
     try {
       // In a real implementation, send to analytics service
       console.log('Performance Report:', this.getReport());
-      console.log('Performance Score:', this.getPerformanceScore());
-    } catch (error) {
-      console.error('Failed to send performance report:', error);
-    }
+      console.log('Performance Score:', this.getPerformanceScore())
+  } catch (error) {
+      console.error('Failed to send performance report:', error)
+  }
   }
 
   reset(): void {
@@ -202,8 +202,8 @@ class PerformanceMonitoringService {
       userId: this.userId,
       timestamp: Date.now(),
       webVitals: {},
-      errors: [];
-    };
+      errors: []
+  };
   }
 }
 

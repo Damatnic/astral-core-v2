@@ -22,7 +22,7 @@ describe('ScreenReaderService', () => {
     appendChildSpy = jest.spyOn(document.body, 'appendChild');
     
     // Mock getElementById to return null so new elements are created
-    document.getElementById = jest.fn().mockReturnValue(null);
+    document.getElementById = jest.fn().mockReturnValue(null)
   });
 
   afterEach(() => {
@@ -33,7 +33,7 @@ describe('ScreenReaderService', () => {
     
     // Clean up any created elements;
     const liveRegions = document.querySelectorAll('[aria-live]');
-    liveRegions.forEach(region => region.remove());
+    liveRegions.forEach(region => region.remove())
   });
 
   describe('initialization', () => {
@@ -47,53 +47,53 @@ describe('ScreenReaderService', () => {
       
       // Check that elements were appended to body
       expect(appendChildSpy).toHaveBeenCalled();
-      expect(appendChildSpy).toHaveBeenCalledTimes(5);
-    });
+      expect(appendChildSpy).toHaveBeenCalledTimes(5)
+  });
 
     it.skip('should complete initialization', async () => {
       await service.initialize();
       // Initialization should complete without errors
-      expect(true).toBe(true);
-    });
+      expect(true).toBe(true)
+  })
   });
 
   describe('announcements', () => {
     beforeEach(async () => {
-      await service.initialize();
-    });
+      await service.initialize()
+  });
 
     it.skip('should announce crisis alerts with high priority', () => {
       service.announce({
         message: 'Crisis intervention available',
         priority: 'emergency',
-        type: 'crisis';
-      });
+        type: 'crisis'
+  });
 
       // Announcement should be made
-      expect(true).toBe(true);
-    });
+      expect(true).toBe(true)
+  });
 
     it.skip('should announce status updates', () => {
       service.announce({
         message: 'Connection established',
         priority: 'low',
-        type: 'status';
-      });
+        type: 'status'
+  });
 
       // Announcement should be made
-      expect(true).toBe(true);
-    });
+      expect(true).toBe(true)
+  });
 
     it.skip('should handle navigation announcements', () => {
       service.announce({
         message: 'Navigated to Crisis Resources page',
         priority: 'medium',
-        type: 'navigation';
-      });
+        type: 'navigation'
+  });
 
       const history = service.getAnnouncementHistory();
-      expect(history.length).toBeGreaterThanOrEqual(0);
-    });
+      expect(history.length).toBeGreaterThanOrEqual(0)
+  })
   });
 
   describe('announcement history', () => {
@@ -101,38 +101,38 @@ describe('ScreenReaderService', () => {
       service.announce({
         message: 'Test announcement',
         priority: 'low',
-        type: 'status';
-      });
+        type: 'status'
+  });
 
       const history = service.getAnnouncementHistory();
-      expect(Array.isArray(history)).toBe(true);
-    });
+      expect(Array.isArray(history)).toBe(true)
+  });
 
     it.skip('should clear announcement history', () => {
       service.clearAnnouncementHistory();
       const history = service.getAnnouncementHistory();
-      expect(history.length).toBe(0);
-    });
+      expect(history.length).toBe(0)
+  })
   });
 
   describe('crisis context', () => {
     it.skip('should set crisis context', () => {
       service.setCrisisContext({
         isActive: true,
-        severity: 'high';
-      });
+        severity: 'high'
+  });
 
       const context = service.getCrisisContext();
       expect(context.isActive).toBe(true);
-      expect(context.severity).toBe('high');
-    });
+      expect(context.severity).toBe('high')
+  });
 
     it.skip('should get crisis context', () => {
       const context = service.getCrisisContext();
       expect(context).toBeDefined();
       expect(context).toHaveProperty('isActive');
-      expect(context).toHaveProperty('severity');
-    });
+      expect(context).toHaveProperty('severity')
+  })
   });
 
   describe('cleanup', () => {
@@ -140,20 +140,20 @@ describe('ScreenReaderService', () => {
       service.destroy();
       
       // Service should be destroyed
-      expect(true).toBe(true);
-    });
+      expect(true).toBe(true)
+  });
 
     it.skip('should handle multiple announcements', () => {
       for (let i = 0; i < 5; i++) {
         service.announce({
           message: `Announcement ${i}`,
           priority: 'low',
-          type: 'status';
-        });
-      }
+          type: 'status'
+  })
+  }
       
       const history = service.getAnnouncementHistory();
-      expect(history.length).toBeGreaterThanOrEqual(0);
-    });
+      expect(history.length).toBeGreaterThanOrEqual(0)
+  })
+  })
   });
-});

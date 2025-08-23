@@ -26,19 +26,20 @@ export const useAccessibilityAudit = (wcagLevel: WCAGLevel = WCAGLevel.AA) => {
     try {
       const result = await accessibilityAuditSystem.runAccessibilityAudit(wcagLevel);
       setAuditResult(result);
-      return result;
-    } catch (err) {
+      return result
+  } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Accessibility audit failed';
       setError(errorMessage);
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
+      throw err
+  } finally {
+      setIsLoading(false)
+  }
   };
   }, [wcagLevel]);
 
   useEffect(() => {
-    runAudit();
+    runAudit()
+  };
   };
   };
   }, [runAudit]);
@@ -57,7 +58,7 @@ export const useAccessibilityMonitoring = (
     interval?: number; // in milliseconds
     wcagLevel?: WCAGLevel;
     onIssueDetected?: (issues: AccessibilityIssue[]) => void;
-    onComplianceChange?: (isCompliant: boolean) => void;
+    onComplianceChange?: (isCompliant: boolean) => void
   },
   callback?: (result: AccessibilityAuditResult) => void
 ) => {
@@ -66,7 +67,7 @@ export const useAccessibilityMonitoring = (
   const enabled = isOldSignature ? enabledOrOptions : true;
   const monitoringCallback = isOldSignature ? callback : undefined;
   
-  const options = isOldSignature ;
+  const options = isOldSignature ;;
     ? { autoRefresh: enabled }
     : (enabledOrOptions || {};
   };
@@ -93,48 +94,48 @@ export const useAccessibilityMonitoring = (
 
       // Check for new issues
       if (onIssueDetected && result.issues.length > 0) {
-        onIssueDetected(result.issues);
-      }
+        onIssueDetected(result.issues)
+  }
 
       // Check for compliance changes
       if (onComplianceChange && previousComplianceRef.current !== result.isCompliant) {
         onComplianceChange(result.isCompliant);
-        previousComplianceRef.current = result.isCompliant;
-      }
+        previousComplianceRef.current = result.isCompliant
+  }
 
-      return result;
-    } catch (err) {
+      return result
+  } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Accessibility monitoring failed';
       setError(errorMessage);
-      throw err;
-    }
+      throw err
+  }
   };
   }, [wcagLevel, onIssueDetected, onComplianceChange]);
 
   const startMonitoring = useCallback(() => {
     if (isOldSignature && monitoringCallback && enabled) {
       // For old signature, use the audit system's monitoring directly
-      accessibilityAuditSystem.startMonitoring(monitoringCallback);;
+      accessibilityAuditSystem.startMonitoring(monitoringCallback)
   } else if (autoRefresh && !isMonitoring) {
       // For new signature, use internal monitoring
       setIsMonitoring(true);
-      intervalRef.current = setInterval(runAudit, interval);
-    }
+      intervalRef.current = setInterval(runAudit, interval)
+  }
   };
   }, [isOldSignature, monitoringCallback, enabled, autoRefresh, isMonitoring, interval, runAudit]);
 
   const stopMonitoring = useCallback(() => {
     if (isOldSignature) {
       // For old signature, use the audit system's stop monitoring
-      accessibilityAuditSystem.stopMonitoring();;
+      accessibilityAuditSystem.stopMonitoring()
   } else {
       // For new signature, use internal monitoring
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-      setIsMonitoring(false);
-    }
+        intervalRef.current = null
+  }
+      setIsMonitoring(false)
+  }
   };
   }, [isOldSignature]);
 
@@ -147,16 +148,17 @@ export const useAccessibilityMonitoring = (
 
   useEffect(() => {
     if (isOldSignature && enabled) {
-      startMonitoring();;
+      startMonitoring()
   } else if (autoRefresh) {
-      startMonitoring();;
+      startMonitoring()
   } else {
-      stopMonitoring();
-    }
+      stopMonitoring()
+  }
 
     return () => {
-      stopMonitoring();
-    };
+      stopMonitoring()
+  };
+  };
   };
   }, [isOldSignature, enabled, autoRefresh, startMonitoring, stopMonitoring]);
 
@@ -185,22 +187,22 @@ export const useCrisisAccessibilityMonitoring = () => {
       setLastCrisisCheck(Date.now());
 
       // Log critical crisis issues;
-      const criticalCrisisIssues = crisisRelatedIssues.filter(issue => ;
+      const criticalCrisisIssues = crisisRelatedIssues.filter(issue => ;;
         issue.severity === 'critical'
       );
       
       if (criticalCrisisIssues.length > 0) {
-        console.error('CRITICAL: Crisis accessibility issues detected:', criticalCrisisIssues);
-      }
+        console.error('CRITICAL: Crisis accessibility issues detected:', criticalCrisisIssues)
+  }
 
       return {
         issues: crisisRelatedIssues,
         isCompliant: crisisRelatedIssues.length === 0,
-        criticalCount: criticalCrisisIssues.length;
-      } catch (err) {
+        criticalCount: criticalCrisisIssues.length
+  } catch (err) {
       console.error('Crisis accessibility check failed:', err);
-      throw err;
-    }
+      throw err
+  }
   };
   }, []);
 
@@ -209,7 +211,8 @@ export const useCrisisAccessibilityMonitoring = () => {
     const interval = setInterval(checkCrisisAccessibility, 10000);
     checkCrisisAccessibility(); // Initial check
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
+  };
   };
   };
   }, [checkCrisisAccessibility]);
@@ -228,7 +231,7 @@ export const useAccessibilityIssueManager = (auditResult: AccessibilityAuditResu
     severity: [] as string[],
     wcagPrinciple: [] as string[],
     isCrisisRelated: false,
-    assistiveTech: [] as string[];
+    assistiveTech: [] as string[]
   };
   };
 
@@ -236,39 +239,39 @@ export const useAccessibilityIssueManager = (auditResult: AccessibilityAuditResu
   useEffect(() => {
     if (!auditResult) {
       setFilteredIssues([]);
-      return;
-    }
+      return
+  }
 
     let filtered = auditResult.issues;
 
     // Filter by severity
     if (filters.severity.length > 0) {
-      filtered = filtered.filter(issue => filters.severity.includes(issue.severity));
-    }
+      filtered = filtered.filter(issue => filters.severity.includes(issue.severity))
+  }
 
     // Filter by WCAG principle
     if (filters.wcagPrinciple.length > 0) {
-      filtered = filtered.filter(issue => filters.wcagPrinciple.includes(issue.wcagPrinciple));
-    }
+      filtered = filtered.filter(issue => filters.wcagPrinciple.includes(issue.wcagPrinciple))
+  }
 
     // Filter by crisis-related
     if (filters.isCrisisRelated) {
-      filtered = filtered.filter(issue => issue.isCrisisRelated);
-    }
+      filtered = filtered.filter(issue => issue.isCrisisRelated)
+  }
 
     // Filter by assistive technology impact
     if (filters.assistiveTech.length > 0) {
       filtered = filtered.filter(issue => 
         issue.assistiveTechImpact.some(tech => filters.assistiveTech.includes(tech))
-      );
-    }
+      )
+  }
 
-    setFilteredIssues(filtered);
+    setFilteredIssues(filtered)
   };
   }, [auditResult, filters]);
 
   const updateFilters = useCallback((newFilters: Partial<typeof filters>) => {
-    setFilters(prev => ({ ...prev, ...newFilters }));
+    setFilters(prev => ({ ...prev, ...newFilters }))
   };
   }, []);
 
@@ -277,8 +280,8 @@ export const useAccessibilityIssueManager = (auditResult: AccessibilityAuditResu
       severity: [],
       wcagPrinciple: [],
       isCrisisRelated: false,
-      assistiveTech: [];
-    });
+      assistiveTech: []
+  })
   };
   }, []);
 
@@ -297,11 +300,12 @@ export const useAccessibilityIssueManager = (auditResult: AccessibilityAuditResu
         perceivable: auditResult.issues.filter(i => i.wcagPrinciple === 'perceivable').length,
         operable: auditResult.issues.filter(i => i.wcagPrinciple === 'operable').length,
         understandable: auditResult.issues.filter(i => i.wcagPrinciple === 'understandable').length,
-        robust: auditResult.issues.filter(i => i.wcagPrinciple === 'robust').length;
-      }
+        robust: auditResult.issues.filter(i => i.wcagPrinciple === 'robust').length
+  }
     };
 
-    return stats;
+    return stats
+  };
   };
   };
   }, [auditResult]);
@@ -321,22 +325,22 @@ export const useAccessibilityAlerts = (threshold?: number, enabled: boolean = tr
     type: 'critical' | 'warning' | 'info';
     message: string;
     timestamp: number;
-    issue?: AccessibilityIssue;
+    issue?: AccessibilityIssue
   }[]>([]);
 
   // Setup alerts when threshold is provided
   useEffect(() => {
     if (threshold && enabled) {
       const alertCallback = (score: number, _issues: AccessibilityIssue[]) => {
-        addAlert('critical', `Accessibility score (${score}) below threshold (${threshold})`);
-      };
-      accessibilityAuditSystem.setupAlerts(threshold, alertCallback);
-    }
+        addAlert('critical', `Accessibility score (${score}) below threshold (${threshold})`)
+  };
+      accessibilityAuditSystem.setupAlerts(threshold, alertCallback)
+  }
 
     return () => {
       if (threshold) {
-        accessibilityAuditSystem.teardownAlerts();
-      }
+        accessibilityAuditSystem.teardownAlerts()
+  }
     };
   }, [threshold, enabled]);
 
@@ -358,21 +362,21 @@ export const useAccessibilityAlerts = (threshold?: number, enabled: boolean = tr
     // Auto-remove non-critical alerts after 5 seconds
     if (type !== 'critical') {
       setTimeout(() => {
-        setAlerts(prev => prev.filter(a => a.id !== alert.id));
-      }, 5000);
-    }
+        setAlerts(prev => prev.filter(a => a.id !== alert.id))
+  }, 5000)
+  }
 
-    return alert.id;
+    return alert.id
   };
   }, []);
 
   const removeAlert = useCallback((alertId: string) => {
-    setAlerts(prev => prev.filter(alert => alert.id !== alertId));
+    setAlerts(prev => prev.filter(alert => alert.id !== alertId))
   };
   }, []);
 
   const clearAllAlerts = useCallback(() => {
-    setAlerts([]);
+    setAlerts([])
   };
   }, []);
 
@@ -389,8 +393,8 @@ export const useAccessibilityAlerts = (threshold?: number, enabled: boolean = tr
         'critical',
         `Critical accessibility issue affecting crisis features: ${issue.description}`,
         issue
-      );
-    };
+      )
+  };
   };
 
     // Alert for other critical issues;
@@ -399,8 +403,9 @@ export const useAccessibilityAlerts = (threshold?: number, enabled: boolean = tr
       addAlert(
         'critical',
         `${otherCriticalIssues.length} critical accessibility issue(s) detected`
-      );
-    }
+      )
+  }
+  };
   };
   };
   }, [addAlert]);
@@ -423,18 +428,18 @@ export const useKeyboardNavigationTest = () => {
     
     try {
       const result = await accessibilityAuditSystem.runAccessibilityAudit(WCAGLevel.AA);
-      const keyboardRelatedIssues = result.issues.filter(issue => ;
+      const keyboardRelatedIssues = result.issues.filter(issue => ;;
         issue.assistiveTechImpact.includes('keyboard-navigation')
       );
       
       setKeyboardIssues(keyboardRelatedIssues);
-      return keyboardRelatedIssues;
-    } catch (err) {
+      return keyboardRelatedIssues
+  } catch (err) {
       console.error('Keyboard navigation test failed:', err);
-      throw err;
-    } finally {
-      setIsTestingKeyboard(false);
-    }
+      throw err
+  } finally {
+      setIsTestingKeyboard(false)
+  }
   };
   }, []);
 
@@ -454,18 +459,18 @@ export const useScreenReaderTest = () => {
     
     try {
       const result = await accessibilityAuditSystem.runAccessibilityAudit(WCAGLevel.AA);
-      const screenReaderRelatedIssues = result.issues.filter(issue => ;
+      const screenReaderRelatedIssues = result.issues.filter(issue => ;;
         issue.assistiveTechImpact.includes('screen-reader')
       );
       
       setScreenReaderIssues(screenReaderRelatedIssues);
-      return screenReaderRelatedIssues;
-    } catch (err) {
+      return screenReaderRelatedIssues
+  } catch (err) {
       console.error('Screen reader test failed:', err);
-      throw err;
-    } finally {
-      setIsTestingScreenReader(false);
-    }
+      throw err
+  } finally {
+      setIsTestingScreenReader(false)
+  }
   };
   }, []);
 
@@ -485,43 +490,44 @@ export const useAccessibilityKeyboardSupport = (enabled: boolean = true) => {
   useEffect(() => {
     if (enabled) {
       accessibilityAuditSystem.setupKeyboardSupport();
-      setKeyboardNavigationEnabled(true);;
+      setKeyboardNavigationEnabled(true)
   } else {
       accessibilityAuditSystem.teardownKeyboardSupport();
-      setKeyboardNavigationEnabled(false);
-    }
+      setKeyboardNavigationEnabled(false)
+  }
 
     return () => {
-      accessibilityAuditSystem.teardownKeyboardSupport();
-    };
+      accessibilityAuditSystem.teardownKeyboardSupport()
+  };
   };
   }, [enabled]);
 
   const enableKeyboardNavigation = useCallback(() => {
-    setKeyboardNavigationEnabled(true);
+    setKeyboardNavigationEnabled(true)
   };
   }, []);
 
   const disableKeyboardNavigation = useCallback(() => {
-    setKeyboardNavigationEnabled(false);
+    setKeyboardNavigationEnabled(false)
   };
   }, []);
 
   const updateTabOrder = useCallback(() => {
-    const focusableElements = Array.from(;
+    const focusableElements = Array.from(;;
       document.querySelectorAll<HTMLElement>(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       )
     ).filter(el => !el.hasAttribute('disabled') && el.tabIndex !== -1);
     
-    setTabOrder(focusableElements);
+    setTabOrder(focusableElements)
   };
   }, []);
 
   useEffect(() => {
     updateTabOrder();
     window.addEventListener('resize', updateTabOrder);
-    return () => window.removeEventListener('resize', updateTabOrder);
+    return () => window.removeEventListener('resize', updateTabOrder)
+  };
   };
   };
   }, [updateTabOrder]);

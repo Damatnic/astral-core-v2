@@ -15,8 +15,8 @@ interface BundleMetrics {
   duplicateModules: string[];
   largestChunks: Array<{ name: string; size: number }>;
   unusedCode: number;
-  memoryImpact: number;
-}
+  memoryImpact: number
+  }
 
 // Chunk loading strategy;
 type ChunkLoadingStrategy = 'eager' | 'lazy' | 'prefetch' | 'preload';
@@ -38,14 +38,14 @@ export class BundleAnalyzer {
     loading: boolean;
     size: number;
     loadTime: number;
-    error?: Error;
+    error?: Error
   }>();
 
   // Analyze bundle performance
   static async analyzeBundlePerformance(): Promise<BundleMetrics> {
     if (process.env.NODE_ENV !== 'development') {
-      return this.metrics;
-    }
+      return this.metrics
+  }
 
     const startTime = performance.now();
     const initialMemory = this.getMemoryUsage();
@@ -70,11 +70,11 @@ export class BundleAnalyzer {
       };
 
       this.logAnalysisResults();
-      return this.metrics;
-    } catch (error) {
+      return this.metrics
+  } catch (error) {
       console.error('Bundle analysis failed:', error);
-      return this.metrics;
-    }
+      return this.metrics
+  }
   }
 
   // Analyze chunk loading performance
@@ -96,16 +96,16 @@ export class BundleAnalyzer {
           loading: false,
           size,
           loadTime: 0,
-        });
-      } catch (error) {
-        console.warn(`Failed to analyze chunk ${chunk}:`, error);
-      }
+        })
+  } catch (error) {
+        console.warn(`Failed to analyze chunk ${chunk}:`, error)
+  }
     }
 
     this.metrics.totalSize = totalSize;
     this.metrics.largestChunks = chunkSizes
       .sort((a, b) => b.size - a.size)
-      .slice(0, 5);
+      .slice(0, 5)
   }
 
   // Get loaded chunks from webpack
@@ -115,8 +115,8 @@ export class BundleAnalyzer {
       const windowWithWebpack = window as any & { __webpack_require__?: { cache?: Record<string, any> } };
       if (typeof windowWithWebpack.__webpack_require__ !== 'undefined') {
         const webpackChunks = windowWithWebpack.__webpack_require__.cache || {};
-        return Object.keys(webpackChunks);
-      }
+        return Object.keys(webpackChunks)
+  }
     } catch {
       // Continue to fallback
     }
@@ -125,7 +125,7 @@ export class BundleAnalyzer {
     const scripts = Array.from(document.scripts);
     return scripts
       .filter(script => script.src.includes('chunk') || script.src.includes('bundle'))
-      .map(script => script.src.split('/').pop() || 'unknown');
+      .map(script => script.src.split('/').pop() || 'unknown')
   }
 
   // Estimate chunk size
@@ -134,24 +134,24 @@ export class BundleAnalyzer {
       // Try to fetch chunk headers to get size;
       const response = await fetch(chunkName, { method: 'HEAD' });
       const contentLength = response.headers.get('content-length');
-      return contentLength ? parseInt(contentLength, 10) : 0;
-    } catch {
+      return contentLength ? parseInt(contentLength, 10) : 0
+  } catch {
       // Fallback to approximate size estimation
-      return this.estimateChunkSize(chunkName);
-    }
+      return this.estimateChunkSize(chunkName)
+  }
   }
 
   // Estimate chunk size based on script content
   private static estimateChunkSize(chunkName: string): number {
-    const script = Array.from(document.scripts).find(s => ;
+    const script = Array.from(document.scripts).find(s => ;;
       s.src.includes(chunkName) || s.src.endsWith(chunkName)
     );
     
     if (script && script.textContent) {
-      return new Blob([script.textContent]).size;
-    }
+      return new Blob([script.textContent]).size
+  }
     
-    return 0;
+    return 0
   }
 
   // Detect duplicate modules (simplified)
@@ -161,13 +161,13 @@ export class BundleAnalyzer {
 
     // Analyze global objects that might indicate duplicates;
     const globalKeys = Object.keys(window);
-    const potentialDuplicates = globalKeys.filter(key => ;
+    const potentialDuplicates = globalKeys.filter(key => ;;
       key.includes('react') || 
       key.includes('lodash') || 
       key.includes('moment')
     );
 
-    this.metrics.duplicateModules = potentialDuplicates;
+    this.metrics.duplicateModules = potentialDuplicates
   }
 
   // Calculate unused code percentage
@@ -181,21 +181,21 @@ export class BundleAnalyzer {
       Object.values(coverage).forEach((fileCoverage: any) => {
         const statements = fileCoverage.s || {};
         totalLines += Object.keys(statements).length;
-        coveredLines += Object.values(statements).filter(Boolean).length;
-      });
+        coveredLines += Object.values(statements).filter(Boolean).length
+  });
 
       this.metrics.unusedCode = totalLines > 0 ? 
-        ((totalLines - coveredLines) / totalLines) * 100 : 0;
-    }
+        ((totalLines - coveredLines) / totalLines) * 100 : 0
+  }
   }
 
   // Get current memory usage
   private static getMemoryUsage(): number {
     if ('memory' in performance) {
       const performanceWithMemory = performance as Performance & { memory?: { usedJSHeapSize: number } };
-      return performanceWithMemory.memory!.usedJSHeapSize / 1024 / 1024;
-    }
-    return 0;
+      return performanceWithMemory.memory!.usedJSHeapSize / 1024 / 1024
+  }
+    return 0
   }
 
   // Log analysis results
@@ -210,15 +210,15 @@ export class BundleAnalyzer {
     if (this.metrics.largestChunks.length > 0) {
       console.log('📈 Largest Chunks:');
       this.metrics.largestChunks.forEach(chunk => {
-        console.log(`  - ${chunk.name}: ${(chunk.size / 1024).toFixed(2)} KB`);
-      });
-    }
+        console.log(`  - ${chunk.name}: ${(chunk.size / 1024).toFixed(2)} KB`)
+  })
+  }
     
     if (this.metrics.duplicateModules.length > 0) {
-      console.log('⚠️ Potential Duplicates:', this.metrics.duplicateModules);
-    }
+      console.log('⚠️ Potential Duplicates:', this.metrics.duplicateModules)
+  }
     
-    console.groupEnd();
+    console.groupEnd()
   }
 
   // Get current metrics
@@ -236,7 +236,7 @@ export class BundleAnalyzer {
       unusedCode: 0,
       memoryImpact: 0,
     };
-    this.chunkRegistry.clear();
+    this.chunkRegistry.clear()
   }
 
   // Register chunk loading
@@ -256,8 +256,8 @@ export class BundleAnalyzer {
     if (chunk) {
       chunk.loaded = true;
       chunk.loading = false;
-      chunk.loadTime = endTime - chunk.loadTime;
-    }
+      chunk.loadTime = endTime - chunk.loadTime
+  }
   }
 
   // Mark chunk as failed
@@ -265,13 +265,13 @@ export class BundleAnalyzer {
     const chunk = this.chunkRegistry.get(chunkName);
     if (chunk) {
       chunk.loading = false;
-      chunk.error = error;
-    }
+      chunk.error = error
+  }
   }
 
   // Get chunk status
   static getChunkStatus(chunkName: string) {
-    return this.chunkRegistry.get(chunkName);
+    return this.chunkRegistry.get(chunkName)
   }
 }
 
@@ -284,7 +284,7 @@ export class ChunkLoadingOptimizer {
 
   // Set loading strategy
   static setStrategy(strategy: ChunkLoadingStrategy): void {
-    this.strategy = strategy;
+    this.strategy = strategy
   }
 
   // Optimize chunk loading based on user behavior
@@ -296,12 +296,12 @@ export class ChunkLoadingOptimizer {
     this.prefetchLikelyChunks();
     
     // Clean up unused chunks
-    this.cleanupUnusedChunks();
+    this.cleanupUnusedChunks()
   }
 
   // Preload critical chunks
   private static preloadCriticalChunks(): void {
-    const criticalChunks = [;
+    const criticalChunks = [;;
       'vendors', // Third-party libraries
       'common',  // Shared code
       'runtime', // Webpack runtime
@@ -312,8 +312,8 @@ export class ChunkLoadingOptimizer {
         chunk,
         () => this.loadChunk(chunk),
         'high'
-      );
-    });
+      )
+  })
   }
 
   // Prefetch likely chunks based on current route
@@ -326,8 +326,8 @@ export class ChunkLoadingOptimizer {
         chunk,
         () => this.loadChunk(chunk),
         'medium'
-      );
-    });
+      )
+  })
   }
 
   // Get likely chunks based on navigation patterns
@@ -340,7 +340,7 @@ export class ChunkLoadingOptimizer {
       '/admin': ['admin-tools', 'user-management'],
     };
 
-    return chunkMap[currentPath] || [];
+    return chunkMap[currentPath] || []
   }
 
   // Load chunk with error handling
@@ -352,8 +352,8 @@ export class ChunkLoadingOptimizer {
     if (this.loadingChunks.size >= this.maxConcurrentLoads) {
       // Queue for later
       this.priorityQueue.push({ chunk: chunkName, priority: 1 });
-      return;
-    }
+      return
+  }
 
     this.loadingChunks.add(chunkName);
     const startTime = performance.now();
@@ -367,15 +367,15 @@ export class ChunkLoadingOptimizer {
       BundleAnalyzer.markChunkLoaded(chunkName, endTime);
       
       if (process.env.NODE_ENV === 'development') {
-        console.log(`✅ Loaded chunk ${chunkName} in ${(endTime - startTime).toFixed(2)}ms`);
-      }
+        console.log(`✅ Loaded chunk ${chunkName} in ${(endTime - startTime).toFixed(2)}ms`)
+  }
     } catch (error) {
       BundleAnalyzer.markChunkFailed(chunkName, error as Error);
-      console.warn(`❌ Failed to load chunk ${chunkName}:`, error);
-    } finally {
+      console.warn(`❌ Failed to load chunk ${chunkName}:`, error)
+  } finally {
       this.loadingChunks.delete(chunkName);
-      this.processQueue();
-    }
+      this.processQueue()
+  }
   }
 
   // Process queued chunks
@@ -388,8 +388,8 @@ export class ChunkLoadingOptimizer {
     const next = this.priorityQueue.shift();
     
     if (next) {
-      this.loadChunk(next.chunk);
-    }
+      this.loadChunk(next.chunk)
+  }
   }
 
   // Clean up unused chunks
@@ -397,8 +397,8 @@ export class ChunkLoadingOptimizer {
     // This would typically involve analyzing which chunks haven't been used
     // and removing them from memory if possible
     if (process.env.NODE_ENV === 'development') {
-      console.log('🧹 Cleaning up unused chunks...');
-    }
+      console.log('🧹 Cleaning up unused chunks...')
+  }
   }
 
   // Get loading statistics
@@ -421,16 +421,16 @@ export class MobileMemoryOptimizer {
     if (this.cleanupInterval) return;
 
     this.cleanupInterval = setInterval(() => {
-      this.checkMemoryUsage();
-    }, 30000); // Check every 30 seconds
+      this.checkMemoryUsage()
+  }, 30000); // Check every 30 seconds
   }
 
   // Stop memory monitoring
   static stopMonitoring(): void {
     if (this.cleanupInterval) {
       clearInterval(this.cleanupInterval);
-      this.cleanupInterval = null;
-    }
+      this.cleanupInterval = null
+  }
   }
 
   // Check memory usage and cleanup if necessary
@@ -438,8 +438,8 @@ export class MobileMemoryOptimizer {
     const memoryUsage = this.getCurrentMemoryUsage();
     
     if (memoryUsage > this.memoryThreshold) {
-      this.performCleanup();
-    }
+      this.performCleanup()
+  }
   }
 
   // Get current memory usage for monitoring
@@ -449,7 +449,7 @@ export class MobileMemoryOptimizer {
       const memory = performanceWithMemory.memory;
       return memory ? memory.usedJSHeapSize / 1024 / 1024 : 0; // Convert to MB
     }
-    return 0;
+    return 0
   }
 
   // Perform memory cleanup
@@ -460,15 +460,15 @@ export class MobileMemoryOptimizer {
     // Force garbage collection if available;
     const windowWithGC = window as any & { gc?: () => void };
     if ('gc' in windowWithGC && windowWithGC.gc) {
-      windowWithGC.gc();
-    }
+      windowWithGC.gc()
+  }
     
     // Clear unused image caches
     MobileMemoryOptimizer.clearImageCaches();
     
     if (process.env.NODE_ENV === 'development') {
-      console.log('🧹 Performed memory cleanup');
-    }
+      console.log('🧹 Performed memory cleanup')
+  }
   }
 
   // Clear image caches
@@ -477,8 +477,8 @@ export class MobileMemoryOptimizer {
     const images = document.querySelectorAll('img[data-cached="true"]');
     images.forEach(img => {
       if (!this.isElementInViewport(img as HTMLElement)) {
-        img.remove();
-      }
+        img.remove()
+  }
     };
   };
   }
@@ -491,7 +491,7 @@ export class MobileMemoryOptimizer {
       rect.left >= 0 &&
       rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
       rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
+    )
   }
 
   // Get memory statistics
@@ -507,7 +507,7 @@ export class MobileMemoryOptimizer {
 export const initializeBundleOptimization = () => {
   // Start memory monitoring on mobile devices
   if (window.innerWidth <= 768) {
-    MobileMemoryOptimizer.startMonitoring();
+    MobileMemoryOptimizer.startMonitoring()
   }
 
   // Optimize chunk loading
@@ -516,8 +516,8 @@ export const initializeBundleOptimization = () => {
   // Analyze bundle performance in development
   if (process.env.NODE_ENV === 'development') {
     setTimeout(() => {
-      BundleAnalyzer.analyzeBundlePerformance();
-    }, 2000);
+      BundleAnalyzer.analyzeBundlePerformance()
+  }, 2000)
   }
 };
 

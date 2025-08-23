@@ -13,12 +13,12 @@ describe('NotificationContext', () => {
     // Mock crypto.randomUUID
     global.crypto = {
       randomUUID: jest.fn(() => `mock-uuid-${++mockUUID}`),
-    } as any;
+    } as any
   });
 
   afterEach(() => {
     jest.runOnlyPendingTimers();
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   describe('NotificationProvider', () => {
@@ -32,8 +32,8 @@ describe('NotificationContext', () => {
               {confirmationModal ? 'Modal shown' : 'No modal'}
             </span>
           </div>
-        );
-      };
+        )
+  };
 
       render(
         <NotificationProvider>
@@ -42,8 +42,8 @@ describe('NotificationContext', () => {
       );
 
       expect(screen.getByTestId('toasts-count')).toHaveTextContent('0');
-      expect(screen.getByTestId('modal-status')).toHaveTextContent('No modal');
-    });
+      expect(screen.getByTestId('modal-status')).toHaveTextContent('No modal')
+  });
 
     it.skip('should add toast notifications', () => {
       const TestComponent = () => {
@@ -61,8 +61,8 @@ describe('NotificationContext', () => {
               ))}
             </div>
           </div>
-        );
-      };
+        )
+  };
 
       render(
         <NotificationProvider>
@@ -74,11 +74,11 @@ describe('NotificationContext', () => {
 
       // Add a toast
       act(() => {
-        screen.getByText('Add Toast').click();
-      });
+        screen.getByText('Add Toast').click()
+  });
 
-      expect(screen.getByTestId('toasts')).toHaveTextContent('Test message - success');
-    });
+      expect(screen.getByTestId('toasts')).toHaveTextContent('Test message - success')
+  });
 
     it.skip('should remove toast notifications', async () => {
       const TestComponent = () => {
@@ -97,8 +97,8 @@ describe('NotificationContext', () => {
               ))}
             </div>
           </div>
-        );
-      };
+        )
+  };
 
       render(
         <NotificationProvider>
@@ -108,20 +108,20 @@ describe('NotificationContext', () => {
 
       // Add a toast
       act(() => {
-        screen.getByText('Add Toast').click();
-      });
+        screen.getByText('Add Toast').click()
+  });
 
       expect(screen.getByText('Test message')).toBeInTheDocument();
 
       // Remove the toast
       act(() => {
-        screen.getByText('Remove').click();
-      });
+        screen.getByText('Remove').click()
+  });
 
       await waitFor(() => {
-        expect(screen.queryByText('Test message')).not.toBeInTheDocument();
-      });
-    });
+        expect(screen.queryByText('Test message')).not.toBeInTheDocument()
+  })
+  });
 
     it.skip('should handle multiple toasts', () => {
       const TestComponent = () => {
@@ -133,8 +133,8 @@ describe('NotificationContext', () => {
             <button onClick={() => addToast('Third', 'warning')}>Add Third</button>
             <span data-testid="toast-count">{toasts.length}</span>
           </div>
-        );
-      };
+        )
+  };
 
       render(
         <NotificationProvider>
@@ -145,20 +145,20 @@ describe('NotificationContext', () => {
       expect(screen.getByTestId('toast-count')).toHaveTextContent('0');
 
       act(() => {
-        screen.getByText('Add First').click();
-      });
+        screen.getByText('Add First').click()
+  });
       expect(screen.getByTestId('toast-count')).toHaveTextContent('1');
 
       act(() => {
-        screen.getByText('Add Second').click();
-      });
+        screen.getByText('Add Second').click()
+  });
       expect(screen.getByTestId('toast-count')).toHaveTextContent('2');
 
       act(() => {
-        screen.getByText('Add Third').click();
-      });
-      expect(screen.getByTestId('toast-count')).toHaveTextContent('3');
-    });
+        screen.getByText('Add Third').click()
+  });
+      expect(screen.getByTestId('toast-count')).toHaveTextContent('3')
+  });
 
     it.skip('should show confirmation modal', () => {
       const TestComponent = () => {
@@ -169,8 +169,8 @@ describe('NotificationContext', () => {
             message: 'Are you sure?',
             onConfirm: jest.fn(),
             onCancel: jest.fn(),
-          });
-        };
+          })
+  };
 
         return (
           <div>
@@ -182,8 +182,8 @@ describe('NotificationContext', () => {
               </div>
             )}
           </div>
-        );
-      };
+        )
+  };
 
       render(
         <NotificationProvider>
@@ -194,13 +194,13 @@ describe('NotificationContext', () => {
       expect(screen.queryByTestId('modal')).not.toBeInTheDocument();
 
       act(() => {
-        screen.getByText('Show Modal').click();
-      });
+        screen.getByText('Show Modal').click()
+  });
 
       expect(screen.getByTestId('modal')).toBeInTheDocument();
       expect(screen.getByText('Confirm Action')).toBeInTheDocument();
-      expect(screen.getByText('Are you sure?')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Are you sure?')).toBeInTheDocument()
+  });
 
     it.skip('should hide confirmation modal', () => {
       const TestComponent = () => {
@@ -223,8 +223,8 @@ describe('NotificationContext', () => {
               {confirmationModal ? 'Visible' : 'Hidden'}
             </span>
           </div>
-        );
-      };
+        )
+  };
 
       render(
         <NotificationProvider>
@@ -236,16 +236,16 @@ describe('NotificationContext', () => {
 
       // Show modal
       act(() => {
-        screen.getByText('Show').click();
-      });
+        screen.getByText('Show').click()
+  });
       expect(screen.getByTestId('modal-status')).toHaveTextContent('Visible');
 
       // Hide modal
       act(() => {
-        screen.getByText('Hide').click();
-      });
-      expect(screen.getByTestId('modal-status')).toHaveTextContent('Hidden');
-    });
+        screen.getByText('Hide').click()
+  });
+      expect(screen.getByTestId('modal-status')).toHaveTextContent('Hidden')
+  });
 
     it('should generate unique IDs for toasts', () => {
       const TestComponent = () => {
@@ -259,8 +259,8 @@ describe('NotificationContext', () => {
               ))}
             </div>
           </div>
-        );
-      };
+        )
+  };
 
       render(
         <NotificationProvider>
@@ -270,21 +270,21 @@ describe('NotificationContext', () => {
 
       // Add multiple toasts
       act(() => {
-        screen.getByText('Add').click();
-      });
+        screen.getByText('Add').click()
+  });
       act(() => {
-        screen.getByText('Add').click();
-      });
+        screen.getByText('Add').click()
+  });
       act(() => {
-        screen.getByText('Add').click();
-      });
+        screen.getByText('Add').click()
+  });
 
       const ids = screen.getByTestId('toast-ids').textContent;
       // Check that IDs are unique (no duplicates when split);
       const idArray = ids?.match(/\S+/g) || [];
       const uniqueIds = new Set(idArray);
-      expect(uniqueIds.size).toBe(idArray.length);
-    });
+      expect(uniqueIds.size).toBe(idArray.length)
+  });
 
     it.skip('should use default toast type when not specified', () => {
       const TestComponent = () => {
@@ -296,8 +296,8 @@ describe('NotificationContext', () => {
               <span key={toast.id} data-testid="toast-type">{toast.type}</span>
             ))}
           </div>
-        );
-      };
+        )
+  };
 
       render(
         <NotificationProvider>
@@ -306,11 +306,11 @@ describe('NotificationContext', () => {
       );
 
       act(() => {
-        screen.getByText('Add Default').click();
-      });
+        screen.getByText('Add Default').click()
+  });
 
-      expect(screen.getByTestId('toast-type')).toHaveTextContent('success');
-    });
+      expect(screen.getByTestId('toast-type')).toHaveTextContent('success')
+  })
   });
 
   describe('useNotification hook', () => {
@@ -321,15 +321,15 @@ describe('NotificationContext', () => {
 
       const TestComponent = () => {
         useNotification();
-        return null;
-      };
+        return null
+  };
 
       expect(() => {
-        render(<TestComponent />);
-      }).toThrow('useNotification must be used within a NotificationProvider');
+        render(<TestComponent />)
+  }).toThrow('useNotification must be used within a NotificationProvider');
 
-      console.error = originalError;
-    });
+      console.error = originalError
+  });
 
     it('should return notification context when used within provider', () => {
       const TestComponent = () => {
@@ -338,8 +338,8 @@ describe('NotificationContext', () => {
           <div data-testid="context-status">
             {context ? 'Context available' : 'No context'}
           </div>
-        );
-      };
+        )
+  };
 
       render(
         <NotificationProvider>
@@ -347,7 +347,7 @@ describe('NotificationContext', () => {
         </NotificationProvider>
       );
 
-      expect(screen.getByTestId('context-status')).toHaveTextContent('Context available');
-    });
+      expect(screen.getByTestId('context-status')).toHaveTextContent('Context available')
+  })
+  })
   });
-});

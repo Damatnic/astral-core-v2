@@ -7,16 +7,16 @@
 
 interface InstallPromptEvent extends Event {
   prompt(): Promise<void>
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
-}
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>
+  }
 
 interface PWAStatus {
   isInstallable: boolean
   isInstalled: boolean
   isOffline: boolean
   isStandalone: boolean
-  supportsPWA: boolean;
-}
+  supportsPWA: boolean
+  }
 
 class PWAService {
   private installPrompt: InstallPromptEvent | null = null;
@@ -52,7 +52,7 @@ class PWAService {
     // Listen for visibility changes (app focus/blur)
     document.addEventListener("visibilitychange", () => {
       if(document.visibilityState === "visible") {
-        this.handleAppFocus();
+        this.handleAppFocus()
   } else {
 this.handleAppBlur()
       }
@@ -95,15 +95,15 @@ this.handleAppBlur()
     if (this.isMobile()) {
       // Handle mobile-specific PWA features
       this.handleMobileViewport();
-      this.initializeTouchOptimizations();
-    }
+      this.initializeTouchOptimizations()
+  }
   }
 
   /**
    * Check if device is mobile
    */
   private isMobile(): boolean {
-    return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
   }
 
   /**
@@ -116,8 +116,8 @@ this.handleAppBlur()
         const meta = document.createElement('meta');
               meta.name = 'viewport';
         meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
-              document.head.appendChild(meta);
-    }
+              document.head.appendChild(meta)
+  }
   }
 
   /**
@@ -151,7 +151,7 @@ this.handleAppBlur()
 // Handle online/offline status changes
     if(isOnline) {
 // Handle online state
-      this.syncPendingData();
+      this.syncPendingData()
   } else {
 // Handle offline state
       this.enableOfflineMode()
@@ -182,8 +182,8 @@ this.handleAppBlur()
       isInstalled: this.isStandalone(),
       isOffline: this.isOffline,
       isStandalone: this.isStandalone(),
-      supportsPWA: this.supportsPWA();
-     };
+      supportsPWA: this.supportsPWA()
+  };
    }
 
   /**
@@ -192,14 +192,14 @@ this.handleAppBlur()
   private isStandalone(): boolean {
           return window.matchMedia('(display-mode: standalone)').matches ||
              (window.navigator as unknown).standalone ||
-             document.referrer.includes('android-app://');
+             document.referrer.includes('android-app: //')
   }
 
   /**
    * Check if browser supports PWA features
    */;
       private supportsPWA(): boolean {
-      return 'serviceWorker' in navigator && 'BeforeInstallPromptEvent' in window;
+      return 'serviceWorker' in navigator && 'BeforeInstallPromptEvent' in window
   }
 
   /**
@@ -208,8 +208,8 @@ this.handleAppBlur()
   public async showInstallPrompt(): Promise<boolean> {
     if(!this.installPrompt) {
 
-      return false;
-    }
+      return false
+  }
 
     try {
       await this.installPrompt.prompt();
@@ -218,15 +218,15 @@ this.handleAppBlur()
               this.installPromptShown = true;
 
         if(result.outcome === 'accepted') {
-        this.installPrompt = null;
-      }
+        this.installPrompt = null
+  }
       
       this.notifyStatusChange();
-      return result.outcome === 'accepted';
-    } catch(error) {
+      return result.outcome === 'accepted'
+  } catch(error) {
 
-      return false;
-    }
+      return false
+  }
   }
 
   /**
@@ -239,8 +239,8 @@ this.handleAppBlur()
     return () => {
       const index = this.statusCallbacks.indexOf(callback);
       if(index > -1) {
-        this.statusCallbacks.splice(index, 1);
-      }
+        this.statusCallbacks.splice(index, 1)
+  }
     };
   }
 
@@ -251,8 +251,8 @@ this.handleAppBlur()
     const status = this.getStatus();
     this.statusCallbacks.forEach(callback => {
       try {
-        callback(status);
-      } catch(error) {}
+        callback(status)
+  } catch(error) {}
     };
   };
   }

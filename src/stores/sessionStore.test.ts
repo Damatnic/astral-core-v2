@@ -17,7 +17,7 @@ describe('sessionStore', () => {
     authState.user = { sub: 'user123' });
 
   afterEach(() => {
-    authState.user = null;
+    authState.user = null
   });
 
   test('fetchHelpSessions should update state on successful API call', async () => {
@@ -25,11 +25,11 @@ describe('sessionStore', () => {
     mockedApiClient.helpSessions.getForUser.mockResolvedValue(mockSessions as any);
 
     await act(async () => {
-      await useSessionStore.getState().fetchHelpSessions();
-    });
+      await useSessionStore.getState().fetchHelpSessions()
+  });
 
     expect(useSessionStore.getState().helpSessions).toEqual(mockSessions);
-    expect(mockedApiClient.helpSessions.getForUser).toHaveBeenCalledWith('user123');
+    expect(mockedApiClient.helpSessions.getForUser).toHaveBeenCalledWith('user123')
   });
   
   test('toggleFavorite should call the API and update the session in the store', async () => {
@@ -41,11 +41,11 @@ describe('sessionStore', () => {
     mockedApiClient.helpSessions.toggleFavorite.mockResolvedValue(updatedSession as any);
     
     await act(async () => {
-      await useSessionStore.getState().toggleFavorite('s1');
-    });
+      await useSessionStore.getState().toggleFavorite('s1')
+  });
 
     expect(mockedApiClient.helpSessions.toggleFavorite).toHaveBeenCalledWith('s1', 'user123');
-    expect(useSessionStore.getState().helpSessions[0].isFavorited).toBe(true);
+    expect(useSessionStore.getState().helpSessions[0].isFavorited).toBe(true)
   });
 
   test('sendKudos should optimistically update and then call the API', async () => {
@@ -56,12 +56,12 @@ describe('sessionStore', () => {
     mockedApiClient.helpSessions.sendKudos.mockResolvedValue({} as any);
 
     await act(async () => {
-      await useSessionStore.getState().sendKudos('s1');
-    });
+      await useSessionStore.getState().sendKudos('s1')
+  });
 
     // Check optimistic update happened
     expect(useSessionStore.getState().helpSessions[0].kudosGiven).toBe(true);
-    expect(mockedApiClient.helpSessions.sendKudos).toHaveBeenCalledWith('s1', 'user123');
+    expect(mockedApiClient.helpSessions.sendKudos).toHaveBeenCalledWith('s1', 'user123')
   });
 
   test('sendKudos should revert optimistic update on API failure', async () => {
@@ -72,10 +72,10 @@ describe('sessionStore', () => {
     mockedApiClient.helpSessions.sendKudos.mockRejectedValue(new Error('API Error'));
 
     await act(async () => {
-      await useSessionStore.getState().sendKudos('s1');
-    });
+      await useSessionStore.getState().sendKudos('s1')
+  });
 
     // Check that the state was reverted
-    expect(useSessionStore.getState().helpSessions[0].kudosGiven).toBe(false);
+    expect(useSessionStore.getState().helpSessions[0].kudosGiven).toBe(false)
+  })
   });
-});

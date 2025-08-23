@@ -10,8 +10,8 @@ interface CommunityPost {
   responses: number;
   isAnonymous: boolean;
   category: 'support' | 'celebration' | 'question' | 'resource';
-  isCrisisSupport?: boolean;
-}
+  isCrisisSupport?: boolean
+  }
 
 interface CommunityHelper {
   id: string;
@@ -20,8 +20,8 @@ interface CommunityHelper {
   rating: number;
   helpedCount: number;
   isOnline: boolean;
-  isCertified: boolean;
-}
+  isCertified: boolean
+  }
 
 const CommunityView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'feed' | 'helpers' | 'groups'>('feed');
@@ -39,8 +39,8 @@ const CommunityView: React.FC = () => {
         likes: 12,
         responses: 3,
         isAnonymous: true,
-        category: 'celebration';
-      },
+        category: 'celebration'
+  },
       {
         id: '2',
         author: 'MindfulMoments',
@@ -49,8 +49,8 @@ const CommunityView: React.FC = () => {
         likes: 8,
         responses: 7,
         isAnonymous: false,
-        category: 'question';
-      },
+        category: 'question'
+  },
       {
         id: '3',
         author: 'HealingJourney',
@@ -59,8 +59,8 @@ const CommunityView: React.FC = () => {
         likes: 15,
         responses: 2,
         isAnonymous: false,
-        category: 'resource';
-      }
+        category: 'resource'
+  }
     ]);
 
     setHelpers([
@@ -71,8 +71,8 @@ const CommunityView: React.FC = () => {
         rating: 4.9,
         helpedCount: 127,
         isOnline: true,
-        isCertified: true;
-      },
+        isCertified: true
+  },
       {
         id: '2',
         name: 'Alex R.',
@@ -80,8 +80,8 @@ const CommunityView: React.FC = () => {
         rating: 4.8,
         helpedCount: 89,
         isOnline: false,
-        isCertified: true;
-      },
+        isCertified: true
+  },
       {
         id: '3',
         name: 'Jordan T.',
@@ -89,9 +89,9 @@ const CommunityView: React.FC = () => {
         rating: 4.7,
         helpedCount: 64,
         isOnline: true,
-        isCertified: false;
-      }
-    ]);
+        isCertified: false
+  }
+    ])
   };
   }, []);
 
@@ -100,9 +100,9 @@ const CommunityView: React.FC = () => {
       support: 'text-blue-600 bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400',
       celebration: 'text-green-600 bg-green-100 dark:bg-green-900/20 dark:text-green-400',
       question: 'text-purple-600 bg-purple-100 dark:bg-purple-900/20 dark:text-purple-400',
-      resource: 'text-orange-600 bg-orange-100 dark:bg-orange-900/20 dark:text-orange-400';
-    };
-    return colors[category as keyof typeof colors] || colors.support;
+      resource: 'text-orange-600 bg-orange-100 dark:bg-orange-900/20 dark:text-orange-400'
+  };
+    return colors[category as keyof typeof colors] || colors.support
   };
 
   const getCategoryLabel = (category: string) => {
@@ -110,9 +110,9 @@ const CommunityView: React.FC = () => {
       support: 'Support',
       celebration: 'Celebration',
       question: 'Question',
-      resource: 'Resource';
-    };
-    return labels[category as keyof typeof labels] || 'Support';
+      resource: 'Resource'
+  };
+    return labels[category as keyof typeof labels] || 'Support'
   };
 
   return (
@@ -158,32 +158,29 @@ const CommunityView: React.FC = () => {
         {/* Tab Navigation */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md mb-6">
           <div className="flex border-b border-gray-200 dark:border-gray-700">
-            <button;
-              className={`px-6 py-4 text-sm font-medium ${
+            <button className={`px-6 py-4 text-sm font-medium ${
                 activeTab === 'feed'
                   ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300';
-              }`}
+                  : 'text-gray-500 dark: text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+  }`}
               onClick={() => setActiveTab('feed')}
             >
               Community Feed
             </button>
-            <button;
-              className={`px-6 py-4 text-sm font-medium ${
+            <button className={`px-6 py-4 text-sm font-medium ${
                 activeTab === 'helpers'
                   ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300';
-              }`}
+                  : 'text-gray-500 dark: text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+  }`}
               onClick={() => setActiveTab('helpers')}
             >
               Find Helpers
             </button>
-            <button;
-              className={`px-6 py-4 text-sm font-medium ${
+            <button className={`px-6 py-4 text-sm font-medium ${
                 activeTab === 'groups'
                   ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300';
-              }`}
+                  : 'text-gray-500 dark: text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+  }`}
               onClick={() => setActiveTab('groups')}
             >
               Support Groups
@@ -380,7 +377,7 @@ const CommunityView: React.FC = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export default CommunityView;

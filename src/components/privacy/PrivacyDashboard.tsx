@@ -4,8 +4,8 @@ import { AppButton } from '../AppButton';
 import { Modal } from '../Modal';
 
 interface PrivacyDashboardProps {
-  className?: string;
-}
+  className?: string
+  }
 
 interface PrivacyReport {
   totalEvents: number;
@@ -17,8 +17,8 @@ interface PrivacyReport {
   hipaaAdjacent: boolean;
   consentStatus: ConsentStatus | null;
   oldestEvent: Date | null;
-  newestEvent: Date | null;
-}
+  newestEvent: Date | null
+  }
 
 const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) => {
   const [consentStatus, setConsentStatus] = useState<ConsentStatus | null>(null);
@@ -30,7 +30,7 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
   const analyticsService = getAnalyticsService();
 
   useEffect(() => {
-    loadPrivacyData();
+    loadPrivacyData()
   };
   }, []);
 
@@ -39,7 +39,7 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
     const report = analyticsService.getPrivacyReport();
     
     setConsentStatus(consent);
-    setPrivacyReport(report);
+    setPrivacyReport(report)
   };
 
   const handleConsentChange = (key: keyof ConsentStatus, value: boolean) => {
@@ -47,8 +47,8 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
       const updatedConsent = { ...consentStatus, [key]: value };
       analyticsService.updateConsent(updatedConsent);
       setConsentStatus(updatedConsent);
-      loadPrivacyData();
-    }
+      loadPrivacyData()
+  }
   };
 
   const handleExportData = async () => {
@@ -63,8 +63,8 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
         request: exportRequest,
         consent: consentStatus,
         privacyReport: privacyReport,
-        exportDate: new Date().toISOString();
-      };
+        exportDate: new Date().toISOString()
+  };
       
       const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -76,12 +76,12 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       
-      setShowExportModal(false);
-    } catch (error) {
-      console.error('Failed to export data:', error);
-    } finally {
-      setIsLoading(false);
-    }
+      setShowExportModal(false)
+  } catch (error) {
+      console.error('Failed to export data:', error)
+  } finally {
+      setIsLoading(false)
+  }
   };
 
   const handleDeleteData = async (retainCrisisData: boolean = true) => {
@@ -92,27 +92,27 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
       await analyticsService.deleteUserData(userId, retainCrisisData);
       
       loadPrivacyData();
-      setShowDeleteModal(false);
-    } catch (error) {
-      console.error('Failed to delete data:', error);
-    } finally {
-      setIsLoading(false);
-    }
+      setShowDeleteModal(false)
+  } catch (error) {
+      console.error('Failed to delete data:', error)
+  } finally {
+      setIsLoading(false)
+  }
   };
 
   const handleOptOut = () => {
     analyticsService.optOut();
-    loadPrivacyData();
+    loadPrivacyData()
   };
 
   const handleOptIn = () => {
     analyticsService.optIn();
-    loadPrivacyData();
+    loadPrivacyData()
   };
 
   const formatDate = (date: Date | null) => {
     if (!date) return 'N/A';
-    return new Date(date).toLocaleDateString();
+    return new Date(date).toLocaleDateString()
   };
 
   return (
@@ -297,16 +297,14 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
           Data Control Actions
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          <AppButton;
-            variant="secondary"
+          <AppButton variant="secondary"
             size="sm"
             onClick={() => setShowExportModal(true)}
           >
             Export My Data
           </AppButton>
           
-          <AppButton;
-            variant="danger"
+          <AppButton variant="danger"
             size="sm"
             onClick={() => setShowDeleteModal(true)}
           >
@@ -314,16 +312,14 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
           </AppButton>
           
           {analyticsService.isEnabled() ? (
-            <AppButton;
-              variant="secondary"
+            <AppButton variant="secondary"
               size="sm"
               onClick={handleOptOut}
             >
               Opt Out
             </AppButton>
           ) : (
-            <AppButton;
-              variant="success"
+            <AppButton variant="success"
               size="sm"
               onClick={handleOptIn}
             >
@@ -331,8 +327,7 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
             </AppButton>
           )}
           
-          <AppButton;
-            variant="ghost"
+          <AppButton variant="ghost"
             size="sm"
             onClick={() => analyticsService.clearStoredData()}
           >
@@ -365,15 +360,13 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
           </div>
 
           <div className="flex justify-end space-x-3">
-            <AppButton;
-              variant="secondary"
+            <AppButton variant="secondary"
               onClick={() => setShowExportModal(false)}
               disabled={isLoading}
             >
               Cancel
             </AppButton>
-            <AppButton;
-              variant="primary"
+            <AppButton variant="primary"
               onClick={handleExportData}
               disabled={isLoading}
             >
@@ -424,15 +417,13 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
           </div>
 
           <div className="flex justify-end space-x-3">
-            <AppButton;
-              variant="secondary"
+            <AppButton variant="secondary"
               onClick={() => setShowDeleteModal(false)}
               disabled={isLoading}
             >
               Cancel
             </AppButton>
-            <AppButton;
-              variant="danger"
+            <AppButton variant="danger"
               onClick={() => handleDeleteData(true)}
               disabled={isLoading}
             >
@@ -442,7 +433,7 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
         </div>
       </Modal>
     </div>
-  );
-};
+  )
+  };
 
 export default PrivacyDashboard;

@@ -8,7 +8,7 @@
 class OpenTelemetryServiceStub {
   async initialize(): Promise<void> {
     console.log('OpenTelemetry disabled - packages not installed');
-    return Promise.resolve();
+    return Promise.resolve()
   }
 
   startSpan(_name: string): any {
@@ -25,7 +25,7 @@ class OpenTelemetryServiceStub {
   }
 
   shutdown(): Promise<void> {
-    return Promise.resolve();
+    return Promise.resolve()
   }
 }
 

@@ -15,24 +15,24 @@ type ExtendedNavigator = Navigator & {
   connection?: {
     effectiveType: string;
     downlink: number;
-    rtt: number;
+    rtt: number
   };
 
 interface CacheStatus {
   caches: Array<{
     name: string;
-    entryCount: number;
+    entryCount: number
   }>;
   totalSize: number;
   userMetrics: any;
-  session: any;
-}
+  session: any
+  }
 
 interface PrefetchOptions {
   priority?: CachePriority;
   timeout?: number;
-  networkAware?: boolean;
-}
+  networkAware?: boolean
+  }
 
 /**
  * Hook for intelligent caching integration
@@ -47,10 +47,10 @@ export const useIntelligentCaching = () => {
   const sendMessage = useCallback((type: string, data?: any) => {
     if (!navigator.serviceWorker.controller) {
       console.warn('[Intelligent Cache] Service worker not ready');
-      return;
-    }
+      return
+  }
 
-    navigator.serviceWorker.controller.postMessage({ type, data });
+    navigator.serviceWorker.controller.postMessage({ type, data })
   };
   }, []);
 
@@ -62,11 +62,11 @@ export const useIntelligentCaching = () => {
     sendMessage('ROUTE_CHANGE', {
       route: currentRoute,
       timeSpent,
-      timestamp: Date.now();
-    });
+      timestamp: Date.now()
+  });
 
     setCurrentRoute(newRoute);
-    setRouteStartTime(Date.now());
+    setRouteStartTime(Date.now())
   };
   }, [currentRoute, routeStartTime, sendMessage]);
 
@@ -82,18 +82,18 @@ export const useIntelligentCaching = () => {
           // Setup message listener
           navigator.serviceWorker.addEventListener('message', (event) => {
             if (event.data.type === 'CACHE_STATUS') {
-              setCacheStatus(event.data.data);
-            }
+              setCacheStatus(event.data.data)
+  }
           });
 
-          console.log('[Intelligent Cache] Service worker integration ready');
-        } catch (error) {
-          console.error('[Intelligent Cache] Service worker initialization failed:', error);
-        }
+          console.log('[Intelligent Cache] Service worker integration ready')
+  } catch (error) {
+          console.error('[Intelligent Cache] Service worker initialization failed:', error)
+  }
       }
     };
 
-    initializeServiceWorker();
+    initializeServiceWorker()
   };
   }, []);
 
@@ -111,7 +111,7 @@ export const useIntelligentCaching = () => {
   }, []);
 
   // Manual prefetch function;
-  const prefetchResource = useCallback(async (;
+  const prefetchResource = useCallback(async (;;
     url: string, 
     options: PrefetchOptions = {}
   ) => {
@@ -127,8 +127,8 @@ export const useIntelligentCaching = () => {
         const { isSlowNetwork } = getNetworkCapabilities();
         if (isSlowNetwork && priority !== 'crisis') {
           console.log('[Prefetch] Skipping due to slow network:', url);
-          return false;
-        }
+          return false
+  }
       }
 
       // Create fetch options with timeout;
@@ -140,23 +140,23 @@ export const useIntelligentCaching = () => {
           'X-Prefetch': 'true',
           'X-Priority': priority
         },
-        signal: controller.signal;
-      };
+        signal: controller.signal
+  };
   };
 
       clearTimeout(timeoutId);
 
       if (!response.ok) {
         console.warn('[Prefetch] Failed with status:', response.status, url);
-        return false;
-      }
+        return false
+  }
       
       console.log('[Prefetch] Successfully prefetched:', url);
-      return true;
-    } catch (error) {
+      return true
+  } catch (error) {
       console.warn('[Prefetch] Error:', error, url);
-      return false;
-    }
+      return false
+  }
   };
   }, [getNetworkCapabilities]);
 
@@ -165,10 +165,10 @@ export const useIntelligentCaching = () => {
     sendMessage('CRISIS_DETECTED', {
       timestamp: Date.now(),
       route: currentRoute,
-      userAgent: navigator.userAgent;
-    });
+      userAgent: navigator.userAgent
+  });
     
-    console.log('[Intelligent Cache] Crisis detection reported');
+    console.log('[Intelligent Cache] Crisis detection reported')
   };
   }, [currentRoute, sendMessage]);
 
@@ -176,26 +176,26 @@ export const useIntelligentCaching = () => {
   const updatePreferences = useCallback((preferences: Record<string, any>) => {
     sendMessage('USER_PREFERENCES_UPDATED', {
       preferences,
-      timestamp: Date.now();
-    });
+      timestamp: Date.now()
+  });
     
-    console.log('[Intelligent Cache] Preferences updated:', preferences);
+    console.log('[Intelligent Cache] Preferences updated:', preferences)
   };
   }, [sendMessage]);
 
   // Get current cache status;
   const getCacheStatus = useCallback(async () => {
     if (!isServiceWorkerReady) {
-      return null;
-    }
+      return null
+  }
 
     return new Promise<CacheStatus | null>((resolve) => {
       const channel = new MessageChannel();
       
       channel.port1.onmessage = (event) => {
         if (event.data.type === 'CACHE_STATUS') {
-          resolve(event.data.data);
-        }
+          resolve(event.data.data)
+  }
       };
 
       navigator.serviceWorker.controller?.postMessage(
@@ -204,25 +204,25 @@ export const useIntelligentCaching = () => {
       );
 
       // Timeout after 5 seconds
-      setTimeout(() => resolve(null), 5000);
-    });
+      setTimeout(() => resolve(null), 5000)
+  })
   };
   }, [isServiceWorkerReady]);
 
   // Helper function to prefetch multiple resources;
-  const prefetchMultipleResources = useCallback(async (;
+  const prefetchMultipleResources = useCallback(async (;;
     urls: string[], 
     options: PrefetchOptions = {}
   ) => {
     const prefetchPromises = urls.map(url => prefetchResource(url, options));
     const results = await Promise.all(prefetchPromises);
-    return results.filter(success => success).length;
+    return results.filter(success => success).length
   };
   }, [prefetchResource]);
 
   // Preload critical resources for current user;
   const preloadUserResources = useCallback(async (userId: string) => {
-    const userResources = [;
+    const userResources = [;;
       `/api/users/${userId}/profile`,
       `/api/users/${userId}/preferences`,
       `/api/users/${userId}/mood-history`,
@@ -232,7 +232,7 @@ export const useIntelligentCaching = () => {
     const successCount = await prefetchMultipleResources(userResources, { priority: 'high' });
     console.log(`[User Preload] Loaded ${successCount}/${userResources.length} resources`);
     
-    return successCount;
+    return successCount
   };
   }, [prefetchMultipleResources]);
 
@@ -242,16 +242,17 @@ export const useIntelligentCaching = () => {
     
     if (isSlowNetwork) {
       console.log('[Image Preload] Skipping due to network conditions');
-      return 0;
-    }
+      return 0
+  }
 
     const successCount = await prefetchMultipleResources(imageUrls, { 
       priority: 'low',
-      networkAware: true ;
-    });
+      networkAware: true
+  });
 
     console.log(`[Image Preload] Loaded ${successCount}/${imageUrls.length} images`);
-    return successCount;
+    return successCount
+  };
   };
   };
   }, [getNetworkCapabilities, prefetchMultipleResources]);
@@ -280,8 +281,8 @@ export const useIntelligentCaching = () => {
  * React component for cache status monitoring
  */;
 export const CacheStatusMonitor: React.FC<{
-  onStatusChange?: (status: CacheStatus) => void;
-}> = ({ onStatusChange }) => {
+  onStatusChange?: (status: CacheStatus) => void
+  }> = ({ onStatusChange }) => {
   const { getCacheStatus, cacheStatus } = useIntelligentCaching();
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
@@ -290,20 +291,20 @@ export const CacheStatusMonitor: React.FC<{
       const status = await getCacheStatus();
       if (status) {
         setLastUpdate(new Date());
-        onStatusChange?.(status);
-      }
+        onStatusChange?.(status)
+  }
     };
 
     // Update status every 30 seconds;
     const interval = setInterval(updateStatus, 30000);
     updateStatus(); // Initial update
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   };
   }, [getCacheStatus, onStatusChange]);
 
   if (!cacheStatus) {
-    return null;
+    return null
   }
 
   return (
@@ -328,13 +329,13 @@ export const CacheStatusMonitor: React.FC<{
         ))}
       </div>
     </div>
-  );
-};
+  )
+  };
 
 /**
  * Helper function to prefetch resources with reduced nesting
  */;
-const prefetchResourceList = async (;
+const prefetchResourceList = async (;;
   resources: string[],
   prefetchFn: (url: string, options?: PrefetchOptions) => Promise<boolean>,
   priority?: CachePriority
@@ -342,8 +343,8 @@ const prefetchResourceList = async (;
   const prefetchPromises = resources.map(url => prefetchFn(url, { priority };
   });
   const results = await Promise.all(prefetchPromises);
-  return results.filter(success => success).length;
-};
+  return results.filter(success => success).length
+  };
 
 /**
  * Higher-order component for automatic resource prefetching
@@ -353,7 +354,7 @@ export const withIntelligentPrefetch = <P extends object>(
   prefetchConfig: {
     resources?: string[];
     images?: string[];
-    priority?: CachePriority;
+    priority?: CachePriority
   } = {}
 ) => {
   return (props: P) => {
@@ -367,20 +368,20 @@ export const withIntelligentPrefetch = <P extends object>(
             prefetchConfig.resources,
             prefetchResource,
             prefetchConfig.priority
-          );
-        }
+          )
+  }
 
         // Prefetch images
         if (prefetchConfig.images) {
-          await preloadImages(prefetchConfig.images);
-        }
+          await preloadImages(prefetchConfig.images)
+  }
       };
 
-      prefetchResources();
-    };
+      prefetchResources()
+  };
   }, [prefetchResource, preloadImages]);
 
-    return <WrappedComponent {...props} />;
+    return <WrappedComponent {...props} />
   };
 
 /**
@@ -396,21 +397,22 @@ export const useCrisisOptimization = () => {
     reportCrisisDetection();
     
     // Immediately prefetch critical crisis resources;
-    const crisisResources = [;
+    const crisisResources = [;;
       '/crisis-resources.json',
       '/emergency-contacts.json',
       '/offline-crisis.html',
       '/api/crisis/immediate-help'
     ];
 
-    const successCount = await prefetchResourceList(;
+    const successCount = await prefetchResourceList(;;
       crisisResources,
       prefetchResource,
       'crisis'
     );
 
     console.log(`[Crisis Mode] Cached ${successCount}/${crisisResources.length} critical resources`);
-    return successCount === crisisResources.length;
+    return successCount === crisisResources.length
+  };
   };
   };
   }, [reportCrisisDetection, prefetchResource]);
@@ -423,14 +425,14 @@ export const useCrisisOptimization = () => {
 export const registerIntelligentServiceWorker = async () => {
   if (!('serviceWorker' in navigator)) {
     console.warn('[Intelligent Cache] Service workers not supported');
-    return false;
+    return false
   }
 
   try {
     const registration = await navigator.serviceWorker.register('/sw-enhanced.js', {
       scope: '/',
-      updateViaCache: 'none';
-    };
+      updateViaCache: 'none'
+  };
   };
 
     console.log('[Intelligent Cache] Service worker registered:', registration.scope);
@@ -445,13 +447,13 @@ export const registerIntelligentServiceWorker = async () => {
             console.log('[Intelligent Cache] New version available');
             // Could trigger a notification here
           }
-        });
-      }
+        })
+  }
     });
 
-    return true;
+    return true
   } catch (error) {
     console.error('[Intelligent Cache] Service worker registration failed:', error);
-    return false;
+    return false
   }
 };

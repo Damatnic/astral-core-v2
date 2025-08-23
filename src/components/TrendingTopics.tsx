@@ -6,13 +6,13 @@ interface TrendingTopic {
   tag: string;
   count: number;
   trend: 'up' | 'down' | 'stable';
-  color: string;
-}
+  color: string
+  }
 
 interface TrendingTopicsProps {
   topics: TrendingTopic[];
-  onTopicClick?: (tag: string) => void;
-}
+  onTopicClick?: (tag: string) => void
+  }
 
 export const TrendingTopics: React.FC<TrendingTopicsProps> = ({ topics, onTopicClick }) => {
   const getTrendIcon = (trend: TrendingTopic['trend']) => {
@@ -22,8 +22,8 @@ export const TrendingTopics: React.FC<TrendingTopicsProps> = ({ topics, onTopicC
       case 'down':
         return '📉';
       case 'stable':
-        return '➡️';
-    }
+        return '➡️'
+  }
   };
 
   return (
@@ -45,8 +45,8 @@ export const TrendingTopics: React.FC<TrendingTopicsProps> = ({ topics, onTopicC
             style={{
               animationDelay: `${index * 0.1}s`,
               background: `linear-gradient(135deg, ${topic.color}20 0%, ${topic.color}10 100%)`,
-              borderColor: topic.color;
-            }}
+              borderColor: topic.color
+  }}
           >
             <div className="topic-content">
               <div className="topic-main">
@@ -69,5 +69,5 @@ export const TrendingTopics: React.FC<TrendingTopicsProps> = ({ topics, onTopicC
         </p>
       </div>
     </div>
-  );
-};
+  )
+  };

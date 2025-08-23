@@ -4,14 +4,14 @@ import { AppButton } from './AppButton';
 
 export const ReportModalContent: React.FC<{
     onClose: () => void;
-    onSubmit: (reason: string) => void;
-}> = ({ onClose, onSubmit }) => {
+    onSubmit: (reason: string) => void
+  }> = ({ onClose, onSubmit }) => {
     const [reason, setReason] = useState(REPORT_REASONS[0]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit(reason);
-    }
+        onSubmit(reason)
+  }
 
     return (
         <form onSubmit={handleSubmit}>

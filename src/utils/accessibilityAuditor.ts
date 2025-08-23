@@ -10,8 +10,8 @@ export interface AccessibilityAuditResult {
   score: number;
   issues: AccessibilityIssue[];
   suggestions: string[];
-  compliantAreas: string[];
-}
+  compliantAreas: string[]
+  }
 
 export interface AccessibilityIssue {
   type: 'error' | 'warning' | 'info';
@@ -20,8 +20,8 @@ export interface AccessibilityIssue {
   element?: string;
   wcagCriterion: string;
   severity: 'low' | 'medium' | 'high' | 'critical';
-  fix?: string;
-}
+  fix?: string
+  }
 
 // Audit configuration interface;
 interface AccessibilityAuditConfig {
@@ -29,8 +29,8 @@ interface AccessibilityAuditConfig {
   includeWarnings: boolean;
   mobileOptimized: boolean;
   skipElementsWithAriaHidden: boolean;
-  customRules: AccessibilityRule[];
-}
+  customRules: AccessibilityRule[]
+  }
 
 // Custom rule interface;
 interface AccessibilityRule {
@@ -39,8 +39,8 @@ interface AccessibilityRule {
   wcagCriterion: string;
   severity: 'low' | 'medium' | 'high' | 'critical';
   check: (element: Element) => boolean;
-  fix?: string;
-}
+  fix?: string
+  }
 
 // Color contrast checker;
 interface ColorContrastResult {
@@ -51,7 +51,7 @@ interface ColorContrastResult {
     aa: boolean;
     aaa: boolean;
     aaLarge: boolean;
-    aaaLarge: boolean;
+    aaaLarge: boolean
   };
 }
 export class MobileAccessibilityAuditor {
@@ -93,7 +93,7 @@ export class MobileAccessibilityAuditor {
     this.runCustomRules();
     
     // Calculate score and generate report
-    return this.generateReport();
+    return this.generateReport()
   }
 
   // Check image alternatives (1.1.1)
@@ -101,7 +101,7 @@ export class MobileAccessibilityAuditor {
     const images = document.querySelectorAll('img');
     
     images.forEach((img) => {
-      const isDecorative = img.getAttribute('aria-hidden') === 'true' || ;
+      const isDecorative = img.getAttribute('aria-hidden') === 'true' || ;;
                           img.getAttribute('role') === 'presentation' ||
                           img.alt === '';
       
@@ -113,9 +113,9 @@ export class MobileAccessibilityAuditor {
           element: `img[src="${img.src}"]`,
           wcagCriterion: '1.1.1',
           severity: 'high',
-          fix: 'Add descriptive alt attribute or mark as decorative with alt=""';
-        });
-      }
+          fix: 'Add descriptive alt attribute or mark as decorative with alt=""'
+  })
+  }
       
       // Check for redundant alt text
       if (img.alt && img.alt.toLowerCase().includes('image') || img.alt.toLowerCase().includes('picture')) {
@@ -126,9 +126,9 @@ export class MobileAccessibilityAuditor {
           element: `img[alt="${img.alt}"]`,
           wcagCriterion: '1.1.1',
           severity: 'low',
-          fix: 'Remove redundant words from alt text';
-        });
-      }
+          fix: 'Remove redundant words from alt text'
+  })
+  }
     });
     
     // Check for background images that convey information;
@@ -143,10 +143,10 @@ export class MobileAccessibilityAuditor {
           element: element.tagName.toLowerCase(),
           wcagCriterion: '1.1.1',
           severity: 'medium',
-          fix: 'Add aria-label or ensure background image is purely decorative';
-        });
-      }
-    });
+          fix: 'Add aria-label or ensure background image is purely decorative'
+  })
+  }
+    })
   }
 
   // Check form labels (1.3.1, 3.3.2)
@@ -169,8 +169,8 @@ export class MobileAccessibilityAuditor {
           wcagCriterion: '1.3.1',
           severity: 'high',
           fix: 'Add label element, aria-label, or aria-labelledby'
-        });
-      }
+        })
+  }
       
       // Check for placeholder as label antipattern
       if (element.placeholder && !hasLabel && !hasAriaLabel) {
@@ -181,10 +181,10 @@ export class MobileAccessibilityAuditor {
           element: `${element.tagName.toLowerCase()}[placeholder="${element.placeholder}"]`,
           wcagCriterion: '3.3.2',
           severity: 'medium',
-          fix: 'Add proper label in addition to placeholder';
-        });
-      }
-    });
+          fix: 'Add proper label in addition to placeholder'
+  })
+  }
+    })
   }
 
   // Check heading structure (1.3.1)
@@ -198,10 +198,10 @@ export class MobileAccessibilityAuditor {
         description: 'No headings found on page',
         wcagCriterion: '1.3.1',
         severity: 'medium',
-        fix: 'Add heading structure to organize content';
-      });
-      return;
-    }
+        fix: 'Add heading structure to organize content'
+  });
+      return
+  }
     
     // Check for h1;
     const h1Elements = headings.filter(h => h.tagName === 'H1');
@@ -212,8 +212,8 @@ export class MobileAccessibilityAuditor {
         description: 'No H1 heading found',
         wcagCriterion: '1.3.1',
         severity: 'medium',
-        fix: 'Add H1 heading as main page title';
-      });;
+        fix: 'Add H1 heading as main page title'
+  })
   } else if (h1Elements.length > 1) {
       this.addIssue({
         type: 'warning',
@@ -221,9 +221,9 @@ export class MobileAccessibilityAuditor {
         description: 'Multiple H1 headings found',
         wcagCriterion: '1.3.1',
         severity: 'low',
-        fix: 'Use only one H1 per page';
-      });
-    }
+        fix: 'Use only one H1 per page'
+  })
+  }
     
     // Check heading hierarchy;
     let previousLevel = 0;
@@ -239,8 +239,8 @@ export class MobileAccessibilityAuditor {
           wcagCriterion: '1.3.1',
           severity: 'medium',
           fix: 'Use sequential heading levels (H1, H2, H3, etc.)'
-        });
-      }
+        })
+  }
       
       // Check for empty headings
       if (!heading.textContent?.trim()) {
@@ -251,12 +251,12 @@ export class MobileAccessibilityAuditor {
           element: `${heading.tagName.toLowerCase()}`,
           wcagCriterion: '1.3.1',
           severity: 'high',
-          fix: 'Add descriptive text to heading or remove if unnecessary';
-        });
-      }
+          fix: 'Add descriptive text to heading or remove if unnecessary'
+  })
+  }
       
-      previousLevel = level;
-    });
+      previousLevel = level
+  })
   }
 
   // Check color contrast (1.4.3, 1.4.6)
@@ -286,11 +286,11 @@ export class MobileAccessibilityAuditor {
               wcagCriterion: this.config.checkLevel === 'AAA' ? '1.4.6' : '1.4.3',
               severity: 'high',
               fix: `Increase contrast between text (${contrast.foreground}) and background (${contrast.background})`
-            });
-          }
+            })
+  }
         }
       }
-    });
+    })
   }
 
   // Calculate color contrast ratio
@@ -300,13 +300,13 @@ export class MobileAccessibilityAuditor {
     const backgroundColor = style.backgroundColor;
     
     if (!color || !backgroundColor || backgroundColor === 'rgba(0, 0, 0, 0)') {
-      return null;
-    }
+      return null
+  }
     
     const foregroundLuminance = this.getLuminance(color);
     const backgroundLuminance = this.getLuminance(backgroundColor);
     
-    const ratio = (Math.max(foregroundLuminance, backgroundLuminance) + 0.05) / ;
+    const ratio = (Math.max(foregroundLuminance, backgroundLuminance) + 0.05) / ;;
                  (Math.min(foregroundLuminance, backgroundLuminance) + 0.05);
     
     return {
@@ -317,8 +317,8 @@ export class MobileAccessibilityAuditor {
         aa: ratio >= 4.5,
         aaa: ratio >= 7,
         aaLarge: ratio >= 3,
-        aaaLarge: ratio >= 4.5;
-      }
+        aaaLarge: ratio >= 4.5
+  }
     }
 
   // Get relative luminance of a color
@@ -328,11 +328,11 @@ export class MobileAccessibilityAuditor {
     
     const [r, g, b] = rgb.map(c => {
       c = c / 255;
-      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-    };
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)
+  };
   };
     
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
   }
 
   // Parse color string to RGB values
@@ -346,12 +346,12 @@ export class MobileAccessibilityAuditor {
     ctx.fillRect(0, 0, 1, 1);
     const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
     
-    return [r, g, b];
+    return [r, g, b]
   }
 
   // Check focus indicators (2.4.7)
   private checkFocusIndicators(): void {
-    const focusableElements = document.querySelectorAll(;
+    const focusableElements = document.querySelectorAll(;;
       'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
     
@@ -364,10 +364,10 @@ export class MobileAccessibilityAuditor {
         const rules = Array.from(sheet.cssRules || []);
         rules.forEach(rule => {
           if (rule instanceof CSSStyleRule && rule.selectorText?.includes(':focus')) {
-            hasGlobalFocusStyle = true;
-          }
-        });
-      } catch (e) {
+            hasGlobalFocusStyle = true
+  }
+        })
+  } catch (e) {
         // Skip cross-origin stylesheets
       }
     });
@@ -379,9 +379,9 @@ export class MobileAccessibilityAuditor {
         description: 'No global focus styles detected',
         wcagCriterion: '2.4.7',
         severity: 'high',
-        fix: 'Add CSS focus styles for all interactive elements';
-      });
-    }
+        fix: 'Add CSS focus styles for all interactive elements'
+  })
+  }
     
     // Test individual elements
     focusableElements.forEach((element, index) => {
@@ -390,7 +390,7 @@ export class MobileAccessibilityAuditor {
         const activeElement = document.activeElement;
         const style = window.getComputedStyle(activeElement || element, ':focus');
         
-        const hasVisibleFocus = style.outline !== 'none' || ;
+        const hasVisibleFocus = style.outline !== 'none' || ;;
                                style.boxShadow !== 'none' ||
                                style.border !== style.getPropertyValue('border') ||
                                style.backgroundColor !== window.getComputedStyle(element).backgroundColor;
@@ -404,25 +404,25 @@ export class MobileAccessibilityAuditor {
             wcagCriterion: '2.4.7',
             severity: 'medium',
             fix: 'Add visible focus styles (outline, border, shadow, etc.)'
-          });
-        }
+          })
+  }
         
         // Restore previous focus
         if (document.activeElement !== activeElement) {
-          (document.activeElement as HTMLElement)?.blur();
-        }
+          (document.activeElement as HTMLElement)?.blur()
+  }
       };
       
       // Only test first few elements to avoid affecting user experience
       if (index < 5) {
-        testFocus();
-      }
-    });
+        testFocus()
+  }
+    })
   }
 
   // Check keyboard navigation (2.1.1)
   private checkKeyboardNavigation(): void {
-    const interactiveElements = document.querySelectorAll(;
+    const interactiveElements = document.querySelectorAll(;;
       'button, a[href], input, select, textarea, [onclick], [onkeydown], [tabindex]:not([tabindex="-1"])'
     );
     
@@ -438,9 +438,9 @@ export class MobileAccessibilityAuditor {
           element: `${element.tagName.toLowerCase()}[tabindex="${tabIndex}"]`,
           wcagCriterion: '2.1.1',
           severity: 'medium',
-          fix: 'Use tabindex="0" or rely on natural tab order';
-        });
-      }
+          fix: 'Use tabindex="0" or rely on natural tab order'
+  })
+  }
       
       // Check for click handlers without keyboard support
       if (element.getAttribute('onclick') && 
@@ -455,10 +455,10 @@ export class MobileAccessibilityAuditor {
           element: element.tagName.toLowerCase(),
           wcagCriterion: '2.1.1',
           severity: 'high',
-          fix: 'Add keyboard event handlers or use button/link elements';
-        });
-      }
-    });
+          fix: 'Add keyboard event handlers or use button/link elements'
+  })
+  }
+    })
   }
 
   // Check touch targets (2.5.5) - Mobile specific
@@ -466,7 +466,7 @@ export class MobileAccessibilityAuditor {
     if (!this.config.mobileOptimized) return;
     
     const MIN_TARGET_SIZE = 44; // WCAG recommendation for mobile;
-    const interactiveElements = document.querySelectorAll(;
+    const interactiveElements = document.querySelectorAll(;;
       'button, a[href], input, select, textarea, [onclick], [tabindex]:not([tabindex="-1"])'
     );
     
@@ -491,10 +491,10 @@ export class MobileAccessibilityAuditor {
           element: `${element.tagName.toLowerCase()}`,
           wcagCriterion: '2.5.5',
           severity: 'medium',
-          fix: 'Increase padding or size to meet minimum touch target requirements';
-        });
-      }
-    });
+          fix: 'Increase padding or size to meet minimum touch target requirements'
+  })
+  }
+    })
   }
 
   // Check landmarks (1.3.1)
@@ -515,8 +515,8 @@ export class MobileAccessibilityAuditor {
         description: 'Missing main landmark',
         wcagCriterion: '1.3.1',
         severity: 'high',
-        fix: 'Add <main> element or role="main"';
-      });;
+        fix: 'Add <main> element or role="main"'
+  })
   } else if (landmarks.main.length > 1) {
       this.addIssue({
         type: 'warning',
@@ -524,9 +524,9 @@ export class MobileAccessibilityAuditor {
         description: 'Multiple main landmarks found',
         wcagCriterion: '1.3.1',
         severity: 'medium',
-        fix: 'Use only one main landmark per page';
-      });
-    }
+        fix: 'Use only one main landmark per page'
+  })
+  }
     
     // Check for navigation landmark
     if (landmarks.navigation.length === 0) {
@@ -536,9 +536,9 @@ export class MobileAccessibilityAuditor {
         description: 'No navigation landmark found',
         wcagCriterion: '1.3.1',
         severity: 'low',
-        fix: 'Add <nav> element or role="navigation" for site navigation';
-      });
-    }
+        fix: 'Add <nav> element or role="navigation" for site navigation'
+  })
+  }
   }
 
   // Check ARIA usage (4.1.2)
@@ -556,9 +556,9 @@ export class MobileAccessibilityAuditor {
           element: element.tagName.toLowerCase(),
           wcagCriterion: '4.1.2',
           severity: 'low',
-          fix: 'Remove empty aria-label or provide descriptive text';
-        });
-      }
+          fix: 'Remove empty aria-label or provide descriptive text'
+  })
+  }
       
       // Check aria-labelledby references;
       const ariaLabelledBy = element.getAttribute('aria-labelledby');
@@ -573,11 +573,11 @@ export class MobileAccessibilityAuditor {
               element: element.tagName.toLowerCase(),
               wcagCriterion: '4.1.2',
               severity: 'high',
-              fix: 'Ensure referenced element exists or fix the ID reference';
-            });
-          }
-        });
-      }
+              fix: 'Ensure referenced element exists or fix the ID reference'
+  })
+  }
+        })
+  }
       
       // Check aria-describedby references;
       const ariaDescribedBy = element.getAttribute('aria-describedby');
@@ -592,12 +592,12 @@ export class MobileAccessibilityAuditor {
               element: element.tagName.toLowerCase(),
               wcagCriterion: '4.1.2',
               severity: 'high',
-              fix: 'Ensure referenced element exists or fix the ID reference';
-            });
-          }
-        });
-      }
-    });
+              fix: 'Ensure referenced element exists or fix the ID reference'
+  })
+  }
+        })
+  }
+    })
   }
 
   // Check text alternatives (1.1.1)
@@ -619,8 +619,8 @@ export class MobileAccessibilityAuditor {
           wcagCriterion: '1.1.1',
           severity: 'medium',
           fix: 'Add <title> element, aria-label, or mark as decorative with aria-hidden="true"'
-        });
-      }
+        })
+  }
     });
     
     // Check canvas elements;
@@ -634,10 +634,10 @@ export class MobileAccessibilityAuditor {
           element: 'canvas',
           wcagCriterion: '1.1.1',
           severity: 'medium',
-          fix: 'Add fallback content inside canvas element or aria-label';
-        });
-      }
-    });
+          fix: 'Add fallback content inside canvas element or aria-label'
+  })
+  }
+    })
   }
 
   // Check language specification (3.1.1)
@@ -650,9 +650,9 @@ export class MobileAccessibilityAuditor {
         description: 'Page missing language declaration',
         wcagCriterion: '3.1.1',
         severity: 'high',
-        fix: 'Add lang attribute to <html> element';
-      });
-    }
+        fix: 'Add lang attribute to <html> element'
+  })
+  }
   }
 
   // Check error identification (3.3.1)
@@ -662,7 +662,7 @@ export class MobileAccessibilityAuditor {
       const requiredFields = form.querySelectorAll('input[required], select[required], textarea[required]');
       
       requiredFields.forEach(field => {
-        const hasErrorMessage = field.getAttribute('aria-describedby') || ;
+        const hasErrorMessage = field.getAttribute('aria-describedby') || ;;
                                field.getAttribute('aria-invalid') === 'true';
         
         if (!hasErrorMessage) {
@@ -674,11 +674,11 @@ export class MobileAccessibilityAuditor {
             element: `${field.tagName.toLowerCase()}[required]`,
             wcagCriterion: '3.3.1',
             severity: 'low',
-            fix: 'Ensure error messages are associated with fields using aria-describedby';
-          });
-        }
-      });
-    });
+            fix: 'Ensure error messages are associated with fields using aria-describedby'
+  })
+  }
+      })
+  })
   }
 
   // Check labels and instructions (3.3.2)
@@ -687,7 +687,7 @@ export class MobileAccessibilityAuditor {
     
     requiredFields.forEach(field => {
       const labels = (field as HTMLInputElement).labels;
-      const hasRequiredIndicator = labels && Array.from(labels).some(label => ;
+      const hasRequiredIndicator = labels && Array.from(labels).some(label => ;;
         label.textContent?.includes('*') || label.textContent?.toLowerCase().includes('required')
       );
       
@@ -699,17 +699,17 @@ export class MobileAccessibilityAuditor {
           element: `${field.tagName.toLowerCase()}[required]`,
           wcagCriterion: '3.3.2',
           severity: 'medium',
-          fix: 'Add visual and programmatic indication that field is required';
-        });
-      }
-    });
+          fix: 'Add visual and programmatic indication that field is required'
+  })
+  }
+    })
   }
 
   // Check focus management (2.4.3)
   private checkFocusManagement(): void {
     // Check for skip links;
     const skipLinks = document.querySelectorAll('a[href^="#"]');
-    const hasSkipToMain = Array.from(skipLinks).some(link => ;
+    const hasSkipToMain = Array.from(skipLinks).some(link => ;;
       link.textContent?.toLowerCase().includes('skip') && 
       link.textContent?.toLowerCase().includes('main')
     );
@@ -721,9 +721,9 @@ export class MobileAccessibilityAuditor {
         description: 'Missing skip to main content link',
         wcagCriterion: '2.4.1',
         severity: 'medium',
-        fix: 'Add skip link to main content at the beginning of the page';
-      });
-    }
+        fix: 'Add skip link to main content at the beginning of the page'
+  })
+  }
   }
 
   // Mobile-specific accessibility checks
@@ -740,7 +740,7 @@ export class MobileAccessibilityAuditor {
         wcagCriterion: '1.4.4',
         severity: 'medium',
         fix: 'Add <meta name="viewport" content="width=device-width, initial-scale=1">'
-      });;
+      })
   } else {
       const content = viewportMeta.getAttribute('content');
       if (content?.includes('user-scalable=no') || content?.includes('maximum-scale=1')) {
@@ -750,9 +750,9 @@ export class MobileAccessibilityAuditor {
           description: 'Viewport prevents zooming',
           wcagCriterion: '1.4.4',
           severity: 'high',
-          fix: 'Remove user-scalable=no and maximum-scale restrictions';
-        });
-      }
+          fix: 'Remove user-scalable=no and maximum-scale restrictions'
+  })
+  }
     }
     
     // Check for horizontal scrolling
@@ -763,9 +763,9 @@ export class MobileAccessibilityAuditor {
         description: 'Content causes horizontal scrolling',
         wcagCriterion: '1.4.10',
         severity: 'medium',
-        fix: 'Ensure content fits within viewport width';
-      });
-    }
+        fix: 'Ensure content fits within viewport width'
+  })
+  }
   }
 
   // Run custom rules
@@ -781,27 +781,27 @@ export class MobileAccessibilityAuditor {
             element: element.tagName.toLowerCase(),
             wcagCriterion: rule.wcagCriterion,
             severity: rule.severity,
-            fix: rule.fix;
-          });
-        }
-      });
-    });
+            fix: rule.fix
+  })
+  }
+      })
+  })
   }
 
   // Add issue to list
   private addIssue(issue: AccessibilityIssue): void {
     if (!this.config.includeWarnings && issue.type === 'warning') {
-      return;
-    }
+      return
+  }
     
     if (this.config.skipElementsWithAriaHidden && issue.element) {
       const element = document.querySelector(issue.element);
       if (element?.getAttribute('aria-hidden') === 'true') {
-        return;
-      }
+        return
+  }
     }
     
-    this.issues.push(issue);
+    this.issues.push(issue)
   }
 
   // Generate final report
@@ -822,29 +822,29 @@ export class MobileAccessibilityAuditor {
     // Generate suggestions;
     const suggestions: string[] = [];
     if (errorCount > 0) {
-      suggestions.push('Fix critical accessibility errors first');
-    }
+      suggestions.push('Fix critical accessibility errors first')
+  }
     if (warningCount > 0) {
-      suggestions.push('Address accessibility warnings to improve experience');
-    }
+      suggestions.push('Address accessibility warnings to improve experience')
+  }
     if (score < 60) {
-      suggestions.push('Consider a comprehensive accessibility review');
-    }
+      suggestions.push('Consider a comprehensive accessibility review')
+  }
     if (this.config.mobileOptimized) {
-      suggestions.push('Test with real mobile devices and assistive technology');
-    }
+      suggestions.push('Test with real mobile devices and assistive technology')
+  }
     
     // Identify compliant areas;
     const compliantAreas: string[] = [];
     if (errorCount === 0) {
-      compliantAreas.push('No critical accessibility errors found');
-    }
+      compliantAreas.push('No critical accessibility errors found')
+  }
     if (this.issues.filter(i => i.wcagCriterion.startsWith('1.1')).length === 0) {
-      compliantAreas.push('Image alternatives properly implemented');
-    }
+      compliantAreas.push('Image alternatives properly implemented')
+  }
     if (this.issues.filter(i => i.wcagCriterion.startsWith('2.4')).length === 0) {
-      compliantAreas.push('Navigation and focus management working well');
-    }
+      compliantAreas.push('Navigation and focus management working well')
+  }
     
     return {
       score,
@@ -857,16 +857,16 @@ export class MobileAccessibilityAuditor {
   static quickAudit(mobileOptimized: boolean = true): AccessibilityAuditResult {
     const auditor = new MobileAccessibilityAuditor({ 
       mobileOptimized,
-      includeWarnings: true ;
-    };
+      includeWarnings: true
   };
-    return auditor.auditPage();
+  };
+    return auditor.auditPage()
   }
   
   // Static method to run comprehensive audit
   static comprehensiveAudit(config?: Partial<AccessibilityAuditConfig>): AccessibilityAuditResult {
     const auditor = new MobileAccessibilityAuditor(config);
-    return auditor.auditPage();
+    return auditor.auditPage()
   }
 }
 

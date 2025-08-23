@@ -49,8 +49,8 @@ describe('DataMigrationService', () => {
     // Reset localStorage mock - use defineProperty to control length
     Object.defineProperty(localStorage, 'length', {
       get: jest.fn(() => 0),
-      configurable: true;
-    });
+      configurable: true
+  });
     // Default key mock - will be overridden in individual tests
   });
 
@@ -58,20 +58,20 @@ describe('DataMigrationService', () => {
     it.skip('should perform complete migration successfully', async () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 5),
-        configurable: true;
-      });
+        configurable: true
+  });
       (localStorage.key as jest.Mock).mockImplementation((index) => {
         const keys = ['userProfile', 'mood_analyses', 'safetyPlan', 'systemKey', '_private'];
-        return index < 5 ? keys[index] : null;
-      });
+        return index < 5 ? keys[index] : null
+  });
       (localStorage.getItem as jest.Mock).mockImplementation((key: string) => {
         const data: Record<string, string> = {
           'userProfile': JSON.stringify({ name: 'Test User' }),
           'mood_analyses': JSON.stringify([{ mood: 'happy' }]),
           'safetyPlan': JSON.stringify({ steps: ['call friend'] }),
         };
-        return data[key] || null;
-      });
+        return data[key] || null
+  });
 
       const options: MigrationOptions = {
         enableLogging: true,
@@ -84,21 +84,21 @@ describe('DataMigrationService', () => {
       expect(report.migratedKeys).toBeGreaterThan(0);
       expect(report.migrationTime).toBeGreaterThan(0);
       expect(mockSecureStorage.exportData).toHaveBeenCalledWith(true);
-      expect(mockEncryptionService.migrateExistingData).toHaveBeenCalled();
-    });
+      expect(mockEncryptionService.migrateExistingData).toHaveBeenCalled()
+  });
 
     it.skip('should handle dry run without making changes', async () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 5),
-        configurable: true;
-      });
+        configurable: true
+  });
       (localStorage.key as jest.Mock).mockImplementation((index) => {
         const keys = ['userProfile', 'mood_analyses', 'safetyPlan', 'systemKey', '_private'];
-        return index < 5 ? keys[index] : null;
-      });
+        return index < 5 ? keys[index] : null
+  });
       (localStorage.getItem as jest.Mock).mockImplementation((key) => {
-        return key === 'mood_analyses' ? JSON.stringify([{ mood: 'sad' }]) : null;
-      });
+        return key === 'mood_analyses' ? JSON.stringify([{ mood: 'sad' }]) : null
+  });
 
       const options: MigrationOptions = {
         dryRun: true,
@@ -108,14 +108,14 @@ describe('DataMigrationService', () => {
 
       expect(report.totalKeys).toBe(5);
       expect(mockSecureStorage.setItem).not.toHaveBeenCalled();
-      expect(mockEncryptionService.migrateExistingData).not.toHaveBeenCalled();
-    });
+      expect(mockEncryptionService.migrateExistingData).not.toHaveBeenCalled()
+  });
 
     it.skip('should handle migration errors gracefully', async () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 1),
-        configurable: true;
-      });
+        configurable: true
+  });
       (localStorage.key as jest.Mock).mockImplementation((index) => {
         return index === 0 ? 'safetyPlan' : null; // Use a key that needs migration
       });
@@ -126,45 +126,45 @@ describe('DataMigrationService', () => {
 
       expect(report.failedKeys).toBeGreaterThan(0);
       expect(report.errors.length).toBeGreaterThan(0);
-      expect(report.errors[0]).toContain('Storage error');
-    });
+      expect(report.errors[0]).toContain('Storage error')
+  });
 
     it.skip('should skip system keys during migration', async () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 2),
-        configurable: true;
-      });
+        configurable: true
+  });
       (localStorage.key as jest.Mock).mockImplementation((index) => {
         const keys = ['_secure_storage_log', 'analytics_events'];
-        return keys[index] || null;
-      });
+        return keys[index] || null
+  });
       (localStorage.getItem as jest.Mock).mockReturnValue('some data');
 
       const report = await service.performMigration();
 
       expect(report.skippedKeys).toBe(2);
-      expect(report.migratedKeys).toBe(0);
-    });
+      expect(report.migratedKeys).toBe(0)
+  });
 
     it.skip('should skip already encrypted data', async () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 1),
-        configurable: true;
-      });
+        configurable: true
+  });
       (localStorage.key as jest.Mock).mockImplementation(() => 'mood_analyses');
       (localStorage.getItem as jest.Mock).mockReturnValue(JSON.stringify({ encrypted: true, data: 'encrypted' }));
 
       const report = await service.performMigration();
 
       expect(report.skippedKeys).toBe(1);
-      expect(report.migratedKeys).toBe(0);
-    });
+      expect(report.migratedKeys).toBe(0)
+  });
 
     it.skip('should add compliance warnings when violations are detected', async () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 1),
-        configurable: true;
-      });
+        configurable: true
+  });
       (localStorage.key as jest.Mock).mockImplementation(() => 'mood_analyses');
       (localStorage.getItem as jest.Mock).mockReturnValue(JSON.stringify({ mood: 'happy' }));
 
@@ -177,8 +177,8 @@ describe('DataMigrationService', () => {
       const report = await service.performMigration();
 
       expect(report.warnings).toContain('HIPAA compliance violations detected');
-      expect(report.warnings).toContain('Unencrypted health data detected');
-    });
+      expect(report.warnings).toContain('Unencrypted health data detected')
+  })
   });
 
   describe('validateMigration', () => {
@@ -203,8 +203,8 @@ describe('DataMigrationService', () => {
       const result = await service.validateMigration();
 
       expect(result.isValid).toBe(true);
-      expect(result.issues).toHaveLength(0);
-    });
+      expect(result.issues).toHaveLength(0)
+  });
 
     it.skip('should detect encryption support issues', async () => {
       mockEncryptionService.getEncryptionStats.mockReturnValue({
@@ -215,8 +215,8 @@ describe('DataMigrationService', () => {
 
       expect(result.isValid).toBe(false);
       expect(result.issues).toContain('Browser does not support required encryption features');
-      expect(result.recommendations).toContain('Use a modern browser that supports Web Crypto API');
-    });
+      expect(result.recommendations).toContain('Use a modern browser that supports Web Crypto API')
+  });
 
     it.skip('should detect HIPAA compliance violations', async () => {
       mockEncryptionService.performHIPAAComplianceCheck.mockReturnValue({
@@ -230,8 +230,8 @@ describe('DataMigrationService', () => {
       expect(result.isValid).toBe(false);
       expect(result.issues).toContain('HIPAA compliance violations detected');
       expect(result.issues).toContain('Unencrypted PII detected');
-      expect(result.recommendations).toContain('Encrypt all personal data');
-    });
+      expect(result.recommendations).toContain('Encrypt all personal data')
+  });
 
     it.skip('should detect data integrity issues', async () => {
       mockEncryptionService.validateDataIntegrity.mockResolvedValue({
@@ -244,34 +244,34 @@ describe('DataMigrationService', () => {
 
       expect(result.isValid).toBe(false);
       expect(result.issues).toContain('2 encrypted items failed integrity check');
-      expect(result.recommendations).toContain('Re-run migration for failed items');
-    });
+      expect(result.recommendations).toContain('Re-run migration for failed items')
+  })
   });
 
   describe('getMigrationStatus', () => {
     it.skip('should detect no migration needed when all data is encrypted', () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 2),
-        configurable: true;
-      });
+        configurable: true
+  });
       (localStorage.key as jest.Mock).mockImplementation((index) => {
         const keys = ['mood_analyses', 'safetyPlan'];
-        return keys[index] || null;
-      });
+        return keys[index] || null
+  });
       (localStorage.getItem as jest.Mock).mockReturnValue(JSON.stringify({ encrypted: true, data: 'encrypted' }));
 
       const status = service.getMigrationStatus();
 
       expect(status.needsMigration).toBe(false);
       expect(status.reason).toBe('All sensitive data is properly encrypted');
-      expect(status.sensitiveKeysFound).toHaveLength(0);
-    });
+      expect(status.sensitiveKeysFound).toHaveLength(0)
+  });
 
     it.skip('should detect migration needed with critical urgency for crisis data', () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 1),
-        configurable: true;
-      });
+        configurable: true
+  });
       (localStorage.key as jest.Mock).mockImplementation(() => 'crisis_intervention_data');
       (localStorage.getItem as jest.Mock).mockReturnValue(JSON.stringify({ data: 'unencrypted' }));
 
@@ -279,36 +279,36 @@ describe('DataMigrationService', () => {
 
       expect(status.needsMigration).toBe(true);
       expect(status.urgency).toBe('critical');
-      expect(status.sensitiveKeysFound).toContain('crisis_intervention_data');
-    });
+      expect(status.sensitiveKeysFound).toContain('crisis_intervention_data')
+  });
 
     it.skip('should detect migration needed with high urgency for health data', () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 1),
-        configurable: true;
-      });
+        configurable: true
+  });
       (localStorage.key as jest.Mock).mockImplementation(() => 'health_records');
       (localStorage.getItem as jest.Mock).mockReturnValue(JSON.stringify({ data: 'unencrypted' }));
 
       const status = service.getMigrationStatus();
 
       expect(status.needsMigration).toBe(true);
-      expect(status.urgency).toBe('high');
-    });
+      expect(status.urgency).toBe('high')
+  });
 
     it.skip('should detect migration needed with medium urgency for chat data', () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 1),
-        configurable: true;
-      });
+        configurable: true
+  });
       (localStorage.key as jest.Mock).mockImplementation(() => 'chat_history');
       (localStorage.getItem as jest.Mock).mockReturnValue(JSON.stringify({ data: 'unencrypted' }));
 
       const status = service.getMigrationStatus();
 
       expect(status.needsMigration).toBe(true);
-      expect(status.urgency).toBe('medium');
-    });
+      expect(status.urgency).toBe('medium')
+  })
   });
 
   describe('setupDataProtection', () => {
@@ -322,8 +322,8 @@ describe('DataMigrationService', () => {
       // Test that localStorage.setItem was overridden
       expect(localStorage.setItem).not.toBe(originalSetItem);
       expect(localStorage.getItem).not.toBe(originalGetItem);
-      expect(localStorage.removeItem).not.toBe(originalRemoveItem);
-    });
+      expect(localStorage.removeItem).not.toBe(originalRemoveItem)
+  });
 
     it.skip('should use secure storage for sensitive keys', async () => {
       await service.setupDataProtection();
@@ -331,8 +331,8 @@ describe('DataMigrationService', () => {
       // Try to set a sensitive key
       localStorage.setItem('mood_analyses', JSON.stringify({ mood: 'happy' }));
 
-      expect(mockSecureStorage.setItem).toHaveBeenCalledWith('mood_analyses', JSON.stringify({ mood: 'happy' }));
-    });
+      expect(mockSecureStorage.setItem).toHaveBeenCalledWith('mood_analyses', JSON.stringify({ mood: 'happy' }))
+  });
 
     it.skip('should use regular localStorage for non-sensitive keys', async () => {
       const originalSetItem = jest.fn();
@@ -343,8 +343,8 @@ describe('DataMigrationService', () => {
       // Try to set a non-sensitive key
       localStorage.setItem('theme_preference', 'dark');
 
-      expect(originalSetItem).toHaveBeenCalledWith('theme_preference', 'dark');
-    });
+      expect(originalSetItem).toHaveBeenCalledWith('theme_preference', 'dark')
+  })
   });
 
   describe('private methods', () => {
@@ -357,9 +357,9 @@ describe('DataMigrationService', () => {
         expect(isSystemKey('analytics_opted_out')).toBe(true);
         expect(isSystemKey('_privateKey')).toBe(true);
         expect(isSystemKey('userProfile')).toBe(false);
-        expect(isSystemKey('mood_analyses')).toBe(false);
-      });
-    });
+        expect(isSystemKey('mood_analyses')).toBe(false)
+  })
+  });
 
     describe('isAlreadyEncrypted', () => {
       it.skip('should detect encrypted data correctly', () => {
@@ -368,9 +368,9 @@ describe('DataMigrationService', () => {
         expect(isAlreadyEncrypted(JSON.stringify({ encrypted: true }))).toBe(true);
         expect(isAlreadyEncrypted(JSON.stringify({ encrypted: false }))).toBe(false);
         expect(isAlreadyEncrypted(JSON.stringify({ data: 'normal' }))).toBe(false);
-        expect(isAlreadyEncrypted('invalid json')).toBe(false);
-      });
-    });
+        expect(isAlreadyEncrypted('invalid json')).toBe(false)
+  })
+  });
 
     describe('shouldEncryptKey', () => {
       it.skip('should identify keys that need encryption', () => {
@@ -387,37 +387,37 @@ describe('DataMigrationService', () => {
 
         expect(shouldEncryptKey('theme_preference')).toBe(false);
         expect(shouldEncryptKey('language_setting')).toBe(false);
-        expect(shouldEncryptKey('ui_state')).toBe(false);
-      });
-    });
+        expect(shouldEncryptKey('ui_state')).toBe(false)
+  })
+  });
 
     describe('getAllLocalStorageKeys', () => {
       it.skip('should retrieve all localStorage keys', () => {
         Object.defineProperty(localStorage, 'length', {
           get: jest.fn(() => 3),
-          configurable: true;
-        });
+          configurable: true
+  });
         (localStorage.key as jest.Mock).mockImplementation((index) => {
           const keys = ['key1', 'key2', 'key3'];
-          return keys[index] || null;
-        });
+          return keys[index] || null
+  });
 
         const keys = (service as any).getAllLocalStorageKeys();
 
-        expect(keys).toEqual(['key1', 'key2', 'key3']);
-      });
+        expect(keys).toEqual(['key1', 'key2', 'key3'])
+  });
 
       it.skip('should handle empty localStorage', () => {
         Object.defineProperty(localStorage, 'length', {
           get: jest.fn(() => 0),
-          configurable: true;
-        });
+          configurable: true
+  });
 
         const keys = (service as any).getAllLocalStorageKeys();
 
-        expect(keys).toEqual([]);
-      });
-    });
+        expect(keys).toEqual([])
+  })
+  });
 
     describe('createBackup', () => {
       it.skip('should create and store backup', async () => {
@@ -431,9 +431,9 @@ describe('DataMigrationService', () => {
         expect(mockSecureStorage.setItem).toHaveBeenCalledWith(
           expect.stringMatching(/^data_backup_\d+$/),
           JSON.stringify(mockBackupData)
-        );
-      });
-    });
+        )
+  })
+  });
 
     describe('logMigrationReport', () => {
       it.skip('should log migration report details', () => {
@@ -464,11 +464,11 @@ describe('DataMigrationService', () => {
         expect(consoleWarnSpy).toHaveBeenCalledWith('Migration warnings:', ['Test warning']);
 
         consoleSpy.mockRestore();
-        consoleWarnSpy.mockRestore();
-      });
-    });
+        consoleWarnSpy.mockRestore()
+  })
+  })
+  })
   });
-});
 
 describe('getDataMigrationService', () => {
   it.skip('should return singleton instance', () => {
@@ -476,9 +476,9 @@ describe('getDataMigrationService', () => {
     const instance2 = getDataMigrationService();
 
     expect(instance1).toBe(instance2);
-    expect(instance1).toBeInstanceOf(DataMigrationService);
+    expect(instance1).toBeInstanceOf(DataMigrationService)
+  })
   });
-});
 
 describe('useDataMigration hook', () => {
   it.skip('should provide migration methods', () => {
@@ -487,7 +487,7 @@ describe('useDataMigration hook', () => {
     expect(result.current.performMigration).toBeInstanceOf(Function);
     expect(result.current.validateMigration).toBeInstanceOf(Function);
     expect(result.current.getMigrationStatus).toBeInstanceOf(Function);
-    expect(result.current.setupDataProtection).toBeInstanceOf(Function);
+    expect(result.current.setupDataProtection).toBeInstanceOf(Function)
   });
 
   it.skip('should perform migration through hook', async () => {
@@ -495,17 +495,17 @@ describe('useDataMigration hook', () => {
 
     Object.defineProperty(localStorage, 'length', {
       get: jest.fn(() => 1),
-      configurable: true;
-    });
+      configurable: true
+  });
     (localStorage.key as jest.Mock).mockReturnValue('test_key');
 
     let migrationResult: MigrationReport | undefined;
     await act(async () => {
-      migrationResult = await result.current.performMigration({ dryRun: true });
-    });
+      migrationResult = await result.current.performMigration({ dryRun: true })
+  });
 
     expect(migrationResult).toBeDefined();
-    expect(migrationResult!.totalKeys).toBeGreaterThanOrEqual(0);
+    expect(migrationResult!.totalKeys).toBeGreaterThanOrEqual(0)
   });
 
   it.skip('should validate migration through hook', async () => {
@@ -513,12 +513,12 @@ describe('useDataMigration hook', () => {
 
     let validationResult: any;
     await act(async () => {
-      validationResult = await result.current.validateMigration();
-    });
+      validationResult = await result.current.validateMigration()
+  });
 
     expect(validationResult).toHaveProperty('isValid');
     expect(validationResult).toHaveProperty('issues');
-    expect(validationResult).toHaveProperty('recommendations');
+    expect(validationResult).toHaveProperty('recommendations')
   });
 
   it.skip('should get migration status through hook', () => {
@@ -526,27 +526,27 @@ describe('useDataMigration hook', () => {
 
     Object.defineProperty(localStorage, 'length', {
       get: jest.fn(() => 0),
-      configurable: true;
-    });
+      configurable: true
+  });
 
     const status = result.current.getMigrationStatus();
 
     expect(status).toHaveProperty('needsMigration');
     expect(status).toHaveProperty('reason');
     expect(status).toHaveProperty('urgency');
-    expect(status).toHaveProperty('sensitiveKeysFound');
+    expect(status).toHaveProperty('sensitiveKeysFound')
   });
 
   it.skip('should setup data protection through hook', async () => {
     const { result } = renderHook(() => useDataMigration());
 
     await act(async () => {
-      await result.current.setupDataProtection();
-    });
+      await result.current.setupDataProtection()
+  });
 
     // Verify localStorage methods were overridden
     expect(localStorage.setItem).toBeDefined();
     expect(localStorage.getItem).toBeDefined();
-    expect(localStorage.removeItem).toBeDefined();
+    expect(localStorage.removeItem).toBeDefined()
+  })
   });
-});

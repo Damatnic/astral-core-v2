@@ -12,7 +12,7 @@ export interface ExportOptions {
   includeSettings: boolean;
   dateRange?: {
     start: Date;
-    end: Date;
+    end: Date
   }
 
 export interface UserDataExport {
@@ -21,29 +21,29 @@ export interface UserDataExport {
     userId?: string;
     version: string;
     format: string;
-    dataTypes: string[];
+    dataTypes: string[]
   };
   personalData?: {
     preferences: any;
     settings: any;
-    profile: any;
+    profile: any
   };
   moodData?: {
     analyses: unknown[];
     patterns: any;
-    trends: any;
+    trends: any
   };
   activityData?: {
     posts: unknown[];
     interactions: unknown[];
-    gamification: any;
+    gamification: any
   };
   chatHistory?: {
     aiSessions: unknown[];
-    peerChats: unknown[];
+    peerChats: unknown[]
   };
-  reflections?: unknown[];
-}
+  reflections?: unknown[]
+  }
 
 class DataExportService {
   private readonly EXPORT_VERSION = '1.0.0';
@@ -59,8 +59,8 @@ class DataExportService {
       case 'pdf':
         return this.exportAsPDF(exportData);
       default:
-        throw new Error(`Unsupported export format: ${options.format}`);
-    }
+        throw new Error(`Unsupported export format: ${options.format}`)
+  }
   }
 
   private async gatherUserData(options: ExportOptions): Promise<UserDataExport> {
@@ -69,25 +69,25 @@ class DataExportService {
         exportDate: new Date().toISOString(),
         version: this.EXPORT_VERSION,
         format: options.format,
-        dataTypes: [];
-      }
+        dataTypes: []
+  }
     };
 
     // Add user ID if available;
     const userId = localStorage.getItem('userId');
     if (userId && options.includePersonalData) {
-      exportData.metadata.userId = userId;
-    }
+      exportData.metadata.userId = userId
+  }
 
     // Gather personal data
     if (options.includePersonalData) {
       exportData.personalData = {
         preferences: this.getStoredData('userPreferences'),
         settings: this.getStoredData('userSettings'),
-        profile: this.getStoredData('userProfile');
-      };
-      exportData.metadata.dataTypes.push('personal');
-    }
+        profile: this.getStoredData('userProfile')
+  };
+      exportData.metadata.dataTypes.push('personal')
+  }
 
     // Gather mood data
     if (options.includeMoodData) {
@@ -97,48 +97,48 @@ class DataExportService {
       exportData.moodData = {
         analyses: filteredMoodData,
         patterns: this.calculateMoodPatterns(filteredMoodData),
-        trends: this.calculateMoodTrends(filteredMoodData);
-      };
-      exportData.metadata.dataTypes.push('mood');
-    }
+        trends: this.calculateMoodTrends(filteredMoodData)
+  };
+      exportData.metadata.dataTypes.push('mood')
+  }
 
     // Gather activity data
     if (options.includeActivityData) {
       exportData.activityData = {
         posts: this.getStoredData('userPosts') || [],
         interactions: this.getStoredData('userInteractions') || [],
-        gamification: this.getStoredData('userStats');
-      };
-      exportData.metadata.dataTypes.push('activity');
-    }
+        gamification: this.getStoredData('userStats')
+  };
+      exportData.metadata.dataTypes.push('activity')
+  }
 
     // Gather chat history
     if (options.includeChatHistory) {
       exportData.chatHistory = {
         aiSessions: this.getStoredData('aiChatHistory') || [],
-        peerChats: this.getStoredData('peerChatHistory') || [];
-      };
-      exportData.metadata.dataTypes.push('chat');
-    }
+        peerChats: this.getStoredData('peerChatHistory') || []
+  };
+      exportData.metadata.dataTypes.push('chat')
+  }
 
     // Gather reflections
     if (options.includeReflections) {
       const reflections = this.getStoredData('userReflections') || [];
       exportData.reflections = this.filterByDateRange(reflections, options.dateRange);
-      exportData.metadata.dataTypes.push('reflections');
-    }
+      exportData.metadata.dataTypes.push('reflections')
+  }
 
-    return exportData;
+    return exportData
   }
 
   private getStoredData(key: string): any {
     try {
       const data = localStorage.getItem(key);
-      return data ? JSON.parse(data) : null;
-    } catch (error) {
+      return data ? JSON.parse(data) : null
+  } catch (error) {
       console.warn(`Failed to parse stored data for ${key}:`, error);
-      return null;
-    }
+      return null
+  }
   }
 
   private filterByDateRange(data: unknown[], dateRange?: { start: Date; end: Date }): unknown[] {
@@ -147,8 +147,8 @@ class DataExportService {
     return data.filter(item => {
       const record = item as any;
       const itemDate = new Date(record.timestamp || record.createdAt || record.date);
-      return itemDate >= dateRange.start && itemDate <= dateRange.end;
-    });
+      return itemDate >= dateRange.start && itemDate <= dateRange.end
+  })
   }
 
   private calculateMoodPatterns(moodData: unknown[]): any {
@@ -157,8 +157,8 @@ class DataExportService {
     const moodCounts: Record<string, number> = {};
     moodData.forEach(analysis => {
       const mood = analysis as any;
-      moodCounts[mood.primary] = (moodCounts[mood.primary] || 0) + 1;
-    });
+      moodCounts[mood.primary] = (moodCounts[mood.primary] || 0) + 1
+  });
 
     return {
       dominantMoods: Object.entries(moodCounts)
@@ -169,8 +169,8 @@ class DataExportService {
       totalEntries: moodData.length,
       dateRange: {
         start: Math.min(...moodData.map(d => (d as any).timestamp)),
-        end: Math.max(...moodData.map(d => (d as any).timestamp));
-      }
+        end: Math.max(...moodData.map(d => (d as any).timestamp))
+  }
     }
 
   private calculateMoodTrends(moodData: unknown[]): any {
@@ -180,15 +180,15 @@ class DataExportService {
     const recentData = sortedData.slice(-7); // Last 7 entries;
     const olderData = sortedData.slice(-14, -7); // Previous 7 entries;
 
-    const getAverageIntensity = (data: unknown[]) => ;
+    const getAverageIntensity = (data: unknown[]) => ;;
       data.reduce((sum: number, item) => sum + ((item as any).intensity || 0), 0) / data.length;
 
     return {
       recentAverageIntensity: getAverageIntensity(recentData),
       previousAverageIntensity: olderData.length ? getAverageIntensity(olderData) : null,
       trendDirection: this.calculateTrendDirection(sortedData),
-      volatility: this.calculateVolatility(sortedData);
-    }
+      volatility: this.calculateVolatility(sortedData)
+  }
 
   private calculateTrendDirection(data: unknown[]): 'improving' | 'declining' | 'stable' {
     if (data.length < 4) return 'stable';
@@ -203,7 +203,7 @@ class DataExportService {
     
     if (difference > 0.1) return 'improving';
     if (difference < -0.1) return 'declining';
-    return 'stable';
+    return 'stable'
   }
 
   private calculateVolatility(data: unknown[]): number {
@@ -212,11 +212,11 @@ class DataExportService {
     let changes = 0;
     for (let i = 1; i < data.length; i++) {
       if ((data[i] as any).primary !== (data[i - 1] as any).primary) {
-        changes++;
-      }
+        changes++
+  }
     }
 
-    return changes / (data.length - 1);
+    return changes / (data.length - 1)
   }
 
   private exportAsJSON(data: UserDataExport): Blob {
@@ -240,10 +240,10 @@ class DataExportService {
         const mood = analysis as any;
         const date = new Date(mood.timestamp).toISOString().split('T')[0];
         const keywords = (mood.keywords || []).join('; ');
-        csvContent += `${date},${mood.primary},${mood.secondary || ''},${mood.intensity},${mood.confidence},"${keywords}"\n`;
-      });
-      csvContent += '\n';
-    }
+        csvContent += `${date},${mood.primary},${mood.secondary || ''},${mood.intensity},${mood.confidence},"${keywords}"\n`
+  });
+      csvContent += '\n'
+  }
 
     // Export activity data as CSV
     if (data.activityData?.posts) {
@@ -254,12 +254,12 @@ class DataExportService {
         const postData = post as any;
         const date = new Date(postData.timestamp || postData.createdAt).toISOString().split('T')[0];
         const content = (postData.content || '').replace(/"/g, '""').substring(0, 100);
-        csvContent += `${date},"${content}",${postData.mood || ''},${postData.supportCount || 0}\n`;
-      });
-      csvContent += '\n';
-    }
+        csvContent += `${date},"${content}",${postData.mood || ''},${postData.supportCount || 0}\n`
+  });
+      csvContent += '\n'
+  }
 
-    return new Blob([csvContent], { type: 'text/csv' });
+    return new Blob([csvContent], { type: 'text/csv' })
   }
 
   private async exportAsPDF(data: UserDataExport): Promise<Blob> {
@@ -280,18 +280,18 @@ class DataExportService {
       if (data.moodData.patterns?.dominantMoods) {
         pdfContent += `\nDominant Moods:\n`;
         data.moodData.patterns.dominantMoods.forEach((mood: any, index: number) => {
-          pdfContent += `${index + 1}. ${mood.mood}: ${(mood.frequency * 100).toFixed(1)}%\n`;
-        });
-      }
+          pdfContent += `${index + 1}. ${mood.mood}: ${(mood.frequency * 100).toFixed(1)}%\n`
+  })
+  }
 
       if (data.moodData.trends) {
         pdfContent += `\nMood Trends:\n`;
         pdfContent += `Recent Average Intensity: ${(data.moodData.trends.recentAverageIntensity * 100).toFixed(1)}%\n`;
         pdfContent += `Trend Direction: ${data.moodData.trends.trendDirection}\n`;
-        pdfContent += `Volatility: ${(data.moodData.trends.volatility * 100).toFixed(1)}%\n`;
-      }
-      pdfContent += '\n';
-    }
+        pdfContent += `Volatility: ${(data.moodData.trends.volatility * 100).toFixed(1)}%\n`
+  }
+      pdfContent += '\n'
+  }
 
     // Activity Summary
     if (data.activityData) {
@@ -302,18 +302,18 @@ class DataExportService {
       
       if (data.activityData.gamification) {
         pdfContent += `Level: ${data.activityData.gamification.level || 'N/A'}\n`;
-        pdfContent += `Total Points: ${data.activityData.gamification.totalPoints || 0}\n`;
-      }
-      pdfContent += '\n';
-    }
+        pdfContent += `Total Points: ${data.activityData.gamification.totalPoints || 0}\n`
+  }
+      pdfContent += '\n'
+  }
 
     // Chat History Summary
     if (data.chatHistory) {
       pdfContent += `CHAT HISTORY SUMMARY\n`;
       pdfContent += `${'-'.repeat(20)}\n`;
       pdfContent += `AI Chat Sessions: ${data.chatHistory.aiSessions?.length || 0}\n`;
-      pdfContent += `Peer Conversations: ${data.chatHistory.peerChats?.length || 0}\n\n`;
-    }
+      pdfContent += `Peer Conversations: ${data.chatHistory.peerChats?.length || 0}\n\n`
+  }
 
     // Reflections Summary
     if (data.reflections) {
@@ -324,17 +324,17 @@ class DataExportService {
       if (data.reflections.length > 0) {
         const dateRange = {
           start: new Date(Math.min(...data.reflections.map((r: any) => new Date(r.timestamp || r.date).getTime()))),
-          end: new Date(Math.max(...data.reflections.map((r: any) => new Date(r.timestamp || r.date).getTime())));
-        };
-        pdfContent += `Date Range: ${dateRange.start.toLocaleDateString()} - ${dateRange.end.toLocaleDateString()}\n`;
-      }
-      pdfContent += '\n';
-    }
+          end: new Date(Math.max(...data.reflections.map((r: any) => new Date(r.timestamp || r.date).getTime())))
+  };
+        pdfContent += `Date Range: ${dateRange.start.toLocaleDateString()} - ${dateRange.end.toLocaleDateString()}\n`
+  }
+      pdfContent += '\n'
+  }
 
     pdfContent += `\nThis export was generated on ${new Date().toLocaleString()}\n`;
     pdfContent += `For questions about your data, please contact support.\n`;
 
-    return new Blob([pdfContent], { type: 'text/plain' });
+    return new Blob([pdfContent], { type: 'text/plain' })
   }
 
   public downloadExport(blob: Blob, filename: string) {
@@ -345,19 +345,19 @@ class DataExportService {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    URL.revokeObjectURL(url)
   }
 
   public generateFilename(format: string, userId?: string): string {
     const timestamp = new Date().toISOString().split('T')[0];
     const userPart = userId ? `_${userId}` : '';
-    return `astral_core_export${userPart}_${timestamp}.${format}`;
+    return `astral_core_export${userPart}_${timestamp}.${format}`
   }
 
   // Data deletion methods for GDPR compliance
   public deleteAllUserData(): Promise<void> {
     return new Promise((resolve) => {
-      const keysToDelete = [;
+      const keysToDelete = [;;
         'userPreferences',
         'userSettings',
         'userProfile',
@@ -376,8 +376,8 @@ class DataExportService {
       ];
 
       keysToDelete.forEach(key => {
-        localStorage.removeItem(key);
-      });
+        localStorage.removeItem(key)
+  });
 
       // Clear any session storage
       sessionStorage.clear();
@@ -387,8 +387,8 @@ class DataExportService {
         // This would require specific implementation based on your IndexedDB usage
       }
 
-      resolve();
-    });
+      resolve()
+  })
   }
 
   public deleteSpecificDataType(dataType: string): Promise<void> {
@@ -404,18 +404,18 @@ class DataExportService {
 
       const keysToDelete = dataTypeKeys[dataType] || [];
       keysToDelete.forEach(key => {
-        localStorage.removeItem(key);
-      });
+        localStorage.removeItem(key)
+  });
 
-      resolve();
-    });
+      resolve()
+  })
   }
 
   // Privacy compliance methods
   public getDataInventory(): Record<string, any> {
     const inventory: Record<string, any> = {};
     
-    const dataKeys = [;
+    const dataKeys = [;;
       'userPreferences',
       'userSettings', 
       'userProfile',
@@ -435,11 +435,11 @@ class DataExportService {
           type: typeof data,
           size: JSON.stringify(data).length,
           lastModified: data.lastModified || 'Unknown',
-          recordCount: Array.isArray(data) ? data.length : 1;
-        }
+          recordCount: Array.isArray(data) ? data.length : 1
+  }
     });
 
-    return inventory;
+    return inventory
   }
 
   public getDataRetentionInfo(): Record<string, string> {
@@ -469,23 +469,24 @@ export const useDataExport = () => {
       return { success: true, filename } catch (error) {
       console.error('Export failed:', error);
       return { success: false, error: error instanceof Error ? error.message : 'Unknown error' } finally {
-      setIsExporting(false);
-    }
+      setIsExporting(false)
+  }
   };
   }, [service]);
 
   const deleteAllData = React.useCallback(async () => {
-    await service.deleteAllUserData();
+    await service.deleteAllUserData()
   };
   }, [service]);
 
   const deleteDataType = React.useCallback(async (dataType: string) => {
-    await service.deleteSpecificDataType(dataType);
+    await service.deleteSpecificDataType(dataType)
   };
   }, [service]);
 
   const getDataInventory = React.useCallback(() => {
-    return service.getDataInventory();
+    return service.getDataInventory()
+  };
   };
   };
   }, [service]);
@@ -504,7 +505,7 @@ let dataExportServiceInstance: DataExportService | null = null;
 
 export const getDataExportService = () => {
   dataExportServiceInstance ??= new DataExportService();
-  return dataExportServiceInstance;
-};
+  return dataExportServiceInstance
+  };
 
 export default DataExportService;

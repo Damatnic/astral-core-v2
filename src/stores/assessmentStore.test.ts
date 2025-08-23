@@ -14,12 +14,12 @@ describe('assessmentStore', () => {
     useAssessmentStore.setState(initialState);
     jest.clearAllMocks();
     authState.userToken = 'user123';
-    mockedFetch.mockClear();
+    mockedFetch.mockClear()
   });
 
   afterEach(() => {
     authState.userToken = null;
-    jest.restoreAllMocks();
+    jest.restoreAllMocks()
   });
 
   test('fetchHistory should update state on successful API call', async () => {
@@ -30,8 +30,8 @@ describe('assessmentStore', () => {
     } as Response);
 
     await act(async () => {
-      await useAssessmentStore.getState().fetchHistory();
-    });
+      await useAssessmentStore.getState().fetchHistory()
+  });
 
     const state = useAssessmentStore.getState();
     expect(state.isLoading).toBe(false);
@@ -41,7 +41,7 @@ describe('assessmentStore', () => {
         'Authorization': 'Bearer user123',
         'Content-Type': 'application/json'
       }
-    });
+    })
   });
   
   test('submitPhq9Result should call the API and then refresh history', async () => {
@@ -61,8 +61,8 @@ describe('assessmentStore', () => {
     } as Response);
 
     await act(async () => {
-      await useAssessmentStore.getState().submitPhq9Result(score, answers);
-    });
+      await useAssessmentStore.getState().submitPhq9Result(score, answers)
+  });
 
     expect(mockedFetch).toHaveBeenCalledWith('/api/assessments/submit', 
       expect.objectContaining({
@@ -71,8 +71,8 @@ describe('assessmentStore', () => {
           'Authorization': 'Bearer user123',
           'Content-Type': 'application/json'
         },
-        body: expect.stringMatching(/"type":"phq-9"/);
-      })
+        body: expect.stringMatching(/"type":"phq-9"/)
+  })
     );
     
     // Verify the body contains the expected data;
@@ -82,8 +82,8 @@ describe('assessmentStore', () => {
       type: 'phq-9',
       score,
       answers,
-      timestamp: expect.any(String);
-    });
+      timestamp: expect.any(String)
+  });
     expect(mockedFetch).toHaveBeenCalledTimes(2); // Submit + refresh
   });
   
@@ -104,8 +104,8 @@ describe('assessmentStore', () => {
     } as Response);
 
     await act(async () => {
-      await useAssessmentStore.getState().submitGad7Result(score, answers);
-    });
+      await useAssessmentStore.getState().submitGad7Result(score, answers)
+  });
 
     expect(mockedFetch).toHaveBeenCalledWith('/api/assessments/submit', 
       expect.objectContaining({
@@ -114,8 +114,8 @@ describe('assessmentStore', () => {
           'Authorization': 'Bearer user123',
           'Content-Type': 'application/json'
         },
-        body: expect.stringMatching(/"type":"gad-7"/);
-      })
+        body: expect.stringMatching(/"type":"gad-7"/)
+  })
     );
     
     // Verify the body contains the expected data;
@@ -125,8 +125,8 @@ describe('assessmentStore', () => {
       type: 'gad-7',
       score,
       answers,
-      timestamp: expect.any(String);
-    });
-    expect(mockedFetch).toHaveBeenCalledTimes(2); // Submit + refresh
+      timestamp: expect.any(String)
   });
-});
+    expect(mockedFetch).toHaveBeenCalledTimes(2); // Submit + refresh
+  })
+  });

@@ -16,8 +16,8 @@ interface AuthGuardProps {
   requireAllRoles?: boolean;
   fallback?: React.ReactNode;
   redirectTo?: string;
-  onUnauthorized?: () => void;
-}
+  onUnauthorized?: () => void
+  }
 
 export const AuthGuard: React.FC<AuthGuardProps> = ({
   children,
@@ -39,10 +39,10 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
     // Subscribe to auth changes;
     const unsubscribe = auth0Service.onAuthStateChange((user) => {
       setIsAuthenticated(!!user);
-      checkAccess(user);
-    });
+      checkAccess(user)
+  });
 
-    return unsubscribe;
+    return unsubscribe
   };
   }, [requireAuth, requireRoles, requireAllRoles]);
 
@@ -56,75 +56,75 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
       
       if (authenticated) {
         const currentUser = await auth0Service.getCurrentUser();
-        await checkAccess(currentUser);;
+        await checkAccess(currentUser)
   } else {
-        setHasAccess(!requireAuth);
-      }
+        setHasAccess(!requireAuth)
+  }
     } catch (error) {
       console.error('Auth check failed:', error);
-      setHasAccess(false);
-    } finally {
-      setIsLoading(false);
-    }
+      setHasAccess(false)
+  } finally {
+      setIsLoading(false)
+  }
   };
 
   const checkAccess = async (user: User | null) => {
     // If auth not required, grant access
     if (!requireAuth) {
       setHasAccess(true);
-      return;
-    }
+      return
+  }
 
     // If auth required but no user, deny access
     if (!user) {
       setHasAccess(false);
-      return;
-    }
+      return
+  }
 
     // If no specific roles required, grant access to any authenticated user
     if (requireRoles.length === 0) {
       setHasAccess(true);
-      return;
-    }
+      return
+  }
 
     // Check role requirements;
     let roleAccess = false;
     if (requireAllRoles) {
-      roleAccess = await auth0Service.hasAllRoles(requireRoles);;
+      roleAccess = await auth0Service.hasAllRoles(requireRoles)
   } else {
-      roleAccess = await auth0Service.hasAnyRole(requireRoles);
-    }
+      roleAccess = await auth0Service.hasAnyRole(requireRoles)
+  }
 
     setHasAccess(roleAccess);
     
     if (!roleAccess && onUnauthorized) {
-      onUnauthorized();
-    }
+      onUnauthorized()
+  }
   };
 
   // Show loading state
   if (isLoading) {
-    return <>{fallback}</>;
+    return <>{fallback}</>
   }
 
   // Check access
   if (!hasAccess) {
     if (requireAuth && !isAuthenticated) {
       // Save the attempted location for redirect after login
-      return <Navigate to={redirectTo} state={{ from: location }} replace />;
-    }
+      return <Navigate to={redirectTo} state={{ from: location }} replace />
+  }
     
     // User is authenticated but doesn't have required roles
     if (isAuthenticated && requireRoles.length > 0) {
-      return <UnauthorizedPage />;
-    }
+      return <UnauthorizedPage />
+  }
     
-    return <Navigate to={redirectTo} replace />;
+    return <Navigate to={redirectTo} replace />
   }
 
   // Access granted
-  return <>{children}</>;
-};
+  return <>{children}</>
+  };
 
 /**
  * Hook for checking authentication and authorization
@@ -142,13 +142,13 @@ export const useAuth = () => {
         
         if (authenticated) {
           const currentUser = await auth0Service.getCurrentUser();
-          setUser(currentUser);
-        }
+          setUser(currentUser)
+  }
       } catch (error) {
-        console.error('Auth check failed:', error);
-      } finally {
-        setIsLoading(false);
-      }
+        console.error('Auth check failed:', error)
+  } finally {
+        setIsLoading(false)
+  }
     };
 
     checkAuth();
@@ -156,31 +156,31 @@ export const useAuth = () => {
     // Subscribe to auth changes;
     const unsubscribe = auth0Service.onAuthStateChange((user) => {
       setUser(user);
-      setIsAuthenticated(!!user);
-    });
+      setIsAuthenticated(!!user)
+  });
 
-    return unsubscribe;
+    return unsubscribe
   };
   }, []);
 
   const login = async (options?: any) => {
-    await auth0Service.login(options);
+    await auth0Service.login(options)
   };
 
   const logout = async () => {
-    await auth0Service.logout();
+    await auth0Service.logout()
   };
 
   const hasRole = async (role: UserRole) => {
-    return await auth0Service.hasRole(role);
+    return await auth0Service.hasRole(role)
   };
 
   const hasAnyRole = async (roles: UserRole[]) => {
-    return await auth0Service.hasAnyRole(roles);
+    return await auth0Service.hasAnyRole(roles)
   };
 
   const hasAllRoles = async (roles: UserRole[]) => {
-    return await auth0Service.hasAllRoles(roles);
+    return await auth0Service.hasAllRoles(roles)
   };
 
   return {
@@ -205,8 +205,8 @@ export function withAuth<P extends object>(
     <AuthGuard {...options}>
       <Component {...props} />
     </AuthGuard>
-  );
-}
+  )
+  }
 
 /**
  * Role-based component visibility
@@ -215,30 +215,30 @@ export const CanAccess: React.FC<{
   roles?: UserRole[];
   requireAll?: boolean;
   children: React.ReactNode;
-  fallback?: React.ReactNode;
-}> = ({ roles = [], requireAll = false, children, fallback = null }) => {
+  fallback?: React.ReactNode
+  }> = ({ roles = [], requireAll = false, children, fallback = null }) => {
   const [hasAccess, setHasAccess] = useState(false);
 
   useEffect(() => {
     const checkAccess = async () => {
       if (roles.length === 0) {
         setHasAccess(true);
-        return;
-      }
+        return
+  }
 
-      const access = requireAll;
+      const access = requireAll;;
         ? await auth0Service.hasAllRoles(roles)
         : await auth0Service.hasAnyRole(roles);
       
-      setHasAccess(access);
-    };
+      setHasAccess(access)
+  };
 
-    checkAccess();
+    checkAccess()
   };
   }, [roles, requireAll]);
 
-  return <>{hasAccess ? children : fallback}</>;
-};
+  return <>{hasAccess ? children : fallback}</>
+  };
 
 // Unauthorized page component;
 const UnauthorizedPage: React.FC = () => (

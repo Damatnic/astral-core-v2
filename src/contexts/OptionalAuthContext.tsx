@@ -30,7 +30,7 @@ export interface OptionalAuthContextType {
     user: AuthUser | null
     helperProfile: Helper | null
     userToken: string | null
-    anonymousId: string | null;
+    anonymousId: string | null
   }
 }
 
@@ -41,15 +41,15 @@ export const authState: {
   user: AuthUser | null
   helperProfile: Helper | null
   userToken: string | null
-  anonymousId: string | null;
-}={
+  anonymousId: string | null
+  }={
   isAuthenticated: false,
   isAnonymous: true,
   user: null,
   helperProfile: null,
   userToken: null,
-  anonymousId: null;
-}
+  anonymousId: null
+  }
 
 const OptionalAuthContext = createContext<OptionalAuthContextType | undefined>(undefined);
 
@@ -61,16 +61,16 @@ const jwtDecode = (token: string): JWTPayload | null => {
     const base64Url = token.split('.')[1];
     if(!base64Url) {
       logger.error("Invalid JWT: Missing payload part.", undefined, "OptionalAuthContext");
-      return null;
-    }
+      return null
+  }
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-      return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-    return JSON.parse(jsonPayload);
+      return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)
+  }).join(''));
+    return JSON.parse(jsonPayload)
   } catch(e) {
     logger.error("Failed to decode JWT", e, "OptionalAuthContext");
-    return null;
+    return null
   }
 };
 
@@ -93,8 +93,8 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
       responseType: WebAuthSession.ResponseType.Token,
       scopes: ["openid", "profile", "email"],
       extraParams: {
-        audience: AUTH0_AUDIENCE;
-      }
+        audience: AUTH0_AUDIENCE
+  }
     },
     !!AUTH0_DOMAIN
   );
@@ -105,7 +105,7 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
       const profile = await ApiClient.helpers.getProfile(auth0UserId);
       if(profile) {
         setHelperProfile(profile)
-        setIsNewUser(false);
+        setIsNewUser(false)
   } else {
         setHelperProfile(null)
         setIsNewUser(true)
@@ -126,20 +126,20 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
         setUser({
           ...decodedToken,
           id: decodedToken.sub,
-          email: decodedToken.email || '';
-        } as AuthUser);
-      }
+          email: decodedToken.email || ''
+  } as AuthUser)
+  }
       setIsAnonymous(false);
       if(decodedToken?.sub) {
-        await fetchHelperProfile(decodedToken.sub);
-      }
+        await fetchHelperProfile(decodedToken.sub)
+  }
     } else {
       sessionStorage.removeItem("accessToken");
       setUser(null);
       setHelperProfile(null);
       setIsNewUser(false);
-      setIsAnonymous(true);
-    }
+      setIsAnonymous(true)
+  }
   };
   }, [fetchHelperProfile]);
 
@@ -149,17 +149,17 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
     let anonId = localStorageService.getAnonymousId();
     if(!anonId) {
       anonId = crypto.randomUUID();
-      localStorageService.setAnonymousId(anonId);
-    }
+      localStorageService.setAnonymousId(anonId)
+  }
     setAnonymousId(anonId);
     
     // Generate or retrieve user token for anonymous users;
     let token = localStorage.getItem("userToken");
     if(!token) {
       token = crypto.randomUUID();
-      localStorage.setItem("userToken", token);
-    }
-    setUserToken(token);
+      localStorage.setItem("userToken", token)
+  }
+    setUserToken(token)
   };
   }, []);
 
@@ -188,8 +188,8 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
     // If Auth0 is configured and user was authenticated, perform Auth0 logout
     if(discovery?.endSessionEndpoint && !isAnonymous) {
       const logoutUrl = `${discovery.endSessionEndpoint}?client_id=${AUTH0_CLIENT_ID}&returnTo=${encodeURIComponent(window.location.origin)}`;
-      window.location.assign(logoutUrl);
-    }
+      window.location.assign(logoutUrl)
+  }
   }, [discovery, setAuthData, isAnonymous])
 
   // Load existing session on mount
@@ -208,14 +208,14 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
             ...userData,
             sub: userData.id,
             exp: Math.floor(Date.now() / 1000) + 86400, // 24 hours from now
-            email: userData.email;
-          } as AuthUser)
+            email: userData.email
+  } as AuthUser)
           setUserToken(demoToken)
           setIsAnonymous(false);
           
           if(userData.helperProfile) {
             setHelperProfile(userData.helperProfile)
-            setIsNewUser(false);
+            setIsNewUser(false)
   } else {
             setHelperProfile(null)
             setIsNewUser(userData.userType === "helper")
@@ -226,13 +226,13 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
             ...userData,
             sub: userData.id,
             exp: Math.floor(Date.now() / 1000) + 86400,
-            email: userData.email;
-          } as AuthUser
+            email: userData.email
+  } as AuthUser
           authState.helperProfile = userData.helperProfile || null
           authState.userToken = demoToken
           setIsLoading(false);
-          return;
-        }
+          return
+  }
         
         // Check for existing auth token;
         const storedToken = sessionStorage.getItem("accessToken");
@@ -240,7 +240,7 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
           const decodedToken = jwtDecode(storedToken);
           if (decodedToken && decodedToken.exp * 1000 > Date.now()) {
             await setAuthData(storedToken)
-            setIsAnonymous(false);
+            setIsAnonymous(false)
   } else {
             // Token expired, clear it
             await setAuthData(null)
@@ -248,12 +248,12 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
         }
         
         // If no auth, remain anonymous
-        logger.debug("No authentication found, using anonymous mode", undefined, "OptionalAuthContext");
-      } catch(error) {
+        logger.debug("No authentication found, using anonymous mode", undefined, "OptionalAuthContext")
+  } catch(error) {
         logger.error("Error during token loading:", error, "OptionalAuthContext");
         // Default to anonymous mode on error
-        await setAuthData(null);
-      } finally {
+        await setAuthData(null)
+  } finally {
         logger.debug("Token load complete", undefined, "OptionalAuthContext");
         setIsLoading(false)
       }
@@ -264,11 +264,11 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
   // Handle Auth0 response
   useEffect(() => {
     if(response?.type === "success") {
-      setAuthData(response.params.access_token);
+      setAuthData(response.params.access_token)
   } else if (response?.type === "error") {
       addToast("Authentication error: " + (response.params.error_description || response.error?.message), "error");
-      logger.error("Authentication error", response.error, "OptionalAuthContext");
-    }
+      logger.error("Authentication error", response.error, "OptionalAuthContext")
+  }
   };
   }, [response, setAuthData, addToast]);
 
@@ -276,17 +276,17 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
     // If Auth0 is not configured, show a message
     if(!AUTH0_DOMAIN || !AUTH0_CLIENT_ID) {
       addToast("Login is optional. You can use all features without signing in!", "info");
-      return;
-    }
+      return
+  }
     
     if(!request) {
       const errorMessage = "Authentication service is not configured correctly.";
       logger.error(errorMessage, undefined, "OptionalAuthContext");
       addToast(errorMessage, "error");
-      return;
-    }
+      return
+  }
     
-    await promptAsync?.();
+    await promptAsync?.()
   };
   }, [request, promptAsync, addToast]);
 
@@ -294,11 +294,11 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
     // For anonymous mode, registration is optional
     if(!AUTH0_DOMAIN) {
       addToast("Registration is optional. You can use all features without an account!", "info");
-      return;
-    }
+      return
+  }
     
     // If Auth0 is configured, redirect to Auth0 signup
-    await login();
+    await login()
   };
   }, [login, addToast]);
 
@@ -345,16 +345,16 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
     authState.user = value.user;
     authState.helperProfile = value.helperProfile;
     authState.userToken = value.userToken;
-    authState.anonymousId = value.anonymousId;
+    authState.anonymousId = value.anonymousId
   }, [value])
 
-  return <OptionalAuthContext.Provider value={value}>{children}</OptionalAuthContext.Provider>;
-}
+  return <OptionalAuthContext.Provider value={value}>{children}</OptionalAuthContext.Provider>
+  }
 
 export const useOptionalAuth = (): OptionalAuthContextType => {
   const context = useContext(OptionalAuthContext);
   if(context === undefined) {
-    throw new Error("useOptionalAuth must be used within an OptionalAuthProvider");
+    throw new Error("useOptionalAuth must be used within an OptionalAuthProvider")
   }
-  return context;
-}
+  return context
+  }

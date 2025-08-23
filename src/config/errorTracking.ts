@@ -19,8 +19,8 @@ export const sentryConfig = {
   release: process.env.VITE_APP_VERSION || '1.0.0',
   
   // Environment name
-  environment: process.env.NODE_ENV || 'development';
-};
+  environment: process.env.NODE_ENV || 'development'
+  };
 
 /**
  * Initialize error tracking for the application
@@ -29,7 +29,7 @@ export const initializeErrorTracking = () => {
   // Only initialize if DSN is provided
   if (!sentryConfig.dsn) {
     logger.warn('Sentry DSN not configured. Error tracking disabled.', undefined, 'errorTracking');
-    return false;
+    return false
   }
 
   // Initialize Sentry
@@ -43,15 +43,15 @@ export const initializeErrorTracking = () => {
       'info',
       {
         environment: sentryConfig.environment,
-        release: sentryConfig.release;
-      }
+        release: sentryConfig.release
+  }
     );
 
     logger.info('Error tracking initialized successfully', undefined, 'errorTracking');
-    return true;
+    return true
   } catch (error) {
     logger.error('Failed to initialize error tracking:', error, 'errorTracking');
-    return false;
+    return false
   }
 };
 
@@ -62,9 +62,9 @@ export const setUserErrorContext = (user: {
   id?: string;
   userType: 'seeker' | 'helper' | 'admin';
   isAuthenticated: boolean;
-  sessionStart?: Date;
-}) => {
-  const sessionDuration = user.sessionStart ;
+  sessionStart?: Date
+  }) => {
+  const sessionDuration = user.sessionStart
     ? Math.floor((Date.now() - user.sessionStart.getTime()) / 1000)
     : undefined;
 
@@ -81,10 +81,10 @@ export const setUserErrorContext = (user: {
     'info',
     {
       user_type: user.userType,
-      authenticated: user.isAuthenticated;
-    }
-  );
-};
+      authenticated: user.isAuthenticated
+  }
+  )
+  };
 
 /**
  * Clear user context on logout
@@ -96,8 +96,8 @@ export const clearUserErrorContext = () => {
     'User logged out',
     'auth',
     'info'
-  );
-};
+  )
+  };
 
 /**
  * Track navigation events
@@ -110,10 +110,10 @@ export const trackNavigation = (from: string, to: string, userType?: string) => 
     {
       from_path: from,
       to_path: to,
-      user_type: userType;
-    }
-  );
-};
+      user_type: userType
+  }
+  )
+  };
 
 /**
  * Track feature usage
@@ -134,8 +134,8 @@ export const trackFeatureUsage = (
       user_type: userType,
       ...metadata
     }
-  );
-};
+  )
+  };
 
 /**
  * Track crisis events (with high priority)
@@ -149,7 +149,7 @@ export const trackCrisisEvent = (
   const getLogLevel = (severity: string) => {
     if (severity === 'critical') return 'error';
     if (severity === 'high') return 'warning';
-    return 'info';
+    return 'info'
   };
 
   ErrorTrackingService.captureMessage(
@@ -160,14 +160,14 @@ export const trackCrisisEvent = (
       severity,
       userType,
       feature: 'crisis-detection',
-      privacyLevel: 'sensitive';
-    },
+      privacyLevel: 'sensitive'
+  },
     {
       event_type: event,
       ...metadata
     }
-  );
-};
+  )
+  };
 
 export default {
   config: sentryConfig,

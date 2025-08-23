@@ -19,67 +19,67 @@ const sampleReflections: Reflection[] = [
         timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
         reactions: { heart: 42, star: 18, lightbulb: 7 },
         myReaction: undefined,
-        userToken: 'anon-token-001';
-    },
+        userToken: 'anon-token-001'
+  },
     {
         id: 'sample-2',
         content: 'Meditation has become my morning anchor. Just 10 minutes of mindfulness sets a peaceful tone for the entire day. The chaos doesn\'t disappear, but I handle it better.',
         timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
         reactions: { heart: 67, star: 23, lightbulb: 15 },
         myReaction: 'heart',
-        userToken: 'anon-token-002';
-    },
+        userToken: 'anon-token-002'
+  },
     {
         id: 'sample-3',
         content: 'Learned that it\'s okay to rest without guilt. Rest is not a reward for finishing everything; it\'s a necessity for being able to continue. Taking care of myself IS productive.',
         timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
         reactions: { heart: 89, star: 31, lightbulb: 22 },
         myReaction: undefined,
-        userToken: 'anon-token-003';
-    },
+        userToken: 'anon-token-003'
+  },
     {
         id: 'sample-4',
         content: 'Walking in nature today reminded me that growth takes time. Trees don\'t rush to bloom, and neither should I. Progress is progress, no matter how small.',
         timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
         reactions: { heart: 124, star: 45, lightbulb: 28 },
         myReaction: 'star',
-        userToken: 'anon-token-004';
-    },
+        userToken: 'anon-token-004'
+  },
     {
         id: 'sample-5',
         content: 'Called an old friend today. Connection is medicine for the soul. We laughed, we cried, we remembered why friendship matters. Reach out to someone you miss.',
         timestamp: new Date(Date.now() - 36 * 60 * 60 * 1000).toISOString(),
         reactions: { heart: 156, star: 52, lightbulb: 34 },
         myReaction: undefined,
-        userToken: 'anon-token-005';
-    },
+        userToken: 'anon-token-005'
+  },
     {
         id: 'sample-6',
         content: 'Journaling breakthrough: I realized I\'ve been so focused on who I should be that I forgot to appreciate who I am. Self-acceptance is a daily practice, not a destination.',
         timestamp: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
         reactions: { heart: 203, star: 71, lightbulb: 48 },
         myReaction: 'lightbulb',
-        userToken: 'anon-token-006';
-    },
+        userToken: 'anon-token-006'
+  },
     {
         id: 'sample-7',
         content: 'Boundaries are not walls; they\'re bridges to healthier relationships. Said no to something that didn\'t serve me today, and it felt liberating.',
         timestamp: new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString(),
         reactions: { heart: 178, star: 59, lightbulb: 41 },
         myReaction: undefined,
-        userToken: 'anon-token-007';
-    },
+        userToken: 'anon-token-007'
+  },
     {
         id: 'sample-8',
         content: 'The sunset tonight was a reminder that endings can be beautiful too. Every day gets a fresh start tomorrow. What a gift.',
         timestamp: new Date(Date.now() - 96 * 60 * 60 * 1000).toISOString(),
         reactions: { heart: 145, star: 67, lightbulb: 19 },
         myReaction: 'heart',
-        userToken: 'anon-token-008';
-    }
+        userToken: 'anon-token-008'
+  }
 ];
 
-const inspirationalPrompts = [;
+const inspirationalPrompts = [;;
     "What made you smile today?",
     "Share a moment of peace you experienced",
     "What are you grateful for right now?",
@@ -118,8 +118,8 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                 setReflections(sampleReflections);
                 updateStore(sampleReflections); // Update the store
             })
-            .finally(() => setIsLoading(false));
-    };
+            .finally(() => setIsLoading(false))
+  };
   }, []);
 
     // Rotate through prompts
@@ -127,11 +127,11 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
         const interval = setInterval(() => {
             setCurrentPrompt(prev => {
                 const currentIndex = inspirationalPrompts.indexOf(prev);
-                return inspirationalPrompts[(currentIndex + 1) % inspirationalPrompts.length];
-            });
-        }, 10000); // Change every 10 seconds
-        return () => clearInterval(interval);
-    };
+                return inspirationalPrompts[(currentIndex + 1) % inspirationalPrompts.length]
+  })
+  }, 10000); // Change every 10 seconds
+        return () => clearInterval(interval)
+  };
   }, []);
 
     const getFilteredReflections = () => {
@@ -141,15 +141,14 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                 return filtered.sort((a, b) => {
                     const totalA = Object.values(a.reactions).reduce((sum, val) => sum + val, 0);
                     const totalB = Object.values(b.reactions).reduce((sum, val) => sum + val, 0);
-                    return totalB - totalA;
-                });
+                    return totalB - totalA
+  });
             case 'recent':
                 return filtered.sort((a, b) => 
                     new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
                 );
-            default:
-                return filtered;
-        }
+            default: return filtered
+  }
     };
     
     const handleSubmit = async (e: React.FormEvent) => {
@@ -159,20 +158,20 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
         try {
             const posted = await ApiClient.reflections.postReflection(userToken, newReflection.trim());
             setReflections(prev => [posted, ...prev]);
-            setNewReflection('');
-        } catch(err) {
+            setNewReflection('')
+  } catch(err) {
             console.error(err);
-            alert("Could not post your reflection. Please try again.");
-        } finally {
-            setIsSubmitting(false);
-        }
+            alert("Could not post your reflection. Please try again.")
+  } finally {
+            setIsSubmitting(false)
+  }
     };
 
     const handleReact = (reflectionId: string, reactionType: string) => {
         if (!userToken) {
             alert("You must have a user token to react.");
-            return;
-        }
+            return
+  }
 
         // Optimistic UI update
         setReflections(prev => prev.map(r => {
@@ -183,8 +182,8 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                     myReaction: reactionType,
                 };
             }
-            return r;
-        };
+            return r
+  };
   });
 
         ApiClient.reflections.addReaction(reflectionId, reactionType, userToken)
@@ -199,11 +198,11 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                         myReaction: undefined,
                     };
                 }
-                return r;
-            };
-  });
-            });
-    }
+                return r
+  };
+  })
+  })
+  }
 
     const filteredReflections = getFilteredReflections();
 
@@ -214,18 +213,18 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                     max-width: 900px;
                     margin: 0 auto;
                     padding: 2rem;
-                    animation: fadeIn 0.5s ease-out;
-                }
+                    animation: fadeIn 0.5s ease-out
+  }
 
                 @keyframes fadeIn {
                     from {
                         opacity: 0;
-                        transform: translateY(10px);
-                    }
+                        transform: translateY(10px)
+  }
                     to {
                         opacity: 1;
-                        transform: translateY(0);
-                    }
+                        transform: translateY(0)
+  }
                 }
 
                 .reflections-header {
@@ -235,8 +234,8 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                     border-radius: 20px;
                     margin-bottom: 2rem;
                     position: relative;
-                    overflow: hidden;
-                }
+                    overflow: hidden
+  }
 
                 .reflections-header::before {
                     content: '';
@@ -246,8 +245,8 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                     width: 200%;
                     height: 200%;
                     background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
-                    animation: float 20s ease-in-out infinite;
-                }
+                    animation: float 20s ease-in-out infinite
+  }
 
                 @keyframes float {
                     0%, 100% { transform: translate(0, 0) rotate(0deg); }
@@ -263,15 +262,15 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                     -webkit-text-fill-color: transparent;
                     background-clip: text;
                     position: relative;
-                    z-index: 1;
-                }
+                    z-index: 1
+  }
 
                 .reflections-header p {
                     color: var(--text-secondary);
                     font-size: 1.1rem;
                     position: relative;
-                    z-index: 1;
-                }
+                    z-index: 1
+  }
 
                 .reflection-stats {
                     display: flex;
@@ -279,25 +278,25 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                     gap: 2rem;
                     margin-top: 1.5rem;
                     position: relative;
-                    z-index: 1;
-                }
+                    z-index: 1
+  }
 
                 .stat-item {
                     display: flex;
                     flex-direction: column;
-                    align-items: center;
-                }
+                    align-items: center
+  }
 
                 .stat-number {
                     font-size: 1.8rem;
                     font-weight: bold;
-                    color: var(--text-primary);
-                }
+                    color: var(--text-primary)
+  }
 
                 .stat-label {
                     font-size: 0.9rem;
-                    color: var(--text-secondary);
-                }
+                    color: var(--text-secondary)
+  }
 
                 .compose-section {
                     background: var(--card-bg);
@@ -305,8 +304,8 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                     padding: 2rem;
                     margin-bottom: 2rem;
                     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-                    border: 1px solid var(--border-color);
-                }
+                    border: 1px solid var(--border-color)
+  }
 
                 .prompt-banner {
                     background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
@@ -316,20 +315,20 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                     display: flex;
                     align-items: center;
                     gap: 1rem;
-                    border: 1px solid rgba(168, 85, 247, 0.2);
-                }
+                    border: 1px solid rgba(168, 85, 247, 0.2)
+  }
 
                 .prompt-icon {
                     color: #a855f7;
-                    font-size: 1.5rem;
-                }
+                    font-size: 1.5rem
+  }
 
                 .prompt-text {
                     flex: 1;
                     color: var(--text-primary);
                     font-style: italic;
-                    animation: fadeInOut 10s ease-in-out infinite;
-                }
+                    animation: fadeInOut 10s ease-in-out infinite
+  }
 
                 @keyframes fadeInOut {
                     0%, 90% { opacity: 1; }
@@ -339,12 +338,12 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                 .compose-form {
                     display: flex;
                     flex-direction: column;
-                    gap: 1rem;
-                }
+                    gap: 1rem
+  }
 
                 .textarea-wrapper {
-                    position: relative;
-                }
+                    position: relative
+  }
 
                 .character-count {
                     position: absolute;
@@ -354,16 +353,16 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                     color: var(--text-secondary);
                     background: var(--bg-primary);
                     padding: 0.25rem 0.5rem;
-                    border-radius: 12px;
-                }
+                    border-radius: 12px
+  }
 
                 .character-count.warning {
-                    color: #f59e0b;
-                }
+                    color: #f59e0b
+  }
 
                 .character-count.error {
-                    color: #ef4444;
-                }
+                    color: #ef4444
+  }
 
                 .filter-tabs {
                     display: flex;
@@ -372,8 +371,8 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                     padding: 0.5rem;
                     background: var(--card-bg);
                     border-radius: 12px;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-                }
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05)
+  }
 
                 .filter-tab {
                     flex: 1;
@@ -388,35 +387,35 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                     align-items: center;
                     justify-content: center;
                     gap: 0.5rem;
-                    font-weight: 500;
-                }
+                    font-weight: 500
+  }
 
                 .filter-tab:hover {
                     background: var(--bg-secondary);
-                    color: var(--text-primary);
-                }
+                    color: var(--text-primary)
+  }
 
                 .filter-tab.active {
                     background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
                     color: white;
-                    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
-                }
+                    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3)
+  }
 
                 .reflections-grid {
                     display: grid;
                     gap: 1.5rem;
-                    animation: fadeInUp 0.5s ease-out;
-                }
+                    animation: fadeInUp 0.5s ease-out
+  }
 
                 @keyframes fadeInUp {
                     from {
                         opacity: 0;
-                        transform: translateY(20px);
-                    }
+                        transform: translateY(20px)
+  }
                     to {
                         opacity: 1;
-                        transform: translateY(0);
-                    }
+                        transform: translateY(0)
+  }
                 }
 
                 .reflection-card {
@@ -425,39 +424,39 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                     padding: 1.5rem;
                     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
                     border: 1px solid var(--border-color);
-                    transition: all 0.3s ease;
-                }
+                    transition: all 0.3s ease
+  }
 
                 .reflection-card:hover {
                     transform: translateY(-3px);
                     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-                    border-color: rgba(168, 85, 247, 0.3);
-                }
+                    border-color: rgba(168, 85, 247, 0.3)
+  }
 
                 .reflection-content {
                     color: var(--text-primary);
                     line-height: 1.6;
                     margin-bottom: 1rem;
-                    font-size: 1.05rem;
-                }
+                    font-size: 1.05rem
+  }
 
                 .reflection-meta {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                     padding-top: 1rem;
-                    border-top: 1px solid var(--border-color);
-                }
+                    border-top: 1px solid var(--border-color)
+  }
 
                 .reflection-time {
                     color: var(--text-secondary);
-                    font-size: 0.9rem;
-                }
+                    font-size: 0.9rem
+  }
 
                 .reaction-buttons {
                     display: flex;
-                    gap: 0.75rem;
-                }
+                    gap: 0.75rem
+  }
 
                 .reaction-btn {
                     display: flex;
@@ -469,76 +468,76 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                     border-radius: 20px;
                     cursor: pointer;
                     transition: all 0.2s ease;
-                    color: var(--text-secondary);
-                }
+                    color: var(--text-secondary)
+  }
 
                 .reaction-btn:hover {
                     background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
                     border-color: #a855f7;
-                    transform: scale(1.05);
-                }
+                    transform: scale(1.05)
+  }
 
                 .reaction-btn.active {
                     background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
                     color: white;
-                    border-color: transparent;
-                }
+                    border-color: transparent
+  }
 
                 .reaction-icon {
-                    font-size: 1.1rem;
-                }
+                    font-size: 1.1rem
+  }
 
                 .reaction-count {
                     font-size: 0.9rem;
-                    font-weight: 500;
-                }
+                    font-weight: 500
+  }
 
                 .empty-reflections {
                     text-align: center;
                     padding: 4rem 2rem;
                     background: var(--card-bg);
-                    border-radius: 16px;
-                }
+                    border-radius: 16px
+  }
 
                 .empty-icon {
                     font-size: 4rem;
                     margin-bottom: 1rem;
-                    opacity: 0.5;
-                }
+                    opacity: 0.5
+  }
 
                 .empty-reflections h3 {
                     color: var(--text-primary);
-                    margin-bottom: 0.5rem;
-                }
+                    margin-bottom: 0.5rem
+  }
 
                 .empty-reflections p {
-                    color: var(--text-secondary);
-                }
+                    color: var(--text-secondary)
+  }
 
                 @media (max-width: 768px) {
                     .reflections-container {
-                        padding: 1rem;
-                    }
+                        padding: 1rem
+  }
 
                     .reflections-header {
-                        padding: 2rem 1rem;
-                    }
+                        padding: 2rem 1rem
+  }
 
                     .reflections-header h1 {
-                        font-size: 2rem;
-                    }
+                        font-size: 2rem
+  }
 
                     .reflection-stats {
-                        gap: 1rem;
-                    }
+                        gap: 1rem
+  }
 
                     .filter-tabs {
-                        flex-direction: column;
-                    }
+                        flex-direction: column
+  }
 
                     .compose-section {
-                        padding: 1.5rem;
-                    }
+                        padding: 1.5rem
+  }
                 }
             `}</style>
 
@@ -588,8 +587,7 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                             </span>
                         </div>
                         <div className="form-actions" style={{justifyContent: 'flex-end'}}>
-                            <AppButton; 
-                                type="submit" 
+                            <AppButton type="submit" 
                                 onClick={() => {}} 
                                 isLoading={isSubmitting} 
                                 disabled={isSubmitting || !newReflection.trim()}
@@ -604,22 +602,19 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                 </div>
 
                 <div className="filter-tabs">
-                    <button; 
-                        className={activeFilter === 'all' ? 'filter-tab active' : 'filter-tab'}
+                    <button className={activeFilter === 'all' ? 'filter-tab active' : 'filter-tab'}
                         onClick={() => setActiveFilter('all')}
                     >
                         <StarIcon />
                         All Reflections
                     </button>
-                    <button; 
-                        className={activeFilter === 'popular' ? 'filter-tab active' : 'filter-tab'}
+                    <button className={activeFilter === 'popular' ? 'filter-tab active' : 'filter-tab'}
                         onClick={() => setActiveFilter('popular')}
                     >
                         <HeartIcon />
                         Most Loved
                     </button>
-                    <button; 
-                        className={activeFilter === 'recent' ? 'filter-tab active' : 'filter-tab'}
+                    <button className={activeFilter === 'recent' ? 'filter-tab active' : 'filter-tab'}
                         onClick={() => setActiveFilter('recent')}
                     >
                         <SparkleIcon />
@@ -645,26 +640,23 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                                             month: 'short',
                                             day: 'numeric',
                                             hour: '2-digit',
-                                            minute: '2-digit';
-                                        })}
+                                            minute: '2-digit'
+  })}
                                     </span>
                                     <div className="reaction-buttons">
-                                        <button; 
-                                            className={reflection.myReaction === 'heart' ? 'reaction-btn active' : 'reaction-btn'}
+                                        <button className={reflection.myReaction === 'heart' ? 'reaction-btn active' : 'reaction-btn'}
                                             onClick={() => handleReact(reflection.id, 'heart')}
                                         >
                                             <span className="reaction-icon">❤️</span>
                                             <span className="reaction-count">{reflection.reactions.heart || 0}</span>
                                         </button>
-                                        <button; 
-                                            className={reflection.myReaction === 'star' ? 'reaction-btn active' : 'reaction-btn'}
+                                        <button className={reflection.myReaction === 'star' ? 'reaction-btn active' : 'reaction-btn'}
                                             onClick={() => handleReact(reflection.id, 'star')}
                                         >
                                             <span className="reaction-icon">⭐</span>
                                             <span className="reaction-count">{reflection.reactions.star || 0}</span>
                                         </button>
-                                        <button; 
-                                            className={reflection.myReaction === 'lightbulb' ? 'reaction-btn active' : 'reaction-btn'}
+                                        <button className={reflection.myReaction === 'lightbulb' ? 'reaction-btn active' : 'reaction-btn'}
                                             onClick={() => handleReact(reflection.id, 'lightbulb')}
                                         >
                                             <span className="reaction-icon">💡</span>
@@ -684,7 +676,7 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                 </div>
             </div>
         </>
-    );
-};
+    )
+  };
 
 export default ReflectionsView;

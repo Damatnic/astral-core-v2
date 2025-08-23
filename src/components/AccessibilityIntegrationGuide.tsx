@@ -24,10 +24,10 @@ function App() {
       <YourAppContent />
       <MobileAccessibilityDashboard />
     </MobileAccessibilityProvider>
-  );
-}
+  )
+  }
 `,
-    description: 'The provider automatically detects user preferences and applies accessibility enhancements';
+    description: 'The provider automatically detects user preferences and applies accessibility enhancements'
   },
 
   // Step 2: Use the accessibility hook in components
@@ -45,15 +45,15 @@ function MyComponent() {
   
   const handleImportantAction = () => {
     // Announce important changes to screen readers
-    announceToScreenReader('Data saved successfully', 'assertive');
+    announceToScreenReader('Data saved successfully', 'assertive')
   };
   
   useEffect(() => {
     const button = buttonRef.current;
     if (button) {
       // Automatically optimize touch targets
-      optimizeForTouch(button);
-    }
+      optimizeForTouch(button)
+  }
   };
   }, [optimizeForTouch]);
   
@@ -68,10 +68,10 @@ function MyComponent() {
     >
       Save Data
     </button>
-  );
-}
+  )
+  }
 `,
-    description: 'Components automatically adapt to user accessibility preferences';
+    description: 'Components automatically adapt to user accessibility preferences'
   },
 
   // Step 3: Enhanced form accessibility
@@ -88,8 +88,8 @@ function AccessibleForm() {
     // Trap focus in modal forms
     if (isModal) {
       setFocusTrap('form-container');
-      return () => removeFocusTrap();
-    }
+      return () => removeFocusTrap()
+  }
   };
   }, [isModal, setFocusTrap, removeFocusTrap]);
   
@@ -106,8 +106,8 @@ function AccessibleForm() {
       );
       // Focus first error field;
       const firstErrorField = document.querySelector('[aria-invalid="true"]');
-      firstErrorField?.focus();
-    }
+      firstErrorField?.focus()
+  }
   };
   
   return (
@@ -134,8 +134,8 @@ function AccessibleForm() {
         )}
       </div>
     </form>
-  );
-}
+  )
+  }
 `,
     description: 'Forms with proper labeling, error handling, and focus management'
   },
@@ -150,7 +150,7 @@ function AccessibleNavigation() {
   
   const handleNavigation = (view, label) => {
     setActiveView(view);
-    announceToScreenReader(\`Navigated to \${label}\`, 'polite');
+    announceToScreenReader(\`Navigated to \${label}\`, 'polite')
   };
   
   return (
@@ -193,8 +193,8 @@ function AccessibleNavigation() {
         {/* Page content */}
       </main>
     </>
-  );
-}
+  )
+  }
 `,
     description: 'Navigation with proper landmarks, skip links, and focus management'
   },
@@ -219,8 +219,8 @@ function AccessibleModal({ isOpen, onClose, title, children }) {
       
       // Focus close button
       setTimeout(() => {
-        closeButtonRef.current?.focus();
-      }, 100);
+        closeButtonRef.current?.focus()
+  }, 100);
       
       // Announce modal opening
       announceToScreenReader(\`\${title} dialog opened\`, 'assertive');
@@ -231,8 +231,8 @@ function AccessibleModal({ isOpen, onClose, title, children }) {
       return () => {
         removeFocusTrap();
         document.body.style.overflow = '';
-        announceToScreenReader('Dialog closed', 'assertive');
-      }
+        announceToScreenReader('Dialog closed', 'assertive')
+  }
   };
   }, [isOpen, title, setFocusTrap, removeFocusTrap, announceToScreenReader]);
   
@@ -240,12 +240,12 @@ function AccessibleModal({ isOpen, onClose, title, children }) {
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
+        onClose()
+  }
     };
     
     document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape)
   };
   }, [isOpen, onClose]);
   
@@ -283,8 +283,8 @@ function AccessibleModal({ isOpen, onClose, title, children }) {
         </footer>
       </dialog>
     </div>
-  );
-}
+  )
+  }
 `,
     description: 'Modals with proper focus trapping, escape handling, and announcements'
   },
@@ -297,7 +297,7 @@ function AccessibleDataVisualization({ data, type = 'chart' }) {
   const { announceToScreenReader } = useMobileAccessibility();
   
   const announceDataChange = (summary) => {
-    announceToScreenReader(\`Data updated: \${summary}\`, 'polite');
+    announceToScreenReader(\`Data updated: \${summary}\`, 'polite')
   };
   
   if (type === 'table') {
@@ -330,7 +330,7 @@ function AccessibleDataVisualization({ data, type = 'chart' }) {
           </tbody>
         </table>
       </div>
-    );
+    )
   }
   
   return (
@@ -367,10 +367,10 @@ function AccessibleDataVisualization({ data, type = 'chart' }) {
         </details>
       </div>
     </div>
-  );
-}
+  )
+  }
 `,
-    description: 'Charts and data with text alternatives and screen reader support';
+    description: 'Charts and data with text alternatives and screen reader support'
   },
 
   // Step 7: Testing and validation
@@ -389,29 +389,29 @@ function AccessibilityTester() {
     const results = MobileAccessibilityAuditor.comprehensiveAudit({
       mobileOptimized: true,
       includeWarnings: true,
-      checkLevel: 'AA';
-    });
+      checkLevel: 'AA'
+  });
     
     setAuditResults(results);
     
     // Log results for development
     console.log('Accessibility Audit Results:', results);
     console.log(\`Score: \${results.score}%\`);
-    console.log(\`Issues: \${results.issues.length}\`);
+    console.log(\`Issues: \${results.issues.length}\`)
   };
   
   const runQuickCheck = () => {
     // Quick WCAG compliance check;
     const results = checkWCAGCompliance();
-    console.log('Quick WCAG Check:', results);
+    console.log('Quick WCAG Check:', results)
   };
   
   // Automated testing in development
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
       // Run audit when component mounts
-      setTimeout(runQuickCheck, 1000);
-    }
+      setTimeout(runQuickCheck, 1000)
+  }
   };
   }, []);
   
@@ -433,8 +433,8 @@ function AccessibilityTester() {
         </div>
       )}
     </div>
-  );
-}
+  )
+  }
 
 // Jest testing example
 describe('Accessibility Tests', () => {
@@ -445,7 +445,7 @@ describe('Accessibility Tests', () => {
     expect(headings).toHaveLength(3);
     
     const h1 = screen.getByRole('heading', { level: 1 });
-    expect(h1).toBeInTheDocument();
+    expect(h1).toBeInTheDocument()
   });
   
   test('should have proper form labels', () => {
@@ -453,7 +453,7 @@ describe('Accessibility Tests', () => {
     
     const emailInput = screen.getByLabelText(/email/i);
     expect(emailInput).toHaveAttribute('type', 'email');
-    expect(emailInput).toHaveAttribute('required');
+    expect(emailInput).toHaveAttribute('required')
   });
   
   test('should support keyboard navigation', () => {
@@ -468,10 +468,10 @@ describe('Accessibility Tests', () => {
     // Test keyboard activation
     fireEvent.keyDown(button, { key: 'Enter' });
     // Assert expected behavior
+  })
   });
-});
 `,
-    description: 'Comprehensive testing setup for accessibility validation';
+    description: 'Comprehensive testing setup for accessibility validation'
   },
 
   // CSS integration
@@ -485,14 +485,14 @@ describe('Accessibility Tests', () => {
   --secondary-color: #ffffff;
   --accent-color: #ffff00;
   --error-color: #ff0000;
-  --success-color: #00ff00;
-}
+  --success-color: #00ff00
+  }
 
 /* Large text mode */
 .accessibility-large-text {
   font-size: 120% !important;
-  line-height: 1.6 !important;
-}
+  line-height: 1.6 !important
+  }
 
 /* Reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
@@ -502,7 +502,7 @@ describe('Accessibility Tests', () => {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+    scroll-behavior: auto !important
   }
 }
 
@@ -510,23 +510,23 @@ describe('Accessibility Tests', () => {
 .accessibility-focus-enhanced:focus {
   outline: 3px solid var(--focus-color, #0066cc) !important;
   outline-offset: 2px !important;
-  box-shadow: 0 0 0 5px rgba(0, 102, 204, 0.3) !important;
-}
+  box-shadow: 0 0 0 5px rgba(0, 102, 204, 0.3) !important
+  }
 
 .accessibility-focus-high-contrast:focus {
   outline: 4px solid #ffff00 !important;
   outline-offset: 3px !important;
   background-color: #000000 !important;
-  color: #ffffff !important;
-}
+  color: #ffffff !important
+  }
 
 /* Touch target optimization */
 .accessibility-touch-optimized {
   min-height: 44px !important;
   min-width: 44px !important;
   padding: 8px !important;
-  margin: 4px !important;
-}
+  margin: 4px !important
+  }
 
 /* Skip links */
 .skip-link {
@@ -540,13 +540,13 @@ describe('Accessibility Tests', () => {
   text-decoration: none;
   border-radius: 4px;
   font-weight: bold;
-  transition: all 0.3s ease;
-}
+  transition: all 0.3s ease
+  }
 
 .skip-link:focus {
   top: 8px;
-  left: 8px;
-}
+  left: 8px
+  }
 
 /* Screen reader only content */
 .sr-only {
@@ -558,8 +558,8 @@ describe('Accessibility Tests', () => {
   overflow: hidden !important;
   clip: rect(0, 0, 0, 0) !important;
   white-space: nowrap !important;
-  border: 0 !important;
-}
+  border: 0 !important
+  }
 
 /* Color blind friendly palette */
 .colorblind-safe {
@@ -567,8 +567,8 @@ describe('Accessibility Tests', () => {
   --blue: #1a9850;
   --orange: #fd8d3c;
   --purple: #762a83;
-  --yellow: #fee08b;
-}
+  --yellow: #fee08b
+  }
 
 /* Mobile specific */
 @media (max-width: 768px) {
@@ -579,17 +579,17 @@ describe('Accessibility Tests', () => {
   select, 
   textarea {
     min-height: 44px;
-    min-width: 44px;
+    min-width: 44px
   }
   
   /* Better spacing for mobile */
   .form-group {
-    margin-bottom: 24px;
+    margin-bottom: 24px
   }
   
   /* Easier reading on mobile */
   body {
-    line-height: 1.6;
+    line-height: 1.6
   }
 }
 
@@ -597,43 +597,43 @@ describe('Accessibility Tests', () => {
 .error-message {
   color: var(--error-color, #dc3545);
   font-weight: 600;
-  margin-top: 4px;
-}
+  margin-top: 4px
+  }
 
 .success-message {
   color: var(--success-color, #28a745);
   font-weight: 600;
-  margin-top: 4px;
-}
+  margin-top: 4px
+  }
 
 /* Form validation states */
 input[aria-invalid="true"],
 select[aria-invalid="true"],
 textarea[aria-invalid="true"] {
   border-color: var(--error-color, #dc3545) !important;
-  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25) !important;
-}
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25) !important
+  }
 
 /* Loading states */
 [aria-busy="true"] {
   cursor: wait;
-  opacity: 0.7;
-}
+  opacity: 0.7
+  }
 
 /* Interactive elements */
 [role="button"]:not(button),
 [role="link"]:not(a) {
   cursor: pointer;
-  user-select: none;
-}
+  user-select: none
+  }
 
 [role="button"]:not(button):focus,
 [role="link"]:not(a):focus {
   outline: 2px solid var(--focus-color, #0066cc);
-  outline-offset: 2px;
-}
+  outline-offset: 2px
+  }
 `,
-    description: 'CSS integration for all accessibility features and responsive design';
+    description: 'CSS integration for all accessibility features and responsive design'
   }
 };
 
@@ -655,8 +655,8 @@ MOBILE ACCESSIBILITY IMPLEMENTATION GUIDE
          <YourApp />
          <MobileAccessibilityDashboard />
        </MobileAccessibilityProvider>
-     );
-   }
+     )
+  }
    \`\`\`
 
 2. Use the accessibility hook in components:
@@ -816,5 +816,5 @@ export const AccessibilityIntegrationGuideComponent: React.FC = () => {
         )}
       </div>
     </div>
-  );
-};
+  )
+  };

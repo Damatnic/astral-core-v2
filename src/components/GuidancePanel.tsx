@@ -4,8 +4,8 @@ import { HelperGuidance } from '../types';
 interface GuidancePanelProps {
   guidance: HelperGuidance;
   onDismiss: () => void;
-  className?: string;
-}
+  className?: string
+  }
 
 const GuidancePanel: React.FC<GuidancePanelProps> = ({ 
   guidance,
@@ -50,8 +50,8 @@ const GuidancePanel: React.FC<GuidancePanelProps> = ({
         )}
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export { GuidancePanel };
 export default GuidancePanel;

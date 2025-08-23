@@ -8,16 +8,16 @@ import { ActiveView } from '../types';
 import i18n from '../i18n';
 
 interface LoginViewProps {
-    setActiveView?: (view: ActiveView) => void;
-}
+    setActiveView?: (view: ActiveView) => void
+  }
 
 export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
     const { login, isLoading } = useAuth();
 
     const handleLoginClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        login();
-    };
+        login()
+  };
 
     // Demo login functions for testing different user types;
     const handleDemoLogin = (userType: 'user' | 'helper' | 'admin') => {
@@ -27,8 +27,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                 sub: 'demo-user-001',
                 email: 'demo.starkeeper@astralcore.com',
                 name: 'Demo Starkeeper',
-                userType: 'seeker';
-            },
+                userType: 'seeker'
+  },
             helper: {
                 sub: 'demo-helper-001', 
                 email: 'demo.guide@astralcore.com',
@@ -41,8 +41,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                     specializations: ['anxiety', 'depression'],
                     bio: 'Demo constellation guide for testing purposes',
                     isVerified: true,
-                    isAvailable: true;
-                }
+                    isAvailable: true
+  }
             },
             admin: {
                 sub: 'demo-admin-001',
@@ -57,8 +57,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                     specializations: ['administration'],
                     bio: 'Demo astral admin for testing purposes',
                     isVerified: true,
-                    isAvailable: true;
-                }
+                    isAvailable: true
+  }
             }
         };
 
@@ -71,8 +71,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
         demoDataService.initializeDemoData(userType, mockUser.sub);
         
         // Trigger a page reload to apply the demo login
-        window.location.reload();
-    };
+        window.location.reload()
+  };
 
     return (
         <>
@@ -81,18 +81,18 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                     max-width: 500px;
                     margin: 0 auto;
                     padding: 2rem;
-                    animation: fadeIn 0.5s ease-out;
-                }
+                    animation: fadeIn 0.5s ease-out
+  }
 
                 @keyframes fadeIn {
                     from {
                         opacity: 0;
-                        transform: translateY(20px);
-                    }
+                        transform: translateY(20px)
+  }
                     to {
                         opacity: 1;
-                        transform: translateY(0);
-                    }
+                        transform: translateY(0)
+  }
                 }
 
                 .login-header {
@@ -102,8 +102,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                     background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
                     border-radius: 20px;
                     position: relative;
-                    overflow: hidden;
-                }
+                    overflow: hidden
+  }
 
                 .login-header::before {
                     content: '';
@@ -113,8 +113,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                     width: 200%;
                     height: 200%;
                     background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
-                    animation: rotate 20s linear infinite;
-                }
+                    animation: rotate 20s linear infinite
+  }
 
                 @keyframes rotate {
                     from { transform: rotate(0deg); }
@@ -129,23 +129,23 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                     -webkit-text-fill-color: transparent;
                     background-clip: text;
                     position: relative;
-                    z-index: 1;
-                }
+                    z-index: 1
+  }
 
                 .login-header p {
                     color: var(--text-secondary);
                     font-size: 1.1rem;
                     position: relative;
-                    z-index: 1;
-                }
+                    z-index: 1
+  }
 
                 .auth-card {
                     background: var(--card-bg);
                     border-radius: 20px;
                     padding: 2rem;
                     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-                    border: 1px solid var(--border-color);
-                }
+                    border: 1px solid var(--border-color)
+  }
 
                 .auth-intro {
                     text-align: center;
@@ -153,21 +153,21 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                     padding: 1.5rem;
                     background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
                     border-radius: 12px;
-                    border: 1px solid rgba(102, 126, 234, 0.1);
-                }
+                    border: 1px solid rgba(102, 126, 234, 0.1)
+  }
 
                 .auth-intro-icon {
                     font-size: 2rem;
-                    margin-bottom: 1rem;
-                }
+                    margin-bottom: 1rem
+  }
 
                 .demo-login-container {
                     margin-bottom: 2rem;
                     padding: 1.5rem;
                     background: var(--bg-secondary);
                     border-radius: 16px;
-                    border: 2px dashed var(--border-color);
-                }
+                    border: 2px dashed var(--border-color)
+  }
 
                 .demo-login-title {
                     text-align: center;
@@ -177,13 +177,13 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 0.5rem;
-                }
+                    gap: 0.5rem
+  }
 
                 .demo-login-buttons {
                     display: grid;
-                    gap: 1rem;
-                }
+                    gap: 1rem
+  }
 
                 .demo-login-btn {
                     padding: 1rem;
@@ -193,34 +193,34 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                     justify-content: space-between;
                     transition: all 0.3s ease;
                     border: 2px solid transparent;
-                    background: var(--card-bg);
-                }
+                    background: var(--card-bg)
+  }
 
                 .demo-login-btn:hover {
                     transform: translateY(-2px);
-                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-                }
+                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1)
+  }
 
                 .demo-login-btn.starkeeper:hover {
                     border-color: #667eea;
-                    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-                }
+                    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%)
+  }
 
                 .demo-login-btn.guide:hover {
                     border-color: #10b981;
-                    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(34, 197, 94, 0.05) 100%);
-                }
+                    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(34, 197, 94, 0.05) 100%)
+  }
 
                 .demo-login-btn.admin:hover {
                     border-color: #f59e0b;
-                    background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(251, 146, 60, 0.05) 100%);
-                }
+                    background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(251, 146, 60, 0.05) 100%)
+  }
 
                 .demo-user-info {
                     display: flex;
                     align-items: center;
-                    gap: 1rem;
-                }
+                    gap: 1rem
+  }
 
                 .demo-user-avatar {
                     width: 40px;
@@ -229,69 +229,69 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    font-size: 1.5rem;
-                }
+                    font-size: 1.5rem
+  }
 
                 .demo-user-details {
-                    text-align: left;
-                }
+                    text-align: left
+  }
 
                 .demo-user-name {
                     font-weight: 600;
                     color: var(--text-primary);
-                    margin-bottom: 0.25rem;
-                }
+                    margin-bottom: 0.25rem
+  }
 
                 .demo-user-role {
                     font-size: 0.85rem;
-                    color: var(--text-secondary);
-                }
+                    color: var(--text-secondary)
+  }
 
                 .demo-user-badge {
                     padding: 0.25rem 0.75rem;
                     border-radius: 20px;
                     font-size: 0.8rem;
                     font-weight: 600;
-                    color: white;
-                }
+                    color: white
+  }
 
                 .badge-starkeeper {
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                }
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+  }
 
                 .badge-guide {
-                    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-                }
+                    background: linear-gradient(135deg, #10b981 0%, #059669 100%)
+  }
 
                 .badge-admin {
-                    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-                }
+                    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%)
+  }
 
                 .divider {
                     display: flex;
                     align-items: center;
                     margin: 2rem 0;
-                    color: var(--text-secondary);
-                }
+                    color: var(--text-secondary)
+  }
 
                 .divider::before,
                 .divider::after {
                     content: '';
                     flex: 1;
                     height: 1px;
-                    background: var(--border-color);
-                }
+                    background: var(--border-color)
+  }
 
                 .divider span {
                     padding: 0 1rem;
-                    font-size: 0.9rem;
-                }
+                    font-size: 0.9rem
+  }
 
                 .auth-buttons {
                     display: flex;
                     flex-direction: column;
-                    gap: 1rem;
-                }
+                    gap: 1rem
+  }
 
                 .auth-button {
                     padding: 1rem;
@@ -302,34 +302,34 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                     gap: 0.75rem;
                     font-weight: 600;
                     transition: all 0.3s ease;
-                    border: 2px solid var(--border-color);
-                }
+                    border: 2px solid var(--border-color)
+  }
 
                 .auth-button:hover {
                     transform: translateY(-2px);
-                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-                }
+                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15)
+  }
 
                 .auth-button.google {
                     background: white;
-                    color: #333;
-                }
+                    color: #333
+  }
 
                 .auth-button.google:hover {
                     border-color: #4285f4;
-                    background: linear-gradient(135deg, rgba(66, 133, 244, 0.05) 0%, rgba(66, 133, 244, 0.1) 100%);
-                }
+                    background: linear-gradient(135deg, rgba(66, 133, 244, 0.05) 0%, rgba(66, 133, 244, 0.1) 100%)
+  }
 
                 .auth-button.apple {
                     background: #000;
                     color: white;
-                    border-color: #000;
-                }
+                    border-color: #000
+  }
 
                 .auth-button.apple:hover {
                     background: #333;
-                    border-color: #333;
-                }
+                    border-color: #333
+  }
 
                 .privacy-note {
                     margin-top: 2rem;
@@ -339,26 +339,26 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                     border: 1px solid rgba(16, 185, 129, 0.2);
                     text-align: center;
                     font-size: 0.9rem;
-                    color: var(--text-secondary);
-                }
+                    color: var(--text-secondary)
+  }
 
                 .privacy-note-icon {
                     color: #10b981;
-                    margin-right: 0.5rem;
-                }
+                    margin-right: 0.5rem
+  }
 
                 @media (max-width: 768px) {
                     .login-container {
-                        padding: 1rem;
-                    }
+                        padding: 1rem
+  }
 
                     .login-header h1 {
-                        font-size: 2rem;
-                    }
+                        font-size: 2rem
+  }
 
                     .auth-card {
-                        padding: 1.5rem;
-                    }
+                        padding: 1.5rem
+  }
                 }
             `}</style>
 
@@ -451,8 +451,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                 marginTop: '2rem',
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 color: 'white',
-                border: 'none';
-            }}>
+                border: 'none'
+  }}>
                 <h3 style={{marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
                     <span>🎭</span> Demo Accounts Available
                 </h3>
@@ -468,8 +468,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                         background: 'rgba(255, 255, 255, 0.1)',
                         padding: '1rem',
                         borderRadius: '0.5rem',
-                        backdropFilter: 'blur(10px)';
-                    }}>
+                        backdropFilter: 'blur(10px)'
+  }}>
                         <strong style={{display: 'block', marginBottom: '0.5rem'}}>
                             👤 Regular User
                         </strong>
@@ -482,8 +482,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                         background: 'rgba(255, 255, 255, 0.1)',
                         padding: '1rem',
                         borderRadius: '0.5rem',
-                        backdropFilter: 'blur(10px)';
-                    }}>
+                        backdropFilter: 'blur(10px)'
+  }}>
                         <strong style={{display: 'block', marginBottom: '0.5rem'}}>
                             💚 Helper
                         </strong>
@@ -496,8 +496,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                         background: 'rgba(255, 255, 255, 0.1)',
                         padding: '1rem',
                         borderRadius: '0.5rem',
-                        backdropFilter: 'blur(10px)';
-                    }}>
+                        backdropFilter: 'blur(10px)'
+  }}>
                         <strong style={{display: 'block', marginBottom: '0.5rem'}}>
                             ⚙️ Admin
                         </strong>
@@ -513,7 +513,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
             </Card>
             </div>
         </>
-    );
-};
+    )
+  };
 
 export default LoginView;

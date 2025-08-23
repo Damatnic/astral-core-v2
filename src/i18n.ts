@@ -50,7 +50,7 @@ export const en = {
   helper_login: 'Helper Login',
   settings: 'Settings',
   donate: 'Donate'
-};
+  };
 
 export const es = {
   share: 'Compartir',
@@ -68,9 +68,9 @@ export const es = {
   helper_login: 'Acceso de Ayudante',
   settings: 'Ajustes',
   donate: 'Donar'
-};
+  };
 
 // Legacy locale setter function;
 export const setLocale = (locale: string) => {
-  changeLanguageFunction(locale);
-};
+  changeLanguageFunction(locale)
+  };

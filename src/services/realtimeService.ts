@@ -11,7 +11,7 @@ interface RealtimeConfig {
   cluster: string;
   authEndpoint: string;
   auth?: {
-    headers: Record<string, string>;
+    headers: Record<string, string>
   }
 
 interface NotificationData {
@@ -21,18 +21,18 @@ interface NotificationData {
   type: 'info' | 'success' | 'warning' | 'error' | 'crisis';
   urgency: 'low' | 'normal' | 'high' | 'critical';
   senderId?: string;
-  timestamp: number;
-}
+  timestamp: number
+  }
 
 interface MoodUpdate {
   userId: string;
   mood: {
     value: number;
     label: string;
-    color?: string;
+    color?: string
   };
-  timestamp: number;
-}
+  timestamp: number
+  }
 
 interface CrisisAlert {
   alertId: string;
@@ -41,16 +41,16 @@ interface CrisisAlert {
   message?: string;
   location?: string;
   timestamp: number;
-  requiresImmediate: boolean;
-}
+  requiresImmediate: boolean
+  }
 
 interface PresenceInfo {
   userId: string;
   username: string;
   status: 'online' | 'away' | 'busy' | 'offline';
   mood?: string;
-  lastSeen?: Date;
-}
+  lastSeen?: Date
+  }
 
 class RealtimeService {
   private pusher: Pusher | null = null;
@@ -65,7 +65,7 @@ class RealtimeService {
   private fallbackToWebSocket = false;
 
   constructor() {
-    this.initialize();
+    this.initialize()
   }
 
   private async initialize() {
@@ -78,18 +78,18 @@ class RealtimeService {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch realtime configuration');
-      }
+        throw new Error('Failed to fetch realtime configuration')
+  }
 
       this.config = await response.json();
       
       // Initialize Pusher client
-      this.initializePusher();
-    } catch (error) {
+      this.initializePusher()
+  } catch (error) {
       console.error('Failed to initialize realtime service:', error);
       // Fallback to existing WebSocket service if Pusher fails
-      this.fallbackToWebSocket = true;
-    }
+      this.fallbackToWebSocket = true
+  }
   }
 
   private initializePusher() {
@@ -97,8 +97,8 @@ class RealtimeService {
 
     // Enable Pusher logging in development
     if (process.env.NODE_ENV === 'development') {
-      Pusher.logToConsole = true;
-    }
+      Pusher.logToConsole = true
+  }
 
     this.pusher = new Pusher(this.config.key, {
       cluster: this.config.cluster,
@@ -109,14 +109,14 @@ class RealtimeService {
       forceTLS: true,
       activityTimeout: 10000,
       pongTimeout: 5000,
-      unavailableTimeout: 10000;
-    });
+      unavailableTimeout: 10000
+  });
 
     // Set up connection event handlers
     this.setupConnectionHandlers();
 
     // Subscribe to global channels
-    this.subscribeToGlobalChannels();
+    this.subscribeToGlobalChannels()
   }
 
   private setupConnectionHandlers() {
@@ -126,33 +126,33 @@ class RealtimeService {
       this.isConnected = true;
       this.reconnectAttempts = 0;
       console.log('✅ Real-time connection established');
-      this.emit('connected', { timestamp: Date.now() });
-    });
+      this.emit('connected', { timestamp: Date.now() })
+  });
 
     this.pusher.connection.bind('disconnected', () => {
       this.isConnected = false;
       console.log('❌ Real-time connection lost');
       this.emit('disconnected', { timestamp: Date.now() });
-      this.handleReconnection();
-    });
+      this.handleReconnection()
+  });
 
     this.pusher.connection.bind('error', (error: unknown) => {
       console.error('Real-time connection error:', error);
-      this.emit('error', error);
-    });
+      this.emit('error', error)
+  });
 
     this.pusher.connection.bind('state_change', (states: any) => {
       console.log('Connection state changed:', states.previous, '->', states.current);
-      this.emit('state_change', states);
-    });
+      this.emit('state_change', states)
+  })
   }
 
   private handleReconnection() {
     if (this.reconnectAttempts >= this.maxReconnectAttempts) {
       console.error('Max reconnection attempts reached, falling back to WebSocket');
       this.fallbackToWebSocket = true;
-      return;
-    }
+      return
+  }
 
     this.reconnectAttempts++;
     const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000);
@@ -161,9 +161,9 @@ class RealtimeService {
     
     setTimeout(() => {
       if (this.pusher) {
-        this.pusher.connect();
-      }
-    }, delay);
+        this.pusher.connect()
+  }
+    }, delay)
   }
 
   private subscribeToGlobalChannels() {
@@ -175,8 +175,8 @@ class RealtimeService {
     // Subscribe to user-specific channel if authenticated;
     const userId = this.getUserId();
     if (userId) {
-      this.subscribeToPrivateChannel(`private-user-${userId}`);
-    }
+      this.subscribeToPrivateChannel(`private-user-${userId}`)
+  }
   }
 
   // Public API Methods
@@ -184,11 +184,11 @@ class RealtimeService {
   public setUserId(userId: string) {
     this.userId = userId;
     // Subscribe to user's private channel
-    this.subscribeToPrivateChannel(`private-user-${userId}`);
+    this.subscribeToPrivateChannel(`private-user-${userId}`)
   }
 
   public getUserId(): string | null {
-    return this.userId || localStorage.getItem('userId');
+    return this.userId || localStorage.getItem('userId')
   }
 
   public subscribeToChannel(channelName: string): Channel | null {
@@ -196,15 +196,15 @@ class RealtimeService {
       // Use WebSocket service as fallback;
       const wsService = getWebSocketService();
       wsService.joinRoom(channelName);
-      return null;
-    }
+      return null
+  }
 
     if (!this.pusher) return null;
 
     // Check if already subscribed
     if (this.channels.has(channelName)) {
-      return this.channels.get(channelName)!;
-    }
+      return this.channels.get(channelName)!
+  }
 
     const subscribedChannel = this.pusher.subscribe(channelName);
     this.channels.set(channelName, subscribedChannel);
@@ -212,33 +212,33 @@ class RealtimeService {
     // Set up channel event handlers
     this.setupChannelHandlers(subscribedChannel, channelName);
 
-    return subscribedChannel;
+    return subscribedChannel
   }
 
   public subscribeToPrivateChannel(channelName: string): Channel | null {
     if (!channelName.startsWith('private-')) {
-      channelName = `private-${channelName}`;
-    }
-    return this.subscribeToChannel(channelName);
+      channelName = `private-${channelName}`
+  }
+    return this.subscribeToChannel(channelName)
   }
 
   public subscribeToPresenceChannel(channelName: string): PresenceChannel | null {
     if (this.fallbackToWebSocket) {
       const wsService = getWebSocketService();
       wsService.joinRoom(channelName);
-      return null;
-    }
+      return null
+  }
 
     if (!this.pusher) return null;
 
     if (!channelName.startsWith('presence-')) {
-      channelName = `presence-${channelName}`;
-    }
+      channelName = `presence-${channelName}`
+  }
 
     // Check if already subscribed
     if (this.presenceChannels.has(channelName)) {
-      return this.presenceChannels.get(channelName)!;
-    }
+      return this.presenceChannels.get(channelName)!
+  }
 
     const channel = this.pusher.subscribe(channelName) as PresenceChannel;
     this.presenceChannels.set(channelName, channel);
@@ -246,55 +246,55 @@ class RealtimeService {
     // Set up presence handlers
     this.setupPresenceHandlers(channel, channelName);
 
-    return channel;
+    return channel
   }
 
   private setupChannelHandlers(channel: Channel, channelName: string) {
     // Handle notifications
     channel.bind('notification', (data: NotificationData) => {
-      this.handleNotification(data);
-    });
+      this.handleNotification(data)
+  });
 
     // Handle messages
     channel.bind('message', (data: unknown) => {
-      this.emit('message', { channel: channelName, data });
-    });
+      this.emit('message', { channel: channelName, data })
+  });
 
     // Handle typing indicators
     channel.bind('typing', (data: unknown) => {
       const typingData = data as Record<string, any>;
-      this.emit('typing', { channel: channelName, ...typingData });
-    });
+      this.emit('typing', { channel: channelName, ...typingData })
+  });
 
     // Handle crisis alerts
     channel.bind('crisis-alert', (data: CrisisAlert) => {
-      this.handleCrisisAlert(data);
-    });
+      this.handleCrisisAlert(data)
+  });
 
     // Handle mood updates
     channel.bind('mood-shared', (data: MoodUpdate) => {
-      this.emit('mood-update', data);
-    });
+      this.emit('mood-update', data)
+  })
   }
 
   private setupPresenceHandlers(channel: PresenceChannel, channelName: string) {
     channel.bind('pusher:subscription_succeeded', (members: any) => {
       console.log(`Joined presence channel: ${channelName}`);
-      this.emit('presence-subscribed', { channel: channelName, members });
-    });
+      this.emit('presence-subscribed', { channel: channelName, members })
+  });
 
     channel.bind('pusher:member_added', (member: any) => {
-      this.emit('member-joined', { channel: channelName, member });
-    });
+      this.emit('member-joined', { channel: channelName, member })
+  });
 
     channel.bind('pusher:member_removed', (member: any) => {
-      this.emit('member-left', { channel: channelName, member });
-    });
+      this.emit('member-left', { channel: channelName, member })
+  });
 
     // Handle presence updates
     channel.bind('presence-update', (data: PresenceInfo) => {
-      this.emit('presence-update', data);
-    });
+      this.emit('presence-update', data)
+  })
   }
 
   private handleNotification(data: NotificationData) {
@@ -306,20 +306,20 @@ class RealtimeService {
         badge: '/icon-192.png',
         tag: data.id,
         requireInteraction: data.urgency === 'high' || data.urgency === 'critical',
-        data: data;
-      });
+        data: data
+  });
 
       notification.onclick = () => {
         window.focus();
         this.emit('notification-clicked', data);
-        notification.close();
-      }
+        notification.close()
+  }
 
     // Emit notification event
     this.emit('notification', data);
 
     // Store in local notifications
-    this.storeNotification(data);
+    this.storeNotification(data)
   }
 
   private handleCrisisAlert(data: CrisisAlert) {
@@ -332,20 +332,20 @@ class RealtimeService {
         tag: `crisis-${data.alertId}`,
         requireInteraction: true,
         // vibrate: [200, 100, 200], // Not supported in NotificationOptions
-        data: data;
-      });
+        data: data
+  });
 
       notification.onclick = () => {
         window.focus();
         this.emit('crisis-alert-clicked', data);
-        notification.close();
-      }
+        notification.close()
+  }
 
     // Emit crisis event
     this.emit('crisis-alert', data);
 
     // Play alert sound if available
-    this.playAlertSound();
+    this.playAlertSound()
   }
 
   private storeNotification(data: NotificationData) {
@@ -353,9 +353,9 @@ class RealtimeService {
     notifications.unshift(data);
     // Keep only last 50 notifications
     if (notifications.length > 50) {
-      notifications.pop();
-    }
-    localStorage.setItem('notifications', JSON.stringify(notifications));
+      notifications.pop()
+  }
+    localStorage.setItem('notifications', JSON.stringify(notifications))
   }
 
   private playAlertSound() {
@@ -374,7 +374,7 @@ class RealtimeService {
     gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
 
     oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.5);
+    oscillator.stop(audioContext.currentTime + 0.5)
   }
 
   // Messaging Methods
@@ -383,8 +383,8 @@ class RealtimeService {
     if (this.fallbackToWebSocket) {
       const wsService = getWebSocketService();
       wsService.send(type, { channel, message });
-      return;
-    }
+      return
+  }
 
     try {
       const response = await fetch('/.netlify/functions/api-realtime/message', {
@@ -397,14 +397,14 @@ class RealtimeService {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to send message');
-      }
+        throw new Error('Failed to send message')
+  }
 
-      return await response.json();
-    } catch (error) {
+      return await response.json()
+  } catch (error) {
       console.error('Error sending message:', error);
-      throw error;
-    }
+      throw error
+  }
   }
 
   public async sendNotification(targetUserId: string, notification: Partial<NotificationData>) {
@@ -419,22 +419,22 @@ class RealtimeService {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to send notification');
-      }
+        throw new Error('Failed to send notification')
+  }
 
-      return await response.json();
-    } catch (error) {
+      return await response.json()
+  } catch (error) {
       console.error('Error sending notification:', error);
-      throw error;
-    }
+      throw error
+  }
   }
 
   public async updatePresence(status: string, mood?: string) {
     if (this.fallbackToWebSocket) {
       const wsService = getWebSocketService();
       wsService.updatePresence(status as ('offline' | 'online' | 'away' | 'busy'));
-      return;
-    }
+      return
+  }
 
     try {
       const response = await fetch('/.netlify/functions/api-realtime/presence', {
@@ -447,26 +447,26 @@ class RealtimeService {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update presence');
-      }
+        throw new Error('Failed to update presence')
+  }
 
-      return await response.json();
-    } catch (error) {
+      return await response.json()
+  } catch (error) {
       console.error('Error updating presence:', error);
-      throw error;
-    }
+      throw error
+  }
   }
 
   public async sendTypingIndicator(channel: string, isTyping: boolean) {
     if (this.fallbackToWebSocket) {
       const wsService = getWebSocketService();
       if (isTyping) {
-        wsService.startTyping(channel);;
+        wsService.startTyping(channel)
   } else {
-        wsService.stopTyping(channel);
-      }
-      return;
-    }
+        wsService.stopTyping(channel)
+  }
+      return
+  }
 
     try {
       const response = await fetch('/.netlify/functions/api-realtime/typing', {
@@ -479,14 +479,14 @@ class RealtimeService {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to send typing indicator');
-      }
+        throw new Error('Failed to send typing indicator')
+  }
 
-      return await response.json();
-    } catch (error) {
+      return await response.json()
+  } catch (error) {
       console.error('Error sending typing indicator:', error);
-      throw error;
-    }
+      throw error
+  }
   }
 
   public async shareMoodUpdate(mood: { value: number; label: string; emoji?: string; color?: string }, isPublic: boolean = false) {
@@ -501,14 +501,14 @@ class RealtimeService {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to share mood update');
-      }
+        throw new Error('Failed to share mood update')
+  }
 
-      return await response.json();
-    } catch (error) {
+      return await response.json()
+  } catch (error) {
       console.error('Error sharing mood update:', error);
-      throw error;
-    }
+      throw error
+  }
   }
 
   public async sendCrisisAlert(severity: string, message: string, location?: string) {
@@ -523,33 +523,33 @@ class RealtimeService {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to send crisis alert');
-      }
+        throw new Error('Failed to send crisis alert')
+  }
 
-      return await response.json();
-    } catch (error) {
+      return await response.json()
+  } catch (error) {
       console.error('Error sending crisis alert:', error);
-      throw error;
-    }
+      throw error
+  }
   }
 
   // Event Handling
 
   public on(event: string, handler: Function) {
     if (!this.eventHandlers.has(event)) {
-      this.eventHandlers.set(event, new Set());
-    }
+      this.eventHandlers.set(event, new Set())
+  }
     this.eventHandlers.get(event)!.add(handler);
 
     // Return unsubscribe function
-    return () => this.off(event, handler);
+    return () => this.off(event, handler)
   }
 
   public off(event: string, handler: Function) {
     const handlers = this.eventHandlers.get(event);
     if (handlers) {
-      handlers.delete(handler);
-    }
+      handlers.delete(handler)
+  }
   }
 
   private emit(event: string, data: any) {
@@ -557,12 +557,12 @@ class RealtimeService {
     if (handlers) {
       handlers.forEach(handler => {
         try {
-          handler(data);
-        } catch (error) {
-          console.error(`Error in event handler for ${event}:`, error);
-        }
-      });
-    }
+          handler(data)
+  } catch (error) {
+          console.error(`Error in event handler for ${event}:`, error)
+  }
+      })
+  }
   }
 
   // Cleanup
@@ -571,46 +571,46 @@ class RealtimeService {
     // Unsubscribe from all channels
     this.channels.forEach((_, name) => {
       if (this.pusher) {
-        this.pusher.unsubscribe(name);
-      }
+        this.pusher.unsubscribe(name)
+  }
     });
     this.channels.clear();
 
     this.presenceChannels.forEach((_, name) => {
       if (this.pusher) {
-        this.pusher.unsubscribe(name);
-      }
+        this.pusher.unsubscribe(name)
+  }
     });
     this.presenceChannels.clear();
 
     // Disconnect Pusher
     if (this.pusher) {
       this.pusher.disconnect();
-      this.pusher = null;
-    }
+      this.pusher = null
+  }
 
-    this.isConnected = false;
+    this.isConnected = false
   }
 
   // Status Methods
 
   public getConnectionStatus(): boolean {
     if (this.fallbackToWebSocket) {
-      return getWebSocketService().isConnected();
-    }
-    return this.isConnected;
+      return getWebSocketService().isConnected()
+  }
+    return this.isConnected
   }
 
   public getActiveChannels(): string[] {
-    return Array.from(this.channels.keys());
+    return Array.from(this.channels.keys())
   }
 
   public getPresenceMembers(channelName: string): any {
     const channel = this.presenceChannels.get(channelName);
     if (channel && 'members' in channel) {
-      return channel.members;
-    }
-    return null;
+      return channel.members
+  }
+    return null
   }
 }
 
@@ -619,10 +619,10 @@ let realtimeServiceInstance: RealtimeService | null = null;
 
 export const getRealtimeService = (): RealtimeService => {
   if (!realtimeServiceInstance) {
-    realtimeServiceInstance = new RealtimeService();
+    realtimeServiceInstance = new RealtimeService()
   }
-  return realtimeServiceInstance;
-};
+  return realtimeServiceInstance
+  };
 
 // React hooks;
 export const useRealtime = () => {
@@ -638,8 +638,9 @@ export const useRealtime = () => {
 
     return () => {
       unsubscribe();
-      unsubscribe2();
-    };
+      unsubscribe2()
+  };
+  };
   };
   }, [service]);
 
@@ -656,8 +657,8 @@ export const useRealtimeChannel = (channelName: string) => {
     const unsubscribeMessage = service.on('message', (data: unknown) => {
       const messageData = data as { channel: string; data: any };
       if (messageData.channel === channelName) {
-        setMessages(prev => [...prev, messageData.data]);
-      }
+        setMessages(prev => [...prev, messageData.data])
+  }
     };
   };
 
@@ -666,28 +667,29 @@ export const useRealtimeChannel = (channelName: string) => {
       if (typingData.channel === channelName) {
         setTypingUsers(prev => {
           if (typingData.isTyping) {
-            return prev.includes(typingData.userId) ? prev : [...prev, typingData.userId];;
+            return prev.includes(typingData.userId) ? prev : [...prev, typingData.userId]
   } else {
-            return prev.filter(id => id !== typingData.userId);
-          }
-        });
-      }
+            return prev.filter(id => id !== typingData.userId)
+  }
+        })
+  }
     });
 
     return () => {
       unsubscribeMessage();
-      unsubscribeTyping();
-    };
+      unsubscribeTyping()
+  };
   };
   }, [channelName, service]);
 
   const sendMessage = React.useCallback(async (message: string) => {
-    await service.sendMessage(channelName, message);
+    await service.sendMessage(channelName, message)
   };
   }, [channelName, service]);
 
   const sendTyping = React.useCallback(async (isTyping: boolean) => {
-    await service.sendTypingIndicator(channelName, isTyping);
+    await service.sendTypingIndicator(channelName, isTyping)
+  };
   };
   };
   }, [channelName, service]);
@@ -710,29 +712,30 @@ export const usePresenceChannel = (channelName: string) => {
       const presenceData = data as { channel: string; members: { members?: Record<string, any> } };
       if (presenceData.channel === channelName) {
         setMembers(Object.values(presenceData.members.members || {};
-  });
-      }
+  })
+  }
     });
 
     const unsubscribeJoin = service.on('member-joined', (data: unknown) => {
       const joinData = data as { channel: string; member: any };
       if (joinData.channel === channelName) {
-        setMembers(prev => [...prev, joinData.member]);
-      }
+        setMembers(prev => [...prev, joinData.member])
+  }
     });
 
     const unsubscribeLeave = service.on('member-left', (data: unknown) => {
       const leaveData = data as { channel: string; member: { id: string } };
       if (leaveData.channel === channelName) {
-        setMembers(prev => prev.filter(m => m.id !== leaveData.member.id));
-      }
+        setMembers(prev => prev.filter(m => m.id !== leaveData.member.id))
+  }
     });
 
     return () => {
       unsubscribe();
       unsubscribeJoin();
-      unsubscribeLeave();
-    };
+      unsubscribeLeave()
+  };
+  };
   };
   }, [channelName, service]);
 

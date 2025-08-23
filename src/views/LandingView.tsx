@@ -44,7 +44,7 @@ const LandingView: React.FC = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export default LandingView;

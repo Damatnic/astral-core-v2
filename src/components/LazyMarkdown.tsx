@@ -13,8 +13,8 @@ interface LazyMarkdownProps {
   children: string;
   className?: string;
   placeholder?: React.ReactNode;
-  autoLoad?: boolean;
-}
+  autoLoad?: boolean
+  }
 
 // Move components outside to avoid re-creation;
 const OptimizedImage: React.FC<React.ImgHTMLAttributes<HTMLImageElement>> = (props) => (
@@ -43,12 +43,12 @@ export const LazyMarkdown: React.FC<LazyMarkdownProps> = ({
 
   // Use safe markdown rendering;
   const renderSimpleMarkdown = (text: string) => {
-    return safeMarkdownToHtml(text);
+    return safeMarkdownToHtml(text)
   };
 
   const handleLoadMarkdown = () => {
     setIsLoading(true);
-    setShouldLoad(true);
+    setShouldLoad(true)
   };
 
   if (!shouldLoad) {
@@ -63,8 +63,8 @@ export const LazyMarkdown: React.FC<LazyMarkdownProps> = ({
               border: 'none',
               padding: '0',
               textAlign: 'left',
-              width: '100%';
-            }}
+              width: '100%'
+  }}
             aria-label="Load full markdown content"
           >
             <div 
@@ -72,8 +72,7 @@ export const LazyMarkdown: React.FC<LazyMarkdownProps> = ({
                 __html: renderSimpleMarkdown(children.substring(0, 200) + (children.length > 200 ? '...' : '')) 
               }} 
             />
-            <div;
-              className="load-markdown-btn"
+            <div className="load-markdown-btn"
               style={{
                 marginTop: '8px',
                 padding: '4px 8px',
@@ -83,15 +82,15 @@ export const LazyMarkdown: React.FC<LazyMarkdownProps> = ({
                 borderRadius: '4px',
                 fontSize: '12px',
                 cursor: 'pointer',
-                display: 'inline-block';
-              }}
+                display: 'inline-block'
+  }}
             >
               Load Full Content
             </div>
           </button>
         )}
       </div>
-    );
+    )
   }
 
   return (
@@ -107,8 +106,8 @@ export const LazyMarkdown: React.FC<LazyMarkdownProps> = ({
         {children}
       </MarkdownRenderer>
     </Suspense>
-  );
-};
+  )
+  };
 
 // Separate component for the actual markdown rendering;
 const MarkdownRenderer: React.FC<{ children: string; className: string }> = ({ 
@@ -116,17 +115,16 @@ const MarkdownRenderer: React.FC<{ children: string; className: string }> = ({
   className 
 }) => {
   return (
-    <ReactMarkdown; 
-      className={className}
+    <ReactMarkdown className={className}
       components={{
         img: OptimizedImage,
-        a: OptimizedLink;
-      }}
+        a: OptimizedLink
+  }}
     >
       {children}
     </ReactMarkdown>
-  );
-};
+  )
+  };
 
 // Hook for markdown loading;
 export const useMarkdownLoader = (content: string, autoLoad = false) => {
@@ -135,7 +133,7 @@ export const useMarkdownLoader = (content: string, autoLoad = false) => {
 
   const loadMarkdown = () => {
     setIsLoading(true);
-    setIsLoaded(true);
+    setIsLoaded(true)
   };
 
   return {

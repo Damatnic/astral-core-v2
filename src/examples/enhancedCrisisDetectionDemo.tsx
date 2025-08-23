@@ -20,8 +20,8 @@ import { Card } from '../components/Card';
 export const EnhancedChatWithCrisisDetection: React.FC<{
   userId?: string;
   languageCode?: string;
-  culturalContext?: string;
-}> = ({ userId, languageCode = 'en', culturalContext }) => {
+  culturalContext?: string
+  }> = ({ userId, languageCode = 'en', culturalContext }) => {
   const [message, setMessage] = useState('');
   const [chatHistory, setChatHistory] = useState<string[]>([]);
 
@@ -58,15 +58,15 @@ export const EnhancedChatWithCrisisDetection: React.FC<{
     // Analyze message for crisis indicators;
     const analysis = await analyzeText(message, { 
       immediate: true, 
-      trackHistory: true ;
-    });
+      trackHistory: true
+  });
 
     if (analysis?.hasCrisisIndicators) {
       console.log('Crisis analysis result:', analysis);
       // Handle crisis detection UI updates
     }
 
-    setMessage('');
+    setMessage('')
   };
 
   return (
@@ -157,14 +157,14 @@ export const EnhancedChatWithCrisisDetection: React.FC<{
         )}
       </Card>
     </div>
-  );
-};
+  )
+  };
 
 // Example: Crisis Detection Dashboard Integration;
 export const CrisisMonitoringView: React.FC<{
   userId?: string;
-  languageCode?: string;
-}> = ({ userId, languageCode = 'en' }) => {
+  languageCode?: string
+  }> = ({ userId, languageCode = 'en' }) => {
   return (
     <div className="crisis-monitoring-view">
       <h2>Crisis Detection & Monitoring</h2>
@@ -181,8 +181,8 @@ export const CrisisMonitoringView: React.FC<{
         }}
       />
     </div>
-  );
-};
+  )
+  };
 
 // Example: Text analysis utility for posts;
 export const analyzePostForCrisis = async (
@@ -193,7 +193,7 @@ export const analyzePostForCrisis = async (
   const { enhancedAICrisisDetectionService } = await import('../services/enhancedAiCrisisDetectionService');
   
   try {
-    const analysis = await enhancedAICrisisDetectionService.analyzeCrisisWithML(;
+    const analysis = await enhancedAICrisisDetectionService.analyzeCrisisWithML(;;
       postText,
       { userId, languageCode }
     );
@@ -205,8 +205,8 @@ export const analyzePostForCrisis = async (
       emotionalState: analysis.emotionalState,
       recommendations: analysis.realTimeRisk?.recommendedInterventions || [],
       culturallyAdapted: (analysis.biasAdjustments?.length || 0) > 0,
-      confidence: analysis.mlConfidence;
-    } catch (error) {
+      confidence: analysis.mlConfidence
+  } catch (error) {
     console.error('Crisis analysis failed:', error);
     return {
       hasCrisis: false,
@@ -215,8 +215,8 @@ export const analyzePostForCrisis = async (
       emotionalState: null,
       recommendations: [],
       culturallyAdapted: false,
-      confidence: 0;
-    }
+      confidence: 0
+  }
 };
 
 // Example: Helper function for crisis intervention workflow;
@@ -226,7 +226,7 @@ export const triggerCrisisIntervention = async (
     userId: string;
     languageCode: string;
     culturalContext?: string;
-    preferredContactMethod?: string;
+    preferredContactMethod?: string
   }
 ) => {
   const { interventionUrgency } = analysis.realTimeRisk;
@@ -277,8 +277,8 @@ export const triggerCrisisIntervention = async (
         action: 'none',
         message: 'No immediate intervention required',
         contacts: [],
-        nextSteps: ['Continue monitoring'];
-      }
+        nextSteps: ['Continue monitoring']
+  }
 };
 
 export default {

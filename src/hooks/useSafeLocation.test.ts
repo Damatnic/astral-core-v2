@@ -23,17 +23,17 @@ const mockLocation = {
   search: '?param=value',
   hash: '#section',
   state: { from: '/previous' },
-  key: 'test-key-123';
-};
+  key: 'test-key-123'
+  };
 
 jest.mock('react-router-dom', () => ({
-  useLocation: jest.fn();
-}));
+  useLocation: jest.fn()
+  }));
 
 
 describe('useSafeLocation Hook', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   it.skip('should return location from router context when available', () => {
@@ -42,15 +42,15 @@ describe('useSafeLocation Hook', () => {
     
     const { result } = renderHook(() => useSafeLocation());
 
-    expect(result.current).toEqual(mockLocation);
+    expect(result.current).toEqual(mockLocation)
   });
 
   it.skip('should return fallback location when no router context exists', () => {
     const { useLocation } = require('react-router-dom');
     // Mock useLocation to throw (no Router context)
     useLocation.mockImplementation(() => {
-      throw new Error('useLocation() may be used only in the context of a <Router> component.');
-    });
+      throw new Error('useLocation() may be used only in the context of a <Router> component.')
+  });
 
     const { result } = renderHook(() => useSafeLocation());
 
@@ -59,8 +59,8 @@ describe('useSafeLocation Hook', () => {
       search: '',
       hash: '',
       state: null,
-      key: 'default';
-    });
+      key: 'default'
+  })
   });
 
   it.skip('should return fallback location when context has no location', () => {
@@ -74,51 +74,51 @@ describe('useSafeLocation Hook', () => {
       search: '',
       hash: '',
       state: null,
-      key: 'default';
-    });
+      key: 'default'
+  })
   });
 
   it.skip('should handle various location states', () => {
-    const locationStates = [;
+    const locationStates = [;;
       {
         pathname: '/',
         search: '',
         hash: '',
         state: null,
-        key: 'home';
-      },
+        key: 'home'
+  },
       {
         pathname: '/mood-tracker',
         search: '?date=2024-01-15',
         hash: '#current-mood',
         state: { mood: 'happy' },
-        key: 'mood-key';
-      },
+        key: 'mood-key'
+  },
       {
         pathname: '/crisis',
         search: '?urgent=true',
         hash: '#emergency',
         state: { emergency: true },
-        key: 'crisis-key';
-      },
+        key: 'crisis-key'
+  },
       {
         pathname: '/community/support',
         search: '?group=anxiety&lang=en',
         hash: '#messages',
         state: { scrollTo: 'bottom' },
-        key: 'community-key';
-      }
+        key: 'community-key'
+  }
     ];
 
     locationStates.forEach((locationState) => {
       jest.spyOn(React, 'useContext').mockReturnValue({
-        location: locationState;
-      });
+        location: locationState
+  });
 
       const { result } = renderHook(() => useSafeLocation());
 
-      expect(result.current).toEqual(locationState);
-    });
+      expect(result.current).toEqual(locationState)
+  })
   });
 
   it.skip('should handle missing search parameter', () => {
@@ -138,7 +138,7 @@ describe('useSafeLocation Hook', () => {
     expect(result.current.hash).toBe('#section');
     expect(result.current.state).toEqual({ test: true });
     expect(result.current.key).toBe('test-key');
-    expect(result.current.search).toBeUndefined();
+    expect(result.current.search).toBeUndefined()
   });
 
   it.skip('should handle missing hash parameter', () => {
@@ -158,7 +158,7 @@ describe('useSafeLocation Hook', () => {
     expect(result.current.search).toBe('?test=true');
     expect(result.current.state).toBeNull();
     expect(result.current.key).toBe('test-key');
-    expect(result.current.hash).toBeUndefined();
+    expect(result.current.hash).toBeUndefined()
   });
 
   it.skip('should handle missing state parameter', () => {
@@ -178,7 +178,7 @@ describe('useSafeLocation Hook', () => {
     expect(result.current.search).toBe('?test=true');
     expect(result.current.hash).toBe('#section');
     expect(result.current.key).toBe('test-key');
-    expect(result.current.state).toBeUndefined();
+    expect(result.current.state).toBeUndefined()
   });
 
   it.skip('should handle missing key parameter', () => {
@@ -198,7 +198,7 @@ describe('useSafeLocation Hook', () => {
     expect(result.current.search).toBe('?test=true');
     expect(result.current.hash).toBe('#section');
     expect(result.current.state).toEqual({ test: true });
-    expect(result.current.key).toBeUndefined();
+    expect(result.current.key).toBeUndefined()
   });
 
   it.skip('should work consistently across multiple renders', () => {
@@ -211,7 +211,7 @@ describe('useSafeLocation Hook', () => {
     rerender();
     rerender();
 
-    expect(result.current).toEqual(initialLocation);
+    expect(result.current).toEqual(initialLocation)
   });
 
   it.skip('should handle context changes', () => {
@@ -221,8 +221,8 @@ describe('useSafeLocation Hook', () => {
         search: '',
         hash: '',
         state: null,
-        key: 'initial';
-      }
+        key: 'initial'
+  }
     };
 
     jest.spyOn(React, 'useContext').mockImplementation(() => contextValue);
@@ -238,8 +238,8 @@ describe('useSafeLocation Hook', () => {
         search: '?updated=true',
         hash: '#new',
         state: { updated: true } as any,
-        key: 'updated';
-      }
+        key: 'updated'
+  }
     };
 
     rerender();
@@ -248,7 +248,7 @@ describe('useSafeLocation Hook', () => {
     expect(result.current.search).toBe('?updated=true');
     expect(result.current.hash).toBe('#new');
     expect(result.current.state).toEqual({ updated: true });
-    expect(result.current.key).toBe('updated');
+    expect(result.current.key).toBe('updated')
   });
 
   it.skip('should maintain type safety', () => {
@@ -272,8 +272,8 @@ describe('useSafeLocation Hook', () => {
       search: '',
       hash: '',
       state: null,
-      key: 'default';
-    });
+      key: 'default'
+  })
   });
 
   it.skip('should handle complex state objects', () => {
@@ -290,8 +290,8 @@ describe('useSafeLocation Hook', () => {
         search: '?complex=true&nested=value',
         hash: '#complex-section',
         state: complexState,
-        key: 'complex-key';
-      }
+        key: 'complex-key'
+  }
     });
 
     const { result } = renderHook(() => useSafeLocation());
@@ -300,7 +300,7 @@ describe('useSafeLocation Hook', () => {
     expect(result.current.pathname).toBe('/complex');
     expect(result.current.search).toBe('?complex=true&nested=value');
     expect(result.current.hash).toBe('#complex-section');
-    expect(result.current.key).toBe('complex-key');
+    expect(result.current.key).toBe('complex-key')
   });
 
   it.skip('should handle empty string values correctly', () => {
@@ -310,8 +310,8 @@ describe('useSafeLocation Hook', () => {
         search: '',
         hash: '',
         state: '',
-        key: '';
-      }
+        key: ''
+  }
     });
 
     const { result } = renderHook(() => useSafeLocation());
@@ -320,7 +320,7 @@ describe('useSafeLocation Hook', () => {
     expect(result.current.search).toBe('');
     expect(result.current.hash).toBe('');
     expect(result.current.state).toBe('');
-    expect(result.current.key).toBe('');
+    expect(result.current.key).toBe('')
   });
 
   it.skip('should be usable outside Router context without errors', () => {
@@ -335,14 +335,14 @@ describe('useSafeLocation Hook', () => {
       expect(result.current.search).toBe('');
       expect(result.current.hash).toBe('');
       expect(result.current.state).toBeNull();
-      expect(result.current.key).toBe('default');
-    }).not.toThrow();
+      expect(result.current.key).toBe('default')
+  }).not.toThrow()
+  })
   });
-});
 
 // Dummy test to keep suite active
 describe('Test Suite Active', () => {
   it('Placeholder test to prevent empty suite', () => {
-    expect(true).toBe(true);
+    expect(true).toBe(true)
+  })
   });
-});

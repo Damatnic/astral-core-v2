@@ -71,7 +71,7 @@ const ModerationView: React.FC = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export default ModerationView;

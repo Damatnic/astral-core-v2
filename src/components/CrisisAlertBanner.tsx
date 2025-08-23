@@ -5,25 +5,25 @@ import { PhoneIcon, ChatIcon, CloseIcon, ShieldIcon, AlertIcon } from './icons.d
 export const CrisisAlertBanner: React.FC<{
   show?: boolean;
   severity?: 'low' | 'medium' | 'high';
-  onClose?: () => void;
-}> = ({ show = true, severity = 'medium', onClose }) => {
+  onClose?: () => void
+  }> = ({ show = true, severity = 'medium', onClose }) => {
   const [isVisible, setIsVisible] = useState(show);
   const resources = getCrisisResources();
   
   useEffect(() => {
-    setIsVisible(show);
+    setIsVisible(show)
   };
   }, [show]);
   
   const handleClose = () => {
     try {
       setIsVisible(false);
-      onClose?.();
-    } catch (error) {
+      onClose?.()
+  } catch (error) {
       console.error('Error closing crisis alert:', error);
       // Still hide the banner even if callback fails
-      setIsVisible(false);
-    }
+      setIsVisible(false)
+  }
   };
   
   if (!isVisible) return null;
@@ -32,7 +32,7 @@ export const CrisisAlertBanner: React.FC<{
     const base = 'crisis-alert-banner';
     if (severity === 'high') return `${base} ${base}--urgent`;
     if (severity === 'low') return `${base} ${base}--info`;
-    return base;
+    return base
   };
   
   return (
@@ -41,8 +41,7 @@ export const CrisisAlertBanner: React.FC<{
         <div className="crisis-alert-header">
           <h3>You&apos;re Not Alone - Help is Available 24/7</h3>
           {onClose && (
-            <button; 
-              className="crisis-alert-close" 
+            <button className="crisis-alert-close" 
               onClick={handleClose}
               aria-label="Close crisis alert"
             >
@@ -83,8 +82,7 @@ export const CrisisAlertBanner: React.FC<{
           >
             Get Help Now
           </a>
-          <button; 
-            className="crisis-action-secondary"
+          <button className="crisis-action-secondary"
             onClick={() => window.location.href = '#crisis'}
           >
             View All Resources
@@ -92,8 +90,8 @@ export const CrisisAlertBanner: React.FC<{
         </div>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 // Floating Crisis Button - Always visible;
 export const FloatingCrisisButton: React.FC = () => {
@@ -101,35 +99,34 @@ export const FloatingCrisisButton: React.FC = () => {
   
   const handleExpand = () => {
     try {
-      setIsExpanded(true);
-    } catch (error) {
-      console.error('Error expanding crisis help:', error);
-    }
+      setIsExpanded(true)
+  } catch (error) {
+      console.error('Error expanding crisis help:', error)
+  }
   };
 
   const handleClose = () => {
     try {
-      setIsExpanded(false);
-    } catch (error) {
-      console.error('Error closing crisis help:', error);
-    }
+      setIsExpanded(false)
+  } catch (error) {
+      console.error('Error closing crisis help:', error)
+  }
   };
 
   const handleEmergencyCall = (number: string) => {
     try {
-      window.location.href = `tel:${number}`;
-    } catch (error) {
+      window.location.href = `tel:${number}`
+  } catch (error) {
       console.error('Error initiating call:', error);
       // Fallback: copy number to clipboard
-      navigator.clipboard?.writeText(number);
-    }
+      navigator.clipboard?.writeText(number)
+  }
   };
   
   return (
     <div className={isExpanded ? 'floating-crisis-button expanded' : 'floating-crisis-button'}>
       {!isExpanded ? (
-        <button; 
-          className="crisis-help-trigger urgent-pulse"
+        <button className="crisis-help-trigger urgent-pulse"
           onClick={handleExpand}
           aria-label="Get immediate help - Crisis support available 24/7"
         >
@@ -141,8 +138,7 @@ export const FloatingCrisisButton: React.FC = () => {
           <div className="crisis-header">
             <AlertIcon />
             <h4>Immediate Help Available 24/7</h4>
-            <button; 
-              className="crisis-close-btn"
+            <button className="crisis-close-btn"
               onClick={handleClose}
               aria-label="Close crisis help menu"
             >
@@ -215,5 +211,5 @@ export const FloatingCrisisButton: React.FC = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+  };

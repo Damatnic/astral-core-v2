@@ -3,12 +3,12 @@
   interface AuthResponse {
     type: "success" | "error";
   params: Record<string, string>;
-  error?: { message: string } | null;
-}
+  error?: { message: string } | null
+  }
 
 export const WebAuthSession={
   makeRedirectUri: () => {
-    return window.location.origin + "/auth/callback";
+    return window.location.origin + "/auth/callback"
   },
   
     useAutoDiscovery: (domain: string) => {
@@ -23,7 +23,7 @@ export const WebAuthSession={
 
   ResponseType: {
     Token: process.env.REACT_APP_TOKEN || "token",
-    Code: "code";
+    Code: "code"
   },
 
   useAuthRequest: (config: Record<string, unknown>, discovery: boolean): [{ url: string }, AuthResponse | null, () => Promise<void>] => {
@@ -34,17 +34,17 @@ export const WebAuthSession={
         response_type: config.responseType,
         scope: config.scopes.join(" "),
         audience: config.extraParams?.audience || "",
-        state: Math.random().toString(36).substring(7);
-      };
+        state: Math.random().toString(36).substring(7)
+  };
   };
       
-      return `${discovery.authorizationEndpoint}?${params.toString()}`;
-    };
+      return `${discovery.authorizationEndpoint}?${params.toString()}`
+  };
     
     const promptAsync = async (): Promise<void> => {
       const authUrl = buildAuthUrl();
-      window.location.href = authUrl;
-    };
+      window.location.href = authUrl
+  };
     
     // Check for auth response in URL;
     const urlParams = window.location.hash ? ;
@@ -62,14 +62,14 @@ export const WebAuthSession={
         response = {
           type: "success" as const,
           params: urlParams,
-          error: null;
-        };
+          error: null
+  };
       }
     }
     
     const request = { url: buildAuthUrl() };
     
-    return [request, response, promptAsync] as const;
+    return [request, response, promptAsync] as const
   },
 
   exchangeCodeAsync: async (_config: Record<string, unknown>) => {

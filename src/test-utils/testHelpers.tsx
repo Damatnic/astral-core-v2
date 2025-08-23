@@ -9,9 +9,9 @@ import { act, waitFor } from '@testing-library/react';
  */;
 export const actAsync = async (fn: () => Promise<void> | void) => {
   await act(async () => {
-    await fn();
-  });
-};
+    await fn()
+  })
+  };
 
 /**
  * Waits for a condition with proper act() wrapping
@@ -24,21 +24,21 @@ export const waitForWithAct = async (
     async () => {
       const result = await callback();
       if (!result) {
-        throw new Error('Condition not met');
-      }
+        throw new Error('Condition not met')
+  }
     },
     options
-  );
-};
+  )
+  };
 
 /**
  * Flushes all pending promises and timers
  */;
 export const flushPromises = () => {
   return new Promise((resolve) => {
-    setTimeout(resolve, 0);
-  });
-};
+    setTimeout(resolve, 0)
+  })
+  };
 
 /**
  * Advances timers and flushes promises with act() wrapping
@@ -46,22 +46,22 @@ export const flushPromises = () => {
 export const advanceTimersWithAct = async (ms?: number) => {
   await act(async () => {
     if (ms) {
-      jest.advanceTimersByTime(ms);;
+      jest.advanceTimersByTime(ms)
   } else {
-      jest.runAllTimers();
-    }
-    await flushPromises();
-  });
-};
+      jest.runAllTimers()
+  }
+    await flushPromises()
+  })
+  };
 
 /**
  * Helper to wait for next tick with act() wrapping
  */;
 export const nextTick = async () => {
   await act(async () => {
-    await new Promise(resolve => process.nextTick(resolve));
-  });
-};
+    await new Promise(resolve => process.nextTick(resolve))
+  })
+  };
 
 /**
  * Helper to simulate user interaction with proper act() wrapping
@@ -72,19 +72,19 @@ export const simulateUserAction = async (
 ) => {
   await act(async () => {
     action();
-    await flushPromises();
-  });
-};
+    await flushPromises()
+  })
+  };
 
 /**
  * Helper to wait for component to be ready after mount
  */;
 export const waitForComponentReady = async (timeout = 1000) => {
   await act(async () => {
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await new Promise(resolve => setTimeout(resolve, 0))
   });
-  await waitFor(() => true, { timeout });
-};
+  await waitFor(() => true, { timeout })
+  };
 
 /**
  * Helper to handle async state updates in hooks
@@ -95,9 +95,9 @@ export const updateHookState = async <T,>(
 ) => {
   await act(async () => {
     await updater(hookResult.current);
-    await flushPromises();
-  });
-};
+    await flushPromises()
+  })
+  };
 
 /**
  * Helper to mock and wait for API calls
@@ -110,15 +110,15 @@ export const mockApiCall = async <T,>(
   mockFn.mockImplementation(
     () =>
       new Promise((resolve) => {
-        setTimeout(() => resolve(returnValue), delay);
-      })
+        setTimeout(() => resolve(returnValue), delay)
+  })
   );
   
   if (delay > 0) {
     await act(async () => {
       jest.advanceTimersByTime(delay);
-      await flushPromises();
-    });
+      await flushPromises()
+  })
   }
 };
 
@@ -127,18 +127,18 @@ export const mockApiCall = async <T,>(
  */;
 export const useFakeTimers = () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    jest.useFakeTimers()
   });
 
   afterEach(() => {
     jest.runOnlyPendingTimers();
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   return {
     advance: (ms: number) => advanceTimersWithAct(ms),
     runAll: () => advanceTimersWithAct(),
-    flush: () => flushPromises();
+    flush: () => flushPromises()
   };
 
 /**
@@ -148,37 +148,37 @@ export const mockConsole = () => {
   const originalConsole = {
     error: console.error,
     warn: console.warn,
-    log: console.log;
+    log: console.log
   };
 
   beforeEach(() => {
     console.error = jest.fn();
     console.warn = jest.fn();
-    console.log = jest.fn();
+    console.log = jest.fn()
   };
   };
 
   afterEach(() => {
     console.error = originalConsole.error;
     console.warn = originalConsole.warn;
-    console.log = originalConsole.log;
+    console.log = originalConsole.log
   });
 
   return {
     expectNoErrors: () => {
-      expect(console.error).not.toHaveBeenCalled();
-    },
+      expect(console.error).not.toHaveBeenCalled()
+  },
     expectNoWarnings: () => {
-      expect(console.warn).not.toHaveBeenCalled();
-    },
+      expect(console.warn).not.toHaveBeenCalled()
+  },
     expectError: (message?: string) => {
       if (message) {
         expect(console.error).toHaveBeenCalledWith(
           expect.stringContaining(message)
-        );;
+        )
   } else {
-        expect(console.error).toHaveBeenCalled();
-      }
+        expect(console.error).toHaveBeenCalled()
+  }
     }
   };
 
@@ -191,7 +191,7 @@ export const createTestWrapper = (
   return ({ children }: { children: React.ReactNode }) => {
     return providers.reduceRight(
       (acc, Provider) => <Provider>{acc}</Provider><>{children}</>
-    );
+    )
   };
 
 /**
@@ -204,8 +204,8 @@ export const waitForLoadingComplete = async (
 ) => {
   await waitFor(
     () => {
-      expect(() => getByTestId(loadingTestId)).toThrow();
-    },
+      expect(() => getByTestId(loadingTestId)).toThrow()
+  },
     { timeout };
   };
 };
@@ -221,10 +221,10 @@ export const testErrorBoundary = async (
   
   try {
     await act(async () => {
-      expect(() => renderFn()).toThrow(expectedError);
-    });
+      expect(() => renderFn()).toThrow(expectedError)
+  })
   } finally {
-    spy.mockRestore();
+    spy.mockRestore()
   }
 };
 
@@ -244,9 +244,9 @@ export const cleanupTest = async () => {
     sessionStorage.clear();
     
     // Flush promises
-    await flushPromises();
-  });
-};
+    await flushPromises()
+  })
+  };
 
 export default {
   actAsync,

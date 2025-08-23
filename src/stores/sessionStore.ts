@@ -22,8 +22,8 @@ interface SessionState {
   startVideoChat: (dilemmaId: string) => void;
   acceptVideoConsent: () => void;
   declineVideoConsent: () => void;
-  endVideoChat: () => void;
-}
+  endVideoChat: () => void
+  }
 
 export const useSessionStore = create<SessionState>((set, get) => ({
   helpSessions: [],
@@ -36,14 +36,14 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     if (!userId) return;
     try {
       const sessions = await ApiClient.helpSessions.getForUser(userId);
-      set({ helpSessions: sessions });
-    } catch (error) {
-      console.error("Failed to load help sessions:", error);
-    }
+      set({ helpSessions: sessions })
+  } catch (error) {
+      console.error("Failed to load help sessions:", error)
+  }
   },
 
   getHelpSessionByDilemmaId: (dilemmaId) => {
-    return get().helpSessions.find(s => s.dilemmaId === dilemmaId);
+    return get().helpSessions.find(s => s.dilemmaId === dilemmaId)
   },
 
   toggleFavorite: async (sessionId) => {
@@ -52,7 +52,7 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     const updatedSession = await ApiClient.helpSessions.toggleFavorite(sessionId, seekerId);
     set(state => ({
       helpSessions: state.helpSessions.map(s => s.id === updatedSession.id ? updatedSession : s),
-    }));
+    }))
   },
 
   sendKudos: async (sessionId) => {
@@ -66,19 +66,19 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     try {
       const result = await ApiClient.helpSessions.sendKudos(sessionId, seekerId);
       if (result && result.updatedHelper) {
-          authService.updateHelperProfile(result.updatedHelper);
-      }
+          authService.updateHelperProfile(result.updatedHelper)
+  }
       if (result && result.newAchievements && result.newAchievements.length > 0) {
           result.newAchievements.forEach(ach => {
-              notificationService.addToast(`🏆 Achievement Unlocked: ${ach.name}!`, 'success');
-          });
-      }
+              notificationService.addToast(`🏆 Achievement Unlocked: ${ach.name}!`, 'success')
+  })
+  }
     } catch (error) {
       console.error("Failed to send kudos:", error);
        set(state => ({
         helpSessions: state.helpSessions.map(s => s.id === sessionId ? { ...s, kudosGiven: false } : s),
-    }));
-    }
+    }))
+  }
   },
 
   generateSeekerSummary: async (sessionId) => {
@@ -95,8 +95,8 @@ export const useSessionStore = create<SessionState>((set, get) => ({
         const summary = await ApiClient.ai.summarizeChat(transcript);
         set(state => ({
             helpSessions: state.helpSessions.map(s => s.id === sessionId ? { ...s, summary, summaryLoading: false } : s)
-        }));
-    } catch (err) {
+        }))
+  } catch (err) {
         console.error("Failed to generate seeker summary:", err);
         set(state => ({
             helpSessions: state.helpSessions.map(s => s.id === sessionId ? { ...s, summaryLoading: false } : s)
@@ -110,16 +110,16 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     try {
         // In a real app, we would get the chat transcript from the session;
         const summary = await ApiClient.ai.summarizeHelperPerformance("");
-        set(state => ({ helpSessions: state.helpSessions.map(s => s.id === sessionId ? { ...s, helperSummary: summary, helperSummaryLoading: false } : s)}));
-    } catch(err) {
+        set(state => ({ helpSessions: state.helpSessions.map(s => s.id === sessionId ? { ...s, helperSummary: summary, helperSummaryLoading: false } : s)}))
+  } catch(err) {
         console.error("Failed to generate helper summary:", err);
-        set(state => ({ helpSessions: state.helpSessions.map(s => s.id === sessionId ? { ...s, helperSummaryLoading: false } : s)}));
-    }
+        set(state => ({ helpSessions: state.helpSessions.map(s => s.id === sessionId ? { ...s, helperSummaryLoading: false } : s)}))
+  }
   },
   
   // --- Video Chat Implementation ---
   startVideoChat: (dilemmaId: string) => {
-    set({ pendingVideoChatDilemmaId: dilemmaId, isVideoConsentModalOpen: true });
+    set({ pendingVideoChatDilemmaId: dilemmaId, isVideoConsentModalOpen: true })
   },
   acceptVideoConsent: () => {
     const pendingId = get().pendingVideoChatDilemmaId;
@@ -128,11 +128,11 @@ export const useSessionStore = create<SessionState>((set, get) => ({
             videoChatDilemmaId: pendingId,
             pendingVideoChatDilemmaId: null,
             isVideoConsentModalOpen: false,
-        });
-    }
+        })
+  }
   },
   declineVideoConsent: () => {
-    set({ pendingVideoChatDilemmaId: null, isVideoConsentModalOpen: false });
+    set({ pendingVideoChatDilemmaId: null, isVideoConsentModalOpen: false })
   },
   endVideoChat: () => {
     set({ videoChatDilemmaId: null });

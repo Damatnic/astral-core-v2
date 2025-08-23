@@ -44,8 +44,8 @@ describe('CulturalAssessmentService', () => {
       summary: "effectiveness: 0.85",
       culturalInsights: ['Western culture shows direct communication patterns'],
       recommendations: ['Consider cultural context in assessments'],
-      limitations: ['Limited cross-cultural validation data'];
-    });
+      limitations: ['Limited cross-cultural validation data']
+  })
   });
 
   describe('Cultural Expression Patterns', () => {
@@ -71,8 +71,8 @@ describe('CulturalAssessmentService', () => {
       // Chinese patterns
       expect(patterns.chinese.depression.somatic).toContain('累');
       expect(patterns.chinese.depression.cultural).toContain('心烦');
-      expect(patterns.chinese.helpSeeking.traditional).toContain('中医');
-    });
+      expect(patterns.chinese.helpSeeking.traditional).toContain('中医')
+  })
   });
 
   describe('Assessment Questions Adaptation', () => {
@@ -90,8 +90,8 @@ describe('CulturalAssessmentService', () => {
       expect(questions).toHaveLength(9);
       expect(questions[0].culturalAdaptations).toHaveProperty('Hispanic/Latino');
       expect(questions[0].sensitivityLevel).toBeDefined();
-      expect(questions[0].stigmaConsiderations).toBeInstanceOf(Array);
-    });
+      expect(questions[0].stigmaConsiderations).toBeInstanceOf(Array)
+  });
 
     test.skip('should get culturally adapted GAD-7 questions', async () => {
       const questions = await service.getCulturalAssessmentQuestions('gad-7', 'ar', 'Arabic');
@@ -99,15 +99,15 @@ describe('CulturalAssessmentService', () => {
       expect(questions).toHaveLength(7);
       expect(questions[0]).toHaveProperty('culturalAdaptations');
       expect(questions[0]).toHaveProperty('sensitivityLevel');
-      expect(questions[0]).toHaveProperty('stigmaConsiderations');
-    });
+      expect(questions[0]).toHaveProperty('stigmaConsiderations')
+  });
 
     test.skip('should use default context when none provided', async () => {
       const questions = await service.getCulturalAssessmentQuestions('phq-9', 'en');
       
       expect(questions).toHaveLength(9);
-      expect(mockCulturalContextService.getCulturalContext).toHaveBeenCalledWith('en');
-    });
+      expect(mockCulturalContextService.getCulturalContext).toHaveBeenCalledWith('en')
+  });
 
     test.skip('should determine appropriate sensitivity levels', () => {
       const service = culturalAssessmentService;
@@ -125,28 +125,28 @@ describe('CulturalAssessmentService', () => {
       expect((service as any).determineSensitivityLevel('anxious')).toBe('medium');
       
       // Low sensitivity for general questions
-      expect((service as any).determineSensitivityLevel('trouble sleeping')).toBe('low');
-    });
+      expect((service as any).determineSensitivityLevel('trouble sleeping')).toBe('low')
+  });
 
     test.skip('should identify stigma considerations', () => {
-      const considerations = (service as any).getStigmaConsiderations(;
+      const considerations = (service as any).getStigmaConsiderations(;;
         'feeling depressed or hopeless',
         'collectivist'
       );
       
       expect(considerations).toContain('Mental health stigma may affect honest responses');
-      expect(considerations).toContain('Family shame considerations may influence answers');
-    });
+      expect(considerations).toContain('Family shame considerations may influence answers')
+  });
 
     test.skip('should identify suicide stigma considerations', () => {
-      const considerations = (service as any).getStigmaConsiderations(;
+      const considerations = (service as any).getStigmaConsiderations(;;
         'thoughts of hurting yourself',
         'Arabic'
       );
       
       expect(considerations).toContain('Suicide stigma varies significantly across cultures');
-      expect(considerations).toContain('Religious or spiritual beliefs may affect responses');
-    });
+      expect(considerations).toContain('Religious or spiritual beliefs may affect responses')
+  })
   });
 
   describe('Cultural Assessment Calculation', () => {
@@ -162,7 +162,7 @@ describe('CulturalAssessmentService', () => {
         communicationStyle: 'indirect',
       });
 
-      const result = await service.calculateCulturalAssessmentResult(;
+      const result = await service.calculateCulturalAssessmentResult(;;
         'phq-9',
         scores,
         answers,
@@ -180,8 +180,8 @@ describe('CulturalAssessmentService', () => {
       expect(result.recommendations.primary).toBeDefined();
       expect(result.recommendations.cultural).toBeInstanceOf(Array);
       expect(result.privacyMetadata.culturallyAdjusted).toBe(true);
-      expect(result.privacyMetadata.biasReductionApplied).toBe(true);
-    });
+      expect(result.privacyMetadata.biasReductionApplied).toBe(true)
+  });
 
     test.skip('should calculate culturally-adjusted GAD-7 results', async () => {
       const scores = [1, 2, 2, 1, 0, 1, 1]; // Total: 8;
@@ -195,7 +195,7 @@ describe('CulturalAssessmentService', () => {
         communicationStyle: 'indirect',
       });
 
-      const result = await service.calculateCulturalAssessmentResult(;
+      const result = await service.calculateCulturalAssessmentResult(;;
         'gad-7',
         scores,
         answers,
@@ -205,38 +205,38 @@ describe('CulturalAssessmentService', () => {
       
       expect(result.severity).toBeDefined();
       expect(['minimal', 'mild', 'moderate', 'severe']).toContain(result.severity);
-      expect(result.culturalFactors.helpSeekingStyle).toBeDefined();
-    });
+      expect(result.culturalFactors.helpSeekingStyle).toBeDefined()
+  });
 
     test.skip('should apply somatic bias adjustment for relevant cultures', () => {
       const somaticBias = (service as any).calculateSomaticBias([], 'Chinese');
       expect(somaticBias).toBe(0.1); // 10% adjustment;
       
       const noSomaticBias = (service as any).calculateSomaticBias([], 'Western');
-      expect(noSomaticBias).toBe(0);
-    });
+      expect(noSomaticBias).toBe(0)
+  });
 
     test.skip('should apply expressiveness adjustment for indirect cultures', () => {
       const adjustment = (service as any).calculateExpressivenessAdjustment([], {
-        communicationStyle: 'indirect';
-      });
+        communicationStyle: 'indirect'
+  });
       expect(adjustment).toBe(0.15); // 15% adjustment;
       
       const noAdjustment = (service as any).calculateExpressivenessAdjustment([], {
-        communicationStyle: 'direct';
-      });
-      expect(noAdjustment).toBe(0);
-    });
+        communicationStyle: 'direct'
+  });
+      expect(noAdjustment).toBe(0)
+  });
 
     test.skip('should apply stigma adjustment based on stigma level', () => {
       const highStigmaAdjustment = (service as any).calculateStigmaAdjustment('phq-9', {
-        mentalHealthStigma: 0.8;
-      });
+        mentalHealthStigma: 0.8
+  });
       expect(highStigmaAdjustment).toBeCloseTo(0.16, 10); // 0.8 * 0.2 = 0.16;
       
       const lowStigmaAdjustment = (service as any).calculateStigmaAdjustment('phq-9', {
-        mentalHealthStigma: 0.2;
-      });
+        mentalHealthStigma: 0.2
+  });
       expect(lowStigmaAdjustment).toBeCloseTo(0.04, 10); // 0.2 * 0.2 = 0.04
     });
 
@@ -250,12 +250,12 @@ describe('CulturalAssessmentService', () => {
       const severity = (service as any).calculateGad7Severity(8, 0.5); // Medium stigma
       // Adjusted thresholds: minimal: 4.5, mild: 9.5, moderate: 14.5
       expect(severity).toBe('mild'); // Score 8 falls in mild range with adjustment
-    });
+    })
   });
 
   describe('Cultural Recommendations', () => {
     test.skip('should generate Hispanic/Latino cultural recommendations', async () => {
-      const recommendations = (service as any).getCulturalRecommendations(;
+      const recommendations = (service as any).getCulturalRecommendations(;;
         'moderate',
         'hispanic_latino',
         'religious'
@@ -263,11 +263,11 @@ describe('CulturalAssessmentService', () => {
       
       expect(recommendations).toContain('Consider speaking with a trusted family member or community elder');
       expect(recommendations).toContain('Explore culturally-informed therapy options with bilingual providers');
-      expect(recommendations).toContain('Connect with your spiritual community for additional support');
-    });
+      expect(recommendations).toContain('Connect with your spiritual community for additional support')
+  });
 
     test.skip('should generate Arabic cultural recommendations', async () => {
-      const recommendations = (service as any).getCulturalRecommendations(;
+      const recommendations = (service as any).getCulturalRecommendations(;;
         'moderate',
         'arabic',
         'traditional'
@@ -275,11 +275,11 @@ describe('CulturalAssessmentService', () => {
       
       expect(recommendations).toContain('Consider involving family in your healing process if culturally appropriate');
       expect(recommendations).toContain('Look for mental health providers familiar with Islamic values and perspectives');
-      expect(recommendations).toContain('Combine professional support with traditional wellness practices');
-    });
+      expect(recommendations).toContain('Combine professional support with traditional wellness practices')
+  });
 
     test.skip('should generate Chinese cultural recommendations', async () => {
-      const recommendations = (service as any).getCulturalRecommendations(;
+      const recommendations = (service as any).getCulturalRecommendations(;;
         'mild',
         'chinese',
         'professional'
@@ -287,8 +287,8 @@ describe('CulturalAssessmentService', () => {
       
       expect(recommendations).toContain('Consider holistic approaches that address mind-body wellness');
       expect(recommendations).toContain('Explore providers who understand concepts like emotional balance and harmony');
-      expect(recommendations).toContain('Family support may be beneficial in your healing journey');
-    });
+      expect(recommendations).toContain('Family support may be beneficial in your healing journey')
+  });
 
     test.skip('should provide language-specific crisis resources', () => {
       const spanishResources = (service as any).getCulturalResources('hispanic_latino', 'es');
@@ -300,24 +300,24 @@ describe('CulturalAssessmentService', () => {
       expect(arabicResources).toContain('Muslim Mental Health resources');
       
       const chineseResources = (service as any).getCulturalResources('chinese', 'zh');
-      expect(chineseResources).toContain('Asian Mental Health Collective');
-    });
+      expect(chineseResources).toContain('Asian Mental Health Collective')
+  });
 
     test.skip('should provide culturally appropriate family guidance', () => {
-      const familyInclusiveGuidance = (service as any).getFamilyGuidance(;
+      const familyInclusiveGuidance = (service as any).getFamilyGuidance(;;
         'moderate',
         'hispanic_latino',
         'family-inclusive'
       );
       expect(familyInclusiveGuidance).toContain('family support is often crucial for healing');
       
-      const communityOrientedGuidance = (service as any).getFamilyGuidance(;
+      const communityOrientedGuidance = (service as any).getFamilyGuidance(;;
         'mild',
         'arabic',
         'community-oriented'
       );
-      expect(communityOrientedGuidance).toContain('Community support can be valuable');
-    });
+      expect(communityOrientedGuidance).toContain('Community support can be valuable')
+  });
 
     test.skip('should generate base recommendations by severity', () => {
       const minimalRec = (service as any).getBaseRecommendations('minimal', 'phq-9');
@@ -325,8 +325,8 @@ describe('CulturalAssessmentService', () => {
       
       const severeRec = (service as any).getBaseRecommendations('severe', 'gad-7');
       expect(severeRec).toContain('severe anxiety symptoms');
-      expect(severeRec).toContain('strongly recommend seeking professional help');
-    });
+      expect(severeRec).toContain('strongly recommend seeking professional help')
+  })
   });
 
   describe('Assessment Submission', () => {
@@ -368,16 +368,16 @@ describe('CulturalAssessmentService', () => {
         finalRiskLevel: expect.any(Number),
         sessionDuration: 15000,
         feedback: undefined,
-      });
-    });
+      })
+  });
 
     test.skip('should handle assessment submission errors', async () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       
       // Make cultural context service throw
       mockCulturalContextService.getCulturalContext.mockImplementation(() => {
-        throw new Error('Context service error');
-      });
+        throw new Error('Context service error')
+  });
 
       const assessmentData = {
         userToken: 'user-123',
@@ -391,8 +391,8 @@ describe('CulturalAssessmentService', () => {
       await expect(service.submitCulturalAssessment(assessmentData)).rejects.toThrow();
       expect(consoleSpy).toHaveBeenCalled();
       
-      consoleSpy.mockRestore();
-    });
+      consoleSpy.mockRestore()
+  })
   });
 
   describe('Cultural Analytics', () => {
@@ -404,8 +404,8 @@ describe('CulturalAssessmentService', () => {
       expect(analytics.recommendations).toBeInstanceOf(Array);
       expect(analytics.privacyCompliant).toBe(true);
       
-      expect(mockPrivacyAnalyticsService.generateEffectivenessReport).toHaveBeenCalled();
-    });
+      expect(mockPrivacyAnalyticsService.generateEffectivenessReport).toHaveBeenCalled()
+  });
 
     test.skip('should filter analytics by cultural context', async () => {
       mockPrivacyAnalyticsService.generateEffectivenessReport.mockResolvedValue({
@@ -416,16 +416,16 @@ describe('CulturalAssessmentService', () => {
           'Western individuals seek professional help'
         ],
         recommendations: ['Test recommendation'],
-        limitations: ['Sample size limitations for cultural analysis'];
-      });
+        limitations: ['Sample size limitations for cultural analysis']
+  });
 
       const analytics = await service.getCulturalAssessmentAnalytics('Western');
       
       expect(analytics.culturalInsights).toHaveLength(2); // Only Western-related insights
       expect(analytics.culturalInsights.every((insight: string) => 
         insight.toLowerCase().includes('western')
-      )).toBe(true);
-    });
+      )).toBe(true)
+  });
 
     test.skip('should handle analytics errors gracefully', async () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
@@ -437,8 +437,8 @@ describe('CulturalAssessmentService', () => {
       await expect(service.getCulturalAssessmentAnalytics()).rejects.toThrow();
       expect(consoleSpy).toHaveBeenCalled();
       
-      consoleSpy.mockRestore();
-    });
+      consoleSpy.mockRestore()
+  });
 
     test.skip('should record analytics with error handling', async () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
@@ -465,8 +465,8 @@ describe('CulturalAssessmentService', () => {
         expect.any(Error)
       );
       
-      consoleSpy.mockRestore();
-    });
+      consoleSpy.mockRestore()
+  })
   });
 
   describe('Helper Methods', () => {
@@ -476,15 +476,15 @@ describe('CulturalAssessmentService', () => {
       
       expect(id1).toMatch(/^cultural_assessment_\d+_[a-z0-9]+$/);
       expect(id2).toMatch(/^cultural_assessment_\d+_[a-z0-9]+$/);
-      expect(id1).not.toBe(id2);
-    });
+      expect(id1).not.toBe(id2)
+  });
 
     test.skip('should anonymize user tokens', () => {
       const token = 'user-123-very-long-token';
       const anonymized = (service as any).anonymizeUserToken(token);
       
-      expect(anonymized).toBe('user-123_anonymized');
-    });
+      expect(anonymized).toBe('user-123_anonymized')
+  });
 
     test.skip('should get cultural adaptations used', () => {
       const adaptations = (service as any).getCulturalAdaptationsUsed('phq-9', 'Chinese');
@@ -492,11 +492,11 @@ describe('CulturalAssessmentService', () => {
       expect(adaptations).toContain('phq-9_cultural_adaptation');
       expect(adaptations).toContain('Chinese_context_applied');
       expect(adaptations).toContain('bias_reduction_applied');
-      expect(adaptations).toContain('cultural_scoring_adjustment');
-    });
+      expect(adaptations).toContain('cultural_scoring_adjustment')
+  });
 
     test.skip('should analyze cultural expression patterns', () => {
-      const patterns = (service as any).analyzeExpressionPatterns(;
+      const patterns = (service as any).analyzeExpressionPatterns(;;
         ['I feel sad', 'I worry too much'],
         'Western'
       );
@@ -505,26 +505,26 @@ describe('CulturalAssessmentService', () => {
     });
 
     test.skip('should get relevant expression patterns for questions', () => {
-      const patterns = (service as any).getRelevantExpressionPatterns(;
+      const patterns = (service as any).getRelevantExpressionPatterns(;;
         'feeling down or depressed',
         {
           depression: {
             emotional: ['sad', 'hopeless'],
             somatic: ['tired', 'pain'],
             behavioral: ['withdrawn'],
-            cultural: ['stressed'];
-          },
+            cultural: ['stressed']
+  },
           anxiety: { physical: [], cognitive: [], social: [], spiritual: [] },
           helpSeeking: { direct: [], indirect: [], metaphorical: [], traditional: [] }
         }
       );
       
       expect(patterns).toContain('sad');
-      expect(patterns).toContain('hopeless');
-    });
+      expect(patterns).toContain('hopeless')
+  });
 
     test.skip('should generate alternative phrasings', () => {
-      const alternatives = (service as any).generateAlternativePhrasings(;
+      const alternatives = (service as any).generateAlternativePhrasings(;;
         'feeling depressed',
         {},
         'en'
@@ -532,8 +532,8 @@ describe('CulturalAssessmentService', () => {
       
       expect(alternatives).toContain('feeling heavy-hearted');
       expect(alternatives).toContain('experiencing sadness');
-      expect(alternatives).toContain('feeling low spirits');
-    });
+      expect(alternatives).toContain('feeling low spirits')
+  })
   });
 
   describe('Base Assessment Questions', () => {
@@ -548,9 +548,9 @@ describe('CulturalAssessmentService', () => {
       questions.forEach((question: any) => {
         expect(question.options).toHaveLength(4);
         expect(question.options[0].value).toBe(0);
-        expect(question.options[3].value).toBe(3);
-      });
-    });
+        expect(question.options[3].value).toBe(3)
+  })
+  });
 
     test.skip('should provide complete GAD-7 questions', () => {
       const questions = (service as any).getBaseAssessmentQuestions('gad-7');
@@ -563,21 +563,21 @@ describe('CulturalAssessmentService', () => {
       questions.forEach((question: any) => {
         expect(question.options).toHaveLength(4);
         expect(question.options[0].text).toBe('Not at all');
-        expect(question.options[3].text).toBe('Nearly every day');
-      });
-    });
+        expect(question.options[3].text).toBe('Nearly every day')
+  })
+  })
   });
 
   describe('Singleton Instance', () => {
     test.skip('should export singleton instance', () => {
-      expect(culturalAssessmentService).toBeInstanceOf(CulturalAssessmentService);
-    });
+      expect(culturalAssessmentService).toBeInstanceOf(CulturalAssessmentService)
+  });
 
     test.skip('should maintain same instance', () => {
       const instance1 = culturalAssessmentService;
       const instance2 = culturalAssessmentService;
-      expect(instance1).toBe(instance2);
-    });
+      expect(instance1).toBe(instance2)
+  })
   });
 
   describe('Error Handling', () => {
@@ -587,24 +587,24 @@ describe('CulturalAssessmentService', () => {
       // Mock an error in the adaptation process;
       const originalGetBaseQuestions = (service as any).getBaseAssessmentQuestions;
       (service as any).getBaseAssessmentQuestions = jest.fn(() => {
-        throw new Error('Question adaptation error');
-      });
+        throw new Error('Question adaptation error')
+  });
 
       await expect(service.getCulturalAssessmentQuestions('phq-9', 'en')).rejects.toThrow();
       expect(consoleSpy).toHaveBeenCalled();
       
       // Restore
       (service as any).getBaseAssessmentQuestions = originalGetBaseQuestions;
-      consoleSpy.mockRestore();
-    });
+      consoleSpy.mockRestore()
+  });
 
     test.skip('should handle calculation errors gracefully', async () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       
       // Mock context service to throw
       mockCulturalContextService.getCulturalContext.mockImplementation(() => {
-        throw new Error('Context error');
-      });
+        throw new Error('Context error')
+  });
 
       await expect(service.calculateCulturalAssessmentResult(
         'phq-9',
@@ -614,23 +614,23 @@ describe('CulturalAssessmentService', () => {
       )).rejects.toThrow();
       
       expect(consoleSpy).toHaveBeenCalled();
-      consoleSpy.mockRestore();
-    });
+      consoleSpy.mockRestore()
+  });
 
     test.skip('should handle missing cultural patterns gracefully', () => {
-      const patterns = (service as any).getRelevantExpressionPatterns(;
+      const patterns = (service as any).getRelevantExpressionPatterns(;;
         'unknown question type',
         undefined
       );
       
-      expect(patterns).toEqual([]);
-    });
+      expect(patterns).toEqual([])
+  })
+  })
   });
-});
 
 // Dummy test to keep suite active
 describe('Test Suite Active', () => {
   it.skip('Placeholder test to prevent empty suite', () => {
-    expect(true).toBe(true);
+    expect(true).toBe(true)
+  })
   });
-});

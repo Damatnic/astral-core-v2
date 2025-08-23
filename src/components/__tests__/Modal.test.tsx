@@ -3,8 +3,8 @@ import { Modal } from '../Modal';
 
 // Mock the CloseIcon component
 jest.mock('../icons.dynamic', () => ({
-  CloseIcon: () => <div data-testid="close-icon">✕</div>;
-}));
+  CloseIcon: () => <div data-testid="close-icon">✕</div>
+  }));
 
 describe('Modal', () => {
   let mockHTMLMethods: ReturnType<typeof mockHTMLElementMethods>;
@@ -13,12 +13,12 @@ describe('Modal', () => {
     mockHTMLMethods = mockHTMLElementMethods();
     jest.clearAllMocks();
     // Use real timers to avoid warnings
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   afterEach(() => {
     jest.restoreAllMocks();
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   describe('Rendering', () => {
@@ -28,15 +28,15 @@ describe('Modal', () => {
       
       expect(screen.getByRole('dialog')).toBeInTheDocument();
       expect(screen.getByText(props.title)).toBeInTheDocument();
-      expect(screen.getByText('Modal content')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Modal content')).toBeInTheDocument()
+  });
 
     it('should not render when isOpen is false', () => {
       const props = createMockModalProps({ isOpen: false });
       render(<Modal {...props} />);
       
-      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    });
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  });
 
     it('should render with correct title', () => {
       const title = 'Custom Test Modal';
@@ -44,8 +44,8 @@ describe('Modal', () => {
       render(<Modal {...props} />);
       
       expect(screen.getByText(title)).toBeInTheDocument();
-      expect(screen.getByRole('dialog')).toHaveAttribute('aria-labelledby', 'modal-title');
-    });
+      expect(screen.getByRole('dialog')).toHaveAttribute('aria-labelledby', 'modal-title')
+  });
 
     it('should render description when provided', () => {
       const description = 'This is a test modal description';
@@ -53,8 +53,8 @@ describe('Modal', () => {
       render(<Modal {...props} />);
       
       expect(screen.getByText(description)).toBeInTheDocument();
-      expect(screen.getByRole('dialog')).toHaveAttribute('aria-describedby', 'modal-description');
-    });
+      expect(screen.getByRole('dialog')).toHaveAttribute('aria-describedby', 'modal-description')
+  });
 
     it('should render close button when isDismissible is true', () => {
       const props = createMockModalProps({ isDismissible: true });
@@ -68,8 +68,8 @@ describe('Modal', () => {
       const props = createMockModalProps({ isDismissible: false });
       render(<Modal {...props} />);
       
-      expect(screen.queryByLabelText(`Close ${props.title} dialog`)).not.toBeInTheDocument();
-    });
+      expect(screen.queryByLabelText(`Close ${props.title} dialog`)).not.toBeInTheDocument()
+  });
 
     it('should render enhanced footer when enhanced and isDismissible', () => {
       const props = createMockModalProps({ enhanced: true, isDismissible: true });
@@ -77,30 +77,30 @@ describe('Modal', () => {
       
       const footerCloseButton = screen.getByText('Close');
       expect(footerCloseButton).toBeInTheDocument();
-      expect(footerCloseButton).toHaveClass('glass-button', 'smooth-transition');
-    });
+      expect(footerCloseButton).toHaveClass('glass-button', 'smooth-transition')
+  });
 
     it('should render swipe hint when allowSwipeToDismiss and not enhanced', () => {
       const props = createMockModalProps({
         allowSwipeToDismiss: true,
         enhanced: false,
-        isDismissible: true;
-      });
+        isDismissible: true
+  });
       render(<Modal {...props} />);
       
-      expect(screen.getByText('Swipe to dismiss')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Swipe to dismiss')).toBeInTheDocument()
+  });
 
     it('should not render swipe hint when enhanced', () => {
       const props = createMockModalProps({
         allowSwipeToDismiss: true,
         enhanced: true,
-        isDismissible: true;
-      });
+        isDismissible: true
+  });
       render(<Modal {...props} />);
       
-      expect(screen.queryByText('Swipe to dismiss')).not.toBeInTheDocument();
-    });
+      expect(screen.queryByText('Swipe to dismiss')).not.toBeInTheDocument()
+  })
   });
 
   describe('Modal Sizes', () => {
@@ -113,13 +113,13 @@ describe('Modal', () => {
         
         const dialog = screen.getByRole('dialog');
         if (size !== 'md') {
-          expect(dialog).toHaveClass('modal-content-enhanced', `modal-${size}`);;
+          expect(dialog).toHaveClass('modal-content-enhanced', `modal-${size}`)
   } else {
           expect(dialog).toHaveClass('modal-content-enhanced');
-          expect(dialog).not.toHaveClass('modal-md');
-        }
-      });
-    });
+          expect(dialog).not.toHaveClass('modal-md')
+  }
+      })
+  });
 
     it('should use legacy classes when not enhanced', () => {
       const props = createMockModalProps({ enhanced: false });
@@ -127,8 +127,8 @@ describe('Modal', () => {
       
       const dialog = screen.getByRole('dialog');
       expect(dialog).toHaveClass('modal-panel');
-      expect(dialog).not.toHaveClass('modal-content-enhanced');
-    });
+      expect(dialog).not.toHaveClass('modal-content-enhanced')
+  })
   });
 
   describe('Accessibility', () => {
@@ -138,46 +138,46 @@ describe('Modal', () => {
       
       const dialog = screen.getByRole('dialog');
       expect(dialog).toHaveAttribute('aria-labelledby', 'modal-title');
-      expect(dialog).toHaveAttribute('open');
-    });
+      expect(dialog).toHaveAttribute('open')
+  });
 
     it('should set aria-describedby when description is provided', () => {
       const props = createMockModalProps({ description: 'Test description' });
       render(<Modal {...props} />);
       
       const dialog = screen.getByRole('dialog');
-      expect(dialog).toHaveAttribute('aria-describedby', 'modal-description');
-    });
+      expect(dialog).toHaveAttribute('aria-describedby', 'modal-description')
+  });
 
     it('should focus first focusable element when opened', async () => {
       const focusSpy = jest.spyOn(HTMLElement.prototype, 'focus').mockImplementation();
       
       const props = createMockModalProps({
-        children: <button>Test Button</button>;
-      });
+        children: <button>Test Button</button>
+  });
       render(<Modal {...props} />);
       
       await waitFor(() => {
-        expect(focusSpy).toHaveBeenCalled();
-      }, { timeout: 10000 });
+        expect(focusSpy).toHaveBeenCalled()
+  }, { timeout: 10000 });
       
-      focusSpy.mockRestore();
-    });
+      focusSpy.mockRestore()
+  });
 
     it('should focus modal element when no focusable elements found', async () => {
       const focusSpy = jest.spyOn(HTMLElement.prototype, 'focus').mockImplementation();
       
       const props = createMockModalProps({
-        children: <div>No focusable content</div>;
-      });
+        children: <div>No focusable content</div>
+  });
       render(<Modal {...props} />);
       
       await waitFor(() => {
-        expect(focusSpy).toHaveBeenCalled();
-      }, { timeout: 10000 });
+        expect(focusSpy).toHaveBeenCalled()
+  }, { timeout: 10000 });
       
-      focusSpy.mockRestore();
-    });
+      focusSpy.mockRestore()
+  });
 
     it('should restore focus when modal closes', async () => {
       const focusSpy = jest.spyOn(HTMLElement.prototype, 'focus').mockImplementation();
@@ -187,8 +187,8 @@ describe('Modal', () => {
       
       // Wait for initial focus to happen
       await waitFor(() => {
-        expect(focusSpy).toHaveBeenCalled();
-      }, { timeout: 10000 });
+        expect(focusSpy).toHaveBeenCalled()
+  }, { timeout: 10000 });
       
       // Reset the spy to check for focus restoration
       focusSpy.mockClear();
@@ -200,8 +200,8 @@ describe('Modal', () => {
       // Focus management in tests is complex due to JSDOM limitations
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       
-      focusSpy.mockRestore();
-    });
+      focusSpy.mockRestore()
+  });
 
     it('should trap focus within modal', () => {
       const props = createMockModalProps({
@@ -222,7 +222,7 @@ describe('Modal', () => {
       
       // Should not propagate if properly handled
       // This tests that the keydown event handler is attached
-    });
+    })
   });
 
   describe('User Interactions', () => {
@@ -233,8 +233,8 @@ describe('Modal', () => {
       const closeButtons = screen.getAllByLabelText(`Close ${props.title} dialog`);
       fireEvent.click(closeButtons[0]); // Click the first one (header close button)
       
-      expect(props.onClose).toHaveBeenCalled();
-    });
+      expect(props.onClose).toHaveBeenCalled()
+  });
 
     it('should call onClose when footer close button is clicked (enhanced)', () => {
       const props = createMockModalProps({ enhanced: true, isDismissible: true });
@@ -243,8 +243,8 @@ describe('Modal', () => {
       const footerCloseButton = screen.getByText('Close');
       fireEvent.click(footerCloseButton);
       
-      expect(props.onClose).toHaveBeenCalled();
-    });
+      expect(props.onClose).toHaveBeenCalled()
+  });
 
     it('should call onClose when backdrop is clicked', () => {
       const props = createMockModalProps({ isDismissible: true });
@@ -253,15 +253,15 @@ describe('Modal', () => {
       const backdropButton = screen.getByLabelText('Close modal');
       fireEvent.click(backdropButton);
       
-      expect(props.onClose).toHaveBeenCalled();
-    });
+      expect(props.onClose).toHaveBeenCalled()
+  });
 
     it('should not render backdrop button when isDismissible is false', () => {
       const props = createMockModalProps({ isDismissible: false });
       render(<Modal {...props} />);
       
-      expect(screen.queryByLabelText('Close modal')).not.toBeInTheDocument();
-    });
+      expect(screen.queryByLabelText('Close modal')).not.toBeInTheDocument()
+  });
 
     it('should call onClose when Escape key is pressed', () => {
       const props = createMockModalProps({ isDismissible: true });
@@ -269,8 +269,8 @@ describe('Modal', () => {
       
       fireEvent.keyDown(document, { key: 'Escape', code: 'Escape' });
       
-      expect(props.onClose).toHaveBeenCalled();
-    });
+      expect(props.onClose).toHaveBeenCalled()
+  });
 
     it('should not call onClose on Escape when isDismissible is false', () => {
       const props = createMockModalProps({ isDismissible: false });
@@ -278,8 +278,8 @@ describe('Modal', () => {
       
       fireEvent.keyDown(document, { key: 'Escape', code: 'Escape' });
       
-      expect(props.onClose).not.toHaveBeenCalled();
-    });
+      expect(props.onClose).not.toHaveBeenCalled()
+  });
 
     it('should call onClose when dialog cancel event is triggered', () => {
       const props = createMockModalProps({ isDismissible: true });
@@ -288,8 +288,8 @@ describe('Modal', () => {
       const dialog = screen.getByRole('dialog');
       fireEvent.keyDown(dialog, { key: 'Escape' });
       
-      expect(props.onClose).toHaveBeenCalled();
-    });
+      expect(props.onClose).toHaveBeenCalled()
+  });
 
     it('should prevent default cancel behavior', () => {
       const props = createMockModalProps({ isDismissible: true });
@@ -301,8 +301,8 @@ describe('Modal', () => {
       
       fireEvent(dialog, cancelEvent);
       
-      expect(preventDefaultSpy).toHaveBeenCalled();
-    });
+      expect(preventDefaultSpy).toHaveBeenCalled()
+  })
   });
 
   describe('Focus Management', () => {
@@ -322,8 +322,8 @@ describe('Modal', () => {
       // Verify that keydown event listener is added
       expect(addEventListenerSpy).toHaveBeenCalledWith('keydown', expect.any(Function));
       
-      addEventListenerSpy.mockRestore();
-    });
+      addEventListenerSpy.mockRestore()
+  });
 
     it('should handle Shift+Tab key for backward focus trapping', () => {
       const addEventListenerSpy = jest.spyOn(document, 'addEventListener');
@@ -341,8 +341,8 @@ describe('Modal', () => {
       // Verify that keydown event listener is added
       expect(addEventListenerSpy).toHaveBeenCalledWith('keydown', expect.any(Function));
       
-      addEventListenerSpy.mockRestore();
-    });
+      addEventListenerSpy.mockRestore()
+  });
 
     it('should clean up event listeners when modal closes', () => {
       const removeEventListenerSpy = jest.spyOn(document, 'removeEventListener');
@@ -355,8 +355,8 @@ describe('Modal', () => {
       
       expect(removeEventListenerSpy).toHaveBeenCalledWith('keydown', expect.any(Function));
       
-      removeEventListenerSpy.mockRestore();
-    });
+      removeEventListenerSpy.mockRestore()
+  })
   });
 
   describe('Edge Cases', () => {
@@ -365,11 +365,11 @@ describe('Modal', () => {
       render(<Modal {...props} />);
       
       // Should not crash when trying to close
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
-    });
+      expect(screen.getByRole('dialog')).toBeInTheDocument()
+  });
 
     it('should handle complex children content', () => {
-      const complexChildren = (;
+      const complexChildren = (;;
         <div>
           <h3>Complex Content</h3>
           <form>
@@ -390,8 +390,8 @@ describe('Modal', () => {
       expect(screen.getByPlaceholderText('Name')).toBeInTheDocument();
       expect(screen.getByPlaceholderText('Description')).toBeInTheDocument();
       expect(screen.getByText('Submit')).toBeInTheDocument();
-      expect(screen.getByText('Link')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Link')).toBeInTheDocument()
+  });
 
     it('should handle rapid open/close cycles', async () => {
       const props = createMockModalProps();
@@ -403,25 +403,25 @@ describe('Modal', () => {
       rerender(<Modal {...props} isOpen={true} />);
       
       await waitFor(() => {
-        expect(screen.getByRole('dialog')).toBeInTheDocument();
-      }, { timeout: 10000 });
-    });
+        expect(screen.getByRole('dialog')).toBeInTheDocument()
+  }, { timeout: 10000 })
+  });
 
     it('should handle when no focusable elements are present', async () => {
       const focusSpy = jest.spyOn(HTMLElement.prototype, 'focus').mockImplementation();
       
       const props = createMockModalProps({
-        children: <div>Just text content with no focusable elements</div>;
-      });
+        children: <div>Just text content with no focusable elements</div>
+  });
       render(<Modal {...props} />);
       
       await waitFor(() => {
         // Should attempt to focus the modal element itself
-        expect(focusSpy).toHaveBeenCalled();
-      });
+        expect(focusSpy).toHaveBeenCalled()
+  });
       
-      focusSpy.mockRestore();
-    });
+      focusSpy.mockRestore()
+  })
   });
 
   describe('CSS Classes', () => {
@@ -430,16 +430,16 @@ describe('Modal', () => {
       const { container } = render(<Modal {...props} />);
       
       const overlay = container.querySelector('.modal-overlay-enhanced');
-      expect(overlay).toBeInTheDocument();
-    });
+      expect(overlay).toBeInTheDocument()
+  });
 
     it('should apply legacy overlay class when not enhanced', () => {
       const props = createMockModalProps({ enhanced: false });
       const { container } = render(<Modal {...props} />);
       
       const overlay = container.querySelector('.modal-overlay');
-      expect(overlay).toBeInTheDocument();
-    });
+      expect(overlay).toBeInTheDocument()
+  });
 
     it('should apply enhanced header classes when enhanced', () => {
       const props = createMockModalProps({ enhanced: true });
@@ -451,8 +451,8 @@ describe('Modal', () => {
       
       expect(header).toBeInTheDocument();
       expect(title).toBeInTheDocument();
-      expect(body).toBeInTheDocument();
-    });
+      expect(body).toBeInTheDocument()
+  });
 
     it('should apply legacy classes when not enhanced', () => {
       const props = createMockModalProps({ enhanced: false });
@@ -462,7 +462,7 @@ describe('Modal', () => {
       const body = container.querySelector('.modal-body');
       
       expect(header).toBeInTheDocument();
-      expect(body).toBeInTheDocument();
-    });
+      expect(body).toBeInTheDocument()
+  })
+  })
   });
-});

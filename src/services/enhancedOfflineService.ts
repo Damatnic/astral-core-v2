@@ -33,7 +33,7 @@ interface OfflineResource {
   emergencyContact?: {
     phone: string;
     text: string;
-    chat?: string;
+    chat?: string
   }
 
 interface OfflineCapabilities {
@@ -49,7 +49,7 @@ interface OfflineCapabilities {
     crisisResources: boolean;
     translations: boolean;
     culturalContent: boolean;
-    aiModels: boolean;
+    aiModels: boolean
   }
 
 interface SyncQueueItem {
@@ -60,8 +60,8 @@ interface SyncQueueItem {
   priority: number;
   retryCount: number;
   culturalContext: string;
-  language: string;
-}
+  language: string
+  }
 
 class EnhancedOfflineService {
   private dbName = 'AstralCoreOfflineDB';
@@ -73,7 +73,7 @@ class EnhancedOfflineService {
   private statusListeners: Array<(status: OfflineCapabilities) => void> = [];
 
   constructor() {
-    this.initialize();
+    this.initialize()
   }
 
   /**
@@ -105,13 +105,12 @@ class EnhancedOfflineService {
       
       this.isInitialized = true;
       console.log('[Enhanced Offline] Service initialized successfully');
-      this.notifyStatusChange();
-      
-    } catch (error) {
+      this.notifyStatusChange()
+  } catch (error) {
       console.error('[Enhanced Offline] Failed to initialize:', error);
       // Fallback to basic offline mode
-      this.initializeFallbackMode();
-    }
+      this.initializeFallbackMode()
+  }
   }
 
   /**
@@ -129,30 +128,30 @@ class EnhancedOfflineService {
         crisisResources: false,
         translations: false,
         culturalContent: false,
-        aiModels: false;
-      }
+        aiModels: false
+  }
     };
 
     // Check storage quota
     try {
       if ('storage' in navigator && 'estimate' in navigator.storage) {
         const estimate = await navigator.storage.estimate();
-        capabilities.storageQuota = estimate.quota || 0;
-      }
+        capabilities.storageQuota = estimate.quota || 0
+  }
     } catch (error) {
-      console.warn('[Enhanced Offline] Could not estimate storage:', error);
-    }
+      console.warn('[Enhanced Offline] Could not estimate storage:', error)
+  }
 
     // Check network information
     try {
       if ('connection' in navigator) {
         const connection = (navigator as any).connection;
         capabilities.networkType = connection.effectiveType;
-        capabilities.downloadSpeed = connection.downlink;
-      }
+        capabilities.downloadSpeed = connection.downlink
+  }
     } catch (error) {
-      console.warn('[Enhanced Offline] Could not get network info:', error);
-    }
+      console.warn('[Enhanced Offline] Could not get network info:', error)
+  }
 
     // Check cache status
     if ('caches' in window) {
@@ -160,13 +159,13 @@ class EnhancedOfflineService {
         const cacheNames = await caches.keys();
         capabilities.cacheStatus.staticResources = cacheNames.some(name => name.includes('static'));
         capabilities.cacheStatus.crisisResources = cacheNames.some(name => name.includes('crisis'));
-        capabilities.cacheStatus.translations = cacheNames.some(name => name.includes('i18n'));
-      } catch (error) {
-        console.warn('[Enhanced Offline] Could not check cache status:', error);
-      }
+        capabilities.cacheStatus.translations = cacheNames.some(name => name.includes('i18n'))
+  } catch (error) {
+        console.warn('[Enhanced Offline] Could not check cache status:', error)
+  }
     }
 
-    return capabilities;
+    return capabilities
   }
 
   /**
@@ -179,8 +178,8 @@ class EnhancedOfflineService {
       request.onerror = () => reject(request.error);
       request.onsuccess = () => {
         this.db = request.result;
-        resolve();
-      };
+        resolve()
+  };
 
       request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
@@ -191,34 +190,34 @@ class EnhancedOfflineService {
           crisisStore.createIndex('language', 'language', { unique: false });
           crisisStore.createIndex('culturalContext', 'culturalContext', { unique: false });
           crisisStore.createIndex('priority', 'priority', { unique: false });
-          crisisStore.createIndex('type', 'type', { unique: false });
-        }
+          crisisStore.createIndex('type', 'type', { unique: false })
+  }
 
         // Sync queue store
         if (!db.objectStoreNames.contains('syncQueue')) {
           const syncStore = db.createObjectStore('syncQueue', { keyPath: 'id' });
           syncStore.createIndex('priority', 'priority', { unique: false });
-          syncStore.createIndex('timestamp', 'timestamp', { unique: false });
-        }
+          syncStore.createIndex('timestamp', 'timestamp', { unique: false })
+  }
 
         // Translations store
         if (!db.objectStoreNames.contains('translations')) {
           const translationStore = db.createObjectStore('translations', { keyPath: 'id' });
-          translationStore.createIndex('language', 'language', { unique: false });
-        }
+          translationStore.createIndex('language', 'language', { unique: false })
+  }
 
         // Cultural content store
         if (!db.objectStoreNames.contains('culturalContent')) {
           const culturalStore = db.createObjectStore('culturalContent', { keyPath: 'id' });
-          culturalStore.createIndex('culturalContext', 'culturalContext', { unique: false });
-        }
+          culturalStore.createIndex('culturalContext', 'culturalContext', { unique: false })
+  }
 
         // User data store (encrypted)
         if (!db.objectStoreNames.contains('userData')) {
           const userStore = db.createObjectStore('userData', { keyPath: 'id' });
-          userStore.createIndex('type', 'type', { unique: false });
-        }
-      });
+          userStore.createIndex('type', 'type', { unique: false })
+  }
+      })
   }
 
   /**
@@ -226,7 +225,7 @@ class EnhancedOfflineService {
    */
   private async loadCrisisResources(): Promise<void> {
     const languages = ['en', 'es', 'pt-BR', 'pt', 'ar', 'zh', 'vi', 'tl'];
-    const culturalContexts = [;
+    const culturalContexts = [;;
       'western', 'hispanic-latino', 'brazilian', 'portuguese',
       'arabic', 'chinese', 'vietnamese', 'filipino'
     ];
@@ -234,11 +233,11 @@ class EnhancedOfflineService {
     for (const language of languages) {
       for (const culturalContext of culturalContexts) {
         const resources = await this.generateCrisisResourcesForContext(language, culturalContext);
-        await this.storeCrisisResources(resources);
-      }
+        await this.storeCrisisResources(resources)
+  }
     }
 
-    console.log(`[Enhanced Offline] Loaded crisis resources for ${languages.length} languages`);
+    console.log(`[Enhanced Offline] Loaded crisis resources for ${languages.length} languages`)
   }
 
   /**
@@ -277,8 +276,8 @@ class EnhancedOfflineService {
         priority: 'high',
         category: 'coping',
         tags: ['coping', 'strategies', 'self-help'],
-        lastUpdated: Date.now();
-      },
+        lastUpdated: Date.now()
+  },
 
       // Safety planning
       {
@@ -291,8 +290,8 @@ class EnhancedOfflineService {
         priority: 'high',
         category: 'safety-planning',
         tags: ['safety', 'planning', 'prevention'],
-        lastUpdated: Date.now();
-      },
+        lastUpdated: Date.now()
+  },
 
       // Cultural guidance
       {
@@ -305,8 +304,8 @@ class EnhancedOfflineService {
         priority: 'medium',
         category: 'cultural-support',
         tags: ['cultural', 'guidance', 'family', 'community'],
-        lastUpdated: Date.now();
-      },
+        lastUpdated: Date.now()
+  },
 
       // Emergency protocols
       {
@@ -319,11 +318,11 @@ class EnhancedOfflineService {
         priority: 'critical',
         category: 'emergency-protocol',
         tags: ['emergency', 'protocol', 'steps'],
-        lastUpdated: Date.now();
-      }
+        lastUpdated: Date.now()
+  }
     ];
 
-    return resources;
+    return resources
   }
 
   /**
@@ -332,53 +331,53 @@ class EnhancedOfflineService {
   private getEmergencyContactsForRegion(_language: string, culturalContext: string): {
     phone: string;
     text: string;
-    chat?: string;
+    chat?: string
   } {
     // Regional emergency contacts based on cultural context;
     const contacts: { [key: string]: any } = {
       'western': {
         phone: '988', // US/Canada Suicide & Crisis Lifeline
         text: '741741', // Crisis Text Line
-        chat: 'https://suicidepreventionlifeline.org/chat/';
-      },
+        chat: 'https://suicidepreventionlifeline.org/chat/'
+  },
       'hispanic-latino': {
         phone: '1-888-628-9454', // Spanish National Suicide Prevention Lifeline
         text: 'HABLANOS to 741741',
-        chat: 'https://suicidepreventionlifeline.org/chat/';
-      },
+        chat: 'https://suicidepreventionlifeline.org/chat/'
+  },
       'brazilian': {
         phone: '188', // Centro de Valorização da Vida (CVV)
         text: '(11) 96363-4111',
-        chat: 'https://www.cvv.org.br/fale-conosco/';
-      },
+        chat: 'https://www.cvv.org.br/fale-conosco/'
+  },
       'portuguese': {
         phone: '213 544 545', // SOS Voz Amiga
         text: '(+351) 96 898 21 61',
-        chat: 'https://sosvozamiga.org/contactos/';
-      },
+        chat: 'https://sosvozamiga.org/contactos/'
+  },
       'arabic': {
         phone: '1-800-273-8255', // International - many Arabic countries use this
         text: 'HELP to 741741',
-        chat: 'https://suicidepreventionlifeline.org/chat/';
-      },
+        chat: 'https://suicidepreventionlifeline.org/chat/'
+  },
       'chinese': {
         phone: '400-161-9995', // Beijing Crisis Intervention
         text: '+86-400-161-9995',
-        chat: 'https://www.crisis.org.cn/';
-      },
+        chat: 'https://www.crisis.org.cn/'
+  },
       'vietnamese': {
         phone: '1-800-273-8255', // International access
         text: 'HELLO to 741741',
-        chat: 'https://suicidepreventionlifeline.org/chat/';
-      },
+        chat: 'https://suicidepreventionlifeline.org/chat/'
+  },
       'filipino': {
         phone: '(02) 804-4673', // In Touch Crisis Line Philippines
         text: '0917-800-1123',
-        chat: 'https://www.hopeline.ph/';
-      }
+        chat: 'https://www.hopeline.ph/'
+  }
     };
 
-    return contacts[culturalContext] || contacts['western'];
+    return contacts[culturalContext] || contacts['western']
   }
 
   /**
@@ -394,9 +393,9 @@ class EnhancedOfflineService {
       await new Promise<void>((resolve, reject) => {
         const request = store.put(resource);
         request.onsuccess = () => resolve();
-        request.onerror = () => reject(request.error);
-      });
-    }
+        request.onerror = () => reject(request.error)
+  })
+  }
   }
 
   /**
@@ -407,22 +406,22 @@ class EnhancedOfflineService {
       console.log('[Enhanced Offline] Network restored - starting sync');
       this.capabilities!.isOnline = true;
       this.processSyncQueue();
-      this.notifyStatusChange();
-    });
+      this.notifyStatusChange()
+  });
 
     window.addEventListener('offline', () => {
       console.log('[Enhanced Offline] Network lost - activating offline mode');
       this.capabilities!.isOnline = false;
       this.activateOfflineMode();
-      this.notifyStatusChange();
-    });
+      this.notifyStatusChange()
+  });
 
     // Monitor connection quality
     if ('connection' in navigator) {
       (navigator as any).connection.addEventListener('change', () => {
-        this.updateNetworkCapabilities();
-      });
-    }
+        this.updateNetworkCapabilities()
+  })
+  }
   }
 
   /**
@@ -434,8 +433,8 @@ class EnhancedOfflineService {
     type?: string
   ): Promise<OfflineResource[]> {
     if (!this.db) {
-      return this.getFallbackCrisisResources(language, culturalContext);
-    }
+      return this.getFallbackCrisisResources(language, culturalContext)
+  }
 
     const transaction = this.db.transaction(['crisisResources'], 'readonly');
     const store = transaction.objectStore('crisisResources');
@@ -446,7 +445,7 @@ class EnhancedOfflineService {
     
     return new Promise((resolve, reject) => {
       languageRequest.onsuccess = () => {
-        const resources = languageRequest.result.filter(resource => ;
+        const resources = languageRequest.result.filter(resource => ;;
           resource.culturalContext === culturalContext &&
           (type ? resource.type === type : true)
         );
@@ -454,13 +453,13 @@ class EnhancedOfflineService {
         // Sort by priority
         resources.sort((a: any, b: any) => {
           const priorityOrder: { [key: string]: number } = { 'critical': 0, 'high': 1, 'medium': 2, 'low': 3 };
-          return priorityOrder[a.priority] - priorityOrder[b.priority];
-        });
+          return priorityOrder[a.priority] - priorityOrder[b.priority]
+  });
         
-        resolve(resources);
-      };
-      languageRequest.onerror = () => reject(languageRequest.error);
-    });
+        resolve(resources)
+  };
+      languageRequest.onerror = () => reject(languageRequest.error)
+  })
   }
 
   /**
@@ -471,17 +470,17 @@ class EnhancedOfflineService {
     severity: SeverityLevel;
     keywords: string[];
     recommendations: OfflineResource[];
-    confidence: number;
+    confidence: number
   }> {
     try {
       // Use enhanced AI crisis detection service if available;
-      const analysis = await enhancedAICrisisDetectionService.analyzeCrisisWithML(;
+      const analysis = await enhancedAICrisisDetectionService.analyzeCrisisWithML(;;
         text, 
         { language, culturalContext }
       );
 
       // Get offline recommendations based on analysis;
-      const recommendations = await this.getCrisisResources(;
+      const recommendations = await this.getCrisisResources(;;
         language,
         culturalContext,
         (analysis.realTimeRisk?.immediateRisk || 0) > 7 ? 'crisis-contact' : 'coping-strategy'
@@ -491,21 +490,21 @@ class EnhancedOfflineService {
       let severity: SeverityLevel = 'low';
       const immediateRisk = analysis.realTimeRisk?.immediateRisk || 0;
       if (immediateRisk > 7) {
-        severity = 'high';;
+        severity = 'high'
   } else if (immediateRisk > 5) {
-        severity = 'medium';
-      }
+        severity = 'medium'
+  }
 
       return {
         isCrisis: immediateRisk > 5,
         severity,
         keywords: [], // ML analysis doesn't provide specific trigger words
         recommendations: recommendations.slice(0, 3),
-        confidence: analysis.confidence;
-      } catch (error) {
+        confidence: analysis.confidence
+  } catch (error) {
       console.warn('[Enhanced Offline] ML crisis detection failed, using fallback:', error);
-      return this.fallbackCrisisDetection(text, language, culturalContext);
-    }
+      return this.fallbackCrisisDetection(text, language, culturalContext)
+  }
   }
 
   /**
@@ -516,8 +515,8 @@ class EnhancedOfflineService {
       ...item,
       id: `sync-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
       timestamp: Date.now(),
-      retryCount: 0;
-    };
+      retryCount: 0
+  };
 
     this.syncQueue.push(syncItem);
 
@@ -525,13 +524,13 @@ class EnhancedOfflineService {
     if (this.db) {
       const transaction = this.db.transaction(['syncQueue'], 'readwrite');
       const store = transaction.objectStore('syncQueue');
-      store.put(syncItem);
-    }
+      store.put(syncItem)
+  }
 
     // Process immediately if online
     if (this.capabilities?.isOnline) {
-      this.processSyncQueue();
-    }
+      this.processSyncQueue()
+  }
   }
 
   /**
@@ -555,12 +554,12 @@ class EnhancedOfflineService {
         crisisResources: true, // We have fallback resources
         translations: false,
         culturalContent: false,
-        aiModels: false;
-      }
+        aiModels: false
+  }
     };
     
     this.isInitialized = true;
-    this.notifyStatusChange();
+    this.notifyStatusChange()
   }
 
   /**
@@ -591,28 +590,28 @@ class EnhancedOfflineService {
       // Add more translations as needed
     };
 
-    return translations[key]?.[language] || translations[key]?.['en'] || key;
+    return translations[key]?.[language] || translations[key]?.['en'] || key
   }
 
   private getCulturalCopingStrategies(language: string, _culturalContext: string): string {
     // Return culturally-appropriate coping strategies
     // This would be expanded with actual content
-    return this.getLocalizedText(language, 'coping.strategies.content');
+    return this.getLocalizedText(language, 'coping.strategies.content')
   }
 
   private getCulturalSafetyPlan(language: string, _culturalContext: string): string {
     // Return culturally-appropriate safety planning guidance
-    return this.getLocalizedText(language, 'safety.plan.content');
+    return this.getLocalizedText(language, 'safety.plan.content')
   }
 
   private getCulturalGuidance(language: string, _culturalContext: string, _contextInfo: any): string {
     // Return cultural guidance considering family involvement, stigma, etc.
-    return this.getLocalizedText(language, 'cultural.guidance.content');
+    return this.getLocalizedText(language, 'cultural.guidance.content')
   }
 
   private getEmergencyProtocol(language: string, _culturalContext: string): string {
     // Return step-by-step emergency protocol
-    return this.getLocalizedText(language, 'emergency.protocol.content');
+    return this.getLocalizedText(language, 'emergency.protocol.content')
   }
 
   private getFallbackCrisisResources(language: string, culturalContext: string): OfflineResource[] {
@@ -631,31 +630,31 @@ class EnhancedOfflineService {
         lastUpdated: Date.now(),
         emergencyContact: this.getEmergencyContactsForRegion(language, culturalContext)
       }
-    ];
+    ]
   }
 
   private fallbackCrisisDetection(text: string, language: string, culturalContext: string): any {
     // Basic keyword-based crisis detection as fallback;
     const crisisKeywords = ['suicide', 'kill myself', 'end it all', 'hopeless', 'can\'t go on'];
-    const foundKeywords = crisisKeywords.filter(keyword => ;
+    const foundKeywords = crisisKeywords.filter(keyword => ;;
       text.toLowerCase().includes(keyword)
     );
 
     // Determine severity based on keyword count;
     let severity: SeverityLevel = 'low';
     if (foundKeywords.length > 2) {
-      severity = 'high';;
+      severity = 'high'
   } else if (foundKeywords.length > 0) {
-      severity = 'medium';
-    }
+      severity = 'medium'
+  }
 
     return {
       isCrisis: foundKeywords.length > 0,
       severity,
       keywords: foundKeywords,
       recommendations: this.getFallbackCrisisResources(language, culturalContext),
-      confidence: foundKeywords.length > 0 ? 0.8 : 0.2;
-    }
+      confidence: foundKeywords.length > 0 ? 0.8 : 0.2
+  }
 
   private async processSyncQueue(): Promise<void> {
     // Process sync queue when online
@@ -673,8 +672,8 @@ class EnhancedOfflineService {
       const connection = (navigator as any).connection;
       this.capabilities.networkType = connection.effectiveType;
       this.capabilities.downloadSpeed = connection.downlink;
-      this.notifyStatusChange();
-    }
+      this.notifyStatusChange()
+  }
   }
 
   private initializeSyncQueue(): void {
@@ -686,34 +685,34 @@ class EnhancedOfflineService {
       
       request.onsuccess = () => {
         this.syncQueue = request.result;
-        console.log(`[Enhanced Offline] Loaded ${this.syncQueue.length} queued items`);
-      }
+        console.log(`[Enhanced Offline] Loaded ${this.syncQueue.length} queued items`)
+  }
   }
 
   private setupEmergencyProtocols(): void {
     // Setup protocols for emergency situations when offline
-    console.log('[Enhanced Offline] Emergency protocols activated');
+    console.log('[Enhanced Offline] Emergency protocols activated')
   }
 
   private notifyStatusChange(): void {
     if (this.capabilities) {
-      this.statusListeners.forEach(listener => listener(this.capabilities!));
-    }
+      this.statusListeners.forEach(listener => listener(this.capabilities!))
+  }
   }
 
   /**
    * Public API methods
    */
   async getOfflineCapabilities(): Promise<OfflineCapabilities | null> {
-    return this.capabilities;
+    return this.capabilities
   }
 
   onStatusChange(callback: (status: OfflineCapabilities) => void): () => void {
     this.statusListeners.push(callback);
     return () => {
       const index = this.statusListeners.indexOf(callback);
-      if (index > -1) this.statusListeners.splice(index, 1);
-    }
+      if (index > -1) this.statusListeners.splice(index, 1)
+  }
 
   async clearOfflineData(): Promise<void> {
     if (this.db) {
@@ -723,14 +722,14 @@ class EnhancedOfflineService {
         transaction.objectStore('syncQueue').clear(),
         transaction.objectStore('translations').clear(),
         transaction.objectStore('culturalContent').clear()
-      ]);
-    }
-    localStorage.removeItem('astral_offline_crisis_resources');
+      ])
+  }
+    localStorage.removeItem('astral_offline_crisis_resources')
   }
 
   async updateOfflineResources(): Promise<void> {
     console.log('[Enhanced Offline] Updating offline resources...');
-    await this.loadCrisisResources();
+    await this.loadCrisisResources()
   }
 }
 

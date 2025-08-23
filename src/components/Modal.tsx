@@ -12,8 +12,8 @@ export const Modal: React.FC<{
   size?: 'sm' | 'md' | 'lg' | 'xl';
   description?: string;
   variant?: 'glass' | 'neumorph' | 'default';
-  animate?: boolean;
-}> = ({ 
+  animate?: boolean
+  }> = ({ 
   isOpen, 
   onClose, 
   children, 
@@ -38,16 +38,16 @@ export const Modal: React.FC<{
             setTimeout(() => {
                 const focusableElement = modalRef.current?.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])') as HTMLElement;
                 if (focusableElement) {
-                    focusableElement.focus();;
+                    focusableElement.focus()
   } else {
-                    modalRef.current?.focus();
-                }
-            }, 100);;
+                    modalRef.current?.focus()
+  }
+            }, 100)
   } else if (previousFocusRef.current) {
             // Restore focus when modal closes
             previousFocusRef.current.focus();
-            previousFocusRef.current = null;
-        }
+            previousFocusRef.current = null
+  }
     };
   }, [isOpen]);
 
@@ -60,12 +60,12 @@ export const Modal: React.FC<{
             if (event.key === 'Escape' && isDismissible && onClose) {
                 event.preventDefault();
                 onClose();
-                return;
-            }
+                return
+  }
 
             // Handle Tab key for focus trapping
             if (event.key === 'Tab' && modalRef.current) {
-                const focusableElements = modalRef.current.querySelectorAll(;
+                const focusableElements = modalRef.current.querySelectorAll(;;
                     'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
                 );
                 const firstElement = focusableElements[0] as HTMLElement;
@@ -74,18 +74,18 @@ export const Modal: React.FC<{
                 if (event.shiftKey && document.activeElement === firstElement) {
                     // Shift + Tab on first element - go to last
                     event.preventDefault();
-                    lastElement?.focus();;
+                    lastElement?.focus()
   } else if (!event.shiftKey && document.activeElement === lastElement) {
                     // Tab on last element - go to first
                     event.preventDefault();
-                    firstElement?.focus();
-                }
+                    firstElement?.focus()
+  }
             }
         };
 
         document.addEventListener('keydown', handleKeyDown);
-        return () => document.removeEventListener('keydown', handleKeyDown);
-    };
+        return () => document.removeEventListener('keydown', handleKeyDown)
+  };
   }, [isOpen, isDismissible, onClose]);
 
     if (!isOpen) return null;
@@ -102,24 +102,22 @@ export const Modal: React.FC<{
             case 'neumorph':
                 contentClasses = ['neumorph-card', 'modal-content-enhanced'];
                 break;
-            default:
-                contentClasses = ['modal-content-enhanced'];
-        }
+            default: contentClasses = ['modal-content-enhanced']
+  }
     }
     
     if (animate) {
-        contentClasses.push('animate-breathe');
-    }
+        contentClasses.push('animate-breathe')
+  }
     
     if (enhanced && size !== 'md') {
-        contentClasses.push(`modal-${size}`);
-    }
+        contentClasses.push(`modal-${size}`)
+  }
 
     return (
         <div className={overlayClasses.join(' ')}>
             {isDismissible && (
-                <button;
-                    className="modal-overlay-button"
+                <button className="modal-overlay-button"
                     onClick={onClose}
                     aria-label="Close modal"
                     style={{
@@ -131,8 +129,8 @@ export const Modal: React.FC<{
                         background: 'transparent',
                         border: 'none',
                         cursor: 'pointer',
-                        zIndex: -1;
-                    }}
+                        zIndex: -1
+  }}
                 />
             )}
             <dialog 
@@ -143,14 +141,13 @@ export const Modal: React.FC<{
                 aria-describedby={description ? "modal-description" : undefined}
                 onCancel={(e) => {
                     e.preventDefault(); // Prevent default browser behavior
-                    if (isDismissible && onClose) onClose();
-                }}
+                    if (isDismissible && onClose) onClose()
+  }}
             >
                 <div className={enhanced ? 'modal-header-enhanced smooth-transition' : 'modal-header'}>
                     <h2 id="modal-title" className={enhanced ? 'modal-title-enhanced gradient-text' : ''}>{title}</h2>
                     {isDismissible && (
-                        <button; 
-                            type="button"
+                        <button type="button"
                             onClick={onClose} 
                             className={`modal-close-btn touch-optimized smooth-transition ${enhanced ? 'glass-button' : ''}`} 
                             aria-label={`Close ${title} dialog`}
@@ -169,8 +166,7 @@ export const Modal: React.FC<{
                 </div>
                 {enhanced && isDismissible && (
                     <div className="modal-footer-enhanced">
-                        <button; 
-                            type="button"
+                        <button type="button"
                             onClick={onClose}
                             className="glass-button smooth-transition"
                             aria-label={`Close ${title} dialog`}
@@ -187,5 +183,5 @@ export const Modal: React.FC<{
                 )}
             </dialog>
         </div>
-    );
-};
+    )
+  };

@@ -13,14 +13,14 @@ export interface OfflineContextValue {
   forceCacheUpdate: () => Promise<boolean>;
   sendMessageToServiceWorker: (message: ChatMessage) => Promise<boolean>;
   isFeatureAvailable: (feature: string) => boolean;
-  getOfflineCapability: (feature: string) => OfflineCapability | undefined;
-}
+  getOfflineCapability: (feature: string) => OfflineCapability | undefined
+  }
 
 const OfflineContext = createContext<OfflineContextValue | undefined>(undefined);
 ;
 export interface OfflineProviderProps {
-  children: ReactNode;
-}
+  children: ReactNode
+  }
 
 export const OfflineProvider: React.FC<OfflineProviderProps> = ({ children }) => {
   const {
@@ -33,7 +33,7 @@ export const OfflineProvider: React.FC<OfflineProviderProps> = ({ children }) =>
   const isFeatureAvailable = (feature: string): boolean => {
     if (connectionStatus.isOnline) return true;
     
-    const capability = connectionStatus.offlineCapabilities.find(;
+    const capability = connectionStatus.offlineCapabilities.find(;;
       cap => cap.feature.toLowerCase() === feature.toLowerCase()
     )
     
@@ -72,7 +72,7 @@ export const OfflineProvider: React.FC<OfflineProviderProps> = ({ children }) =>
 export const useOffline = (): void => {
   const context = useContext(OfflineContext);
   if(context === undefined) {
-    throw new Error("useOffline must be used within an OfflineProvider");
+    throw new Error("useOffline must be used within an OfflineProvider")
   }
   return context
 }

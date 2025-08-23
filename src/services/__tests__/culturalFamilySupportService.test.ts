@@ -42,12 +42,12 @@ describe('CulturalFamilySupportService', () => {
     mockPrivacyAnalyticsService.recordInterventionOutcome.mockResolvedValue(undefined);
     mockEnhancedOfflineService.addToSyncQueue.mockResolvedValue(undefined);
 
-    service = culturalFamilySupportService;
+    service = culturalFamilySupportService
   });
 
   afterEach(() => {
     console.log = originalConsoleLog;
-    console.warn = originalConsoleWarn;
+    console.warn = originalConsoleWarn
   });
 
   describe('Initialization', () => {
@@ -56,12 +56,12 @@ describe('CulturalFamilySupportService', () => {
       
       const westernGuidance = service.getCulturalGuidance('Western');
       expect(westernGuidance).toBeDefined();
-      expect(westernGuidance?.region).toBe('Western');
-    });
+      expect(westernGuidance?.region).toBe('Western')
+  });
 
     test.skip('should load family support data on initialization', () => {
-      expect(console.log).toHaveBeenCalledWith('[Family Support] Loading family support data...');
-    });
+      expect(console.log).toHaveBeenCalledWith('[Family Support] Loading family support data...')
+  })
   });
 
   describe('Cultural Guidance Configuration', () => {
@@ -77,8 +77,8 @@ describe('CulturalFamilySupportService', () => {
       );
       expect(guidance?.crisisManagement.escalationApproach).toContain('Direct contact');
       expect(guidance?.communicationTemplates).toHaveProperty('mild_concern');
-      expect(guidance?.communicationTemplates).toHaveProperty('crisis_alert');
-    });
+      expect(guidance?.communicationTemplates).toHaveProperty('crisis_alert')
+  });
 
     test.skip('should have comprehensive Hispanic/Latino cultural guidance', () => {
       const guidance = service.getCulturalGuidance('Hispanic/Latino');
@@ -94,8 +94,8 @@ describe('CulturalFamilySupportService', () => {
         'Consider stigma around mental health'
       );
       expect(guidance?.crisisManagement.escalationApproach).toContain('Gradual involvement');
-      expect(guidance?.communicationTemplates).toHaveProperty('family_meeting');
-    });
+      expect(guidance?.communicationTemplates).toHaveProperty('family_meeting')
+  });
 
     test.skip('should have comprehensive Arabic cultural guidance', () => {
       const guidance = service.getCulturalGuidance('Arabic');
@@ -111,8 +111,8 @@ describe('CulturalFamilySupportService', () => {
         'Religious considerations and beliefs about mental health'
       );
       expect(guidance?.crisisManagement.escalationApproach).toContain('Authority-based');
-      expect(guidance?.communicationTemplates).toHaveProperty('respectful_approach');
-    });
+      expect(guidance?.communicationTemplates).toHaveProperty('respectful_approach')
+  });
 
     test.skip('should have comprehensive Chinese cultural guidance', () => {
       const guidance = service.getCulturalGuidance('Chinese');
@@ -128,8 +128,8 @@ describe('CulturalFamilySupportService', () => {
       expect(guidance?.familyInvolvementGuidelines.communicationTips).toContain(
         'Use indirect communication when appropriate'
       );
-      expect(guidance?.communicationTemplates).toHaveProperty('harmony_approach');
-    });
+      expect(guidance?.communicationTemplates).toHaveProperty('harmony_approach')
+  })
   });
 
   describe('Family Support Creation', () => {
@@ -142,7 +142,7 @@ describe('CulturalFamilySupportService', () => {
         communicationStyle: 'direct' as const,
       };
 
-      const familySupport = await service.createFamilySupport(;
+      const familySupport = await service.createFamilySupport(;;
         'user-123',
         culturalContext,
         'en',
@@ -159,8 +159,8 @@ describe('CulturalFamilySupportService', () => {
       expect(familySupport.familyMembers).toEqual([]);
       expect(familySupport.privacySettings.shareWithFamily).toBe(true);
       expect(familySupport.createdAt).toBeDefined();
-      expect(familySupport.lastUpdated).toBeDefined();
-    });
+      expect(familySupport.lastUpdated).toBeDefined()
+  });
 
     test.skip('should set appropriate privacy settings based on support level', async () => {
       const culturalContext = {
@@ -172,7 +172,7 @@ describe('CulturalFamilySupportService', () => {
       };
 
       // Test individual_only support level;
-      const individualSupport = await service.createFamilySupport(;
+      const individualSupport = await service.createFamilySupport(;;
         'user-1',
         culturalContext,
         'es',
@@ -182,7 +182,7 @@ describe('CulturalFamilySupportService', () => {
       expect(individualSupport.privacySettings.shareWithFamily).toBe(false);
 
       // Test family_involved support level;
-      const familySupport = await service.createFamilySupport(;
+      const familySupport = await service.createFamilySupport(;;
         'user-2',
         culturalContext,
         'es',
@@ -193,15 +193,15 @@ describe('CulturalFamilySupportService', () => {
       expect(familySupport.privacySettings.shareProgressReports).toBe(true);
 
       // Test community_centered support level;
-      const communitySupport = await service.createFamilySupport(;
+      const communitySupport = await service.createFamilySupport(;;
         'user-3',
         culturalContext,
         'es',
         'extended',
         'community_centered'
       );
-      expect(communitySupport.privacySettings.shareProgressReports).toBe(true);
-    });
+      expect(communitySupport.privacySettings.shareProgressReports).toBe(true)
+  });
 
     test.skip('should record analytics for family support setup', async () => {
       const culturalContext = {
@@ -229,8 +229,8 @@ describe('CulturalFamilySupportService', () => {
         finalRiskLevel: 0.3,
         sessionDuration: 15,
         feedback: 4,
-      });
-    });
+      })
+  });
 
     test.skip('should handle analytics recording errors gracefully', async () => {
       mockPrivacyAnalyticsService.recordInterventionOutcome.mockRejectedValue(
@@ -246,7 +246,7 @@ describe('CulturalFamilySupportService', () => {
       };
 
       // Should not throw even if analytics fails;
-      const familySupport = await service.createFamilySupport(;
+      const familySupport = await service.createFamilySupport(;;
         'user-error',
         culturalContext,
         'zh',
@@ -258,8 +258,8 @@ describe('CulturalFamilySupportService', () => {
       expect(console.warn).toHaveBeenCalledWith(
         'Failed to record family support analytics:',
         expect.any(Error)
-      );
-    });
+      )
+  })
   });
 
   describe('Family Member Management', () => {
@@ -301,8 +301,8 @@ describe('CulturalFamilySupportService', () => {
       expect(familySupport?.familyMembers).toHaveLength(1);
       expect(familySupport?.familyMembers[0].name).toBe('Jane Doe');
       expect(familySupport?.familyMembers[0].relationship).toBe('spouse');
-      expect(familySupport?.familyMembers[0].id).toMatch(/^member_\d+_[a-z0-9]+$/);
-    });
+      expect(familySupport?.familyMembers[0].id).toMatch(/^member_\d+_[a-z0-9]+$/)
+  });
 
     test.skip('should throw error when adding member to non-existent family support', async () => {
       const familyMember: Omit<FamilyMember, 'id'> = {
@@ -323,8 +323,8 @@ describe('CulturalFamilySupportService', () => {
       };
 
       await expect(service.addFamilyMember('nonexistent-user', familyMember))
-        .rejects.toThrow('Family support not found');
-    });
+        .rejects.toThrow('Family support not found')
+  });
 
     test.skip('should update lastUpdated timestamp when adding family member', async () => {
       const culturalContext = {
@@ -361,8 +361,8 @@ describe('CulturalFamilySupportService', () => {
       });
 
       const updatedSupport = service.getFamilySupport('user-update');
-      expect(updatedSupport?.lastUpdated).not.toBe(originalTimestamp);
-    });
+      expect(updatedSupport?.lastUpdated).not.toBe(originalTimestamp)
+  });
 
     test.skip('should log family member addition', async () => {
       const culturalContext = {
@@ -394,8 +394,8 @@ describe('CulturalFamilySupportService', () => {
 
       expect(console.log).toHaveBeenCalledWith(
         '[Family Support] Added family member with relationship: grandparent, role: spiritual_guide'
-      );
-    });
+      )
+  })
   });
 
   describe('Crisis Notification Strategy', () => {
@@ -454,8 +454,8 @@ describe('CulturalFamilySupportService', () => {
       expect(strategy.contactsToNotify[0].emergencyContact).toBe(true);
       expect(strategy.escalationOrder).toContain('emergency_services');
       expect(strategy.culturalProtocols).toContain('respect_individual_autonomy');
-      expect(strategy.culturalProtocols).toContain('direct_communication');
-    });
+      expect(strategy.culturalProtocols).toContain('direct_communication')
+  });
 
     test.skip('should determine family-centered crisis strategy', () => {
       const familySupport: FamilySupport = {
@@ -530,8 +530,8 @@ describe('CulturalFamilySupportService', () => {
       expect(strategy.escalationOrder).toContain('extended_family');
       expect(strategy.culturalProtocols).toContain('respect_family_hierarchy');
       expect(strategy.culturalProtocols).toContain('gradual_disclosure');
-      expect(strategy.culturalProtocols).toContain('collective_decision_making');
-    });
+      expect(strategy.culturalProtocols).toContain('collective_decision_making')
+  });
 
     test.skip('should determine community-based crisis strategy', () => {
       const familySupport: FamilySupport = {
@@ -590,8 +590,8 @@ describe('CulturalFamilySupportService', () => {
       expect(strategy.escalationOrder).toContain('religious_guides');
       expect(strategy.culturalProtocols).toContain('honor_community_wisdom');
       expect(strategy.culturalProtocols).toContain('respect_cultural_authorities');
-      expect(strategy.culturalProtocols).toContain('preserve_family_honor');
-    });
+      expect(strategy.culturalProtocols).toContain('preserve_family_honor')
+  })
   });
 
   describe('Crisis Notification Sending', () => {
@@ -626,8 +626,8 @@ describe('CulturalFamilySupportService', () => {
       // Enable emergency protocol;
       const familySupport = service.getFamilySupport('user-crisis');
       if (familySupport) {
-        familySupport.emergencyProtocol.enabled = true;
-      }
+        familySupport.emergencyProtocol.enabled = true
+  }
 
       await service.sendCrisisNotification('user-crisis', 'moderate_risk', {
         message: 'User needs support',
@@ -638,8 +638,8 @@ describe('CulturalFamilySupportService', () => {
 
       expect(console.log).toHaveBeenCalledWith(
         expect.stringContaining('[Family Support] Crisis notification sent: moderate_risk')
-      );
-    });
+      )
+  });
 
     test.skip('should not send notification if emergency protocol is disabled', async () => {
       const culturalContext = {
@@ -661,8 +661,8 @@ describe('CulturalFamilySupportService', () => {
       // Should not send any notifications
       expect(console.log).not.toHaveBeenCalledWith(
         expect.stringContaining('Crisis notification sent')
-      );
-    });
+      )
+  });
 
     test.skip('should not send notification if no family support exists', async () => {
       await service.sendCrisisNotification('nonexistent-user', 'high_risk', {
@@ -674,8 +674,8 @@ describe('CulturalFamilySupportService', () => {
       // Should not send any notifications
       expect(console.log).not.toHaveBeenCalledWith(
         expect.stringContaining('Crisis notification sent')
-      );
-    });
+      )
+  });
 
     test.skip('should respect member consent and notification preferences', async () => {
       const culturalContext = {
@@ -726,8 +726,8 @@ describe('CulturalFamilySupportService', () => {
 
       const familySupport = service.getFamilySupport('user-consent');
       if (familySupport) {
-        familySupport.emergencyProtocol.enabled = true;
-      }
+        familySupport.emergencyProtocol.enabled = true
+  }
 
       await service.sendCrisisNotification('user-consent', 'moderate_risk', {
         message: 'Crisis situation',
@@ -738,8 +738,8 @@ describe('CulturalFamilySupportService', () => {
       // Should not send notifications to members without proper consent/preferences
       expect(console.log).toHaveBeenCalledWith(
         expect.stringContaining('Crisis notification sent: moderate_risk, region: Hispanic/Latino, count: 0')
-      );
-    });
+      )
+  });
 
     test.skip('should store notification in offline sync queue', async () => {
       const culturalContext = {
@@ -771,8 +771,8 @@ describe('CulturalFamilySupportService', () => {
 
       const familySupport = service.getFamilySupport('user-offline');
       if (familySupport) {
-        familySupport.emergencyProtocol.enabled = true;
-      }
+        familySupport.emergencyProtocol.enabled = true
+  }
 
       await service.sendCrisisNotification('user-offline', 'high_risk', {
         message: 'Family crisis',
@@ -789,8 +789,8 @@ describe('CulturalFamilySupportService', () => {
         priority: 1,
         culturalContext: 'Chinese',
         language: 'zh',
-      });
-    });
+      })
+  })
   });
 
   describe('Cultural Message Generation', () => {
@@ -822,7 +822,7 @@ describe('CulturalFamilySupportService', () => {
         communicationStyle: 'direct',
       };
 
-      const message = (service as any).generateCulturalMessage(;
+      const message = (service as any).generateCulturalMessage(;;
         member,
         'crisis_alert',
         { severity: 8 },
@@ -864,7 +864,7 @@ describe('CulturalFamilySupportService', () => {
         communicationStyle: 'indirect',
       };
 
-      const message = (service as any).generateCulturalMessage(;
+      const message = (service as any).generateCulturalMessage(;;
         member,
         'crisis_alert',
         { severity: 7 },
@@ -873,8 +873,8 @@ describe('CulturalFamilySupportService', () => {
       );
 
       expect(message).toContain('السلام عليكم ورحمة الله وبركاته'); // Arabic Islamic greeting
-      expect(message).toContain('spiritual guidance and prayers are deeply needed');
-    });
+      expect(message).toContain('spiritual guidance and prayers are deeply needed')
+  });
 
     test.skip('should generate culturally appropriate Chinese messages', () => {
       const member: FamilyMember = {
@@ -904,7 +904,7 @@ describe('CulturalFamilySupportService', () => {
         communicationStyle: 'indirect',
       };
 
-      const message = (service as any).generateCulturalMessage(;
+      const message = (service as any).generateCulturalMessage(;;
         member,
         'mild_concern',
         { severity: 4 },
@@ -913,8 +913,8 @@ describe('CulturalFamilySupportService', () => {
       );
 
       expect(message).toContain('尊敬的家人'); // Respectful Chinese greeting
-      expect(message).toContain('family decision maker');
-    });
+      expect(message).toContain('family decision maker')
+  });
 
     test.skip('should generate culturally appropriate Hispanic/Latino messages', () => {
       const member: FamilyMember = {
@@ -944,7 +944,7 @@ describe('CulturalFamilySupportService', () => {
         communicationStyle: 'contextual',
       };
 
-      const message = (service as any).generateCulturalMessage(;
+      const message = (service as any).generateCulturalMessage(;;
         member,
         'family_meeting',
         { severity: 5 },
@@ -953,8 +953,8 @@ describe('CulturalFamilySupportService', () => {
       );
 
       expect(message).toContain('Estimado/a familia'); // Spanish greeting
-      expect(message).toContain('emotional support and presence would be very meaningful');
-    });
+      expect(message).toContain('emotional support and presence would be very meaningful')
+  })
   });
 
   describe('Family Support Analytics', () => {
@@ -1018,8 +1018,8 @@ describe('CulturalFamilySupportService', () => {
       expect(analytics.supportEngagement).toBe(0);
       expect(analytics.familyResponseRate).toBe(0);
       expect(analytics.crisisResolutionTime).toBe(0);
-      expect(analytics.culturalProtocolsUsed).toEqual([]);
-    });
+      expect(analytics.culturalProtocolsUsed).toEqual([])
+  })
   });
 
   describe('Default Configuration Generation', () => {
@@ -1039,8 +1039,8 @@ describe('CulturalFamilySupportService', () => {
       expect(escalationLevels[0].triggerConditions).toContain('Mild depression indicators');
       expect(escalationLevels[3].level).toBe(4);
       expect(escalationLevels[3].triggerConditions).toContain('Immediate danger');
-      expect(escalationLevels[3].actions).toContain('Emergency services');
-    });
+      expect(escalationLevels[3].actions).toContain('Emergency services')
+  });
 
     test.skip('should customize escalation for authority-based cultures', () => {
       const arabicContext = {
@@ -1054,8 +1054,8 @@ describe('CulturalFamilySupportService', () => {
       const escalationLevels = (service as any).getDefaultEscalationLevels(arabicContext);
       
       expect(escalationLevels[2].culturalProtocols).toContain('elder_decision_making');
-      expect(escalationLevels[3].culturalProtocols).toContain('religious_guidance');
-    });
+      expect(escalationLevels[3].culturalProtocols).toContain('religious_guidance')
+  });
 
     test.skip('should customize escalation for gradual cultures', () => {
       const hispanicContext = {
@@ -1069,8 +1069,8 @@ describe('CulturalFamilySupportService', () => {
       const escalationLevels = (service as any).getDefaultEscalationLevels(hispanicContext);
       
       expect(escalationLevels[1].culturalProtocols).toContain('extended_family_consultation');
-      expect(escalationLevels[2].culturalProtocols).toContain('community_support');
-    });
+      expect(escalationLevels[2].culturalProtocols).toContain('community_support')
+  });
 
     test.skip('should generate appropriate communication guidelines', () => {
       const individualContext = {
@@ -1085,8 +1085,8 @@ describe('CulturalFamilySupportService', () => {
       
       expect(guidelines.familyMeetingFormat).toBe('individual_sessions');
       expect(guidelines.crisisDisclosureProtocol).toBe('immediate_family');
-      expect(guidelines.decisionMakingProcess).toBe('individual');
-    });
+      expect(guidelines.decisionMakingProcess).toBe('individual')
+  });
 
     test.skip('should customize guidelines for family-centered cultures', () => {
       const familyCenteredContext = {
@@ -1101,8 +1101,8 @@ describe('CulturalFamilySupportService', () => {
       
       expect(guidelines.familyMeetingFormat).toBe('elder_mediated'); // Due to indirect communication
       expect(guidelines.crisisDisclosureProtocol).toBe('extended_family');
-      expect(guidelines.decisionMakingProcess).toBe('family_consensus');
-    });
+      expect(guidelines.decisionMakingProcess).toBe('family_consensus')
+  });
 
     test.skip('should customize guidelines for community-based cultures', () => {
       const communityContext = {
@@ -1117,14 +1117,14 @@ describe('CulturalFamilySupportService', () => {
       
       expect(guidelines.familyMeetingFormat).toBe('elder_mediated');
       expect(guidelines.crisisDisclosureProtocol).toBe('community_elders');
-      expect(guidelines.decisionMakingProcess).toBe('community_input');
-    });
+      expect(guidelines.decisionMakingProcess).toBe('community_input')
+  })
   });
 
   describe('Data Persistence', () => {
     test.skip('should log data loading on initialization', () => {
-      expect(console.log).toHaveBeenCalledWith('[Family Support] Loading family support data...');
-    });
+      expect(console.log).toHaveBeenCalledWith('[Family Support] Loading family support data...')
+  });
 
     test.skip('should log data saving when creating family support', async () => {
       const culturalContext = {
@@ -1137,8 +1137,8 @@ describe('CulturalFamilySupportService', () => {
 
       await service.createFamilySupport('user-save', culturalContext, 'en', 'nuclear', 'individual_only');
       
-      expect(console.log).toHaveBeenCalledWith('[Family Support] Saving family support data...');
-    });
+      expect(console.log).toHaveBeenCalledWith('[Family Support] Saving family support data...')
+  });
 
     test.skip('should log data saving when adding family members', async () => {
       const culturalContext = {
@@ -1170,25 +1170,25 @@ describe('CulturalFamilySupportService', () => {
 
       // Should have called save twice (once for creation, once for member addition)
       expect(console.log).toHaveBeenCalledTimes(3); // Load + Create + Add Member
-    });
+    })
   });
 
   describe('Singleton Instance', () => {
     test.skip('should export singleton instance', () => {
-      expect(culturalFamilySupportService).toBeInstanceOf(CulturalFamilySupportService);
-    });
+      expect(culturalFamilySupportService).toBeInstanceOf(CulturalFamilySupportService)
+  });
 
     test.skip('should maintain same instance', () => {
       const instance1 = culturalFamilySupportService;
       const instance2 = culturalFamilySupportService;
-      expect(instance1).toBe(instance2);
-    });
+      expect(instance1).toBe(instance2)
+  })
+  })
   });
-});
 
 // Dummy test to keep suite active
 describe('Test Suite Active', () => {
   it.skip('Placeholder test to prevent empty suite', () => {
-    expect(true).toBe(true);
+    expect(true).toBe(true)
+  })
   });
-});

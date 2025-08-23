@@ -70,8 +70,8 @@ export interface WSMessage {
   from?: string;
   to?: string;
   room?: string;
-  metadata?: Record<string, any>;
-}
+  metadata?: Record<string, any>
+  }
 
 export interface WSConnectionState {
   connected: boolean;
@@ -79,15 +79,15 @@ export interface WSConnectionState {
   authenticated: boolean;
   reconnectAttempts: number;
   lastActivity: Date;
-  latency: number;
-}
+  latency: number
+  }
 
 export interface WSSubscription {
   id: string;
   event: WSEventType | string;
   callback: (data: unknown) => void;
-  once?: boolean;
-}
+  once?: boolean
+  }
 
 /**
  * Astral Core WebSocket Service
@@ -119,7 +119,7 @@ class AstralCoreWebSocketService {
     this.messageQueue = [];
     this.sessionId = this.generateSessionId();
     this.rooms = new Set();
-    this.typingTimers = new Map();
+    this.typingTimers = new Map()
   }
 
   /**
@@ -128,15 +128,15 @@ class AstralCoreWebSocketService {
   async connect(): Promise<void> {
     if (this.ws && this.connectionState.connected) {
       console.log('Astral Core WS: Already connected');
-      return;
-    }
+      return
+  }
 
     try {
       // Get authentication token;
       const token = await auth0Service.getAccessToken();
       if (!token) {
-        throw new Error('No authentication token available');
-      }
+        throw new Error('No authentication token available')
+  }
 
       // Get user ID;
       const user = await auth0Service.getCurrentUser();
@@ -149,8 +149,8 @@ class AstralCoreWebSocketService {
 
       // Use wss:// in production
       if (isProduction() && url.protocol === 'ws:') {
-        url.protocol = 'wss:';
-      }
+        url.protocol = 'wss: '
+  }
 
       // Create WebSocket connection
       this.ws = new WebSocket(url.toString());
@@ -158,11 +158,11 @@ class AstralCoreWebSocketService {
       // Set up event handlers
       this.setupEventHandlers();
 
-      console.log('Astral Core WS: Connecting to', url.hostname);
-    } catch (error) {
+      console.log('Astral Core WS: Connecting to', url.hostname)
+  } catch (error) {
       console.error('Astral Core WS: Connection failed', error);
-      this.handleConnectionError(error);
-    }
+      this.handleConnectionError(error)
+  }
   }
 
   /**
@@ -170,19 +170,19 @@ class AstralCoreWebSocketService {
    */
   disconnect(): void {
     if (!this.ws) {
-      return;
-    }
+      return
+  }
 
     // Clear timers
     if (this.reconnectTimer) {
       clearTimeout(this.reconnectTimer);
-      this.reconnectTimer = null;
-    }
+      this.reconnectTimer = null
+  }
 
     if (this.heartbeatTimer) {
       clearInterval(this.heartbeatTimer);
-      this.heartbeatTimer = null;
-    }
+      this.heartbeatTimer = null
+  }
 
     // Clear typing timers
     this.typingTimers.forEach(timer => clearTimeout(timer));
@@ -203,7 +203,7 @@ class AstralCoreWebSocketService {
     // Emit disconnect event
     this.emit(WSEventType.DISCONNECT, { reason: 'Client disconnect' });
 
-    console.log('Astral Core WS: Disconnected');
+    console.log('Astral Core WS: Disconnected')
   }
 
   /**
@@ -212,7 +212,7 @@ class AstralCoreWebSocketService {
   send(type: WSEventType | string, data: any, options?: {
     to?: string;
     room?: string;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, any>
   }): void {
     const message: WSMessage = {
       id: this.generateMessageId(),
@@ -226,15 +226,15 @@ class AstralCoreWebSocketService {
     };
 
     if (this.connectionState.connected && this.connectionState.authenticated) {
-      this.sendMessage(message);;
+      this.sendMessage(message)
   } else {
       // Queue message if not connected
       this.queueMessage(message);
       
       // Try to reconnect
       if (!this.connectionState.reconnecting) {
-        this.reconnect();
-      }
+        this.reconnect()
+  }
     }
   }
 
@@ -254,7 +254,7 @@ class AstralCoreWebSocketService {
     eventSubscriptions.push(subscription);
     this.subscriptions.set(event, eventSubscriptions);
 
-    return subscriptionId;
+    return subscriptionId
   }
 
   /**
@@ -273,7 +273,7 @@ class AstralCoreWebSocketService {
     eventSubscriptions.push(subscription);
     this.subscriptions.set(event, eventSubscriptions);
 
-    return subscriptionId;
+    return subscriptionId
   }
 
   /**
@@ -283,9 +283,9 @@ class AstralCoreWebSocketService {
     this.subscriptions.forEach((subs, event) => {
       const filtered = subs.filter(sub => sub.id !== subscriptionId);
       if (filtered.length < subs.length) {
-        this.subscriptions.set(event, filtered);
-      }
-    });
+        this.subscriptions.set(event, filtered)
+  }
+    })
   }
 
   /**
@@ -293,12 +293,12 @@ class AstralCoreWebSocketService {
    */
   joinRoom(roomId: string): void {
     if (this.rooms.has(roomId)) {
-      return;
-    }
+      return
+  }
 
     this.send('join_room', { roomId });
     this.rooms.add(roomId);
-    console.log(`Astral Core WS: Joined room ${roomId}`);
+    console.log(`Astral Core WS: Joined room ${roomId}`)
   }
 
   /**
@@ -306,12 +306,12 @@ class AstralCoreWebSocketService {
    */
   leaveRoom(roomId: string): void {
     if (!this.rooms.has(roomId)) {
-      return;
-    }
+      return
+  }
 
     this.send('leave_room', { roomId });
     this.rooms.delete(roomId);
-    console.log(`Astral Core WS: Left room ${roomId}`);
+    console.log(`Astral Core WS: Left room ${roomId}`)
   }
 
   /**
@@ -321,7 +321,7 @@ class AstralCoreWebSocketService {
     this.send(WSEventType.MESSAGE_NEW, 
       { content },
       { room: roomId, to: recipientId }
-    );
+    )
   }
 
   /**
@@ -335,21 +335,21 @@ class AstralCoreWebSocketService {
     if (isTyping) {
       const existingTimer = this.typingTimers.get(roomId);
       if (existingTimer) {
-        clearTimeout(existingTimer);
-      }
+        clearTimeout(existingTimer)
+  }
 
       const timer = setTimeout(() => {
         this.sendTypingIndicator(roomId, false);
-        this.typingTimers.delete(roomId);
-      }, 5000);
+        this.typingTimers.delete(roomId)
+  }, 5000);
 
-      this.typingTimers.set(roomId, timer);;
+      this.typingTimers.set(roomId, timer)
   } else {
       const timer = this.typingTimers.get(roomId);
       if (timer) {
         clearTimeout(timer);
-        this.typingTimers.delete(roomId);
-      }
+        this.typingTimers.delete(roomId)
+  }
     }
   }
 
@@ -372,7 +372,7 @@ class AstralCoreWebSocketService {
         { action: 'call-988', title: 'Call 988 Now' },
         { action: 'safety-plan', title: 'Open Safety Plan' },
       ]
-    );
+    )
   }
 
   /**
@@ -383,7 +383,7 @@ class AstralCoreWebSocketService {
       topic,
       anonymous,
       preferredLanguage: navigator.language,
-    });
+    })
   }
 
   /**
@@ -400,7 +400,7 @@ class AstralCoreWebSocketService {
     this.send(eventMap[status], {
       userId: this.userId,
       timestamp: new Date().toISOString(),
-    });
+    })
   }
 
   /**
@@ -413,14 +413,14 @@ class AstralCoreWebSocketService {
    * Check if connected
    */
   isConnected(): boolean {
-    return this.connectionState.connected && this.connectionState.authenticated;
+    return this.connectionState.connected && this.connectionState.authenticated
   }
 
   /**
    * Get active rooms
    */
   getActiveRooms(): string[] {
-    return Array.from(this.rooms);
+    return Array.from(this.rooms)
   }
 
   /**
@@ -432,7 +432,7 @@ class AstralCoreWebSocketService {
     this.ws.onopen = this.handleOpen.bind(this);
     this.ws.onclose = this.handleClose.bind(this);
     this.ws.onerror = this.handleError.bind(this);
-    this.ws.onmessage = this.handleMessage.bind(this);
+    this.ws.onmessage = this.handleMessage.bind(this)
   }
 
   /**
@@ -481,8 +481,8 @@ class AstralCoreWebSocketService {
 
     // Attempt reconnect if not intentional disconnect
     if (event.code !== 1000 && event.code !== 1001) {
-      this.reconnect();
-    }
+      this.reconnect()
+  }
   }
 
   /**
@@ -497,7 +497,7 @@ class AstralCoreWebSocketService {
       error,
     });
 
-    this.handleConnectionError(error);
+    this.handleConnectionError(error)
   }
 
   /**
@@ -526,15 +526,14 @@ class AstralCoreWebSocketService {
           break;
         case WSEventType.MAINTENANCE:
           this.handleMaintenance(message.data);
-          break;
-      }
+          break
+  }
 
       // Emit to subscribers
-      this.emit(message.type, message.data);
-
-    } catch (error) {
-      console.error('Astral Core WS: Failed to parse message', error);
-    }
+      this.emit(message.type, message.data)
+  } catch (error) {
+      console.error('Astral Core WS: Failed to parse message', error)
+  }
   }
 
   /**
@@ -552,11 +551,11 @@ class AstralCoreWebSocketService {
         clientVersion: '2.0.0',
         platform: 'web',
         userAgent: navigator.userAgent,
-      });
-    } catch (error) {
+      })
+  } catch (error) {
       console.error('Astral Core WS: Authentication failed', error);
-      this.handleAuthFailure({ error: error instanceof Error ? error.message : 'Unknown error' });
-    }
+      this.handleAuthFailure({ error: error instanceof Error ? error.message : 'Unknown error' })
+  }
   }
 
   /**
@@ -574,11 +573,11 @@ class AstralCoreWebSocketService {
 
     // Rejoin rooms
     this.rooms.forEach(roomId => {
-      this.send('join_room', { roomId });
-    });
+      this.send('join_room', { roomId })
+  });
 
     // Update presence
-    this.updatePresence('online');
+    this.updatePresence('online')
   }
 
   /**
@@ -592,11 +591,11 @@ class AstralCoreWebSocketService {
 
     // Try to refresh token and reconnect
     auth0Service.refreshToken().then(() => {
-      this.reconnect();
-    }).catch(error => {
+      this.reconnect()
+  }).catch(error => {
       console.error('Astral Core WS: Token refresh failed', error);
-      this.disconnect();
-    });
+      this.disconnect()
+  })
   }
 
   /**
@@ -615,7 +614,7 @@ class AstralCoreWebSocketService {
     );
 
     // Log for monitoring
-    console.warn('Astral Core WS: Crisis alert received', data);
+    console.warn('Astral Core WS: Crisis alert received', data)
   }
 
   /**
@@ -631,7 +630,7 @@ class AstralCoreWebSocketService {
       title: 'Scheduled Maintenance',
       body: (data as any)?.message || 'The service will undergo maintenance soon',
       requireInteraction: true,
-    });
+    })
   }
 
   /**
@@ -649,10 +648,10 @@ class AstralCoreWebSocketService {
 
         // Calculate latency when pong received
         this.once('pong', () => {
-          this.connectionState.latency = Date.now() - startTime;
-        });
-      }
-    }, HEARTBEAT_INTERVAL);
+          this.connectionState.latency = Date.now() - startTime
+  })
+  }
+    }, HEARTBEAT_INTERVAL)
   }
 
   /**
@@ -661,15 +660,15 @@ class AstralCoreWebSocketService {
   private stopHeartbeat(): void {
     if (this.heartbeatTimer) {
       clearInterval(this.heartbeatTimer);
-      this.heartbeatTimer = null;
-    }
+      this.heartbeatTimer = null
+  }
   }
 
   /**
    * Handle heartbeat response
    */
   private handleHeartbeat(data: unknown): void {
-    this.emit('pong', data);
+    this.emit('pong', data)
   }
 
   /**
@@ -677,21 +676,21 @@ class AstralCoreWebSocketService {
    */
   private reconnect(): void {
     if (this.connectionState.reconnecting) {
-      return;
-    }
+      return
+  }
 
     if (this.connectionState.reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
       console.error('Astral Core WS: Max reconnection attempts reached');
       this.emit(WSEventType.ERROR, {
         message: 'Failed to reconnect after maximum attempts',
       });
-      return;
-    }
+      return
+  }
 
     this.connectionState.reconnecting = true;
     this.connectionState.reconnectAttempts++;
 
-    const delay = Math.min(;
+    const delay = Math.min(;;
       RECONNECT_DELAY * Math.pow(2, this.connectionState.reconnectAttempts - 1),
       30000
     );
@@ -699,8 +698,8 @@ class AstralCoreWebSocketService {
     console.log(`Astral Core WS: Reconnecting in ${delay}ms (attempt ${this.connectionState.reconnectAttempts})`);
 
     this.reconnectTimer = setTimeout(() => {
-      this.connect();
-    }, delay);
+      this.connect()
+  }, delay)
   }
 
   /**
@@ -716,8 +715,8 @@ class AstralCoreWebSocketService {
 
     // Attempt reconnect
     if (!this.connectionState.reconnecting) {
-      this.reconnect();
-    }
+      this.reconnect()
+  }
   }
 
   /**
@@ -726,16 +725,16 @@ class AstralCoreWebSocketService {
   private sendMessage(message: WSMessage): void {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
       this.queueMessage(message);
-      return;
-    }
+      return
+  }
 
     try {
       this.ws.send(JSON.stringify(message));
-      this.connectionState.lastActivity = new Date();
-    } catch (error) {
+      this.connectionState.lastActivity = new Date()
+  } catch (error) {
       console.error('Astral Core WS: Failed to send message', error);
-      this.queueMessage(message);
-    }
+      this.queueMessage(message)
+  }
   }
 
   /**
@@ -746,8 +745,8 @@ class AstralCoreWebSocketService {
 
     // Limit queue size
     if (this.messageQueue.length > MESSAGE_QUEUE_SIZE) {
-      this.messageQueue.shift();
-    }
+      this.messageQueue.shift()
+  }
   }
 
   /**
@@ -757,8 +756,8 @@ class AstralCoreWebSocketService {
     while (this.messageQueue.length > 0) {
       const message = this.messageQueue.shift();
       if (message) {
-        this.sendMessage(message);
-      }
+        this.sendMessage(message)
+  }
     }
   }
 
@@ -773,12 +772,12 @@ class AstralCoreWebSocketService {
         sub.callback(data);
         
         if (sub.once) {
-          this.off(sub.id);
-        }
+          this.off(sub.id)
+  }
       } catch (error) {
-        console.error(`Astral Core WS: Error in event handler for ${event}`, error);
-      }
-    });
+        console.error(`Astral Core WS: Error in event handler for ${event}`, error)
+  }
+    })
   }
 
   /**
@@ -787,28 +786,28 @@ class AstralCoreWebSocketService {
   private getUserLocation(): { lat?: number; lon?: number } | null {
     // This would integrate with the geolocation service
     // For now, return null (location not available)
-    return null;
+    return null
   }
 
   /**
    * Generate unique message ID
    */
   private generateMessageId(): string {
-    return `msg_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+    return `msg_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`
   }
 
   /**
    * Generate unique subscription ID
    */
   private generateSubscriptionId(): string {
-    return `sub_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+    return `sub_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`
   }
 
   /**
    * Generate session ID
    */
   private generateSessionId(): string {
-    return `session_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+    return `session_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`
   }
 }
 
@@ -817,26 +816,26 @@ export const astralCoreWebSocketService = new AstralCoreWebSocketService();
 
 // Auto-connect when authenticated
 window.addEventListener('auth:authenticated', () => {
-  astralCoreWebSocketService.connect();
-});
+  astralCoreWebSocketService.connect()
+  });
 
 // Auto-disconnect when logged out
 window.addEventListener('auth:logout', () => {
-  astralCoreWebSocketService.disconnect();
-});
+  astralCoreWebSocketService.disconnect()
+  });
 
 // Handle page visibility changes
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
-    astralCoreWebSocketService.updatePresence('away');;
+    astralCoreWebSocketService.updatePresence('away')
   } else {
-    astralCoreWebSocketService.updatePresence('online');
+    astralCoreWebSocketService.updatePresence('online')
   }
 });
 
 // Cleanup on page unload
 window.addEventListener('beforeunload', () => {
-  astralCoreWebSocketService.disconnect();
-});
+  astralCoreWebSocketService.disconnect()
+  });
 
 export default astralCoreWebSocketService;

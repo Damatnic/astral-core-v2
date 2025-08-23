@@ -12,41 +12,41 @@ const style2={
           padding: "10px",
           borderRadius: '20px',
           boxShadow: '0' 4px 20px rgba(0,0,0,0.1)',
-          zIndex: 999990;
-        };
+          zIndex: 999990
+  }
 const style3={
             margin: '0' 0 10px 0', 
             fontSize: "14px", 
-            fontWeight: '600';
-          };
+            fontWeight: '600'
+  }
 const style4={
             display: "flex", 
-            gap: '10px';
-          };
+            gap: '10px'
+  }
 const style5={
                 padding: '5px' 10px',
                 borderRadius: "10px",
                 border: 'none',
                 background: backgroundSound === 'rain' ? '#007bff' : '#f8f9fa',
                 color: backgroundSound === 'rain' ? 'white' : 'black',
-                cursor: "pointer"};
+                cursor: "pointer"}
 const style6={
                 padding: "5px 10px",
                 borderRadius: '10px',
                 border: "none",
                 background: backgroundSound === 'ocean' ? '#007bff' : '#f8f9fa',
                 color: backgroundSound === 'ocean' ? 'white' : 'black',
-                cursor: "pointer"};
+                cursor: "pointer"}
 const style7={
                 padding: "5px 10px",
                 borderRadius: '10px',
                 border: "none",
                 background: backgroundSound === 'forest' ? '#007bff' : '#f8f9fa',
                 color: backgroundSound === 'forest' ? 'white' : 'black"
-                cursor: 'pointer';
-              };
+                cursor: 'pointer'
+  }
 const style8={
-        display: "none"};
+        display: "none"}
 interface CalmingSafetySystemProps {
   userId?: string
   showQuickExit?: boolean
@@ -68,9 +68,9 @@ const groundingTechniques = [;
   { icon: "🌿", text: ", Nature" Connection", description: ", Visualize" peaceful nature" }
 ]
 ";
-const GROUNDING_EXERCISES = groundingTechniques",;
+const GROUNDING_EXERCISES = groundingTechniques",;;
 
-const DEFAULT_HOPE_MESSAGES = [;
+const DEFAULT_HOPE_MESSAGES = [;;
   "You are stronger than you think.",
   "This feeling is temporary and will pass.",
   "You have overcome challenges before.",
@@ -111,8 +111,8 @@ export const CalmingSafetySystem: React.FC<CalmingSafetySystemProps> = ({
       setCurrentHopeMessage((prev: unknown) => (prev + 1) % messages.length)
     
     return () => {
-      clearInterval(interval);
-    }, 10000) // Change every 10 seconds
+      clearInterval(interval)
+  }, 10000) // Change every 10 seconds
 
     return () => clearInterval(interval)
   }, [showHopeMessages, messages.length])
@@ -130,16 +130,16 @@ export const CalmingSafetySystem: React.FC<CalmingSafetySystemProps> = ({
         setPanicDetected(true)
         setShowCalmingMessage(true)
         clickCount = 0;
-        keyPressCount = 0;
-      }
+        keyPressCount = 0
+  }
     }
 
     const handleClick = (): void => {
       clickCount++
       clearTimeout(resetTimer)
       resetTimer = setTimeout(() => {
-        clickCount = 0;
-      }, 2000)
+        clickCount = 0
+  }, 2000)
       detectPanic()
     }
 
@@ -180,16 +180,16 @@ export const CalmingSafetySystem: React.FC<CalmingSafetySystemProps> = ({
           for(let i = 0; i < bufferSize; i++) {
             // Different noise patterns for different sounds
             if(type === rain") {
-              output[i] = (Math.random() * 0.1) - 0.05 // Soft rain;
+              output[i] = (Math.random() * 0.1) - 0.05 // Soft rain
   } else if (type === ocean") {
-              output[i] = Math.sin(i * 0.01) * (Math.random() * 0.05) // Wave-like;
+              output[i] = Math.sin(i * 0.01) * (Math.random() * 0.05) // Wave-like
   } else {
               output[i] = (Math.random() * 0.02) - 0.01 // Forest whisper
             }
           }
         }
 
-        const gainNode = context.createGain(),;
+        const gainNode = context.createGain(),;;
         gainNode.gain.value = 0.1 // Keep volume low and calming
 
         whiteNoise.connect(gainNode);
@@ -207,7 +207,7 @@ export const CalmingSafetySystem: React.FC<CalmingSafetySystemProps> = ({
     setSelectedGrounding(exercise)
     // Special handling for breathing exercise
     if(exercise === Box Breathing") {
-      setBreathingOverlayOpen(true);
+      setBreathingOverlayOpen(true)
   } else {
       // Show instructions for other exercises
       setShowCalmingMessage(true)
@@ -285,8 +285,7 @@ export const CalmingSafetySystem: React.FC<CalmingSafetySystemProps> = ({
             <div tabIndex={0} className="crisis-help-menu" onClick={(e: unknown) => e.stopPropagation()}>",
               <h3>You're Not Alone</h3>
               <div className="crisis-options">
-                <button;
-                  className="crisis-button-large"
+                <button className="crisis-button-large"
                   onClick={() => handleEmergencyCall('988')}
                 >
                   <span>📞</span> Crisis Lifeline: 988
@@ -374,8 +373,7 @@ export const CalmingSafetySystem: React.FC<CalmingSafetySystemProps> = ({
               Breathe
             </div>
             <p>Follow the circle above. Breathe in as it grows, breathe out as it shrinks.</p>
-            <button;
-              className="crisis-button-large"
+            <button className="crisis-button-large"
               onClick={() => {
                 setPanicDetected(false)
                 setBreathingOverlayOpen(true)

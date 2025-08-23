@@ -20,8 +20,8 @@ export interface ErrorState {
   isRetrying: boolean;
   clearError: () => void;
   setError: (error: Error | string, code?: string) => void;
-  retryLastAction?: () => Promise<void>;
-}
+  retryLastAction?: () => Promise<void>
+  }
 
 /**
  * Standard loading state interface
@@ -30,8 +30,8 @@ export interface LoadingState {
   isLoading: boolean;
   loadingMessage?: string;
   loadingProgress?: number;
-  setLoading: (loading: boolean, message?: string, progress?: number) => void;
-}
+  setLoading: (loading: boolean, message?: string, progress?: number) => void
+  }
 
 /**
  * Standard optimization state
@@ -41,8 +41,8 @@ export interface OptimizationState {
   updateCount: number;
   cacheValid: boolean;
   invalidateCache: () => void;
-  updateMetrics: () => void;
-}
+  updateMetrics: () => void
+  }
 
 /**
  * Combined enhanced state interface
@@ -51,8 +51,8 @@ export interface EnhancedState extends ErrorState, LoadingState, OptimizationSta
   // Version for migration support
   _version: number;
   _hasHydrated: boolean;
-  setHasHydrated: (state: boolean) => void;
-}
+  setHasHydrated: (state: boolean) => void
+  }
 
 /**
  * Create standard error handling slice
@@ -72,14 +72,14 @@ export const createErrorSlice = <T extends ErrorState>(
     errorCode: undefined,
     errorTimestamp: undefined,
     errorRetryCount: 0,
-    isRetrying: false;
+    isRetrying: false
   } as Partial<T>),
   
   setError: (error: Error | string, code?: string) => set({
     error: typeof error === 'string' ? new Error(error) : error,
     errorCode: code,
     errorTimestamp: new Date(),
-    isRetrying: false;
+    isRetrying: false
   } as Partial<T>)
 });
 
@@ -96,7 +96,7 @@ export const createLoadingSlice = <T extends LoadingState>(
   setLoading: (loading: boolean, message?: string, progress?: number) => set({
     isLoading: loading,
     loadingMessage: message,
-    loadingProgress: progress;
+    loadingProgress: progress
   } as Partial<T>)
 });
 
@@ -111,14 +111,14 @@ export const createOptimizationSlice = <T extends OptimizationState>(
   cacheValid: true,
   
   invalidateCache: () => set({
-    cacheValid: false;
+    cacheValid: false
   } as Partial<T>),
   
   updateMetrics: () => set((state: any) => ({
     ...state,
     lastUpdated: new Date(),
     updateCount: state.updateCount + 1,
-    cacheValid: true;
+    cacheValid: true
   }))
 });
 
@@ -142,8 +142,8 @@ export interface PersistConfig<T> {
   migrate?: (persistedState: any, version: number) => T;
   partialize?: (state: T) => Partial<T>;
   skipHydration?: boolean;
-  storage?: 'localStorage' | 'sessionStorage' | 'indexedDB';
-}
+  storage?: 'localStorage' | 'sessionStorage' | 'indexedDB'
+  }
 
 /**
  * Create persistence options with sensible defaults
@@ -162,8 +162,7 @@ export const createPersistOptions = <T extends EnhancedState>(
       // Falling back to localStorage for now
       storage = createJSONStorage(() => localStorage);
       break;
-    default:
-      storage = createJSONStorage(() => localStorage);
+    default: storage = createJSONStorage(() => localStorage)
   }
 
   return {
@@ -181,12 +180,12 @@ export const createPersistOptions = <T extends EnhancedState>(
         isRetrying?: any;
         isLoading?: any;
         loadingMessage?: any;
-        loadingProgress?: any;
-      };
+        loadingProgress?: any
+  };
       const { error, errorCode, errorTimestamp, errorRetryCount, isRetrying,
               isLoading, loadingMessage, loadingProgress, ...rest } = typedState;
-      return rest;
-    }),
+      return rest
+  }),
     
     // Migration support
     migrate: config.migrate,
@@ -197,8 +196,8 @@ export const createPersistOptions = <T extends EnhancedState>(
     // Handle hydration
     onRehydrateStorage: () => (state) => {
       if (state) {
-        state.setHasHydrated(true);
-      }
+        state.setHasHydrated(true)
+  }
     }
   };
 
@@ -218,26 +217,26 @@ export const withRetry = async <T>(
     try {
       if (attempt > 0) {
         setLoading(true, `Retrying... (${attempt}/${maxRetries})`);
-        await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
-      }
+        await new Promise(resolve => setTimeout(resolve, retryDelay * attempt))
+  }
       
       const result = await action();
       setLoading(false);
-      return result;
-    } catch (error) {
+      return result
+  } catch (error) {
       lastError = error as Error;
       console.error(`Attempt ${attempt + 1} failed:`, error);
       
       if (attempt === maxRetries) {
         setError(lastError, 'MAX_RETRIES_EXCEEDED');
         setLoading(false);
-        return null;
-      }
+        return null
+  }
     }
   }
   
-  return null;
-};
+  return null
+  };
 
 /**
  * Optimistic update wrapper
@@ -256,7 +255,7 @@ export const withOptimisticUpdate = <R>(
     // Rollback on failure
     rollback();
     setError(error as Error, 'OPTIMISTIC_UPDATE_FAILED');
-    throw error;
+    throw error
   };
   };
 };
@@ -272,9 +271,9 @@ export const createDebouncedUpdate = <T extends (...args: unknown[]) => any>(
   
   return ((...args: Parameters<T>) => {
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn(...args), delay);
-  }) as T;
-};
+    timeoutId = setTimeout(() => fn(...args), delay)
+  }) as T
+  };
 
 /**
  * Middleware composer for enhanced stores
@@ -292,8 +291,8 @@ export const createEnhancedStore = <T extends EnhancedState>(
   // Add devtools in development
   if (enableDevtools) {
     enhancedCreator = devtools(enhancedCreator, {
-      name: persistConfig?.name || 'Store';
-    }) as StateCreator<T>;
+      name: persistConfig?.name || 'Store'
+  }) as StateCreator<T>
   }
   
   // Add persistence if config provided
@@ -301,11 +300,11 @@ export const createEnhancedStore = <T extends EnhancedState>(
     enhancedCreator = persist(
       enhancedCreator,
       createPersistOptions(persistConfig)
-    ) as StateCreator<T>;
+    ) as StateCreator<T>
   }
   
-  return enhancedCreator as StateCreator<T, [], [['zustand/persist', Partial<T>], ['zustand/devtools', never], ['zustand/subscribeWithSelector', never]]>;
-};
+  return enhancedCreator as StateCreator<T, [], [['zustand/persist', Partial<T>], ['zustand/devtools', never], ['zustand/subscribeWithSelector', never]]>
+  };
 
 /**
  * Cache management utilities
@@ -315,14 +314,14 @@ export class StoreCache<T> {
   private readonly ttl: number;
   
   constructor(ttlSeconds: number = 300) { // 5 minutes default
-    this.ttl = ttlSeconds * 1000;
+    this.ttl = ttlSeconds * 1000
   }
   
   set(key: string, data: T): void {
     this.cache.set(key, {
       data,
-      timestamp: Date.now();
-    });
+      timestamp: Date.now()
+  })
   }
   
   get(key: string): T | null {
@@ -331,18 +330,18 @@ export class StoreCache<T> {
     
     if (Date.now() - entry.timestamp > this.ttl) {
       this.cache.delete(key);
-      return null;
-    }
+      return null
+  }
     
-    return entry.data;
+    return entry.data
   }
   
   clear(): void {
-    this.cache.clear();
+    this.cache.clear()
   }
   
   invalidate(key: string): void {
-    this.cache.delete(key);
+    this.cache.delete(key)
   }
 }
 
@@ -358,16 +357,16 @@ export class StorePerformanceMonitor {
     const duration = performance.now() - start;
     
     if (!this.metrics.has(actionName)) {
-      this.metrics.set(actionName, []);
-    }
+      this.metrics.set(actionName, [])
+  }
     this.metrics.get(actionName)!.push(duration);
     
     // Log slow actions
     if (duration > 100) {
-      console.warn(`Slow store action: ${actionName} took ${duration.toFixed(2)}ms`);
-    }
+      console.warn(`Slow store action: ${actionName} took ${duration.toFixed(2)}ms`)
+  }
     
-    return result;
+    return result
   }
   
   getMetrics(actionName: string): { avg: number; min: number; max: number; count: number } | null {
@@ -378,11 +377,11 @@ export class StorePerformanceMonitor {
       avg: measurements.reduce((a, b) => a + b, 0) / measurements.length,
       min: Math.min(...measurements),
       max: Math.max(...measurements),
-      count: measurements.length;
-    }
+      count: measurements.length
+  }
   
   clearMetrics(): void {
-    this.metrics.clear();
+    this.metrics.clear()
   }
 }
 
@@ -393,12 +392,12 @@ export class SubscriptionManager {
   private subscriptions: (() => void)[] = [];
   
   add(unsubscribe: () => void): void {
-    this.subscriptions.push(unsubscribe);
+    this.subscriptions.push(unsubscribe)
   }
   
   clearAll(): void {
     this.subscriptions.forEach(unsub => unsub());
-    this.subscriptions = [];
+    this.subscriptions = []
   }
 }
 

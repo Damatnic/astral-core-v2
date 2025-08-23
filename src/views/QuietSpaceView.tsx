@@ -10,8 +10,8 @@ import './QuietSpaceView.css';
 type BreathingPattern = {
     name: string;
     description: string;
-    phases: Array<{phase: 'inhale' | 'hold' | 'exhale' | 'pause', duration: number, text: string}>;
-};
+    phases: Array<{phase: 'inhale' | 'hold' | 'exhale' | 'pause', duration: number, text: string}>
+  };
 
 const breathingPatterns: BreathingPattern[] = [
     {
@@ -44,43 +44,43 @@ const breathingPatterns: BreathingPattern[] = [
     }
 ];
 
-const stressReliefResources = [;
+const stressReliefResources = [;;
     {
         title: 'Headspace',
         description: 'Guided meditation and mindfulness',
         url: 'https://www.headspace.com',
-        icon: '🧘';
-    },
+        icon: '🧘'
+  },
     {
         title: 'Calm',
         description: 'Sleep stories and relaxation',
         url: 'https://www.calm.com',
-        icon: '😴';
-    },
+        icon: '😴'
+  },
     {
         title: 'Insight Timer',
         description: 'Free meditation community',
         url: 'https://insighttimer.com',
-        icon: '⏰';
-    },
+        icon: '⏰'
+  },
     {
         title: 'Progressive Muscle Relaxation',
         description: 'Physical tension release technique',
         url: 'https://www.healthline.com/health/progressive-muscle-relaxation',
-        icon: '💪';
-    },
+        icon: '💪'
+  },
     {
         title: '7 Cups',
         description: 'Anonymous emotional support',
         url: 'https://www.7cups.com',
-        icon: '☕';
-    },
+        icon: '☕'
+  },
     {
         title: 'Nature Sounds',
         description: 'Calming ambient sounds',
         url: 'https://www.noisli.com',
-        icon: '🌿';
-    }
+        icon: '🌿'
+  }
 ];
 
 export const QuietSpaceView: React.FC = () => {
@@ -118,41 +118,41 @@ export const QuietSpaceView: React.FC = () => {
                 gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
                 
                 oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.5);
-            };
+                oscillator.stop(audioContext.currentTime + 0.5)
+  };
             
             // Store the function to create chimes
-            (window as any).playChime = createChime;
-        }
+            (window as any).playChime = createChime
+  }
         
         // Cleanup on unmount
         return () => {
             if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-            }
+                clearInterval(intervalRef.current)
+  }
             if (phaseTimeoutRef.current) {
-                clearTimeout(phaseTimeoutRef.current);
-            }
+                clearTimeout(phaseTimeoutRef.current)
+  }
         };
     };
   }, []);
 
     const toggleBreathing = () => {
         if (isPlaying) {
-            stopBreathing();;
+            stopBreathing()
   } else {
-            startBreathingCycle();
-        }
-        setIsPlaying(!isPlaying);
-    };
+            startBreathingCycle()
+  }
+        setIsPlaying(!isPlaying)
+  };
     
     const stopBreathing = () => {
         if (intervalRef.current) clearInterval(intervalRef.current);
         if (phaseTimeoutRef.current) clearTimeout(phaseTimeoutRef.current);
         setBreathingPhase('pause');
         setBreathingText('Begin');
-        setPhaseProgress(0);
-    };
+        setPhaseProgress(0)
+  };
     
     const startBreathingCycle = () => {
         const pattern = breathingPatterns[selectedPattern];
@@ -166,8 +166,8 @@ export const QuietSpaceView: React.FC = () => {
             
             // Play chime at the start of each phase if enabled
             if (showChimes && (window as any).playChime) {
-                (window as any).playChime();
-            }
+                (window as any).playChime()
+  }
             
             // Animate progress;
             let progress = 0;
@@ -180,19 +180,19 @@ export const QuietSpaceView: React.FC = () => {
                 setPhaseProgress(Math.min(progress, 100));
                 
                 if (progress >= 100) {
-                    clearInterval(intervalRef.current!);
-                }
+                    clearInterval(intervalRef.current!)
+  }
             }, progressInterval);
             
             // Move to next phase
             phaseTimeoutRef.current = window.setTimeout(() => {
                 currentPhaseIndex = (currentPhaseIndex + 1) % pattern.phases.length;
-                runPhase();
-            }, currentPhase.duration);
-        };
+                runPhase()
+  }, currentPhase.duration)
+  };
         
-        runPhase();
-    };
+        runPhase()
+  };
 
     return (
         <div className="quiet-space-container">
@@ -209,8 +209,8 @@ export const QuietSpaceView: React.FC = () => {
                     alignItems: 'center',
                     gap: '1rem',
                     justifyContent: 'center',
-                    marginTop: '1rem';
-                }}>
+                    marginTop: '1rem'
+  }}>
                     <span style={{ color: '#7f8c8d', fontSize: '0.9rem' }}>Ambiance:</span>
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
                         {[
@@ -236,8 +236,8 @@ export const QuietSpaceView: React.FC = () => {
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     boxShadow: backgroundTheme === theme ? '0 4px 12px rgba(102, 126, 234, 0.3)' : 'none',
-                                    transition: 'all 0.3s ease';
-                                }}
+                                    transition: 'all 0.3s ease'
+  }}
                             >
                                 {emoji}
                             </button>
@@ -264,8 +264,8 @@ export const QuietSpaceView: React.FC = () => {
                         cursor: 'pointer',
                         fontSize: '1rem',
                         fontWeight: '500',
-                        transition: 'all 0.3s ease';
-                    }}
+                        transition: 'all 0.3s ease'
+  }}
                 >
                     {showMeditation ? '🧘 Hide Meditation Timer' : '🧘 Open Meditation Timer'}
                 </button>
@@ -292,15 +292,15 @@ export const QuietSpaceView: React.FC = () => {
                             onClick={() => {
                                 setSelectedPattern(index);
                                 if (isPlaying) {
-                                    stopBreathing();
-                                }
+                                    stopBreathing()
+  }
                                 // Add visual feedback for pattern change;
                                 const allCards = document.querySelectorAll('.pattern-card');
                                 allCards.forEach(card => card.classList.add('transitioning'));
                                 setTimeout(() => {
-                                    allCards.forEach(card => card.classList.remove('transitioning'));
-                                }, 300);
-                            }}
+                                    allCards.forEach(card => card.classList.remove('transitioning'))
+  }, 300)
+  }}
                         >
                             <h3>{pattern.name}</h3>
                             <p>{pattern.description}</p>
@@ -314,8 +314,8 @@ export const QuietSpaceView: React.FC = () => {
                         <div className="breathing-text">{breathingText}</div>
                         <div className="phase-progress" style={{
                             width: `${phaseProgress}%`,
-                            transition: 'width 0.1s linear';
-                        }} />
+                            transition: 'width 0.1s linear'
+  }} />
                     </div>
                 </div>
                 
@@ -327,8 +327,7 @@ export const QuietSpaceView: React.FC = () => {
 
                 {/* Controls */}
                 <div className="breathing-controls">
-                    <AppButton; 
-                        className="quiet-space-button" 
+                    <AppButton className="quiet-space-button" 
                         onClick={toggleBreathing}
                         variant="primary"
                     >
@@ -337,8 +336,7 @@ export const QuietSpaceView: React.FC = () => {
                     </AppButton>
                     
                     <label className="chime-toggle">
-                        <input; 
-                            type="checkbox" 
+                        <input type="checkbox" 
                             checked={showChimes} 
                             onChange={(e) => setShowChimes(e.target.checked)}
                         />
@@ -384,20 +382,17 @@ export const QuietSpaceView: React.FC = () => {
                     <span>Learn More</span>
                 </h2>
                 <div className="learn-more-buttons">
-                    <AppButton; 
-                        variant="secondary" 
+                    <AppButton variant="secondary" 
                         onClick={() => window.open('https://www.healthline.com/health/breathing-exercises-for-anxiety', '_blank')}
                     >
                         Breathing Techniques Guide
                     </AppButton>
-                    <AppButton; 
-                        variant="secondary" 
+                    <AppButton variant="secondary" 
                         onClick={() => window.open('https://www.mindful.org/meditation/mindfulness-getting-started/', '_blank')}
                     >
                         Mindfulness for Beginners
                     </AppButton>
-                    <AppButton; 
-                        variant="secondary" 
+                    <AppButton variant="secondary" 
                         onClick={() => window.open('https://www.sleepfoundation.org/sleep-hygiene', '_blank')}
                     >
                         Better Sleep Tips
@@ -405,7 +400,7 @@ export const QuietSpaceView: React.FC = () => {
                 </div>
             </Card>
         </div>
-    );
-};
+    )
+  };
 
 export default QuietSpaceView;

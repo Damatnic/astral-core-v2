@@ -42,8 +42,8 @@ export interface PeerProfile {
 export interface ExperienceArea {
   category: 'anxiety' | 'depression' | 'grief' | 'trauma' | 'relationships' | 'work-stress' | 'family' | 'identity' | 'substance' | 'health';
   level: 'personal' | 'supported-others' | 'professional';
-  description?: string;
-}
+  description?: string
+  }
 
 export interface PeerMatch {
   peerId: string;
@@ -70,8 +70,8 @@ export interface PeerSupportSession {
   escalationTriggers: string[];
   moderationFlags: string[];
   sessionType: 'text-chat' | 'voice-call' | 'video-call' | 'group-session';
-  privacyLevel: 'anonymous' | 'semi-anonymous' | 'identified';
-}
+  privacyLevel: 'anonymous' | 'semi-anonymous' | 'identified'
+  }
 
 export interface PeerSupportRequest {
   id: string;
@@ -101,10 +101,10 @@ export interface CommunityGroup {
     frequency: 'daily' | 'weekly' | 'monthly';
     timezone: string;
     dayOfWeek?: number;
-    timeOfDay: string;
+    timeOfDay: string
   };
-  safetyGuidelines: string[];
-}
+  safetyGuidelines: string[]
+  }
 
 class PeerSupportNetworkService {
   private peerProfiles: Map<string, PeerProfile> = new Map();
@@ -115,7 +115,7 @@ class PeerSupportNetworkService {
 
   constructor() {
     this.setupSafetyMonitoring();
-    this.initializeDefaultGroups();
+    this.initializeDefaultGroups()
   }
 
   /**
@@ -123,12 +123,12 @@ class PeerSupportNetworkService {
    */
   private setupSafetyMonitoring(): void {
     setInterval(() => {
-      this.monitorActiveSessions();
-    }, 30000); // Check every 30 seconds
+      this.monitorActiveSessions()
+  }, 30000); // Check every 30 seconds
 
     setInterval(() => {
-      this.processAutoEscalations();
-    }, 60000); // Check escalations every minute
+      this.processAutoEscalations()
+  }, 60000); // Check escalations every minute
   }
 
   /**
@@ -155,8 +155,8 @@ class PeerSupportNetworkService {
           'Report any safety concerns immediately',
           'Follow crisis escalation protocols'
         ]
-      });
-    });
+      })
+  })
   }
 
   /**
@@ -181,11 +181,11 @@ class PeerSupportNetworkService {
       this.peerProfiles.set(peerId, profile);
       
       console.log(`[Peer Support] Registered new peer supporter: ${peerId} (${peerData.language})`);
-      return peerId;
-    } catch (error) {
+      return peerId
+  } catch (error) {
       console.error('[Peer Support] Failed to register peer supporter:', error);
-      throw error;
-    }
+      throw error
+  }
   }
 
   /**
@@ -200,10 +200,10 @@ class PeerSupportNetworkService {
     for (let i = 0; i < data.length; i++) {
       const char = data.charCodeAt(i);
       hash = ((hash << 5) - hash) + char;
-      hash = hash & hash;
-    }
+      hash = hash & hash
+  }
     
-    return `peer-${Math.abs(hash).toString(36).substr(0, 8)}`;
+    return `peer-${Math.abs(hash).toString(36).substr(0, 8)}`
   }
 
   /**
@@ -211,7 +211,7 @@ class PeerSupportNetworkService {
    */
   async findCompatiblePeers(request: PeerSupportRequest): Promise<PeerMatch[]> {
     try {
-      const availablePeers = Array.from(this.peerProfiles.values());
+      const availablePeers = Array.from(this.peerProfiles.values());;
         .filter(peer => 
           peer.availabilityStatus === 'available' &&
           peer.preferredLanguages.includes(request.language)
@@ -222,8 +222,8 @@ class PeerSupportNetworkService {
       for (const peer of availablePeers) {
         const match = await this.calculatePeerCompatibility(peer, request);
         if (match.compatibilityScore > 0.6) { // Minimum compatibility threshold
-          matches.push(match);
-        }
+          matches.push(match)
+  }
       }
 
       // Sort by compatibility score
@@ -232,8 +232,8 @@ class PeerSupportNetworkService {
       return matches.slice(0, 5); // Return top 5 matches
     } catch (error) {
       console.error('[Peer Support] Failed to find compatible peers:', error);
-      return [];
-    }
+      return []
+  }
   }
 
   /**
@@ -260,7 +260,7 @@ class PeerSupportNetworkService {
     const safetyScore = (peer.safetyRating / 5.0) * 0.7 + (peer.averageRating / 5.0) * 0.3;
 
     // Overall compatibility score;
-    const compatibilityScore = (;
+    const compatibilityScore = (;;
       culturalMatch * 0.25 +
       languageMatch * 0.25 +
       experienceMatch * 0.25 +
@@ -291,7 +291,7 @@ class PeerSupportNetworkService {
   private calculateExperienceMatch(peerExperience: ExperienceArea[], requestedExperience: string[]): number {
     if (requestedExperience.length === 0) return 0.5; // Neutral if no specific experience requested;
 
-    const matchingAreas = peerExperience.filter(exp => ;
+    const matchingAreas = peerExperience.filter(exp => ;;
       requestedExperience.includes(exp.category)
     );
 
@@ -301,16 +301,16 @@ class PeerSupportNetworkService {
     const weightedScore = matchingAreas.reduce((sum, exp) => {
       let levelWeight: number;
       if (exp.level === 'professional') {
-        levelWeight = 1.0;;
+        levelWeight = 1.0
   } else if (exp.level === 'supported-others') {
-        levelWeight = 0.8;;
+        levelWeight = 0.8
   } else {
-        levelWeight = 0.6;
-      }
-      return sum + levelWeight;
-    }, 0);
+        levelWeight = 0.6
+  }
+      return sum + levelWeight
+  }, 0);
 
-    return Math.min(1.0, weightedScore / requestedExperience.length);
+    return Math.min(1.0, weightedScore / requestedExperience.length)
   }
 
   /**
@@ -326,21 +326,21 @@ class PeerSupportNetworkService {
 
     return reasons.length > 0 ? 
       `Recommended for ${reasons.join(', ')}` : 
-      'General compatibility match';
+      'General compatibility match'
   }
 
   /**
    * Calculate estimated wait time for peer
    */
   private calculateEstimatedWaitTime(peer: PeerProfile): number {
-    const activeSessions = Array.from(this.activeSessions.values());
+    const activeSessions = Array.from(this.activeSessions.values());;
       .filter(session => session.supporterId === peer.id && session.status === 'active');
 
     // Base wait time on current load and historical session length;
     const baseWaitTime = activeSessions.length * 15; // 15 minutes per active session;
     const randomVariation = Math.random() * 10; // Add some variation
 
-    return Math.round(baseWaitTime + randomVariation);
+    return Math.round(baseWaitTime + randomVariation)
   }
 
   /**
@@ -352,8 +352,8 @@ class PeerSupportNetworkService {
       const supporter = this.peerProfiles.get(supporterId);
       
       if (!supporter) {
-        throw new Error('Supporter not found');
-      }
+        throw new Error('Supporter not found')
+  }
 
       // Get initial risk assessment;
       const initialRiskLevel = await this.assessInitialRisk(request);
@@ -370,8 +370,8 @@ class PeerSupportNetworkService {
         escalationTriggers: [],
         moderationFlags: [],
         sessionType: request.sessionType,
-        privacyLevel: 'anonymous';
-      };
+        privacyLevel: 'anonymous'
+  };
 
       this.activeSessions.set(sessionId, session);
       this.pendingRequests.delete(request.id);
@@ -381,11 +381,11 @@ class PeerSupportNetworkService {
       this.peerProfiles.set(supporterId, supporter);
 
       console.log(`[Peer Support] Created session ${sessionId} (${request.language})`);
-      return sessionId;
-    } catch (error) {
+      return sessionId
+  } catch (error) {
       console.error('[Peer Support] Failed to create support session:', error);
-      throw error;
-    }
+      throw error
+  }
   }
 
   /**
@@ -394,7 +394,7 @@ class PeerSupportNetworkService {
   private async assessInitialRisk(request: PeerSupportRequest): Promise<number> {
     try {
       // Use enhanced AI crisis detection for initial assessment;
-      const analysis = await enhancedAICrisisDetectionService.analyzeCrisisWithML(;
+      const analysis = await enhancedAICrisisDetectionService.analyzeCrisisWithML(;;
         request.description,
         request.language
       );
@@ -408,12 +408,12 @@ class PeerSupportNetworkService {
       }[request.urgencyLevel] || 0.5;
 
       // Combine AI analysis with urgency level
-      return Math.max(analysis.realTimeRisk?.immediateRisk || 0.5, urgencyRisk);
-    } catch (error) {
+      return Math.max(analysis.realTimeRisk?.immediateRisk || 0.5, urgencyRisk)
+  } catch (error) {
       console.error('[Peer Support] Failed to assess initial risk:', error);
       // Default to medium risk if assessment fails
-      return 0.5;
-    }
+      return 0.5
+  }
   }
 
   /**
@@ -428,25 +428,25 @@ class PeerSupportNetworkService {
         const sessionDuration = (Date.now() - session.startTime) / (1000 * 60); // minutes
         
         if (sessionDuration > 120) { // 2 hours
-          session.escalationTriggers.push('long-duration-session');
-        }
+          session.escalationTriggers.push('long-duration-session')
+  }
 
         // Check for high risk levels
         if (session.riskLevel > 0.8) {
-          session.escalationTriggers.push('high-risk-level');
-        }
+          session.escalationTriggers.push('high-risk-level')
+  }
 
         // Update session
         this.activeSessions.set(sessionId, session);
 
         // Trigger escalation if needed
         if (session.escalationTriggers.length > 0) {
-          await this.processSessionEscalation(sessionId);
-        }
+          await this.processSessionEscalation(sessionId)
+  }
 
       } catch (error) {
-        console.error(`[Peer Support] Failed to monitor session ${sessionId}:`, error);
-      }
+        console.error(`[Peer Support] Failed to monitor session ${sessionId}:`, error)
+  }
     }
   }
 
@@ -477,10 +477,10 @@ class PeerSupportNetworkService {
       };
   };
 
-      console.log(`[Peer Support] Escalated session ${sessionId} to professional support`);
-    } catch (error) {
-      console.error(`[Peer Support] Failed to escalate session ${sessionId}:`, error);
-    }
+      console.log(`[Peer Support] Escalated session ${sessionId} to professional support`)
+  } catch (error) {
+      console.error(`[Peer Support] Failed to escalate session ${sessionId}:`, error)
+  }
   }
 
   /**
@@ -492,8 +492,8 @@ class PeerSupportNetworkService {
       const sessionId = this.moderationQueue.shift();
       if (sessionId) {
         // In a real implementation, this would notify human moderators
-        console.log(`[Peer Support] Session ${sessionId} requires moderation attention`);
-      }
+        console.log(`[Peer Support] Session ${sessionId} requires moderation attention`)
+  }
     }
   }
 
@@ -504,13 +504,13 @@ class PeerSupportNetworkService {
     seekerRating?: number;
     supporterRating?: number;
     finalRiskLevel: number;
-    followUpNeeded: boolean;
+    followUpNeeded: boolean
   }): Promise<void> {
     try {
       const session = this.activeSessions.get(sessionId);
       if (!session) {
-        throw new Error('Session not found');
-      }
+        throw new Error('Session not found')
+  }
 
       // Update session
       session.endTime = Date.now();
@@ -527,11 +527,11 @@ class PeerSupportNetworkService {
         if (feedback.supporterRating) {
           // Update average rating;
           const totalRating = supporter.averageRating * (supporter.totalSupportSessions - 1) + feedback.supporterRating;
-          supporter.averageRating = totalRating / supporter.totalSupportSessions;
-        }
+          supporter.averageRating = totalRating / supporter.totalSupportSessions
+  }
 
-        this.peerProfiles.set(session.supporterId, supporter);
-      }
+        this.peerProfiles.set(session.supporterId, supporter)
+  }
 
       // Record session outcome in analytics;
       const sessionDuration = (session.endTime - session.startTime) / (1000 * 60);
@@ -543,17 +543,17 @@ class PeerSupportNetworkService {
         initialRiskLevel: session.riskLevel,
         finalRiskLevel: feedback.finalRiskLevel,
         sessionDuration,
-        feedback: feedback.seekerRating;
-      });
+        feedback: feedback.seekerRating
+  });
 
       // Remove from active sessions
       this.activeSessions.delete(sessionId);
 
-      console.log(`[Peer Support] Completed session ${sessionId}`);
-    } catch (error) {
+      console.log(`[Peer Support] Completed session ${sessionId}`)
+  } catch (error) {
       console.error('[Peer Support] Failed to complete session:', error);
-      throw error;
-    }
+      throw error
+  }
   }
 
   /**
@@ -564,7 +564,7 @@ class PeerSupportNetworkService {
       .filter(group => 
         group.language === language &&
         (!culturalContext || group.culturalFocus === culturalContext)
-      );
+      )
   }
 
   /**
@@ -577,13 +577,13 @@ class PeerSupportNetworkService {
     completedSessions: number;
     averageSessionDuration: number;
     languageDistribution: Record<string, number>;
-    culturalDistribution: Record<string, number>;
+    culturalDistribution: Record<string, number>
   } {
     const totalPeers = this.peerProfiles.size;
-    const availablePeers = Array.from(this.peerProfiles.values());
+    const availablePeers = Array.from(this.peerProfiles.values());;
       .filter(peer => peer.availabilityStatus === 'available').length;
     
-    const activeSessions = Array.from(this.activeSessions.values());
+    const activeSessions = Array.from(this.activeSessions.values());;
       .filter(session => session.status === 'active').length;
 
     // Calculate completed sessions and average duration;
@@ -591,8 +591,8 @@ class PeerSupportNetworkService {
     let totalDuration = 0;
     
     Array.from(this.peerProfiles.values()).forEach(peer => {
-      completedSessions += peer.totalSupportSessions;
-    });
+      completedSessions += peer.totalSupportSessions
+  });
 
     // Language and cultural distribution;
     const languageDistribution: Record<string, number> = {};
@@ -600,8 +600,8 @@ class PeerSupportNetworkService {
 
     Array.from(this.peerProfiles.values()).forEach(peer => {
       languageDistribution[peer.language] = (languageDistribution[peer.language] || 0) + 1;
-      culturalDistribution[peer.culturalBackground] = (culturalDistribution[peer.culturalBackground] || 0) + 1;
-    });
+      culturalDistribution[peer.culturalBackground] = (culturalDistribution[peer.culturalBackground] || 0) + 1
+  });
 
     return {
       totalPeers,

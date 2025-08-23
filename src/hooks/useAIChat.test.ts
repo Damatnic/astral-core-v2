@@ -10,14 +10,14 @@ jest.mock('../utils/ApiClient', () => ({
       resetAIChat: jest.fn(),
       sendMessageToAI: jest.fn(),
       chat: jest.fn(),
-      saveChatHistory: jest.fn();
-    }
+      saveChatHistory: jest.fn()
+  }
   }
 }));
 
 jest.mock('../contexts/AuthContext', () => ({
   authState: {
-    userToken: 'test-token';
+    userToken: 'test-token'
   }
 }));
 
@@ -27,8 +27,8 @@ jest.mock('../services/crisisDetectionService', () => ({
       hasCrisisIndicators: false,
       severityLevel: 'low',
       crisisTypes: [],
-      confidence: 0.1;
-    })
+      confidence: 0.1
+  })
   }
 }));
 
@@ -37,11 +37,11 @@ jest.mock('../services/aiModerationService', () => ({
     moderateMessage: jest.fn().mockReturnValue({
       safe: true,
       category: null,
-      escalate: false;
-    }),
+      escalate: false
+  }),
     generateSafeResponse: jest.fn().mockReturnValue('Content has been moderated for safety.'),
     sanitizeForDisplay: jest.fn((text) => text),
-    needsHumanIntervention: jest.fn().mockReturnValue(false);
+    needsHumanIntervention: jest.fn().mockReturnValue(false)
   }
 }));
 
@@ -50,22 +50,22 @@ describe('useAIChat Hook', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.useRealTimers(); // Use real timers to avoid timer warnings
-    (authState.userToken as any) = 'test-token';
+    (authState.userToken as any) = 'test-token'
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   it.skip('should initialize with empty session', async () => {
     (ApiClient.ai.loadChatHistory as jest.Mock).mockResolvedValue([]);
     const { result } = renderHook(() => useAIChat());
     
-    expect(result.current.session).toEqual({ messages: [], isTyping: false });
+    expect(result.current.session).toEqual({ messages: [], isTyping: false })
   });
 
   it.skip('should fetch chat history on mount', async () => {
-    const mockHistory = [;
+    const mockHistory = [;;
       { id: '1', sender: 'user', text: 'Hello', timestamp: '2024-01-01T00:00:00Z' },
       { id: '2', sender: 'ai', text: 'Hi there!', timestamp: '2024-01-01T00:01:00Z' }
     ];
@@ -75,10 +75,10 @@ describe('useAIChat Hook', () => {
     const { result } = renderHook(() => useAIChat());
     
     await waitFor(() => {
-      expect(result.current.session.messages).toEqual(mockHistory);
-    }, { timeout: 10000 });
+      expect(result.current.session.messages).toEqual(mockHistory)
+  }, { timeout: 10000 });
     
-    expect(ApiClient.ai.loadChatHistory).toHaveBeenCalled();
+    expect(ApiClient.ai.loadChatHistory).toHaveBeenCalled()
   });
 
   it.skip('should handle chat history fetch error gracefully', async () => {
@@ -90,14 +90,14 @@ describe('useAIChat Hook', () => {
     const { result } = renderHook(() => useAIChat());
     
     await waitFor(() => {
-      expect(result.current.session.messages).toEqual([]);
-    }, { timeout: 10000 });
+      expect(result.current.session.messages).toEqual([])
+  }, { timeout: 10000 });
     
     expect(consoleSpy).toHaveBeenCalledWith(
       "AI chat history unavailable in development mode - using empty state"
     );
     
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should handle non-array response from API', async () => {
@@ -106,8 +106,8 @@ describe('useAIChat Hook', () => {
     const { result } = renderHook(() => useAIChat());
     
     await waitFor(() => {
-      expect(result.current.session.messages).toEqual([]);
-    });
+      expect(result.current.session.messages).toEqual([])
+  })
   });
 
   it.skip('should send message when user is authenticated', async () => {
@@ -123,15 +123,15 @@ describe('useAIChat Hook', () => {
     const { result } = renderHook(() => useAIChat());
     
     await act(async () => {
-      await result.current.sendMessage('I need help');
-    });
+      await result.current.sendMessage('I need help')
+  });
     
     expect(ApiClient.ai.chat).toHaveBeenCalledWith(
       expect.arrayContaining([
         expect.objectContaining({
           sender: 'user',
-          text: 'I need help';
-        })
+          text: 'I need help'
+  })
       ]),
       'test-token',
       'openai'
@@ -141,8 +141,8 @@ describe('useAIChat Hook', () => {
       expect(result.current.session.messages).toHaveLength(2);
       expect(result.current.session.messages[0].text).toBe('I need help');
       expect(result.current.session.messages[1].text).toBe('I can help you!');
-      expect(result.current.session.isTyping).toBe(false);
-    });
+      expect(result.current.session.isTyping).toBe(false)
+  })
   });
 
   it.skip('should not send message when user is not authenticated', async () => {
@@ -152,10 +152,10 @@ describe('useAIChat Hook', () => {
     const { result } = renderHook(() => useAIChat());
     
     await act(async () => {
-      await result.current.sendMessage('Test message');
-    });
+      await result.current.sendMessage('Test message')
+  });
     
-    expect(ApiClient.ai.chat).not.toHaveBeenCalled();
+    expect(ApiClient.ai.chat).not.toHaveBeenCalled()
   });
 
   it.skip('should handle send message errors', async () => {
@@ -169,23 +169,23 @@ describe('useAIChat Hook', () => {
     const { result } = renderHook(() => useAIChat());
     
     await act(async () => {
-      await result.current.sendMessage('Test message');
-    });
+      await result.current.sendMessage('Test message')
+  });
     
     await waitFor(() => {
-      expect(result.current.session.isTyping).toBe(false);
-    });
+      expect(result.current.session.isTyping).toBe(false)
+  });
     
     expect(consoleSpy).toHaveBeenCalledWith(
       'AI chat error:',
       expect.any(Error)
     );
     
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should reset chat session', async () => {
-    const mockHistory = [;
+    const mockHistory = [;;
       { id: '1', sender: 'user', text: 'Hello', timestamp: '2024-01-01T00:00:00Z' }
     ];
     
@@ -195,15 +195,15 @@ describe('useAIChat Hook', () => {
     const { result } = renderHook(() => useAIChat());
     
     await waitFor(() => {
-      expect(result.current.session.messages).toEqual(mockHistory);
-    });
+      expect(result.current.session.messages).toEqual(mockHistory)
+  });
     
     await act(async () => {
-      await result.current.resetAIChat();
-    });
+      await result.current.resetAIChat()
+  });
     
     expect(ApiClient.ai.resetAIChat).toHaveBeenCalled();
-    expect(result.current.session).toEqual({ messages: [], isTyping: false });
+    expect(result.current.session).toEqual({ messages: [], isTyping: false })
   });
 
   it.skip('should set typing indicator when sending message', async () => {
@@ -213,11 +213,11 @@ describe('useAIChat Hook', () => {
     const { result } = renderHook(() => useAIChat());
     
     await act(async () => {
-      await result.current.sendMessage('test message');
-    });
+      await result.current.sendMessage('test message')
+  });
     
     // Check that typing was set during the message send
-    expect(ApiClient.ai.chat).toHaveBeenCalled();
+    expect(ApiClient.ai.chat).toHaveBeenCalled()
   });
 
   it.skip('should maintain message history across sends', async () => {
@@ -230,26 +230,26 @@ describe('useAIChat Hook', () => {
     const { result } = renderHook(() => useAIChat());
     
     await act(async () => {
-      await result.current.sendMessage('First message');
-    });
+      await result.current.sendMessage('First message')
+  });
     
     await act(async () => {
-      await result.current.sendMessage('Second message');
-    });
+      await result.current.sendMessage('Second message')
+  });
     
     await waitFor(() => {
       expect(result.current.session.messages).toHaveLength(4);
       expect(result.current.session.messages[0].text).toBe('First message');
       expect(result.current.session.messages[1].text).toBe('First response');
       expect(result.current.session.messages[2].text).toBe('Second message');
-      expect(result.current.session.messages[3].text).toBe('Second response');
-    });
+      expect(result.current.session.messages[3].text).toBe('Second response')
+  })
+  })
   });
-});
 
 // Dummy test to keep suite active
 describe('Test Suite Active', () => {
   it('Placeholder test to prevent empty suite', () => {
-    expect(true).toBe(true);
+    expect(true).toBe(true)
+  })
   });
-});

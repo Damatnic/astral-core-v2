@@ -22,8 +22,8 @@ describe('EnhancedCrisisDetectionIntegrationService', () => {
       expect(result.overallSeverity).toBeDefined();
       expect(result.confidenceScore).toBeGreaterThan(0);
       expect(result.immediateRisk).toBeGreaterThanOrEqual(0);
-      expect(result.interventionUrgency).toBeDefined();
-    });
+      expect(result.interventionUrgency).toBeDefined()
+  });
 
     it.skip('should provide intervention recommendations', async () => {
       const text = 'Feeling overwhelmed today';
@@ -32,8 +32,8 @@ describe('EnhancedCrisisDetectionIntegrationService', () => {
       
       expect(result.interventionRecommendations).toBeDefined();
       expect(result.escalationRequired).toBeDefined();
-      expect(result.emergencyServicesRequired).toBeDefined();
-    });
+      expect(result.emergencyServicesRequired).toBeDefined()
+  });
 
     it.skip('should analyze risk levels', async () => {
       const text = 'I need help dealing with these thoughts';
@@ -43,8 +43,8 @@ describe('EnhancedCrisisDetectionIntegrationService', () => {
       expect(result.immediateRisk).toBeGreaterThanOrEqual(0);
       expect(result.immediateRisk).toBeLessThanOrEqual(100);
       expect(result.shortTermRisk).toBeGreaterThanOrEqual(0);
-      expect(result.longTermRisk).toBeGreaterThanOrEqual(0);
-    });
+      expect(result.longTermRisk).toBeGreaterThanOrEqual(0)
+  });
 
     it.skip('should include component analysis results', async () => {
       const text = 'Test crisis content';
@@ -54,8 +54,8 @@ describe('EnhancedCrisisDetectionIntegrationService', () => {
       expect(result.keywordAnalysis).toBeDefined();
       expect(result.aiAnalysis).toBeDefined();
       expect(result.confidenceScore).toBeGreaterThanOrEqual(0);
-      expect(result.confidenceScore).toBeLessThanOrEqual(1);
-    });
+      expect(result.confidenceScore).toBeLessThanOrEqual(1)
+  })
   });
 
   describe('Error Handling', () => {
@@ -65,8 +65,8 @@ describe('EnhancedCrisisDetectionIntegrationService', () => {
       const result = await enhancedCrisisDetectionIntegrationService.performComprehensiveCrisisAnalysis(text);
       
       expect(result).toBeDefined();
-      expect(result.hasCrisisIndicators).toBeDefined();
-    });
+      expect(result.hasCrisisIndicators).toBeDefined()
+  });
 
     it.skip('should handle very long text input', async () => {
       const text = 'test '.repeat(1000);
@@ -74,7 +74,7 @@ describe('EnhancedCrisisDetectionIntegrationService', () => {
       const result = await enhancedCrisisDetectionIntegrationService.performComprehensiveCrisisAnalysis(text);
       
       expect(result).toBeDefined();
-      expect(result.overallSeverity).toBeDefined();
-    });
+      expect(result.overallSeverity).toBeDefined()
+  })
+  })
   });
-});

@@ -33,14 +33,14 @@ export const HelperCommunityView: React.FC = () => {
         if (activeTab === 'forum') {
             ApiClient.helperCommunity.getThreads().then(data => {
                 setThreads(data);
-                setIsLoading(false);
-            });;
+                setIsLoading(false)
+  })
   } else if (activeTab === 'proposals') {
             ApiClient.helperCommunity.getProposals().then(data => {
                 setProposals(data);
-                setIsLoading(false);
-            });
-        }
+                setIsLoading(false)
+  })
+  }
     };
   }, [activeTab]);
 
@@ -49,9 +49,9 @@ export const HelperCommunityView: React.FC = () => {
             setIsLoading(true);
             ApiClient.helperCommunity.getPosts(selectedThread.id).then(data => {
                 setPosts(data);
-                setIsLoading(false);
-            });
-        }
+                setIsLoading(false)
+  })
+  }
     };
   }, [selectedThread]);
 
@@ -59,19 +59,19 @@ export const HelperCommunityView: React.FC = () => {
         if (!newThreadTitle.trim() || !newPostContent.trim() || !helperProfile) return;
         setIsPosting(true);
         try {
-            const newThread = await ApiClient.helperCommunity.createThread(;
+            const newThread = await ApiClient.helperCommunity.createThread(;;
                 { title: newThreadTitle.trim(), authorId: helperProfile.id, authorName: helperProfile.displayName },
                 newPostContent.trim()
             );
             setThreads(prev => [newThread, ...prev].sort((a,b) => new Date(b.lastReply).getTime() - new Date(a.lastReply).getTime()));
             setNewThreadTitle('');
-            setNewPostContent('');
-        } catch (e) {
+            setNewPostContent('')
+  } catch (e) {
             console.error(e);
-            alert("Failed to create thread.");
-        } finally {
-            setIsPosting(false);
-        }
+            alert("Failed to create thread.")
+  } finally {
+            setIsPosting(false)
+  }
     };
 
     const handleCreatePost = async () => {
@@ -82,18 +82,18 @@ export const HelperCommunityView: React.FC = () => {
                 threadId: selectedThread.id,
                 authorId: helperProfile.id,
                 authorName: helperProfile.displayName,
-                content: newPostContent.trim();
-            });
+                content: newPostContent.trim()
+  });
             setPosts(prev => [...prev, newPost]);
             setNewPostContent('');
             setThreads(prev => prev.map(t => t.id === selectedThread.id ? {...t, postCount: t.postCount + 1, lastReply: new Date().toISOString()} : t)
-                .sort((a,b) => new Date(b.lastReply).getTime() - new Date(a.lastReply).getTime()));
-        } catch (e) {
+                .sort((a,b) => new Date(b.lastReply).getTime() - new Date(a.lastReply).getTime()))
+  } catch (e) {
             console.error(e);
-            alert("Failed to create post.");
-        } finally {
-            setIsPosting(false);
-        }
+            alert("Failed to create post.")
+  } finally {
+            setIsPosting(false)
+  }
     };
 
     const handleCreateProposal = async () => {
@@ -108,24 +108,24 @@ export const HelperCommunityView: React.FC = () => {
             });
             setProposals(prev => [newProposal, ...prev]);
             setNewProposalTitle('');
-            setNewProposalDescription('');
-        } catch(e) {
+            setNewProposalDescription('')
+  } catch(e) {
             console.error(e);
-            alert("Failed to create proposal.");
-        } finally {
-            setIsPosting(false);
-        }
+            alert("Failed to create proposal.")
+  } finally {
+            setIsPosting(false)
+  }
     }
 
     const handleVote = async (proposalId: string, vote: 'for' | 'against' | 'abstain') => {
         if (!helperProfile) return;
         try {
             const updatedProposal = await ApiClient.helperCommunity.voteOnProposal(proposalId, helperProfile.id, vote);
-            setProposals(prev => prev.map(p => p.id === proposalId ? updatedProposal : p));
-        } catch (e) {
+            setProposals(prev => prev.map(p => p.id === proposalId ? updatedProposal : p))
+  } catch (e) {
             console.error(e);
-            alert("Failed to cast vote.");
-        }
+            alert("Failed to cast vote.")
+  }
     }
 
     const renderForum = () => {
@@ -175,7 +175,7 @@ export const HelperCommunityView: React.FC = () => {
         )
     };
 
-    const renderProposals = () => (;
+    const renderProposals = () => (;;
         <>
             {isCouncilMember && (
                  <div className="card">
@@ -227,7 +227,7 @@ export const HelperCommunityView: React.FC = () => {
                 ) : activeTab === 'forum' ? renderForum() : renderProposals()}
             </div>
         </>
-    );
-};
+    )
+  };
 
 export default HelperCommunityView;

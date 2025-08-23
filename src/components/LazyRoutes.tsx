@@ -15,7 +15,7 @@ export const CrisisView = createLazyRoute(
     preloadStrategy: 'immediate',
     title: 'Crisis Support',
     breadcrumb: 'Crisis',
-    requiresAuth: false;
+    requiresAuth: false
   }
 );
 
@@ -26,7 +26,7 @@ export const SafetyPlanView = createLazyRoute(
     preloadStrategy: 'immediate',
     title: 'Safety Plan',
     breadcrumb: 'Safety Plan',
-    requiresAuth: false;
+    requiresAuth: false
   }
 );
 
@@ -38,7 +38,7 @@ export const DashboardView = createLazyRoute(
     preloadStrategy: 'idle',
     title: 'Dashboard',
     breadcrumb: 'Dashboard',
-    requiresAuth: true;
+    requiresAuth: true
   }
 );
 
@@ -49,7 +49,7 @@ export const CommunityView = createLazyRoute(
     preloadStrategy: 'idle',
     title: 'Community',
     breadcrumb: 'Community',
-    requiresAuth: true;
+    requiresAuth: true
   }
 );
 
@@ -60,7 +60,7 @@ export const ChatView = createLazyRoute(
     preloadStrategy: 'hover',
     title: 'Helper Chat',
     breadcrumb: 'Chat',
-    requiresAuth: true;
+    requiresAuth: true
   }
 );
 
@@ -71,7 +71,7 @@ export const AIAssistantView = createLazyRoute(
     preloadStrategy: 'hover',
     title: 'AI Assistant',
     breadcrumb: 'AI Assistant',
-    requiresAuth: true;
+    requiresAuth: true
   }
 );
 
@@ -83,7 +83,7 @@ export const ProfileView = createLazyRoute(
     preloadStrategy: 'visible',
     title: 'Profile',
     breadcrumb: 'Profile',
-    requiresAuth: true;
+    requiresAuth: true
   }
 );
 
@@ -94,7 +94,7 @@ export const SettingsView = createLazyRoute(
     preloadStrategy: 'visible',
     title: 'Settings',
     breadcrumb: 'Settings',
-    requiresAuth: true;
+    requiresAuth: true
   }
 );
 
@@ -105,7 +105,7 @@ export const WellnessView = createLazyRoute(
     preloadStrategy: 'visible',
     title: 'Wellness Tracking',
     breadcrumb: 'Wellness',
-    requiresAuth: true;
+    requiresAuth: true
   }
 );
 
@@ -117,7 +117,7 @@ export const HelperDashboardView = createLazyRoute(
     preloadStrategy: 'visible',
     title: 'Helper Dashboard',
     breadcrumb: 'Helper Dashboard',
-    requiresAuth: true;
+    requiresAuth: true
   }
 );
 
@@ -128,7 +128,7 @@ export const ModerationView = createLazyRoute(
     preloadStrategy: 'visible',
     title: 'Moderation',
     breadcrumb: 'Moderation',
-    requiresAuth: true;
+    requiresAuth: true
   }
 );
 
@@ -140,7 +140,7 @@ export const AdminDashboardView = createLazyRoute(
     preloadStrategy: 'hover',
     title: 'Admin Dashboard',
     breadcrumb: 'Admin',
-    requiresAuth: true;
+    requiresAuth: true
   }
 );
 
@@ -151,7 +151,7 @@ export const AnalyticsView = createLazyRoute(
     preloadStrategy: 'hover',
     title: 'Analytics',
     breadcrumb: 'Analytics',
-    requiresAuth: true;
+    requiresAuth: true
   }
 );
 
@@ -163,7 +163,7 @@ export const LegalView = createLazyRoute(
     preloadStrategy: 'hover',
     title: 'Legal',
     breadcrumb: 'Legal',
-    requiresAuth: false;
+    requiresAuth: false
   }
 );
 
@@ -174,7 +174,7 @@ export const AboutView = createLazyRoute(
     preloadStrategy: 'hover',
     title: 'About',
     breadcrumb: 'About',
-    requiresAuth: false;
+    requiresAuth: false
   }
 );
 
@@ -185,7 +185,7 @@ export const HelpView = createLazyRoute(
     preloadStrategy: 'hover',
     title: 'Help',
     breadcrumb: 'Help',
-    requiresAuth: false;
+    requiresAuth: false
   }
 );
 
@@ -194,7 +194,7 @@ export const CrisisResourcesModal = createLazyComponent(
   () => import('./CrisisResourcesModal'),
   {
     skeleton: 'card',
-    preloadStrategy: 'idle';
+    preloadStrategy: 'idle'
   }
 );
 
@@ -202,7 +202,7 @@ export const OfflineCapabilities = createLazyComponent(
   () => import('./OfflineCapabilities'),
   {
     skeleton: 'list',
-    preloadStrategy: 'idle';
+    preloadStrategy: 'idle'
   }
 );
 
@@ -214,97 +214,97 @@ export const routeMetadata = {
     component: DashboardView,
     title: 'Mental Health Support Platform',
     description: 'Anonymous peer-to-peer mental health support with crisis intervention',
-    priority: 'high';
+    priority: 'high'
   },
   '/crisis': {
     component: CrisisView,
     title: 'Crisis Support - Immediate Help Available',
     description: 'Emergency mental health resources and crisis intervention support',
-    priority: 'critical';
+    priority: 'critical'
   },
   '/safety-plan': {
     component: SafetyPlanView,
     title: 'Personal Safety Plan',
     description: 'Create and manage your personal mental health safety plan',
-    priority: 'critical';
+    priority: 'critical'
   },
   '/community': {
     component: CommunityView,
     title: 'Community Support',
     description: 'Connect with peers and share experiences in a safe environment',
-    priority: 'high';
+    priority: 'high'
   },
   '/chat': {
     component: ChatView,
     title: 'Helper Chat',
     description: 'One-on-one support with certified mental health helpers',
-    priority: 'high';
+    priority: 'high'
   },
   '/ai-assistant': {
     component: AIAssistantView,
     title: 'AI Mental Health Assistant',
     description: 'AI-powered mental health support and guidance',
-    priority: 'medium';
+    priority: 'medium'
   },
   '/wellness': {
     component: WellnessView,
     title: 'Wellness Tracking',
     description: 'Track your mental health journey and progress',
-    priority: 'medium';
+    priority: 'medium'
   },
   '/profile': {
     component: ProfileView,
     title: 'Profile',
     description: 'Manage your profile and preferences',
-    priority: 'low';
+    priority: 'low'
   },
   '/settings': {
     component: SettingsView,
     title: 'Settings',
     description: 'Configure your platform settings and privacy',
-    priority: 'low';
+    priority: 'low'
   },
   '/helper': {
     component: HelperDashboardView,
     title: 'Helper Dashboard',
     description: 'Manage your helper activities and support requests',
-    priority: 'medium';
+    priority: 'medium'
   },
   '/moderation': {
     component: ModerationView,
     title: 'Content Moderation',
     description: 'Review and moderate community content',
-    priority: 'medium';
+    priority: 'medium'
   },
   '/admin': {
     component: AdminDashboardView,
     title: 'Admin Dashboard',
     description: 'Platform administration and management',
-    priority: 'low';
+    priority: 'low'
   },
   '/analytics': {
     component: AnalyticsView,
     title: 'Platform Analytics',
     description: 'Usage analytics and platform insights',
-    priority: 'low';
+    priority: 'low'
   },
   '/legal': {
     component: LegalView,
     title: 'Legal Information',
     description: 'Terms of service, privacy policy, and legal information',
-    priority: 'low';
+    priority: 'low'
   },
   '/about': {
     component: AboutView,
     title: 'About Us',
     description: 'Learn about our mission and mental health platform',
-    priority: 'low';
+    priority: 'low'
   },
   '/help': {
     component: HelpView,
     title: 'Help & Support',
     description: 'Get help using the platform and find resources',
-    priority: 'low';
+    priority: 'low'
   }
 };
 
@@ -312,10 +312,10 @@ export const routeMetadata = {
 const safePreload = (component: any) => {
   try {
     if (component && 'preload' in component && typeof component.preload === 'function') {
-      component.preload();
-    }
+      component.preload()
+  }
   } catch (error) {
-    console.warn('Failed to preload component:', error);
+    console.warn('Failed to preload component:', error)
   }
 };
 
@@ -328,7 +328,7 @@ export const preloadCriticalRoutes = () => {
   // Preload based on authentication status
   if (typeof window !== 'undefined' && localStorage.getItem('userToken')) {
     safePreload(DashboardView);
-    safePreload(CommunityView);
+    safePreload(CommunityView)
   }
 };
 
@@ -346,7 +346,7 @@ export const getRoutePerformance = (routePath: string) => {
     loadTime: currentEntry?.loadEventEnd - currentEntry?.loadEventStart,
     domContentLoaded: currentEntry?.domContentLoadedEventEnd - currentEntry?.domContentLoadedEventStart,
     firstContentfulPaint: performance.getEntriesByName('first-contentful-paint')[0]?.startTime,
-    largestContentfulPaint: performance.getEntriesByName('largest-contentful-paint')[0]?.startTime;
+    largestContentfulPaint: performance.getEntriesByName('largest-contentful-paint')[0]?.startTime
   };
 
 export default {

@@ -12,8 +12,8 @@ export interface User {
   picture?: string;
   isEmailVerified?: boolean;
   createdAt?: string;
-  updatedAt?: string;
-}
+  updatedAt?: string
+  }
 
 export interface Dilemma {
   id: string;
@@ -43,10 +43,10 @@ export interface Dilemma {
     flagged?: boolean;
     approved?: boolean;
     reviewedBy?: string;
-    reviewedAt?: string;
+    reviewedAt?: string
   }
-  aiMatchReason?: string;
-}
+  aiMatchReason?: string
+  }
 
 export interface Helper {
     id: string; // Internal UUID
@@ -71,22 +71,22 @@ export interface Helper {
     applicationStatus: 'none' | 'pending' | 'approved' | 'rejected';
     applicationNotes?: string;
     trainingCompleted: boolean;
-    quizScore?: number;
-}
+    quizScore?: number
+  }
 
 export interface Achievement {
     id: string;
     name: string;
     description: string;
-    icon: string;
-}
+    icon: string
+  }
 
 export interface ChatMessage {
     id: string;
     sender: 'user' | 'poster';
     text: string;
-    timestamp: string;
-}
+    timestamp: string
+  }
 
 export interface ChatSession {
     dilemmaId: string;
@@ -95,8 +95,8 @@ export interface ChatSession {
     isTyping?: boolean;
     perspective?: 'seeker' | 'helper';
     helpSessionId?: string;
-    helper?: Helper;
-}
+    helper?: Helper
+  }
 
 export interface AIChatMessage {
     id: string;
@@ -111,20 +111,20 @@ export interface AIChatSession {
     messages: AIChatMessage[];
     isTyping?: boolean;
     startedAt?: string;
-    status?: string;
-}
+    status?: string
+  }
 
 export interface AnalysisResult {
   sentiment: 'Positive' | 'Negative' | 'Neutral' | '';
-  isCrisis: boolean;
-}
+  isCrisis: boolean
+  }
 
 export interface Toast {
     id: string;
     message: string;
     type: 'success' | 'error' | 'info' | 'warning';
-    timestamp?: number;
-}
+    timestamp?: number
+  }
 
 export interface ConfirmationModalState {
   title: string;
@@ -133,8 +133,8 @@ export interface ConfirmationModalState {
   onCancel?: () => void;
   confirmText?: string;
   cancelText?: string;
-  confirmVariant?: 'primary' | 'danger' | 'success' | 'secondary';
-}
+  confirmVariant?: 'primary' | 'danger' | 'success' | 'secondary'
+  }
 
 export interface Resource {
     id: string;
@@ -142,27 +142,27 @@ export interface Resource {
     description: string;
     link: string;
     category: 'Crisis Support' | 'Anxiety' | 'Depression' | 'Coping Strategies' | 'Grief' | 'Emergency Help' | 'Text Support' | 'Youth & Students' | 'Veterans' | 'LGBTQ+';
-    contact?: string;
-}
+    contact?: string
+  }
 
 export interface CrisisResource {
     title: string;
-    contact: string;
-}
+    contact: string
+  }
 
 export interface HelperGuidance {
     dilemmaId: string;
     isCrisis: boolean;
     flagReason: string;
     suggestedResponses: string[];
-    suggestedResources: CrisisResource[];
-}
+    suggestedResources: CrisisResource[]
+  }
 
 export interface Feedback {
   dilemmaId: string;
   helperId: string;
-  wasHelpful: boolean;
-}
+  wasHelpful: boolean
+  }
 
 export interface ForumThread {
     id: string;
@@ -180,8 +180,8 @@ export interface ForumPost {
     authorId: string; // Helper ID
     authorName: string; // Helper display name
     content: string;
-    timestamp: string;
-}
+    timestamp: string
+  }
 
 export interface CommunityProposal {
     id: string;
@@ -195,15 +195,15 @@ export interface CommunityProposal {
     votes: {
         for: number;
         against: number;
-        abstain: number;
-    }
+        abstain: number
+  }
 }
 
 export interface CommunityVote {
     proposalId: string;
     helperId: string;
-    vote: 'for' | 'against' | 'abstain';
-}
+    vote: 'for' | 'against' | 'abstain'
+  }
 
 export interface Reflection {
     id: string;
@@ -217,8 +217,8 @@ export interface Reflection {
 export interface Block {
     blockerId: string; // ID of the user initiating the block
     blockedId: string; // ID of the user being blocked
-    timestamp: string;
-}
+    timestamp: string
+  }
 
 export interface ModerationAction {
     id: string;
@@ -238,8 +238,8 @@ export interface UserStatus {
     warnings: number;
     isBanned: boolean;
     banReason?: string;
-    banExpires?: string;
-}
+    banExpires?: string
+  }
 
 export interface HelpSession {
     id: string;
@@ -255,30 +255,30 @@ export interface HelpSession {
     summary?: string;
     summaryLoading?: boolean;
     helperSummary?: string;
-    helperSummaryLoading?: boolean;
-}
+    helperSummaryLoading?: boolean
+  }
 
 export interface CommunityStats {
     activeDilemmas: number;
     avgTimeToFirstSupport: string; // e.g., "5m 30s"
     totalHelpers: number;
-    mostCommonCategory: string;
-}
+    mostCommonCategory: string
+  }
 
 export interface SafetyPlan {
     triggers: string;
     copingStrategies: string;
     supportContacts: string;
-    safePlaces: string;
-}
+    safePlaces: string
+  }
 
 export interface LegalConsentRecord {
     userId: string;
     userType: string;
     documentType: string;
     documentVersion: string;
-    consentTimestamp: string;
-}
+    consentTimestamp: string
+  }
 
 export interface WellnessVideo {
     id: string;
@@ -298,8 +298,8 @@ export interface WellnessVideo {
     tags?: string[];
     uploadedBy?: string;
     uploadedAt?: string;
-    views?: number;
-}
+    views?: number
+  }
 
 export interface MoodCheckIn {
   id: string;
@@ -310,15 +310,15 @@ export interface MoodCheckIn {
   sleepQuality: number; // 1-5
   energyLevel: number; // 1-5
   tags: string[];
-  notes?: string;
-}
+  notes?: string
+  }
 
 export interface Habit {
   id: string;
   name: string;
   description: string;
-  category: 'Mindfulness' | 'Physical' | 'Social' | 'Self-Care';
-}
+  category: 'Mindfulness' | 'Physical' | 'Social' | 'Self-Care'
+  }
 
 export interface TrackedHabit {
   userId: string;
@@ -326,8 +326,8 @@ export interface TrackedHabit {
   trackedAt: string;
   currentStreak: number;
   longestStreak: number;
-  isCompletedToday: boolean;
-}
+  isCompletedToday: boolean
+  }
 
 export interface HabitCompletion {
   id: string;
@@ -339,14 +339,14 @@ export interface HabitCompletion {
 export interface AssessmentQuestion {
     id: string;
     text: string;
-    options: { text: string; value: number }[];
-}
+    options: { text: string; value: number }[]
+  }
 
 export interface AssessmentResult {
     score: number;
     severity: string;
-    recommendation: string;
-}
+    recommendation: string
+  }
 
 export interface Assessment {
     id: string;
@@ -355,15 +355,15 @@ export interface Assessment {
     type: 'phq-9' | 'gad-7';
     timestamp: string;
     score: number;
-    answers: number[];
-}
+    answers: number[]
+  }
 
 export interface JournalEntry {
   id: string;
   userToken: string;
   timestamp: string;
-  content: string;
-}
+  content: string
+  }
 
 // ===== ADMIN SPECIFIC INTERFACES =====;
 
@@ -378,8 +378,8 @@ export interface AdminProfile {
     contactInfo: {
         email: string;
         phone: string;
-        emergencyContact: string;
-    };
+        emergencyContact: string
+  };
 }
 export interface HelperApplication {
     id: string;
@@ -393,8 +393,8 @@ export interface HelperApplication {
     backgroundCheckStatus: 'pending' | 'in_progress' | 'completed' | 'flagged';
     referencesVerified: boolean;
     reviewNotes: string;
-    riskAssessment: 'low' | 'medium' | 'high';
-}
+    riskAssessment: 'low' | 'medium' | 'high'
+  }
 
 export interface EscalatedCase {
     id: string;
@@ -407,8 +407,8 @@ export interface EscalatedCase {
     helperInvolved?: string;
     actionsTaken: string[];
     outcome: string;
-    followUpRequired: boolean;
-}
+    followUpRequired: boolean
+  }
 
 export interface PlatformAnalytics {
     userMetrics: {
@@ -417,32 +417,32 @@ export interface PlatformAnalytics {
         dailyActiveUsers: number;
         weeklyActiveUsers: number;
         userRetentionRate: number;
-        averageSessionDuration: number;
-    };
+        averageSessionDuration: number
+  };
     helperMetrics: {
         totalActiveHelpers: number;
         averageResponseTime: number;
         helpersOnline: number;
         totalSessionsToday: number;
         helperSatisfactionRating: number;
-        helperUtilizationRate: number;
-    };
+        helperUtilizationRate: number
+  };
     crisisMetrics: {
         crisisAlertsToday: number;
         averageResponseTimeToCrisis: number;
         crisisResolutionRate: number;
         escalationRate: number;
         emergencyContactsActivated: number;
-        preventionSuccessRate: number;
-    };
+        preventionSuccessRate: number
+  };
     platformHealth: {
         systemUptime: number;
         averagePageLoadTime: number;
         errorRate: number;
         dataBackupStatus: string;
         securityIncidents: number;
-        performanceScore: number;
-    };
+        performanceScore: number
+  };
 }
 export interface CommunityHealthMetrics {
     totalPosts: number;
@@ -451,8 +451,8 @@ export interface CommunityHealthMetrics {
     positiveSentimentRate: number;
     engagementRate: number;
     reportedIncidents: number;
-    communityGuidanceInterventions: number;
-}
+    communityGuidanceInterventions: number
+  }
 
 export interface QualityMetrics {
     helperPerformanceReviews: number;
@@ -462,19 +462,19 @@ export interface QualityMetrics {
         peerSupport: number;
         crisisSupport: number;
         resourceLibrary: number;
-        moodTracking: number;
-    };
+        moodTracking: number
+  };
     completedAudits: number;
-    pendingAudits: number;
-}
+    pendingAudits: number
+  }
 
 export interface AdminAction {
     id: string;
     type: 'helper_approval' | 'policy_update' | 'security_enhancement' | 'moderation_action';
     description: string;
     timestamp: Date;
-    adminUser: string;
-}
+    adminUser: string
+  }
 
 export interface SystemAlert {
     id: string;
@@ -482,8 +482,8 @@ export interface SystemAlert {
     severity: 'low' | 'medium' | 'high' | 'critical';
     message: string;
     timestamp: Date;
-    status: 'new' | 'acknowledged' | 'monitoring' | 'resolved';
-}
+    status: 'new' | 'acknowledged' | 'monitoring' | 'resolved'
+  }
 
 export interface AstralAdminDashboard {
     profile: AdminProfile;
@@ -493,8 +493,8 @@ export interface AstralAdminDashboard {
     communityHealth: CommunityHealthMetrics;
     qualityMetrics: QualityMetrics;
     recentActions: AdminAction[];
-    systemAlerts: SystemAlert[];
-}
+    systemAlerts: SystemAlert[]
+  }
 
 // ===== COMMUNITY CONTENT INTERFACES =====;
 
@@ -512,8 +512,8 @@ export interface WellnessChallenge {
     dailyPrompts: DailyPrompt[];
     status: 'upcoming' | 'active' | 'completed';
     isPublic: boolean;
-    tags: string[];
-}
+    tags: string[]
+  }
 
 export interface ChallengeParticipant {
     userId: string;
@@ -521,8 +521,8 @@ export interface ChallengeParticipant {
     joinedDate: string;
     currentStreak: number;
     totalDaysCompleted: number;
-    isActive: boolean;
-}
+    isActive: boolean
+  }
 
 export interface DailyPrompt {
     day: number;
@@ -549,8 +549,8 @@ export interface GroupDiscussion {
     status: 'scheduled' | 'active' | 'completed' | 'cancelled';
     isPrivate: boolean;
     maxParticipants?: number;
-    tags: string[];
-}
+    tags: string[]
+  }
 
 export interface DiscussionParticipant {
     userId: string;
@@ -558,8 +558,8 @@ export interface DiscussionParticipant {
     userType: 'starkeeper' | 'helper' | 'moderator';
     joinedDate: string;
     isActive: boolean;
-    lastSeen: string;
-}
+    lastSeen: string
+  }
 
 export interface DiscussionMessage {
     id: string;
@@ -570,14 +570,14 @@ export interface DiscussionMessage {
     timestamp: string;
     reactions: MessageReaction[];
     isSupported: boolean;
-    supportCount: number;
-}
+    supportCount: number
+  }
 
 export interface MessageReaction {
     type: 'heart' | 'light' | 'strength' | 'hug' | 'star';
     count: number;
-    users: string[];
-}
+    users: string[]
+  }
 
 export interface CommunityEvent {
     id: string;
@@ -595,8 +595,8 @@ export interface CommunityEvent {
     meetingLink?: string;
     resources: EventResource[];
     status: 'upcoming' | 'active' | 'completed' | 'cancelled';
-    tags: string[];
-}
+    tags: string[]
+  }
 
 export interface EventParticipant {
     userId: string;
@@ -612,8 +612,8 @@ export interface EventResource {
     title: string;
     type: 'document' | 'video' | 'audio' | 'link' | 'worksheet';
     url: string;
-    description?: string;
-}
+    description?: string
+  }
 
 export interface PeerConnection {
     id: string;
@@ -626,8 +626,8 @@ export interface PeerConnection {
     sharedGoals: string[];
     status: 'active' | 'paused' | 'ended';
     interactionCount: number;
-    isMatched: boolean;
-}
+    isMatched: boolean
+  }
 
 export interface CommunityContent {
     wellnessChallenges: WellnessChallenge[];
@@ -635,8 +635,8 @@ export interface CommunityContent {
     communityEvents: CommunityEvent[];
     peerConnections: PeerConnection[];
     forumThreads: ForumThread[];
-    activeUsers: CommunityUser[];
-}
+    activeUsers: CommunityUser[]
+  }
 
 export interface CommunityUser {
     id: string;
@@ -646,8 +646,8 @@ export interface CommunityUser {
     lastActive: string;
     contributionScore: number;
     badges: UserBadge[];
-    isOnline: boolean;
-}
+    isOnline: boolean
+  }
 
 export interface UserBadge {
     id: string;
@@ -655,8 +655,8 @@ export interface UserBadge {
     description: string;
     icon: string;
     earnedDate: string;
-    category: 'participation' | 'helping' | 'milestone' | 'leadership' | 'special';
-}
+    category: 'participation' | 'helping' | 'milestone' | 'leadership' | 'special'
+  }
 
 // ===== END ADMIN INTERFACES =====;
 

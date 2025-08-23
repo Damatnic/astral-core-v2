@@ -21,16 +21,16 @@ interface RouteConfig {
   priority?: Priority;
   dependencies?: string[];
   mobileOptimized?: boolean;
-  prefetchTrigger?: PrefetchTrigger;
-}
+  prefetchTrigger?: PrefetchTrigger
+  }
 
 // Navigation patterns for predictive loading;
 interface NavigationPattern {
   from: string;
   to: string;
   probability: number;
-  timestamp: number;
-}
+  timestamp: number
+  }
 
 // Enhanced route manager;
 export class EnhancedRouteManager {
@@ -59,8 +59,8 @@ export class EnhancedRouteManager {
     this.isInitialized = true;
 
     if (process.env.NODE_ENV === 'development') {
-      console.log('🚀 Enhanced Route Manager initialized');
-    }
+      console.log('🚀 Enhanced Route Manager initialized')
+  }
   }
 
   // Register a route with enhanced lazy loading
@@ -70,7 +70,7 @@ export class EnhancedRouteManager {
     this.routes.set(path, config);
 
     // Create enhanced lazy component;
-    const EnhancedComponent = createEnhancedLazyComponent(;
+    const EnhancedComponent = createEnhancedLazyComponent(;;
       () => Promise.resolve({ default: component }),
       {
         strategy: 'network-aware',
@@ -85,10 +85,10 @@ export class EnhancedRouteManager {
 
     // Setup preloading if specified
     if (config.preload) {
-      this.schedulePreload(path, priority);
-    }
+      this.schedulePreload(path, priority)
+  }
 
-    return EnhancedComponent;
+    return EnhancedComponent
   }
 
   // Enhanced version of existing lazy route creation
@@ -126,7 +126,7 @@ export class EnhancedRouteManager {
     // Setup preloading based on trigger
     this.setupPreloadTrigger(routePath, config);
 
-    return EnhancedComponent;
+    return EnhancedComponent
   }
 
   // Setup navigation monitoring for predictive loading
@@ -142,15 +142,15 @@ export class EnhancedRouteManager {
       lastPath = args[2] as string;
       this.currentRoute = lastPath;
       originalPushState.apply(history, args);
-      this.onRouteChange(lastPath);
-    };
+      this.onRouteChange(lastPath)
+  };
 
     history.replaceState = (...args) => {
       lastPath = args[2] as string;
       this.currentRoute = lastPath;
       originalReplaceState.apply(history, args);
-      this.onRouteChange(lastPath);
-    };
+      this.onRouteChange(lastPath)
+  };
 
     // Monitor popstate events
     window.addEventListener('popstate', () => {
@@ -158,8 +158,8 @@ export class EnhancedRouteManager {
       this.recordNavigation(lastPath, newPath);
       lastPath = newPath;
       this.currentRoute = newPath;
-      this.onRouteChange(newPath);
-    });
+      this.onRouteChange(newPath)
+  })
   }
 
   // Record navigation pattern
@@ -177,11 +177,11 @@ export class EnhancedRouteManager {
 
     // Keep only recent history (last 100 navigations)
     if (this.navigationHistory.length > 100) {
-      this.navigationHistory.shift();
-    }
+      this.navigationHistory.shift()
+  }
 
     // Update probabilities
-    this.updateNavigationProbabilities();
+    this.updateNavigationProbabilities()
   }
 
   // Update navigation probabilities based on history
@@ -198,8 +198,8 @@ export class EnhancedRouteManager {
       const fromKey = `${from}->*`;
       const fromTotal = patterns.get(fromKey) || { count: 0, total: 0 };
       fromTotal.total += 1;
-      patterns.set(fromKey, fromTotal);
-    });
+      patterns.set(fromKey, fromTotal)
+  });
 
     // Update probabilities in navigation history
     this.navigationHistory.forEach(pattern => {
@@ -209,9 +209,9 @@ export class EnhancedRouteManager {
       const totalData = patterns.get(fromKey);
 
       if (patternData && totalData && totalData.total > 0) {
-        pattern.probability = patternData.count / totalData.total;
-      }
-    });
+        pattern.probability = patternData.count / totalData.total
+  }
+    })
   }
 
   // Handle route changes
@@ -220,7 +220,7 @@ export class EnhancedRouteManager {
     this.preloadLikelyRoutes(newPath);
 
     // Cleanup unused resources
-    this.cleanupUnusedResources();
+    this.cleanupUnusedResources()
   }
 
   // Preload likely routes based on navigation patterns
@@ -229,9 +229,9 @@ export class EnhancedRouteManager {
     
     likelyRoutes.forEach(({ route, probability }) => {
       if (probability > 0.3 && !this.preloadCache.has(route)) {
-        this.schedulePreload(route, probability > 0.7 ? 'high' : 'medium');
-      }
-    });
+        this.schedulePreload(route, probability > 0.7 ? 'high' : 'medium')
+  }
+    })
   }
 
   // Get likely next routes based on navigation patterns
@@ -245,15 +245,15 @@ export class EnhancedRouteManager {
     const routeProbabilities = new Map<string, number>();
     relevantPatterns.forEach(pattern => {
       const existing = routeProbabilities.get(pattern.to) || 0;
-      routeProbabilities.set(pattern.to, existing + pattern.probability);
-    });
+      routeProbabilities.set(pattern.to, existing + pattern.probability)
+  });
 
     // Convert to array and sort by probability
     routeProbabilities.forEach((probability, route) => {
-      routes.push({ route, probability });
-    });
+      routes.push({ route, probability })
+  });
 
-    return routes.sort((a, b) => b.probability - a.probability).slice(0, 3);
+    return routes.sort((a, b) => b.probability - a.probability).slice(0, 3)
   }
 
   // Setup preload triggers
@@ -275,8 +275,8 @@ export class EnhancedRouteManager {
       
       case 'interaction':
         this.setupInteractionPreload(routePath, config.priority);
-        break;
-    }
+        break
+  }
   }
 
   // Setup hover-based preloading
@@ -286,9 +286,9 @@ export class EnhancedRouteManager {
       const link = target.closest('a');
       
       if (link && link.getAttribute('href') === routePath) {
-        this.schedulePreload(routePath, priority);
-      }
-    });
+        this.schedulePreload(routePath, priority)
+  }
+    })
   }
 
   // Setup viewport-based preloading
@@ -301,17 +301,17 @@ export class EnhancedRouteManager {
           
           if (href === routePath) {
             this.schedulePreload(routePath, priority);
-            observer.unobserve(link);
-          }
+            observer.unobserve(link)
+  }
         }
-      });
-    }, { rootMargin: '100px' });
+      })
+  }, { rootMargin: '100px' });
 
     // Observe all links to this route
     setTimeout(() => {
       const links = document.querySelectorAll(`a[href="${routePath}"]`);
-      links.forEach(link => observer.observe(link));
-    }, 1000);
+      links.forEach(link => observer.observe(link))
+  }, 1000)
   }
 
   // Setup interaction-based preloading
@@ -324,10 +324,10 @@ export class EnhancedRouteManager {
         const link = target.closest('a');
         
         if (link && link.getAttribute('href') === routePath) {
-          this.schedulePreload(routePath, priority);
-        }
-      }, { passive: true });
-    });
+          this.schedulePreload(routePath, priority)
+  }
+      }, { passive: true })
+  })
   }
 
   // Setup viewport preloading for all routes
@@ -341,38 +341,38 @@ export class EnhancedRouteManager {
           const config = this.routes.get(href)!;
           if (config.prefetchTrigger === 'viewport') {
             this.schedulePreload(href, config.priority);
-            observer.unobserve(link);
-          }
+            observer.unobserve(link)
+  }
         }
       }
     };
 
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => handleIntersection(entry, observer));
-    }, { rootMargin: '100px' });
+      entries.forEach(entry => handleIntersection(entry, observer))
+  }, { rootMargin: '100px' });
 
     // Handle added nodes;
     const handleAddedNodes = (node: Node) => {
       if (node.nodeType === Node.ELEMENT_NODE) {
         const element = node as HTMLElement;
         const links = element.querySelectorAll('a[href]');
-        links.forEach(link => observer.observe(link));
-      }
+        links.forEach(link => observer.observe(link))
+  }
     };
 
     // Observe links as they appear;
     const linkObserver = new MutationObserver((mutations) => {
       mutations.forEach(mutation => {
-        mutation.addedNodes.forEach(handleAddedNodes);
-      });
-    });
+        mutation.addedNodes.forEach(handleAddedNodes)
+  })
+  });
 
-    linkObserver.observe(document.body, { childList: true, subtree: true });
+    linkObserver.observe(document.body, { childList: true, subtree: true })
   }
 
   // Preload critical routes immediately
   private static preloadCriticalRoutes(): void {
-    const criticalRoutes = [;
+    const criticalRoutes = [;;
       '/',
       '/chat',
       '/dashboard',
@@ -380,9 +380,9 @@ export class EnhancedRouteManager {
 
     criticalRoutes.forEach(route => {
       if (this.routes.has(route)) {
-        this.schedulePreload(route, 'high');
-      }
-    });
+        this.schedulePreload(route, 'high')
+  }
+    })
   }
 
   // Schedule route preloading
@@ -397,8 +397,8 @@ export class EnhancedRouteManager {
         `route_${routePath}`,
         () => Promise.resolve({ default: config.component }),
         priority
-      );
-    }
+      )
+  }
   }
 
   // Cleanup unused resources
@@ -406,8 +406,8 @@ export class EnhancedRouteManager {
     // This would typically involve analyzing which routes haven't been visited
     // and cleaning up their resources if memory is constrained
     if (process.env.NODE_ENV === 'development') {
-      console.log('🧹 Cleaning up unused route resources');
-    }
+      console.log('🧹 Cleaning up unused route resources')
+  }
   }
 
   // Get navigation statistics
@@ -433,7 +433,7 @@ export class EnhancedRouteManager {
 // Hook for using enhanced routing;
 export const useEnhancedRouting = () => {
   useEffect(() => {
-    EnhancedRouteManager.initialize();
+    EnhancedRouteManager.initialize()
   };
   }, []);
 
@@ -457,17 +457,17 @@ export const withRouteTracking = <P extends object>(
         const renderTime = endTime - startTime;
         
         if (process.env.NODE_ENV === 'development') {
-          console.log(`📊 Route ${routePath} render time: ${renderTime.toFixed(2)}ms`);
-        }
+          console.log(`📊 Route ${routePath} render time: ${renderTime.toFixed(2)}ms`)
+  }
       };
   }, []);
 
-    return React.createElement(Component, props);
+    return React.createElement(Component, props)
   };
 
   TrackedComponent.displayName = `withRouteTracking(${Component.displayName || Component.name})`;
-  return TrackedComponent as ComponentType<P>;
-};
+  return TrackedComponent as ComponentType<P>
+  };
 
 export default {
   EnhancedRouteManager,

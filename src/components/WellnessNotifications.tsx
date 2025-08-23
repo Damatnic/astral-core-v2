@@ -11,10 +11,10 @@ interface Notification {
   read: boolean;
   action?: {
     label: string;
-    handler: () => void;
+    handler: () => void
   }
 
-const wellnessMessages = [;
+const wellnessMessages = [;;
   "Time for a mindfulness check-in! How are you feeling?",
   "Remember to take a deep breath and center yourself.",
   "You're doing great! Take a moment to appreciate your progress.",
@@ -36,8 +36,8 @@ export const WellnessNotifications: React.FC = () => {
   useEffect(() => {
     // Check notification permission
     if ('Notification' in window) {
-      setPermission(Notification.permission);
-    }
+      setPermission(Notification.permission)
+  }
     
     // Load saved notifications;
     const saved = localStorage.getItem('wellnessNotifications');
@@ -45,17 +45,17 @@ export const WellnessNotifications: React.FC = () => {
       const parsed = JSON.parse(saved);
       setNotifications(parsed.map((n: any) => ({
         ...n,
-        timestamp: new Date(n.timestamp);
-      })));
-    }
+        timestamp: new Date(n.timestamp)
+  })))
+  }
     
     // Check preferences;
     const prefs = localStorage.getItem('userPreferences');
     if (prefs) {
       const preferences = JSON.parse(prefs);
       if (preferences.wellnessReminders) {
-        setupReminders(preferences.reminderFrequency || 4);
-      }
+        setupReminders(preferences.reminderFrequency || 4)
+  }
     }
   };
   }, []);
@@ -66,7 +66,7 @@ export const WellnessNotifications: React.FC = () => {
     setUnreadCount(unread);
     
     // Save notifications
-    localStorage.setItem('wellnessNotifications', JSON.stringify(notifications));
+    localStorage.setItem('wellnessNotifications', JSON.stringify(notifications))
   };
   }, [notifications]);
   
@@ -87,19 +87,19 @@ export const WellnessNotifications: React.FC = () => {
         
         if (quietStart > quietEnd) {
           // Quiet hours span midnight
-          if (hours >= quietStart || hours < quietEnd) return;;
+          if (hours >= quietStart || hours < quietEnd) return
   } else {
           // Normal quiet hours
-          if (hours >= quietStart && hours < quietEnd) return;
-        }
+          if (hours >= quietStart && hours < quietEnd) return
+  }
       }
       
       // Create reminder notification;
       const message = wellnessMessages[Math.floor(Math.random() * wellnessMessages.length)];
-      createNotification('reminder', 'Wellness Check-In', message);
-    }, intervalMs);
+      createNotification('reminder', 'Wellness Check-In', message)
+  }, intervalMs);
     
-    return () => clearInterval(reminderInterval);
+    return () => clearInterval(reminderInterval)
   };
   
   const createNotification = useCallback((;
@@ -127,41 +127,41 @@ export const WellnessNotifications: React.FC = () => {
         icon: '/icon-192x192.png',
         badge: '/badge-72x72.png',
         tag: notification.id,
-        requireInteraction: false;
-      });
+        requireInteraction: false
+  });
       
       browserNotif.onclick = () => {
         window.focus();
         setShowPanel(true);
         markAsRead(notification.id);
-        if (action) action.handler();
-      }
+        if (action) action.handler()
+  }
   };
   }, [permission]);
   
   const requestPermission = async () => {
     if ('Notification' in window && permission === 'default') {
       const result = await Notification.requestPermission();
-      setPermission(result);
-    }
+      setPermission(result)
+  }
   };
   
   const markAsRead = (id: string) => {
     setNotifications(prev => prev.map(n => 
       n.id === id ? { ...n, read: true } : n
-    ));
+    ))
   };
   
   const markAllAsRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })))
   };
   
   const deleteNotification = (id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
+    setNotifications(prev => prev.filter(n => n.id !== id))
   };
   
   const clearAll = () => {
-    setNotifications([]);
+    setNotifications([])
   };
   
   const getIcon = (type: string) => {
@@ -172,9 +172,8 @@ export const WellnessNotifications: React.FC = () => {
         return <HeartIcon className="notif-type-icon support" />;
       case 'tip':
         return <CheckIcon className="notif-type-icon tip" />;
-      default:
-        return <BellIcon className="notif-type-icon reminder" />;
-    }
+      default: return <BellIcon className="notif-type-icon reminder" />
+  }
   };
   
   const formatTime = (date: Date) => {
@@ -188,7 +187,7 @@ export const WellnessNotifications: React.FC = () => {
     if (minutes < 60) return `${minutes}m ago`;
     if (hours < 24) return `${hours}h ago`;
     if (days === 1) return 'Yesterday';
-    return date.toLocaleDateString();
+    return date.toLocaleDateString()
   };
   
   // Simulate some achievements for demo
@@ -201,24 +200,23 @@ export const WellnessNotifications: React.FC = () => {
         // Check for streaks
         if (history.length >= 3 && !localStorage.getItem('achievement_streak3')) {
           createNotification('achievement', '3-Day Streak!', 'You have been consistent with your wellness check-ins!');
-          localStorage.setItem('achievement_streak3', 'true');
-        }
+          localStorage.setItem('achievement_streak3', 'true')
+  }
         
         if (history.length >= 7 && !localStorage.getItem('achievement_streak7')) {
           createNotification('achievement', 'Week Warrior!', 'A full week of wellness tracking! Amazing!');
-          localStorage.setItem('achievement_streak7', 'true');
-        }
+          localStorage.setItem('achievement_streak7', 'true')
+  }
       }
     };
     
-    checkAchievements();
+    checkAchievements()
   };
   }, [createNotification]);
   
   return (
     <>
-      <button;
-        className={`notifications-trigger ${unreadCount > 0 ? 'has-unread' : ''}`}
+      <button className={`notifications-trigger ${unreadCount > 0 ? 'has-unread' : ''}`}
         onClick={() => setShowPanel(!showPanel)}
         aria-label={`Notifications ${unreadCount > 0 ? `(${unreadCount} unread)` : ''}`}
       >
@@ -280,23 +278,21 @@ export const WellnessNotifications: React.FC = () => {
                       </div>
                       <p className="notif-message">{notif.message}</p>
                       {notif.action && (
-                        <button;
-                          className="notif-action"
+                        <button className="notif-action"
                           onClick={(e) => {
                             e.stopPropagation();
-                            notif.action!.handler();
-                          }}
+                            notif.action!.handler()
+  }}
                         >
                           {notif.action.label}
                         </button>
                       )}
                     </div>
-                    <button;
-                      className="delete-notif"
+                    <button className="delete-notif"
                       onClick={(e) => {
                         e.stopPropagation();
-                        deleteNotification(notif.id);
-                      }}
+                        deleteNotification(notif.id)
+  }}
                     >
                       <CloseIcon />
                     </button>
@@ -316,5 +312,5 @@ export const WellnessNotifications: React.FC = () => {
         </>
       )}
     </>
-  );
-};
+  )
+  };

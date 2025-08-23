@@ -13,8 +13,8 @@ export interface EmergencyContactWidget {
   type: 'hotline' | 'professional' | 'personal' | 'emergency';
   available: string;
   priority: number;
-  lastContacted?: number;
-}
+  lastContacted?: number
+  }
 
 export interface EmergencyContactsWidgetProps {
   contacts?: EmergencyContactWidget[];
@@ -26,8 +26,8 @@ export interface EmergencyContactsWidgetProps {
   onContactUsed?: (data: { contactId: string; action: string; timestamp: number }) => void;
   onAddContact?: () => void;
   onRemoveContact?: (contactId: string) => void;
-  onReorder?: (contactIds: string[]) => void;
-}
+  onReorder?: (contactIds: string[]) => void
+  }
 
 export const EmergencyContactsWidget: React.FC<EmergencyContactsWidgetProps> = ({
   contacts = [],
@@ -51,10 +51,10 @@ export const EmergencyContactsWidget: React.FC<EmergencyContactsWidgetProps> = (
 
   useEffect(() => {
     const shouldLimitDisplay = collapsible && !isExpanded;
-    const limitedContacts = shouldLimitDisplay ;
+    const limitedContacts = shouldLimitDisplay ;;
       ? sortedContacts.slice(0, initialDisplay)
       : sortedContacts;
-    setDisplayedContacts(limitedContacts);
+    setDisplayedContacts(limitedContacts)
   };
   }, [contacts, isExpanded, collapsible, initialDisplay, sortedContacts]);
 
@@ -75,17 +75,17 @@ export const EmergencyContactsWidget: React.FC<EmergencyContactsWidgetProps> = (
         errorDiv.style.zIndex = '9999';
         document.body.appendChild(errorDiv);
         setTimeout(() => errorDiv.remove(), 3000);
-        return;
-      }
+        return
+  }
       window.location.href = `tel:${contact.phone}`;
       onContactUsed?.({
         contactId: contact.id,
         action: 'call',
-        timestamp: Date.now();
-      });
-    } catch (error) {
-      console.error('Failed to initiate call:', error);
-    }
+        timestamp: Date.now()
+  })
+  } catch (error) {
+      console.error('Failed to initiate call:', error)
+  }
   };
 
   const handleText = (contact: EmergencyContactWidget) => {
@@ -94,29 +94,29 @@ export const EmergencyContactsWidget: React.FC<EmergencyContactsWidgetProps> = (
       onContactUsed?.({
         contactId: contact.id,
         action: 'text',
-        timestamp: Date.now();
-      });
-    } catch (error) {
-      console.error('Failed to initiate text:', error);
-    }
+        timestamp: Date.now()
+  })
+  } catch (error) {
+      console.error('Failed to initiate text:', error)
+  }
   };
 
   const handleMoveUp = (index: number) => {
     if (index > 0) {
       const newOrder = [...sortedContacts];
       [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
-      onReorder?.(newOrder.map(c => c.id));
-    }
+      onReorder?.(newOrder.map(c => c.id))
+  }
   };
 
   const handleCopyPhone = async (phone: string) => {
     try {
       await navigator.clipboard.writeText(phone);
       setCopiedPhone(phone);
-      setTimeout(() => setCopiedPhone(null), 2000);
-    } catch (error) {
-      console.error('Failed to copy phone number:', error);
-    }
+      setTimeout(() => setCopiedPhone(null), 2000)
+  } catch (error) {
+      console.error('Failed to copy phone number:', error)
+  }
   };
 
   const formatLastContacted = (timestamp: number) => {
@@ -130,7 +130,7 @@ export const EmergencyContactsWidget: React.FC<EmergencyContactsWidgetProps> = (
     
     const days = Math.floor(hours / 24);
     if (days === 1) return '1 day ago';
-    return `${days} days ago`;
+    return `${days} days ago`
   };
 
   if (loading) {
@@ -138,7 +138,7 @@ export const EmergencyContactsWidget: React.FC<EmergencyContactsWidgetProps> = (
       <div className="emergency-contacts-widget" data-testid="emergency-contacts-widget">
         <div data-testid="loading-skeleton">Loading...</div>
       </div>
-    );
+    )
   }
 
   if (contacts.length === 0) {
@@ -157,12 +157,11 @@ export const EmergencyContactsWidget: React.FC<EmergencyContactsWidgetProps> = (
           )}
         </div>
       </div>
-    );
+    )
   }
 
   return (
-    <section; 
-      className={`emergency-contacts-widget ${compact ? 'compact' : ''} ${window.innerWidth <= 768 ? 'mobile-layout' : ''}`}
+    <section className={`emergency-contacts-widget ${compact ? 'compact' : ''} ${window.innerWidth <= 768 ? 'mobile-layout' : ''}`}
       data-testid="emergency-contacts-widget"
       aria-label="Emergency contacts"
       role="region"
@@ -322,7 +321,7 @@ export const EmergencyContactsWidget: React.FC<EmergencyContactsWidgetProps> = (
         </button>
       )}
     </section>
-  );
-};
+  )
+  };
 
 export default EmergencyContactsWidget;

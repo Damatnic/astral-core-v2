@@ -14,41 +14,41 @@ interface SpeechRecognition extends EventTarget {
   start(): void;
   stop(): void;
   onresult: ((event: SpeechRecognitionEvent) => void) | null;
-  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
-}
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null
+  }
 
 interface SpeechRecognitionEvent extends Event {
   resultIndex: number;
-  results: SpeechRecognitionResultList;
-}
+  results: SpeechRecognitionResultList
+  }
 
 interface SpeechRecognitionErrorEvent extends Event {
   error: string;
-  message: string;
-}
+  message: string
+  }
 
 interface SpeechRecognitionResultList {
   length: number;
   item(index: number): SpeechRecognitionResult;
-  [index: number]: SpeechRecognitionResult;
-}
+  [index: number]: SpeechRecognitionResult
+  }
 
 interface SpeechRecognitionResult {
   length: number;
   item(index: number): SpeechRecognitionAlternative;
   [index: number]: SpeechRecognitionAlternative;
-  isFinal: boolean;
-}
+  isFinal: boolean
+  }
 
 interface SpeechRecognitionAlternative {
   transcript: string;
-  confidence: number;
-}
+  confidence: number
+  }
 
 declare global {
   interface Window {
     SpeechRecognition: new () => SpeechRecognition;
-    webkitSpeechRecognition: new () => SpeechRecognition;
+    webkitSpeechRecognition: new () => SpeechRecognition
   }
 }
 
@@ -86,8 +86,8 @@ export interface AccessibilitySettings {
   simplifiedInterface: boolean;
   readingAssistance: boolean;
   contextualHelp: boolean;
-  errorSummaryEnabled: boolean;
-}
+  errorSummaryEnabled: boolean
+  }
 
 export interface AccessibilityAnnouncement {
   message: string;
@@ -101,8 +101,8 @@ export interface KeyboardShortcut {
   description: string;
   action: () => void;
   enabled: boolean;
-  crisisRelated: boolean;
-}
+  crisisRelated: boolean
+  }
 
 class AccessibilityService {
   private settings: AccessibilitySettings;
@@ -120,42 +120,42 @@ class AccessibilityService {
   private contrastThemes = {
     default: {
       name: 'Default',
-      cssClass: 'theme-default';
-    },
+      cssClass: 'theme-default'
+  },
     highContrast: {
       name: 'High Contrast',
-      cssClass: 'theme-high-contrast';
-    },
+      cssClass: 'theme-high-contrast'
+  },
     highContrastWhite: {
       name: 'High Contrast White',
-      cssClass: 'theme-high-contrast-white';
-    },
+      cssClass: 'theme-high-contrast-white'
+  },
     highContrastBlack: {
       name: 'High Contrast Black',
-      cssClass: 'theme-high-contrast-black';
-    },
+      cssClass: 'theme-high-contrast-black'
+  },
     deuteranopia: {
       name: 'Deuteranopia Support',
-      cssClass: 'theme-deuteranopia';
-    },
+      cssClass: 'theme-deuteranopia'
+  },
     protanopia: {
       name: 'Protanopia Support',
-      cssClass: 'theme-protanopia';
-    },
+      cssClass: 'theme-protanopia'
+  },
     tritanopia: {
       name: 'Tritanopia Support',
-      cssClass: 'theme-tritanopia';
-    },
+      cssClass: 'theme-tritanopia'
+  },
     monochrome: {
       name: 'Monochrome',
-      cssClass: 'theme-monochrome';
-    }
+      cssClass: 'theme-monochrome'
+  }
   };
 
   constructor() {
     this.settings = this.getDefaultSettings();
     this.speechSynthesis = window.speechSynthesis;
-    this.initializeSpeechRecognition();
+    this.initializeSpeechRecognition()
   }
 
   /**
@@ -190,14 +190,14 @@ class AccessibilityService {
       this.announce({
         message: 'Accessibility features are now active. Press Alt+H for help.',
         priority: 'low',
-        type: 'status';
-      });
+        type: 'status'
+  });
       
-      console.log('[Accessibility] Service initialized successfully');
-    } catch (error) {
+      console.log('[Accessibility] Service initialized successfully')
+  } catch (error) {
       console.error('[Accessibility] Failed to initialize:', error);
-      throw error;
-    }
+      throw error
+  }
   }
 
   /**
@@ -237,8 +237,8 @@ class AccessibilityService {
       simplifiedInterface: false,
       readingAssistance: false,
       contextualHelp: true,
-      errorSummaryEnabled: true;
-     }
+      errorSummaryEnabled: true
+  }
 
   /**
    * Detect system accessibility preferences
@@ -247,35 +247,35 @@ class AccessibilityService {
     try {
       // Check for reduced motion preference
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        this.settings.reducedMotion = true;
-      }
+        this.settings.reducedMotion = true
+  }
 
       // Check for high contrast preference
       if (window.matchMedia('(prefers-contrast: high)').matches) {
-        this.settings.highContrast = true;
-      }
+        this.settings.highContrast = true
+  }
 
       // Check for forced colors (Windows high contrast mode)
       if (window.matchMedia('(forced-colors: active)').matches) {
         this.settings.highContrast = true;
-        this.settings.focusIndicatorStrength = 'maximum';
-      }
+        this.settings.focusIndicatorStrength = 'maximum'
+  }
 
       // Detect screen reader usage
       if (this.isScreenReaderDetected()) {
         this.settings.screenReaderEnabled = true;
-        this.settings.verboseDescriptions = true;
-      }
+        this.settings.verboseDescriptions = true
+  }
 
       console.log('[Accessibility] System preferences detected:', {
         reducedMotion: this.settings.reducedMotion,
         highContrast: this.settings.highContrast,
-        screenReader: this.settings.screenReaderEnabled;
-      };
+        screenReader: this.settings.screenReaderEnabled
+  };
   };
     } catch (error) {
-      console.warn('[Accessibility] Could not detect system preferences:', error);
-    }
+      console.warn('[Accessibility] Could not detect system preferences:', error)
+  }
   }
 
   /**
@@ -283,7 +283,7 @@ class AccessibilityService {
    */
   private isScreenReaderDetected(): boolean {
     // Multiple detection methods for better accuracy;
-    const indicators = [;
+    const indicators = [;;
       // Check for common screen reader user agents
       /JAWS|NVDA|ORCA|VoiceOver|TalkBack|Narrator/i.test(navigator.userAgent),
       
@@ -297,14 +297,14 @@ class AccessibilityService {
       document.querySelector('[aria-hidden="true"][role="presentation"]') !== null
     ];
 
-    return indicators.some(indicator => indicator);
+    return indicators.some(indicator => indicator)
   }
 
   /**
    * Setup live regions for screen reader announcements
    */
   private setupLiveRegions(): void {
-    const regions = [;
+    const regions = [;;
       { id: 'sr-status', politeness: 'polite', label: 'Status updates' },
       { id: 'sr-alerts', politeness: 'assertive', label: 'Important alerts' },
       { id: 'sr-emergency', politeness: 'assertive', label: 'Emergency notifications' }
@@ -325,10 +325,10 @@ class AccessibilityService {
           height: 1px;
           overflow: hidden;
         `;
-        document.body.appendChild(element);
-      }
-      this.liveRegions.set(region.id, element);
-    });
+        document.body.appendChild(element)
+  }
+      this.liveRegions.set(region.id, element)
+  })
   }
 
   /**
@@ -341,49 +341,49 @@ class AccessibilityService {
         description: 'Quick access to crisis resources',
         action: () => this.navigateToCrisisResources(),
         enabled: this.settings.crisisShortcutsEnabled,
-        crisisRelated: true;
-      },
+        crisisRelated: true
+  },
       {
         keys: ['Alt', 'h'],
         description: 'Show accessibility help',
         action: () => this.showAccessibilityHelp(),
         enabled: true,
-        crisisRelated: false;
-      },
+        crisisRelated: false
+  },
       {
         keys: ['Alt', 'e'],
         description: 'Emergency contact activation',
         action: () => this.activateEmergencyContact(),
         enabled: this.settings.crisisShortcutsEnabled,
-        crisisRelated: true;
-      },
+        crisisRelated: true
+  },
       {
         keys: ['Alt', 'n'],
         description: 'Navigate to main content',
         action: () => this.skipToMainContent(),
         enabled: this.settings.skipLinksEnabled,
-        crisisRelated: false;
-      },
+        crisisRelated: false
+  },
       {
         keys: ['Alt', 's'],
         description: 'Go to safety plan',
         action: () => this.navigateToSafetyPlan(),
         enabled: this.settings.crisisShortcutsEnabled,
-        crisisRelated: true;
-      },
+        crisisRelated: true
+  },
       {
         keys: ['Alt', 'v'],
         description: 'Toggle voice navigation',
         action: () => this.toggleVoiceNavigation(),
         enabled: true,
-        crisisRelated: false;
-      }
+        crisisRelated: false
+  }
     ];
 
     shortcuts.forEach(shortcut => {
       const key = shortcut.keys.join('+');
-      this.shortcuts.set(key, shortcut);
-    });
+      this.shortcuts.set(key, shortcut)
+  })
   }
 
   /**
@@ -398,22 +398,22 @@ class AccessibilityService {
         
         // Limit focus stack size
         if (this.focusStack.length > 10) {
-          this.focusStack.shift();
-        }
+          this.focusStack.shift()
+  }
         
         // Announce focus changes for screen readers if verbose
         if (this.settings.screenReaderEnabled && this.settings.verboseDescriptions) {
-          this.announceFocusChange(target);
-        }
+          this.announceFocusChange(target)
+  }
       }
     });
 
     // Handle escape key for focus restoration
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && this.settings.enhancedKeyboardNavigation) {
-        this.restorePreviousFocus();
-      }
-    });
+        this.restorePreviousFocus()
+  }
+    })
   }
 
   /**
@@ -425,11 +425,11 @@ class AccessibilityService {
     if (!styleSheet) {
       styleSheet = document.createElement('style');
       styleSheet.id = 'accessibility-themes';
-      document.head.appendChild(styleSheet);
-    }
+      document.head.appendChild(styleSheet)
+  }
 
     // High contrast theme CSS;
-    const highContrastCSS = `;
+    const highContrastCSS = `;;
       .theme-high-contrast {
         --bg-primary: #000000;
         --bg-secondary: #000000;
@@ -440,8 +440,8 @@ class AccessibilityService {
         --error-color: #ff0000;
         --success-color: #00ff00;
         --warning-color: #ffff00;
-        --crisis-color: #ff0000;
-      }
+        --crisis-color: #ff0000
+  }
       
       .theme-high-contrast-white {
         --bg-primary: #ffffff;
@@ -453,8 +453,8 @@ class AccessibilityService {
         --error-color: #ff0000;
         --success-color: #008000;
         --warning-color: #ff8c00;
-        --crisis-color: #ff0000;
-      }
+        --crisis-color: #ff0000
+  }
       
       .theme-high-contrast-black {
         --bg-primary: #000000;
@@ -466,22 +466,22 @@ class AccessibilityService {
         --error-color: #ff6666;
         --success-color: #66ff66;
         --warning-color: #ffff66;
-        --crisis-color: #ff4444;
-      }
+        --crisis-color: #ff4444
+  }
       
       /* Enhanced focus indicators */
       .focus-enhanced *:focus,
       .focus-maximum *:focus {
         outline: 3px solid var(--focus-color, #007ACC) !important;
         outline-offset: 2px !important;
-        box-shadow: 0 0 0 5px rgba(0, 122, 204, 0.3) !important;
-      }
+        box-shadow: 0 0 0 5px rgba(0, 122, 204, 0.3) !important
+  }
       
       .focus-maximum *:focus {
         outline-width: 5px !important;
         outline-offset: 3px !important;
-        box-shadow: 0 0 0 8px rgba(0, 122, 204, 0.5) !important;
-      }
+        box-shadow: 0 0 0 8px rgba(0, 122, 204, 0.5) !important
+  }
       
       /* Reduced motion */
       .reduced-motion *,
@@ -490,8 +490,8 @@ class AccessibilityService {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
+        scroll-behavior: auto !important
+  }
       
       /* Text size scaling */
       .text-scale-125 { font-size: 1.25em !important; }
@@ -503,46 +503,46 @@ class AccessibilityService {
       .theme-deuteranopia {
         --success-color: #0066cc;
         --warning-color: #ff6600;
-        --error-color: #cc0000;
-      }
+        --error-color: #cc0000
+  }
       
       .theme-protanopia {
         --success-color: #0080ff;
         --warning-color: #ff8000;
-        --error-color: #800000;
-      }
+        --error-color: #800000
+  }
       
       .theme-tritanopia {
         --success-color: #008080;
         --warning-color: #ff4080;
-        --error-color: #ff0040;
-      }
+        --error-color: #ff0040
+  }
       
       .theme-monochrome {
-        filter: grayscale(100%);
-      }
+        filter: grayscale(100%)
+  }
       
       /* Crisis-specific accessibility */
       .crisis-mode {
         --crisis-bg: var(--error-color, #ff0000);
-        --crisis-text: #ffffff;
-      }
+        --crisis-text: #ffffff
+  }
       
       .crisis-button {
         background: var(--crisis-bg) !important;
         color: var(--crisis-text) !important;
         border: 3px solid #ffffff !important;
         font-weight: bold !important;
-        font-size: 1.2em !important;
-      }
+        font-size: 1.2em !important
+  }
       
       .crisis-button:focus {
         outline: 5px solid #ffff00 !important;
-        outline-offset: 3px !important;
-      }
+        outline-offset: 3px !important
+  }
     `;
 
-    styleSheet.textContent = highContrastCSS;
+    styleSheet.textContent = highContrastCSS
   }
 
   /**
@@ -551,8 +551,8 @@ class AccessibilityService {
   private initializeSpeechRecognition(): void {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
       console.warn('[Accessibility] Speech recognition not supported');
-      return;
-    }
+      return
+  }
 
     try {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -564,27 +564,27 @@ class AccessibilityService {
         this.speechRecognition.lang = 'en-US';
         
         this.speechRecognition.onresult = (event: SpeechRecognitionEvent) => {
-          this.handleVoiceCommand(event);
-        };
+          this.handleVoiceCommand(event)
+  };
         
         this.speechRecognition.onerror = (event: SpeechRecognitionErrorEvent) => {
           console.warn('[Accessibility] Speech recognition error:', event.error);
           if (event.error === 'not-allowed') {
-            this.settings.voiceNavigationEnabled = false;
-          }
+            this.settings.voiceNavigationEnabled = false
+  }
         }
       
-      console.log('[Accessibility] Speech recognition initialized');
-    } catch (error) {
-      console.error('[Accessibility] Failed to initialize speech recognition:', error);
-    }
+      console.log('[Accessibility] Speech recognition initialized')
+  } catch (error) {
+      console.error('[Accessibility] Failed to initialize speech recognition:', error)
+  }
   }
 
   /**
    * Initialize voice commands for crisis and navigation
    */
   private initializeVoiceCommands(): void {
-    const commands = [;
+    const commands = [;;
       // Crisis commands (priority)
       { phrase: 'emergency help', action: () => this.activateEmergencyContact() },
       { phrase: 'crisis resources', action: () => this.navigateToCrisisResources() },
@@ -605,8 +605,8 @@ class AccessibilityService {
     ];
 
     commands.forEach(command => {
-      this.voiceCommands.set(command.phrase.toLowerCase(), command.action);
-    });
+      this.voiceCommands.set(command.phrase.toLowerCase(), command.action)
+  })
   }
 
   /**
@@ -628,10 +628,10 @@ class AccessibilityService {
         this.announce({
           message: `Command executed: ${transcript}`,
           priority: 'medium',
-          type: 'status';
-        });
-        return;
-      }
+          type: 'status'
+  });
+        return
+  }
     }
 
     // Check for partial matches
@@ -641,18 +641,18 @@ class AccessibilityService {
         this.announce({
           message: `Command executed: ${phrase}`,
           priority: 'medium',
-          type: 'status';
-        });
-        return;
-      }
+          type: 'status'
+  });
+        return
+  }
     }
 
     // No command found
     this.announce({
       message: 'Command not recognized. Say "help" for available commands.',
       priority: 'low',
-      type: 'error';
-    });
+      type: 'error'
+  })
   }
 
   /**
@@ -660,8 +660,8 @@ class AccessibilityService {
    */
   public announce(announcement: AccessibilityAnnouncement): void {
     if (!this.settings.screenReaderEnabled && announcement.priority !== 'emergency') {
-      return;
-    }
+      return
+  }
 
     let regionId: string;
     
@@ -673,37 +673,36 @@ class AccessibilityService {
       case 'medium':
         regionId = 'sr-alerts';
         break;
-      default:
-        regionId = 'sr-status';
-    }
+      default: regionId = 'sr-status'
+  }
 
     const region = this.liveRegions.get(regionId);
     if (region) {
       // Clear previous content if not persistent
       if (!announcement.persistent) {
-        region.textContent = '';
-      }
+        region.textContent = ''
+  }
       
       // Add new announcement
       setTimeout(() => {
         if (announcement.persistent) {
-          region.textContent += ` ${announcement.message}`;;
+          region.textContent += ` ${announcement.message}`
   } else {
-          region.textContent = announcement.message;
-        }
+          region.textContent = announcement.message
+  }
       }, 100);
 
       // Clear non-persistent announcements after a delay
       if (!announcement.persistent) {
         setTimeout(() => {
           if (region.textContent === announcement.message) {
-            region.textContent = '';
-          }
-        }, 10000);
-      }
+            region.textContent = ''
+  }
+        }, 10000)
+  }
     }
 
-    console.log(`[Accessibility] Announced: ${announcement.message}`);
+    console.log(`[Accessibility] Announced: ${announcement.message}`)
   }
 
   /**
@@ -717,9 +716,9 @@ class AccessibilityService {
       this.announce({
         message: `${label}, ${role}`,
         priority: 'low',
-        type: 'navigation';
-      });
-    }
+        type: 'navigation'
+  })
+  }
   }
 
   /**
@@ -733,7 +732,7 @@ class AccessibilityService {
       (element as HTMLInputElement).placeholder ||
       element.textContent ||
       ''
-    ).trim();
+    ).trim()
   }
 
   /**
@@ -746,7 +745,7 @@ class AccessibilityService {
     this.applyReducedMotion();
     this.applyColorBlindnessSupport();
     
-    console.log('[Accessibility] All settings applied');
+    console.log('[Accessibility] All settings applied')
   }
 
   /**
@@ -757,22 +756,22 @@ class AccessibilityService {
     
     // Remove existing theme classes
     Object.values(this.contrastThemes).forEach(theme => {
-      body.classList.remove(theme.cssClass);
-    });
+      body.classList.remove(theme.cssClass)
+  });
 
     // Apply selected theme
     if (this.settings.highContrast) {
       const theme = this.contrastThemes.highContrast;
-      body.classList.add(theme.cssClass);
-    }
+      body.classList.add(theme.cssClass)
+  }
 
     // Apply color blindness support
     if (this.settings.colorBlindnessType !== 'none') {
       const themeKey = this.settings.colorBlindnessType as keyof typeof this.contrastThemes;
       const theme = this.contrastThemes[themeKey];
       if (theme) {
-        body.classList.add(theme.cssClass);
-      }
+        body.classList.add(theme.cssClass)
+  }
     }
   }
 
@@ -786,7 +785,7 @@ class AccessibilityService {
     body.classList.remove('focus-normal', 'focus-enhanced', 'focus-maximum');
     
     // Apply focus indicator strength
-    body.classList.add(`focus-${this.settings.focusIndicatorStrength}`);
+    body.classList.add(`focus-${this.settings.focusIndicatorStrength}`)
   }
 
   /**
@@ -801,8 +800,8 @@ class AccessibilityService {
     // Apply text scaling
     if (this.settings.increasedTextSize > 1.0) {
       const scale = Math.round(this.settings.increasedTextSize * 100);
-      body.classList.add(`text-scale-${scale}`);
-    }
+      body.classList.add(`text-scale-${scale}`)
+  }
   }
 
   /**
@@ -812,10 +811,10 @@ class AccessibilityService {
     const body = document.body;
     
     if (this.settings.reducedMotion) {
-      body.classList.add('reduced-motion');;
+      body.classList.add('reduced-motion')
   } else {
-      body.classList.remove('reduced-motion');
-    }
+      body.classList.remove('reduced-motion')
+  }
   }
 
   /**
@@ -832,25 +831,25 @@ class AccessibilityService {
   private setupEventListeners(): void {
     // Keyboard shortcuts
     document.addEventListener('keydown', (event) => {
-      this.handleKeyboardShortcut(event);
-    });
+      this.handleKeyboardShortcut(event)
+  });
 
     // Monitor media query changes;
     const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     reducedMotionQuery.addEventListener('change', (e) => {
       if (e.matches) {
         this.settings.reducedMotion = true;
-        this.applyReducedMotion();
-      }
+        this.applyReducedMotion()
+  }
     });
 
     const highContrastQuery = window.matchMedia('(prefers-contrast: high)');
     highContrastQuery.addEventListener('change', (e) => {
       if (e.matches) {
         this.settings.highContrast = true;
-        this.applyHighContrastTheme();
-      }
-    });
+        this.applyHighContrastTheme()
+  }
+    })
   }
 
   /**
@@ -876,45 +875,45 @@ class AccessibilityService {
       this.announce({
         message: `Activated: ${shortcut.description}`,
         priority: shortcut.crisisRelated ? 'high' : 'medium',
-        type: shortcut.crisisRelated ? 'crisis' : 'navigation';
-      });
-    }
+        type: shortcut.crisisRelated ? 'crisis' : 'navigation'
+  })
+  }
   }
 
   // Navigation methods for keyboard shortcuts and voice commands
   private navigateToCrisisResources(): void {
     const windowWithApp = window as any;
     if (windowWithApp.app?.setActiveView) {
-      windowWithApp.app.setActiveView({ view: 'crisis' });
-    }
+      windowWithApp.app.setActiveView({ view: 'crisis' })
+  }
   }
 
   private navigateToSafetyPlan(): void {
     const windowWithApp = window as any;
     if (windowWithApp.app?.setActiveView) {
-      windowWithApp.app.setActiveView({ view: 'safety-plan' });
-    }
+      windowWithApp.app.setActiveView({ view: 'safety-plan' })
+  }
   }
 
   private navigateToHome(): void {
     const windowWithApp = window as any;
     if (windowWithApp.app?.setActiveView) {
-      windowWithApp.app.setActiveView({ view: 'feed' });
-    }
+      windowWithApp.app.setActiveView({ view: 'feed' })
+  }
   }
 
   private navigateToHelperChat(): void {
     const windowWithApp = window as any;
     if (windowWithApp.app?.setActiveView) {
-      windowWithApp.app.setActiveView({ view: 'chat' });
-    }
+      windowWithApp.app.setActiveView({ view: 'chat' })
+  }
   }
 
   private navigateToAIChat(): void {
     const windowWithApp = window as any;
     if (windowWithApp.app?.setActiveView) {
-      windowWithApp.app.setActiveView({ view: 'ai-chat' });
-    }
+      windowWithApp.app.setActiveView({ view: 'ai-chat' })
+  }
   }
 
   private activateEmergencyContact(): void {
@@ -923,16 +922,16 @@ class AccessibilityService {
       message: 'Activating emergency contacts. Help is on the way.',
       priority: 'emergency',
       type: 'crisis',
-      persistent: true;
-    });
+      persistent: true
+  });
     
     // Additional emergency activation logic would go here
-    console.log('[Accessibility] Emergency contact activated');
+    console.log('[Accessibility] Emergency contact activated')
   }
 
   private openMainMenu(): void {
     // Open main navigation menu
-    console.log('[Accessibility] Opening main menu');
+    console.log('[Accessibility] Opening main menu')
   }
 
   private skipToMainContent(): void {
@@ -942,22 +941,22 @@ class AccessibilityService {
       this.announce({
         message: 'Skipped to main content',
         priority: 'low',
-        type: 'navigation';
-      });
-    }
+        type: 'navigation'
+  })
+  }
   }
 
   private restorePreviousFocus(): void {
     if (this.focusStack.length > 1) {
       const previousElement = this.focusStack[this.focusStack.length - 2];
       if (previousElement && document.contains(previousElement)) {
-        previousElement.focus();
-      }
+        previousElement.focus()
+  }
     }
   }
 
   private showAccessibilityHelp(): void {
-    const helpMessage = `;
+    const helpMessage = `;;
       Accessibility Help:
       Alt+C: Crisis resources
       Alt+E: Emergency contact
@@ -974,18 +973,18 @@ class AccessibilityService {
     this.announce({
       message: helpMessage,
       priority: 'medium',
-      type: 'status';
-    });
+      type: 'status'
+  })
   }
 
   private toggleVoiceNavigation(): void {
     this.settings.voiceNavigationEnabled = !this.settings.voiceNavigationEnabled;
     
     if (this.settings.voiceNavigationEnabled) {
-      this.startVoiceNavigation();;
+      this.startVoiceNavigation()
   } else {
-      this.stopVoiceNavigation();
-    }
+      this.stopVoiceNavigation()
+  }
   }
 
   private startVoiceNavigation(): void {
@@ -995,11 +994,11 @@ class AccessibilityService {
         this.announce({
           message: 'Voice navigation started. Say "help" for commands.',
           priority: 'medium',
-          type: 'status';
-        });
-      } catch (error) {
-        console.error('[Accessibility] Failed to start voice navigation:', error);
-      }
+          type: 'status'
+  })
+  } catch (error) {
+        console.error('[Accessibility] Failed to start voice navigation:', error)
+  }
     }
   }
 
@@ -1009,9 +1008,9 @@ class AccessibilityService {
       this.announce({
         message: 'Voice navigation stopped.',
         priority: 'low',
-        type: 'status';
-      });
-    }
+        type: 'status'
+  })
+  }
   }
 
   private toggleHighContrast(): void {
@@ -1022,8 +1021,8 @@ class AccessibilityService {
     this.announce({
       message: `High contrast ${this.settings.highContrast ? 'enabled' : 'disabled'}`,
       priority: 'medium',
-      type: 'status';
-    });
+      type: 'status'
+  })
   }
 
   private readCurrentPage(): void {
@@ -1032,16 +1031,16 @@ class AccessibilityService {
       const utterance = new SpeechSynthesisUtterance(content);
       utterance.rate = 0.8;
       utterance.pitch = 1.0;
-      this.speechSynthesis.speak(utterance);
-    }
+      this.speechSynthesis.speak(utterance)
+  }
   }
 
   private extractPageContent(): string {
     const main = document.querySelector('main') || document.body;
-    const headings = Array.from(main.querySelectorAll('h1, h2, h3, h4, h5, h6'));
+    const headings = Array.from(main.querySelectorAll('h1, h2, h3, h4, h5, h6'));;
       .map(h => h.textContent).join('. ');
     const content = main.textContent || '';
-    return `Page content: ${headings}. ${content.slice(0, 500)}`;
+    return `Page content: ${headings}. ${content.slice(0, 500)}`
   }
 
   /**
@@ -1054,8 +1053,8 @@ class AccessibilityService {
         const settings = JSON.parse(stored);
         this.settings = { ...this.settings, ...settings }
     } catch (error) {
-      console.warn('[Accessibility] Failed to load settings:', error);
-    }
+      console.warn('[Accessibility] Failed to load settings:', error)
+  }
   }
 
   /**
@@ -1063,10 +1062,10 @@ class AccessibilityService {
    */
   public async saveSettings(): Promise<void> {
     try {
-      localStorage.setItem('accessibility-settings', JSON.stringify(this.settings));
-    } catch (error) {
-      console.error('[Accessibility] Failed to save settings:', error);
-    }
+      localStorage.setItem('accessibility-settings', JSON.stringify(this.settings))
+  } catch (error) {
+      console.error('[Accessibility] Failed to save settings:', error)
+  }
   }
 
   /**
@@ -1080,8 +1079,8 @@ class AccessibilityService {
     this.announce({
       message: 'Accessibility settings updated',
       priority: 'low',
-      type: 'status';
-    });
+      type: 'status'
+  })
   }
 
   /**
@@ -1094,21 +1093,21 @@ class AccessibilityService {
    * Get available keyboard shortcuts
    */
   public getKeyboardShortcuts(): KeyboardShortcut[] {
-    return Array.from(this.shortcuts.values());
+    return Array.from(this.shortcuts.values())
   }
 
   /**
    * Get available voice commands
    */
   public getVoiceCommands(): string[] {
-    return Array.from(this.voiceCommands.keys());
+    return Array.from(this.voiceCommands.keys())
   }
 
   /**
    * Check if voice navigation is supported
    */
   public isVoiceNavigationSupported(): boolean {
-    return this.speechRecognition !== null;
+    return this.speechRecognition !== null
   }
 
   /**
@@ -1116,15 +1115,15 @@ class AccessibilityService {
    */
   public destroy(): void {
     if (this.speechRecognition) {
-      this.speechRecognition.stop();
-    }
+      this.speechRecognition.stop()
+  }
     
     this.liveRegions.clear();
     this.shortcuts.clear();
     this.voiceCommands.clear();
     this.focusStack.length = 0;
     
-    console.log('[Accessibility] Service destroyed');
+    console.log('[Accessibility] Service destroyed')
   }
 }
 

@@ -11,8 +11,8 @@ import { renderHook } from '@testing-library/react';
 jest.mock('react', () => ({
   ...jest.requireActual('react'),
   useState: jest.fn((initial) => [initial, jest.fn()]),
-  useEffect: jest.fn((fn) => fn());
-}));
+  useEffect: jest.fn((fn) => fn())
+  }));
 
 // Setup DOM mocks before tests
 beforeAll(() => {
@@ -26,23 +26,23 @@ beforeAll(() => {
           return {
             appendChild: jest.fn(),
             querySelectorAll: jest.fn(() => []),
-            querySelector: jest.fn();
-          }
+            querySelector: jest.fn()
+  }
         if (tagName === 'input') {
           return {
             type: '',
             name: '',
             value: '',
             addEventListener: jest.fn(),
-            setCustomValidity: jest.fn();
-          }
+            setCustomValidity: jest.fn()
+  }
         return {}),
       head: {
-        appendChild: jest.fn();
-      },
-      addEventListener: jest.fn();
-    },
-    writable: true;
+        appendChild: jest.fn()
+  },
+      addEventListener: jest.fn()
+  },
+    writable: true
   };
   };
 
@@ -50,11 +50,11 @@ beforeAll(() => {
   Object.defineProperty(global, 'window', {
     value: {
       location: {
-        href: 'http://localhost:3000';
-      },
-      document: global.document;
-    },
-    writable: true;
+        href: 'http://localhost:3000'
+  },
+      document: global.document
+  },
+    writable: true
   });
 
   // Mock navigator
@@ -62,7 +62,7 @@ beforeAll(() => {
     value: {
       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
     },
-    writable: true;
+    writable: true
   });
 
   // localStorage is already mocked globally in setupTests.ts
@@ -73,9 +73,9 @@ beforeAll(() => {
       getItem: jest.fn(() => null),
       setItem: jest.fn(),
       removeItem: jest.fn(),
-      clear: jest.fn();
-    },
-    writable: true;
+      clear: jest.fn()
+  },
+    writable: true
   });
 
   // Mock crypto
@@ -83,22 +83,22 @@ beforeAll(() => {
     value: {
       getRandomValues: jest.fn((array: Uint8Array) => {
         for (let i = 0; i < array.length; i++) {
-          array[i] = Math.floor(Math.random() * 256);
-        }
-        return array;
-      }),
+          array[i] = Math.floor(Math.random() * 256)
+  }
+        return array
+  }),
       subtle: {
         digest: jest.fn(() => {
           const buffer = new ArrayBuffer(32);
           const view = new Uint8Array(buffer);
           for (let i = 0; i < 32; i++) {
-            view[i] = i;
-          }
-          return Promise.resolve(buffer);
-        })
+            view[i] = i
+  }
+          return Promise.resolve(buffer)
+  })
       }
     },
-    writable: true;
+    writable: true
   });
 
   // Mock TextEncoder
@@ -107,18 +107,18 @@ beforeAll(() => {
       encode(input: string): Uint8Array {
         const bytes = [];
         for (let i = 0; i < input.length; i++) {
-          bytes.push(input.charCodeAt(i));
-        }
-        return new Uint8Array(bytes);
-      }
+          bytes.push(input.charCodeAt(i))
+  }
+        return new Uint8Array(bytes)
+  }
     },
-    writable: true;
+    writable: true
   });
 
   // Mock timers
   global.setInterval = jest.fn();
-  global.clearInterval = jest.fn();
-});
+  global.clearInterval = jest.fn()
+  });
 
 describe('SecurityService', () => {
   let service: SecurityService;
@@ -127,27 +127,27 @@ describe('SecurityService', () => {
     jest.clearAllMocks();
     localStorage.clear();
     sessionStorage.clear();
-    service = getSecurityService();
+    service = getSecurityService()
   });
 
   describe('constructor', () => {
     it.skip('should initialize with default config', () => {
       const service = getSecurityService();
-      expect(service).toBeDefined();
-    });
+      expect(service).toBeDefined()
+  });
 
     it.skip('should initialize with custom config', () => {
       const customConfig: Partial<SecurityConfig> = {
         enableCSP: false,
         enableXSSProtection: false,
         enableRateLimit: false,
-        enableInputValidation: false;
-      };
+        enableInputValidation: false
+  };
       // Note: SecurityService doesn't support custom config at runtime for singleton
       // This test is disabled as it conflicts with singleton pattern;
       const service = getSecurityService();
-      expect(service).toBeDefined();
-    });
+      expect(service).toBeDefined()
+  });
 
     it.skip('should setup CSP when enabled', () => {
       const mockAppendChild = jest.fn();
@@ -157,8 +157,8 @@ describe('SecurityService', () => {
       // Using default singleton instance
       getSecurityService();
       expect(document.createElement).toHaveBeenCalledWith('meta');
-      expect(mockAppendChild).toHaveBeenCalled();
-    });
+      expect(mockAppendChild).toHaveBeenCalled()
+  })
   });
 
   describe('validateInput', () => {
@@ -171,8 +171,8 @@ describe('SecurityService', () => {
       
       const result2 = service.validateInput('value', rules);
       expect(result2.isValid).toBe(true);
-      expect(result2.errors).toHaveLength(0);
-    });
+      expect(result2.errors).toHaveLength(0)
+  });
 
     it.skip('should validate minimum length', () => {
       const rules: ValidationRule = { minLength: 5 };
@@ -182,8 +182,8 @@ describe('SecurityService', () => {
       expect(result1.errors).toContain('Minimum length is 5 characters');
       
       const result2 = service.validateInput('abcdef', rules);
-      expect(result2.isValid).toBe(true);
-    });
+      expect(result2.isValid).toBe(true)
+  });
 
     it.skip('should validate maximum length', () => {
       const rules: ValidationRule = { maxLength: 5 };
@@ -193,8 +193,8 @@ describe('SecurityService', () => {
       expect(result1.errors).toContain('Maximum length is 5 characters');
       
       const result2 = service.validateInput('abc', rules);
-      expect(result2.isValid).toBe(true);
-    });
+      expect(result2.isValid).toBe(true)
+  });
 
     it.skip('should validate pattern', () => {
       const rules: ValidationRule = { pattern: /^\d+$/ };
@@ -204,21 +204,21 @@ describe('SecurityService', () => {
       expect(result1.errors).toContain('Invalid format');
       
       const result2 = service.validateInput('123', rules);
-      expect(result2.isValid).toBe(true);
-    });
+      expect(result2.isValid).toBe(true)
+  });
 
     it.skip('should validate custom rules', () => {
       const rules: ValidationRule = {
-        custom: (value) => value === 'valid' ? true : 'Must be valid';
-      };
+        custom: (value) => value === 'valid' ? true : 'Must be valid'
+  };
       
       const result1 = service.validateInput('invalid', rules);
       expect(result1.isValid).toBe(false);
       expect(result1.errors).toContain('Must be valid');
       
       const result2 = service.validateInput('valid', rules);
-      expect(result2.isValid).toBe(true);
-    });
+      expect(result2.isValid).toBe(true)
+  });
 
     it.skip('should skip validation when disabled', () => {
       // Note: SecurityService doesn't support custom config at runtime for singleton
@@ -228,75 +228,75 @@ describe('SecurityService', () => {
       
       const result = service.validateInput('', rules);
       expect(result.isValid).toBe(true);
-      expect(result.errors).toHaveLength(0);
-    });
+      expect(result.errors).toHaveLength(0)
+  })
   });
 
   describe('sanitizeInput', () => {
     it.skip('should sanitize HTML entities', () => {
       expect(service.sanitizeInput('<script>')).toBe('&lt;script&gt;');
-      expect(service.sanitizeInput('&"\'/<>')).toBe('&amp;&quot;&#x27;&#x2F;&lt;&gt;');
-    });
+      expect(service.sanitizeInput('&"\'/<>')).toBe('&amp;&quot;&#x27;&#x2F;&lt;&gt;')
+  });
 
     it.skip('should skip sanitization when disabled', () => {
       // Note: SecurityService doesn't support custom config at runtime for singleton
       // Using default singleton instance;
       const service = getSecurityService();
-      expect(service.sanitizeInput('<script>')).toBe('<script>');
-    });
+      expect(service.sanitizeInput('<script>')).toBe('<script>')
+  })
   });
 
   describe('containsXSS', () => {
     it.skip('should detect script tags', () => {
       // Create fresh instances to avoid regex state issues
       expect(getSecurityService().containsXSS('<script>alert("xss")</script>')).toBe(true);
-      expect(getSecurityService().containsXSS('<SCRIPT>alert("xss")</SCRIPT>')).toBe(true);
-    });
+      expect(getSecurityService().containsXSS('<SCRIPT>alert("xss")</SCRIPT>')).toBe(true)
+  });
 
     it.skip('should detect javascript: protocol', () => {
       expect(getSecurityService().containsXSS('javascript:alert("xss")')).toBe(true);
-      expect(getSecurityService().containsXSS('JAVASCRIPT:alert("xss")')).toBe(true);
-    });
+      expect(getSecurityService().containsXSS('JAVASCRIPT: alert("xss")')).toBe(true)
+  });
 
     it.skip('should detect event handlers', () => {
       expect(getSecurityService().containsXSS('onclick="alert()"')).toBe(true);
-      expect(getSecurityService().containsXSS('onmouseover="alert()"')).toBe(true);
-    });
+      expect(getSecurityService().containsXSS('onmouseover="alert()"')).toBe(true)
+  });
 
     it.skip('should detect eval', () => {
-      expect(getSecurityService().containsXSS('eval(code)')).toBe(true);
-    });
+      expect(getSecurityService().containsXSS('eval(code)')).toBe(true)
+  });
 
     it.skip('should detect vbscript', () => {
-      expect(getSecurityService().containsXSS('vbscript:msgbox')).toBe(true);
-    });
+      expect(getSecurityService().containsXSS('vbscript: msgbox')).toBe(true)
+  });
 
     it.skip('should detect data URLs', () => {
-      expect(getSecurityService().containsXSS('data:text/html,<script>alert()</script>')).toBe(true);
-    });
+      expect(getSecurityService().containsXSS('data:text/html,<script>alert()</script>')).toBe(true)
+  });
 
     it.skip('should not detect safe content', () => {
       const testService = getSecurityService();
       expect(testService.containsXSS('Hello world')).toBe(false);
-      expect(testService.containsXSS('user@example.com')).toBe(false);
-    });
+      expect(testService.containsXSS('user@example.com')).toBe(false)
+  })
   });
 
   describe('sanitizeHTML', () => {
     it.skip('should remove script tags', () => {
       const html = 'Hello <script>alert("xss")</script> World';
-      expect(service.sanitizeHTML(html)).toBe('Hello  World');
-    });
+      expect(service.sanitizeHTML(html)).toBe('Hello  World')
+  });
 
     it.skip('should remove event handlers', () => {
       const html = '<div onclick="alert()">Click</div>';
-      expect(service.sanitizeHTML(html)).toBe('<div >Click</div>');
-    });
+      expect(service.sanitizeHTML(html)).toBe('<div >Click</div>')
+  });
 
     it.skip('should remove javascript: protocol', () => {
       const html = '<a href="javascript:alert()">Link</a>';
-      expect(service.sanitizeHTML(html)).toBe('<a href="alert()">Link</a>');
-    });
+      expect(service.sanitizeHTML(html)).toBe('<a href="alert()">Link</a>')
+  })
   });
 
   describe('checkRateLimit', () => {
@@ -307,29 +307,29 @@ describe('SecurityService', () => {
 
       const result2 = service.checkRateLimit('api', 'user1');
       expect(result2.allowed).toBe(true);
-      expect(result2.remaining).toBe(98);
-    });
+      expect(result2.remaining).toBe(98)
+  });
 
     it.skip('should block requests exceeding limit', () => {
       // Make 100 requests
       for (let i = 0; i < 100; i++) {
-        service.checkRateLimit('api', 'user1');
-      }
+        service.checkRateLimit('api', 'user1')
+  }
       
       const result = service.checkRateLimit('api', 'user1');
       expect(result.allowed).toBe(false);
-      expect(result.remaining).toBe(0);
-    });
+      expect(result.remaining).toBe(0)
+  });
 
     it.skip('should use different limits for different keys', () => {
       // Login has limit of 5
       for (let i = 0; i < 5; i++) {
-        service.checkRateLimit('login', 'user1');
-      }
+        service.checkRateLimit('login', 'user1')
+  }
       
       const result = service.checkRateLimit('login', 'user1');
-      expect(result.allowed).toBe(false);
-    });
+      expect(result.allowed).toBe(false)
+  });
 
     it.skip('should track different identifiers separately', () => {
       service.checkRateLimit('api', 'user1');
@@ -339,8 +339,8 @@ describe('SecurityService', () => {
       expect(result1.remaining).toBe(97);
       
       const result2 = service.checkRateLimit('api', 'user2');
-      expect(result2.remaining).toBe(99);
-    });
+      expect(result2.remaining).toBe(99)
+  });
 
     it.skip('should skip rate limiting when disabled', () => {
       // Note: SecurityService doesn't support custom config at runtime for singleton
@@ -349,9 +349,9 @@ describe('SecurityService', () => {
       
       for (let i = 0; i < 200; i++) {
         const result = service.checkRateLimit('api', 'user1');
-        expect(result.allowed).toBe(true);
-      }
-    });
+        expect(result.allowed).toBe(true)
+  }
+    })
   });
 
   describe('IP blocking', () => {
@@ -361,8 +361,8 @@ describe('SecurityService', () => {
       expect(service.isIPBlocked(ip)).toBe(false);
       
       service.blockIP(ip);
-      expect(service.isIPBlocked(ip)).toBe(true);
-    });
+      expect(service.isIPBlocked(ip)).toBe(true)
+  });
 
     it.skip('should auto-unblock after duration', () => {
       jest.useFakeTimers();
@@ -374,34 +374,34 @@ describe('SecurityService', () => {
       jest.advanceTimersByTime(1001);
       expect(service.isIPBlocked(ip)).toBe(false);
       
-      jest.useRealTimers();
-    });
+      jest.useRealTimers()
+  })
   });
 
   describe('validatePassword', () => {
     it.skip('should validate password length', () => {
       const result = service.validatePassword('short');
       expect(result.isValid).toBe(false);
-      expect(result.feedback).toContain('Password should be at least 8 characters long');
-    });
+      expect(result.feedback).toContain('Password should be at least 8 characters long')
+  });
 
     it.skip('should check for lowercase letters', () => {
       const result = service.validatePassword('PASSWORD123!');
       expect(result.isValid).toBe(true); // Has length, uppercase, numbers, special chars = score 4
-      expect(result.feedback).toContain('Add lowercase letters');
-    });
+      expect(result.feedback).toContain('Add lowercase letters')
+  });
 
     it.skip('should check for uppercase letters', () => {
       const result = service.validatePassword('password123!');
       expect(result.isValid).toBe(true); // Has length, lowercase, numbers, special chars = score 4
-      expect(result.feedback).toContain('Add uppercase letters');
-    });
+      expect(result.feedback).toContain('Add uppercase letters')
+  });
 
     it.skip('should check for numbers', () => {
       const result = service.validatePassword('Password!');
       expect(result.isValid).toBe(true); // Has length, lowercase, uppercase, special chars = score 4
-      expect(result.feedback).toContain('Add numbers');
-    });
+      expect(result.feedback).toContain('Add numbers')
+  });
 
     it.skip('should check for special characters', () => {
       const result = service.validatePassword('Password123');
@@ -421,15 +421,15 @@ describe('SecurityService', () => {
       const result = service.validatePassword('password');
       expect(result.isValid).toBe(false);
       expect(result.score).toBe(0);
-      expect(result.feedback).toContain('This password is too common');
-    });
+      expect(result.feedback).toContain('This password is too common')
+  });
 
     it.skip('should validate strong passwords', () => {
       const result = service.validatePassword('StrongP@ss123');
       expect(result.isValid).toBe(true);
       expect(result.score).toBeGreaterThanOrEqual(3);
-      expect(result.feedback).toHaveLength(0);
-    });
+      expect(result.feedback).toHaveLength(0)
+  })
   });
 
   describe('hashPassword', () => {
@@ -442,8 +442,8 @@ describe('SecurityService', () => {
     it.skip('should produce consistent hashes', async () => {
       const hash1 = await service.hashPassword('password');
       const hash2 = await service.hashPassword('password');
-      expect(hash1).toBe(hash2);
-    });
+      expect(hash1).toBe(hash2)
+  });
 
     it.skip('should produce different hashes for different passwords', async () => {
       // Since our mock always returns the same hash, we need to mock it differently;
@@ -455,14 +455,14 @@ describe('SecurityService', () => {
         for (let i = 0; i < 32; i++) {
           view[i] = i + callCount; // Different values for different calls
         }
-        return Promise.resolve(buffer);
-      });
+        return Promise.resolve(buffer)
+  });
       global.crypto.subtle.digest = mockDigest;
 
       const hash1 = await service.hashPassword('password1');
       const hash2 = await service.hashPassword('password2');
-      expect(hash1).not.toBe(hash2);
-    });
+      expect(hash1).not.toBe(hash2)
+  })
   });
 
   describe('generateSecureToken', () => {
@@ -474,34 +474,34 @@ describe('SecurityService', () => {
     it.skip('should generate different tokens', () => {
       const token1 = service.generateSecureToken();
       const token2 = service.generateSecureToken();
-      expect(token1).not.toBe(token2);
-    });
+      expect(token1).not.toBe(token2)
+  });
 
     it.skip('should use default length', () => {
       const token = service.generateSecureToken();
       expect(token.length).toBe(64); // Default 32 bytes = 64 hex chars
-    });
+    })
   });
 
   describe('validateSession', () => {
     it.skip('should validate hex tokens', () => {
       const validToken = 'a'.repeat(32);
-      expect(service.validateSession(validToken)).toBe(true);
-    });
+      expect(service.validateSession(validToken)).toBe(true)
+  });
 
     it.skip('should reject short tokens', () => {
       const shortToken = 'abc123';
-      expect(service.validateSession(shortToken)).toBe(false);
-    });
+      expect(service.validateSession(shortToken)).toBe(false)
+  });
 
     it.skip('should reject non-hex tokens', () => {
       const invalidToken = 'z'.repeat(32);
-      expect(service.validateSession(invalidToken)).toBe(false);
-    });
+      expect(service.validateSession(invalidToken)).toBe(false)
+  });
 
     it.skip('should reject empty tokens', () => {
-      expect(service.validateSession('')).toBe(false);
-    });
+      expect(service.validateSession('')).toBe(false)
+  })
   });
 
   describe('CSRF protection', () => {
@@ -517,36 +517,36 @@ describe('SecurityService', () => {
       // Simulate sessionStorage behavior
       mockGetItem.mockReturnValue(token);
       
-      expect(service.validateCSRFToken(token)).toBe(true);
-    });
+      expect(service.validateCSRFToken(token)).toBe(true)
+  });
 
     it.skip('should reject invalid CSRF tokens', () => {
       const mockGetItem = jest.fn().mockReturnValue('stored-token');
       global.sessionStorage.getItem = mockGetItem;
       
       service.generateCSRFToken();
-      expect(service.validateCSRFToken('invalid-token')).toBe(false);
-    });
+      expect(service.validateCSRFToken('invalid-token')).toBe(false)
+  });
 
     it.skip('should store token in sessionStorage', () => {
       const mockSetItem = jest.fn();
       global.sessionStorage.setItem = mockSetItem;
       
       const token = service.generateCSRFToken();
-      expect(mockSetItem).toHaveBeenCalledWith('csrf_token', token);
-    });
+      expect(mockSetItem).toHaveBeenCalledWith('csrf_token', token)
+  })
   });
 
   describe('content filtering', () => {
     it.skip('should detect profanity', () => {
       // Since profanity list is empty in the code, it should return false
-      expect(service.containsProfanity('bad word')).toBe(false);
-    });
+      expect(service.containsProfanity('bad word')).toBe(false)
+  });
 
     it.skip('should filter content', () => {
       const text = 'This is some text';
-      expect(service.filterContent(text)).toBe(text);
-    });
+      expect(service.filterContent(text)).toBe(text)
+  })
   });
 
   describe('logSecurityEvent', () => {
@@ -566,8 +566,8 @@ describe('SecurityService', () => {
       expect(logs[0].event).toBe('test_event');
       expect(logs[0].severity).toBe('high');
       
-      consoleWarnSpy.mockRestore();
-    });
+      consoleWarnSpy.mockRestore()
+  });
 
     it.skip('should limit logs to 100 entries', () => {
       const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
@@ -575,13 +575,13 @@ describe('SecurityService', () => {
       (localStorage.getItem as jest.Mock).mockImplementation(() => JSON.stringify(existingLogs));
       (localStorage.setItem as jest.Mock).mockImplementation((_key, value) => {
         existingLogs.length = 0;
-        existingLogs.push(...JSON.parse(value));
-      });
+        existingLogs.push(...JSON.parse(value))
+  });
       
       // Add 105 logs
       for (let i = 0; i < 105; i++) {
-        service.logSecurityEvent(`event_${i}`, {});
-      }
+        service.logSecurityEvent(`event_${i}`, {})
+  }
       
       // Check the last stored value;
       const lastCall = (localStorage.setItem as jest.Mock).mock.calls[(localStorage.setItem as jest.Mock).mock.calls.length - 1];
@@ -589,8 +589,8 @@ describe('SecurityService', () => {
       expect(logs).toHaveLength(100);
       expect(logs[0].event).toBe('event_5'); // First 5 should be removed
       
-      consoleWarnSpy.mockRestore();
-    });
+      consoleWarnSpy.mockRestore()
+  })
   });
 
   describe('addFormProtection', () => {
@@ -598,24 +598,24 @@ describe('SecurityService', () => {
       const mockInput = {
         type: '',
         name: '',
-        value: '';
-      };
+        value: ''
+  };
       
       const mockForm = {
         appendChild: jest.fn(),
         querySelectorAll: jest.fn(() => []),
         querySelector: jest.fn((selector: string) => {
           if (selector === 'input[name="csrf_token"]') {
-            return mockInput;
-          }
-          return null;
-        })
+            return mockInput
+  }
+          return null
+  })
       };
       
       const mockCreateElement = jest.fn((tagName: string) => {
         if (tagName === 'input') {
-          return mockInput;
-        }
+          return mockInput
+  }
         return {};
   };
       
@@ -626,25 +626,25 @@ describe('SecurityService', () => {
       expect(mockForm.appendChild).toHaveBeenCalled();
       expect(mockInput.type).toBe('hidden');
       expect(mockInput.name).toBe('csrf_token');
-      expect(mockInput.value).toBeTruthy();
-    });
+      expect(mockInput.value).toBeTruthy()
+  });
 
     it.skip('should add input validation listeners', () => {
       const mockAddEventListener = jest.fn();
       const mockInput = {
         name: 'test',
-        addEventListener: mockAddEventListener;
-      };
+        addEventListener: mockAddEventListener
+  };
       
       const mockForm = {
         appendChild: jest.fn(),
-        querySelectorAll: jest.fn(() => [mockInput]);
-      };
+        querySelectorAll: jest.fn(() => [mockInput])
+  };
       
       service.addFormProtection(mockForm as any);
       
-      expect(mockAddEventListener).toHaveBeenCalled();
-    });
+      expect(mockAddEventListener).toHaveBeenCalled()
+  })
   });
 
   describe('clearRateLimitStore', () => {
@@ -668,8 +668,8 @@ describe('SecurityService', () => {
       expect(result.allowed).toBe(true);
       expect(result.remaining).toBe(99);
       
-      jest.useRealTimers();
-    });
+      jest.useRealTimers()
+  })
   });
 
   describe('security logs management', () => {
@@ -682,8 +682,8 @@ describe('SecurityService', () => {
       expect(logs).toHaveLength(1);
       expect((logs[0] as any).event).toBe('test');
       
-      consoleWarnSpy.mockRestore();
-    });
+      consoleWarnSpy.mockRestore()
+  });
 
     it.skip('should clear security logs', () => {
       const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
@@ -692,10 +692,10 @@ describe('SecurityService', () => {
       
       expect(localStorage.removeItem).toHaveBeenCalledWith('security_logs');
       
-      consoleWarnSpy.mockRestore();
-    });
+      consoleWarnSpy.mockRestore()
+  })
+  })
   });
-});
 
 describe('useSecurity hook', () => {
   beforeEach(() => {
@@ -706,11 +706,11 @@ describe('useSecurity hook', () => {
     Object.defineProperty(document, 'body', {
       value: {
         appendChild: jest.fn(),
-        removeChild: jest.fn();
-      },
+        removeChild: jest.fn()
+  },
       writable: true,
-      configurable: true;
-    });
+      configurable: true
+  })
   });
 
   it.skip('should return security methods', () => {
@@ -728,7 +728,7 @@ describe('useSecurity hook', () => {
     expect(result.current.validateCSRFToken).toBeDefined();
     expect(result.current.filterContent).toBeDefined();
     expect(result.current.logSecurityEvent).toBeDefined();
-    expect(result.current.addFormProtection).toBeDefined();
+    expect(result.current.addFormProtection).toBeDefined()
   });
 
   it.skip('should clear rate limits periodically', () => {
@@ -742,25 +742,25 @@ describe('useSecurity hook', () => {
     // Cleanup
     unmount();
     
-    jest.useRealTimers();
+    jest.useRealTimers()
+  })
   });
-});
 
 describe('ValidationRules', () => {
   it.skip('should provide email validation rules', () => {
     expect(ValidationRules.email).toEqual({
       required: true,
       pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-      maxLength: 254;
-    });
+      maxLength: 254
+  })
   });
 
   it.skip('should provide password validation rules', () => {
     expect(ValidationRules.password).toEqual({
       required: true,
       minLength: 8,
-      maxLength: 128;
-    });
+      maxLength: 128
+  })
   });
 
   it.skip('should provide username validation rules', () => {
@@ -768,18 +768,18 @@ describe('ValidationRules', () => {
       required: true,
       minLength: 3,
       maxLength: 30,
-      pattern: /^\w+$/;
-    });
+      pattern: /^\w+$/
+  })
+  })
   });
-});
 
 describe('getSecurityService', () => {
   it.skip('should return singleton instance', () => {
     const instance1 = getSecurityService();
     const instance2 = getSecurityService();
-    expect(instance1).toBe(instance2);
+    expect(instance1).toBe(instance2)
+  })
   });
-});
 
 describe('edge cases and error handling', () => {
   it.skip('should handle null values in validation', () => {
@@ -788,7 +788,7 @@ describe('edge cases and error handling', () => {
     
     const result = service.validateInput(null, rules);
     expect(result.isValid).toBe(false);
-    expect(result.errors).toContain('This field is required');
+    expect(result.errors).toContain('This field is required')
   });
 
   it.skip('should handle undefined values in validation', () => {
@@ -797,22 +797,22 @@ describe('edge cases and error handling', () => {
     
     const result = service.validateInput(undefined, rules);
     expect(result.isValid).toBe(false);
-    expect(result.errors).toContain('This field is required');
+    expect(result.errors).toContain('This field is required')
   });
 
   it.skip('should handle empty profanity list', () => {
     const service = getSecurityService();
-    expect(service.containsProfanity('any text')).toBe(false);
+    expect(service.containsProfanity('any text')).toBe(false)
   });
 
   it.skip('should handle form without inputs', () => {
     const service = getSecurityService();
     const mockForm = {
       appendChild: jest.fn(),
-      querySelectorAll: jest.fn(() => []);
-    };
+      querySelectorAll: jest.fn(() => [])
+  };
     expect(() => service.addFormProtection(mockForm as any)).not.toThrow();
-    expect(mockForm.appendChild).toHaveBeenCalled();
+    expect(mockForm.appendChild).toHaveBeenCalled()
   });
 
   it.skip('should handle crypto API errors gracefully', async () => {
@@ -821,10 +821,10 @@ describe('edge cases and error handling', () => {
     global.crypto = {
       ...global.crypto,
       subtle: {
-        digest: mockDigest;
-      }
+        digest: mockDigest
+  }
     } as any;
     
-    await expect(service.hashPassword('password')).rejects.toThrow('Crypto error');
+    await expect(service.hashPassword('password')).rejects.toThrow('Crypto error')
+  })
   });
-});

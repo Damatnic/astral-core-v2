@@ -123,8 +123,8 @@ const envSchema = z.object({
   // File Upload
   MAX_FILE_SIZE: z.string().regex(/^\d+$/).optional(),
   ALLOWED_FILE_TYPES: z.string().optional(),
-  UPLOAD_PATH: z.string().optional();
-});
+  UPLOAD_PATH: z.string().optional()
+  });
 
 // Define required variables by environment;
 const requiredByEnvironment={
@@ -166,7 +166,7 @@ const requiredByEnvironment={
     "SMTP_PASS",
     "EMAIL_FROM"
   ]
-};
+}
 
 // Security validation rules;
 const securityRules={
@@ -178,8 +178,8 @@ const securityRules={
         value.length < 32)
     ) {
       throw new Error(
-        "JWT_SECRET must be at least 32 characters and not contain default values");
-    }
+        "JWT_SECRET must be at least 32 characters and not contain default values")
+  }
   },
   SESSION_SECRET: (value: string) => {
     if (
@@ -189,18 +189,18 @@ const securityRules={
         value.length < 32)
     ) {
       throw new Error(
-        "SESSION_SECRET must be at least 32 characters and not contain default values");
-    }
+        "SESSION_SECRET must be at least 32 characters and not contain default values")
+  }
   },
   DATABASE_URL: (value: string) => {
     if (value && value.includes("password") && !value.includes("@")) {
-      throw new Error("DATABASE_URL appears to be malformed");
-    }
+      throw new Error("DATABASE_URL appears to be malformed")
+  }
   },
   VITE_AUTH0_CLIENT_SECRET: (value: string) => {
     if(value && value.length < 32) {
-      throw new Error("AUTH0_CLIENT_SECRET appears to be too short");
-    }
+      throw new Error("AUTH0_CLIENT_SECRET appears to be too short")
+  }
   }
 };
 
@@ -209,8 +209,8 @@ export interface ValidationResult {
   missing: string[];
   errors: string[];
   warnings: string[];
-  security: string[];
-}
+  security: string[]
+  }
 /**
  * Validate environment variables
  */;
@@ -220,52 +220,52 @@ export function validateEnvironment(env: Record<string, string | undefined>, env
     missing: [],
     errors: [],
     warnings: [],
-    security: [];
-  };
+    security: []
+  }
 
   // Check required variables for environment;
   const required = requiredByEnvironment[environment as keyof typeof requiredByEnvironment];
   required.forEach((key: string) => {
     if(!env[key]) {
       result.missing.push(key);
-      result.valid = false;
-    }
+      result.valid = false
+  }
   });
 
   // Validate schema (skip empty PWA colors as they have defaults)
   try {
     // Filter out empty PWA color values before validation;
-    const envToValidate={ ...env };
+    const envToValidate={ ...env }
     if(envToValidate.VITE_PWA_THEME_COLOR === "") {
-      delete envToValidate.VITE_PWA_THEME_COLOR;
-    }
+      delete envToValidate.VITE_PWA_THEME_COLOR
+  }
     if(envToValidate.VITE_PWA_BACKGROUND_COLOR === "") {
-      delete envToValidate.VITE_PWA_BACKGROUND_COLOR;
-    }
-    envSchema.parse(envToValidate);
+      delete envToValidate.VITE_PWA_BACKGROUND_COLOR
+  }
+    envSchema.parse(envToValidate)
   } catch(error) {
     if(error instanceof z.ZodError) {
       error.issues.forEach((err) => {
         if (err.message.includes("Required")) {
-          result.missing.push(err.path.join("."));;
+          result.missing.push(err.path.join("."))
   } else {
-          result.errors.push(`${err.path.join('.')}: ${err.message}`);
-        }
+          result.errors.push(`${err.path.join('.')}: ${err.message}`)
+  }
       });
-      result.valid = false;
-    }
+      result.valid = false
+  }
   }
   // Security checks
   Object.entries(securityRules).forEach(([key, validator]) => {
     const value = env[key];
     if(value) {
       try {
-        validator(value);
-      } catch(error) {
+        validator(value)
+  } catch(error) {
         result.security.push((error as Error).message);
         if(environment === "production") {
-          result.valid = false;
-        }
+          result.valid = false
+  }
       }
     }
   });
@@ -273,21 +273,21 @@ export function validateEnvironment(env: Record<string, string | undefined>, env
   // Warnings for production
   if(environment === "production") {
     if(env.VITE_DEBUG_MODE === "true") {
-      result.warnings.push("Debug mode is enabled in production");
-    }
+      result.warnings.push("Debug mode is enabled in production")
+  }
     if(env.VITE_SHOW_DEV_TOOLS === "true") {
-      result.warnings.push("Dev tools are enabled in production");
-    }
+      result.warnings.push("Dev tools are enabled in production")
+  }
     if(env.CSP_REPORT_ONLY === "true") {
-      result.warnings.push("CSP is in report-only mode in production");
-    }
+      result.warnings.push("CSP is in report-only mode in production")
+  }
     if(!env.VITE_ENABLE_TWO_FACTOR || env.VITE_ENABLE_TWO_FACTOR !== "true") {
       result.warnings.push(
-        "Two-factor authentication is not enabled in production");
-    }
+        "Two-factor authentication is not enabled in production")
+  }
     if(!env.DATABASE_SSL || env.DATABASE_SSL !== "true") {
-      result.warnings.push("Database SSL is not enabled in production");
-    }
+      result.warnings.push("Database SSL is not enabled in production")
+  }
   }
   // Check for sensitive data in public variables;
   const publicVars = Object.keys(env).filter((key: string) => key.startsWith("VITE_"));
@@ -304,13 +304,13 @@ export function validateEnvironment(env: Record<string, string | undefined>, env
     ) {
       result.security.push(`Potentially sensitive data in public variable: ${key}`);
       if(environment === "production") {
-        result.valid = false;
-      }
+        result.valid = false
+  }
     }
   });
 
-  return result;
-}
+  return result
+  }
 /**
  * Display validation results
  */;
@@ -325,19 +325,19 @@ export function displayValidationResults(result: ValidationResult): void {
   }
   if(result.security.length > 0) {
 
-    result.security.forEach((issue) => console.error(`  - ${issue}`));
+    result.security.forEach((issue) => console.error(`  - ${issue}`))
   }
-  if(!result.valid) {
-    if(;
-      typeof process !== "undefined" &&
+      if(!result.valid) {
+      if(
+        typeof process !== "undefined" &&
       process.env?.NODE_ENV === "production"
     ) {
-      throw new Error("Environment validation failed in production");
-    }
+      throw new Error("Environment validation failed in production")
+  }
   }
   if(result.warnings.length > 0) {
 
-    result.warnings.forEach((warning) => console.warn(`  - ${warning}`));
+    result.warnings.forEach((warning) => console.warn(`  - ${warning}`))
   }
   if(result.valid && result.warnings.length === 0) {
 
@@ -353,50 +353,50 @@ export function loadAndValidateEnv(): ValidationResult {
   const result = validateEnvironment(env, environment);
   displayValidationResults(result);
 
-  return result;
-}
+  return result
+  }
 /**
  * Get environment variable with optional default
  */;
 export function getEnv(key: string, defaultValue?: string): string | undefined {
   if(typeof process !== "undefined") {
-    return process.env[key] || defaultValue;
+    return process.env[key] || defaultValue
   }
-  return defaultValue;
-}
+  return defaultValue
+  }
 /**
  * Check if environment variable exists
  */;
 export function hasEnv(key: string): boolean {
-  return typeof process !== "undefined" && !!process.env[key];
-}
+  return typeof process !== "undefined" && !!process.env[key]
+  }
 /**
  * Get environment type
  */;
 export function getEnvironment(): "development" | "staging" | "production" {
   if(typeof process !== "undefined" && process.env?.NODE_ENV) {
-    return process.env.NODE_ENV as "development" | "staging" | "production";
+    return process.env.NODE_ENV as "development" | "staging" | "production"
   }
-  return "development";
-}
+  return "development"
+  }
 /**
  * Check if in production
  */;
 export function isProduction(): boolean {
-  return getEnvironment() === "production";
-}
+  return getEnvironment() === "production"
+  }
 /**
  * Check if in development
  */;
 export function isDevelopment(): boolean {
-  return getEnvironment() === "development";
-}
+  return getEnvironment() === "development"
+  }
 /**
  * Check if in staging
  */;
 export function isStaging(): boolean {
-  return getEnvironment() === "staging";
-}
+  return getEnvironment() === "staging"
+  }
 export default {
   validateEnvironment,
   loadAndValidateEnv,

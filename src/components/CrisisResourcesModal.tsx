@@ -20,8 +20,8 @@ export interface CrisisResource {
   region: string;
   priority: 'critical' | 'high' | 'medium';
   type: 'emergency' | 'mental_health' | 'text_support' | 'treatment_referral' | 'specialized';
-  services?: string[];
-}
+  services?: string[]
+  }
 
 export interface CopingStrategy {
   id: string;
@@ -30,14 +30,14 @@ export interface CopingStrategy {
   steps: string[];
   category: 'breathing' | 'grounding' | 'distraction' | 'self_soothing' | 'cognitive';
   duration: string;
-  difficulty: 'easy' | 'moderate' | 'advanced';
-}
+  difficulty: 'easy' | 'moderate' | 'advanced'
+  }
 
 export interface CrisisResourcesModalProps {
   isOpen: boolean;
   onClose: () => void;
-  initialTab?: 'emergency' | 'support' | 'coping' | 'safety';
-}
+  initialTab?: 'emergency' | 'support' | 'coping' | 'safety'
+  }
 
 export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
   isOpen,
@@ -67,8 +67,8 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
         ]);
 
         if (!resourcesResponse.ok || !copingResponse.ok) {
-          throw new Error('Failed to load crisis resources');
-        }
+          throw new Error('Failed to load crisis resources')
+  }
 
         const [resourcesData, copingData] = await Promise.all([
           resourcesResponse.json(),
@@ -82,8 +82,8 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
         ];
 
         setCrisisResources(allResources);
-        setCopingStrategies(copingData.strategies || []);
-      } catch (err) {
+        setCopingStrategies(copingData.strategies || [])
+  } catch (err) {
         console.error('Failed to load crisis resources:', err);
         setError('Unable to load crisis resources. Please try again.');
         
@@ -97,8 +97,8 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
             availability: '24/7',
             region: 'US',
             priority: 'critical',
-            type: 'emergency';
-          },
+            type: 'emergency'
+  },
           {
             id: 'suicide-prevention-988',
             name: 'National Suicide Prevention Lifeline',
@@ -107,15 +107,15 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
             availability: '24/7',
             region: 'US',
             priority: 'critical',
-            type: 'mental_health';
-          }
-        ]);
-      } finally {
-        setLoading(false);
-      }
+            type: 'mental_health'
+  }
+        ])
+  } finally {
+        setLoading(false)
+  }
     };
 
-    loadResources();
+    loadResources()
   };
   }, [isOpen]);
 
@@ -173,8 +173,7 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
           </div>
         </div>
         <p className="coping-strategy__description">{strategy.description}</p>
-        <button;
-          className="coping-strategy__toggle"
+        <button className="coping-strategy__toggle"
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
         >
@@ -190,11 +189,11 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
           </ol>
         )}
       </div>
-    );
+    )
   };
 
   // Safety planning content;
-  const SafetyPlanContent = () => (;
+  const SafetyPlanContent = () => (;;
     <div className="safety-plan">
       <div className="safety-plan__section">
         <h3>Warning Signs</h3>
@@ -245,7 +244,7 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
           <p>Loading crisis resources...</p>
         </div>
       </Modal>
-    );
+    )
   }
 
   return (
@@ -268,8 +267,7 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
               </span>
             )}
           </div>
-          <button;
-            className="crisis-modal__close"
+          <button className="crisis-modal__close"
             onClick={onClose}
             aria-label="Close crisis resources"
           >
@@ -285,26 +283,22 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
         )}
 
         <div className="crisis-modal__tabs">
-          <button;
-            className={activeTab === 'emergency' ? 'crisis-tab crisis-tab--active' : 'crisis-tab'}
+          <button className={activeTab === 'emergency' ? 'crisis-tab crisis-tab--active' : 'crisis-tab'}
             onClick={() => setActiveTab('emergency')}
           >
             Emergency
           </button>
-          <button;
-            className={activeTab === 'support' ? 'crisis-tab crisis-tab--active' : 'crisis-tab'}
+          <button className={activeTab === 'support' ? 'crisis-tab crisis-tab--active' : 'crisis-tab'}
             onClick={() => setActiveTab('support')}
           >
             Support
           </button>
-          <button;
-            className={activeTab === 'coping' ? 'crisis-tab crisis-tab--active' : 'crisis-tab'}
+          <button className={activeTab === 'coping' ? 'crisis-tab crisis-tab--active' : 'crisis-tab'}
             onClick={() => setActiveTab('coping')}
           >
             Coping
           </button>
-          <button;
-            className={activeTab === 'safety' ? 'crisis-tab crisis-tab--active' : 'crisis-tab'}
+          <button className={activeTab === 'safety' ? 'crisis-tab crisis-tab--active' : 'crisis-tab'}
             onClick={() => setActiveTab('safety')}
           >
             Safety Plan
@@ -358,7 +352,7 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
         </div>
       </div>
     </Modal>
-  );
-};
+  )
+  };
 
 export default CrisisResourcesModal;

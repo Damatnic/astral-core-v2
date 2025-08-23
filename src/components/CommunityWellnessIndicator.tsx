@@ -6,8 +6,8 @@ interface CommunityWellnessIndicatorProps {
   activeUsers: number;
   supportGiven: number;
   postsToday: number;
-  overallMood: 'positive' | 'neutral' | 'needsSupport';
-}
+  overallMood: 'positive' | 'neutral' | 'needsSupport'
+  }
 
 export const CommunityWellnessIndicator: React.FC<CommunityWellnessIndicatorProps> = ({
   activeUsers,
@@ -23,9 +23,8 @@ export const CommunityWellnessIndicator: React.FC<CommunityWellnessIndicatorProp
         return '#FFC107';
       case 'needsSupport':
         return '#FF5722';
-      default:
-        return '#667eea';
-    }
+      default: return '#667eea'
+  }
   };
 
   const getMoodMessage = () => {
@@ -36,9 +35,8 @@ export const CommunityWellnessIndicator: React.FC<CommunityWellnessIndicatorProp
         return 'The community is here for each other 💙';
       case 'needsSupport':
         return 'The community needs extra support today 🤗';
-      default:
-        return 'Welcome to our supportive community';
-    }
+      default: return 'Welcome to our supportive community'
+  }
   };
 
   return (
@@ -93,5 +91,5 @@ export const CommunityWellnessIndicator: React.FC<CommunityWellnessIndicatorProp
         <div className="pulse-ring pulse-ring-3"></div>
       </div>
     </div>
-  );
-};
+  )
+  };

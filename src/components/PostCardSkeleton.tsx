@@ -14,8 +14,8 @@ interface PostCardSkeletonProps {
   /** Show additional skeleton elements for helper view */
   isHelperView?: boolean;
   /** Animate the skeleton */
-  animate?: boolean;
-}
+  animate?: boolean
+  }
 
 export const PostCardSkeleton: React.FC<PostCardSkeletonProps> = ({ 
   count = 1, 
@@ -87,8 +87,8 @@ export const PostCardSkeleton: React.FC<PostCardSkeletonProps> = ({
         </output>
       ))}
     </>
-  );
-};
+  )
+  };
 
 /**
  * Inline skeleton for when PostCard is loading within existing layout

@@ -10,8 +10,8 @@ interface ReflectionState {
     addReflection: (reflection: Reflection) => void;
     updateReaction: (reflectionId: string, reactionType: string, userReaction?: string) => void;
     setLoading: (loading: boolean) => void;
-    setError: (error: string | null) => void;
-}
+    setError: (error: string | null) => void
+  }
 
 export const useReflectionStore = create<ReflectionState>((set) => ({
     reflections: [],
@@ -29,15 +29,15 @@ export const useReflectionStore = create<ReflectionState>((set) => ({
             if (r.id === reflectionId) {
                 const updatedReactions = { ...r.reactions };
                 if (userReaction && !r.myReaction) {
-                    updatedReactions[reactionType] = (updatedReactions[reactionType] || 0) + 1;
-                }
+                    updatedReactions[reactionType] = (updatedReactions[reactionType] || 0) + 1
+  }
                 return {
                     ...r,
                     reactions: updatedReactions,
-                    myReaction: userReaction || r.myReaction;
-                }
-            return r;
-        })
+                    myReaction: userReaction || r.myReaction
+  }
+            return r
+  })
     };
   }),
     

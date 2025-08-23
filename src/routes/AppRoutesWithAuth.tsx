@@ -57,23 +57,23 @@ const RouteLoading: React.FC = () => (
 // Simple Auth Guard Component;
 const SimpleAuthGuard: React.FC<{ 
   children: React.ReactNode;
-  requireRoles?: string[];
-}> = ({ children, requireRoles }) => {
+  requireRoles?: string[]
+  }> = ({ children, requireRoles }) => {
   const { isAuthenticated, user } = useSimpleAuth();
 
   if (!isAuthenticated) {
-    return <Navigate to="/auth" replace />;
+    return <Navigate to="/auth" replace />
   }
 
   if (requireRoles && requireRoles.length > 0) {
     const hasRequiredRole = requireRoles.includes(user?.role || '');
     if (!hasRequiredRole) {
-      return <Navigate to="/" replace />;
-    }
+      return <Navigate to="/" replace />
+  }
   }
 
-  return <>{children}</>;
-};
+  return <>{children}</>
+  };
 
 export const AppRoutesWithAuth: React.FC = () => {
   const { isAuthenticated } = useSimpleAuth();
@@ -234,7 +234,7 @@ export const AppRoutesWithAuth: React.FC = () => {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>
-  );
-};
+  )
+  };
 
 export default AppRoutesWithAuth;

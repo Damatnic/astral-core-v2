@@ -10,15 +10,15 @@ export const truncateText = (text: string, maxLength: number, suffix: string = '
   
   // Handle negative max length
   if (maxLength <= 0) {
-    return suffix;
+    return suffix
   }
   
   if (text.length <= maxLength) {
-    return text;
+    return text
   }
   
   // Trim the text before adding suffix to avoid trailing spaces
-  return text.slice(0, maxLength).trimEnd() + suffix;
-};
+  return text.slice(0, maxLength).trimEnd() + suffix
+  };
 
 export default truncateText;

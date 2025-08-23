@@ -8,8 +8,8 @@ interface ThemeConfig {
   secondary: string;
   background: string;
   overlay: string;
-  message: string;
-}
+  message: string
+  }
 
 const moodThemes: Record<string, ThemeConfig> = {
   excellent: {
@@ -18,7 +18,7 @@ const moodThemes: Record<string, ThemeConfig> = {
     secondary: '#81C784',
     background: 'linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%)',
     overlay: 'rgba(76, 175, 80, 0.05)',
-    message: 'Your positive energy is radiating! 🌟';
+    message: 'Your positive energy is radiating! 🌟'
   },
   good: {
     name: 'Balanced',
@@ -42,7 +42,7 @@ const moodThemes: Record<string, ThemeConfig> = {
     secondary: '#FFB74D',
     background: 'linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%)',
     overlay: 'rgba(255, 152, 0, 0.05)',
-    message: 'It\'s okay to not be okay. You\'re not alone 🧡';
+    message: 'It\'s okay to not be okay. You\'re not alone 🧡'
   },
   struggling: {
     name: 'Gentle',
@@ -50,7 +50,7 @@ const moodThemes: Record<string, ThemeConfig> = {
     secondary: '#F06292',
     background: 'linear-gradient(135deg, #FCE4EC 0%, #F8BBD0 100%)',
     overlay: 'rgba(233, 30, 99, 0.05)',
-    message: 'We\'re here to support you through this 💗';
+    message: 'We\'re here to support you through this 💗'
   }
 };
 
@@ -68,25 +68,25 @@ export const MoodThemeAdapter: React.FC = () => {
     
     let selectedTheme: ThemeConfig;
     if (avgMood >= 4.5) {
-      selectedTheme = moodThemes.excellent;;
+      selectedTheme = moodThemes.excellent
   } else if (avgMood >= 3.5) {
-      selectedTheme = moodThemes.good;;
+      selectedTheme = moodThemes.good
   } else if (avgMood >= 2.5) {
-      selectedTheme = moodThemes.neutral;;
+      selectedTheme = moodThemes.neutral
   } else if (avgMood >= 1.5) {
-      selectedTheme = moodThemes.low;;
+      selectedTheme = moodThemes.low
   } else {
-      selectedTheme = moodThemes.struggling;
-    }
+      selectedTheme = moodThemes.struggling
+  }
     
     if (selectedTheme.name !== currentTheme.name) {
       setIsTransitioning(true);
       setTimeout(() => {
         setCurrentTheme(selectedTheme);
         applyTheme(selectedTheme);
-        setIsTransitioning(false);
-      }, 300);
-    }
+        setIsTransitioning(false)
+  }, 300)
+  }
   };
   }, [history, currentTheme.name]);
   
@@ -105,18 +105,17 @@ export const MoodThemeAdapter: React.FC = () => {
     // Apply background gradient to specific elements;
     const elements = document.querySelectorAll('.mood-adaptive');
     elements.forEach(el => {
-      (el as HTMLElement).style.background = theme.background;
-    });
+      (el as HTMLElement).style.background = theme.background
+  })
   };
   
   return (
     <div className={`mood-theme-indicator ${isTransitioning ? 'transitioning' : ''}`}>
-      <div; 
-        className="theme-badge"
+      <div className="theme-badge"
         style={{
           background: currentTheme.background,
-          borderColor: currentTheme.primary;
-        }}
+          borderColor: currentTheme.primary
+  }}
       >
         <span className="theme-name" style={{ color: currentTheme.primary }}>
           {currentTheme.name} Mode
@@ -126,5 +125,5 @@ export const MoodThemeAdapter: React.FC = () => {
         {currentTheme.message}
       </p>
     </div>
-  );
-};
+  )
+  };

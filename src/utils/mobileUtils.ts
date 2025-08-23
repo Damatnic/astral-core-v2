@@ -11,10 +11,10 @@ export const initMobileViewport = () => {
     document.documentElement.style.setProperty('--vh', `${vh}px`);
     
     // Set mobile-specific viewport height for keyboard handling;
-    const mobileVh = window.visualViewport ;
+    const mobileVh = window.visualViewport ;;
       ? window.visualViewport.height * 0.01
       : window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--mobile-vh', `${mobileVh * 100}px`);
+    document.documentElement.style.setProperty('--mobile-vh', `${mobileVh * 100}px`)
   };
 
   // Set initial viewport height
@@ -26,21 +26,21 @@ export const initMobileViewport = () => {
   // Use Visual Viewport API if available (better for mobile)
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', setViewportHeight);
-    window.visualViewport.addEventListener('scroll', setViewportHeight);
+    window.visualViewport.addEventListener('scroll', setViewportHeight)
   }
 
   // Handle orientation changes
   window.addEventListener('orientationchange', () => {
-    setTimeout(setViewportHeight, 100);
+    setTimeout(setViewportHeight, 100)
   });
 
   return () => {
     window.removeEventListener('resize', setViewportHeight);
     if (window.visualViewport) {
       window.visualViewport.removeEventListener('resize', setViewportHeight);
-      window.visualViewport.removeEventListener('scroll', setViewportHeight);
-    }
-    window.removeEventListener('orientationchange', setViewportHeight);
+      window.visualViewport.removeEventListener('scroll', setViewportHeight)
+  }
+    window.removeEventListener('orientationchange', setViewportHeight)
   };
 
 /**
@@ -52,8 +52,8 @@ export const enhanceMobileFocus = () => {
   inputs.forEach(input => {
     // Type guard to ensure it's an HTML element with addEventListener
     if (!(input instanceof HTMLElement) || typeof input.addEventListener !== 'function') {
-      return;
-    }
+      return
+  }
     
     // Prevent zoom on iOS by ensuring 16px font size
     if (window.navigator.userAgent.includes('iPhone') || window.navigator.userAgent.includes('iPad')) {
@@ -62,8 +62,8 @@ export const enhanceMobileFocus = () => {
         const fontSize = parseFloat(computedStyle.fontSize);
         
         if (fontSize < 16 && input.style) {
-          input.style.fontSize = '16px';
-        }
+          input.style.fontSize = '16px'
+  }
       }
     }
 
@@ -79,17 +79,17 @@ export const enhanceMobileFocus = () => {
         target.scrollIntoView({
           behavior: 'smooth',
           block: 'center',
-          inline: 'nearest';
-        });
-      }, 300);
-    });
+          inline: 'nearest'
+  })
+  }, 300)
+  });
 
     input.addEventListener('blur', (e) => {
       const target = e.target as HTMLElement;
-      target.classList.remove('mobile-input-focused');
-    });
-  });
-};
+      target.classList.remove('mobile-input-focused')
+  })
+  })
+  };
 
 /**
  * Detect mobile device
@@ -102,28 +102,28 @@ export const isMobileDevice = (): boolean => {
   
   // If it's a desktop user agent with large screen, it's not mobile even if touch is supported
   if (!hasMobileUserAgent && window.innerWidth > 768) {
-    return false;
+    return false
   }
   
-  return hasMobileUserAgent || hasSmallScreen || hasTouchSupport;
-};
+  return hasMobileUserAgent || hasSmallScreen || hasTouchSupport
+  };
 
 /**
  * Detect if virtual keyboard is open
  */;
 export const isVirtualKeyboardOpen = (): boolean => {
   if (window.visualViewport && typeof window.visualViewport.height === 'number') {
-    return window.visualViewport.height < window.innerHeight * 0.8;
+    return window.visualViewport.height < window.innerHeight * 0.8
   }
   
   // Fallback detection
   if (window.screen && typeof window.screen.height === 'number') {
     const heightDifference = window.screen.height - window.innerHeight;
-    return heightDifference > 150;
+    return heightDifference > 150
   }
   
-  return false;
-};
+  return false
+  };
 
 /**
  * Touch feedback utilities
@@ -134,7 +134,7 @@ export const addTouchFeedback = (element: HTMLElement) => {
   element.addEventListener('touchstart', () => {
     touchStartTime = Date.now();
     element.style.transform = 'scale(0.95)';
-    element.style.transition = 'transform 0.1s ease';
+    element.style.transition = 'transform 0.1s ease'
   });
 
   element.addEventListener('touchend', () => {
@@ -143,17 +143,17 @@ export const addTouchFeedback = (element: HTMLElement) => {
     // Only apply feedback for quick taps
     if (touchDuration < 300) {
       setTimeout(() => {
-        element.style.transform = 'scale(1)';
-      }, 100);;
+        element.style.transform = 'scale(1)'
+  }, 100)
   } else {
-      element.style.transform = 'scale(1)';
-    }
+      element.style.transform = 'scale(1)'
+  }
   });
 
   element.addEventListener('touchcancel', () => {
-    element.style.transform = 'scale(1)';
-  });
-};
+    element.style.transform = 'scale(1)'
+  })
+  };
 
 /**
  * Initialize all mobile enhancements
@@ -174,20 +174,20 @@ export const initMobileEnhancements = () => {
   const buttons = document.querySelectorAll('button, .btn, [role="button"]');
   buttons.forEach(button => {
     if (button instanceof HTMLElement) {
-      addTouchFeedback(button);
-    }
+      addTouchFeedback(button)
+  }
   });
 
   // Return cleanup function
-  return cleanupViewport;
-};
+  return cleanupViewport
+  };
 
 // Auto-initialize when DOM is ready
 if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initMobileEnhancements);;
+    document.addEventListener('DOMContentLoaded', initMobileEnhancements)
   } else {
-    initMobileEnhancements();
+    initMobileEnhancements()
   }
 }
 

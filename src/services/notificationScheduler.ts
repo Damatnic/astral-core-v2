@@ -23,21 +23,21 @@ interface ScheduledNotification {
     dosage?: string;
     therapistName?: string;
     sessionType?: string;
-    [key: string]: any;
+    [key: string]: any
   }
 
 interface NotificationAction {
   action: string;
   title: string;
-  icon?: string;
-}
+  icon?: string
+  }
 
 interface NotificationQueue {
   id: string;
   scheduledFor: Date;
   notification: ScheduledNotification;
-  status: 'pending' | 'sent' | 'failed' | 'cancelled';
-}
+  status: 'pending' | 'sent' | 'failed' | 'cancelled'
+  }
 
 class NotificationScheduler {
   private schedules: Map<string, ScheduledNotification> = new Map();
@@ -48,7 +48,7 @@ class NotificationScheduler {
 
   constructor() {
     this.loadSchedules();
-    this.start();
+    this.start()
   }
 
   /**
@@ -62,14 +62,14 @@ class NotificationScheduler {
     
     // Check every minute for scheduled notifications
     this.checkInterval = setInterval(() => {
-      this.checkScheduledNotifications();
-    }, 60000); // 1 minute
+      this.checkScheduledNotifications()
+  }, 60000); // 1 minute
     
     // Initial check
     this.checkScheduledNotifications();
     
     // Schedule all active notifications
-    this.scheduleAllNotifications();
+    this.scheduleAllNotifications()
   }
 
   /**
@@ -84,12 +84,12 @@ class NotificationScheduler {
     // Clear interval
     if (this.checkInterval) {
       clearInterval(this.checkInterval);
-      this.checkInterval = null;
-    }
+      this.checkInterval = null
+  }
     
     // Clear all timers
     this.timers.forEach(timer => clearTimeout(timer));
-    this.timers.clear();
+    this.timers.clear()
   }
 
   /**
@@ -100,18 +100,18 @@ class NotificationScheduler {
     const schedule: ScheduledNotification = {
       ...notification,
       id,
-      nextScheduled: this.calculateNextScheduledTime(notification);
-    };
+      nextScheduled: this.calculateNextScheduledTime(notification)
+  };
     
     this.schedules.set(id, schedule);
     this.saveSchedules();
     
     if (schedule.enabled) {
-      this.scheduleNotification(schedule);
-    }
+      this.scheduleNotification(schedule)
+  }
     
     console.log('[Scheduler] Added schedule:', schedule);
-    return id;
+    return id
   }
 
   /**
@@ -125,8 +125,8 @@ class NotificationScheduler {
     const existingTimer = this.timers.get(id);
     if (existingTimer) {
       clearTimeout(existingTimer);
-      this.timers.delete(id);
-    }
+      this.timers.delete(id)
+  }
     
     // Update schedule;
     const updatedSchedule = {
@@ -140,11 +140,11 @@ class NotificationScheduler {
     
     // Reschedule if enabled
     if (updatedSchedule.enabled) {
-      this.scheduleNotification(updatedSchedule);
-    }
+      this.scheduleNotification(updatedSchedule)
+  }
     
     console.log('[Scheduler] Updated schedule:', updatedSchedule);
-    return true;
+    return true
   }
 
   /**
@@ -158,8 +158,8 @@ class NotificationScheduler {
     const timer = this.timers.get(id);
     if (timer) {
       clearTimeout(timer);
-      this.timers.delete(id);
-    }
+      this.timers.delete(id)
+  }
     
     // Remove from schedules
     this.schedules.delete(id);
@@ -169,21 +169,21 @@ class NotificationScheduler {
     this.queue = this.queue.filter(item => item.notification.id !== id);
     
     console.log('[Scheduler] Removed schedule:', id);
-    return true;
+    return true
   }
 
   /**
    * Get all scheduled notifications
    */
   public getSchedules(): ScheduledNotification[] {
-    return Array.from(this.schedules.values());
+    return Array.from(this.schedules.values())
   }
 
   /**
    * Get scheduled notifications by type
    */
   public getSchedulesByType(type: ScheduledNotification['type']): ScheduledNotification[] {
-    return Array.from(this.schedules.values()).filter(s => s.type === type);
+    return Array.from(this.schedules.values()).filter(s => s.type === type)
   }
 
   /**
@@ -197,7 +197,7 @@ class NotificationScheduler {
       item.status === 'pending' &&
       item.scheduledFor >= now &&
       item.scheduledFor <= futureTime
-    ).sort((a, b) => a.scheduledFor.getTime() - b.scheduledFor.getTime());
+    ).sort((a, b) => a.scheduledFor.getTime() - b.scheduledFor.getTime())
   }
 
   /**
@@ -221,7 +221,7 @@ class NotificationScheduler {
         medicationName,
         dosage
       }
-    });
+    })
   }
 
   /**
@@ -239,8 +239,8 @@ class NotificationScheduler {
       time,
       days,
       enabled: true,
-      repeatInterval: 'daily';
-    });
+      repeatInterval: 'daily'
+  })
   }
 
   /**
@@ -264,7 +264,7 @@ class NotificationScheduler {
         therapistName,
         sessionType
       }
-    });
+    })
   }
 
   /**
@@ -282,24 +282,24 @@ class NotificationScheduler {
     if (delay <= 0) {
       // Should have been sent already, schedule for next occurrence
       this.sendNotification(schedule);
-      return;
-    }
+      return
+  }
     
     // Clear existing timer;
     const existingTimer = this.timers.get(schedule.id);
     if (existingTimer) {
-      clearTimeout(existingTimer);
-    }
+      clearTimeout(existingTimer)
+  }
     
     // Set new timer;
     const timer = setTimeout(() => {
-      this.sendNotification(schedule);
-    }, delay);
+      this.sendNotification(schedule)
+  }, delay);
     
     this.timers.set(schedule.id, timer);
     
     // Add to queue
-    this.addToQueue(schedule, nextTime);
+    this.addToQueue(schedule, nextTime)
   }
 
   /**
@@ -308,9 +308,9 @@ class NotificationScheduler {
   private scheduleAllNotifications(): void {
     this.schedules.forEach(schedule => {
       if (schedule.enabled) {
-        this.scheduleNotification(schedule);
-      }
-    });
+        this.scheduleNotification(schedule)
+  }
+    })
   }
 
   /**
@@ -329,11 +329,11 @@ class NotificationScheduler {
       // Check if already sent recently (within last 5 minutes)
       if (schedule.lastSent) {
         const timeSinceLastSent = now.getTime() - schedule.lastSent.getTime();
-        if (timeSinceLastSent < 5 * 60 * 1000) return;
-      }
+        if (timeSinceLastSent < 5 * 60 * 1000) return
+  }
       
-      this.sendNotification(schedule);
-    });
+      this.sendNotification(schedule)
+  })
   }
 
   /**
@@ -346,12 +346,12 @@ class NotificationScheduler {
       if (!status.hasPermission || !status.isSubscribed) {
         console.log('[Scheduler] Cannot send notification - no permission or not subscribed');
         this.updateQueueStatus(schedule.id, 'cancelled');
-        return;
-      }
+        return
+  }
       
       // Check quiet hours;
       const userId = localStorage.getItem('userId') || 'default';
-      const shouldSend = await pushNotificationService.shouldSendNotification(;
+      const shouldSend = await pushNotificationService.shouldSendNotification(;;
         userId,
         schedule.type === 'medication' ? 'urgent' : 'non_urgent'
       );
@@ -362,16 +362,16 @@ class NotificationScheduler {
         
         // Reschedule for next occurrence
         this.rescheduleNotification(schedule);
-        return;
-      }
+        return
+  }
       
       // Send the notification;
       const registration = await navigator.serviceWorker.getRegistration();
       if (!registration) {
         console.warn('[Scheduler] No service worker registration');
         this.updateQueueStatus(schedule.id, 'failed');
-        return;
-      }
+        return
+  }
       
       await registration.showNotification(schedule.title, {
         body: schedule.message,
@@ -382,8 +382,8 @@ class NotificationScheduler {
           type: schedule.type,
           scheduleId: schedule.id,
           metadata: schedule.metadata,
-          timestamp: Date.now();
-        },
+          timestamp: Date.now()
+  },
         requireInteraction: schedule.type === 'medication'
         // Note: actions property not supported in NotificationOptions
         // Actions would be handled via service worker in production
@@ -400,11 +400,11 @@ class NotificationScheduler {
       // Schedule next occurrence
       this.rescheduleNotification(schedule);
       
-      console.log('[Scheduler] Notification sent:', schedule.id);
-    } catch (error) {
+      console.log('[Scheduler] Notification sent:', schedule.id)
+  } catch (error) {
       console.error('[Scheduler] Failed to send notification:', error);
-      this.updateQueueStatus(schedule.id, 'failed');
-    }
+      this.updateQueueStatus(schedule.id, 'failed')
+  }
   }
 
   /**
@@ -416,8 +416,8 @@ class NotificationScheduler {
       schedule.nextScheduled = nextTime;
       this.schedules.set(schedule.id, schedule);
       this.saveSchedules();
-      this.scheduleNotification(schedule);
-    }
+      this.scheduleNotification(schedule)
+  }
   }
 
   /**
@@ -425,8 +425,8 @@ class NotificationScheduler {
    */
   private calculateNextScheduledTime(schedule: Partial<ScheduledNotification>): Date | null {
     if (!schedule.time || !schedule.days || schedule.days.length === 0) {
-      return null;
-    }
+      return null
+  }
     
     const [hours, minutes] = schedule.time.split(':').map(Number);
     const now = new Date();
@@ -443,13 +443,13 @@ class NotificationScheduler {
       if (schedule.days.includes(dayName)) {
         // Skip if it's today but the time has passed
         if (i === 0 && checkDate.getTime() <= now.getTime()) {
-          continue;
-        }
-        return checkDate;
-      }
+          continue
+  }
+        return checkDate
+  }
     }
     
-    return null;
+    return null
   }
 
   /**
@@ -479,8 +479,8 @@ class NotificationScheduler {
         return [
           { action: 'view', title: 'View' },
           { action: 'dismiss', title: 'Dismiss' }
-        ];
-    }
+        ]
+  }
   }
 
   /**
@@ -495,13 +495,13 @@ class NotificationScheduler {
       id: this.generateId(),
       scheduledFor,
       notification: schedule,
-      status: 'pending';
-    });
+      status: 'pending'
+  });
     
     // Keep queue size manageable (last 100 items)
     if (this.queue.length > 100) {
-      this.queue = this.queue.slice(-100);
-    }
+      this.queue = this.queue.slice(-100)
+  }
   }
 
   /**
@@ -510,8 +510,8 @@ class NotificationScheduler {
   private updateQueueStatus(scheduleId: string, status: NotificationQueue['status']): void {
     const queueItem = this.queue.find(item => item.notification.id === scheduleId);
     if (queueItem) {
-      queueItem.status = status;
-    }
+      queueItem.status = status
+  }
   }
 
   /**
@@ -525,17 +525,17 @@ class NotificationScheduler {
         schedules.forEach((schedule: ScheduledNotification) => {
           // Restore dates
           if (schedule.lastSent) {
-            schedule.lastSent = new Date(schedule.lastSent);
-          }
+            schedule.lastSent = new Date(schedule.lastSent)
+  }
           if (schedule.nextScheduled) {
-            schedule.nextScheduled = new Date(schedule.nextScheduled);
-          }
-          this.schedules.set(schedule.id, schedule);
-        });
-      }
+            schedule.nextScheduled = new Date(schedule.nextScheduled)
+  }
+          this.schedules.set(schedule.id, schedule)
+  })
+  }
     } catch (error) {
-      console.error('[Scheduler] Failed to load schedules:', error);
-    }
+      console.error('[Scheduler] Failed to load schedules:', error)
+  }
   }
 
   /**
@@ -544,17 +544,17 @@ class NotificationScheduler {
   private saveSchedules(): void {
     try {
       const schedules = Array.from(this.schedules.values());
-      localStorage.setItem('notification_schedules', JSON.stringify(schedules));
-    } catch (error) {
-      console.error('[Scheduler] Failed to save schedules:', error);
-    }
+      localStorage.setItem('notification_schedules', JSON.stringify(schedules))
+  } catch (error) {
+      console.error('[Scheduler] Failed to save schedules:', error)
+  }
   }
 
   /**
    * Generate unique ID
    */
   private generateId(): string {
-    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
   }
 }
 

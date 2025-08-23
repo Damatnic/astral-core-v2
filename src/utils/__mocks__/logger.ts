@@ -9,8 +9,8 @@ class MockLogger {
   warn = jest.fn();
   error = jest.fn();
   getRecentLogs = jest.fn(() => []);
-  clearLogs = jest.fn();
-}
+  clearLogs = jest.fn()
+  }
 
 export const logger = new MockLogger();
 export const log = logger.debug.bind(logger);

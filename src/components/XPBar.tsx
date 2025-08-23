@@ -3,8 +3,8 @@ import React from 'react';
 interface XPBarProps {
     currentXp: number;
     nextLevelXp: number;
-    level: number;
-}
+    level: number
+  }
 
 export const XPBar: React.FC<XPBarProps> = ({ currentXp = 0, nextLevelXp = 0, level = 1 }) => {
     const safeCurrentXp = currentXp ?? 0;
@@ -20,11 +20,10 @@ export const XPBar: React.FC<XPBarProps> = ({ currentXp = 0, nextLevelXp = 0, le
                  <span>{safeCurrentXp.toLocaleString()} / {safeNextLevelXp.toLocaleString()} XP</span>
             </div>
             <div className="xp-bar" title={`Level ${safeLevel} Progress`}>
-                <div; 
-                    className="xp-bar-fill" 
+                <div className="xp-bar-fill" 
                     style={{ width: `${progressPercentage}%` }}
                 ></div>
             </div>
         </div>
-    );
-};
+    )
+  };

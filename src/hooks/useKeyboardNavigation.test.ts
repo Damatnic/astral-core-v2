@@ -19,20 +19,20 @@ import {
 beforeEach(() => {
   // Ensure document.body exists
   if (!document.body) {
-    document.documentElement.innerHTML = '<body></body>';
+    document.documentElement.innerHTML = '<body></body>'
   }
   // Clear and prepare body
   document.body.innerHTML = '';
   const root = document.createElement('div');
   root.id = 'root';
-  document.body.appendChild(root);
-});
+  document.body.appendChild(root)
+  });
 
 afterEach(() => {
   document.body.innerHTML = '';
   jest.useRealTimers();
-  jest.clearAllMocks();
-});
+  jest.clearAllMocks()
+  });
 
 // Mock DOM methods;
 const mockFocus = jest.fn();
@@ -60,24 +60,24 @@ const createMockElement = (tagName: string, props: any = {}) => ({
 const mockContainer = {
   querySelectorAll: jest.fn(),
   querySelector: jest.fn(),
-  contains: jest.fn(() => true);
-};
+  contains: jest.fn(() => true)
+  };
 
 // Mock document methods
 Object.defineProperty(document, 'activeElement', {
   writable: true,
-  value: null;
-});
+  value: null
+  });
 
 Object.defineProperty(document, 'addEventListener', {
   value: jest.fn(),
-  writable: true;
-});
+  writable: true
+  });
 
 Object.defineProperty(document, 'removeEventListener', {
   value: jest.fn(),
-  writable: true;
-});
+  writable: true
+  });
 
 // Don't override createElement - it might interfere with React Testing Library
 
@@ -88,16 +88,16 @@ if (document.body) {
   const originalRemoveChild = document.body.removeChild.bind(document.body);
   
   document.body.appendChild = jest.fn((child) => {
-    return originalAppendChild(child);
+    return originalAppendChild(child)
   });
   
   document.body.removeChild = jest.fn((child) => {
     if (child && child.parentNode === document.body) {
-      return originalRemoveChild(child);
-    }
-    return child;
-  });
-}
+      return originalRemoveChild(child)
+  }
+    return child
+  })
+  }
 
 // No wrapper needed for these tests
 
@@ -117,7 +117,7 @@ describe('useKeyboardNavigation Hook', () => {
       createMockElement('button', { textContent: 'Button 2' }),
       createMockElement('a', { href: '#', textContent: 'Link' }),
       createMockElement('input', { type: 'text' })
-    ]);
+    ])
   });
 
   it.skip('should initialize with default options', () => {
@@ -128,7 +128,7 @@ describe('useKeyboardNavigation Hook', () => {
     expect(typeof result.current.focusNext).toBe('function');
     expect(typeof result.current.focusPrevious).toBe('function');
     expect(typeof result.current.getFocusableElements).toBe('function');
-    expect(typeof result.current.trapFocusInContainer).toBe('function');
+    expect(typeof result.current.trapFocusInContainer).toBe('function')
   });
 
   it.skip('should get focusable elements correctly', () => {
@@ -139,7 +139,7 @@ describe('useKeyboardNavigation Hook', () => {
     expect(mockContainer.querySelectorAll).toHaveBeenCalledWith(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
-    expect(elements).toHaveLength(4);
+    expect(elements).toHaveLength(4)
   });
 
   it.skip('should filter out disabled elements', () => {
@@ -160,22 +160,22 @@ describe('useKeyboardNavigation Hook', () => {
     const { result } = renderHook(() => useKeyboardNavigation(containerRef));
 
     act(() => {
-      result.current.focusFirst();
-    });
+      result.current.focusFirst()
+  });
 
     const elements = mockContainer.querySelectorAll();
-    expect(elements[0].focus).toHaveBeenCalled();
+    expect(elements[0].focus).toHaveBeenCalled()
   });
 
   it.skip('should focus last element', () => {
     const { result } = renderHook(() => useKeyboardNavigation(containerRef));
 
     act(() => {
-      result.current.focusLast();
-    });
+      result.current.focusLast()
+  });
 
     const elements = mockContainer.querySelectorAll();
-    expect(elements[elements.length - 1].focus).toHaveBeenCalled();
+    expect(elements[elements.length - 1].focus).toHaveBeenCalled()
   });
 
   it.skip('should focus next element with wrapping', () => {
@@ -185,10 +185,10 @@ describe('useKeyboardNavigation Hook', () => {
     const { result } = renderHook(() => useKeyboardNavigation(containerRef, { wrap: true }));
 
     act(() => {
-      result.current.focusNext();
-    });
+      result.current.focusNext()
+  });
 
-    expect(elements[1].focus).toHaveBeenCalled();
+    expect(elements[1].focus).toHaveBeenCalled()
   });
 
   it.skip('should wrap to first element when at end', () => {
@@ -198,10 +198,10 @@ describe('useKeyboardNavigation Hook', () => {
     const { result } = renderHook(() => useKeyboardNavigation(containerRef, { wrap: true }));
 
     act(() => {
-      result.current.focusNext();
-    });
+      result.current.focusNext()
+  });
 
-    expect(elements[0].focus).toHaveBeenCalled();
+    expect(elements[0].focus).toHaveBeenCalled()
   });
 
   it.skip('should not wrap when disabled', () => {
@@ -211,11 +211,11 @@ describe('useKeyboardNavigation Hook', () => {
     const { result } = renderHook(() => useKeyboardNavigation(containerRef, { wrap: false }));
 
     act(() => {
-      result.current.focusNext();
-    });
+      result.current.focusNext()
+  });
 
     // Should stay on the last element
-    expect(elements[elements.length - 1].focus).toHaveBeenCalled();
+    expect(elements[elements.length - 1].focus).toHaveBeenCalled()
   });
 
   it.skip('should focus previous element', () => {
@@ -225,16 +225,16 @@ describe('useKeyboardNavigation Hook', () => {
     const { result } = renderHook(() => useKeyboardNavigation(containerRef));
 
     act(() => {
-      result.current.focusPrevious();
-    });
+      result.current.focusPrevious()
+  });
 
-    expect(elements[0].focus).toHaveBeenCalled();
+    expect(elements[0].focus).toHaveBeenCalled()
   });
 
   it.skip('should set up keyboard event listeners', () => {
     renderHook(() => useKeyboardNavigation(containerRef));
 
-    expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
+    expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function))
   });
 
   it.skip('should clean up event listeners on unmount', () => {
@@ -242,7 +242,7 @@ describe('useKeyboardNavigation Hook', () => {
 
     unmount();
 
-    expect(document.removeEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
+    expect(document.removeEventListener).toHaveBeenCalledWith('keydown', expect.any(Function))
   });
 
   it.skip('should handle arrow key navigation', () => {
@@ -250,8 +250,8 @@ describe('useKeyboardNavigation Hook', () => {
     const mockEvent = {
       key: 'ArrowDown',
       preventDefault: jest.fn(),
-      target: elements[0];
-    };
+      target: elements[0]
+  };
 
     mockContainer.contains.mockReturnValue(true);
     (document as any).activeElement = elements[0];
@@ -263,11 +263,11 @@ describe('useKeyboardNavigation Hook', () => {
     const keydownListener = eventListeners.find(call => call[0] === 'keydown')[1];
 
     act(() => {
-      keydownListener(mockEvent);
-    });
+      keydownListener(mockEvent)
+  });
 
     expect(mockEvent.preventDefault).toHaveBeenCalled();
-    expect(elements[1].focus).toHaveBeenCalled();
+    expect(elements[1].focus).toHaveBeenCalled()
   });
 
   it.skip('should handle home and end keys', () => {
@@ -275,8 +275,8 @@ describe('useKeyboardNavigation Hook', () => {
     const mockHomeEvent = {
       key: 'Home',
       preventDefault: jest.fn(),
-      target: elements[1];
-    };
+      target: elements[1]
+  };
 
     mockContainer.contains.mockReturnValue(true);
     (document as any).activeElement = elements[1];
@@ -287,11 +287,11 @@ describe('useKeyboardNavigation Hook', () => {
     const keydownListener = eventListeners.find(call => call[0] === 'keydown')[1];
 
     act(() => {
-      keydownListener(mockHomeEvent);
-    });
+      keydownListener(mockHomeEvent)
+  });
 
     expect(mockHomeEvent.preventDefault).toHaveBeenCalled();
-    expect(elements[0].focus).toHaveBeenCalled();
+    expect(elements[0].focus).toHaveBeenCalled()
   });
 
   it.skip('should handle Enter and Space key activation', () => {
@@ -299,8 +299,8 @@ describe('useKeyboardNavigation Hook', () => {
     const mockEnterEvent = {
       key: 'Enter',
       preventDefault: jest.fn(),
-      target: elements[0];
-    };
+      target: elements[0]
+  };
 
     mockContainer.contains.mockReturnValue(true);
     (document as any).activeElement = elements[0];
@@ -311,11 +311,11 @@ describe('useKeyboardNavigation Hook', () => {
     const keydownListener = eventListeners.find(call => call[0] === 'keydown')[1];
 
     act(() => {
-      keydownListener(mockEnterEvent);
-    });
+      keydownListener(mockEnterEvent)
+  });
 
     expect(mockEnterEvent.preventDefault).toHaveBeenCalled();
-    expect(elements[0].click).toHaveBeenCalled();
+    expect(elements[0].click).toHaveBeenCalled()
   });
 
   it.skip('should handle Escape key', () => {
@@ -323,8 +323,8 @@ describe('useKeyboardNavigation Hook', () => {
     const mockEscapeEvent = {
       key: 'Escape',
       preventDefault: jest.fn(),
-      target: mockContainer.querySelectorAll()[0];
-    };
+      target: mockContainer.querySelectorAll()[0]
+  };
 
     mockContainer.contains.mockReturnValue(true);
 
@@ -334,11 +334,11 @@ describe('useKeyboardNavigation Hook', () => {
     const keydownListener = eventListeners.find(call => call[0] === 'keydown')[1];
 
     act(() => {
-      keydownListener(mockEscapeEvent);
-    });
+      keydownListener(mockEscapeEvent)
+  });
 
     expect(mockEscapeEvent.preventDefault).toHaveBeenCalled();
-    expect(onEscape).toHaveBeenCalled();
+    expect(onEscape).toHaveBeenCalled()
   });
 
   it.skip('should call navigation callback', () => {
@@ -348,10 +348,10 @@ describe('useKeyboardNavigation Hook', () => {
     const { result } = renderHook(() => useKeyboardNavigation(containerRef, { onNavigate }));
 
     act(() => {
-      result.current.focusFirst();
-    });
+      result.current.focusFirst()
+  });
 
-    expect(onNavigate).toHaveBeenCalledWith(0, elements[0]);
+    expect(onNavigate).toHaveBeenCalledWith(0, elements[0])
   });
 
   it.skip('should call activation callback', () => {
@@ -360,8 +360,8 @@ describe('useKeyboardNavigation Hook', () => {
     const mockEvent = {
       key: 'Enter',
       preventDefault: jest.fn(),
-      target: elements[0];
-    };
+      target: elements[0]
+  };
 
     mockContainer.contains.mockReturnValue(true);
     (document as any).activeElement = elements[0];
@@ -372,10 +372,10 @@ describe('useKeyboardNavigation Hook', () => {
     const keydownListener = eventListeners.find(call => call[0] === 'keydown')[1];
 
     act(() => {
-      keydownListener(mockEvent);
-    });
+      keydownListener(mockEvent)
+  });
 
-    expect(onActivate).toHaveBeenCalledWith(0, elements[0]);
+    expect(onActivate).toHaveBeenCalledWith(0, elements[0])
   });
 
   it.skip('should auto-focus first element when enabled', () => {
@@ -383,7 +383,7 @@ describe('useKeyboardNavigation Hook', () => {
 
     renderHook(() => useKeyboardNavigation(containerRef, { autoFocus: true }));
 
-    expect(elements[0].focus).toHaveBeenCalled();
+    expect(elements[0].focus).toHaveBeenCalled()
   });
 
   it.skip('should respect orientation settings', () => {
@@ -391,8 +391,8 @@ describe('useKeyboardNavigation Hook', () => {
     const mockEvent = {
       key: 'ArrowRight',
       preventDefault: jest.fn(),
-      target: elements[0];
-    };
+      target: elements[0]
+  };
 
     mockContainer.contains.mockReturnValue(true);
     (document as any).activeElement = elements[0];
@@ -403,19 +403,19 @@ describe('useKeyboardNavigation Hook', () => {
     const keydownListener = eventListeners.find(call => call[0] === 'keydown')[1];
 
     act(() => {
-      keydownListener(mockEvent);
-    });
+      keydownListener(mockEvent)
+  });
 
     expect(mockEvent.preventDefault).toHaveBeenCalled();
-    expect(elements[1].focus).toHaveBeenCalled();
+    expect(elements[1].focus).toHaveBeenCalled()
   });
 
   it.skip('should ignore events outside container', () => {
     const mockEvent = {
       key: 'ArrowDown',
       preventDefault: jest.fn(),
-      target: createMockElement('button');
-    };
+      target: createMockElement('button')
+  };
 
     mockContainer.contains.mockReturnValue(false);
 
@@ -425,10 +425,10 @@ describe('useKeyboardNavigation Hook', () => {
     const keydownListener = eventListeners.find(call => call[0] === 'keydown')[1];
 
     act(() => {
-      keydownListener(mockEvent);
-    });
+      keydownListener(mockEvent)
+  });
 
-    expect(mockEvent.preventDefault).not.toHaveBeenCalled();
+    expect(mockEvent.preventDefault).not.toHaveBeenCalled()
   });
 
   it.skip('should handle empty container', () => {
@@ -438,11 +438,11 @@ describe('useKeyboardNavigation Hook', () => {
 
     expect(() => {
       act(() => {
-        result.current.focusFirst();
-      });
-    }).not.toThrow();
+        result.current.focusFirst()
+  })
+  }).not.toThrow()
+  })
   });
-});
 
 describe('useFocusTrap Hook', () => {
   let containerRef: React.RefObject<HTMLElement>;
@@ -455,7 +455,7 @@ describe('useFocusTrap Hook', () => {
       createMockElement('button'),
       createMockElement('input'),
       createMockElement('a', { href: '#' })
-    ]);
+    ])
   });
 
   it.skip('should initialize focus trap when active', () => {
@@ -464,7 +464,7 @@ describe('useFocusTrap Hook', () => {
     renderHook(() => useFocusTrap(containerRef, true));
 
     expect(elements[0].focus).toHaveBeenCalled();
-    expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
+    expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function))
   });
 
   it.skip('should not initialize when inactive', () => {
@@ -473,7 +473,7 @@ describe('useFocusTrap Hook', () => {
     renderHook(() => useFocusTrap(containerRef, false));
 
     expect(elements[0].focus).not.toHaveBeenCalled();
-    expect(document.addEventListener).not.toHaveBeenCalledWith('keydown', expect.any(Function));
+    expect(document.addEventListener).not.toHaveBeenCalledWith('keydown', expect.any(Function))
   });
 
   it.skip('should handle Tab key cycling', () => {
@@ -481,8 +481,8 @@ describe('useFocusTrap Hook', () => {
     const mockTabEvent = {
       key: 'Tab',
       shiftKey: false,
-      preventDefault: jest.fn();
-    };
+      preventDefault: jest.fn()
+  };
 
     (document as any).activeElement = elements[elements.length - 1]; // Last element
 
@@ -492,8 +492,8 @@ describe('useFocusTrap Hook', () => {
     const keydownListener = eventListeners.find(call => call[0] === 'keydown')[1];
 
     act(() => {
-      keydownListener(mockTabEvent);
-    });
+      keydownListener(mockTabEvent)
+  });
 
     expect(mockTabEvent.preventDefault).toHaveBeenCalled();
     expect(elements[0].focus).toHaveBeenCalled(); // Should cycle to first
@@ -504,8 +504,8 @@ describe('useFocusTrap Hook', () => {
     const mockShiftTabEvent = {
       key: 'Tab',
       shiftKey: true,
-      preventDefault: jest.fn();
-    };
+      preventDefault: jest.fn()
+  };
 
     (document as any).activeElement = elements[0]; // First element
 
@@ -515,8 +515,8 @@ describe('useFocusTrap Hook', () => {
     const keydownListener = eventListeners.find(call => call[0] === 'keydown')[1];
 
     act(() => {
-      keydownListener(mockShiftTabEvent);
-    });
+      keydownListener(mockShiftTabEvent)
+  });
 
     expect(mockShiftTabEvent.preventDefault).toHaveBeenCalled();
     expect(elements[elements.length - 1].focus).toHaveBeenCalled(); // Should cycle to last
@@ -530,7 +530,7 @@ describe('useFocusTrap Hook', () => {
 
     unmount();
 
-    expect(previousElement.focus).toHaveBeenCalled();
+    expect(previousElement.focus).toHaveBeenCalled()
   });
 
   it.skip('should not restore focus when disabled', () => {
@@ -545,7 +545,7 @@ describe('useFocusTrap Hook', () => {
     unmount();
 
     // Should not be called on unmount when restoreFocus is false
-    expect(previousElement.focus).not.toHaveBeenCalled();
+    expect(previousElement.focus).not.toHaveBeenCalled()
   });
 
   it.skip('should handle fallback focus when no focusable elements', () => {
@@ -554,7 +554,7 @@ describe('useFocusTrap Hook', () => {
 
     renderHook(() => useFocusTrap(containerRef, true, { fallbackFocus: 'div' }));
 
-    expect(mockContainer.querySelector).toHaveBeenCalledWith('div');
+    expect(mockContainer.querySelector).toHaveBeenCalledWith('div')
   });
 
   it.skip('should provide focus control functions', () => {
@@ -566,27 +566,27 @@ describe('useFocusTrap Hook', () => {
     const elements = mockContainer.querySelectorAll();
 
     act(() => {
-      result.current.focusFirst();
-    });
+      result.current.focusFirst()
+  });
 
     expect(elements[0].focus).toHaveBeenCalled();
 
     act(() => {
-      result.current.focusLast();
-    });
-
-    expect(elements[elements.length - 1].focus).toHaveBeenCalled();
+      result.current.focusLast()
   });
-});
+
+    expect(elements[elements.length - 1].focus).toHaveBeenCalled()
+  })
+  });
 
 describe('useSkipNavigation Hook', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.useFakeTimers();
+    jest.useFakeTimers()
   });
   
   afterEach(() => {
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   it.skip('should skip to main content', () => {
@@ -596,15 +596,15 @@ describe('useSkipNavigation Hook', () => {
     const { result } = renderHook(() => useSkipNavigation());
 
     act(() => {
-      result.current.skipToMain();
-    });
+      result.current.skipToMain()
+  });
 
     expect(document.querySelector).toHaveBeenCalledWith('main, [role="main"], #main-content');
     expect(mainElement.focus).toHaveBeenCalled();
     expect(mainElement.scrollIntoView).toHaveBeenCalledWith({
       behavior: 'smooth',
-      block: 'start';
-    });
+      block: 'start'
+  })
   });
 
   it.skip('should skip to navigation', () => {
@@ -617,13 +617,13 @@ describe('useSkipNavigation Hook', () => {
     const { result } = renderHook(() => useSkipNavigation());
 
     act(() => {
-      result.current.skipToNavigation();
-    });
+      result.current.skipToNavigation()
+  });
 
     expect(document.querySelector).toHaveBeenCalledWith('nav, [role="navigation"]');
     expect(navElement.querySelector).toHaveBeenCalledWith('a, button');
     expect(linkElement.focus).toHaveBeenCalled();
-    expect(linkElement.scrollIntoView).toHaveBeenCalled();
+    expect(linkElement.scrollIntoView).toHaveBeenCalled()
   });
 
   it.skip('should announce screen reader messages', () => {
@@ -633,16 +633,16 @@ describe('useSkipNavigation Hook', () => {
     const { result } = renderHook(() => useSkipNavigation());
 
     act(() => {
-      result.current.skipToMain();
-    });
+      result.current.skipToMain()
+  });
 
     expect(document.body.appendChild).toHaveBeenCalled();
     
     // Verify announcement cleanup after timeout
     jest.runOnlyPendingTimers();
-    expect(document.body.removeChild).toHaveBeenCalled();
+    expect(document.body.removeChild).toHaveBeenCalled()
+  })
   });
-});
 
 describe('useRovingTabindex Hook', () => {
   let containerRef: React.RefObject<HTMLElement>;
@@ -655,7 +655,7 @@ describe('useRovingTabindex Hook', () => {
       createMockElement('button', { setAttribute: jest.fn() }),
       createMockElement('button', { setAttribute: jest.fn() }),
       createMockElement('button', { setAttribute: jest.fn() })
-    ]);
+    ])
   });
 
   it.skip('should set initial tabindex values', () => {
@@ -665,7 +665,7 @@ describe('useRovingTabindex Hook', () => {
 
     expect(elements[0].setAttribute).toHaveBeenCalledWith('tabindex', '0');
     expect(elements[1].setAttribute).toHaveBeenCalledWith('tabindex', '-1');
-    expect(elements[2].setAttribute).toHaveBeenCalledWith('tabindex', '-1');
+    expect(elements[2].setAttribute).toHaveBeenCalledWith('tabindex', '-1')
   });
 
   it.skip('should provide setActiveIndex function', () => {
@@ -674,16 +674,16 @@ describe('useRovingTabindex Hook', () => {
     const { result } = renderHook(() => useRovingTabindex(containerRef));
 
     act(() => {
-      result.current.setActiveIndex(1);
-    });
+      result.current.setActiveIndex(1)
+  });
 
-    expect(elements[1].focus).toHaveBeenCalled();
+    expect(elements[1].focus).toHaveBeenCalled()
   });
 
   it.skip('should provide getCurrentIndex function', () => {
     const { result } = renderHook(() => useRovingTabindex(containerRef, { defaultIndex: 2 }));
 
-    expect(result.current.getCurrentIndex()).toBe(2);
+    expect(result.current.getCurrentIndex()).toBe(2)
   });
 
   it.skip('should handle wrapping when enabled', () => {
@@ -693,8 +693,8 @@ describe('useRovingTabindex Hook', () => {
 
     // Try to set index beyond array length
     act(() => {
-      result.current.setActiveIndex(5);
-    });
+      result.current.setActiveIndex(5)
+  });
 
     expect(elements[2].focus).toHaveBeenCalled(); // Should wrap to index 2 (5 % 3)
   });
@@ -705,16 +705,16 @@ describe('useRovingTabindex Hook', () => {
     const { result } = renderHook(() => useRovingTabindex(containerRef, { wrap: false }));
 
     act(() => {
-      result.current.setActiveIndex(5);
-    });
+      result.current.setActiveIndex(5)
+  });
 
     expect(elements[2].focus).toHaveBeenCalled(); // Should clamp to last index
+  })
   });
-});
 
 describe('useGlobalKeyboardShortcuts Hook', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   it.skip('should register keyboard shortcuts', () => {
@@ -726,7 +726,7 @@ describe('useGlobalKeyboardShortcuts Hook', () => {
 
     renderHook(() => useGlobalKeyboardShortcuts(shortcuts));
 
-    expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
+    expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function))
   });
 
   it.skip('should execute shortcuts on key combination', () => {
@@ -749,16 +749,16 @@ describe('useGlobalKeyboardShortcuts Hook', () => {
       shiftKey: false,
       metaKey: false,
       key: 's',
-      preventDefault: jest.fn();
-    };
+      preventDefault: jest.fn()
+  };
 
     act(() => {
-      keydownListener(mockEvent);
-    });
+      keydownListener(mockEvent)
+  });
 
     expect(mockEvent.preventDefault).toHaveBeenCalled();
     expect(saveHandler).toHaveBeenCalled();
-    expect(helpHandler).not.toHaveBeenCalled();
+    expect(helpHandler).not.toHaveBeenCalled()
   });
 
   it.skip('should handle multiple modifier keys', () => {
@@ -775,8 +775,8 @@ describe('useGlobalKeyboardShortcuts Hook', () => {
     const keydownListener = eventListeners.find(call => call[0] === 'keydown')?.[1];
 
     if (!keydownListener) {
-      throw new Error('Keydown listener not found');
-    }
+      throw new Error('Keydown listener not found')
+  }
 
     const mockEvent = {
       ctrlKey: true,
@@ -784,15 +784,15 @@ describe('useGlobalKeyboardShortcuts Hook', () => {
       shiftKey: true,
       metaKey: false,
       key: 'z',
-      preventDefault: jest.fn();
-    };
+      preventDefault: jest.fn()
+  };
 
     act(() => {
-      keydownListener(mockEvent);
-    });
+      keydownListener(mockEvent)
+  });
 
     expect(mockEvent.preventDefault).toHaveBeenCalled();
-    expect(complexHandler).toHaveBeenCalled();
+    expect(complexHandler).toHaveBeenCalled()
   });
 
   it.skip('should clean up event listeners on unmount', () => {
@@ -802,7 +802,7 @@ describe('useGlobalKeyboardShortcuts Hook', () => {
 
     unmount();
 
-    expect(document.removeEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
+    expect(document.removeEventListener).toHaveBeenCalledWith('keydown', expect.any(Function))
   });
 
   it.skip('should not execute non-matching shortcuts', () => {
@@ -823,26 +823,26 @@ describe('useGlobalKeyboardShortcuts Hook', () => {
       shiftKey: false,
       metaKey: false,
       key: 's',
-      preventDefault: jest.fn();
-    };
+      preventDefault: jest.fn()
+  };
 
     act(() => {
-      keydownListener(mockEvent);
-    });
+      keydownListener(mockEvent)
+  });
 
     expect(mockEvent.preventDefault).not.toHaveBeenCalled();
-    expect(saveHandler).not.toHaveBeenCalled();
+    expect(saveHandler).not.toHaveBeenCalled()
+  })
   });
-});
 
 describe('announceKeyboardShortcut utility', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.useFakeTimers();
+    jest.useFakeTimers()
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   it.skip('should create screen reader announcement', () => {
@@ -853,7 +853,7 @@ describe('announceKeyboardShortcut utility', () => {
     const appendCall = (document.body.appendChild as jest.Mock).mock.calls[0][0];
     expect(appendCall.getAttribute('aria-live')).toBe('polite');
     expect(appendCall.className).toBe('sr-only');
-    expect(appendCall.textContent).toBe('Keyboard shortcut: Ctrl+S for save document');
+    expect(appendCall.textContent).toBe('Keyboard shortcut: Ctrl+S for save document')
   });
 
   it.skip('should clean up announcement after timeout', () => {
@@ -863,6 +863,6 @@ describe('announceKeyboardShortcut utility', () => {
 
     jest.advanceTimersByTime(2000);
 
-    expect(document.body.removeChild).toHaveBeenCalled();
+    expect(document.body.removeChild).toHaveBeenCalled()
+  })
   });
-});

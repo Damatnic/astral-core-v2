@@ -13,8 +13,8 @@ export const GoogleBadge: React.FC<{ className?: string }> = ({ className = '' }
         <SparkleIcon />
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export const FloatingGoogleBadge: React.FC = () => {
   return (
@@ -24,5 +24,5 @@ export const FloatingGoogleBadge: React.FC = () => {
         <span>Powered by Google Gemini AI</span>
       </div>
     </div>
-  );
-};
+  )
+  };

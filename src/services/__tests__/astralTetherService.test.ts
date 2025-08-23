@@ -37,6 +37,6 @@ jest.mock('../secureStorageService', () => ({
 // Dummy test to keep suite active
 describe('Test Suite Active', () => {
   it.skip('Placeholder test to prevent empty suite', () => {
-    expect(true).toBe(true);
+    expect(true).toBe(true)
+  })
   });
-});

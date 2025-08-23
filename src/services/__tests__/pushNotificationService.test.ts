@@ -31,22 +31,22 @@ describe('PushNotificationService', () => {
 
   beforeEach(() => {
     service = pushNotificationService;
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   describe('initialization', () => {
     it.skip('should initialize successfully', async () => {
       await service.initialize();
       
-      expect(navigator.serviceWorker.ready).toHaveBeenCalled;
-    });
+      expect(navigator.serviceWorker.ready).toHaveBeenCalled
+  });
 
     it.skip('should request notification permissions', async () => {
       const permission = await service.requestPermission();
       
       expect(Notification.requestPermission).toHaveBeenCalled();
-      expect(permission).toBe('granted');
-    });
+      expect(permission).toBe('granted')
+  })
   });
 
   describe('subscription management', () => {
@@ -55,23 +55,23 @@ describe('PushNotificationService', () => {
         endpoint: 'https://fcm.googleapis.com/fcm/send/test',
         keys: {
           p256dh: 'test-key',
-          auth: 'test-auth';
-        }
+          auth: 'test-auth'
+  }
       };
 
       mockServiceWorkerRegistration.pushManager.subscribe.mockResolvedValue(mockSubscription);
 
       const subscription = await service.subscribe();
 
-      expect(subscription).toEqual(mockSubscription);
-    });
+      expect(subscription).toEqual(mockSubscription)
+  });
 
     it.skip('should handle crisis notification subscriptions', async () => {
       const result = await service.subscribeToCrisisAlerts('user-123');
 
       expect(result.subscribed).toBe(true);
-      expect(result.alertTypes).toContain('crisis_immediate');
-    });
+      expect(result.alertTypes).toContain('crisis_immediate')
+  })
   });
 
   describe('crisis notifications', () => {
@@ -79,33 +79,33 @@ describe('PushNotificationService', () => {
       await service.sendCrisisNotification('user-123', {
         type: 'crisis_immediate',
         message: 'Crisis intervention needed',
-        urgency: 'high';
-      });
+        urgency: 'high'
+  });
 
       expect(mockServiceWorkerRegistration.showNotification).toHaveBeenCalledWith(
         'Crisis Support Alert',
         expect.objectContaining({
           body: 'Crisis intervention needed',
           priority: 'high',
-          tag: 'crisis_immediate';
-        })
-      );
-    });
+          tag: 'crisis_immediate'
+  })
+      )
+  });
 
     it.skip('should send safety check notifications', async () => {
       await service.sendSafetyCheckNotification('user-456', {
         message: 'How are you feeling today?',
-        type: 'daily_check';
-      });
+        type: 'daily_check'
+  });
 
       expect(mockServiceWorkerRegistration.showNotification).toHaveBeenCalledWith(
         'Daily Safety Check',
         expect.objectContaining({
           body: 'How are you feeling today?',
-          tag: 'safety_check';
-        })
-      );
-    });
+          tag: 'safety_check'
+  })
+      )
+  })
   });
 
   describe('notification preferences', () => {
@@ -120,8 +120,8 @@ describe('PushNotificationService', () => {
       await service.updateNotificationPreferences('user-123', preferences);
 
       const stored = await service.getNotificationPreferences('user-123');
-      expect(stored).toEqual(preferences);
-    });
+      expect(stored).toEqual(preferences)
+  });
 
     it.skip('should respect quiet hours', async () => {
       const quietHourPrefs = {
@@ -134,8 +134,8 @@ describe('PushNotificationService', () => {
       jest.spyOn(Date.prototype, 'getHours').mockReturnValue(23);
 
       const shouldSend = await service.shouldSendNotification('user-123', 'non_urgent');
-      expect(shouldSend).toBe(false);
-    });
+      expect(shouldSend).toBe(false)
+  })
   });
 
   describe('error handling', () => {
@@ -146,22 +146,22 @@ describe('PushNotificationService', () => {
       expect(permission).toBe('denied');
 
       const result = await service.subscribe();
-      expect(result).toBeNull();
-    });
+      expect(result).toBeNull()
+  });
 
     it.skip('should handle service worker unavailability', async () => {
       delete (navigator as any).serviceWorker;
 
       const result = await pushNotificationService.initialize();
 
-      expect(result.supported).toBe(false);
-    });
+      expect(result.supported).toBe(false)
+  })
+  })
   });
-});
 
 // Dummy test to keep suite active
 describe('Test Suite Active', () => {
   it.skip('Placeholder test to prevent empty suite', () => {
-    expect(true).toBe(true);
+    expect(true).toBe(true)
+  })
   });
-});

@@ -45,11 +45,11 @@ describe('networkDetection', () => {
     // Reset console methods
     jest.spyOn(console, 'group').mockImplementation();
     jest.spyOn(console, 'log').mockImplementation();
-    jest.spyOn(console, 'groupEnd').mockImplementation();
+    jest.spyOn(console, 'groupEnd').mockImplementation()
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    jest.restoreAllMocks()
   });
 
   describe('getConnectionType', () => {
@@ -58,40 +58,40 @@ describe('networkDetection', () => {
       
       const result = getConnectionType();
       
-      expect(result).toBe('2g');
-    });
+      expect(result).toBe('2g')
+  });
 
     it('should return 2g for 2g effective type', () => {
       mockConnection.effectiveType = '2g';
       
       const result = getConnectionType();
       
-      expect(result).toBe('2g');
-    });
+      expect(result).toBe('2g')
+  });
 
     it('should return 3g for 3g effective type', () => {
       mockConnection.effectiveType = '3g';
       
       const result = getConnectionType();
       
-      expect(result).toBe('3g');
-    });
+      expect(result).toBe('3g')
+  });
 
     it('should return 4g for 4g effective type', () => {
       mockConnection.effectiveType = '4g';
       
       const result = getConnectionType();
       
-      expect(result).toBe('4g');
-    });
+      expect(result).toBe('4g')
+  });
 
     it('should default to 4g for unknown effective type', () => {
       mockConnection.effectiveType = 'unknown';
       
       const result = getConnectionType();
       
-      expect(result).toBe('4g');
-    });
+      expect(result).toBe('4g')
+  });
 
     it('should return unknown when navigator.connection is unavailable', () => {
       Object.defineProperty(navigator, 'connection', {
@@ -101,8 +101,8 @@ describe('networkDetection', () => {
       
       const result = getConnectionType();
       
-      expect(result).toBe('unknown');
-    });
+      expect(result).toBe('unknown')
+  });
 
     it('should handle missing effectiveType property', () => {
       const connectionWithoutEffectiveType = { ...mockConnection };
@@ -116,7 +116,7 @@ describe('networkDetection', () => {
       const result = getConnectionType();
       
       expect(result).toBe('4g'); // Should default to 4g
-    });
+    })
   });
 
   describe('getNetworkQuality', () => {
@@ -126,8 +126,8 @@ describe('networkDetection', () => {
       
       const result = getNetworkQuality();
       
-      expect(result).toBe('poor');
-    });
+      expect(result).toBe('poor')
+  });
 
     it('should return poor for high RTT', () => {
       mockConnection.downlink = 1;
@@ -135,8 +135,8 @@ describe('networkDetection', () => {
       
       const result = getNetworkQuality();
       
-      expect(result).toBe('poor');
-    });
+      expect(result).toBe('poor')
+  });
 
     it('should return excellent for high speed and low latency', () => {
       mockConnection.downlink = 5;
@@ -144,8 +144,8 @@ describe('networkDetection', () => {
       
       const result = getNetworkQuality();
       
-      expect(result).toBe('excellent');
-    });
+      expect(result).toBe('excellent')
+  });
 
     it('should return good for moderate conditions', () => {
       mockConnection.downlink = 1.5;
@@ -153,8 +153,8 @@ describe('networkDetection', () => {
       
       const result = getNetworkQuality();
       
-      expect(result).toBe('good');
-    });
+      expect(result).toBe('good')
+  });
 
     it('should default to good when navigator.connection is unavailable', () => {
       Object.defineProperty(navigator, 'connection', {
@@ -164,8 +164,8 @@ describe('networkDetection', () => {
       
       const result = getNetworkQuality();
       
-      expect(result).toBe('good');
-    });
+      expect(result).toBe('good')
+  });
 
     it('should use default values when connection properties are missing', () => {
       const connectionWithoutProperties = {};
@@ -183,7 +183,7 @@ describe('networkDetection', () => {
       // Test boundary conditions based on implementation:
       // Poor: downlink < 0.5 || rtt > 500
       // Excellent: downlink > 2 && rtt < 150;
-      const testCases = [;
+      const testCases = [;;
         { downlink: 0.49, rtt: 500, expected: 'poor' }, // Just below boundary (poor)
         { downlink: 0.5, rtt: 501, expected: 'poor' }, // Just above RTT boundary (poor)
         { downlink: 0.5, rtt: 500, expected: 'good' }, // Exactly at boundary (good)
@@ -197,9 +197,9 @@ describe('networkDetection', () => {
         mockConnection.rtt = rtt;
         
         const result = getNetworkQuality();
-        expect(result).toBe(expected);
-      });
-    });
+        expect(result).toBe(expected)
+  })
+  })
   });
 
   describe('getAdaptiveLoadingConfig', () => {
@@ -208,8 +208,8 @@ describe('networkDetection', () => {
       mockConnection.effectiveType = '4g';
       mockConnection.downlink = 2;
       mockConnection.rtt = 200;
-      mockConnection.saveData = false;
-    });
+      mockConnection.saveData = false
+  });
 
     it('should return complete configuration object', () => {
       const result = getAdaptiveLoadingConfig();
@@ -222,8 +222,8 @@ describe('networkDetection', () => {
       expect(result).toHaveProperty('shouldPreloadImages');
       expect(result).toHaveProperty('shouldPreloadVideos');
       expect(result).toHaveProperty('recommendedImageQuality');
-      expect(result).toHaveProperty('chunkLoadingStrategy');
-    });
+      expect(result).toHaveProperty('chunkLoadingStrategy')
+  });
 
     it('should recommend optimal settings for excellent connection', () => {
       mockConnection.effectiveType = '4g';
@@ -237,8 +237,8 @@ describe('networkDetection', () => {
       expect(result.shouldPreloadImages).toBe(true);
       expect(result.shouldPreloadVideos).toBe(true);
       expect(result.recommendedImageQuality).toBe('high');
-      expect(result.chunkLoadingStrategy).toBe('aggressive');
-    });
+      expect(result.chunkLoadingStrategy).toBe('aggressive')
+  });
 
     it('should recommend conservative settings for poor connection', () => {
       mockConnection.effectiveType = '2g';
@@ -251,8 +251,8 @@ describe('networkDetection', () => {
       expect(result.shouldPreloadImages).toBe(false);
       expect(result.shouldPreloadVideos).toBe(false);
       expect(result.recommendedImageQuality).toBe('low');
-      expect(result.chunkLoadingStrategy).toBe('minimal');
-    });
+      expect(result.chunkLoadingStrategy).toBe('minimal')
+  });
 
     it('should disable preloading when saveData is enabled', () => {
       mockConnection.effectiveType = '4g';
@@ -264,8 +264,8 @@ describe('networkDetection', () => {
       
       expect(result.saveData).toBe(true);
       expect(result.recommendedImageQuality).toBe('low');
-      expect(result.chunkLoadingStrategy).toBe('minimal');
-    });
+      expect(result.chunkLoadingStrategy).toBe('minimal')
+  });
 
     it('should not preload videos on 2g even with good quality', () => {
       mockConnection.effectiveType = '2g';
@@ -296,8 +296,8 @@ describe('networkDetection', () => {
         shouldPreloadVideos: false,
         recommendedImageQuality: 'medium',
         chunkLoadingStrategy: 'conservative',
-      });
-    });
+      })
+  });
 
     it('should use default values for missing properties', () => {
       const partialConnection = {
@@ -315,7 +315,7 @@ describe('networkDetection', () => {
       expect(result.downlink).toBe(1); // Default value
       expect(result.rtt).toBe(300); // Default value
       expect(result.saveData).toBe(false); // Default value
-    });
+    })
   });
 
 
@@ -338,91 +338,91 @@ describe('networkDetection', () => {
     describe('auto-play feature', () => {
       it('should enable auto-play for good quality without data saver', () => {
         const result = shouldEnableFeature('auto-play', mockConfig);
-        expect(result).toBe(true);
-      });
+        expect(result).toBe(true)
+  });
 
       it('should disable auto-play for poor quality', () => {
         mockConfig.quality = 'poor';
         const result = shouldEnableFeature('auto-play', mockConfig);
-        expect(result).toBe(false);
-      });
+        expect(result).toBe(false)
+  });
 
       it('should disable auto-play when data saver is enabled', () => {
         mockConfig.saveData = true;
         const result = shouldEnableFeature('auto-play', mockConfig);
-        expect(result).toBe(false);
-      });
-    });
+        expect(result).toBe(false)
+  })
+  });
 
     describe('high-res-images feature', () => {
       it('should enable for high image quality setting', () => {
         mockConfig.recommendedImageQuality = 'high';
         const result = shouldEnableFeature('high-res-images', mockConfig);
-        expect(result).toBe(true);
-      });
+        expect(result).toBe(true)
+  });
 
       it('should disable for medium image quality setting', () => {
         mockConfig.recommendedImageQuality = 'medium';
         const result = shouldEnableFeature('high-res-images', mockConfig);
-        expect(result).toBe(false);
-      });
+        expect(result).toBe(false)
+  });
 
       it('should disable for low image quality setting', () => {
         mockConfig.recommendedImageQuality = 'low';
         const result = shouldEnableFeature('high-res-images', mockConfig);
-        expect(result).toBe(false);
-      });
-    });
+        expect(result).toBe(false)
+  })
+  });
 
     describe('video-preload feature', () => {
       it('should enable when shouldPreloadVideos is true', () => {
         mockConfig.shouldPreloadVideos = true;
         const result = shouldEnableFeature('video-preload', mockConfig);
-        expect(result).toBe(true);
-      });
+        expect(result).toBe(true)
+  });
 
       it('should disable when shouldPreloadVideos is false', () => {
         mockConfig.shouldPreloadVideos = false;
         const result = shouldEnableFeature('video-preload', mockConfig);
-        expect(result).toBe(false);
-      });
-    });
+        expect(result).toBe(false)
+  })
+  });
 
     describe('background-sync feature', () => {
       it('should enable for good quality connection', () => {
         mockConfig.quality = 'good';
         const result = shouldEnableFeature('background-sync', mockConfig);
-        expect(result).toBe(true);
-      });
+        expect(result).toBe(true)
+  });
 
       it('should enable for excellent quality connection', () => {
         mockConfig.quality = 'excellent';
         const result = shouldEnableFeature('background-sync', mockConfig);
-        expect(result).toBe(true);
-      });
+        expect(result).toBe(true)
+  });
 
       it('should disable for poor quality connection', () => {
         mockConfig.quality = 'poor';
         const result = shouldEnableFeature('background-sync', mockConfig);
-        expect(result).toBe(false);
-      });
-    });
+        expect(result).toBe(false)
+  })
+  });
 
     it('should return false for unknown feature', () => {
       const result = shouldEnableFeature('unknown-feature' as any, mockConfig);
-      expect(result).toBe(false);
-    });
+      expect(result).toBe(false)
+  });
 
     it('should use current config when none provided', () => {
       // Test that it calls getAdaptiveLoadingConfig internally;
       const result = shouldEnableFeature('auto-play');
-      expect(typeof result).toBe('boolean');
-    });
+      expect(typeof result).toBe('boolean')
+  });
 
     it('should handle undefined config gracefully', () => {
       const result = shouldEnableFeature('auto-play', undefined as any);
-      expect(typeof result).toBe('boolean');
-    });
+      expect(typeof result).toBe('boolean')
+  })
   });
 
   describe('logNetworkInfo', () => {
@@ -437,8 +437,8 @@ describe('networkDetection', () => {
       expect(console.log).toHaveBeenCalledWith('Data Saver Mode:', expect.any(Boolean));
       expect(console.log).toHaveBeenCalledWith('Image Quality:', expect.stringMatching(/low|medium|high/));
       expect(console.log).toHaveBeenCalledWith('Loading Strategy:', expect.stringMatching(/minimal|conservative|aggressive/));
-      expect(console.groupEnd).toHaveBeenCalled();
-    });
+      expect(console.groupEnd).toHaveBeenCalled()
+  });
 
     it('should handle missing connection gracefully', () => {
       Object.defineProperty(navigator, 'connection', {
@@ -448,24 +448,24 @@ describe('networkDetection', () => {
       
       expect(() => logNetworkInfo()).not.toThrow();
       expect(console.group).toHaveBeenCalled();
-      expect(console.groupEnd).toHaveBeenCalled();
-    });
+      expect(console.groupEnd).toHaveBeenCalled()
+  })
   });
 
   describe('type definitions', () => {
     it('should accept valid ConnectionType values', () => {
       const validTypes: ConnectionType[] = ['2g', '3g', '4g', '5g', 'wifi', 'unknown'];
       validTypes.forEach(type => {
-        expect(['2g', '3g', '4g', '5g', 'wifi', 'unknown']).toContain(type);
-      });
-    });
+        expect(['2g', '3g', '4g', '5g', 'wifi', 'unknown']).toContain(type)
+  })
+  });
 
     it('should accept valid NetworkQuality values', () => {
       const validQualities: NetworkQuality[] = ['poor', 'good', 'excellent'];
       validQualities.forEach(quality => {
-        expect(['poor', 'good', 'excellent']).toContain(quality);
-      });
-    });
+        expect(['poor', 'good', 'excellent']).toContain(quality)
+  })
+  });
 
     it('should validate AdaptiveLoadingConfig structure', () => {
       const config: AdaptiveLoadingConfig = {
@@ -489,8 +489,8 @@ describe('networkDetection', () => {
       expect(typeof config.shouldPreloadImages).toBe('boolean');
       expect(typeof config.shouldPreloadVideos).toBe('boolean');
       expect(typeof config.recommendedImageQuality).toBe('string');
-      expect(typeof config.chunkLoadingStrategy).toBe('string');
-    });
+      expect(typeof config.chunkLoadingStrategy).toBe('string')
+  })
   });
 
   describe('edge cases and error handling', () => {
@@ -510,9 +510,9 @@ describe('networkDetection', () => {
       expect(() => {
         getConnectionType();
         getNetworkQuality();
-        getAdaptiveLoadingConfig();
-      }).not.toThrow();
-    });
+        getAdaptiveLoadingConfig()
+  }).not.toThrow()
+  });
 
     it('should handle negative network values', () => {
       mockConnection.downlink = -1;
@@ -522,8 +522,8 @@ describe('networkDetection', () => {
       const config = getAdaptiveLoadingConfig();
       
       expect(quality).toBe('poor'); // Negative values should be treated as poor
-      expect(config.quality).toBe('poor');
-    });
+      expect(config.quality).toBe('poor')
+  });
 
     it('should handle extremely high network values', () => {
       mockConnection.downlink = 1000; // 1 Gbps
@@ -534,8 +534,8 @@ describe('networkDetection', () => {
       
       expect(quality).toBe('excellent');
       expect(config.quality).toBe('excellent');
-      expect(config.chunkLoadingStrategy).toBe('aggressive');
-    });
+      expect(config.chunkLoadingStrategy).toBe('aggressive')
+  });
 
     it('should handle connection type case sensitivity', () => {
       mockConnection.effectiveType = '4G'; // Uppercase;
@@ -551,9 +551,9 @@ describe('networkDetection', () => {
       
       expect(() => {
         const quality = getNetworkQuality();
-        expect(['poor', 'good', 'excellent']).toContain(quality);
-      }).not.toThrow();
-    });
+        expect(['poor', 'good', 'excellent']).toContain(quality)
+  }).not.toThrow()
+  })
   });
 
   describe('performance considerations', () => {
@@ -562,8 +562,8 @@ describe('networkDetection', () => {
       const start = performance.now();
       
       for (let i = 0; i < iterations; i++) {
-        getAdaptiveLoadingConfig();
-      }
+        getAdaptiveLoadingConfig()
+  }
       
       const end = performance.now();
       const timePerCall = (end - start) / iterations;
@@ -574,11 +574,11 @@ describe('networkDetection', () => {
     it('should not create memory leaks with repeated hook usage', () => {
       // Simulate multiple hook instances
       for (let i = 0; i < 100; i++) {
-        renderHook(() => useAdaptiveLoading());
-      }
+        renderHook(() => useAdaptiveLoading())
+  }
       
       // If there were memory leaks, event listeners would accumulate
-      expect(mockConnection.addEventListener).toHaveBeenCalledTimes(100);
-    });
+      expect(mockConnection.addEventListener).toHaveBeenCalledTimes(100)
+  })
+  })
   });
-});

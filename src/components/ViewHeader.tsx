@@ -3,8 +3,8 @@ import React from 'react';
 export const ViewHeader: React.FC<{
   title: string;
   subtitle?: string;
-  children?: React.ReactNode;
-}> = ({ title, subtitle, children }) => {
+  children?: React.ReactNode
+  }> = ({ title, subtitle, children }) => {
   return (
     <div className="view-header">
       <div>
@@ -13,5 +13,5 @@ export const ViewHeader: React.FC<{
       </div>
       {children && <div className="view-header-actions">{children}</div>}
     </div>
-  );
-};
+  )
+  };

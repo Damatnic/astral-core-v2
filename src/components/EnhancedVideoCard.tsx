@@ -15,8 +15,8 @@ interface EnhancedVideoCardProps {
   onToggleLike: (videoId: string) => void;
   onToggleSave: (videoId: string) => void;
   onShare: (video: WellnessVideo) => void;
-  priority?: number;
-}
+  priority?: number
+  }
 
 /**
  * Enhanced Video Card with Optimized Thumbnails
@@ -60,52 +60,51 @@ export const EnhancedVideoCard: React.FC<EnhancedVideoCardProps> = ({
         if (cachedThumbnail) {
           setThumbnail(cachedThumbnail);
           setIsGeneratingThumbnail(false);
-          return;
-        }
+          return
+  }
 
         // Generate new thumbnail;
-        const generatedThumbnail = await videoThumbnailGenerator.generateThumbnails(;
+        const generatedThumbnail = await videoThumbnailGenerator.generateThumbnails(;;
           video.videoUrl,
           {
             frameTime: 2, // Extract frame at 2 seconds
             quality: 85,
-            generatePlaceholder: true;
-          }
+            generatePlaceholder: true
+  }
         );
 
         setThumbnail(generatedThumbnail);
         
         // Save to cache;
         const updatedCache = [...cachedThumbnails, generatedThumbnail];
-        videoThumbnailGenerator.saveThumbnailsToCache(updatedCache);
-        
-      } catch (error) {
+        videoThumbnailGenerator.saveThumbnailsToCache(updatedCache)
+  } catch (error) {
         console.error('Failed to generate thumbnail:', error);
-        setThumbnailError(true);
-      } finally {
-        setIsGeneratingThumbnail(false);
-      }
+        setThumbnailError(true)
+  } finally {
+        setIsGeneratingThumbnail(false)
+  }
     };
 
-    generateThumbnail();
+    generateThumbnail()
   };
   }, [video.videoUrl, thumbnail, thumbnailError]);
 
   // Handle like action;
   const handleLike = useCallback(() => {
-    onToggleLike(video.id);
+    onToggleLike(video.id)
   };
   }, [onToggleLike, video.id]);
 
   // Handle save action;
   const handleSave = useCallback(() => {
-    onToggleSave(video.id);
+    onToggleSave(video.id)
   };
   }, [onToggleSave, video.id]);
 
   // Handle share action;
   const handleShare = useCallback(() => {
-    onShare(video);
+    onShare(video)
   };
   }, [onShare, video]);
 
@@ -114,28 +113,28 @@ export const EnhancedVideoCard: React.FC<EnhancedVideoCardProps> = ({
     const videoEl = e.currentTarget;
     const fallbackUrl = `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`;
     if (videoEl.src !== fallbackUrl) {
-      videoEl.src = fallbackUrl;
-    }
+      videoEl.src = fallbackUrl
+  }
   };
   }, []);
 
   // Get thumbnail URL or fallback;
   const getThumbnailSrc = (): string => {
     if (thumbnail) {
-      return videoThumbnailGenerator.getThumbnailUrl(thumbnail, 'medium');
-    }
+      return videoThumbnailGenerator.getThumbnailUrl(thumbnail, 'medium')
+  }
     
     // Generate fallback thumbnail
     return videoThumbnailGenerator.generateFallbackThumbnail(
       480,
       270,
       'Wellness Video'
-    );
+    )
   };
 
   // Get thumbnail alt text;
   const getThumbnailAlt = (): string => {
-    return `Thumbnail for ${video.description || 'wellness video'}`;
+    return `Thumbnail for ${video.description || 'wellness video'}`
   };
 
   const videoTitle = video.description.split(':')[0] || 'Wellness Video';
@@ -184,8 +183,7 @@ export const EnhancedVideoCard: React.FC<EnhancedVideoCardProps> = ({
       <div className="enhanced-video-overlay">
         {/* Play/Pause Indicator */}
         {isActive && (
-          <button;
-            className="enhanced-play-indicator"
+          <button className="enhanced-play-indicator"
             onClick={onTogglePlay}
             aria-label={isPlaying ? "Pause video" : "Play video"}
           >
@@ -211,8 +209,7 @@ export const EnhancedVideoCard: React.FC<EnhancedVideoCardProps> = ({
         
         {/* Action Buttons */}
         <div className="enhanced-video-actions">
-          <button;
-            className={`enhanced-action-btn like-btn ${isLiked ? 'liked' : ''}`}
+          <button className={`enhanced-action-btn like-btn ${isLiked ? 'liked' : ''}`}
             onClick={handleLike}
             aria-label={isLiked ? "Unlike video" : "Like video"}
           >
@@ -220,8 +217,7 @@ export const EnhancedVideoCard: React.FC<EnhancedVideoCardProps> = ({
             <span className="action-count">{video.likes?.toLocaleString() || 0}</span>
           </button>
 
-          <button;
-            className={`enhanced-action-btn save-btn ${isSaved ? 'saved' : ''}`}
+          <button className={`enhanced-action-btn save-btn ${isSaved ? 'saved' : ''}`}
             onClick={handleSave}
             aria-label={isSaved ? "Remove from saved" : "Save video"}
           >
@@ -229,8 +225,7 @@ export const EnhancedVideoCard: React.FC<EnhancedVideoCardProps> = ({
             <span className="action-label">Save</span>
           </button>
 
-          <button;
-            className="enhanced-action-btn share-btn"
+          <button className="enhanced-action-btn share-btn"
             onClick={handleShare}
             aria-label="Share video"
           >
@@ -245,8 +240,8 @@ export const EnhancedVideoCard: React.FC<EnhancedVideoCardProps> = ({
         Video by {video.userToken}, {video.likes || 0} likes
       </div>
     </div>
-  );
-};
+  )
+  };
 
 /**
  * Video Grid Component for multiple enhanced video cards
@@ -261,8 +256,8 @@ interface VideoGridProps {
   onTogglePlay: () => void;
   onToggleLike: (videoId: string) => void;
   onToggleSave: (videoId: string) => void;
-  onShare: (video: WellnessVideo) => void;
-}
+  onShare: (video: WellnessVideo) => void
+  }
 
 export const EnhancedVideoGrid: React.FC<VideoGridProps> = ({
   videos,
@@ -287,8 +282,8 @@ export const EnhancedVideoGrid: React.FC<VideoGridProps> = ({
           isLiked={likedVideos.has(video.id)}
           isSaved={savedVideos.has(video.id)}
           videoRef={{ 
-            current: videoRefs.current[index] ;
-          } as React.RefObject<HTMLVideoElement>}
+            current: videoRefs.current[index]
+  } as React.RefObject<HTMLVideoElement>}
           onTogglePlay={onTogglePlay}
           onToggleLike={onToggleLike}
           onToggleSave={onToggleSave}
@@ -297,7 +292,7 @@ export const EnhancedVideoGrid: React.FC<VideoGridProps> = ({
         />
       ))}
     </div>
-  );
-};
+  )
+  };
 
 export default EnhancedVideoCard;

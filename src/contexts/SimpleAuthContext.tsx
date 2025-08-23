@@ -7,8 +7,8 @@ interface User {
   id: string;
   email: string;
   name: string;
-  role: string;
-}
+  role: string
+  }
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -17,8 +17,8 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>;
   register: (email: string, password: string, name: string, role?: string) => Promise<boolean>;
   logout: () => Promise<void>;
-  userToken: string | null;
-}
+  userToken: string | null
+  }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -38,16 +38,16 @@ export const SimpleAuthProvider: React.FC<{ children: ReactNode }> = ({ children
         if (isValid) {
           const currentUser = await simpleAuthService.getCurrentUser();
           setUser(currentUser);
-          setUserToken(simpleAuthService.getToken());
-        }
+          setUserToken(simpleAuthService.getToken())
+  }
       } catch (error) {
-        logger.error('Auth check failed:', error, 'SimpleAuthContext');
-      } finally {
-        setIsLoading(false);
-      }
+        logger.error('Auth check failed:', error, 'SimpleAuthContext')
+  } finally {
+        setIsLoading(false)
+  }
     };
 
-    checkAuth();
+    checkAuth()
   };
   }, []);
 
@@ -55,10 +55,10 @@ export const SimpleAuthProvider: React.FC<{ children: ReactNode }> = ({ children
   useEffect(() => {
     const unsubscribe = simpleAuthService.onAuthStateChange((newUser) => {
       setUser(newUser);
-      setUserToken(simpleAuthService.getToken());
-    });
+      setUserToken(simpleAuthService.getToken())
+  });
 
-    return unsubscribe;
+    return unsubscribe
   };
   }, []);
 
@@ -70,19 +70,19 @@ export const SimpleAuthProvider: React.FC<{ children: ReactNode }> = ({ children
         setUser(response.user || null);
         setUserToken(simpleAuthService.getToken());
         addToast('Successfully logged in!', 'success');
-        return true;;
+        return true
   } else {
         addToast(response.error || 'Login failed', 'error');
-        return false;
-      }
+        return false
+  }
     } catch (error) {
       addToast((error as Error).message || 'Login failed', 'error');
-      return false;
-    }
+      return false
+  }
   };
   }, [addToast]);
 
-  const register = useCallback(async (;
+  const register = useCallback(async (;;
     email: string, 
     password: string, 
     name: string, 
@@ -95,15 +95,15 @@ export const SimpleAuthProvider: React.FC<{ children: ReactNode }> = ({ children
         setUser(response.user || null);
         setUserToken(simpleAuthService.getToken());
         addToast('Account created successfully!', 'success');
-        return true;;
+        return true
   } else {
         addToast(response.error || 'Registration failed', 'error');
-        return false;
-      }
+        return false
+  }
     } catch (error) {
       addToast((error as Error).message || 'Registration failed', 'error');
-      return false;
-    }
+      return false
+  }
   };
   }, [addToast]);
 
@@ -112,13 +112,13 @@ export const SimpleAuthProvider: React.FC<{ children: ReactNode }> = ({ children
       await simpleAuthService.logout();
       setUser(null);
       setUserToken(null);
-      addToast('Successfully logged out', 'success');
-    } catch (error) {
+      addToast('Successfully logged out', 'success')
+  } catch (error) {
       logger.error('Logout error:', error, 'SimpleAuthContext');
       // Still clear local state even if API call fails
       setUser(null);
-      setUserToken(null);
-    }
+      setUserToken(null)
+  }
   };
   }, [addToast]);
 
@@ -132,16 +132,16 @@ export const SimpleAuthProvider: React.FC<{ children: ReactNode }> = ({ children
     userToken,
   }), [user, isLoading, login, register, logout, userToken]);
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  };
 
 export const useSimpleAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useSimpleAuth must be used within a SimpleAuthProvider');
+    throw new Error('useSimpleAuth must be used within a SimpleAuthProvider')
   }
-  return context;
-};
+  return context
+  };
 
 // Export context for testing;
 export { AuthContext };

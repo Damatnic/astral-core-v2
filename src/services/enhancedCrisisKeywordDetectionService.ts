@@ -35,8 +35,8 @@ export interface CrisisKeywordMatch {
   category: CrisisCategory;
   urgencyScore: number;
   interventionRequired: boolean;
-  emotionalWeight: number;
-}
+  emotionalWeight: number
+  }
 
 export interface ContextualCrisisPattern {
   pattern: RegExp;
@@ -48,8 +48,8 @@ export interface ContextualCrisisPattern {
   positiveAmplifiers: string[]; // Words that increase crisis significance
   timelineIndicators: string[];
   emotionalIndicators: string[];
-  riskWeight: number;
-}
+  riskWeight: number
+  }
 
 export interface EmotionalCrisisIndicator {
   emotionalState: string;
@@ -57,8 +57,8 @@ export interface EmotionalCrisisIndicator {
   crisisCorrelation: number; // 0-1 correlation with crisis states
   linguisticMarkers: string[];
   behavioralPatterns: string[];
-  interventionUrgency: InterventionUrgencyLevel;
-}
+  interventionUrgency: InterventionUrgencyLevel
+  }
 
 export interface CrisisRiskAssessment {
   immediateRisk: number; // 0-100
@@ -72,13 +72,13 @@ export interface CrisisRiskAssessment {
   timelineAnalysis: {
     hasTemporalUrgency: boolean;
     timeframe: string;
-    urgencyModifiers: string[];
+    urgencyModifiers: string[]
   };
   emotionalProfile: {
     primaryEmotion: string;
     intensity: number;
     stability: number;
-    crisisAlignment: number;
+    crisisAlignment: number
   };
 }
 export interface EnhancedCrisisDetectionResult {
@@ -95,7 +95,7 @@ export interface EnhancedCrisisDetectionResult {
     analysisMethod: 'keyword' | 'contextual' | 'semantic' | 'ml-enhanced';
     confidence: number;
     processingTime: number;
-    flaggedConcerns: string[];
+    flaggedConcerns: string[]
   };
 }
 export interface InterventionRecommendation {
@@ -105,8 +105,8 @@ export interface InterventionRecommendation {
   actionItems: string[];
   timeframe: string;
   resources: string[];
-  culturalConsiderations: string[];
-}
+  culturalConsiderations: string[]
+  }
 
 export type CrisisCategory = 
   | 'suicidal-ideation'
@@ -138,8 +138,8 @@ class EnhancedCrisisKeywordDetectionService {
       positiveAmplifiers: ['definitely', 'absolutely', 'certainly', 'finally', 'done waiting', 'ready'],
       timelineIndicators: ['tonight', 'today', 'this evening', 'in an hour', 'soon'],
       emotionalIndicators: ['hopeless', 'empty', 'done', 'can\'t take it', 'over it'],
-      riskWeight: 100;
-    },
+      riskWeight: 100
+  },
     
     // Suicide plan details
     {
@@ -152,8 +152,8 @@ class EnhancedCrisisKeywordDetectionService {
       positiveAmplifiers: ['detailed', 'specific', 'ready', 'prepared', 'set', 'exactly'],
       timelineIndicators: ['tonight', 'tomorrow', 'this week', 'soon', 'when', 'time comes'],
       emotionalIndicators: ['calm', 'peaceful', 'resolved', 'certain', 'clear'],
-      riskWeight: 95;
-    },
+      riskWeight: 95
+  },
 
     // Direct suicide intent
     {
@@ -166,8 +166,8 @@ class EnhancedCrisisKeywordDetectionService {
       positiveAmplifiers: ['really', 'definitely', 'tonight', 'today', 'now'],
       timelineIndicators: ['tonight', 'today', 'now', 'soon', 'immediately'],
       emotionalIndicators: ['desperate', 'done', 'finished', 'can\'t'],
-      riskWeight: 95;
-    },
+      riskWeight: 95
+  },
     
     // Active suicide ideation
     {
@@ -180,8 +180,8 @@ class EnhancedCrisisKeywordDetectionService {
       positiveAmplifiers: ['desperately', 'so badly', 'constantly', 'every day', 'really', 'so tired'],
       timelineIndicators: ['lately', 'recently', 'for weeks', 'every day'],
       emotionalIndicators: ['hopeless', 'exhausted', 'empty', 'worthless', 'tired'],
-      riskWeight: 85;
-    },
+      riskWeight: 85
+  },
 
     // Self-harm mentions (including negative context)
     {
@@ -194,8 +194,8 @@ class EnhancedCrisisKeywordDetectionService {
       positiveAmplifiers: ['want to', 'going to', 'plan to', 'need to'],
       timelineIndicators: [],
       emotionalIndicators: [],
-      riskWeight: 60;
-    },
+      riskWeight: 60
+  },
     
     // Self-harm with escalation
     {
@@ -208,8 +208,8 @@ class EnhancedCrisisKeywordDetectionService {
       positiveAmplifiers: ['desperately', 'compulsively', 'addicted to', 'can\'t control', 'deeper', 'worse'],
       timelineIndicators: ['lately', 'recently', 'tonight', 'daily'],
       emotionalIndicators: ['numb', 'desperate', 'out of control', 'need to'],
-      riskWeight: 80;
-    },
+      riskWeight: 80
+  },
 
     // Substance crisis with suicidal intent
     {
@@ -222,8 +222,8 @@ class EnhancedCrisisKeywordDetectionService {
       positiveAmplifiers: ['hoping', 'trying', 'planning', 'ready', 'won\'t wake'],
       timelineIndicators: ['tonight', 'now', 'about to', 'going to', 'tomorrow'],
       emotionalIndicators: ['hopeless', 'desperate', 'done', 'empty'],
-      riskWeight: 90;
-    },
+      riskWeight: 90
+  },
 
     // Medical emergency indicators
     {
@@ -236,8 +236,8 @@ class EnhancedCrisisKeywordDetectionService {
       positiveAmplifiers: ['just', 'right now', 'happening', 'emergency', 'took'],
       timelineIndicators: ['now', 'just', 'currently', 'right now'],
       emotionalIndicators: ['scared', 'panicked', 'confused', 'desperate'],
-      riskWeight: 100;
-    },
+      riskWeight: 100
+  },
 
     // Violence threats
     {
@@ -250,8 +250,8 @@ class EnhancedCrisisKeywordDetectionService {
       positiveAmplifiers: ['planning', 'ready', 'deserve', 'have to', 'tonight', 'coming'],
       timelineIndicators: ['tonight', 'tomorrow', 'soon', 'when I see'],
       emotionalIndicators: ['rage', 'angry', 'hatred', 'vindictive'],
-      riskWeight: 95;
-    },
+      riskWeight: 95
+  },
 
     // Severe psychological distress
     {
@@ -264,8 +264,8 @@ class EnhancedCrisisKeywordDetectionService {
       positiveAmplifiers: ['actually', 'literally', 'really', 'definitely'],
       timelineIndicators: ['lately', 'for days', 'constantly', 'right now'],
       emotionalIndicators: ['confused', 'scared', 'paranoid', 'disconnected'],
-      riskWeight: 80;
-    },
+      riskWeight: 80
+  },
 
     // Panic crisis
     {
@@ -278,8 +278,8 @@ class EnhancedCrisisKeywordDetectionService {
       positiveAmplifiers: ['right now', 'overwhelming', 'can\'t control', 'severe'],
       timelineIndicators: ['now', 'right now', 'currently', 'happening'],
       emotionalIndicators: ['terrified', 'panicked', 'overwhelmed', 'desperate'],
-      riskWeight: 35  // Reduced to keep panic attacks at 'high' severity even with urgency modifiers;
-    },
+      riskWeight: 35  // Reduced to keep panic attacks at 'high' severity even with urgency modifiers
+  },
     
     // Breathing difficulty in panic context
     {
@@ -292,8 +292,8 @@ class EnhancedCrisisKeywordDetectionService {
       positiveAmplifiers: ['right now', 'properly', 'at all'],
       timelineIndicators: ['now', 'right now', 'currently'],
       emotionalIndicators: ['panicked', 'anxious', 'overwhelmed'],
-      riskWeight: 30  // Reduced to keep panic attacks at 'high' severity even with urgency modifiers;
-    },
+      riskWeight: 30  // Reduced to keep panic attacks at 'high' severity even with urgency modifiers
+  },
 
     // Abuse disclosure
     {
@@ -306,8 +306,8 @@ class EnhancedCrisisKeywordDetectionService {
       positiveAmplifiers: ['still', 'ongoing', 'every day', 'getting worse', 'happening'],
       timelineIndicators: ['now', 'still', 'ongoing', 'every day'],
       emotionalIndicators: ['scared', 'trapped', 'helpless', 'afraid'],
-      riskWeight: 85;
-    }
+      riskWeight: 85
+  }
   ];
 
   // Emotional crisis indicators with linguistic markers
@@ -318,40 +318,40 @@ class EnhancedCrisisKeywordDetectionService {
       crisisCorrelation: 0.95,
       linguisticMarkers: ['no point', 'nothing matters', 'no way out', 'trapped', 'stuck'],
       behavioralPatterns: ['giving up', 'withdrawal', 'isolation', 'declining self-care'],
-      interventionUrgency: 'high';
-    },
+      interventionUrgency: 'high'
+  },
     {
       emotionalState: 'desperation',
       intensity: 0.85,
       crisisCorrelation: 0.9,
       linguisticMarkers: ['desperate', 'can\'t take it', 'at the end', 'breaking point'],
       behavioralPatterns: ['impulsive actions', 'seeking extreme solutions', 'risk-taking'],
-      interventionUrgency: 'high';
-    },
+      interventionUrgency: 'high'
+  },
     {
       emotionalState: 'emotional_numbness',
       intensity: 0.8,
       crisisCorrelation: 0.85,
       linguisticMarkers: ['numb', 'empty', 'nothing', 'void', 'hollow'],
       behavioralPatterns: ['disconnection', 'emotional flatness', 'disengagement'],
-      interventionUrgency: 'medium';
-    },
+      interventionUrgency: 'medium'
+  },
     {
       emotionalState: 'rage_crisis',
       intensity: 0.9,
       crisisCorrelation: 0.8,
       linguisticMarkers: ['rage', 'furious', 'explosive', 'violent thoughts', 'lose control'],
       behavioralPatterns: ['aggression', 'threats', 'destruction', 'violence ideation'],
-      interventionUrgency: 'immediate';
-    },
+      interventionUrgency: 'immediate'
+  },
     {
       emotionalState: 'severe_anxiety',
       intensity: 0.85,
       crisisCorrelation: 0.75,
       linguisticMarkers: ['overwhelming anxiety', 'can\'t cope', 'spiraling', 'out of control'],
       behavioralPatterns: ['avoidance', 'panic', 'hypervigilance', 'catastrophizing'],
-      interventionUrgency: 'medium';
-    }
+      interventionUrgency: 'medium'
+  }
   ];
 
   // Timeline urgency indicators
@@ -376,8 +376,8 @@ class EnhancedCrisisKeywordDetectionService {
     
     // Handle empty or whitespace-only text
     if (!text || !text.trim()) {
-      return this.createFailsafeResult('', startTime);
-    }
+      return this.createFailsafeResult('', startTime)
+  }
     
     try {
       // Step 1: Enhanced keyword and pattern matching;
@@ -393,14 +393,14 @@ class EnhancedCrisisKeywordDetectionService {
       const emotionalIndicators = this.analyzeEmotionalCrisisPatterns(text);
       
       // Step 5: Generate intervention recommendations;
-      const interventionRecommendations = this.generateInterventionRecommendations(;
+      const interventionRecommendations = this.generateInterventionRecommendations(;;
         riskAssessment,
         keywordMatches,
         emotionalIndicators
       );
       
       // Step 6: Determine overall severity and urgency;
-      const overallSeverity = this.calculateOverallSeverity(;
+      const overallSeverity = this.calculateOverallSeverity(;;
         keywordMatches,
         contextualPatterns,
         riskAssessment
@@ -408,9 +408,9 @@ class EnhancedCrisisKeywordDetectionService {
       
       // Determine crisis indicators more accurately;
       const hasCrisisIndicators = keywordMatches.length > 0 || contextualPatterns.length > 0;
-      const escalationRequired = riskAssessment.immediateRisk >= 70 || overallSeverity === 'emergency' || ;
+      const escalationRequired = riskAssessment.immediateRisk >= 70 || overallSeverity === 'emergency' || ;;
         overallSeverity === 'critical';
-      const emergencyServicesRequired = riskAssessment.immediateRisk >= 85 || ;
+      const emergencyServicesRequired = riskAssessment.immediateRisk >= 85 || ;;
         keywordMatches.some(match => match.severity === 'emergency') ||
         contextualPatterns.some(p => p.severity === 'emergency');
 
@@ -432,8 +432,8 @@ class EnhancedCrisisKeywordDetectionService {
         }
       } catch (error) {
       console.error('[Enhanced Crisis Keyword Detection] Analysis failed:', error);
-      return this.createFailsafeResult(text, startTime);
-    }
+      return this.createFailsafeResult(text, startTime)
+  }
   }
 
   /**
@@ -455,7 +455,7 @@ class EnhancedCrisisKeywordDetectionService {
           const surrounding = this.extractSurroundingContext(text, position, this.contextWindow);
           
           // Analyze context for confidence scoring;
-          const confidence = this.calculateKeywordConfidence(;
+          const confidence = this.calculateKeywordConfidence(;;
             match[0],
             surrounding,
             pattern
@@ -473,8 +473,8 @@ class EnhancedCrisisKeywordDetectionService {
               category: pattern.category,
               urgencyScore: this.calculateUrgencyScore(surrounding, pattern),
               interventionRequired: pattern.severity === 'emergency' || pattern.severity === 'critical',
-              emotionalWeight: pattern.riskWeight / 100;
-            };
+              emotionalWeight: pattern.riskWeight / 100
+  };
   };
           }
         }
@@ -484,8 +484,8 @@ class EnhancedCrisisKeywordDetectionService {
     // Sort by confidence then by position for consistent results
     return matches.sort((a, b) => {
       if (b.confidence !== a.confidence) return b.confidence - a.confidence;
-      return a.position - b.position;
-    });
+      return a.position - b.position
+  })
   }
 
   /**
@@ -500,18 +500,18 @@ class EnhancedCrisisKeywordDetectionService {
       const caseInsensitivePattern = new RegExp(pattern.pattern.source, 'gi');
       if (caseInsensitivePattern.test(text)) {
         // Check for negative flags before adding;
-        const hasNegativeFlag = pattern.negativeFlagWords.some(flag => ;
+        const hasNegativeFlag = pattern.negativeFlagWords.some(flag => ;;
           normalizedText.includes(flag.toLowerCase())
         );
         
         // Only add if no negative flags are present
         if (!hasNegativeFlag) {
-          detectedPatterns.push(pattern);
-        }
+          detectedPatterns.push(pattern)
+  }
       }
     }
     
-    return detectedPatterns;
+    return detectedPatterns
   }
 
   /**
@@ -531,30 +531,30 @@ class EnhancedCrisisKeywordDetectionService {
     if (keywordMatches.length > 0) {
       // Use max for emergency situations instead of average;
       const maxUrgency = Math.max(...keywordMatches.map(m => m.urgencyScore * m.confidence));
-      const avgUrgency = keywordMatches.reduce((sum, match) => ;
+      const avgUrgency = keywordMatches.reduce((sum, match) => ;;
         sum + (match.urgencyScore * match.confidence), 0
       ) / keywordMatches.length;
       
       // Use max for emergency, average otherwise
-      keywordRisk = hasEmergencyPattern ? maxUrgency : avgUrgency;
-    }
+      keywordRisk = hasEmergencyPattern ? maxUrgency : avgUrgency
+  }
 
     let patternRisk = 0;
     if (contextualPatterns.length > 0) {
       // Use max risk weight for emergency situations;
       const maxRisk = Math.max(...contextualPatterns.map(p => p.riskWeight));
-      const avgRisk = contextualPatterns.reduce((sum, pattern) => ;
+      const avgRisk = contextualPatterns.reduce((sum, pattern) => ;;
         sum + pattern.riskWeight, 0
       ) / contextualPatterns.length;
       
-      patternRisk = hasEmergencyPattern ? maxRisk : avgRisk;
-    }
+      patternRisk = hasEmergencyPattern ? maxRisk : avgRisk
+  }
 
     // Timeline urgency analysis;
     const timelineAnalysis = this.analyzeTimelineUrgency(text);
     // Reduce temporal multiplier for panic situations (they're urgent but not life-threatening);
     const isPanicSituation = contextualPatterns.some(p => p.category === 'panic-crisis');
-    const temporalMultiplier = timelineAnalysis.hasTemporalUrgency ? ;
+    const temporalMultiplier = timelineAnalysis.hasTemporalUrgency ? ;;
       (isPanicSituation ? 1.0 : 1.5) : 1.0;  // No multiplier for panic attacks
 
     // Emotional intensity analysis;
@@ -568,18 +568,18 @@ class EnhancedCrisisKeywordDetectionService {
       // Emergency situations get minimum 85 risk score
       immediateRisk = Math.max(85, Math.min(100, 
         (keywordRisk * 0.5 + patternRisk * 0.5) * temporalMultiplier
-      ));;
+      ))
   } else if (hasCriticalPattern) {
       // Critical situations get minimum 70 risk score
       immediateRisk = Math.max(85, Math.min(100, // Ensures > 80 for timeline urgency 
         (keywordRisk * 0.45 + patternRisk * 0.45) * temporalMultiplier * (1 + emotionalMultiplier * 0.1)
-      ));;
+      ))
   } else {
       // Standard calculation for other situations
       immediateRisk = Math.min(100, 
         (keywordRisk * 0.4 + patternRisk * 0.3) * temporalMultiplier * (1 + emotionalMultiplier)
-      );
-    }
+      )
+  }
 
     // Calculate short-term and long-term risk;
     const shortTermRisk = Math.min(100, immediateRisk * 0.8 + this.assessBehavioralPatterns(text) * 20);
@@ -618,15 +618,15 @@ class EnhancedCrisisKeywordDetectionService {
       // Check linguistic markers
       for (const marker of indicator.linguisticMarkers) {
         if (normalizedText.includes(marker)) {
-          markerCount++;
-        }
+          markerCount++
+  }
       }
 
       // Check behavioral patterns
       for (const behavior of indicator.behavioralPatterns) {
         if (normalizedText.includes(behavior)) {
-          behaviorCount++;
-        }
+          behaviorCount++
+  }
       }
 
       // Calculate indicator strength;
@@ -637,15 +637,15 @@ class EnhancedCrisisKeywordDetectionService {
       if (markerCount > 0 || behaviorCount > 0) { // Detect if any markers or behaviors match
         detectedIndicators.push({
           ...indicator,
-          intensity: indicator.intensity * overallStrength;
-        };
+          intensity: indicator.intensity * overallStrength
+  };
   };
       }
     }
 
     return detectedIndicators.sort((a, b) => 
       (b.intensity * b.crisisCorrelation) - (a.intensity * a.crisisCorrelation)
-    );
+    )
   }
 
   /**
@@ -673,8 +673,8 @@ class EnhancedCrisisKeywordDetectionService {
         timeframe: 'Immediate',
         resources: ['911', '988 Suicide & Crisis Lifeline'],
         culturalConsiderations: ['Emergency services', 'Immediate family notification']
-      });
-    }
+      })
+  }
 
     // High-risk interventions
     if (riskAssessment.interventionUrgency === 'high') {
@@ -691,8 +691,8 @@ class EnhancedCrisisKeywordDetectionService {
         timeframe: 'Within 2-4 hours',
         resources: ['988 Suicide & Crisis Lifeline', 'Crisis Text Line', 'Emergency therapy services'],
         culturalConsiderations: ['Family involvement preferences', 'Cultural crisis response methods']
-      });
-    }
+      })
+  }
 
     // Medium-risk supportive interventions
     if (riskAssessment.interventionUrgency === 'medium') {
@@ -709,8 +709,8 @@ class EnhancedCrisisKeywordDetectionService {
         timeframe: 'Within 24 hours',
         resources: ['Mental health professionals', 'Crisis support groups', 'Peer support services'],
         culturalConsiderations: ['Culturally appropriate support methods', 'Community resources']
-      });
-    }
+      })
+  }
 
     // Ongoing monitoring and resources
     if (riskAssessment.immediateRisk > 10) { // Lowered from 20 to include more cases
@@ -727,10 +727,10 @@ class EnhancedCrisisKeywordDetectionService {
         timeframe: 'Ongoing',
         resources: ['Mental health apps', 'Support groups', 'Crisis resource cards'],
         culturalConsiderations: ['Cultural healing practices', 'Community support systems']
-      });
-    }
+      })
+  }
 
-    return recommendations.sort((a, b) => a.priority - b.priority);
+    return recommendations.sort((a, b) => a.priority - b.priority)
   }
 
   // Helper methods for analysis
@@ -750,7 +750,7 @@ class EnhancedCrisisKeywordDetectionService {
     }
     
     // Check for strong negation patterns BEFORE the keyword;
-    const negationPatterns = [;
+    const negationPatterns = [;;
       /\b(?:don't|dont|do not|never|wouldn't|would not|won't|will not)\s+(?:have|want|plan|intend|going)\s*(?:to|a)?\s*/gi,
       /\b(?:not|never)\s+(?:planning|going|intending|wanting)\s*(?:to)?\s*/gi,
       /\b(?:would|could)\s+never\s*/gi,
@@ -774,33 +774,33 @@ class EnhancedCrisisKeywordDetectionService {
     }
     
     // Higher base confidence for emergency severity;
-    let confidence = pattern.severity === 'emergency' ? 0.75 : ;
+    let confidence = pattern.severity === 'emergency' ? 0.75 : ;;
                      pattern.severity === 'critical' ? 0.65 : 0.5;
 
     // Check for positive amplifiers
     for (const amplifier of pattern.positiveAmplifiers) {
       if (contextLower.includes(amplifier.toLowerCase())) {
-        confidence += 0.15;
-      }
+        confidence += 0.15
+  }
     }
     
     // Check for hypothetical language patterns;
     const hypotheticalPatterns = ['if i were to', 'would never actually', 'hypothetically', 'just thinking about'];
     for (const hypoPattern of hypotheticalPatterns) {
       if (contextLower.includes(hypoPattern)) {
-        confidence -= 0.5;
-      }
+        confidence -= 0.5
+  }
     }
 
     // Check for context requirements;
-    const contextRequirementMet = pattern.contextRequirement.some(req => ;
+    const contextRequirementMet = pattern.contextRequirement.some(req => ;;
       contextLower.includes(req)
     );
     if (contextRequirementMet) {
-      confidence += 0.2;
-    }
+      confidence += 0.2
+  }
 
-    return Math.max(0, Math.min(1, confidence));
+    return Math.max(0, Math.min(1, confidence))
   }
 
   private calculateUrgencyScore(context: string, pattern: ContextualCrisisPattern): number {
@@ -815,13 +815,13 @@ class EnhancedCrisisKeywordDetectionService {
             case 'veryUrgent': urgencyScore += 20; break;
             case 'urgent': urgencyScore += 15; break;
             case 'concerning': urgencyScore += 10; break;
-            case 'planning': urgencyScore += 25; break;
-          }
+            case 'planning': urgencyScore += 25; break
+  }
         }
       }
     }
 
-    return Math.min(100, urgencyScore);
+    return Math.min(100, urgencyScore)
   }
 
   private analyzeTimelineUrgency(text: string): { hasTemporalUrgency: boolean; timeframe: string; urgencyModifiers: string[] } {
@@ -835,8 +835,8 @@ class EnhancedCrisisKeywordDetectionService {
         if (normalizedText.includes(indicator)) {
           hasTemporalUrgency = true;
           timeframe = urgencyLevel;
-          urgencyModifiers.push(indicator);
-        }
+          urgencyModifiers.push(indicator)
+  }
       }
     }
 
@@ -857,14 +857,14 @@ class EnhancedCrisisKeywordDetectionService {
     let maxScore = 0;
 
     for (const [emotion, keywords] of Object.entries(emotions)) {
-      const score = keywords.reduce((sum, keyword) => ;
+      const score = keywords.reduce((sum, keyword) => ;;
         sum + (normalizedText.includes(keyword) ? 1 : 0), 0
       );
       
       if (score > maxScore) {
         maxScore = score;
-        maxEmotion = emotion;
-      }
+        maxEmotion = emotion
+  }
     }
 
     const intensity = Math.min(1, maxScore / 5);
@@ -886,26 +886,26 @@ class EnhancedCrisisKeywordDetectionService {
   ): 'none' | 'low' | 'medium' | 'high' | 'critical' | 'emergency' {
     // If no matches at all, return 'none'
     if (keywordMatches.length === 0 && contextualPatterns.length === 0 && riskAssessment.immediateRisk < 10) {
-      return 'none';
-    }
+      return 'none'
+  }
     
     // Check for explicit emergency patterns first
     if (contextualPatterns.some(p => p.severity === 'emergency') || 
         keywordMatches.some(m => m.severity === 'emergency')) {
-      return 'emergency';
-    }
+      return 'emergency'
+  }
     
     // Check for critical patterns
     if (contextualPatterns.some(p => p.severity === 'critical') || 
         keywordMatches.some(m => m.severity === 'critical')) {
-      return 'critical';
-    }
+      return 'critical'
+  }
     
     // Check for high severity patterns
     if (contextualPatterns.some(p => p.severity === 'high') || 
         keywordMatches.some(m => m.severity === 'high')) {
-      return 'high';
-    }
+      return 'high'
+  }
     
     // Use risk assessment for other levels
     if (riskAssessment.immediateRisk >= 85) return 'emergency';
@@ -913,7 +913,7 @@ class EnhancedCrisisKeywordDetectionService {
     if (riskAssessment.immediateRisk >= 50) return 'high';
     if (riskAssessment.immediateRisk >= 30) return 'medium';
     if (riskAssessment.immediateRisk >= 10) return 'low';
-    return 'none';
+    return 'none'
   }
 
   private calculateOverallConfidence(
@@ -926,8 +926,8 @@ class EnhancedCrisisKeywordDetectionService {
     if (keywordMatches.length > 0) {
       avgKeywordConfidence = keywordMatches.reduce((sum, match) => 
         sum + match.confidence, 0
-      ) / keywordMatches.length;
-    }
+      ) / keywordMatches.length
+  }
     
     const patternBonus = Math.min(0.3, contextualPatterns.length * 0.1);
     
@@ -938,22 +938,22 @@ class EnhancedCrisisKeywordDetectionService {
   private extractSurroundingContext(text: string, position: number, window: number): string {
     const start = Math.max(0, position - window);
     const end = Math.min(text.length, position + window);
-    return text.substring(start, end);
+    return text.substring(start, end)
   }
 
   private extractContextWords(context: string, requirements: string[]): string[] {
     const words = context.toLowerCase().split(/\s+/);
-    return requirements.filter(req => words.some(word => word.includes(req)));
+    return requirements.filter(req => words.some(word => word.includes(req)))
   }
 
   private extractRiskFactors(text: string): string[] {
     const riskFactors = ['isolation', 'substance use', 'recent loss', 'trauma', 'financial stress'];
-    return riskFactors.filter(factor => text.toLowerCase().includes(factor));
+    return riskFactors.filter(factor => text.toLowerCase().includes(factor))
   }
 
   private extractProtectiveFactors(text: string): string[] {
     const protectiveFactors = ['support system', 'therapy', 'medication', 'family', 'friends', 'pets'];
-    return protectiveFactors.filter(factor => text.toLowerCase().includes(factor));
+    return protectiveFactors.filter(factor => text.toLowerCase().includes(factor))
   }
 
   private extractFlaggedConcerns(
@@ -963,32 +963,32 @@ class EnhancedCrisisKeywordDetectionService {
     const concerns: string[] = [];
     
     if (keywordMatches.some(m => m.severity === 'emergency')) {
-      concerns.push('Emergency-level crisis indicators detected');
-    }
+      concerns.push('Emergency-level crisis indicators detected')
+  }
     
     if (contextualPatterns.some(p => p.category === 'suicide-plan')) {
-      concerns.push('Suicide planning indicators present');
-    }
+      concerns.push('Suicide planning indicators present')
+  }
     
     if (keywordMatches.some(m => m.category === 'violence-threat')) {
-      concerns.push('Violence threat indicators detected');
-    }
+      concerns.push('Violence threat indicators detected')
+  }
     
-    return concerns;
+    return concerns
   }
 
   private assessBehavioralPatterns(text: string): number {
     // Simplified behavioral pattern assessment;
     const patterns = ['giving up', 'withdrawal', 'impulsive', 'reckless'];
     const detected = patterns.filter(pattern => text.toLowerCase().includes(pattern));
-    return (detected.length / patterns.length) * 100;
+    return (detected.length / patterns.length) * 100
   }
 
   private assessOverallRiskFactors(text: string): number {
     // Simplified risk factor assessment;
     const riskFactors = ['alone', 'isolated', 'lost job', 'relationship ended', 'death', 'trauma'];
     const detected = riskFactors.filter(factor => text.toLowerCase().includes(factor));
-    return (detected.length / riskFactors.length) * 100;
+    return (detected.length / riskFactors.length) * 100
   }
 
   private createFailsafeResult(_text: string, startTime: number): EnhancedCrisisDetectionResult {
@@ -1017,8 +1017,8 @@ class EnhancedCrisisKeywordDetectionService {
         analysisMethod: 'keyword',
         confidence: 0,
         processingTime: Date.now() - startTime,
-        flaggedConcerns: ['Analysis failed - using failsafe mode'];
-      }
+        flaggedConcerns: ['Analysis failed - using failsafe mode']
+  }
     }
 }
 

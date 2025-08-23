@@ -65,7 +65,7 @@ const AnalyticsView: React.FC = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export default AnalyticsView;

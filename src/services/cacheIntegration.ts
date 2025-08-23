@@ -40,8 +40,8 @@ export class CacheIntegration {
     try {
       // Initialize cache warming if enabled
       if (this.config.enableCacheWarming) {
-        await this.initializeCacheWarming();
-      }
+        await this.initializeCacheWarming()
+  }
 
       // Set up periodic maintenance
       this.setupPeriodicMaintenance();
@@ -50,11 +50,11 @@ export class CacheIntegration {
       this.setupStorageMonitoring();
 
       this.initialized = true;
-      console.log('[CacheIntegration] Intelligent caching initialized successfully');
-    } catch (error) {
+      console.log('[CacheIntegration] Intelligent caching initialized successfully')
+  } catch (error) {
       console.error('[CacheIntegration] Failed to initialize:', error);
-      throw error;
-    }
+      throw error
+  }
   }
 
   /**
@@ -70,10 +70,10 @@ export class CacheIntegration {
       // Initialize coordinator cache warming
       await cacheCoordinator.initializeCacheWarming();
       
-      console.log('[CacheIntegration] Cache warming completed');
-    } catch (error) {
-      console.error('[CacheIntegration] Cache warming failed:', error);
-    }
+      console.log('[CacheIntegration] Cache warming completed')
+  } catch (error) {
+      console.error('[CacheIntegration] Cache warming failed:', error)
+  }
   }
 
   /**
@@ -81,8 +81,8 @@ export class CacheIntegration {
    */
   private setupPeriodicMaintenance(): void {
     if (this.maintenanceTimer) {
-      clearInterval(this.maintenanceTimer);
-    }
+      clearInterval(this.maintenanceTimer)
+  }
 
     const intervalMs = this.config.maintenanceInterval * 60 * 1000;
     
@@ -91,19 +91,19 @@ export class CacheIntegration {
       
       try {
         if (this.config.enableIntelligentEviction) {
-          await intelligentCache.performIntelligentEviction();
-        }
+          await intelligentCache.performIntelligentEviction()
+  }
         
         await intelligentCache.cleanupExpiredEntries();
         await cacheCoordinator.performCacheCleanup();
         
-        console.log('[CacheIntegration] Periodic maintenance completed');
-      } catch (error) {
-        console.error('[CacheIntegration] Periodic maintenance failed:', error);
-      }
+        console.log('[CacheIntegration] Periodic maintenance completed')
+  } catch (error) {
+        console.error('[CacheIntegration] Periodic maintenance failed:', error)
+  }
     }, intervalMs);
 
-    console.log(`[CacheIntegration] Periodic maintenance scheduled every ${this.config.maintenanceInterval} minutes`);
+    console.log(`[CacheIntegration] Periodic maintenance scheduled every ${this.config.maintenanceInterval} minutes`)
   }
 
   /**
@@ -114,9 +114,9 @@ export class CacheIntegration {
     if (typeof window !== 'undefined' && 'addEventListener' in window) {
       window.addEventListener('storage-warning', ((event: CustomEvent) => {
         const { level, usagePercentage } = event.detail;
-        this.handleStorageWarning(level, usagePercentage);
-      }) as EventListener);
-    }
+        this.handleStorageWarning(level, usagePercentage)
+  }) as EventListener)
+  }
 
     // Periodic storage checks
     setInterval(async () => {
@@ -124,13 +124,13 @@ export class CacheIntegration {
         const storageInfo = await intelligentCache.getStorageInfo();
         
         if (storageInfo.usagePercentage > 0.9) {
-          this.handleStorageWarning('critical', storageInfo.usagePercentage);;
+          this.handleStorageWarning('critical', storageInfo.usagePercentage)
   } else if (storageInfo.usagePercentage > 0.8) {
-          this.handleStorageWarning('warning', storageInfo.usagePercentage);
-        }
+          this.handleStorageWarning('warning', storageInfo.usagePercentage)
+  }
       } catch (error) {
-        console.error('[CacheIntegration] Storage monitoring check failed:', error);
-      }
+        console.error('[CacheIntegration] Storage monitoring check failed:', error)
+  }
     }, 5 * 60 * 1000); // Check every 5 minutes
   }
 
@@ -145,20 +145,20 @@ export class CacheIntegration {
       const event = new CustomEvent('cache-storage-warning', {
         detail: { level, usagePercentage }
       });
-      window.dispatchEvent(event);
-    }
+      window.dispatchEvent(event)
+  }
 
     // Automatic cleanup for critical storage situations
     if (level === 'critical' && this.config.enableIntelligentEviction) {
       setTimeout(async () => {
         try {
           await intelligentCache.performIntelligentEviction();
-          console.log('[CacheIntegration] Emergency cache cleanup completed');
-        } catch (error) {
-          console.error('[CacheIntegration] Emergency cache cleanup failed:', error);
-        }
-      }, 1000);
-    }
+          console.log('[CacheIntegration] Emergency cache cleanup completed')
+  } catch (error) {
+          console.error('[CacheIntegration] Emergency cache cleanup failed:', error)
+  }
+      }, 1000)
+  }
   }
 
   /**
@@ -168,11 +168,11 @@ export class CacheIntegration {
     if (!this.initialized) {
       // Gracefully handle uninitialized state
       console.log('[CacheIntegration] Cache warming requested but not initialized, skipping');
-      return;
-    }
+      return
+  }
 
     console.log('[CacheIntegration] Manual cache warming triggered');
-    await this.initializeCacheWarming();
+    await this.initializeCacheWarming()
   }
 
   /**
@@ -182,8 +182,8 @@ export class CacheIntegration {
     if (!this.initialized) {
       // Gracefully handle uninitialized state
       console.log('[CacheIntegration] Cache cleanup requested but not initialized, skipping');
-      return;
-    }
+      return
+  }
 
     console.log('[CacheIntegration] Manual cache cleanup triggered');
     
@@ -191,8 +191,8 @@ export class CacheIntegration {
     await cacheCoordinator.performCacheCleanup();
     
     if (this.config.enableIntelligentEviction) {
-      await intelligentCache.performIntelligentEviction();
-    }
+      await intelligentCache.performIntelligentEviction()
+  }
   }
 
   /**
@@ -205,11 +205,11 @@ export class CacheIntegration {
     maintenance: {
       lastRun: number;
       intervalMinutes: number;
-      isEnabled: boolean;
-    }> {
+      isEnabled: boolean
+  }> {
     if (!this.initialized) {
-      throw new Error('Cache integration not initialized');
-    }
+      throw new Error('Cache integration not initialized')
+  }
 
     const [storageInfo, analytics, strategies] = await Promise.all([
       intelligentCache.getStorageInfo(),
@@ -224,8 +224,8 @@ export class CacheIntegration {
       maintenance: {
         lastRun: Date.now(), // This would be tracked in a real implementation
         intervalMinutes: this.config.maintenanceInterval,
-        isEnabled: this.maintenanceTimer !== null;
-      }
+        isEnabled: this.maintenanceTimer !== null
+  }
     }
 
   /**
@@ -233,11 +233,11 @@ export class CacheIntegration {
    */
   public async invalidateCache(url: string, reason: 'expired' | 'updated' | 'manual' = 'manual'): Promise<void> {
     if (!this.initialized) {
-      throw new Error('Cache integration not initialized');
-    }
+      throw new Error('Cache integration not initialized')
+  }
 
     console.log(`[CacheIntegration] Invalidating cache for ${url} (${reason})`);
-    await intelligentCache.invalidateCache(url, reason);
+    await intelligentCache.invalidateCache(url, reason)
   }
 
   /**
@@ -245,8 +245,8 @@ export class CacheIntegration {
    */
   public async preloadCriticalResources(urls: string[]): Promise<void> {
     if (!this.initialized) {
-      throw new Error('Cache integration not initialized');
-    }
+      throw new Error('Cache integration not initialized')
+  }
 
     console.log(`[CacheIntegration] Preloading ${urls.length} critical resources`);
     
@@ -261,14 +261,14 @@ export class CacheIntegration {
   };
         
         if (response.ok) {
-          console.log(`[CacheIntegration] Preloaded: ${url}`);
-        }
+          console.log(`[CacheIntegration] Preloaded: ${url}`)
+  }
       } catch (error) {
-        console.warn(`[CacheIntegration] Failed to preload ${url}:`, error);
-      }
+        console.warn(`[CacheIntegration] Failed to preload ${url}:`, error)
+  }
     });
 
-    await Promise.allSettled(preloadPromises);
+    await Promise.allSettled(preloadPromises)
   }
 
   /**
@@ -282,15 +282,15 @@ export class CacheIntegration {
         const cache = await caches.open(cacheName);
         const response = await cache.match(url);
         if (response) {
-          return true;
-        }
+          return true
+  }
       }
       
-      return false;
-    } catch (error) {
+      return false
+  } catch (error) {
       console.error('[CacheIntegration] Cache check failed:', error);
-      return false;
-    }
+      return false
+  }
   }
 
   /**
@@ -301,8 +301,8 @@ export class CacheIntegration {
     cacheBreakdown: Array<{
       name: string;
       size: number;
-      entryCount: number;
-    }>;
+      entryCount: number
+  }>
   }> {
     try {
       const cacheNames = await caches.keys();
@@ -316,8 +316,8 @@ export class CacheIntegration {
       console.error('[CacheIntegration] Cache size calculation failed:', error);
       return {
         totalSize: 0,
-        cacheBreakdown: [];
-      }
+        cacheBreakdown: []
+  }
   }
 
   /**
@@ -326,13 +326,13 @@ export class CacheIntegration {
   private async calculateCacheBreakdown(cacheNames: string[]): Promise<Array<{
     name: string;
     size: number;
-    entryCount: number;
+    entryCount: number
   }>> {
     const breakdown: Array<{
       name: string;
       size: number;
-      entryCount: number;
-    }> = [];
+      entryCount: number
+  }> = [];
 
     for (const cacheName of cacheNames) {
       const cache = await caches.open(cacheName);
@@ -342,12 +342,12 @@ export class CacheIntegration {
       breakdown.push({
         name: cacheName,
         size,
-        entryCount: keys.length;
-      };
+        entryCount: keys.length
+  };
   };
     }
 
-    return breakdown;
+    return breakdown
   }
 
   /**
@@ -361,14 +361,14 @@ export class CacheIntegration {
         const response = await cache.match(request);
         if (response) {
           const size = await this.estimateResponseSize(response);
-          totalSize += size;
-        }
+          totalSize += size
+  }
       } catch {
         totalSize += 1024; // Default estimate on error
       }
     }
 
-    return totalSize;
+    return totalSize
   }
 
   /**
@@ -377,8 +377,8 @@ export class CacheIntegration {
   private async estimateResponseSize(response: Response): Promise<number> {
     const contentLength = response.headers.get('content-length');
     if (contentLength) {
-      return parseInt(contentLength, 10);
-    }
+      return parseInt(contentLength, 10)
+  }
 
     // Estimate based on response content
     try {
@@ -396,11 +396,11 @@ export class CacheIntegration {
   public destroy(): void {
     if (this.maintenanceTimer) {
       clearInterval(this.maintenanceTimer);
-      this.maintenanceTimer = null;
-    }
+      this.maintenanceTimer = null
+  }
 
     this.initialized = false;
-    console.log('[CacheIntegration] Cache integration destroyed');
+    console.log('[CacheIntegration] Cache integration destroyed')
   }
 }
 

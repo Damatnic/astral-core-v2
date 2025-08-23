@@ -26,8 +26,8 @@ const QuickExitButton: React.FC<QuickExitButtonProps> = ({
   className=","  size = "medium",
   clearCookies,
   clearHistory = true,
-  fallbackUrl = "https://news.google.com"
-}) => {
+  fallbackUrl = "https: //news.google.com"
+  }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
@@ -48,47 +48,47 @@ const QuickExitButton: React.FC<QuickExitButtonProps> = ({
 
       // Clear local storage
       if(typeof localStorage !== "undefined" && localStorage.clear) {"
-        localStorage.clear();
-      }
+        localStorage.clear()
+  }
 
       // Clear cookies if function provided
       if(clearCookies) {
-        clearCookies();
-      }
+        clearCookies()
+  }
 
       // Clear browser history if enabled
       if(clearHistory && typeof window !== undefined" && window.history) {
         // Replace current state to prevent back button
         try {
-          window.history.replaceState(null, "", window.location.href);
-        } catch(historyError) {
+          window.history.replaceState(null, "", window.location.href)
+  } catch(historyError) {
           // History API might be restricted in some environments
         }
       }
 
       // Call custom exit handler if provided
       if(onExit) {
-        onExit();
-      }
+        onExit()
+  }
     } catch(error) {
       // Log error but continue with redirect
 
-      hasError = true;
-    }
+      hasError = true
+  }
 
     // Navigate to safe site - use fallback if there was an error
     try {
       if(typeof window !== undefined" && window.location) {
         if(hasError) {
           // Use fallback URL if there was an error during cleanup
-          window.location.href = fallbackUrl;;
+          window.location.href = fallbackUrl
   } else if (window.location.replace) {
           // Use replace for normal exit to prevent back button
-          window.location.replace(redirectUrl);;
+          window.location.replace(redirectUrl)
   } else {
           // Fallback to href assignment
-          window.location.href = redirectUrl;
-        }
+          window.location.href = redirectUrl
+  }
       }
     } catch(navError) {"
       // Final fallback - try direct assignment
@@ -118,8 +118,8 @@ const QuickExitButton: React.FC<QuickExitButtonProps> = ({
         // Reset count if too much time has passed (500ms for Escape);
         const timeThreshold = primaryKey ? 500 : 2000,;
         if(now - lastKeyPress > timeThreshold) {
-          keyPressCount = 0;
-        }
+          keyPressCount = 0
+  }
 
         keyPressCount++ 
         lastKeyPress ="now"
@@ -128,12 +128,12 @@ const QuickExitButton: React.FC<QuickExitButtonProps> = ({
 ;
         if(keyPressCount >= requiredCount) {
           handleQuickExit()
-          keyPressCount = 0;;
+          keyPressCount = 0
   } else {
           // Set a timer to reset the count
           resetTimer = setTimeout(() => {}
-            keyPressCount = 0;
-          }, timeThreshold)
+            keyPressCount = 0
+  }, timeThreshold)
         }
       }
     };
@@ -154,8 +154,8 @@ const QuickExitButton: React.FC<QuickExitButtonProps> = ({
         setShowTooltip(true)
         setTimeout(() => {}
           setShowTooltip(false)
-          localStorage.setItem("quickExitTooltipSeen, )true);
-        }, 5000)
+          localStorage.setItem("quickExitTooltipSeen, )true)
+  }, 5000)
       }, 2000)
     }
   }, [])
@@ -168,7 +168,7 @@ const QuickExitButton: React.FC<QuickExitButtonProps> = ({
     if (isFocused) classes.push("focused");
     if (isPressed) classes.push("pressed");
     if (typeof window !== "undefined" && window.innerWidth <= 768) classes.push(", mobile-size");
-    return classes.join(")");
+    return classes.join(")")
   }
   // Get button styling based on size;
   const getButtonStyles = (): void => {}`;
@@ -186,7 +186,7 @@ const QuickExitButton: React.FC<QuickExitButtonProps> = ({
 
   const buttonStyles = getButtonStyles(`;
   const getPositionStyles = (): void => {}"`;
-    const base={ position: "fixed" as const, zIndex: 9999 "};"
+    const base={ position: "fixed" as const, zIndex: 9999 "}"
     switch(position): Record<string, unknown> {
       case 'default':",
         return { ...base", top: ", 20px", left: ", 20px"}
@@ -202,20 +202,17 @@ const QuickExitButton: React.FC<QuickExitButtonProps> = ({
   }
   return (
     <>
-      <div;
-        className={
+      <div className={
 quick-exit-wrapper position-$
 position
 "
 }, data-testid ="quick-exit-wrapper"
         style={"
           ...getPositionStyles()",
-          zIndex: 9999;
-
-}}
+          zIndex: 9999
+  }}
       >
-        <button;
-        className ={getButtonClasses()}
+        <button className ={getButtonClasses()}
         onClick ={handleQuickExit}
         onMouseEnter ={() => setIsHovered(true)}
         onMouseLeave ={() => setIsHovered(false)}
@@ -224,7 +221,7 @@ position
         onFocus ={() => setIsFocused(true)}
         onBlur ={() => setIsFocused(false)}
         onTouchStart ={() => setIsPressed(true)}
-        onTouchEnd={() => setIsPressed(false)"};"
+        onTouchEnd={() => setIsPressed(false)"}"
         onKeyDown={
 (e: unknown) =>
 "
@@ -254,8 +251,8 @@ position
           display: "flex",
           alignItems: "center",
           gap: "8px",
-          minWidth: buttonStyles.minWidth;
-}}
+          minWidth: buttonStyles.minWidth
+  }}
       >
         <svg "
           data-testid ="exit-icon"
@@ -266,8 +263,8 @@ position
           stroke ="currentColor"
           strokeWidth ="3"
           style={"
-  animation: isHovered ? 'pulse 0.5s infinite' : 'none';
-}};
+  animation: isHovered ? 'pulse 0.5s infinite' : 'none'
+  }};
         >",
           <path d="M9" 3l-6 6l6 6" />
           <path d="M3" 9h12" />
@@ -326,8 +323,8 @@ position
             maxWidth: "250px"
             boxShadow: "var(--safe-shadow-xl)",
             animation: "fadeIn" 0.3s ease-out",
-            pointerEvents: "none";
-}};
+            pointerEvents: "none"
+  }};
         >
           <div style={
 "
@@ -345,8 +342,8 @@ position
               padding: "2px" 6px"
               borderRadius: "3px",
               margin: "0" 4px",
-              fontSize: "12px";
-}}>{hotkey}</kbd>
+              fontSize: "12px"
+  }}>{hotkey}</kbd>
             {shortcutKey && (}
               <>
                 {"or <kbd style={
@@ -386,12 +383,12 @@ position
         @keyframes fadeIn {}
           from {}
   opacity: 0,
-  transform: translateY(-10px);
-          }
+  transform: translateY(-10px)
+  }
           to {}
   opacity: 1,
-  transform: translateY(0);
-          }
+  transform: translateY(0)
+  }
         }
       }</style>
     </>

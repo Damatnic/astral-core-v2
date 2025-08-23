@@ -15,7 +15,7 @@ const AdminDashboardRoute: React.FC = () => {
     <AdminDashboardView 
       onUpdateApplicationStatus={handleUpdateApplicationStatus}
     />
-  );
-};
+  )
+  };
 
 export default AdminDashboardRoute;

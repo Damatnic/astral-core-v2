@@ -44,8 +44,8 @@ interface DilemmaState {
   declineRequest: (dilemmaId: string) => Promise<void>;
   summarizeDilemma: (dilemmaId: string) => Promise<void>;
   dismissReport: (dilemmaId: string) => Promise<void>;
-  removePost: (dilemmaId: string) => Promise<void>;
-}
+  removePost: (dilemmaId: string) => Promise<void>
+  }
 
 export const useDilemmaStore = create<DilemmaState>((set, get) => {
     const calculateDerivedState = (state: DilemmaState) => {
@@ -55,7 +55,7 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
         const reportedDilemmas = allDilemmas.filter(d => d.isReported && d.status !== 'removed_by_moderator');
 
         // Calculate visibleDilemmas and hasMore for the community feed;
-        let filteredDilemmas = allDilemmas.filter(d =>;
+        let filteredDilemmas = allDilemmas.filter(d =>;;
             d.status === 'active' &&
             !d.assignedHelperId &&
             !d.isReported &&
@@ -63,13 +63,13 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
         );
 
         if (filter !== 'All') {
-            filteredDilemmas = filteredDilemmas.filter(d => d.category === filter);
-        }
+            filteredDilemmas = filteredDilemmas.filter(d => d.category === filter)
+  }
 
         if (searchTerm) {
             const lowerCaseSearchTerm = searchTerm.toLowerCase();
-            filteredDilemmas = filteredDilemmas.filter(d => d.content.toLowerCase().includes(lowerCaseSearchTerm));
-        }
+            filteredDilemmas = filteredDilemmas.filter(d => d.content.toLowerCase().includes(lowerCaseSearchTerm))
+  }
 
         switch (sort) {
             case 'newest':
@@ -80,8 +80,8 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                 break;
             case 'needs-support':
                 filteredDilemmas.sort((a, b) => a.supportCount - b.supportCount);
-                break;
-        }
+                break
+  }
 
         const paginatedDilemmas = filteredDilemmas.slice(0, currentPage * POSTS_PER_PAGE);
         const hasMore = paginatedDilemmas.length < filteredDilemmas.length;
@@ -117,8 +117,8 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                 allDilemmas: dilemmas,
                 isLoading: false,
                 ...calculateDerivedState({ ...state, allDilemmas: dilemmas })
-            }));
-        } catch (error) {
+            }))
+  } catch (error) {
             console.error("Failed to fetch dilemmas:", error);
             // Provide sample community posts when API fails;
             const sampleCommunityPosts: Dilemma[] = [
@@ -141,8 +141,8 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                     moderation: {
                         action: 'dismissed',
                         timestamp: new Date().toISOString(),
-                        moderatorId: 'system';
-                    }
+                        moderatorId: 'system'
+  }
                 },
                 {
                     id: 'community-2',
@@ -163,8 +163,8 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                     moderation: {
                         action: 'dismissed',
                         timestamp: new Date().toISOString(),
-                        moderatorId: 'system';
-                    }
+                        moderatorId: 'system'
+  }
                 },
                 {
                     id: 'community-3',
@@ -185,8 +185,8 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                     moderation: {
                         action: 'dismissed',
                         timestamp: new Date().toISOString(),
-                        moderatorId: 'system';
-                    }
+                        moderatorId: 'system'
+  }
                 }
             ];
             set(state => ({
@@ -194,8 +194,8 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                 allDilemmas: sampleCommunityPosts,
                 isLoading: false,
                 ...calculateDerivedState({ ...state, allDilemmas: sampleCommunityPosts })
-            }));
-        }
+            }))
+  }
     },
 
     fetchForYouFeed: async () => {
@@ -203,8 +203,8 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
         if (!userToken) return;
         try {
             const dilemmas = await ApiClient.dilemmas.getForYouFeed(userToken);
-            set({ forYouDilemmas: Array.isArray(dilemmas) ? dilemmas : [] });
-        } catch (error) {
+            set({ forYouDilemmas: Array.isArray(dilemmas) ? dilemmas : [] })
+  } catch (error) {
             console.error("Failed to load For You feed:", error);
             // Provide inspiring sample posts for the "For You" feed;
             const sampleForYouPosts: Dilemma[] = [
@@ -231,10 +231,10 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                         flagged: false,
                         approved: true,
                         reviewedBy: 'system',
-                        reviewedAt: new Date().toISOString();
-                    },
-                    aiMatchReason: 'Positive mental health progress post';
-                },
+                        reviewedAt: new Date().toISOString()
+  },
+                    aiMatchReason: 'Positive mental health progress post'
+  },
                 {
                     id: 'sample-2',
                     userToken: 'sample-user-2',
@@ -258,10 +258,10 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                         flagged: false,
                         approved: true,
                         reviewedBy: 'mod-sarah',
-                        reviewedAt: new Date().toISOString();
-                    },
-                    aiMatchReason: 'Inspiring recovery story';
-                },
+                        reviewedAt: new Date().toISOString()
+  },
+                    aiMatchReason: 'Inspiring recovery story'
+  },
                 {
                     id: 'sample-3',
                     userToken: 'sample-user-3',
@@ -285,10 +285,10 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                         flagged: false,
                         approved: true,
                         reviewedBy: 'system',
-                        reviewedAt: new Date().toISOString();
-                    },
-                    aiMatchReason: 'Supportive community message';
-                },
+                        reviewedAt: new Date().toISOString()
+  },
+                    aiMatchReason: 'Supportive community message'
+  },
                 {
                     id: 'sample-4',
                     userToken: 'sample-user-4',
@@ -312,10 +312,10 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                         flagged: false,
                         approved: true,
                         reviewedBy: 'mod-alex',
-                        reviewedAt: new Date().toISOString();
-                    },
-                    aiMatchReason: 'Creative coping strategy discussion';
-                },
+                        reviewedAt: new Date().toISOString()
+  },
+                    aiMatchReason: 'Creative coping strategy discussion'
+  },
                 {
                     id: 'sample-5',
                     userToken: 'sample-user-5',
@@ -339,13 +339,13 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                         flagged: false,
                         approved: true,
                         reviewedBy: 'system',
-                        reviewedAt: new Date().toISOString();
-                    },
-                    aiMatchReason: 'Community appreciation post';
-                }
+                        reviewedAt: new Date().toISOString()
+  },
+                    aiMatchReason: 'Community appreciation post'
+  }
             ];
-            set({ forYouDilemmas: sampleForYouPosts });
-        }
+            set({ forYouDilemmas: sampleForYouPosts })
+  }
     },
     
     setFilter: (filter) => set(state => {
@@ -368,13 +368,13 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
     
     postDilemma: async (data, userToken) => {
         await ApiClient.dilemmas.postDilemma(data, userToken);
-        await get().fetchDilemmas();
-    },
+        await get().fetchDilemmas()
+  },
 
     createDirectRequest: async (data, userToken, requestedHelperId) => {
         await ApiClient.dilemmas.createDirectRequest(data, userToken, requestedHelperId);
-        await get().fetchDilemmas();
-    },
+        await get().fetchDilemmas()
+  },
     
     toggleSupport: async (dilemmaId) => {
         const updated = await ApiClient.dilemmas.toggleSupport(dilemmaId);
@@ -409,17 +409,17 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
   };
         
         if (result.updatedHelper) {
-            authService.updateHelperProfile(result.updatedHelper);
-        }
+            authService.updateHelperProfile(result.updatedHelper)
+  }
         
         if (result.newAchievements && result.newAchievements.length > 0) {
             result.newAchievements.forEach(ach => {
-                notificationService.addToast(`🏆 Achievement Unlocked: ${ach.name}!`, 'success');
-            });
-        }
+                notificationService.addToast(`🏆 Achievement Unlocked: ${ach.name}!`, 'success')
+  })
+  }
 
-        useChatStore.getState().startChat(result.dilemma.id, 'helper');
-    },
+        useChatStore.getState().startChat(result.dilemma.id, 'helper')
+  },
     
     declineRequest: async (dilemmaId) => {
         const helper = authState.helperProfile;
@@ -449,26 +449,26 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
         set(state => ({ allDilemmas: state.allDilemmas.map(d => d.id === dilemmaId ? { ...d, summaryLoading: true } : d) }));
         try {
             const summary = await ApiClient.ai.summarizeDilemma(dilemma.content);
-            set(state => ({ allDilemmas: state.allDilemmas.map(d => d.id === dilemmaId ? { ...d, summary, summaryLoading: false } : d) }));
-        } catch (err) {
+            set(state => ({ allDilemmas: state.allDilemmas.map(d => d.id === dilemmaId ? { ...d, summary, summaryLoading: false } : d) }))
+  } catch (err) {
             console.error("Failed to summarize dilemma", err);
-            set(state => ({ allDilemmas: state.allDilemmas.map(d => d.id === dilemmaId ? { ...d, summaryLoading: false } : d) }));
-        }
+            set(state => ({ allDilemmas: state.allDilemmas.map(d => d.id === dilemmaId ? { ...d, summaryLoading: false } : d) }))
+  }
     },
 
     dismissReport: async (dilemmaId) => {
         const helper = authState.helperProfile;
         if (!helper) throw new Error("Moderator profile not found");
         await ApiClient.moderation.dismissReport(dilemmaId, helper);
-        await get().fetchDilemmas();
-    },
+        await get().fetchDilemmas()
+  },
 
     removePost: async (dilemmaId) => {
         const helper = authState.helperProfile;
         if (!helper) throw new Error("Moderator profile not found");
         await ApiClient.moderation.removePost(dilemmaId, helper);
-        await get().fetchDilemmas();
-    },
+        await get().fetchDilemmas()
+  },
   }
 });
 

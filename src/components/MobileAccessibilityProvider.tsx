@@ -24,16 +24,16 @@ interface AccessibilityPreferences {
   hapticFeedback: boolean;
   colorBlindness: 'none' | 'protanopia' | 'deuteranopia' | 'tritanopia';
   fontSize: number; // percentage multiplier
-  focusIndicatorStyle: 'default' | 'enhanced' | 'high-contrast';
-}
+  focusIndicatorStyle: 'default' | 'enhanced' | 'high-contrast'
+  }
 
 // Focus management interface;
 interface FocusManagement {
   currentFocus: string | null;
   focusHistory: string[];
   trapStack: string[];
-  announcements: string[];
-}
+  announcements: string[]
+  }
 
 // Touch accessibility interface;
 interface TouchAccessibility {
@@ -49,8 +49,8 @@ interface ScreenReaderSupport {
   announceChanges: boolean;
   describeLandmarks: boolean;
   readingMode: 'detailed' | 'concise' | 'minimal';
-  skipLinkBehavior: 'immediate' | 'with-delay';
-}
+  skipLinkBehavior: 'immediate' | 'with-delay'
+  }
 
 // Accessibility context interface;
 interface MobileAccessibilityContextValue {
@@ -67,16 +67,16 @@ interface MobileAccessibilityContextValue {
   navigateToElement: (elementId: string, options?: { smooth?: boolean; announce?: boolean }) => void;
   checkWCAGCompliance: () => AccessibilityAuditResult;
   adaptForColorBlindness: (element: HTMLElement) => void;
-  optimizeForTouch: (element: HTMLElement) => void;
-}
+  optimizeForTouch: (element: HTMLElement) => void
+  }
 
 // WCAG audit interface;
 interface AccessibilityAuditResult {
   score: number; // 0-100
   issues: AccessibilityIssue[];
   suggestions: string[];
-  compliantAreas: string[];
-}
+  compliantAreas: string[]
+  }
 
 interface AccessibilityIssue {
   type: 'error' | 'warning' | 'info';
@@ -85,8 +85,8 @@ interface AccessibilityIssue {
   element?: string;
   wcagCriterion: string;
   severity: 'low' | 'medium' | 'high' | 'critical';
-  fix?: string;
-}
+  fix?: string
+  }
 
 // Create context;
 const MobileAccessibilityContext = createContext<MobileAccessibilityContextValue | null>(null);
@@ -95,10 +95,10 @@ const MobileAccessibilityContext = createContext<MobileAccessibilityContextValue
 export const useMobileAccessibility = () => {
   const context = useContext(MobileAccessibilityContext);
   if (!context) {
-    throw new Error('useMobileAccessibility must be used within MobileAccessibilityProvider');
+    throw new Error('useMobileAccessibility must be used within MobileAccessibilityProvider')
   }
-  return context;
-};
+  return context
+  };
 
 // Provider component;
 export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -112,21 +112,21 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     hapticFeedback: true,
     colorBlindness: 'none',
     fontSize: 100,
-    focusIndicatorStyle: 'default';
+    focusIndicatorStyle: 'default'
   });
 
   const [focusManagement, setFocusManagement] = useState<FocusManagement>({
     currentFocus: null,
     focusHistory: [],
     trapStack: [],
-    announcements: [];
+    announcements: []
   });
 
   const [touchAccessibility] = useState<TouchAccessibility>({
     targetSize: 44, // WCAG minimum 44x44 pixels
     spacing: 8,
     timeout: 3000,
-    pressAndHold: true;
+    pressAndHold: true
   });
 
   const [screenReader, setScreenReader] = useState<ScreenReaderSupport>({
@@ -134,7 +134,7 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     announceChanges: true,
     describeLandmarks: true,
     readingMode: 'detailed',
-    skipLinkBehavior: 'immediate';
+    skipLinkBehavior: 'immediate'
   });
 
   // Refs;
@@ -149,8 +149,8 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     setupKeyboardNavigation();
     
     return () => {
-      cleanupAccessibilityObservers();
-    };
+      cleanupAccessibilityObservers()
+  };
   };
   }, []);
 
@@ -167,32 +167,32 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     // Check for high contrast
     if (mediaQueries.highContrast.matches) {
       detectedPreferences.highContrast = true;
-      detectedPreferences.focusIndicatorStyle = 'high-contrast';
-    }
+      detectedPreferences.focusIndicatorStyle = 'high-contrast'
+  }
 
     // Check for reduced motion
     if (mediaQueries.reducedMotion.matches) {
-      detectedPreferences.reducedMotion = true;
-    }
+      detectedPreferences.reducedMotion = true
+  }
 
     // Check for screen reader;
     const screenReaderDetected = 
-      'speechSynthesis' in window || ;
+      'speechSynthesis' in window || ;;
       navigator.userAgent.includes('NVDA') ||
       navigator.userAgent.includes('JAWS') ||
       navigator.userAgent.includes('VoiceOver');
 
     if (screenReaderDetected) {
       detectedPreferences.screenReader = true;
-      setScreenReader(prev => ({ ...prev, enabled: true }));
-    }
+      setScreenReader(prev => ({ ...prev, enabled: true }))
+  }
 
     // Check for touch support;
     const touchSupported = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     if (!touchSupported) {
       // Keyboard-first navigation for non-touch devices
-      detectedPreferences.focusIndicatorStyle = 'enhanced';
-    }
+      detectedPreferences.focusIndicatorStyle = 'enhanced'
+  }
 
     // Apply detected preferences
     setPreferences(prev => ({ ...prev, ...detectedPreferences }));
@@ -202,10 +202,10 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     if (savedPreferences) {
       try {
         const parsed = JSON.parse(savedPreferences);
-        setPreferences(prev => ({ ...prev, ...parsed }));
-      } catch (error) {
-        console.warn('Failed to parse saved accessibility preferences:', error);
-      }
+        setPreferences(prev => ({ ...prev, ...parsed }))
+  } catch (error) {
+        console.warn('Failed to parse saved accessibility preferences:', error)
+  }
     }
   };
   }, []);
@@ -217,16 +217,16 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
       mutations.forEach((mutation) => {
         if (mutation.type === 'attributes' && mutation.attributeName === 'tabindex') {
           const element = mutation.target as HTMLElement;
-          optimizeForTouch(element);
-        }
-      });
-    });
+          optimizeForTouch(element)
+  }
+      })
+  });
 
     focusObserver.observe(document.body, {
       attributes: true,
       attributeFilter: ['tabindex', 'aria-hidden', 'role'],
-      subtree: true;
-    });
+      subtree: true
+  });
 
     // Content change observer for screen readers;
     const contentObserver = new MutationObserver((mutations) => {
@@ -241,26 +241,26 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
                   setTimeout(() => {
                     const text = element.textContent?.trim();
                     if (text && text.length > 0) {
-                      announceToScreenReader(`New content: ${text}`, 'polite');
-                    }
-                  }, 100);
-                }
+                      announceToScreenReader(`New content: ${text}`, 'polite')
+  }
+                  }, 100)
+  }
               }
-            });
-          }
-        });
-      }
+            })
+  }
+        })
+  }
     });
 
     contentObserver.observe(document.body, {
       childList: true,
-      subtree: true;
-    });
+      subtree: true
+  });
 
     return () => {
       focusObserver.disconnect();
-      contentObserver.disconnect();
-    };
+      contentObserver.disconnect()
+  };
   };
   }, [screenReader.enabled, screenReader.announceChanges]);
 
@@ -274,65 +274,65 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
   const injectAccessibilityStyles = useCallback(() => {
     const existingStyle = document.getElementById('mobile-accessibility-styles');
     if (existingStyle) {
-      existingStyle.remove();
-    }
+      existingStyle.remove()
+  }
 
     const style = document.createElement('style');
     style.id = 'mobile-accessibility-styles';
     style.textContent = `
       /* High contrast mode */
       .accessibility-high-contrast {
-        filter: contrast(150%) !important;
-      }
+        filter: contrast(150%) !important
+  }
       
       /* Large text mode */
       .accessibility-large-text {
         font-size: ${preferences.fontSize}% !important;
-        line-height: 1.6 !important;
-      }
+        line-height: 1.6 !important
+  }
       
       /* Focus indicators */
       .accessibility-focus-enhanced:focus {
         outline: 3px solid #0066cc !important;
         outline-offset: 2px !important;
-        box-shadow: 0 0 0 5px rgba(0, 102, 204, 0.3) !important;
-      }
+        box-shadow: 0 0 0 5px rgba(0, 102, 204, 0.3) !important
+  }
       
       .accessibility-focus-high-contrast:focus {
         outline: 4px solid #ffff00 !important;
         outline-offset: 3px !important;
         background-color: #000000 !important;
-        color: #ffffff !important;
-      }
+        color: #ffffff !important
+  }
       
       /* Touch targets */
       .accessibility-touch-optimized {
         min-height: ${touchAccessibility.targetSize}px !important;
         min-width: ${touchAccessibility.targetSize}px !important;
         margin: ${touchAccessibility.spacing}px !important;
-        padding: ${Math.max(8, touchAccessibility.spacing)}px !important;
-      }
+        padding: ${Math.max(8, touchAccessibility.spacing)}px !important
+  }
       
       /* Reduced motion */
       .accessibility-reduced-motion * {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
+        scroll-behavior: auto !important
+  }
       
       /* Color blindness filters */
       .accessibility-protanopia {
-        filter: url('#protanopia-filter') !important;
-      }
+        filter: url('#protanopia-filter') !important
+  }
       
       .accessibility-deuteranopia {
-        filter: url('#deuteranopia-filter') !important;
-      }
+        filter: url('#deuteranopia-filter') !important
+  }
       
       .accessibility-tritanopia {
-        filter: url('#tritanopia-filter') !important;
-      }
+        filter: url('#tritanopia-filter') !important
+  }
       
       /* Skip links */
       .accessibility-skip-link {
@@ -345,13 +345,13 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
         color: #ffffff !important;
         text-decoration: none !important;
         border-radius: 4px !important;
-        font-weight: bold !important;
-      }
+        font-weight: bold !important
+  }
       
       .accessibility-skip-link:focus {
         top: 8px !important;
-        left: 8px !important;
-      }
+        left: 8px !important
+  }
       
       /* Screen reader only content */
       .accessibility-sr-only {
@@ -363,8 +363,8 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
         overflow: hidden !important;
         clip: rect(0, 0, 0, 0) !important;
         white-space: nowrap !important;
-        border: 0 !important;
-      }
+        border: 0 !important
+  }
       
       /* Landmark styles */
       nav[role="navigation"],
@@ -372,8 +372,8 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
       aside[role="complementary"],
       header[role="banner"],
       footer[role="contentinfo"] {
-        position: relative;
-      }
+        position: relative
+  }
       
       /* Announcement region */
       .accessibility-announcements {
@@ -382,14 +382,14 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
         top: auto;
         width: 1px;
         height: 1px;
-        overflow: hidden;
-      }
+        overflow: hidden
+  }
     `;
     
     document.head.appendChild(style);
 
     // Add color blindness SVG filters
-    injectColorBlindnessFilters();
+    injectColorBlindnessFilters()
   };
   }, [preferences.fontSize, touchAccessibility.targetSize, touchAccessibility.spacing]);
 
@@ -425,7 +425,7 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
       </defs>
     `;
     
-    document.body.appendChild(svg);
+    document.body.appendChild(svg)
   };
   }, []);
 
@@ -438,8 +438,8 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
         const main = document.querySelector('main, [role="main"]') as HTMLElement;
         if (main) {
           main.focus();
-          announceToScreenReader('Navigated to main content', 'assertive');
-        }
+          announceToScreenReader('Navigated to main content', 'assertive')
+  }
       }
       
       // Skip to navigation (Alt + N)
@@ -448,8 +448,8 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
         const nav = document.querySelector('nav, [role="navigation"]') as HTMLElement;
         if (nav) {
           nav.focus();
-          announceToScreenReader('Navigated to navigation', 'assertive');
-        }
+          announceToScreenReader('Navigated to navigation', 'assertive')
+  }
       }
       
       // Toggle high contrast (Alt + H)
@@ -459,26 +459,26 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
         announceToScreenReader(
           `High contrast ${!preferences.highContrast ? 'enabled' : 'disabled'}`,
           'assertive'
-        );
-      }
+        )
+  }
       
       // Escape key handling for focus traps
       if (event.key === 'Escape' && focusTrapRef.current) {
         event.preventDefault();
-        removeFocusTrap();
-      }
+        removeFocusTrap()
+  }
       
       // Tab key handling for focus management
       if (event.key === 'Tab') {
-        handleTabNavigation(event);
-      }
+        handleTabNavigation(event)
+  }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
+      document.removeEventListener('keydown', handleKeyDown)
+  };
   };
   }, [preferences.highContrast]);
 
@@ -487,7 +487,7 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     if (focusTrapRef.current) {
       const trapContainer = document.getElementById(focusTrapRef.current);
       if (trapContainer) {
-        const trapFocusables = trapContainer.querySelectorAll(;
+        const trapFocusables = trapContainer.querySelectorAll(;;
           'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
         );
         
@@ -497,11 +497,11 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
           
           if (event.shiftKey && document.activeElement === first) {
             event.preventDefault();
-            last.focus();;
+            last.focus()
   } else if (!event.shiftKey && document.activeElement === last) {
             event.preventDefault();
-            first.focus();
-          }
+            first.focus()
+  }
         }
       }
     }
@@ -514,9 +514,9 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
           ...prev,
           currentFocus: activeElement.id,
           focusHistory: [...prev.focusHistory.slice(-9), activeElement.id]
-        }));
-      }
-    }, 0);
+        }))
+  }
+    }, 0)
   };
   }, []);
 
@@ -531,8 +531,8 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
       // Apply styles immediately
       applyAccessibilityPreferences(newPreferences);
       
-      return newPreferences;
-    });
+      return newPreferences
+  })
   };
   }, []);
 
@@ -552,27 +552,27 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     
     // Apply preferences
     if (prefs.highContrast) {
-      body.classList.add('accessibility-high-contrast');
-    }
+      body.classList.add('accessibility-high-contrast')
+  }
     
     if (prefs.largeText || prefs.fontSize > 100) {
-      body.classList.add('accessibility-large-text');
-    }
+      body.classList.add('accessibility-large-text')
+  }
     
     if (prefs.reducedMotion) {
-      body.classList.add('accessibility-reduced-motion');
-    }
+      body.classList.add('accessibility-reduced-motion')
+  }
     
     if (prefs.colorBlindness !== 'none') {
-      body.classList.add(`accessibility-${prefs.colorBlindness}`);
-    }
+      body.classList.add(`accessibility-${prefs.colorBlindness}`)
+  }
     
     // Update focus indicators;
     const focusClass = `accessibility-focus-${prefs.focusIndicatorStyle}`;
     document.querySelectorAll('button, a, input, select, textarea, [tabindex]').forEach(element => {
       element.classList.remove('accessibility-focus-default', 'accessibility-focus-enhanced', 'accessibility-focus-high-contrast');
-      element.classList.add(focusClass);
-    });
+      element.classList.add(focusClass)
+  })
   };
   }, []);
 
@@ -587,15 +587,15 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     setTimeout(() => {
       if (announcementRef.current) {
         announcementRef.current.textContent = message;
-        announcementRef.current.setAttribute('aria-live', priority);
-      }
+        announcementRef.current.setAttribute('aria-live', priority)
+  }
     }, 100);
     
     // Track announcements
     setFocusManagement(prev => ({
       ...prev,
       announcements: [...prev.announcements.slice(-4), message]
-    }));
+    }))
   };
   }, []);
 
@@ -607,7 +607,7 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
       trapStack: [...prev.trapStack, containerId]
     }));
     
-    announceToScreenReader('Focus trapped in dialog', 'assertive');
+    announceToScreenReader('Focus trapped in dialog', 'assertive')
   };
   }, [announceToScreenReader]);
 
@@ -617,13 +617,13 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
         const newStack = prev.trapStack.slice(0, -1);
         return {
           ...prev,
-          trapStack: newStack;
-        };
+          trapStack: newStack
+  };
   };
       
       focusTrapRef.current = null;
-      announceToScreenReader('Focus trap removed', 'assertive');
-    }
+      announceToScreenReader('Focus trap removed', 'assertive')
+  }
   };
   }, [announceToScreenReader]);
 
@@ -639,17 +639,17 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     element.scrollIntoView({
       behavior: options.smooth && !preferences.reducedMotion ? 'smooth' : 'auto',
       block: 'center',
-      inline: 'nearest';
-    });
+      inline: 'nearest'
+  });
     
     // Announce if requested
     if (options.announce) {
-      const label = element.getAttribute('aria-label') || ;
+      const label = element.getAttribute('aria-label') || ;;
                    element.getAttribute('title') || 
                    element.textContent?.trim() || 
                    `Element ${elementId}`;
-      announceToScreenReader(`Navigated to ${label}`, 'assertive');
-    }
+      announceToScreenReader(`Navigated to ${label}`, 'assertive')
+  }
   };
   }, [preferences.reducedMotion, announceToScreenReader]);
 
@@ -669,9 +669,9 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
           element: img.src,
           wcagCriterion: '1.1.1',
           severity: 'high',
-          fix: 'Add descriptive alt attribute';
-        });
-      }
+          fix: 'Add descriptive alt attribute'
+  })
+  }
     });
     
     // Check for proper heading structure;
@@ -687,11 +687,11 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
           element: heading.textContent?.substring(0, 50) || '',
           wcagCriterion: '1.3.1',
           severity: 'medium',
-          fix: 'Use sequential heading levels';
-        });
-      }
-      previousLevel = level;
-    });
+          fix: 'Use sequential heading levels'
+  })
+  }
+      previousLevel = level
+  });
     
     // Check for proper form labels
     document.querySelectorAll('input, select, textarea').forEach(input => {
@@ -704,9 +704,9 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
           element: element.name || element.id || 'unnamed input',
           wcagCriterion: '1.3.1',
           severity: 'high',
-          fix: 'Add label element or aria-label';
-        });
-      }
+          fix: 'Add label element or aria-label'
+  })
+  }
     });
     
     // Check for touch target size
@@ -721,14 +721,14 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
           wcagCriterion: '2.5.5',
           severity: 'medium',
           fix: `Increase size to at least ${touchAccessibility.targetSize}x${touchAccessibility.targetSize}px`
-        });
-      }
+        })
+  }
     });
     
     // Check for proper landmarks;
     const landmarks = document.querySelectorAll('main, nav, aside, header, footer, [role="main"], [role="navigation"], [role="complementary"], [role="banner"], [role="contentinfo"]');
     if (landmarks.length > 0) {
-      compliantAreas.push('Proper landmark structure');;
+      compliantAreas.push('Proper landmark structure')
   } else {
       issues.push({
         type: 'warning',
@@ -737,8 +737,8 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
         wcagCriterion: '1.3.1',
         severity: 'medium',
         fix: 'Add main, nav, and other landmark elements'
-      });
-    }
+      })
+  }
     
     // Check for focus indicators;
     const focusableElements = document.querySelectorAll('button, a, input, select, textarea, [tabindex]:not([tabindex="-1"])');
@@ -746,12 +746,12 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     focusableElements.forEach(element => {
       const styles = window.getComputedStyle(element, ':focus');
       if (styles.outline !== 'none' || styles.boxShadow !== 'none') {
-        hasFocusStyles = true;
-      }
+        hasFocusStyles = true
+  }
     });
     
     if (hasFocusStyles) {
-      compliantAreas.push('Focus indicators present');;
+      compliantAreas.push('Focus indicators present')
   } else {
       issues.push({
         type: 'error',
@@ -759,9 +759,9 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
         description: 'Missing focus indicators',
         wcagCriterion: '2.4.7',
         severity: 'high',
-        fix: 'Add visible focus styles';
-      });
-    }
+        fix: 'Add visible focus styles'
+  })
+  }
     
     // Calculate score;
     const totalChecks = 20; // Total number of checks performed;
@@ -776,12 +776,12 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     if (issues.length > 0) {
       suggestions.push('Review and fix accessibility issues found');
       suggestions.push('Test with screen readers');
-      suggestions.push('Verify keyboard navigation');
-    }
+      suggestions.push('Verify keyboard navigation')
+  }
     
     if (score > 80) {
-      suggestions.push('Consider advanced accessibility features');
-    }
+      suggestions.push('Consider advanced accessibility features')
+  }
     
     return {
       score,
@@ -795,7 +795,7 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
   const adaptForColorBlindness = useCallback((element: HTMLElement) => {
     if (preferences.colorBlindness === 'none') return;
     
-    element.classList.add(`accessibility-${preferences.colorBlindness}`);
+    element.classList.add(`accessibility-${preferences.colorBlindness}`)
   };
   }, [preferences.colorBlindness]);
 
@@ -804,8 +804,8 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     const rect = element.getBoundingClientRect();
     
     if (rect.width < touchAccessibility.targetSize || rect.height < touchAccessibility.targetSize) {
-      element.classList.add('accessibility-touch-optimized');
-    }
+      element.classList.add('accessibility-touch-optimized')
+  }
     
     // Add touch feedback
     if (preferences.hapticFeedback && 'vibrate' in navigator) {
@@ -819,7 +819,7 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
 
   // Apply preferences on mount and changes
   useEffect(() => {
-    applyAccessibilityPreferences(preferences);
+    applyAccessibilityPreferences(preferences)
   };
   }, [preferences, applyAccessibilityPreferences]);
 
@@ -866,8 +866,8 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
       
       {children}
     </MobileAccessibilityContext.Provider>
-  );
-};
+  )
+  };
 
 // Accessibility HOC for components;
 export const withMobileAccessibility = <P extends object>(
@@ -880,18 +880,18 @@ export const withMobileAccessibility = <P extends object>(
     
     useEffect(() => {
       if (accessibilityOptions) {
-        updatePreferences(accessibilityOptions);
-      }
+        updatePreferences(accessibilityOptions)
+  }
       
       if (componentRef.current) {
         adaptForColorBlindness(componentRef.current);
         
         // Optimize all interactive elements;
-        const interactiveElements = componentRef.current.querySelectorAll(;
+        const interactiveElements = componentRef.current.querySelectorAll(;;
           'button, a, input, select, textarea, [tabindex]:not([tabindex="-1"])'
         );
-        interactiveElements.forEach(element => optimizeForTouch(element as HTMLElement));
-      }
+        interactiveElements.forEach(element => optimizeForTouch(element as HTMLElement))
+  }
     };
   }, [accessibilityOptions, updatePreferences, adaptForColorBlindness, optimizeForTouch]);
     
@@ -899,11 +899,11 @@ export const withMobileAccessibility = <P extends object>(
       <div ref={componentRef} className="accessibility-component-wrapper">
         <Component {...(componentProps as P)} />
       </div>
-    );
+    )
   };
   
   WithAccessibility.displayName = `withMobileAccessibility(${Component.displayName || Component.name})`;
-  return WithAccessibility;
-};
+  return WithAccessibility
+  };
 
 export default MobileAccessibilityProvider;

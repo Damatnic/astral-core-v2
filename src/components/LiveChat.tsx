@@ -9,8 +9,8 @@ interface Message {
   username: string;
   message: string;
   timestamp: number;
-  type?: 'text' | 'system' | 'emoji';
-}
+  type?: 'text' | 'system' | 'emoji'
+  }
 
 interface LiveChatProps {
   roomId: string;
@@ -19,8 +19,8 @@ interface LiveChatProps {
   title?: string;
   height?: string;
   enableEmojis?: boolean;
-  enableTypingIndicator?: boolean;
-}
+  enableTypingIndicator?: boolean
+  }
 
 export const LiveChat: React.FC<LiveChatProps> = ({
   roomId,
@@ -46,7 +46,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   };
   }, [messages]);
 
@@ -54,27 +54,27 @@ export const LiveChat: React.FC<LiveChatProps> = ({
   const handleTyping = useCallback(() => {
     if (!isTyping && enableTypingIndicator) {
       setIsTyping(true);
-      sendTyping(true);
-    }
+      sendTyping(true)
+  }
 
     // Clear existing timeout
     if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-    }
+      clearTimeout(typingTimeoutRef.current)
+  }
 
     // Set new timeout to stop typing indicator
     typingTimeoutRef.current = setTimeout(() => {
       if (isTyping) {
         setIsTyping(false);
-        sendTyping(false);
-      }
-    }, 2000);
+        sendTyping(false)
+  }
+    }, 2000)
   };
   }, [isTyping, sendTyping, enableTypingIndicator]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
-    handleTyping();
+    handleTyping()
   };
 
   const handleSendMessage = async () => {
@@ -87,32 +87,32 @@ export const LiveChat: React.FC<LiveChatProps> = ({
       // Stop typing indicator
       if (isTyping) {
         setIsTyping(false);
-        sendTyping(false);
-      }
+        sendTyping(false)
+  }
       
       // Clear typing timeout
       if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
-      }
+        clearTimeout(typingTimeoutRef.current)
+  }
     } catch (error) {
-      console.error('Failed to send message:', error);
-    }
+      console.error('Failed to send message:', error)
+  }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSendMessage();
-    }
+      handleSendMessage()
+  }
   };
 
   const handleEmojiClick = async (emoji: string) => {
     try {
       await sendMessage(emoji);
-      setShowEmojiPicker(false);
-    } catch (error) {
-      console.error('Failed to send emoji:', error);
-    }
+      setShowEmojiPicker(false)
+  } catch (error) {
+      console.error('Failed to send emoji:', error)
+  }
   };
 
   const renderMessage = (message: Message) => {
@@ -136,7 +136,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({
           {formatTimeAgo(new Date(message.timestamp))}
         </div>
       </div>
-    );
+    )
   };
 
   const renderTypingIndicator = () => {
@@ -144,7 +144,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({
     
     if (otherTypingUsers.length === 0) return null;
 
-    const typingText = otherTypingUsers.length === 1;
+    const typingText = otherTypingUsers.length === 1;;
       ? `${otherTypingUsers[0]} is typing...`
       : otherTypingUsers.length === 2
       ? `${otherTypingUsers[0]} and ${otherTypingUsers[1]} are typing...`
@@ -159,18 +159,18 @@ export const LiveChat: React.FC<LiveChatProps> = ({
         </div>
         <span className="typing-text">{typingText}</span>
       </div>
-    );
+    )
   };
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
-      }
+        clearTimeout(typingTimeoutRef.current)
+  }
       if (isTyping) {
-        sendTyping(false);
-      }
+        sendTyping(false)
+  }
     };
   }, [isTyping, sendTyping]);
 
@@ -201,8 +201,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({
       <div className="live-chat-input-container">
         {enableEmojis && (
           <div className="emoji-picker-container">
-            <button;
-              className="emoji-picker-toggle"
+            <button className="emoji-picker-toggle"
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               aria-label="Toggle emoji picker"
             >
@@ -237,8 +236,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({
           aria-label="Chat message input"
         />
 
-        <button;
-          className="live-chat-send-button"
+        <button className="live-chat-send-button"
           onClick={handleSendMessage}
           disabled={!inputValue.trim()}
           aria-label="Send message"
@@ -252,5 +250,5 @@ export const LiveChat: React.FC<LiveChatProps> = ({
         </button>
       </div>
     </div>
-  );
-};
+  )
+  };

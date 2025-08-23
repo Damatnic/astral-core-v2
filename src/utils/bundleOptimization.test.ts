@@ -91,7 +91,7 @@ describe('bundleOptimization', () => {
     jest.clearAllMocks();
     
     // Reset BundleAnalyzer metrics
-    BundleAnalyzer.resetMetrics();
+    BundleAnalyzer.resetMetrics()
   });
 
   afterEach(() => {
@@ -105,7 +105,7 @@ describe('bundleOptimization', () => {
     });
     delete (global as any).__webpack_require__;
     jest.useRealTimers();
-    jest.restoreAllMocks();
+    jest.restoreAllMocks()
   });
 
   describe('BundleAnalyzer', () => {
@@ -136,8 +136,8 @@ describe('bundleOptimization', () => {
           largestChunks: [],
           unusedCode: 0,
           memoryImpact: 0,
-        });
-      });
+        })
+  });
 
       test('should perform full analysis in development', async () => {
         process.env.NODE_ENV = 'development';
@@ -155,8 +155,8 @@ describe('bundleOptimization', () => {
         expect(result.loadTime).toBeGreaterThanOrEqual(0);
         expect(result.memoryImpact).toBeGreaterThanOrEqual(0);
         expect(result.chunkCount).toBeGreaterThanOrEqual(0);
-        expect(console.group).toHaveBeenCalledWith('📊 Bundle Analysis Results');
-      });
+        expect(console.group).toHaveBeenCalledWith('📊 Bundle Analysis Results')
+  });
 
       test.skip('should handle analysis errors gracefully', async () => {
         // Skipped: console.error not being called as expected
@@ -166,8 +166,8 @@ describe('bundleOptimization', () => {
         mockPerformance.now.mockImplementation(() => {
           callCount++;
           if (callCount === 1) return 1000; // start time
-          throw new Error('Performance API error');
-        });
+          throw new Error('Performance API error')
+  });
 
         const result = await BundleAnalyzer.analyzeBundlePerformance();
 
@@ -175,8 +175,8 @@ describe('bundleOptimization', () => {
           'Bundle analysis failed:',
           expect.any(Error)
         );
-        expect(result).toBeDefined();
-      });
+        expect(result).toBeDefined()
+  });
 
       test('should detect and log duplicate modules', async () => {
         process.env.NODE_ENV = 'development';
@@ -189,9 +189,9 @@ describe('bundleOptimization', () => {
 
         const result = BundleAnalyzer.getMetrics();
         expect(result.duplicateModules).toContain('react');
-        expect(result.duplicateModules).toContain('lodash');
-      });
-    });
+        expect(result.duplicateModules).toContain('lodash')
+  })
+  });
 
     describe('getLoadedChunks', () => {
       test('should get chunks from webpack cache when available', async () => {
@@ -200,8 +200,8 @@ describe('bundleOptimization', () => {
 
         expect(chunks).toContain('module1');
         expect(chunks).toContain('module2');
-        expect(chunks).toContain('vendor');
-      });
+        expect(chunks).toContain('vendor')
+  });
 
       test('should fallback to script analysis when webpack not available', async () => {
         delete (global as any).__webpack_require__;
@@ -210,8 +210,8 @@ describe('bundleOptimization', () => {
         const chunks = analyzer.getLoadedChunks();
 
         expect(chunks).toContain('chunk.abc123.js');
-        expect(chunks).toContain('bundle.def456.js');
-      });
+        expect(chunks).toContain('bundle.def456.js')
+  });
 
       test('should handle missing webpack gracefully', async () => {
         delete (global as any).__webpack_require__;
@@ -220,9 +220,9 @@ describe('bundleOptimization', () => {
         const analyzer = BundleAnalyzer as any;
         const chunks = analyzer.getLoadedChunks();
 
-        expect(chunks).toEqual([]);
-      });
-    });
+        expect(chunks).toEqual([])
+  })
+  });
 
     describe('getChunkSize', () => {
       test('should fetch chunk size from headers', async () => {
@@ -234,8 +234,8 @@ describe('bundleOptimization', () => {
         const size = await analyzer.getChunkSize('test-chunk.js');
 
         expect(size).toBe(2048);
-        expect(global.fetch).toHaveBeenCalledWith('test-chunk.js', { method: 'HEAD' });
-      });
+        expect(global.fetch).toHaveBeenCalledWith('test-chunk.js', { method: 'HEAD' })
+  });
 
       test('should fallback to estimation when fetch fails', async () => {
         (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
@@ -252,8 +252,8 @@ describe('bundleOptimization', () => {
         const analyzer = BundleAnalyzer as any;
         const size = await analyzer.getChunkSize('test-chunk.js');
 
-        expect(size).toBeGreaterThan(0);
-      });
+        expect(size).toBeGreaterThan(0)
+  });
 
       test('should return 0 for missing chunks', async () => {
         (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
@@ -262,9 +262,9 @@ describe('bundleOptimization', () => {
         const analyzer = BundleAnalyzer as any;
         const size = await analyzer.getChunkSize('nonexistent-chunk.js');
 
-        expect(size).toBe(0);
-      });
-    });
+        expect(size).toBe(0)
+  })
+  });
 
     describe('chunk registry management', () => {
       test('should register chunk loading', () => {
@@ -277,8 +277,8 @@ describe('bundleOptimization', () => {
           loading: true,
           size: 0,
           loadTime: startTime,
-        });
-      });
+        })
+  });
 
       test('should mark chunk as loaded', () => {
         const startTime = 1000;
@@ -293,8 +293,8 @@ describe('bundleOptimization', () => {
           loading: false,
           size: 0,
           loadTime: 500,
-        });
-      });
+        })
+  });
 
       test('should mark chunk as failed', () => {
         const error = new Error('Load failed');
@@ -308,17 +308,17 @@ describe('bundleOptimization', () => {
           size: 0,
           loadTime: 1000,
           error,
-        });
-      });
+        })
+  });
 
       test('should handle operations on non-existent chunks', () => {
         BundleAnalyzer.markChunkLoaded('nonexistent', 2000);
         BundleAnalyzer.markChunkFailed('nonexistent', new Error('test'));
 
         const status = BundleAnalyzer.getChunkStatus('nonexistent');
-        expect(status).toBeUndefined();
-      });
-    });
+        expect(status).toBeUndefined()
+  })
+  });
 
     describe('getMetrics', () => {
       test('should return current metrics', () => {
@@ -330,8 +330,8 @@ describe('bundleOptimization', () => {
         expect(metrics).toHaveProperty('duplicateModules');
         expect(metrics).toHaveProperty('largestChunks');
         expect(metrics).toHaveProperty('unusedCode');
-        expect(metrics).toHaveProperty('memoryImpact');
-      });
+        expect(metrics).toHaveProperty('memoryImpact')
+  });
 
       test('should return a copy of metrics', () => {
         const metrics1 = BundleAnalyzer.getMetrics();
@@ -339,25 +339,25 @@ describe('bundleOptimization', () => {
 
         expect(metrics1).toEqual(metrics2);
         expect(metrics1).not.toBe(metrics2); // Different object references
-      });
-    });
+      })
+  })
   });
 
   describe('ChunkLoadingOptimizer', () => {
     beforeEach(() => {
       // Reset static state
       ChunkLoadingOptimizer.setStrategy('lazy');
-      jest.clearAllTimers();
-    });
+      jest.clearAllTimers()
+  });
 
     describe('setStrategy', () => {
       test('should set loading strategy', () => {
         ChunkLoadingOptimizer.setStrategy('prefetch');
         
         const stats = ChunkLoadingOptimizer.getLoadingStats();
-        expect(stats.strategy).toBe('prefetch');
-      });
-    });
+        expect(stats.strategy).toBe('prefetch')
+  })
+  });
 
     describe('optimizeChunkLoading', () => {
       test('should trigger optimization processes', () => {
@@ -387,8 +387,8 @@ describe('bundleOptimization', () => {
           'runtime',
           expect.any(Function),
           'high'
-        );
-      });
+        )
+  });
 
       test('should prefetch likely chunks based on route', () => {
         const { ComponentPreloader } = require('../components/EnhancedLazyComponent');
@@ -410,9 +410,9 @@ describe('bundleOptimization', () => {
           'user-profile',
           expect.any(Function),
           'medium'
-        );
-      });
-    });
+        )
+  })
+  });
 
     describe('loadChunk', () => {
       test('should load chunk successfully', async () => {
@@ -427,8 +427,8 @@ describe('bundleOptimization', () => {
 
         expect(console.log).toHaveBeenCalledWith(
           expect.stringContaining('✅ Loaded chunk test-chunk')
-        );
-      });
+        )
+  });
 
       test('should prevent concurrent loading of same chunk', async () => {
         const loadChunk = (ChunkLoadingOptimizer as any).loadChunk.bind(ChunkLoadingOptimizer);
@@ -441,11 +441,11 @@ describe('bundleOptimization', () => {
         await Promise.all([promise1, promise2]);
 
         // Should only log once (for first load attempt);
-        const loadLogs = (console.log as jest.Mock).mock.calls.filter(call =>;
+        const loadLogs = (console.log as jest.Mock).mock.calls.filter(call =>;;
           call[0].includes('✅ Loaded chunk test-chunk')
         );
-        expect(loadLogs.length).toBe(1);
-      });
+        expect(loadLogs.length).toBe(1)
+  });
 
       test('should queue chunks when max concurrent limit reached', async () => {
         const loadChunk = (ChunkLoadingOptimizer as any).loadChunk.bind(ChunkLoadingOptimizer);
@@ -453,12 +453,12 @@ describe('bundleOptimization', () => {
         // Load multiple chunks to hit the limit;
         const promises = [];
         for (let i = 0; i < 5; i++) {
-          promises.push(loadChunk(`chunk-${i}`));
-        }
+          promises.push(loadChunk(`chunk-${i}`))
+  }
         
         const stats = ChunkLoadingOptimizer.getLoadingStats();
-        expect(stats.queueLength).toBeGreaterThan(0);
-      });
+        expect(stats.queueLength).toBeGreaterThan(0)
+  });
 
       test('should handle load failures', async () => {
         const loadChunk = (ChunkLoadingOptimizer as any).loadChunk.bind(ChunkLoadingOptimizer);
@@ -468,13 +468,13 @@ describe('bundleOptimization', () => {
           // Simulate error by throwing
           setTimeout(() => {
             try {
-              throw new Error('Simulated load failure');
-            } catch (error) {
+              throw new Error('Simulated load failure')
+  } catch (error) {
               // This would be caught in the real implementation
             }
           }, 0);
-          return 1 as any;
-        }) as any);
+          return 1 as any
+  }) as any);
 
         const promise = loadChunk('failing-chunk');
         
@@ -484,8 +484,8 @@ describe('bundleOptimization', () => {
 
         // Should continue processing queue
         expect(true).toBe(true); // Test passes if no unhandled rejection
-      });
-    });
+      })
+  });
 
     describe('getLoadingStats', () => {
       test('should return current loading statistics', () => {
@@ -495,9 +495,9 @@ describe('bundleOptimization', () => {
         expect(stats).toHaveProperty('queueLength');
         expect(stats).toHaveProperty('loadingCount');
         expect(stats).toHaveProperty('maxConcurrent');
-        expect(stats.maxConcurrent).toBe(3);
-      });
-    });
+        expect(stats.maxConcurrent).toBe(3)
+  })
+  });
 
     describe('processQueue', () => {
       test('should process queued chunks by priority', async () => {
@@ -506,15 +506,15 @@ describe('bundleOptimization', () => {
         
         // Queue some chunks to exceed limit
         for (let i = 0; i < 5; i++) {
-          loadChunk(`chunk-${i}`);
-        }
+          loadChunk(`chunk-${i}`)
+  }
         
         // Process queue
         processQueue();
         
         expect(true).toBe(true); // Test passes if queue processing works
-      });
-    });
+      })
+  })
   });
 
   describe('MobileMemoryOptimizer', () => {
@@ -528,15 +528,15 @@ describe('bundleOptimization', () => {
           return [
             {
               getBoundingClientRect: () => ({ 
-                top: -100, left: 0, bottom: -50, right: 100 ;
-              }),
+                top: -100, left: 0, bottom: -50, right: 100
+  }),
               remove: jest.fn(),
             },
-          ] as any;
-        }
-        return [] as any;
-      }) as any;
-    });
+          ] as any
+  }
+        return [] as any
+  }) as any
+  });
 
     describe('startMonitoring', () => {
       test('should start memory monitoring', () => {
@@ -546,8 +546,8 @@ describe('bundleOptimization', () => {
         expect(stats.monitoring).toBe(true);
 
         // Clean up
-        MobileMemoryOptimizer.stopMonitoring();
-      });
+        MobileMemoryOptimizer.stopMonitoring()
+  });
 
       test('should not start multiple intervals', () => {
         MobileMemoryOptimizer.startMonitoring();
@@ -556,9 +556,9 @@ describe('bundleOptimization', () => {
         const stats = MobileMemoryOptimizer.getMemoryStats();
         expect(stats.monitoring).toBe(true);
 
-        MobileMemoryOptimizer.stopMonitoring();
-      });
-    });
+        MobileMemoryOptimizer.stopMonitoring()
+  })
+  });
 
     describe('stopMonitoring', () => {
       test('should stop memory monitoring', () => {
@@ -566,15 +566,15 @@ describe('bundleOptimization', () => {
         MobileMemoryOptimizer.stopMonitoring();
 
         const stats = MobileMemoryOptimizer.getMemoryStats();
-        expect(stats.monitoring).toBe(false);
-      });
+        expect(stats.monitoring).toBe(false)
+  });
 
       test('should handle stopping when not monitoring', () => {
         expect(() => {
-          MobileMemoryOptimizer.stopMonitoring();
-        }).not.toThrow();
-      });
-    });
+          MobileMemoryOptimizer.stopMonitoring()
+  }).not.toThrow()
+  })
+  });
 
     describe('memory cleanup', () => {
       test('should perform cleanup when memory threshold exceeded', () => {
@@ -597,8 +597,8 @@ describe('bundleOptimization', () => {
         expect(ComponentPreloader.clearCache).toHaveBeenCalled();
         expect(console.log).toHaveBeenCalledWith('🧹 Performed memory cleanup');
 
-        MobileMemoryOptimizer.stopMonitoring();
-      });
+        MobileMemoryOptimizer.stopMonitoring()
+  });
 
       test('should not cleanup when memory usage is normal', () => {
         // Mock normal memory usage
@@ -615,14 +615,14 @@ describe('bundleOptimization', () => {
         const checkMemoryUsage = (MobileMemoryOptimizer as any).checkMemoryUsage;
         checkMemoryUsage.call(MobileMemoryOptimizer);
 
-        expect(ComponentPreloader.clearCache).not.toHaveBeenCalled();
-      });
+        expect(ComponentPreloader.clearCache).not.toHaveBeenCalled()
+  });
 
       test('should clear unused images from DOM', () => {
         const mockImage = {
           getBoundingClientRect: () => ({ 
-            top: -100, left: 0, bottom: -50, right: 100 ;
-          }),
+            top: -100, left: 0, bottom: -50, right: 100
+  }),
           remove: jest.fn(),
         };
 
@@ -631,14 +631,14 @@ describe('bundleOptimization', () => {
         const performCleanup = (MobileMemoryOptimizer as any).performCleanup;
         performCleanup();
 
-        expect(mockImage.remove).toHaveBeenCalled();
-      });
+        expect(mockImage.remove).toHaveBeenCalled()
+  });
 
       test('should keep visible images', () => {
         const mockImage = {
           getBoundingClientRect: () => ({ 
-            top: 100, left: 0, bottom: 200, right: 100 ;
-          }),
+            top: 100, left: 0, bottom: 200, right: 100
+  }),
           remove: jest.fn(),
         };
 
@@ -651,8 +651,8 @@ describe('bundleOptimization', () => {
         const performCleanup = (MobileMemoryOptimizer as any).performCleanup;
         performCleanup();
 
-        expect(mockImage.remove).not.toHaveBeenCalled();
-      });
+        expect(mockImage.remove).not.toHaveBeenCalled()
+  });
 
       test('should handle missing performance.memory', () => {
         delete (performance as any).memory;
@@ -660,10 +660,10 @@ describe('bundleOptimization', () => {
         expect(() => {
           const getCurrentMemoryUsage = (MobileMemoryOptimizer as any).getCurrentMemoryUsage;
           const usage = getCurrentMemoryUsage();
-          expect(usage).toBe(0);
-        }).not.toThrow();
-      });
-    });
+          expect(usage).toBe(0)
+  }).not.toThrow()
+  })
+  });
 
     describe('garbage collection', () => {
       test('should trigger garbage collection when available', () => {
@@ -675,18 +675,18 @@ describe('bundleOptimization', () => {
 
         expect(mockGc).toHaveBeenCalled();
 
-        delete (global as any).gc;
-      });
+        delete (global as any).gc
+  });
 
       test('should handle missing garbage collection gracefully', () => {
         delete (global as any).gc;
 
         expect(() => {
           const performCleanup = (MobileMemoryOptimizer as any).performCleanup;
-          performCleanup();
-        }).not.toThrow();
-      });
-    });
+          performCleanup()
+  }).not.toThrow()
+  })
+  });
 
     describe('getMemoryStats', () => {
       test('should return memory statistics', () => {
@@ -695,9 +695,9 @@ describe('bundleOptimization', () => {
         expect(stats).toHaveProperty('currentUsage');
         expect(stats).toHaveProperty('threshold');
         expect(stats).toHaveProperty('monitoring');
-        expect(stats.threshold).toBe(50);
-      });
-    });
+        expect(stats.threshold).toBe(50)
+  })
+  });
 
     describe('isElementInViewport', () => {
       test('should detect element in viewport', () => {
@@ -714,8 +714,8 @@ describe('bundleOptimization', () => {
         Object.defineProperty(window, 'innerWidth', { value: 800, writable: true });
 
         const isInViewport = (MobileMemoryOptimizer as any).isElementInViewport;
-        expect(isInViewport(element)).toBe(true);
-      });
+        expect(isInViewport(element)).toBe(true)
+  });
 
       test('should detect element outside viewport', () => {
         const element = {
@@ -728,8 +728,8 @@ describe('bundleOptimization', () => {
         } as HTMLElement;
 
         const isInViewport = (MobileMemoryOptimizer as any).isElementInViewport;
-        expect(isInViewport(element)).toBe(false);
-      });
+        expect(isInViewport(element)).toBe(false)
+  });
 
       test('should handle documentElement dimensions fallback', () => {
         Object.defineProperty(window, 'innerHeight', { value: undefined, writable: true });
@@ -747,9 +747,9 @@ describe('bundleOptimization', () => {
         } as HTMLElement;
 
         const isInViewport = (MobileMemoryOptimizer as any).isElementInViewport;
-        expect(isInViewport(element)).toBe(true);
-      });
-    });
+        expect(isInViewport(element)).toBe(true)
+  })
+  })
   });
 
   describe('initializeBundleOptimization', () => {
@@ -776,8 +776,8 @@ describe('bundleOptimization', () => {
       initializeBundleOptimization();
 
       expect(startMonitoringSpy).not.toHaveBeenCalled();
-      expect(optimizeChunkLoadingSpy).toHaveBeenCalled();
-    });
+      expect(optimizeChunkLoadingSpy).toHaveBeenCalled()
+  });
 
     test('should analyze bundle performance in development', () => {
       process.env.NODE_ENV = 'development';
@@ -789,8 +789,8 @@ describe('bundleOptimization', () => {
       // Fast forward the timeout
       jest.advanceTimersByTime(2000);
 
-      expect(analyzeSpy).toHaveBeenCalled();
-    });
+      expect(analyzeSpy).toHaveBeenCalled()
+  });
 
     test('should not analyze bundle performance in production', () => {
       process.env.NODE_ENV = 'production';
@@ -801,8 +801,8 @@ describe('bundleOptimization', () => {
 
       jest.advanceTimersByTime(2000);
 
-      expect(analyzeSpy).not.toHaveBeenCalled();
-    });
+      expect(analyzeSpy).not.toHaveBeenCalled()
+  })
   });
 
   describe('Error Handling and Edge Cases', () => {
@@ -810,9 +810,9 @@ describe('bundleOptimization', () => {
       delete (global as any).__webpack_require__;
 
       expect(() => {
-        BundleAnalyzer.analyzeBundlePerformance();
-      }).not.toThrow();
-    });
+        BundleAnalyzer.analyzeBundlePerformance()
+  }).not.toThrow()
+  });
 
     test('should handle fetch errors in chunk size detection', async () => {
       (global.fetch as jest.Mock).mockRejectedValue(new Error('Network error'));
@@ -820,8 +820,8 @@ describe('bundleOptimization', () => {
       const analyzer = BundleAnalyzer as any;
       const size = await analyzer.getChunkSize('test-chunk.js');
 
-      expect(size).toBe(0);
-    });
+      expect(size).toBe(0)
+  });
 
     test('should handle missing script elements', async () => {
       Object.defineProperty(document, 'scripts', { value: [], writable: true });
@@ -832,31 +832,31 @@ describe('bundleOptimization', () => {
       // Should still get chunks from webpack cache even without scripts
       expect(chunks).toContain('module1');
       expect(chunks).toContain('module2');
-      expect(chunks).toContain('vendor');
-    });
+      expect(chunks).toContain('vendor')
+  });
 
     test('should handle missing performance API', () => {
       delete (global as any).performance;
 
       expect(() => {
-        new BundleAnalyzer();
-      }).not.toThrow();
+        new BundleAnalyzer()
+  }).not.toThrow();
 
       // Restore for other tests
       Object.defineProperty(global, 'performance', {
         value: mockPerformance,
         writable: true,
-      });
-    });
+      })
+  });
 
     test('should handle missing DOM elements in memory cleanup', () => {
       document.querySelectorAll = jest.fn(() => [] as any);
 
       expect(() => {
         const performCleanup = (MobileMemoryOptimizer as any).performCleanup;
-        performCleanup();
-      }).not.toThrow();
-    });
+        performCleanup()
+  }).not.toThrow()
+  })
   });
 
   describe('Performance Considerations', () => {
@@ -866,8 +866,8 @@ describe('bundleOptimization', () => {
       // Simulate many memory checks;
       const getCurrentMemoryUsage = (MobileMemoryOptimizer as any).getCurrentMemoryUsage;
       for (let i = 0; i < 1000; i++) {
-        getCurrentMemoryUsage();
-      }
+        getCurrentMemoryUsage()
+  }
 
       const endTime = performance.now();
       const duration = endTime - startTime;
@@ -881,8 +881,8 @@ describe('bundleOptimization', () => {
       // Simulate many chunk operations
       for (let i = 0; i < 1000; i++) {
         BundleAnalyzer.registerChunkLoad(`chunk-${i}`, Date.now());
-        BundleAnalyzer.markChunkLoaded(`chunk-${i}`, Date.now() + 100);
-      }
+        BundleAnalyzer.markChunkLoaded(`chunk-${i}`, Date.now() + 100)
+  }
 
       const endTime = performance.now();
       const duration = endTime - startTime;
@@ -894,12 +894,12 @@ describe('bundleOptimization', () => {
       // Start and stop monitoring multiple times
       for (let i = 0; i < 10; i++) {
         MobileMemoryOptimizer.startMonitoring();
-        MobileMemoryOptimizer.stopMonitoring();
-      }
+        MobileMemoryOptimizer.stopMonitoring()
+  }
 
       const stats = MobileMemoryOptimizer.getMemoryStats();
-      expect(stats.monitoring).toBe(false);
-    });
+      expect(stats.monitoring).toBe(false)
+  })
   });
 
   describe('Integration Tests', () => {
@@ -928,8 +928,8 @@ describe('bundleOptimization', () => {
       expect(loadingStats.strategy).toBe('lazy');
 
       // Cleanup
-      MobileMemoryOptimizer.stopMonitoring();
-    });
+      MobileMemoryOptimizer.stopMonitoring()
+  });
 
     test('should coordinate between different optimization systems', async () => {
       // Simulate chunk loading while memory optimization is active
@@ -945,8 +945,8 @@ describe('bundleOptimization', () => {
       const memoryStats = MobileMemoryOptimizer.getMemoryStats();
       expect(memoryStats.monitoring).toBe(true);
 
-      MobileMemoryOptimizer.stopMonitoring();
-    });
+      MobileMemoryOptimizer.stopMonitoring()
+  })
   });
 
   describe('Default Export', () => {
@@ -956,7 +956,7 @@ describe('bundleOptimization', () => {
       expect(defaultExport).toHaveProperty('BundleAnalyzer');
       expect(defaultExport).toHaveProperty('ChunkLoadingOptimizer');
       expect(defaultExport).toHaveProperty('MobileMemoryOptimizer');
-      expect(defaultExport).toHaveProperty('initializeBundleOptimization');
-    });
+      expect(defaultExport).toHaveProperty('initializeBundleOptimization')
+  })
+  })
   });
-});

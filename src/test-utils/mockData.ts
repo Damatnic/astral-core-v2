@@ -83,7 +83,7 @@ export const mockMoodEntries = [
     sleep: 8,
     notes: 'Had a good day, feeling positive',
     activities: ['exercise', 'meditation', 'socializing'],
-    timestamp: '2024-01-15T08:00:00Z';
+    timestamp: '2024-01-15T08:00:00Z'
   },
   {
     id: 'mood-002',
@@ -94,7 +94,7 @@ export const mockMoodEntries = [
     sleep: 6,
     notes: 'Feeling stressed about work',
     activities: ['work', 'reading'],
-    timestamp: '2024-01-14T08:00:00Z';
+    timestamp: '2024-01-14T08:00:00Z'
   },
   {
     id: 'mood-003',
@@ -105,7 +105,7 @@ export const mockMoodEntries = [
     sleep: 9,
     notes: 'Great sleep, feeling refreshed',
     activities: ['exercise', 'nature walk', 'cooking'],
-    timestamp: '2024-01-13T08:00:00Z';
+    timestamp: '2024-01-13T08:00:00Z'
   }
 ];
 
@@ -121,15 +121,15 @@ export const mockReflections = [
       heart: 12,
       support: 8,
       empathy: 5,
-      inspire: 3;
-    },
+      inspire: 3
+  },
     comments: [
       {
         id: 'comment-001',
         userId: 'helper-456',
         content: 'This is a great insight! Small breaks are so important.',
-        createdAt: '2024-01-15T15:00:00Z';
-      }
+        createdAt: '2024-01-15T15:00:00Z'
+  }
     ]
   },
   {
@@ -143,9 +143,9 @@ export const mockReflections = [
       heart: 25,
       support: 15,
       empathy: 10,
-      inspire: 8;
-    },
-    comments: [];
+      inspire: 8
+  },
+    comments: []
   }
 ];
 
@@ -159,7 +159,7 @@ export const mockCrisisResources = [
     description: 'Free, confidential crisis support',
     categories: ['crisis', 'suicide prevention'],
     languages: ['en', 'es'],
-    website: 'https://988lifeline.org';
+    website: 'https://988lifeline.org'
   },
   {
     id: 'resource-002',
@@ -169,7 +169,7 @@ export const mockCrisisResources = [
     description: 'Treatment referral and information service',
     categories: ['substance abuse', 'mental health'],
     languages: ['en', 'es'],
-    website: 'https://www.samhsa.gov/find-help/national-helpline';
+    website: 'https://www.samhsa.gov/find-help/national-helpline'
   },
   {
     id: 'resource-003',
@@ -180,7 +180,7 @@ export const mockCrisisResources = [
     description: 'Support for Veterans and their families',
     categories: ['veterans', 'crisis'],
     languages: ['en'],
-    website: 'https://www.veteranscrisisline.net';
+    website: 'https://www.veteranscrisisline.net'
   }
 ];
 
@@ -208,21 +208,21 @@ export const mockSafetyPlan = {
     {
       name: 'Mom',
       phone: '555-0101',
-      relationship: 'family';
-    },
+      relationship: 'family'
+  },
     {
       name: 'Best Friend Sarah',
       phone: '555-0102',
-      relationship: 'friend';
-    }
+      relationship: 'friend'
+  }
   ],
   professionals: [
     {
       name: 'Dr. Smith',
       phone: '555-0201',
       role: 'Therapist',
-      availability: 'Mon-Fri 9-5';
-    }
+      availability: 'Mon-Fri 9-5'
+  }
   ],
   safeEnvironment: [
     'Remove sharp objects',
@@ -236,27 +236,27 @@ export const mockSafetyPlan = {
     'Helping others'
   ],
   createdAt: '2024-01-01T00:00:00Z',
-  lastUpdated: '2024-01-15T00:00:00Z';
-};
+  lastUpdated: '2024-01-15T00:00:00Z'
+  };
 
 export const mockChatMessages = [
   {
     id: 'msg-001',
     sender: 'user',
     text: 'I\'m feeling anxious about tomorrow',
-    timestamp: '2024-01-15T10:00:00Z';
+    timestamp: '2024-01-15T10:00:00Z'
   },
   {
     id: 'msg-002',
     sender: 'ai',
     text: 'I understand you\'re feeling anxious. Can you tell me more about what\'s happening tomorrow?',
-    timestamp: '2024-01-15T10:00:30Z';
+    timestamp: '2024-01-15T10:00:30Z'
   },
   {
     id: 'msg-003',
     sender: 'user',
     text: 'I have a big presentation at work',
-    timestamp: '2024-01-15T10:01:00Z';
+    timestamp: '2024-01-15T10:01:00Z'
   },
   {
     id: 'msg-004',
@@ -287,7 +287,7 @@ export const mockHabits = [
       '2024-01-13',
       // ... more dates
     ],
-    createdAt: '2024-01-01T00:00:00Z';
+    createdAt: '2024-01-01T00:00:00Z'
   },
   {
     id: 'habit-002',
@@ -304,7 +304,7 @@ export const mockHabits = [
       '2024-01-12',
       '2024-01-11'
     ],
-    createdAt: '2024-01-01T00:00:00Z';
+    createdAt: '2024-01-01T00:00:00Z'
   }
 ];
 
@@ -317,7 +317,7 @@ export const mockJournalEntries = [
     mood: 'hopeful',
     tags: ['progress', 'productivity', 'calm'],
     isPrivate: true,
-    createdAt: '2024-01-15T20:00:00Z';
+    createdAt: '2024-01-15T20:00:00Z'
   },
   {
     id: 'journal-002',
@@ -327,7 +327,7 @@ export const mockJournalEntries = [
     mood: 'stressed',
     tags: ['work', 'stress', 'coping'],
     isPrivate: true,
-    createdAt: '2024-01-14T19:00:00Z';
+    createdAt: '2024-01-14T19:00:00Z'
   }
 ];
 
@@ -339,7 +339,7 @@ export const mockNotifications = [
     title: 'Time for your daily check-in',
     message: 'How are you feeling today?',
     isRead: false,
-    createdAt: '2024-01-15T09:00:00Z';
+    createdAt: '2024-01-15T09:00:00Z'
   },
   {
     id: 'notif-002',
@@ -348,7 +348,7 @@ export const mockNotifications = [
     title: 'Milestone reached!',
     message: 'You\'ve completed a 7-day meditation streak!',
     isRead: true,
-    createdAt: '2024-01-14T10:00:00Z';
+    createdAt: '2024-01-14T10:00:00Z'
   },
   {
     id: 'notif-003',
@@ -357,7 +357,7 @@ export const mockNotifications = [
     title: 'Someone reacted to your reflection',
     message: 'Your reflection received 5 hearts',
     isRead: true,
-    createdAt: '2024-01-13T15:00:00Z';
+    createdAt: '2024-01-13T15:00:00Z'
   }
 ];
 
@@ -372,7 +372,7 @@ export const mockVideos = [
     category: 'meditation',
     views: 1250,
     likes: 98,
-    createdAt: '2024-01-01T00:00:00Z';
+    createdAt: '2024-01-01T00:00:00Z'
   },
   {
     id: 'video-002',
@@ -384,7 +384,7 @@ export const mockVideos = [
     category: 'anxiety',
     views: 2100,
     likes: 156,
-    createdAt: '2024-01-05T00:00:00Z';
+    createdAt: '2024-01-05T00:00:00Z'
   }
 ];
 
@@ -445,22 +445,22 @@ export const mockApiResponses = {
   success: {
     status: 'success',
     data: {},
-    message: 'Operation completed successfully';
+    message: 'Operation completed successfully'
   },
   error: {
     status: 'error',
     error: 'Something went wrong',
-    code: 'GENERIC_ERROR';
+    code: 'GENERIC_ERROR'
   },
   unauthorized: {
     status: 'error',
     error: 'Unauthorized access',
-    code: 'UNAUTHORIZED';
+    code: 'UNAUTHORIZED'
   },
   notFound: {
     status: 'error',
     error: 'Resource not found',
-    code: 'NOT_FOUND';
+    code: 'NOT_FOUND'
   }
 };
 
@@ -469,23 +469,23 @@ export const mockWebSocketMessages = {
   typing: {
     type: 'typing',
     userId: 'helper-456',
-    isTyping: true;
+    isTyping: true
   },
   message: {
     type: 'message',
     id: 'ws-msg-001',
     sender: 'helper-456',
     text: 'How can I help you today?',
-    timestamp: '2024-01-15T10:00:00Z';
+    timestamp: '2024-01-15T10:00:00Z'
   },
   presence: {
     type: 'presence',
     userId: 'helper-456',
-    status: 'online';
+    status: 'online'
   },
   notification: {
     type: 'notification',
     title: 'New message',
-    message: 'You have a new message from your helper';
+    message: 'You have a new message from your helper'
   }
 };

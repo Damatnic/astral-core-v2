@@ -32,15 +32,15 @@ const mockCulturalAssessmentService = culturalAssessmentService as jest.Mocked<t
 describe('culturalAssessmentUtils', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {})
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    jest.restoreAllMocks()
   });
 
   describe('getCulturalPhq9Questions', () => {
-    const mockCulturalQuestions = [;
+    const mockCulturalQuestions = [;;
       {
         id: 'phq9_1_cultural',
         text: 'Standard question text',
@@ -107,16 +107,16 @@ describe('culturalAssessmentUtils', () => {
         id: 'phq9_1_cultural',
         text: 'Asian-adapted question text',
         options: mockCulturalQuestions[0].options,
-      });
-    });
+      })
+  });
 
     it('should fallback to Western adaptation when cultural context not found', async () => {
       mockCulturalAssessmentService.getCulturalAssessmentQuestions.mockResolvedValue(mockCulturalQuestions);
 
       const result = await getCulturalPhq9Questions('en', 'Unknown');
 
-      expect(result[0].text).toBe('Western question text');
-    });
+      expect(result[0].text).toBe('Western question text')
+  });
 
     it('should use standard text when no cultural adaptations available', async () => {
       const questionsWithoutAdaptations = [{
@@ -128,8 +128,8 @@ describe('culturalAssessmentUtils', () => {
 
       const result = await getCulturalPhq9Questions('en', 'Asian');
 
-      expect(result[0].text).toBe('Standard question text');
-    });
+      expect(result[0].text).toBe('Standard question text')
+  });
 
     it('should use default language code when not provided', async () => {
       mockCulturalAssessmentService.getCulturalAssessmentQuestions.mockResolvedValue(mockCulturalQuestions);
@@ -140,8 +140,8 @@ describe('culturalAssessmentUtils', () => {
         'phq-9',
         'en',
         undefined
-      );
-    });
+      )
+  });
 
     it('should fallback to standard questions on service failure', async () => {
       mockCulturalAssessmentService.getCulturalAssessmentQuestions.mockRejectedValue(new Error('Service failed'));
@@ -153,20 +153,20 @@ describe('culturalAssessmentUtils', () => {
       expect(console.error).toHaveBeenCalledWith(
         '[Assessment Utils] Failed to get cultural PHQ-9 questions:',
         expect.any(Error)
-      );
-    });
+      )
+  });
 
     it('should handle empty cultural questions response', async () => {
       mockCulturalAssessmentService.getCulturalAssessmentQuestions.mockResolvedValue([]);
 
       const result = await getCulturalPhq9Questions('en', 'Asian');
 
-      expect(result).toHaveLength(0);
-    });
+      expect(result).toHaveLength(0)
+  })
   });
 
   describe('getCulturalGad7Questions', () => {
-    const mockGad7Questions = [;
+    const mockGad7Questions = [;;
       {
         id: 'gad7_1_cultural',
         text: 'Standard GAD-7 question',
@@ -205,8 +205,8 @@ describe('culturalAssessmentUtils', () => {
       );
 
       expect(result).toHaveLength(1);
-      expect(result[0].text).toBe('Latino-adapted GAD-7 question');
-    });
+      expect(result[0].text).toBe('Latino-adapted GAD-7 question')
+  });
 
     it('should fallback to standard GAD-7 questions on failure', async () => {
       mockCulturalAssessmentService.getCulturalAssessmentQuestions.mockRejectedValue(new Error('Failed'));
@@ -214,8 +214,8 @@ describe('culturalAssessmentUtils', () => {
       const result = await getCulturalGad7Questions('es', 'Latino');
 
       expect(result).toHaveLength(7); // Standard GAD-7 has 7 questions
-      expect(result[0].id).toBe('gad7_1');
-    });
+      expect(result[0].id).toBe('gad7_1')
+  })
   });
 
   describe('getCulturalPhq9Result', () => {
@@ -260,8 +260,8 @@ describe('culturalAssessmentUtils', () => {
       expect(result).toEqual({
         ...mockCulturalResult,
         color: '#f97316', // Orange for moderate
-      });
-    });
+      })
+  });
 
     it('should use score strings as textual answers when not provided', async () => {
       mockCulturalAssessmentService.calculateCulturalAssessmentResult.mockResolvedValue(mockCulturalResult);
@@ -275,8 +275,8 @@ describe('culturalAssessmentUtils', () => {
         ['1', '2', '0'],
         'en',
         'Asian'
-      );
-    });
+      )
+  });
 
     it('should use default language when not provided', async () => {
       mockCulturalAssessmentService.calculateCulturalAssessmentResult.mockResolvedValue(mockCulturalResult);
@@ -289,8 +289,8 @@ describe('culturalAssessmentUtils', () => {
         ['1', '2', '1'],
         'en',
         undefined
-      );
-    });
+      )
+  });
 
     it('should fallback to standard calculation on service failure', async () => {
       mockCulturalAssessmentService.calculateCulturalAssessmentResult.mockRejectedValue(new Error('Service failed'));
@@ -320,11 +320,11 @@ describe('culturalAssessmentUtils', () => {
       expect(console.error).toHaveBeenCalledWith(
         '[Assessment Utils] Failed to get cultural PHQ-9 result:',
         expect.any(Error)
-      );
-    });
+      )
+  });
 
     it('should handle different severity levels and colors', async () => {
-      const severityTests = [;
+      const severityTests = [;;
         { severity: 'minimal', expectedColor: '#10b981' },
         { severity: 'mild', expectedColor: '#f59e0b' },
         { severity: 'moderate', expectedColor: '#f97316' },
@@ -340,9 +340,9 @@ describe('culturalAssessmentUtils', () => {
         });
 
         const result = await getCulturalPhq9Result([1], 'en', 'Asian');
-        expect(result.color).toBe(expectedColor);
-      }
-    });
+        expect(result.color).toBe(expectedColor)
+  }
+    })
   });
 
   describe('getCulturalGad7Result', () => {
@@ -378,8 +378,8 @@ describe('culturalAssessmentUtils', () => {
       expect(result).toEqual({
         ...mockGad7Result,
         color: '#f59e0b', // Yellow for mild
-      });
-    });
+      })
+  });
 
     it('should fallback to standard GAD-7 calculation on failure', async () => {
       mockCulturalAssessmentService.calculateCulturalAssessmentResult.mockRejectedValue(new Error('Failed'));
@@ -389,8 +389,8 @@ describe('culturalAssessmentUtils', () => {
 
       expect(result.score).toBe(7);
       expect(result.severity).toBe('mild');
-      expect(result.culturalContext).toBe('Western');
-    });
+      expect(result.culturalContext).toBe('Western')
+  })
   });
 
   describe('submitCulturalAssessment', () => {
@@ -416,7 +416,7 @@ describe('culturalAssessmentUtils', () => {
     it('should submit cultural assessment with all parameters', async () => {
       mockCulturalAssessmentService.submitCulturalAssessment.mockResolvedValue(mockSubmissionResult);
 
-      const result = await submitCulturalAssessment(;
+      const result = await submitCulturalAssessment(;;
         'user-123',
         'phq-9',
         [1, 2, 1, 2, 1, 2, 1, 1, 0],
@@ -436,8 +436,8 @@ describe('culturalAssessmentUtils', () => {
         sessionDuration: 300000,
       });
 
-      expect(result).toBe(mockSubmissionResult);
-    });
+      expect(result).toBe(mockSubmissionResult)
+  });
 
     it('should use default values when optional parameters not provided', async () => {
       mockCulturalAssessmentService.submitCulturalAssessment.mockResolvedValue(mockSubmissionResult);
@@ -452,8 +452,8 @@ describe('culturalAssessmentUtils', () => {
         languageCode: 'en',
         culturalContext: undefined,
         sessionDuration: 300000,
-      });
-    });
+      })
+  });
 
     it('should throw error on service failure', async () => {
       const serviceError = new Error('Submission failed');
@@ -466,8 +466,8 @@ describe('culturalAssessmentUtils', () => {
       expect(console.error).toHaveBeenCalledWith(
         '[Assessment Utils] Failed to submit cultural assessment:',
         serviceError
-      );
-    });
+      )
+  })
   });
 
   describe('formatAssessmentDate', () => {
@@ -475,17 +475,17 @@ describe('culturalAssessmentUtils', () => {
       const date = new Date('2024-01-15T10:30:00Z');
       const result = formatAssessmentDate(date);
 
-      expect(result).toBe('Jan 15, 2024');
-    });
+      expect(result).toBe('Jan 15, 2024')
+  });
 
     it('should format date string correctly', () => {
       const result = formatAssessmentDate('2024-01-15T10:30:00Z');
 
-      expect(result).toBe('Jan 15, 2024');
-    });
+      expect(result).toBe('Jan 15, 2024')
+  });
 
     it('should handle different date formats', () => {
-      const testDates = [;
+      const testDates = [;;
         { input: '2024-12-25', expected: 'Dec 25, 2024' },
         { input: '2024-01-01', expected: 'Jan 1, 2024' },
         { input: '2024-06-15', expected: 'Jun 15, 2024' },
@@ -493,41 +493,41 @@ describe('culturalAssessmentUtils', () => {
 
       testDates.forEach(({ input, expected }) => {
         const result = formatAssessmentDate(input);
-        expect(result).toBe(expected);
-      });
-    });
+        expect(result).toBe(expected)
+  })
+  });
 
     it('should handle invalid date strings', () => {
       const result = formatAssessmentDate('invalid-date');
-      expect(result).toMatch(/Invalid Date|NaN/);
-    });
+      expect(result).toMatch(/Invalid Date|NaN/)
+  })
   });
 
   describe('getAssessmentDisplayName', () => {
     it('should return correct display name for PHQ-9', () => {
       const result = getAssessmentDisplayName('phq-9');
-      expect(result).toBe('PHQ-9 (Depression)');
-    });
+      expect(result).toBe('PHQ-9 (Depression)')
+  });
 
     it('should return correct display name for GAD-7', () => {
       const result = getAssessmentDisplayName('gad-7');
-      expect(result).toBe('GAD-7 (Anxiety)');
-    });
+      expect(result).toBe('GAD-7 (Anxiety)')
+  });
 
     it('should return unknown for unrecognized assessment type', () => {
       const result = getAssessmentDisplayName('unknown-assessment');
-      expect(result).toBe('Unknown Assessment');
-    });
+      expect(result).toBe('Unknown Assessment')
+  });
 
     it('should handle empty string', () => {
       const result = getAssessmentDisplayName('');
-      expect(result).toBe('Unknown Assessment');
-    });
+      expect(result).toBe('Unknown Assessment')
+  });
 
     it('should handle case sensitivity', () => {
       const result = getAssessmentDisplayName('PHQ-9');
-      expect(result).toBe('Unknown Assessment');
-    });
+      expect(result).toBe('Unknown Assessment')
+  })
   });
 
   describe('standard fallback functions', () => {
@@ -541,9 +541,9 @@ describe('culturalAssessmentUtils', () => {
         testScores.forEach(async (scores) => {
           const result = await getCulturalPhq9Result(scores);
           expect(result.severity).toBe('minimal');
-          expect(result.color).toBe('#10b981');
-        });
-      });
+          expect(result.color).toBe('#10b981')
+  })
+  });
 
       it('should classify severe depression correctly', () => {
         mockCulturalAssessmentService.calculateCulturalAssessmentResult.mockRejectedValue(new Error('Failed'));
@@ -554,10 +554,10 @@ describe('culturalAssessmentUtils', () => {
         result.then(r => {
           expect(r.severity).toBe('severe');
           expect(r.color).toBe('#991b1b');
-          expect(r.recommendation).toContain('severe depression');
-        });
-      });
-    });
+          expect(r.recommendation).toContain('severe depression')
+  })
+  })
+  });
 
     describe('standard GAD-7 scoring', () => {
       it('should classify minimal anxiety correctly', () => {
@@ -568,9 +568,9 @@ describe('culturalAssessmentUtils', () => {
         
         result.then(r => {
           expect(r.severity).toBe('minimal');
-          expect(r.recommendation).toContain('minimal anxiety');
-        });
-      });
+          expect(r.recommendation).toContain('minimal anxiety')
+  })
+  });
 
       it('should classify severe anxiety correctly', () => {
         mockCulturalAssessmentService.calculateCulturalAssessmentResult.mockRejectedValue(new Error('Failed'));
@@ -580,10 +580,10 @@ describe('culturalAssessmentUtils', () => {
         
         result.then(r => {
           expect(r.severity).toBe('severe');
-          expect(r.recommendation).toContain('severe anxiety');
-        });
-      });
-    });
+          expect(r.recommendation).toContain('severe anxiety')
+  })
+  })
+  })
   });
 
   describe('interface compliance', () => {
@@ -601,8 +601,8 @@ describe('culturalAssessmentUtils', () => {
       expect(question.text).toBe('Test question');
       expect(question.options).toHaveLength(2);
       expect(question.options[0]).toHaveProperty('text');
-      expect(question.options[0]).toHaveProperty('value');
-    });
+      expect(question.options[0]).toHaveProperty('value')
+  });
 
     it('should match AssessmentResult interface', () => {
       const result: AssessmentResult = {
@@ -616,8 +616,8 @@ describe('culturalAssessmentUtils', () => {
       expect(result).toHaveProperty('recommendation');
       expect(typeof result.score).toBe('number');
       expect(typeof result.severity).toBe('string');
-      expect(typeof result.recommendation).toBe('string');
-    });
+      expect(typeof result.recommendation).toBe('string')
+  });
 
     it('should match CulturalAssessmentResult interface', () => {
       const result: CulturalAssessmentResult = {
@@ -646,8 +646,8 @@ describe('culturalAssessmentUtils', () => {
       expect(result.culturalFactors).toHaveProperty('expressionStyle');
       expect(result.recommendations).toHaveProperty('primary');
       expect(result.recommendations).toHaveProperty('cultural');
-      expect(Array.isArray(result.recommendations.cultural)).toBe(true);
-    });
+      expect(Array.isArray(result.recommendations.cultural)).toBe(true)
+  })
   });
 
   describe('error handling and edge cases', () => {
@@ -661,8 +661,8 @@ describe('culturalAssessmentUtils', () => {
       const result = await getCulturalPhq9Result([1, 1, 1]);
       
       expect(result.culturalContext).toBe('Western');
-      expect(console.error).toHaveBeenCalled();
-    });
+      expect(console.error).toHaveBeenCalled()
+  });
 
     it('should handle malformed service responses', async () => {
       mockCulturalAssessmentService.getCulturalAssessmentQuestions.mockResolvedValue(null as any);
@@ -678,8 +678,8 @@ describe('culturalAssessmentUtils', () => {
       const result = await getCulturalPhq9Result([]);
       
       expect(result.score).toBe(0);
-      expect(result.severity).toBe('minimal');
-    });
+      expect(result.severity).toBe('minimal')
+  });
 
     it('should handle negative scores', async () => {
       mockCulturalAssessmentService.calculateCulturalAssessmentResult.mockRejectedValue(new Error('Invalid scores'));
@@ -687,6 +687,6 @@ describe('culturalAssessmentUtils', () => {
       const result = await getCulturalPhq9Result([-1, -2, -1]);
       
       expect(result.score).toBe(-4); // Sum of negative scores
-    });
+    })
+  })
   });
-});

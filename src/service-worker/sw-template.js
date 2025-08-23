@@ -35,7 +35,7 @@ const CACHE_NAMES = {
 };
 
 // Crisis Resources (Always Available Offline);
-const CRISIS_RESOURCES = [;
+const CRISIS_RESOURCES = [;;
   '/crisis',
   '/emergency',
   '/safety-plan',
@@ -47,13 +47,13 @@ const CRISIS_RESOURCES = [;
 // Background Sync Queues;
 const bgSyncQueues = {
   crisis: new BackgroundSync('crisis-reports', {
-    maxRetentionTime: 24 * 60 // 24 hours;
+    maxRetentionTime: 24 * 60 // 24 hours
   }),
   wellness: new BackgroundSync('wellness-data', {
-    maxRetentionTime: 7 * 24 * 60 // 7 days;
+    maxRetentionTime: 7 * 24 * 60 // 7 days
   }),
   community: new BackgroundSync('community-actions', {
-    maxRetentionTime: 3 * 24 * 60 // 3 days;
+    maxRetentionTime: 3 * 24 * 60 // 3 days
   })
 };
 
@@ -74,23 +74,23 @@ self.addEventListener('install', (event) => {
       // Precache critical crisis resources
       caches.open(CACHE_NAMES.CRISIS).then(cache => {
         return cache.addAll(CRISIS_RESOURCES.map(url => new Request(url, {
-          cache: 'reload' // Always fetch fresh copies;
-        })));
-      }),
+          cache: 'reload' // Always fetch fresh copies
+  })))
+  }),
       
       // Precache offline fallback pages
       caches.open(CACHE_NAMES.CRITICAL).then(cache => {
         return cache.addAll([
           '/offline.html',
           '/offline-crisis.html'
-        ]);
-      })
+        ])
+  })
     ])
   );
   
   // Skip waiting in development, but be careful in production
   if (process.env.NODE_ENV === 'development') {
-    self.skipWaiting();
+    self.skipWaiting()
   }
 });
 
@@ -111,19 +111,19 @@ self.addEventListener('activate', (event) => {
       // Update crisis resources
       updateCrisisResources()
     ])
-  );
-});
+  )
+  });
 
 async function cleanupOldCaches() {
   const cacheNames = await caches.keys();
-  const oldCaches = cacheNames.filter(name => ;
+  const oldCaches = cacheNames.filter(name => ;;
     name.startsWith(CACHE_PREFIX) && !Object.values(CACHE_NAMES).includes(name)
   );
   
   return Promise.all(
     oldCaches.map(name => caches.delete(name))
-  );
-}
+  )
+  }
 
 async function initializeCrisisMode() {
   if (!CRISIS_MODE_ENABLED) return;
@@ -134,7 +134,7 @@ async function initializeCrisisMode() {
   
   if (cachedRequests.length === 0) {
     // Initializing crisis mode - caching resources
-    await crisisCache.addAll(CRISIS_RESOURCES);
+    await crisisCache.addAll(CRISIS_RESOURCES)
   }
 }
 
@@ -147,16 +147,16 @@ async function updateCrisisResources() {
       try {
         const response = await fetch(url, { cache: 'reload' });
         if (response.ok) {
-          await crisisCache.put(url, response);
-        }
+          await crisisCache.put(url, response)
+  }
       } catch (error) {
-        console.warn(`[SW] Failed to update crisis resource: ${url}`, error);
-      }
+        console.warn(`[SW] Failed to update crisis resource: ${url}`, error)
+  }
     });
     
-    await Promise.allSettled(promises);
+    await Promise.allSettled(promises)
   } catch (error) {
-    console.error('[SW] Failed to update crisis resources', error);
+    console.error('[SW] Failed to update crisis resources', error)
   }
 }
 
@@ -175,8 +175,8 @@ registerRoute(
         new ExpirationPlugin({
           maxEntries: 100,
           maxAgeSeconds: 5 * 60, // 5 minutes
-          purgeOnQuotaError: true;
-        }),
+          purgeOnQuotaError: true
+  }),
         new CacheableResponsePlugin({
           statuses: [0, 200]
         })
@@ -184,8 +184,8 @@ registerRoute(
     });
     
     try {
-      return await strategy.handle({ request, event });
-    } catch (error) {
+      return await strategy.handle({ request, event })
+  } catch (error) {
       console.error('[SW] API request failed:', error);
       
       // Handle failed API calls with background sync
@@ -193,8 +193,8 @@ registerRoute(
       
       // Return cached response or offline fallback;
       const cachedResponse = await getCachedApiResponse(request);
-      return cachedResponse || createOfflineApiResponse(request);
-    }
+      return cachedResponse || createOfflineApiResponse(request)
+  }
   }
 );
 
@@ -234,8 +234,8 @@ registerRoute(
       new ExpirationPlugin({
         maxEntries: 100,
         maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
-        purgeOnQuotaError: true;
-      }),
+        purgeOnQuotaError: true
+  }),
       new CacheableResponsePlugin({
         statuses: [0, 200]
       })
@@ -244,24 +244,24 @@ registerRoute(
 );
 
 // Navigation Fallback;
-const navigationRoute = new NavigationRoute(;
+const navigationRoute = new NavigationRoute(;;
   async ({ event }) => {
     const request = event.request;
     
     try {
       // Try network first for navigation
-      return await fetch(request);
-    } catch (error) {
+      return await fetch(request)
+  } catch (error) {
       console.warn('[SW] Navigation request failed, serving offline fallback:', error);
       
       // Check if it's a crisis-related route
       if (CRISIS_RESOURCES.some(resource => request.url.includes(resource))) {
-        return caches.match('/offline-crisis.html') || caches.match('/offline.html');
-      }
+        return caches.match('/offline-crisis.html') || caches.match('/offline.html')
+  }
       
       // Default offline fallback
-      return caches.match('/offline.html');
-    }
+      return caches.match('/offline.html')
+  }
   },
   {
     allowlist: [/^(?!\/__).*/], // Exclude service worker and API routes
@@ -282,11 +282,11 @@ async function handleFailedApiCall(request, event) {
   // Determine sync queue based on function type;
   let queue;
   if (functionName.includes('crisis') || functionName.includes('emergency')) {
-    queue = bgSyncQueues.crisis;;
+    queue = bgSyncQueues.crisis
   } else if (functionName.includes('wellness') || functionName.includes('mood')) {
-    queue = bgSyncQueues.wellness;;
+    queue = bgSyncQueues.wellness
   } else {
-    queue = bgSyncQueues.community;
+    queue = bgSyncQueues.community
   }
   
   // Add to background sync queue
@@ -298,21 +298,21 @@ async function handleFailedApiCall(request, event) {
           url: request.url,
           method: request.method,
           headers: Object.fromEntries(request.headers.entries()),
-          body: JSON.stringify(requestData);
-        },
+          body: JSON.stringify(requestData)
+  },
         timestamp: Date.now(),
-        retryCount: 0;
-      });
-    } catch (error) {
-      console.error('[SW] Failed to queue request for background sync', error);
-    }
+        retryCount: 0
+  })
+  } catch (error) {
+      console.error('[SW] Failed to queue request for background sync', error)
+  }
   }
 }
 
 async function getCachedApiResponse(request) {
   const cache = await caches.open(CACHE_NAMES.API);
-  return cache.match(request);
-}
+  return cache.match(request)
+  }
 
 function createOfflineApiResponse(request) {
   const url = new URL(request.url);
@@ -323,21 +323,21 @@ function createOfflineApiResponse(request) {
       success: false,
       offline: true,
       message: 'Your data will be synced when you\'re back online',
-      timestamp: Date.now();
-    }), {
+      timestamp: Date.now()
+  }), {
       status: 202,
       headers: { 'Content-Type': 'application/json' }
-    });
+    })
   }
   
   return new Response(JSON.stringify({
     error: 'Offline - data will sync when connection is restored',
-    offline: true;
+    offline: true
   }), {
     status: 503,
     headers: { 'Content-Type': 'application/json' }
-  });
-}
+  })
+  }
 
 /* =================================
    MESSAGE HANDLING & COMMUNICATION
@@ -374,24 +374,24 @@ self.addEventListener('message', (event) => {
       break;
       
     default:
-      console.warn('[SW] Unknown message type:', type);
+      console.warn('[SW] Unknown message type:', type)
   }
 });
 
 async function clearSpecificCache(cacheName) {
   if (cacheName === CACHE_NAMES.CRISIS) {
-    throw new Error('Cannot clear crisis cache - it contains essential safety resources');
+    throw new Error('Cannot clear crisis cache - it contains essential safety resources')
   }
   
-  return caches.delete(cacheName);
-}
+  return caches.delete(cacheName)
+  }
 
 async function cacheCrisisResource(url) {
   const crisisCache = await caches.open(CACHE_NAMES.CRISIS);
   const response = await fetch(url);
   
   if (response.ok) {
-    await crisisCache.put(url, response);
+    await crisisCache.put(url, response)
   }
 }
 
@@ -405,13 +405,13 @@ async function getCacheStatus() {
       const keys = await cache.keys();
       status[name] = {
         count: keys.length,
-        size: await calculateCacheSize(cache);
-      };
+        size: await calculateCacheSize(cache)
+  };
     }
   }
   
-  return status;
-}
+  return status
+  }
 
 async function calculateCacheSize(cache) {
   const keys = await cache.keys();
@@ -422,16 +422,16 @@ async function calculateCacheSize(cache) {
       const response = await cache.match(key);
       if (response) {
         const blob = await response.blob();
-        totalSize += blob.size;
-      }
+        totalSize += blob.size
+  }
     } catch (error) {
       console.warn('[SW] Failed to calculate size for cached response:', error);
       // Skip errored responses - continue with calculation
     }
   }
   
-  return totalSize;
-}
+  return totalSize
+  }
 
 /* =================================
    PERFORMANCE MONITORING
@@ -451,8 +451,8 @@ self.addEventListener('fetch', (event) => {
           // Log performance for crisis resources
           // Crisis resource loaded successfully
           
-          return response;
-        } catch (error) {
+          return response
+  } catch (error) {
           console.warn('[SW] Failed to fetch crisis resource, serving from cache:', error);
           
           const cachedResponse = await caches.match(event.request);
@@ -460,10 +460,10 @@ self.addEventListener('fetch', (event) => {
           
           // Crisis resource served from cache
           
-          return cachedResponse || new Response('Crisis resource unavailable', { status: 503 });
-        }
+          return cachedResponse || new Response('Crisis resource unavailable', { status: 503 })
+  }
       })()
-    );
+    )
   }
 });
 
@@ -480,18 +480,18 @@ self.addEventListener('error', (event) => {
       client.postMessage({
         type: 'SW_ERROR',
         error: event.error.message,
-        timestamp: Date.now();
-      });
-    });
+        timestamp: Date.now()
+  })
+  })
+  })
   });
-});
 
 self.addEventListener('unhandledrejection', (event) => {
   console.error('[SW] Unhandled Promise Rejection:', event.reason);
   
   // Prevent the default handling
-  event.preventDefault();
-});
+  event.preventDefault()
+  });
 
 // Heartbeat mechanism for monitoring service worker health
 setInterval(() => {
@@ -500,10 +500,10 @@ setInterval(() => {
       client.postMessage({
         type: 'SW_HEARTBEAT',
         version: SW_VERSION,
-        timestamp: Date.now();
-      });
-    });
-  });
-}, 60000); // Every minute
+        timestamp: Date.now()
+  })
+  })
+  })
+  }, 60000); // Every minute
 
 // Service worker initialized

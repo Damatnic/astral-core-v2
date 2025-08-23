@@ -13,18 +13,18 @@ export interface VideoThumbnailOptions {
   frameTime?: number; // Time in seconds to extract frame (default: 1)
   quality?: number; // JPEG quality 0-100 (default: 85)
   sizes?: Array<{ width: number; height: number; suffix: string }>;
-  generatePlaceholder?: boolean;
-}
+  generatePlaceholder?: boolean
+  }
 
 export interface GeneratedThumbnail {
   original: string;
   sizes: Record<string, string>; // suffix -> base64 URL
   placeholder?: string;
   aspectRatio: number;
-  duration?: number;
-}
+  duration?: number
+  }
 
-const DEFAULT_SIZES = [;
+const DEFAULT_SIZES = [;;
   { width: 320, height: 180, suffix: 'small' },
   { width: 480, height: 270, suffix: 'medium' },
   { width: 720, height: 405, suffix: 'large' },
@@ -42,9 +42,9 @@ export class VideoThumbnailGenerator {
     this.canvas = document.createElement('canvas');
     const context = this.canvas.getContext('2d');
     if (!context) {
-      throw new Error('Failed to create canvas 2D context');
-    }
-    this.ctx = context;
+      throw new Error('Failed to create canvas 2D context')
+  }
+    this.ctx = context
   }
 
   /**
@@ -67,8 +67,8 @@ export class VideoThumbnailGenerator {
       video.preload = 'metadata';
 
       video.onloadedmetadata = () => {
-        video.currentTime = Math.min(frameTime, video.duration / 2);
-      };
+        video.currentTime = Math.min(frameTime, video.duration / 2)
+  };
 
       video.onseeked = async () => {
         try {
@@ -78,39 +78,39 @@ export class VideoThumbnailGenerator {
           const thumbnailSizes: Record<string, string> = {};
           
           for (const size of sizes) {
-            const thumbnailUrl = this.generateThumbnailAtSize(;
+            const thumbnailUrl = this.generateThumbnailAtSize(;;
               video,
               size.width,
               size.height,
               quality
             );
-            thumbnailSizes[size.suffix] = thumbnailUrl;
-          }
+            thumbnailSizes[size.suffix] = thumbnailUrl
+  }
 
           // Generate placeholder if requested;
           let placeholder: string | undefined;
           if (generatePlaceholder) {
-            placeholder = this.generatePlaceholder(video, aspectRatio);
-          }
+            placeholder = this.generatePlaceholder(video, aspectRatio)
+  }
 
           resolve({
             original: videoSrc,
             sizes: thumbnailSizes,
             placeholder,
             aspectRatio,
-            duration: video.duration;
-          });
-        } catch (error) {
-          reject(error);
-        }
+            duration: video.duration
+  })
+  } catch (error) {
+          reject(error)
+  }
       };
 
       video.onerror = () => {
-        reject(new Error(`Failed to load video: ${videoSrc}`));
-      };
+        reject(new Error(`Failed to load video: ${videoSrc}`))
+  };
 
-      video.src = videoSrc;
-    });
+      video.src = videoSrc
+  })
   }
 
   /**
@@ -129,7 +129,7 @@ export class VideoThumbnailGenerator {
     this.ctx.drawImage(video, 0, 0, width, height);
 
     // Convert to optimized JPEG
-    return this.canvas.toDataURL('image/jpeg', quality / 100);
+    return this.canvas.toDataURL('image/jpeg', quality / 100)
   }
 
   /**
@@ -148,7 +148,7 @@ export class VideoThumbnailGenerator {
     // Draw low-res frame
     this.ctx.drawImage(video, 0, 0, placeholderWidth, placeholderHeight);
 
-    return this.canvas.toDataURL('image/jpeg', 0.1);
+    return this.canvas.toDataURL('image/jpeg', 0.1)
   }
 
   /**
@@ -160,8 +160,8 @@ export class VideoThumbnailGenerator {
   ): GeneratedThumbnail | null {
     if (videoElement.readyState < 2) {
       // Video not ready
-      return null;
-    }
+      return null
+  }
 
     try {
       const {
@@ -175,31 +175,31 @@ export class VideoThumbnailGenerator {
 
       // Generate thumbnails for all sizes
       for (const size of sizes) {
-        const thumbnailUrl = this.generateThumbnailAtSize(;
+        const thumbnailUrl = this.generateThumbnailAtSize(;;
           videoElement,
           size.width,
           size.height,
           quality
         );
-        thumbnailSizes[size.suffix] = thumbnailUrl;
-      }
+        thumbnailSizes[size.suffix] = thumbnailUrl
+  }
 
       // Generate placeholder if requested;
       let placeholder: string | undefined;
       if (generatePlaceholder) {
-        placeholder = this.generatePlaceholder(videoElement, aspectRatio);
-      }
+        placeholder = this.generatePlaceholder(videoElement, aspectRatio)
+  }
 
       return {
         original: videoElement.src,
         sizes: thumbnailSizes,
         placeholder,
         aspectRatio,
-        duration: videoElement.duration;
-      } catch (error) {
+        duration: videoElement.duration
+  } catch (error) {
       console.error('Error generating thumbnail from element:', error);
-      return null;
-    }
+      return null
+  }
   }
 
   /**
@@ -217,12 +217,12 @@ export class VideoThumbnailGenerator {
     for (let i = 0; i < videoSources.length; i += batchSize) {
       const batch = videoSources.slice(i, i + batchSize);
       
-      const batchPromises = batch.map(videoSrc =>;
+      const batchPromises = batch.map(videoSrc =>;;
         this.generateThumbnails(videoSrc, options)
           .catch(error => {
             console.error(`Failed to generate thumbnail for ${videoSrc}:`, error);
-            return null;
-          };
+            return null
+  };
   });
 
       const batchResults = await Promise.all(batchPromises);
@@ -230,11 +230,11 @@ export class VideoThumbnailGenerator {
 
       // Small delay between batches to prevent blocking UI
       if (i + batchSize < videoSources.length) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
+        await new Promise(resolve => setTimeout(resolve, 100))
+  }
     }
 
-    return results;
+    return results
   }
 
   /**
@@ -249,14 +249,14 @@ export class VideoThumbnailGenerator {
           sizes: thumb.sizes,
           placeholder: thumb.placeholder,
           aspectRatio: thumb.aspectRatio,
-          duration: thumb.duration;
-        }))
+          duration: thumb.duration
+  }))
       };
 
-      localStorage.setItem('video-thumbnails-cache', JSON.stringify(cacheData));
-    } catch (error) {
-      console.warn('Failed to save thumbnails to cache:', error);
-    }
+      localStorage.setItem('video-thumbnails-cache', JSON.stringify(cacheData))
+  } catch (error) {
+      console.warn('Failed to save thumbnails to cache:', error)
+  }
   }
 
   /**
@@ -273,27 +273,27 @@ export class VideoThumbnailGenerator {
       const isExpired = Date.now() - cacheData.timestamp > 24 * 60 * 60 * 1000;
       if (isExpired) {
         localStorage.removeItem('video-thumbnails-cache');
-        return [];
-      }
+        return []
+  }
 
       return cacheData.thumbnails.map((thumb: any) => ({
         original: thumb.videoSrc,
         sizes: thumb.sizes,
         placeholder: thumb.placeholder,
         aspectRatio: thumb.aspectRatio,
-        duration: thumb.duration;
-      }));
-    } catch (error) {
+        duration: thumb.duration
+  }))
+  } catch (error) {
       console.warn('Failed to load thumbnails from cache:', error);
-      return [];
-    }
+      return []
+  }
   }
 
   /**
    * Clear thumbnail cache
    */
   clearCache(): void {
-    localStorage.removeItem('video-thumbnails-cache');
+    localStorage.removeItem('video-thumbnails-cache')
   }
 
   /**
@@ -307,7 +307,7 @@ export class VideoThumbnailGenerator {
            thumbnail.sizes.medium || 
            thumbnail.sizes.small || 
            Object.values(thumbnail.sizes)[0] || 
-           '';
+           ''
   }
 
   /**
@@ -346,7 +346,7 @@ export class VideoThumbnailGenerator {
     this.ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
     this.ctx.fill();
 
-    return this.canvas.toDataURL('image/jpeg', 0.9);
+    return this.canvas.toDataURL('image/jpeg', 0.9)
   }
 }
 

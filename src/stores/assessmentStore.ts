@@ -18,8 +18,8 @@ interface AssessmentState {
     languageCode: string,
     culturalContext?: string,
     sessionDuration?: number
-  ) => Promise<void>;
-}
+  ) => Promise<void>
+  }
 
 export const useAssessmentStore = create<AssessmentState>((set, get) => ({
     history: [],
@@ -29,8 +29,8 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
         const userToken = authState.userToken;
         if (!userToken) {
             set({ history: [], isLoading: false });
-            return;
-        }
+            return
+  }
         set({ isLoading: true });
         try {
             const response = await fetch('/api/assessments/history', {
@@ -42,17 +42,17 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
             
             if (response.ok) {
                 const data = await response.json();
-                set({ history: data.assessments || [] });;
+                set({ history: data.assessments || [] })
   } else {
                 console.error('Failed to fetch assessment history:', response.status);
-                set({ history: [] });
-            }
+                set({ history: [] })
+  }
         } catch (error) {
             console.error("Failed to fetch assessment history:", error);
-            set({ history: [] });
-        } finally {
-            set({ isLoading: false });
-        }
+            set({ history: [] })
+  } finally {
+            set({ isLoading: false })
+  }
     },
 
     submitPhq9Result: async (score, answers, cultural = false, culturalContext) => {
@@ -68,8 +68,8 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
                 answers: answers.map(String),
                 languageCode: 'en', // Default - could be detected from user settings
                 culturalContext,
-                sessionDuration: 300000 // 5 minutes default;
-            });;
+                sessionDuration: 300000 // 5 minutes default
+  })
   } else {
             // Submit standard PHQ-9 assessment;
             const response = await fetch('/api/assessments/submit', {
@@ -82,17 +82,17 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
                     type: 'phq-9',
                     score,
                     answers,
-                    timestamp: new Date().toISOString();
-                })
+                    timestamp: new Date().toISOString()
+  })
             });
             
             if (!response.ok) {
-                throw new Error(`Failed to submit PHQ-9: ${response.status}`);
-            }
+                throw new Error(`Failed to submit PHQ-9: ${response.status}`)
+  }
         }
         
-        await get().fetchHistory();
-    },
+        await get().fetchHistory()
+  },
     
     submitGad7Result: async (score, answers, cultural = false, culturalContext) => {
         const userToken = authState.userToken;
@@ -107,8 +107,8 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
                 answers: answers.map(String),
                 languageCode: 'en', // Default - could be detected from user settings
                 culturalContext,
-                sessionDuration: 300000 // 5 minutes default;
-            });;
+                sessionDuration: 300000 // 5 minutes default
+  })
   } else {
             // Submit standard GAD-7 assessment;
             const response = await fetch('/api/assessments/submit', {
@@ -121,17 +121,17 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
                     type: 'gad-7',
                     score,
                     answers,
-                    timestamp: new Date().toISOString();
-                })
+                    timestamp: new Date().toISOString()
+  })
             });
             
             if (!response.ok) {
-                throw new Error(`Failed to submit GAD-7: ${response.status}`);
-            }
+                throw new Error(`Failed to submit GAD-7: ${response.status}`)
+  }
         }
         
-        await get().fetchHistory();
-    },
+        await get().fetchHistory()
+  },
 
     submitCulturalAssessment: async (type, scores, answers, languageCode, culturalContext, sessionDuration = 300000) => {
         const userToken = authState.userToken;
@@ -147,8 +147,8 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
             sessionDuration
         });
         
-        await get().fetchHistory();
-    }
+        await get().fetchHistory()
+  }
 }));
 
 // Initial data fetch

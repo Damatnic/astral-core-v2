@@ -15,15 +15,15 @@ export interface LazyComponentProps {
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
   preload?: boolean;
   priority?: 'high' | 'medium' | 'low';
-  className?: string;
-}
+  className?: string
+  }
 
 export interface LazyLoadOptions {
   skeleton?: 'default' | 'card' | 'list' | 'form' | 'chat' | 'dashboard';
   errorMessage?: string;
   retryable?: boolean;
-  preloadStrategy?: 'idle' | 'visible' | 'hover' | 'immediate';
-}
+  preloadStrategy?: 'idle' | 'visible' | 'hover' | 'immediate'
+  }
 
 // Default error fallback component;
 const DefaultErrorFallback: React.FC<{ error: Error; resetErrorBoundary: () => void }> = ({ 
@@ -49,10 +49,10 @@ const DefaultErrorFallback: React.FC<{ error: Error; resetErrorBoundary: () => v
 export const PreloadStrategies = {
   idle: (loadComponent: () => Promise<unknown>) => {
     if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => loadComponent());;
+      requestIdleCallback(() => loadComponent())
   } else {
-      setTimeout(loadComponent, 100);
-    }
+      setTimeout(loadComponent, 100)
+  }
   },
   
   visible: (loadComponent: () => Promise<unknown>, element?: Element) => {
@@ -61,28 +61,28 @@ export const PreloadStrategies = {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             loadComponent();
-            observer.disconnect();
-          }
-        });
-      });
-      observer.observe(element);;
+            observer.disconnect()
+  }
+        })
+  });
+      observer.observe(element)
   } else {
-      loadComponent();
-    }
+      loadComponent()
+  }
   },
   
   hover: (loadComponent: () => Promise<unknown>, element?: Element) => {
     if (element) {
       const handleMouseEnter = () => {
         loadComponent();
-        element.removeEventListener('mouseenter', handleMouseEnter);
-      };
-      element.addEventListener('mouseenter', handleMouseEnter);
-    }
+        element.removeEventListener('mouseenter', handleMouseEnter)
+  };
+      element.addEventListener('mouseenter', handleMouseEnter)
+  }
   },
   
   immediate: (loadComponent: () => Promise<unknown>) => {
-    loadComponent();
+    loadComponent()
   }
 };
 
@@ -119,7 +119,7 @@ export function createLazyComponent<T extends ComponentType<any>>(;
     // Handle preloading
     React.useEffect(() => {
       if (preload || preloadStrategy === 'immediate') {
-        preloadComponent();;
+        preloadComponent()
   } else {
         const element = containerRef.current;
         
@@ -132,8 +132,8 @@ export function createLazyComponent<T extends ComponentType<any>>(;
             break;
           case 'hover':
             PreloadStrategies.hover(preloadComponent, element || undefined);
-            break;
-        }
+            break
+  }
       }
     };
   }, [preload, preloadStrategy]);
@@ -143,8 +143,8 @@ export function createLazyComponent<T extends ComponentType<any>>(;
       console.error(`Lazy component error (attempt ${retryCount + 1}):`, error);
       
       if (onError) {
-        onError(error, errorInfo);
-      }
+        onError(error, errorInfo)
+  }
 
       // Analytics integration point
       if (typeof window !== 'undefined' && (window as any).analytics) {
@@ -152,15 +152,15 @@ export function createLazyComponent<T extends ComponentType<any>>(;
           error: error.message,
           component: importFn.toString(),
           retryCount,
-          userAgent: navigator.userAgent;
-        });
-      }
+          userAgent: navigator.userAgent
+  })
+  }
     };
   }, [onError, retryCount]);
 
     const handleReset = React.useCallback(() => {
-      setRetryCount(prev => prev + 1);
-    };
+      setRetryCount(prev => prev + 1)
+  };
   }, []);
 
     // Generate appropriate loading skeleton;
@@ -171,22 +171,21 @@ export function createLazyComponent<T extends ComponentType<any>>(;
       let loadingVariant: 'post' | 'comment' | 'profile' | 'chat' = 'post';
       
       if (skeleton === 'chat') {
-        loadingVariant = 'chat';;
+        loadingVariant = 'chat'
   } else if (skeleton === 'form' || skeleton === 'card') {
-        loadingVariant = 'profile';  // Use profile for form/card skeletons;
+        loadingVariant = 'profile';  // Use profile for form/card skeletons
   } else if (skeleton === 'list') {
-        loadingVariant = 'comment';  // Use comment for list skeletons;
+        loadingVariant = 'comment';  // Use comment for list skeletons
   } else if (skeleton === 'dashboard') {
         loadingVariant = 'post';  // Use post for dashboard skeletons
       }
       
       return (
-        <LoadingSkeleton; 
-          variant={loadingVariant}
+        <LoadingSkeleton variant={loadingVariant}
           className={`lazy-loading ${className}`}
         />
-      );
-    };
+      )
+  };
 
     // Enhanced error fallback with retry;
     const EnhancedErrorFallback: React.FC<{ error: Error; resetErrorBoundary: () => void }> = ({ 
@@ -195,18 +194,18 @@ export function createLazyComponent<T extends ComponentType<any>>(;
     }) => {
       const handleRetry = () => {
         resetErrorBoundary();
-        handleReset();
-      };
+        handleReset()
+  };
 
       return (
         <div className={`lazy-error-container ${className}`}>
           {React.createElement(errorFallback, { 
             error, 
-            resetErrorBoundary: retryable ? handleRetry : resetErrorBoundary ;
-          })}
+            resetErrorBoundary: retryable ? handleRetry : resetErrorBoundary
+  })}
         </div>
-      );
-    };
+      )
+  };
 
     return (
       <div 
@@ -224,14 +223,14 @@ export function createLazyComponent<T extends ComponentType<any>>(;
           </Suspense>
         </SimpleErrorBoundary>
       </div>
-    );
+    )
   };
 
   // Attach preload function to component
   (EnhancedLazyComponent as any).preload = preloadComponent;
 
-  return EnhancedLazyComponent;
-}
+  return EnhancedLazyComponent
+  }
 
 // Route-based lazy loading for major views;
 export const createLazyRoute = (;
@@ -239,7 +238,7 @@ export const createLazyRoute = (;
   routeOptions: LazyLoadOptions & {
     breadcrumb?: string;
     title?: string;
-    requiresAuth?: boolean;
+    requiresAuth?: boolean
   } = {}
 ) => {
   const {
@@ -262,8 +261,8 @@ export const createLazyRoute = (;
     requiresAuth
   };
 
-  return LazyRoute;
-};
+  return LazyRoute
+  };
 
 // Bundle analyzer helper;
 export const getBundleInfo = () => {
@@ -271,11 +270,11 @@ export const getBundleInfo = () => {
 
   const resourceEntries = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
 
-  const jsResources = resourceEntries.filter(entry => ;
+  const jsResources = resourceEntries.filter(entry => ;;
     entry.name.includes('.js') && !entry.name.includes('chrome-extension')
   );
 
-  const cssResources = resourceEntries.filter(entry => ;
+  const cssResources = resourceEntries.filter(entry => ;;
     entry.name.includes('.css')
   );
 
@@ -287,7 +286,7 @@ export const getBundleInfo = () => {
     totalDecodedSize: resourceEntries.reduce((sum, entry) => sum + (entry.decodedBodySize || 0), 0),
     mainBundle: jsResources.find(entry => entry.name.includes('index')),
     vendorBundle: jsResources.find(entry => entry.name.includes('vendor')),
-    componentsBundle: jsResources.find(entry => entry.name.includes('components'));
+    componentsBundle: jsResources.find(entry => entry.name.includes('components'))
   };
 
 // Performance monitoring hook;
@@ -296,59 +295,59 @@ export const usePerformanceMonitoring = () => {
 
   React.useEffect(() => {
     const updateMetrics = () => {
-      setMetrics(getBundleInfo());
-    };
+      setMetrics(getBundleInfo())
+  };
 
     // Initial measurement
     updateMetrics();
 
     // Update on new resources;
     const observer = new PerformanceObserver((_list) => {
-      updateMetrics();
-    };
+      updateMetrics()
+  };
   };
 
     observer.observe({ entryTypes: ['resource'] });
 
     return () => {
-      observer.disconnect();
-    };
+      observer.disconnect()
+  };
   };
   }, []);
 
-  return metrics;
-};
+  return metrics
+  };
 
 // CSS for lazy loading components;
 export const lazyComponentStyles = `
   .lazy-component-wrapper {
     position: relative;
-    width: 100%;
+    width: 100%
   }
 
   .lazy-component-wrapper[data-priority="high"] {
-    z-index: 100;
+    z-index: 100
   }
 
   .lazy-component-wrapper[data-priority="medium"] {
-    z-index: 50;
+    z-index: 50
   }
 
   .lazy-component-wrapper[data-priority="low"] {
-    z-index: 10;
+    z-index: 10
   }
 
   .lazy-loading {
-    animation: lazy-pulse 1.5s ease-in-out infinite;
+    animation: lazy-pulse 1.5s ease-in-out infinite
   }
 
   @keyframes lazy-pulse {
     0%, 100% {
-      opacity: 1;
-    }
+      opacity: 1
+  }
     50% {
-      opacity: 0.7;
-    }
+      opacity: 0.7
+  }
   }
 
   .lazy-error-fallback {
@@ -359,38 +358,38 @@ export const lazyComponentStyles = `
     padding: 24px;
     background-color: var(--bg-secondary, #f8fafc);
     border: 1px solid var(--border-light, #e2e8f0);
-    border-radius: 8px;
+    border-radius: 8px
   }
 
   .error-content {
     text-align: center;
-    max-width: 400px;
+    max-width: 400px
   }
 
   .error-content h3 {
     margin: 0 0 8px 0;
     font-size: 18px;
     font-weight: 600;
-    color: var(--red-600, #dc2626);
+    color: var(--red-600, #dc2626)
   }
 
   .error-content p {
     margin: 0 0 16px 0;
     font-size: 14px;
     color: var(--text-secondary, #64748b);
-    line-height: 1.5;
+    line-height: 1.5
   }
 
   .error-content details {
     margin-bottom: 16px;
-    text-align: left;
+    text-align: left
   }
 
   .error-content summary {
     cursor: pointer;
     font-size: 12px;
     color: var(--text-secondary, #64748b);
-    margin-bottom: 8px;
+    margin-bottom: 8px
   }
 
   .error-content pre {
@@ -399,7 +398,7 @@ export const lazyComponentStyles = `
     border-radius: 4px;
     font-size: 11px;
     overflow-x: auto;
-    color: var(--red-700, #b91c1c);
+    color: var(--red-700, #b91c1c)
   }
 
   .retry-button {
@@ -411,49 +410,49 @@ export const lazyComponentStyles = `
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s ease
   }
 
   .retry-button:hover {
-    background-color: var(--blue-600, #2563eb);
+    background-color: var(--blue-600, #2563eb)
   }
 
   .retry-button:focus {
     outline: 2px solid var(--blue-500, #3b82f6);
-    outline-offset: 2px;
+    outline-offset: 2px
   }
 
   .lazy-error-container {
-    width: 100%;
+    width: 100%
   }
 
   /* Dark mode support */
   @media (prefers-color-scheme: dark) {
     .lazy-error-fallback {
       background-color: var(--bg-secondary-dark, #1e293b);
-      border-color: var(--border-dark, #374151);
-    }
+      border-color: var(--border-dark, #374151)
+  }
 
     .error-content h3 {
-      color: var(--red-400, #f87171);
-    }
+      color: var(--red-400, #f87171)
+  }
 
     .error-content p,
     .error-content summary {
-      color: var(--text-secondary-dark, #94a3b8);
-    }
+      color: var(--text-secondary-dark, #94a3b8)
+  }
 
     .error-content pre {
       background-color: var(--gray-800, #1f2937);
-      color: var(--red-300, #fca5a5);
-    }
+      color: var(--red-300, #fca5a5)
+  }
   }
 
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
     .lazy-loading {
-      animation: none;
-    }
+      animation: none
+  }
   }
 `;
 

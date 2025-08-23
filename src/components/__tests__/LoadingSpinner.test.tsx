@@ -8,28 +8,28 @@ describe('LoadingSpinner', () => {
       
       const container = screen.getByRole('status');
       expect(container).toBeInTheDocument();
-      expect(container).toHaveClass('loading-spinner-container');
-    });
+      expect(container).toHaveClass('loading-spinner-container')
+  });
 
     it('should render spinner with custom className', () => {
       render(<LoadingSpinner className="custom-spinner" />);
       
       const container = screen.getByRole('status');
-      expect(container).toHaveClass('loading-spinner-container', 'custom-spinner');
-    });
+      expect(container).toHaveClass('loading-spinner-container', 'custom-spinner')
+  });
 
     it('should render message when provided', () => {
       const message = 'Loading data...';
       render(<LoadingSpinner message={message} />);
       
-      expect(screen.getByText(message)).toBeInTheDocument();
-    });
+      expect(screen.getByText(message)).toBeInTheDocument()
+  });
 
     it('should not render message when not provided', () => {
       const { container } = render(<LoadingSpinner />);
       
-      expect(container.querySelector('.loading-message')).not.toBeInTheDocument();
-    });
+      expect(container.querySelector('.loading-message')).not.toBeInTheDocument()
+  });
 
     it('should render with correct HTML structure', () => {
       const { container } = render(<LoadingSpinner message="Loading..." />);
@@ -38,12 +38,12 @@ describe('LoadingSpinner', () => {
       expect(container.querySelector('.therapy-spinner')).toBeInTheDocument();
       expect(container.querySelector('.loading-dots')).toBeInTheDocument();
       expect(container.querySelector('.loading-message')).toBeInTheDocument();
-      expect(container.querySelectorAll('.loading-dot')).toHaveLength(3);
-    });
+      expect(container.querySelectorAll('.loading-dot')).toHaveLength(3)
+  })
   });
 
   describe('Sizes', () => {
-    const sizes = [;
+    const sizes = [;;
       { size: 'small' as const, expectedClass: 'w-4 h-4' },
       { size: 'medium' as const, expectedClass: 'w-8 h-8' },
       { size: 'large' as const, expectedClass: 'w-12 h-12' }
@@ -54,16 +54,16 @@ describe('LoadingSpinner', () => {
         const { container } = render(<LoadingSpinner size={size} />);
         
         const dots = container.querySelector('.loading-dots');
-        expect(dots).toHaveClass(expectedClass);
-      });
-    });
+        expect(dots).toHaveClass(expectedClass)
+  })
+  });
 
     it('should use medium size by default', () => {
       const { container } = render(<LoadingSpinner />);
       
       const dots = container.querySelector('.loading-dots');
-      expect(dots).toHaveClass('w-8', 'h-8');
-    });
+      expect(dots).toHaveClass('w-8', 'h-8')
+  });
 
     it('should handle invalid size gracefully', () => {
       // TypeScript would prevent this, but testing runtime behavior;
@@ -71,8 +71,8 @@ describe('LoadingSpinner', () => {
       
       const dots = container.querySelector('.loading-dots');
       // Should default to medium or handle gracefully
-      expect(dots).toBeInTheDocument();
-    });
+      expect(dots).toBeInTheDocument()
+  })
   });
 
   describe('Accessibility', () => {
@@ -80,39 +80,39 @@ describe('LoadingSpinner', () => {
       render(<LoadingSpinner />);
       
       const output = screen.getByRole('status');
-      expect(output.tagName.toLowerCase()).toBe('output');
-    });
+      expect(output.tagName.toLowerCase()).toBe('output')
+  });
 
     it('should have aria-live="polite"', () => {
       render(<LoadingSpinner />);
       
       const container = screen.getByRole('status');
-      expect(container).toHaveAttribute('aria-live', 'polite');
-    });
+      expect(container).toHaveAttribute('aria-live', 'polite')
+  });
 
     it('should have aria-hidden="true" on spinner element', () => {
       const { container } = render(<LoadingSpinner />);
       
       // The loading dots don't have aria-hidden in this implementation;
       const dots = container.querySelector('.loading-dots');
-      expect(dots).toBeInTheDocument();
-    });
+      expect(dots).toBeInTheDocument()
+  });
 
     it('should have aria-hidden="true" on loading dots', () => {
       const { container } = render(<LoadingSpinner message="Loading..." />);
       
       // The loading dots don't have aria-hidden in this implementation;
       const dots = container.querySelector('.loading-dots');
-      expect(dots).toBeInTheDocument();
-    });
+      expect(dots).toBeInTheDocument()
+  });
 
     it('should include "Loading:" prefix for screen readers', () => {
       render(<LoadingSpinner message="Please wait" />);
       
       const srText = screen.getByText('Loading:');
       expect(srText).toBeInTheDocument();
-      expect(srText).toHaveClass('sr-only');
-    });
+      expect(srText).toHaveClass('sr-only')
+  });
 
     it('should provide complete message context for screen readers', () => {
       const message = 'Fetching user data';
@@ -120,8 +120,8 @@ describe('LoadingSpinner', () => {
       
       // Screen readers should get "Loading: Fetching user data"
       expect(screen.getByText('Loading:')).toBeInTheDocument();
-      expect(screen.getByText(message)).toBeInTheDocument();
-    });
+      expect(screen.getByText(message)).toBeInTheDocument()
+  })
   });
 
   describe('Message Display', () => {
@@ -129,15 +129,15 @@ describe('LoadingSpinner', () => {
       const message = 'Loading data';
       render(<LoadingSpinner message={message} />);
       
-      expect(screen.getByText(message)).toBeInTheDocument();
-    });
+      expect(screen.getByText(message)).toBeInTheDocument()
+  });
 
     it('should render complex messages', () => {
       const message = 'Processing your request, please wait...';
       render(<LoadingSpinner message={message} />);
       
-      expect(screen.getByText(message)).toBeInTheDocument();
-    });
+      expect(screen.getByText(message)).toBeInTheDocument()
+  });
 
     it('should handle empty string message', () => {
       const { container } = render(<LoadingSpinner message="" />);
@@ -147,30 +147,30 @@ describe('LoadingSpinner', () => {
       expect(messageElement).not.toBeInTheDocument();
       
       // Verify the spinner itself is still rendered
-      expect(container.querySelector('.loading-dots')).toBeInTheDocument();
-    });
+      expect(container.querySelector('.loading-dots')).toBeInTheDocument()
+  });
 
     it('should handle messages with special characters', () => {
       const message = 'Loading... 50% complete! @#$%';
       render(<LoadingSpinner message={message} />);
       
-      expect(screen.getByText(message)).toBeInTheDocument();
-    });
+      expect(screen.getByText(message)).toBeInTheDocument()
+  });
 
     it('should handle very long messages', () => {
       const longMessage = 'This is a very long loading message that might wrap to multiple lines and should still display correctly without breaking the component layout or accessibility features';
       render(<LoadingSpinner message={longMessage} />);
       
-      expect(screen.getByText(longMessage)).toBeInTheDocument();
-    });
+      expect(screen.getByText(longMessage)).toBeInTheDocument()
+  });
 
     it('should render loading dots alongside message', () => {
       const { container } = render(<LoadingSpinner message="Loading" />);
       
       const dots = container.querySelector('.loading-dots');
       expect(dots).toBeInTheDocument();
-      expect(container.querySelectorAll('.loading-dot')).toHaveLength(3);
-    });
+      expect(container.querySelectorAll('.loading-dot')).toHaveLength(3)
+  })
   });
 
   describe('CSS Classes', () => {
@@ -183,15 +183,15 @@ describe('LoadingSpinner', () => {
       expect(therapySpinner).toBeInTheDocument();
       
       const dots = container.querySelector('.loading-dots');
-      expect(dots).toBeInTheDocument();
-    });
+      expect(dots).toBeInTheDocument()
+  });
 
     it('should combine custom className with base classes', () => {
       const customClass = 'my-custom-loader';
       const { container } = render(<LoadingSpinner className={customClass} />);
       
-      expect(container.firstChild).toHaveClass('loading-spinner-container', customClass);
-    });
+      expect(container.firstChild).toHaveClass('loading-spinner-container', customClass)
+  });
 
     it('should handle multiple custom classes', () => {
       const customClasses = 'class1 class2 class3';
@@ -202,8 +202,8 @@ describe('LoadingSpinner', () => {
         'class1',
         'class2', 
         'class3'
-      );
-    });
+      )
+  });
 
     it('should apply size-specific classes correctly', () => {
       const { container: smallContainer } = render(<LoadingSpinner size="small" />);
@@ -212,8 +212,8 @@ describe('LoadingSpinner', () => {
       
       expect(smallContainer.querySelector('.loading-dots')).toHaveClass('w-4', 'h-4');
       expect(mediumContainer.querySelector('.loading-dots')).toHaveClass('w-8', 'h-8');
-      expect(largeContainer.querySelector('.loading-dots')).toHaveClass('w-12', 'h-12');
-    });
+      expect(largeContainer.querySelector('.loading-dots')).toHaveClass('w-12', 'h-12')
+  })
   });
 
   describe('Component Structure', () => {
@@ -233,8 +233,8 @@ describe('LoadingSpinner', () => {
       expect(messageElement).toBeInTheDocument();
       
       const srText = messageElement?.querySelector('.sr-only');
-      expect(srText).toBeInTheDocument();
-    });
+      expect(srText).toBeInTheDocument()
+  });
 
     it('should maintain structure without message', () => {
       const { container } = render(<LoadingSpinner />);
@@ -250,8 +250,8 @@ describe('LoadingSpinner', () => {
       
       // Should not have message elements;
       const messageElement = output?.querySelector('.loading-message');
-      expect(messageElement).not.toBeInTheDocument();
-    });
+      expect(messageElement).not.toBeInTheDocument()
+  })
   });
 
   describe('Edge Cases', () => {
@@ -259,22 +259,22 @@ describe('LoadingSpinner', () => {
       render(<LoadingSpinner className={undefined} />);
       
       const container = screen.getByRole('status');
-      expect(container).toHaveClass('loading-spinner-container');
-    });
+      expect(container).toHaveClass('loading-spinner-container')
+  });
 
     it('should handle null message', () => {
       render(<LoadingSpinner message={undefined} />);
       
       const container = screen.getByRole('status');
-      expect(container).toBeInTheDocument();
-    });
+      expect(container).toBeInTheDocument()
+  });
 
     it('should handle undefined message', () => {
       render(<LoadingSpinner message={undefined} />);
       
       const container = screen.getByRole('status');
-      expect(container).toBeInTheDocument();
-    });
+      expect(container).toBeInTheDocument()
+  });
 
     it('should handle undefined size', () => {
       render(<LoadingSpinner size={undefined} />);
@@ -287,16 +287,16 @@ describe('LoadingSpinner', () => {
     it('should handle numeric message', () => {
       render(<LoadingSpinner message={'123'} />);
       
-      expect(screen.getByText('123')).toBeInTheDocument();
-    });
+      expect(screen.getByText('123')).toBeInTheDocument()
+  });
 
     it('should handle boolean message', () => {
       render(<LoadingSpinner message={'true'} />);
       
       // React will render boolean as string;
       const { container } = render(<LoadingSpinner />);
-      expect(container).toBeInTheDocument();
-    });
+      expect(container).toBeInTheDocument()
+  })
   });
 
   describe('Named and Default Exports', () => {
@@ -305,20 +305,20 @@ describe('LoadingSpinner', () => {
       
       render(<NamedLoadingSpinner message="Named export test" />);
       
-      expect(screen.getByText('Named export test')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Named export test')).toBeInTheDocument()
+  });
 
     it('should export LoadingSpinner as default export', () => {
       // Already testing with default import
       render(<LoadingSpinner message="Default export test" />);
       
-      expect(screen.getByText('Default export test')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Default export test')).toBeInTheDocument()
+  })
   });
 
   describe('Integration with Different Content', () => {
     it('should work with different size and message combinations', () => {
-      const combinations = [;
+      const combinations = [;;
         { size: 'small' as const, message: 'Small loader' },
         { size: 'medium' as const, message: 'Medium loader' },
         { size: 'large' as const, message: 'Large loader' }
@@ -335,17 +335,17 @@ describe('LoadingSpinner', () => {
         const sizeClasses = {
           small: 'w-4 h-4',
           medium: 'w-8 h-8',
-          large: 'w-12 h-12';
-        };
+          large: 'w-12 h-12'
+  };
         expect(dots).toHaveClass(sizeClasses[size].split(' ')[0]);
         expect(dots).toHaveClass(sizeClasses[size].split(' ')[1]);
         
-        unmount();
-      });
-    });
+        unmount()
+  })
+  });
 
     it('should maintain accessibility with all prop combinations', () => {
-      const props = [;
+      const props = [;;
         { size: 'small' as const, message: 'Test', className: 'test-class' },
         { size: 'large' as const, className: 'another-class' },
         { message: 'Just message' },
@@ -358,8 +358,8 @@ describe('LoadingSpinner', () => {
         const container = screen.getByRole('status');
         expect(container).toHaveAttribute('aria-live', 'polite');
         
-        unmount();
-      });
-    });
+        unmount()
+  })
+  })
+  })
   });
-});

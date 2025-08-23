@@ -24,7 +24,7 @@ Object.defineProperty(navigator, 'serviceWorker', {
 
 describe('Service Worker Configuration', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   describe('service worker registration', () => {
@@ -33,40 +33,40 @@ describe('Service Worker Configuration', () => {
 
       expect(navigator.serviceWorker.register).toHaveBeenCalledWith('/sw.js', {
         scope: '/',
-        updateViaCache: 'none';
-      });
-      expect(registration).toBe(mockServiceWorkerRegistration);
-    });
+        updateViaCache: 'none'
+  });
+      expect(registration).toBe(mockServiceWorkerRegistration)
+  });
 
     it.skip('should handle registration failures gracefully', async () => {
       (navigator.serviceWorker.register as jest.Mock).mockRejectedValue(new Error('Registration failed'));
 
       const result = await registerServiceWorker();
 
-      expect(result).toBeNull();
-    });
+      expect(result).toBeNull()
+  });
 
     it.skip('should handle browsers without service worker support', async () => {
       delete (navigator as any).serviceWorker;
 
       const result = await registerServiceWorker();
 
-      expect(result).toBeNull();
-    });
+      expect(result).toBeNull()
+  })
   });
 
   describe('service worker updates', () => {
     it.skip('should check for updates', async () => {
       await updateServiceWorker();
 
-      expect(mockServiceWorkerRegistration.update).toHaveBeenCalled();
-    });
+      expect(mockServiceWorkerRegistration.update).toHaveBeenCalled()
+  });
 
     it.skip('should handle update check failures', async () => {
       mockServiceWorkerRegistration.update.mockRejectedValue(new Error('Update failed'));
 
-      await expect(updateServiceWorker()).resolves.not.toThrow();
-    });
+      await expect(updateServiceWorker()).resolves.not.toThrow()
+  });
 
     it.skip('should notify when new version is available', async () => {
       mockServiceWorkerRegistration.waiting = { state: 'waiting' };
@@ -75,11 +75,11 @@ describe('Service Worker Configuration', () => {
       
       // Simulate update detection
       await registerServiceWorker({
-        onUpdate: updateHandler;
-      });
+        onUpdate: updateHandler
+  });
 
-      expect(updateHandler).toBeInstanceOf(Function);
-    });
+      expect(updateHandler).toBeInstanceOf(Function)
+  })
   });
 
   describe('service worker unregistration', () => {
@@ -87,16 +87,16 @@ describe('Service Worker Configuration', () => {
       const result = await unregisterServiceWorker();
 
       expect(mockServiceWorkerRegistration.unregister).toHaveBeenCalled();
-      expect(result).toBe(true);
-    });
+      expect(result).toBe(true)
+  });
 
     it.skip('should handle unregistration when no service worker exists', async () => {
       (navigator.serviceWorker.getRegistration as jest.Mock).mockResolvedValue(null);
 
       const result = await unregisterServiceWorker();
 
-      expect(result).toBe(false);
-    });
+      expect(result).toBe(false)
+  })
   });
 
   describe('service worker lifecycle', () => {
@@ -104,31 +104,31 @@ describe('Service Worker Configuration', () => {
       const installHandler = jest.fn();
       
       registerServiceWorker({
-        onInstall: installHandler;
-      });
+        onInstall: installHandler
+  });
 
-      expect(installHandler).toBeInstanceOf(Function);
-    });
+      expect(installHandler).toBeInstanceOf(Function)
+  });
 
     it.skip('should handle activate event', () => {
       const activateHandler = jest.fn();
       
       registerServiceWorker({
-        onActivate: activateHandler;
-      });
+        onActivate: activateHandler
+  });
 
-      expect(activateHandler).toBeInstanceOf(Function);
-    });
+      expect(activateHandler).toBeInstanceOf(Function)
+  });
 
     it.skip('should handle fetch event for offline support', () => {
       const fetchHandler = jest.fn();
       
       registerServiceWorker({
-        onFetch: fetchHandler;
-      });
+        onFetch: fetchHandler
+  });
 
-      expect(fetchHandler).toBeInstanceOf(Function);
-    });
+      expect(fetchHandler).toBeInstanceOf(Function)
+  })
   });
 
   describe('caching strategies', () => {
@@ -140,8 +140,8 @@ describe('Service Worker Configuration', () => {
 
       registerServiceWorker(config);
 
-      expect(navigator.serviceWorker.register).toHaveBeenCalled();
-    });
+      expect(navigator.serviceWorker.register).toHaveBeenCalled()
+  });
 
     it.skip('should implement network-first strategy for API calls', () => {
       const config = {
@@ -151,8 +151,8 @@ describe('Service Worker Configuration', () => {
 
       registerServiceWorker(config);
 
-      expect(navigator.serviceWorker.register).toHaveBeenCalled();
-    });
+      expect(navigator.serviceWorker.register).toHaveBeenCalled()
+  });
 
     it.skip('should implement stale-while-revalidate for dynamic content', () => {
       const config = {
@@ -162,21 +162,21 @@ describe('Service Worker Configuration', () => {
 
       registerServiceWorker(config);
 
-      expect(navigator.serviceWorker.register).toHaveBeenCalled();
-    });
+      expect(navigator.serviceWorker.register).toHaveBeenCalled()
+  })
   });
 
   describe('offline functionality', () => {
     it.skip('should configure offline page', () => {
       const config = {
         offlinePage: '/offline.html',
-        offlineAssets: ['/css/offline.css'];
-      };
+        offlineAssets: ['/css/offline.css']
+  };
 
       registerServiceWorker(config);
 
-      expect(navigator.serviceWorker.register).toHaveBeenCalled();
-    });
+      expect(navigator.serviceWorker.register).toHaveBeenCalled()
+  });
 
     it.skip('should handle crisis resources offline', () => {
       const config = {
@@ -189,8 +189,8 @@ describe('Service Worker Configuration', () => {
 
       registerServiceWorker(config);
 
-      expect(navigator.serviceWorker.register).toHaveBeenCalled();
-    });
+      expect(navigator.serviceWorker.register).toHaveBeenCalled()
+  })
   });
 
   describe('push notification support', () => {
@@ -198,14 +198,14 @@ describe('Service Worker Configuration', () => {
       const config = {
         pushNotifications: {
           enabled: true,
-          vapidKey: 'test-vapid-key';
-        }
+          vapidKey: 'test-vapid-key'
+  }
       };
 
       registerServiceWorker(config);
 
-      expect(navigator.serviceWorker.register).toHaveBeenCalled();
-    });
+      expect(navigator.serviceWorker.register).toHaveBeenCalled()
+  });
 
     it.skip('should handle background sync for offline actions', () => {
       const config = {
@@ -217,8 +217,8 @@ describe('Service Worker Configuration', () => {
 
       registerServiceWorker(config);
 
-      expect(navigator.serviceWorker.register).toHaveBeenCalled();
-    });
+      expect(navigator.serviceWorker.register).toHaveBeenCalled()
+  })
   });
 
   describe('performance optimization', () => {
@@ -233,21 +233,21 @@ describe('Service Worker Configuration', () => {
 
       registerServiceWorker(config);
 
-      expect(navigator.serviceWorker.register).toHaveBeenCalled();
-    });
+      expect(navigator.serviceWorker.register).toHaveBeenCalled()
+  });
 
     it.skip('should implement resource hinting', () => {
       const config = {
         resourceHints: {
           preconnect: ['https://api.crisis-support.org'],
-          prefetch: ['/api/resources/crisis'];
-        }
+          prefetch: ['/api/resources/crisis']
+  }
       };
 
       registerServiceWorker(config);
 
-      expect(navigator.serviceWorker.register).toHaveBeenCalled();
-    });
+      expect(navigator.serviceWorker.register).toHaveBeenCalled()
+  })
   });
 
   describe('error handling and monitoring', () => {
@@ -255,31 +255,31 @@ describe('Service Worker Configuration', () => {
       const errorHandler = jest.fn();
       
       await registerServiceWorker({
-        onError: errorHandler;
-      });
+        onError: errorHandler
+  });
 
       // Simulate error;
       const error = new Error('Service worker error');
       errorHandler(error);
 
-      expect(errorHandler).toHaveBeenCalledWith(error);
-    });
+      expect(errorHandler).toHaveBeenCalledWith(error)
+  });
 
     it.skip('should track service worker performance', () => {
       const performanceHandler = jest.fn();
       
       registerServiceWorker({
-        onPerformance: performanceHandler;
-      });
-
-      expect(performanceHandler).toBeInstanceOf(Function);
-    });
+        onPerformance: performanceHandler
   });
-});
+
+      expect(performanceHandler).toBeInstanceOf(Function)
+  })
+  })
+  });
 
 // Dummy test to keep suite active
 describe('Test Suite Active', () => {
   it.skip('Placeholder test to prevent empty suite', () => {
-    expect(true).toBe(true);
+    expect(true).toBe(true)
+  })
   });
-});

@@ -37,7 +37,7 @@ jest.mock('../../Modal', () => {
 describe('ConsentBanner', () => {
   let mockAnalyticsServiceInstance: {
     getConsentStatus: jest.Mock;
-    updateConsent: jest.Mock;
+    updateConsent: jest.Mock
   };
 
   const mockOnConsentChange = jest.fn();
@@ -50,7 +50,7 @@ describe('ConsentBanner', () => {
     };
     
     const { getAnalyticsService } = require('../../../services/analyticsService');
-    getAnalyticsService.mockReturnValue(mockAnalyticsServiceInstance);
+    getAnalyticsService.mockReturnValue(mockAnalyticsServiceInstance)
   });
 
   describe('Initial Rendering', () => {
@@ -61,8 +61,8 @@ describe('ConsentBanner', () => {
       
       expect(screen.getByText('Privacy & Mental Health Data Protection')).toBeInTheDocument();
       expect(screen.getByText(/We use privacy-compliant analytics/)).toBeInTheDocument();
-      expect(screen.getByText(/GDPR & HIPAA-adjacent compliant/)).toBeInTheDocument();
-    });
+      expect(screen.getByText(/GDPR & HIPAA-adjacent compliant/)).toBeInTheDocument()
+  });
 
     it('should not render banner when consent already exists', () => {
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue({
@@ -71,13 +71,13 @@ describe('ConsentBanner', () => {
         functionality: true,
         marketing: false,
         timestamp: Date.now(),
-        version: '1.0.0';
-      });
+        version: '1.0.0'
+  });
       
       render(<ConsentBanner />);
       
-      expect(screen.queryByText('Privacy & Mental Health Data Protection')).not.toBeInTheDocument();
-    });
+      expect(screen.queryByText('Privacy & Mental Health Data Protection')).not.toBeInTheDocument()
+  });
 
     it('should render all action buttons', () => {
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(null);
@@ -86,8 +86,8 @@ describe('ConsentBanner', () => {
       
       expect(screen.getByTestId('button-customize-preferences')).toBeInTheDocument();
       expect(screen.getByTestId('button-essential-only')).toBeInTheDocument();
-      expect(screen.getByTestId('button-accept-all')).toBeInTheDocument();
-    });
+      expect(screen.getByTestId('button-accept-all')).toBeInTheDocument()
+  })
   });
 
   describe('Accept All Functionality', () => {
@@ -105,8 +105,8 @@ describe('ConsentBanner', () => {
         functionality: true,
         marketing: true,
         timestamp: 123456789,
-        version: '1.0.0';
-      });
+        version: '1.0.0'
+  });
       
       expect(mockOnConsentChange).toHaveBeenCalledWith({
         analytics: true,
@@ -114,11 +114,11 @@ describe('ConsentBanner', () => {
         functionality: true,
         marketing: true,
         timestamp: 123456789,
-        version: '1.0.0';
-      });
+        version: '1.0.0'
+  });
       
-      dateNowSpy.mockRestore();
-    });
+      dateNowSpy.mockRestore()
+  });
 
     it('should hide banner after accepting all', async () => {
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(null);
@@ -128,9 +128,9 @@ describe('ConsentBanner', () => {
       fireEvent.click(screen.getByTestId('button-accept-all'));
       
       await waitFor(() => {
-        expect(screen.queryByText('Privacy & Mental Health Data Protection')).not.toBeInTheDocument();
-      });
-    });
+        expect(screen.queryByText('Privacy & Mental Health Data Protection')).not.toBeInTheDocument()
+  })
+  })
   });
 
   describe('Essential Only Functionality', () => {
@@ -148,8 +148,8 @@ describe('ConsentBanner', () => {
         functionality: true,
         marketing: false,
         timestamp: 987654321,
-        version: '1.0.0';
-      });
+        version: '1.0.0'
+  });
       
       expect(mockOnConsentChange).toHaveBeenCalledWith({
         analytics: false,
@@ -157,11 +157,11 @@ describe('ConsentBanner', () => {
         functionality: true,
         marketing: false,
         timestamp: 987654321,
-        version: '1.0.0';
-      });
+        version: '1.0.0'
+  });
       
-      dateNowSpy.mockRestore();
-    });
+      dateNowSpy.mockRestore()
+  });
 
     it('should hide banner after accepting essential only', async () => {
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(null);
@@ -171,9 +171,9 @@ describe('ConsentBanner', () => {
       fireEvent.click(screen.getByTestId('button-essential-only'));
       
       await waitFor(() => {
-        expect(screen.queryByText('Privacy & Mental Health Data Protection')).not.toBeInTheDocument();
-      });
-    });
+        expect(screen.queryByText('Privacy & Mental Health Data Protection')).not.toBeInTheDocument()
+  })
+  })
   });
 
   describe('Preferences Modal', () => {
@@ -185,8 +185,8 @@ describe('ConsentBanner', () => {
       fireEvent.click(screen.getByTestId('button-customize-preferences'));
       
       expect(screen.getByTestId('modal')).toBeInTheDocument();
-      expect(screen.getByText('Privacy Preferences')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Privacy Preferences')).toBeInTheDocument()
+  });
 
     it('should render all preference options in modal', () => {
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(null);
@@ -198,8 +198,8 @@ describe('ConsentBanner', () => {
       expect(screen.getByText('Essential Functionality')).toBeInTheDocument();
       expect(screen.getByText('Performance Monitoring')).toBeInTheDocument();
       expect(screen.getByText('Usage Analytics')).toBeInTheDocument();
-      expect(screen.getByText('Marketing Communications')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Marketing Communications')).toBeInTheDocument()
+  });
 
     it('should have required checkboxes disabled', () => {
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(null);
@@ -214,8 +214,8 @@ describe('ConsentBanner', () => {
       expect(functionalityCheckbox).toBeDisabled();
       expect(functionalityCheckbox).toBeChecked();
       expect(performanceCheckbox).toBeDisabled();
-      expect(performanceCheckbox).toBeChecked();
-    });
+      expect(performanceCheckbox).toBeChecked()
+  });
 
     it('should allow toggling optional checkboxes', () => {
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(null);
@@ -234,8 +234,8 @@ describe('ConsentBanner', () => {
       fireEvent.click(marketingCheckbox);
       
       expect(analyticsCheckbox).toBeChecked();
-      expect(marketingCheckbox).toBeChecked();
-    });
+      expect(marketingCheckbox).toBeChecked()
+  });
 
     it('should close modal when cancel is clicked', async () => {
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(null);
@@ -248,9 +248,9 @@ describe('ConsentBanner', () => {
       fireEvent.click(screen.getByText('Cancel'));
       
       await waitFor(() => {
-        expect(screen.queryByTestId('modal')).not.toBeInTheDocument();
-      });
-    });
+        expect(screen.queryByTestId('modal')).not.toBeInTheDocument()
+  })
+  });
 
     it('should save preferences and close modal when Save Preferences is clicked', async () => {
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(null);
@@ -272,8 +272,8 @@ describe('ConsentBanner', () => {
         functionality: true,
         marketing: false,
         timestamp: 555666777,
-        version: '1.0.0';
-      });
+        version: '1.0.0'
+  });
       
       expect(mockOnConsentChange).toHaveBeenCalledWith({
         analytics: true,
@@ -281,16 +281,16 @@ describe('ConsentBanner', () => {
         functionality: true,
         marketing: false,
         timestamp: 555666777,
-        version: '1.0.0';
-      });
+        version: '1.0.0'
+  });
       
       await waitFor(() => {
         expect(screen.queryByTestId('modal')).not.toBeInTheDocument();
-        expect(screen.queryByText('Privacy & Mental Health Data Protection')).not.toBeInTheDocument();
-      });
+        expect(screen.queryByText('Privacy & Mental Health Data Protection')).not.toBeInTheDocument()
+  });
       
-      dateNowSpy.mockRestore();
-    });
+      dateNowSpy.mockRestore()
+  })
   });
 
   describe('Existing Consent Loading', () => {
@@ -301,8 +301,8 @@ describe('ConsentBanner', () => {
         functionality: true,
         marketing: true,
         timestamp: Date.now(),
-        version: '1.0.0';
-      };
+        version: '1.0.0'
+  };
       
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(existingConsent);
       
@@ -312,8 +312,8 @@ describe('ConsentBanner', () => {
       expect(screen.queryByText('Privacy & Mental Health Data Protection')).not.toBeInTheDocument();
       
       // Verify the preferences would be loaded (this is internal state, harder to test directly)
-      expect(mockAnalyticsServiceInstance.getConsentStatus).toHaveBeenCalled();
-    });
+      expect(mockAnalyticsServiceInstance.getConsentStatus).toHaveBeenCalled()
+  });
 
     it('should handle consent status without timestamp', () => {
       const incompleteConsent = {
@@ -321,16 +321,16 @@ describe('ConsentBanner', () => {
         performance: true,
         functionality: true,
         marketing: false,
-        version: '1.0.0';
-      };
+        version: '1.0.0'
+  };
       
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(incompleteConsent);
       
       render(<ConsentBanner />);
       
       // Banner should show since timestamp is missing
-      expect(screen.getByText('Privacy & Mental Health Data Protection')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Privacy & Mental Health Data Protection')).toBeInTheDocument()
+  })
   });
 
   describe('Accessibility', () => {
@@ -339,8 +339,8 @@ describe('ConsentBanner', () => {
       
       render(<ConsentBanner />);
       
-      expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent('Privacy & Mental Health Data Protection');
-    });
+      expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent('Privacy & Mental Health Data Protection')
+  });
 
     it('should have properly labeled checkboxes in preferences modal', () => {
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(null);
@@ -352,8 +352,8 @@ describe('ConsentBanner', () => {
       expect(screen.getByLabelText(/Essential Functionality/)).toBeInTheDocument();
       expect(screen.getByLabelText(/Performance Monitoring/)).toBeInTheDocument();
       expect(screen.getByLabelText(/Usage Analytics/)).toBeInTheDocument();
-      expect(screen.getByLabelText(/Marketing Communications/)).toBeInTheDocument();
-    });
+      expect(screen.getByLabelText(/Marketing Communications/)).toBeInTheDocument()
+  });
 
     it('should have appropriate ARIA attributes for required fields', () => {
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(null);
@@ -366,8 +366,8 @@ describe('ConsentBanner', () => {
       expect(requiredBadges).toHaveLength(2);
       
       const optionalBadges = screen.getAllByText('Optional');
-      expect(optionalBadges).toHaveLength(2);
-    });
+      expect(optionalBadges).toHaveLength(2)
+  })
   });
 
   describe('Edge Cases', () => {
@@ -376,8 +376,8 @@ describe('ConsentBanner', () => {
       
       render(<ConsentBanner />);
       
-      expect(screen.getByText('Privacy & Mental Health Data Protection')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Privacy & Mental Health Data Protection')).toBeInTheDocument()
+  });
 
     it('should work without onConsentChange callback', () => {
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(null);
@@ -385,9 +385,9 @@ describe('ConsentBanner', () => {
       render(<ConsentBanner />); // No onConsentChange prop
       
       expect(() => {
-        fireEvent.click(screen.getByTestId('button-accept-all'));
-      }).not.toThrow();
-    });
+        fireEvent.click(screen.getByTestId('button-accept-all'))
+  }).not.toThrow()
+  });
 
     it('should handle rapid button clicks gracefully', () => {
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(null);
@@ -402,8 +402,8 @@ describe('ConsentBanner', () => {
       fireEvent.click(acceptAllButton);
       
       // Should call once since banner gets hidden after first click
-      expect(mockAnalyticsServiceInstance.updateConsent).toHaveBeenCalledTimes(1);
-    });
+      expect(mockAnalyticsServiceInstance.updateConsent).toHaveBeenCalledTimes(1)
+  });
 
     it('should handle checkbox state changes correctly', () => {
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(null);
@@ -431,7 +431,7 @@ describe('ConsentBanner', () => {
       
       expect(analyticsCheckbox).not.toBeChecked();
       expect(marketingCheckbox).toBeChecked(); // Should remain checked
-    });
+    })
   });
 
   describe('Content and Messaging', () => {
@@ -442,8 +442,8 @@ describe('ConsentBanner', () => {
       
       expect(screen.getByText(/mental health platform/)).toBeInTheDocument();
       expect(screen.getByText(/crisis intervention data/)).toBeInTheDocument();
-      expect(screen.getByText(/GDPR & HIPAA-adjacent compliant/)).toBeInTheDocument();
-    });
+      expect(screen.getByText(/GDPR & HIPAA-adjacent compliant/)).toBeInTheDocument()
+  });
 
     it('should display data retention and anonymization information', () => {
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(null);
@@ -451,8 +451,8 @@ describe('ConsentBanner', () => {
       render(<ConsentBanner />);
       
       expect(screen.getByText(/Data retention: 30 days/)).toBeInTheDocument();
-      expect(screen.getByText(/Automatic anonymization: 7 days/)).toBeInTheDocument();
-    });
+      expect(screen.getByText(/Automatic anonymization: 7 days/)).toBeInTheDocument()
+  });
 
     it('should display mental health data protection notice in modal', () => {
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(null);
@@ -464,20 +464,20 @@ describe('ConsentBanner', () => {
       
       // Wait for modal to appear and check for content
       // The modal might have different text, so let's be more flexible;
-      const modalContent = screen.queryByText(/Privacy Preferences/i) || ;
+      const modalContent = screen.queryByText(/Privacy Preferences/i) || ;;
                           screen.queryByText(/Customize/i);
       
       if (modalContent) {
-        expect(modalContent).toBeInTheDocument();
-      }
+        expect(modalContent).toBeInTheDocument()
+  }
       
       // Check for consent options - these should be present;
-      const essentialOption = screen.queryByLabelText(/Essential/i) ||;
+      const essentialOption = screen.queryByLabelText(/Essential/i) ||;;
                               screen.queryByText(/Essential/i);
       
       if (essentialOption) {
-        expect(essentialOption).toBeInTheDocument();
-      }
-    });
+        expect(essentialOption).toBeInTheDocument()
+  }
+    })
+  })
   });
-});

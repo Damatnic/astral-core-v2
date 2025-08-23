@@ -38,8 +38,8 @@ import { AnimatedNumber } from './AnimatedNumber';
 
 interface PrivacyAnalyticsDashboardProps {
   userRole?: 'Admin' | 'Moderator' | 'Helper';
-  className?: string;
-}
+  className?: string
+  }
 
 export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps> = ({
   userRole = 'Helper',
@@ -70,12 +70,12 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
     try {
       const report = await generateReport();
       setReportData(report);
-      setActiveTab('report');
-    } catch (err) {
-      console.error('Failed to generate report:', err);
-    } finally {
-      setIsGeneratingReport(false);
-    }
+      setActiveTab('report')
+  } catch (err) {
+      console.error('Failed to generate report:', err)
+  } finally {
+      setIsGeneratingReport(false)
+  }
   };
 
   /**
@@ -87,8 +87,8 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
       if (exportedData) {
         // Create download link;
         const blob = new Blob([JSON.stringify(exportedData, null, 2)], { 
-          type: 'application/json' ;
-        });
+          type: 'application/json'
+  });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
@@ -96,11 +96,11 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-      }
+        URL.revokeObjectURL(url)
+  }
     } catch (err) {
-      console.error('Failed to export data:', err);
-    }
+      console.error('Failed to export data:', err)
+  }
   };
 
   if (isLoading && !insights) {
@@ -109,7 +109,7 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
         <LoadingSpinner />
         <p>{t('analytics.loading')}</p>
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -121,10 +121,10 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
           {t('analytics.actions.retry')}
         </AppButton>
       </div>
-    );
+    )
   }
 
-  const renderOverview = () => (;
+  const renderOverview = () => (;;
     <div className="analytics-overview">
       <div className="analytics-grid">
         <Card className="metric-card">
@@ -188,8 +188,7 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
             <div key={lang} className="distribution-item">
               <span className="language-label">{t(`languages.${lang}`)}</span>
               <div className="distribution-bar">
-                <div; 
-                  className="distribution-fill"
+                <div className="distribution-fill"
                   style={{ 
                     width: `${(count / Math.max(...Object.values(insights?.globalMetrics.languageDistribution || {}))) * 100}%` 
                   }}
@@ -221,7 +220,7 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
     </div>
   );
 
-  const renderCulturalAnalysis = () => (;
+  const renderCulturalAnalysis = () => (;;
     <div className="cultural-analysis">
       <div className="cultural-metrics-grid">
         {culturalMetrics.map((metrics) => (
@@ -294,7 +293,7 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
     </div>
   );
 
-  const renderPrivacyMetrics = () => (;
+  const renderPrivacyMetrics = () => (;;
     <div className="privacy-metrics">
       <Card className="privacy-overview-card">
         <h4>{t('analytics.privacy.overview')}</h4>
@@ -302,8 +301,7 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
           <div className="privacy-stat">
             <span className="stat-label">{t('analytics.privacy.budgetUsed')}</span>
             <div className="budget-bar">
-              <div; 
-                className="budget-fill"
+              <div className="budget-fill"
                 style={{ width: `${(privacyBudget.used / 10) * 100}%` }}
               />
             </div>
@@ -388,7 +386,7 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
     </div>
   );
 
-  const renderReport = () => (;
+  const renderReport = () => (;;
     <div className="analytics-report">
       {reportData ? (
         <Card className="report-card">
@@ -461,26 +459,22 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
       </div>
 
       <div className="dashboard-tabs">
-        <button;
-          className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`}
+        <button className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`}
           onClick={() => setActiveTab('overview')}
         >
           {t('analytics.tabs.overview')}
         </button>
-        <button;
-          className={`tab-button ${activeTab === 'cultural' ? 'active' : ''}`}
+        <button className={`tab-button ${activeTab === 'cultural' ? 'active' : ''}`}
           onClick={() => setActiveTab('cultural')}
         >
           {t('analytics.tabs.cultural')}
         </button>
-        <button;
-          className={`tab-button ${activeTab === 'privacy' ? 'active' : ''}`}
+        <button className={`tab-button ${activeTab === 'privacy' ? 'active' : ''}`}
           onClick={() => setActiveTab('privacy')}
         >
           {t('analytics.tabs.privacy')}
         </button>
-        <button;
-          className={`tab-button ${activeTab === 'report' ? 'active' : ''}`}
+        <button className={`tab-button ${activeTab === 'report' ? 'active' : ''}`}
           onClick={() => setActiveTab('report')}
         >
           {t('analytics.tabs.report')}
@@ -494,7 +488,7 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
         {activeTab === 'report' && renderReport()}
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export default PrivacyAnalyticsDashboard;

@@ -17,8 +17,8 @@ import {
 interface CrisisStressTestingDashboardProps {
   onEmergencyBreak?: (reason: string) => void;
   onTestComplete?: (results: CrisisTestResult[]) => void;
-  className?: string;
-}
+  className?: string
+  }
 
 export const CrisisStressTestingDashboard: React.FC<CrisisStressTestingDashboardProps> = ({
   onEmergencyBreak,
@@ -39,8 +39,8 @@ export const CrisisStressTestingDashboard: React.FC<CrisisStressTestingDashboard
     failureThresholds: {
       responseTime: 1000, // 1 second
       errorRate: 0.01, // 1%
-      availability: 0.99 // 99%;
-    },
+      availability: 0.99 // 99%
+  },
     emergencyBreakConditions: [
       'Critical safety impact detected',
       'System availability below 50%',
@@ -51,7 +51,7 @@ export const CrisisStressTestingDashboard: React.FC<CrisisStressTestingDashboard
   const [emergencyStatus, setEmergencyStatus] = useState<{
     active: boolean;
     reason?: string;
-    timestamp?: number;
+    timestamp?: number
   }>({ active: false });
 
   // Run crisis stress tests;
@@ -68,8 +68,8 @@ export const CrisisStressTestingDashboard: React.FC<CrisisStressTestingDashboard
       // Filter scenarios based on selection;
       const configWithSelectedScenarios = {
         ...testConfig,
-        scenarios: testConfig.scenarios.filter(s => selectedScenarios.includes(s.id));
-      };
+        scenarios: testConfig.scenarios.filter(s => selectedScenarios.includes(s.id))
+  };
 
       const results = await crisisStressTestingSystem.runCrisisStressTests(configWithSelectedScenarios);
       
@@ -78,7 +78,7 @@ export const CrisisStressTestingDashboard: React.FC<CrisisStressTestingDashboard
       setCurrentTest(null);
       
       // Check for any critical failures;
-      const criticalFailures = results.filter(r => ;
+      const criticalFailures = results.filter(r => ;;
         r.impactAssessment.safetyImpact === 'life-threatening'
       );
       
@@ -87,10 +87,10 @@ export const CrisisStressTestingDashboard: React.FC<CrisisStressTestingDashboard
         setEmergencyStatus({ 
           active: true, 
           reason, 
-          timestamp: Date.now() ;
-        });
-        onEmergencyBreak?.(reason);
-      }
+          timestamp: Date.now()
+  });
+        onEmergencyBreak?.(reason)
+  }
       
     } catch (error) {
       console.error('Crisis stress testing failed:', error);
@@ -98,23 +98,23 @@ export const CrisisStressTestingDashboard: React.FC<CrisisStressTestingDashboard
       setEmergencyStatus({ 
         active: true, 
         reason, 
-        timestamp: Date.now() ;
-      });
-      onEmergencyBreak?.(reason);
-    } finally {
+        timestamp: Date.now()
+  });
+      onEmergencyBreak?.(reason)
+  } finally {
       setIsTestingActive(false);
-      setCurrentTest(null);
-    }
+      setCurrentTest(null)
+  }
   };
   }, [isTestingActive, testConfig, selectedScenarios, onTestComplete, onEmergencyBreak]);
 
   // Handle scenario selection;
   const handleScenarioToggle = useCallback((scenarioId: string, checked: boolean) => {
     if (checked) {
-      setSelectedScenarios(prev => [...prev, scenarioId]);;
+      setSelectedScenarios(prev => [...prev, scenarioId])
   } else {
-      setSelectedScenarios(prev => prev.filter(id => id !== scenarioId));
-    }
+      setSelectedScenarios(prev => prev.filter(id => id !== scenarioId))
+  }
   };
   }, []);
 
@@ -125,15 +125,15 @@ export const CrisisStressTestingDashboard: React.FC<CrisisStressTestingDashboard
     setEmergencyStatus({ 
       active: true, 
       reason: 'Manual emergency stop', 
-      timestamp: Date.now() ;
-    });
-    onEmergencyBreak?.('Manual emergency stop activated');
+      timestamp: Date.now()
+  });
+    onEmergencyBreak?.('Manual emergency stop activated')
   };
   }, [onEmergencyBreak]);
 
   // Clear emergency status;
   const clearEmergencyStatus = useCallback(() => {
-    setEmergencyStatus({ active: false });
+    setEmergencyStatus({ active: false })
   };
   }, []);
 
@@ -152,8 +152,8 @@ export const CrisisStressTestingDashboard: React.FC<CrisisStressTestingDashboard
       failed: testResults.length - successful,
       critical,
       avgResponseTime: Math.round(avgResponseTime),
-      avgAvailability: Math.round(avgAvailability * 100);
-    };
+      avgAvailability: Math.round(avgAvailability * 100)
+  };
   }, [testResults]);
 
   const stats = getTestStats();
@@ -164,16 +164,14 @@ export const CrisisStressTestingDashboard: React.FC<CrisisStressTestingDashboard
         <h2>🚨 Crisis Intervention Stress Testing</h2>
         <div className="header-actions">
           {isTestingActive ? (
-            <button; 
-              className="emergency-stop-btn"
+            <button className="emergency-stop-btn"
               onClick={emergencyStop}
               disabled={!isTestingActive}
             >
               🛑 EMERGENCY STOP
             </button>
           ) : (
-            <button; 
-              className="run-tests-btn"
+            <button className="run-tests-btn"
               onClick={runStressTests}
               disabled={isTestingActive || selectedScenarios.length === 0}
             >
@@ -227,8 +225,8 @@ export const CrisisStressTestingDashboard: React.FC<CrisisStressTestingDashboard
             value={testConfig.maxConcurrentUsers}
             onChange={(e) => setTestConfig(prev => ({
               ...prev,
-              maxConcurrentUsers: parseInt(e.target.value);
-            };
+              maxConcurrentUsers: parseInt(e.target.value)
+  }
   })}
             min="100"
             max="10000"
@@ -245,8 +243,8 @@ export const CrisisStressTestingDashboard: React.FC<CrisisStressTestingDashboard
             value={testConfig.testDuration}
             onChange={(e) => setTestConfig(prev => ({
               ...prev,
-              testDuration: parseInt(e.target.value);
-            }))}
+              testDuration: parseInt(e.target.value)
+  }))}
             min="60"
             max="3600"
             step="30"
@@ -264,8 +262,8 @@ export const CrisisStressTestingDashboard: React.FC<CrisisStressTestingDashboard
               ...prev,
               failureThresholds: {
                 ...prev.failureThresholds,
-                responseTime: parseInt(e.target.value);
-              }
+                responseTime: parseInt(e.target.value)
+  }
             }))}
             min="100"
             max="5000"
@@ -282,8 +280,7 @@ export const CrisisStressTestingDashboard: React.FC<CrisisStressTestingDashboard
           {CRISIS_TEST_SCENARIOS.map(scenario => (
             <div key={scenario.id} className="scenario-card">
               <div className="scenario-header">
-                <input;
-                  type="checkbox"
+                <input type="checkbox"
                   id={scenario.id}
                   checked={selectedScenarios.includes(scenario.id)}
                   onChange={(e) => handleScenarioToggle(scenario.id, e.target.checked)}
@@ -447,7 +444,7 @@ export const CrisisStressTestingDashboard: React.FC<CrisisStressTestingDashboard
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 export default CrisisStressTestingDashboard;

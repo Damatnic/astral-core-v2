@@ -41,10 +41,10 @@ describe('imageOptimization', () => {
     const originalCreateElement = document.createElement.bind(document);
     document.createElement = jest.fn((tagName: string) => {
       if (tagName === 'canvas') {
-        return mockCanvas;
-      }
-      return originalCreateElement(tagName);
-    });
+        return mockCanvas
+  }
+      return originalCreateElement(tagName)
+  });
 
     // Mock IntersectionObserver
     mockIntersectionObserver = jest.fn(() => ({
@@ -77,16 +77,16 @@ describe('imageOptimization', () => {
       writable: true,
     });
 
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   afterEach(() => {
     // Reset canvas mock to default state
     if (mockCanvas && mockCanvas.toDataURL) {
-      mockCanvas.toDataURL = jest.fn(() => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD//2Q==');
-    }
+      mockCanvas.toDataURL = jest.fn(() => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD//2Q==')
+  }
     // Restore document.createElement
-    jest.restoreAllMocks();
+    jest.restoreAllMocks()
   });
 
   describe('Default Configuration', () => {
@@ -96,20 +96,20 @@ describe('imageOptimization', () => {
         small: { width: 480, height: 270 },
         medium: { width: 720, height: 405 },
         large: { width: 1280, height: 720 },
-      });
-    });
+      })
+  });
 
     test('should have appropriate quality settings', () => {
       expect(defaultImageConfig.quality).toEqual({
         webp: 85,
         jpeg: 80,
         png: 95,
-      });
-    });
+      })
+  });
 
     test('should have reasonable lazy loading offset', () => {
-      expect(defaultImageConfig.lazyLoadingOffset).toBe(100);
-    });
+      expect(defaultImageConfig.lazyLoadingOffset).toBe(100)
+  });
 
     test('should have 24-hour cache expiry', () => {
       expect(defaultImageConfig.cacheExpiry).toBe(86400000); // 24 hours in ms
@@ -120,21 +120,21 @@ describe('imageOptimization', () => {
         slow: 1,
         medium: 5,
         fast: Infinity,
-      });
-    });
+      })
+  })
   });
 
   describe('ImageOptimizer Class', () => {
     let optimizer: ImageOptimizer;
 
     beforeEach(() => {
-      optimizer = new ImageOptimizer();
-    });
+      optimizer = new ImageOptimizer()
+  });
 
     describe('Constructor and Initialization', () => {
       test('should initialize with default config', () => {
-        expect(optimizer).toBeInstanceOf(ImageOptimizer);
-      });
+        expect(optimizer).toBeInstanceOf(ImageOptimizer)
+  });
 
       test('should accept custom config', () => {
         const customConfig: Partial<ImageOptimizationConfig> = {
@@ -143,8 +143,8 @@ describe('imageOptimization', () => {
         };
         
         const customOptimizer = new ImageOptimizer(customConfig);
-        expect(customOptimizer).toBeInstanceOf(ImageOptimizer);
-      });
+        expect(customOptimizer).toBeInstanceOf(ImageOptimizer)
+  });
 
       test('should initialize IntersectionObserver when available', () => {
         expect(mockIntersectionObserver).toHaveBeenCalledWith(
@@ -152,32 +152,32 @@ describe('imageOptimization', () => {
           expect.objectContaining({
             rootMargin: '100px',
           })
-        );
-      });
+        )
+  });
 
       test('should handle missing IntersectionObserver', () => {
         delete (global as any).IntersectionObserver;
         
         expect(() => {
-          new ImageOptimizer();
-        }).not.toThrow();
-      });
+          new ImageOptimizer()
+  }).not.toThrow()
+  });
 
       test('should initialize connection detection', () => {
         expect(mockConnection.addEventListener).toHaveBeenCalledWith(
           'change',
           expect.any(Function)
-        );
-      });
+        )
+  });
 
       test('should handle missing navigator.connection', () => {
         delete (navigator as any).connection;
         
         expect(() => {
-          new ImageOptimizer();
-        }).not.toThrow();
-      });
-    });
+          new ImageOptimizer()
+  }).not.toThrow()
+  })
+  });
 
     describe('Connection Detection', () => {
       test('should detect slow connection', () => {
@@ -185,22 +185,22 @@ describe('imageOptimization', () => {
         const slowOptimizer = new ImageOptimizer();
         
         // Access private property through type assertion
-        expect((slowOptimizer as any).connectionType).toBe('slow');
-      });
+        expect((slowOptimizer as any).connectionType).toBe('slow')
+  });
 
       test('should detect medium connection', () => {
         mockConnection.downlink = 3;
         const mediumOptimizer = new ImageOptimizer();
         
-        expect((mediumOptimizer as any).connectionType).toBe('medium');
-      });
+        expect((mediumOptimizer as any).connectionType).toBe('medium')
+  });
 
       test('should detect fast connection', () => {
         mockConnection.downlink = 10;
         const fastOptimizer = new ImageOptimizer();
         
-        expect((fastOptimizer as any).connectionType).toBe('fast');
-      });
+        expect((fastOptimizer as any).connectionType).toBe('fast')
+  });
 
       test('should update connection type on change', () => {
         // Start with slow connection
@@ -221,18 +221,18 @@ describe('imageOptimization', () => {
         // we'll simulate what it does;
         const downlink = mockConnection.downlink || 1;
         if (downlink < 1) { // slow threshold
-          (optimizer as any).connectionType = 'slow';;
+          (optimizer as any).connectionType = 'slow'
   } else if (downlink < 2) { // medium threshold  
-          (optimizer as any).connectionType = 'medium';;
+          (optimizer as any).connectionType = 'medium'
   } else {
-          (optimizer as any).connectionType = 'fast';
-        }
+          (optimizer as any).connectionType = 'fast'
+  }
         
         // Verify connection type was updated based on new downlink value
         // downlink 10 > medium threshold (2), so it should be 'fast'
-        expect((optimizer as any).connectionType).toBe('fast');
-      });
-    });
+        expect((optimizer as any).connectionType).toBe('fast')
+  })
+  });
 
     describe('generateOptimizedImages', () => {
       test('should generate optimized image configuration', () => {
@@ -249,8 +249,8 @@ describe('imageOptimization', () => {
           alt: 'Test image',
           loading: 'lazy',
           priority: 5,
-        });
-      });
+        })
+  });
 
       test('should generate formats for all breakpoints', () => {
         const result = optimizer.generateOptimizedImages('https://example.com/test.jpg', {
@@ -265,8 +265,8 @@ describe('imageOptimization', () => {
         
         // Check JPEG formats;
         const jpegFormats = result.formats.filter(f => f.format === 'jpeg');
-        expect(jpegFormats).toHaveLength(4);
-      });
+        expect(jpegFormats).toHaveLength(4)
+  });
 
       test('should generate correct URLs with query parameters', () => {
         const result = optimizer.generateOptimizedImages('https://example.com/test.jpg', {
@@ -281,8 +281,8 @@ describe('imageOptimization', () => {
         expect(url.searchParams.get('f')).toBeTruthy();
         expect(url.searchParams.get('q')).toBeTruthy();
         expect(url.searchParams.get('fit')).toBe('cover');
-        expect(url.searchParams.get('auto')).toBe('compress');
-      });
+        expect(url.searchParams.get('auto')).toBe('compress')
+  });
 
       test('should use cache for repeated requests', () => {
         const options = { alt: 'Test image' };
@@ -301,8 +301,8 @@ describe('imageOptimization', () => {
         });
 
         expect(result.priority).toBe(9);
-        expect(result.loading).toBe('eager');
-      });
+        expect(result.loading).toBe('eager')
+  });
 
       test('should generate unique IDs for different images', () => {
         // Clear cache to ensure fresh IDs
@@ -319,27 +319,27 @@ describe('imageOptimization', () => {
         // However, the implementation may produce the same ID if the hash function is simple
         // Let's just check that both have IDs
         expect(result1.id).toBeTruthy();
-        expect(result2.id).toBeTruthy();
-      });
-    });
+        expect(result2.id).toBeTruthy()
+  })
+  });
 
     describe('getOptimalFormat', () => {
       test('should prefer WebP when supported', () => {
         // Mock WebP support
         mockCanvas.toDataURL = jest.fn((type) => {
           if (type === 'image/webp') {
-            return 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
-          }
-          return 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD//2Q==';
-        });
+            return 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA='
+  }
+          return 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD//2Q=='
+  });
 
         const optimizedImage = optimizer.generateOptimizedImages('https://example.com/test.jpg', {
           alt: 'Test image',
         });
         
         const optimalFormat = optimizer.getOptimalFormat(optimizedImage);
-        expect(optimalFormat.format).toBe('webp');
-      });
+        expect(optimalFormat.format).toBe('webp')
+  });
 
       test('should fallback to JPEG when WebP not supported', () => {
         // Mock WebP not supported
@@ -352,8 +352,8 @@ describe('imageOptimization', () => {
         });
         
         const optimalFormat = optimizer.getOptimalFormat(optimizedImage);
-        expect(optimalFormat.format).toBe('jpeg');
-      });
+        expect(optimalFormat.format).toBe('jpeg')
+  });
 
       test('should choose size based on connection speed', () => {
         const optimizedImage = optimizer.generateOptimizedImages('https://example.com/test.jpg', {
@@ -374,12 +374,12 @@ describe('imageOptimization', () => {
         (optimizer as any).connectionType = 'fast';
         const fastFormat = optimizer.getOptimalFormat(optimizedImage);
         expect(fastFormat.width).toBe(720); // medium size
-      });
-    });
+      })
+  });
 
     describe('preloadCriticalImages', () => {
       test('should preload high priority images', () => {
-        const images = [;
+        const images = [;;
           optimizer.generateOptimizedImages('https://example.com/image1.jpg', {
             alt: 'Image 1',
             priority: 9,
@@ -403,10 +403,10 @@ describe('imageOptimization', () => {
         
         document.createElement = jest.fn((tagName) => {
           if (tagName === 'link') {
-            return mockLink;
-          }
-          return mockCanvas;
-        });
+            return mockLink
+  }
+          return mockCanvas
+  });
         
         Object.defineProperty(document, 'head', {
           value: { appendChild: mockAppendChild },
@@ -417,8 +417,8 @@ describe('imageOptimization', () => {
 
         // Should preload both high priority and eager loading images
         // Updated expectation to match actual behavior
-        expect(mockAppendChild.mock.calls.length).toBeGreaterThanOrEqual(2);
-      });
+        expect(mockAppendChild.mock.calls.length).toBeGreaterThanOrEqual(2)
+  });
 
       test('should limit preloads to first 3 critical images', () => {
         const images = Array.from({ length: 5 }, (_, i) =>
@@ -436,9 +436,9 @@ describe('imageOptimization', () => {
 
         optimizer.preloadCriticalImages(images);
 
-        expect(mockAppendChild).toHaveBeenCalledTimes(3);
-      });
-    });
+        expect(mockAppendChild).toHaveBeenCalledTimes(3)
+  })
+  });
 
     describe('setupLazyLoading', () => {
       test('should observe element with IntersectionObserver', () => {
@@ -452,8 +452,8 @@ describe('imageOptimization', () => {
         optimizer.setupLazyLoading(mockImg);
 
         expect(mockImg.loading).toBe('lazy');
-        expect(mockObserve).toHaveBeenCalledWith(mockImg);
-      });
+        expect(mockObserve).toHaveBeenCalledWith(mockImg)
+  });
 
       test('should fallback without IntersectionObserver', () => {
         (optimizer as any).intersectionObserver = null;
@@ -465,16 +465,16 @@ describe('imageOptimization', () => {
           writable: true,
           configurable: true,
         });
-        const loadOptimizedImageSpy = jest.spyOn(;
+        const loadOptimizedImageSpy = jest.spyOn(;;
           optimizer,
           'loadOptimizedImage' as any
         );
 
         optimizer.setupLazyLoading(mockImg);
 
-        expect(loadOptimizedImageSpy).toHaveBeenCalledWith(mockImg);
-      });
-    });
+        expect(loadOptimizedImageSpy).toHaveBeenCalledWith(mockImg)
+  })
+  });
 
     describe('generateSrcSet', () => {
       test('should generate proper srcset for WebP', () => {
@@ -488,8 +488,8 @@ describe('imageOptimization', () => {
         expect(srcSet).toContain('480w');
         expect(srcSet).toContain('720w');
         expect(srcSet).toContain('1280w');
-        expect(srcSet.split(',').length).toBe(4);
-      });
+        expect(srcSet.split(',').length).toBe(4)
+  });
 
       test('should generate proper srcset for JPEG', () => {
         const optimizedImage = optimizer.generateOptimizedImages('https://example.com/test.jpg', {
@@ -502,9 +502,9 @@ describe('imageOptimization', () => {
         expect(srcSet).toContain('480w');
         expect(srcSet).toContain('720w');
         expect(srcSet).toContain('1280w');
-        expect(srcSet.split(',').length).toBe(4);
-      });
-    });
+        expect(srcSet.split(',').length).toBe(4)
+  })
+  });
 
     describe('generateSizes', () => {
       test('should generate responsive sizes attribute', () => {
@@ -514,9 +514,9 @@ describe('imageOptimization', () => {
         expect(sizes).toContain('(max-width: 768px) 480px');
         expect(sizes).toContain('(max-width: 1024px) 720px');
         expect(sizes).toContain('1280px');
-        expect(sizes.split(',').length).toBe(4);
-      });
-    });
+        expect(sizes.split(',').length).toBe(4)
+  })
+  });
 
     describe('clearCache', () => {
       test('should clear internal cache', () => {
@@ -528,9 +528,9 @@ describe('imageOptimization', () => {
 
         optimizer.clearCache();
 
-        expect((optimizer as any).cache.size).toBe(0);
-      });
-    });
+        expect((optimizer as any).cache.size).toBe(0)
+  })
+  });
 
     describe('Private Methods', () => {
       test('should generate proper image ID', () => {
@@ -539,24 +539,24 @@ describe('imageOptimization', () => {
 
         expect(typeof id).toBe('string');
         expect(id.length).toBe(16);
-        expect(id).toMatch(/^[a-zA-Z0-9]+$/);
-      });
+        expect(id).toMatch(/^[a-zA-Z0-9]+$/)
+  });
 
       test('should generate blur placeholder', () => {
         const placeholder = (optimizer as any).generatePlaceholder('https://example.com/test.jpg');
 
         expect(placeholder).toContain('data:image/jpeg;base64,');
         expect(mockCanvas.getContext).toHaveBeenCalledWith('2d');
-        expect(mockContext.fillRect).toHaveBeenCalledWith(0, 0, 40, 23);
-      });
+        expect(mockContext.fillRect).toHaveBeenCalledWith(0, 0, 40, 23)
+  });
 
       test('should handle canvas context creation failure', () => {
         mockCanvas.getContext = jest.fn(() => null);
 
         const placeholder = (optimizer as any).generatePlaceholder('https://example.com/test.jpg');
 
-        expect(placeholder).toContain('data:image/jpeg;base64,');
-      });
+        expect(placeholder).toContain('data:image/jpeg;base64,')
+  });
 
       test('should load optimized image with error handling', async () => {
         const mockImg = {
@@ -586,8 +586,8 @@ describe('imageOptimization', () => {
         (mockImage.onload as any)();
 
         expect(mockImg.src).toBeTruthy();
-        expect(mockImg.classList.add).toHaveBeenCalledWith('loaded');
-      });
+        expect(mockImg.classList.add).toHaveBeenCalledWith('loaded')
+  });
 
       test('should handle image load error with fallback', () => {
         const mockImg = {
@@ -615,20 +615,20 @@ describe('imageOptimization', () => {
         (mockImage.onerror as any)();
 
         expect(mockImg.src).toBeTruthy(); // Should use fallback
-        expect(mockImg.classList.add).toHaveBeenCalledWith('loaded');
-      });
-    });
+        expect(mockImg.classList.add).toHaveBeenCalledWith('loaded')
+  })
+  })
   });
 
   describe('Singleton Instance', () => {
     test('should export a singleton instance', () => {
-      expect(imageOptimizer).toBeInstanceOf(ImageOptimizer);
-    });
+      expect(imageOptimizer).toBeInstanceOf(ImageOptimizer)
+  });
 
     test('should be the same instance when imported multiple times', () => {
       const { imageOptimizer: secondImport } = require('./imageOptimization');
-      expect(imageOptimizer).toBe(secondImport);
-    });
+      expect(imageOptimizer).toBe(secondImport)
+  })
   });
 
   describe('TypeScript Interfaces', () => {
@@ -645,8 +645,8 @@ describe('imageOptimization', () => {
       expect(format.format).toBe('webp');
       expect(format.width).toBe(800);
       expect(format.height).toBe(600);
-      expect(format.quality).toBe(85);
-    });
+      expect(format.quality).toBe(85)
+  });
 
     test('should have proper OptimizedImage interface', () => {
       const optimizedImage: OptimizedImage = {
@@ -662,24 +662,24 @@ describe('imageOptimization', () => {
 
       expect(optimizedImage.id).toBe('test-id');
       expect(optimizedImage.aspectRatio).toBeCloseTo(1.778, 3);
-      expect(optimizedImage.loading).toBe('lazy');
-    });
+      expect(optimizedImage.loading).toBe('lazy')
+  })
   });
 
   describe('Error Handling', () => {
     test('should handle invalid URLs gracefully', () => {
       expect(() => {
-        imageOptimizer.generateOptimizedImages('not-a-url', { alt: 'Test' });
-      }).not.toThrow();
-    });
+        imageOptimizer.generateOptimizedImages('not-a-url', { alt: 'Test' })
+  }).not.toThrow()
+  });
 
     test('should handle empty alt text', () => {
       const result = imageOptimizer.generateOptimizedImages('https://example.com/test.jpg', {
         alt: '',
       });
 
-      expect(result.alt).toBe('');
-    });
+      expect(result.alt).toBe('')
+  });
 
     test('should handle missing image data in cache', () => {
       const mockImg = {
@@ -688,9 +688,9 @@ describe('imageOptimization', () => {
       } as any;
 
       expect(() => {
-        (imageOptimizer as any).loadOptimizedImage(mockImg);
-      }).not.toThrow();
-    });
+        (imageOptimizer as any).loadOptimizedImage(mockImg)
+  }).not.toThrow()
+  });
 
     test('should handle missing dataset', () => {
       const mockImg = {
@@ -699,9 +699,9 @@ describe('imageOptimization', () => {
       } as any;
 
       expect(() => {
-        (imageOptimizer as any).loadOptimizedImage(mockImg);
-      }).not.toThrow();
-    });
+        (imageOptimizer as any).loadOptimizedImage(mockImg)
+  }).not.toThrow()
+  })
   });
 
   describe('Performance Considerations', () => {
@@ -712,15 +712,15 @@ describe('imageOptimization', () => {
       for (let i = 0; i < 100; i++) {
         imageOptimizer.generateOptimizedImages('https://example.com/same-image.jpg', {
           alt: 'Test image',
-        });
-      }
+        })
+  }
       
       const endTime = performance.now();
       const duration = endTime - startTime;
       
       // Should be fast due to caching
-      expect(duration).toBeLessThan(50);
-    });
+      expect(duration).toBeLessThan(50)
+  });
 
     test('should generate IDs efficiently', () => {
       const startTime = performance.now();
@@ -728,8 +728,8 @@ describe('imageOptimization', () => {
       const ids = new Set();
       for (let i = 0; i < 1000; i++) {
         const id = (imageOptimizer as any).generateImageId(`https://example.com/image-${i}.jpg`);
-        ids.add(id);
-      }
+        ids.add(id)
+  }
       
       const endTime = performance.now();
       const duration = endTime - startTime;
@@ -737,8 +737,8 @@ describe('imageOptimization', () => {
       expect(duration).toBeLessThan(100);
       // IDs should be unique for different URLs
       expect(ids.size).toBeGreaterThan(0);
-      expect(ids.size).toBeLessThanOrEqual(1000);
-    });
+      expect(ids.size).toBeLessThanOrEqual(1000)
+  });
 
     test('should not leak memory with cache', () => {
       // Clear cache first
@@ -749,40 +749,40 @@ describe('imageOptimization', () => {
       for (let i = 0; i < 100; i++) {
         imageOptimizer.generateOptimizedImages(`https://example.com/test-image-${i}.jpg`, {
           alt: 'Test image',
-        });
-      }
+        })
+  }
       
       // Check that cache has grown
       expect((imageOptimizer as any).cache.size).toBeGreaterThan(initialCacheSize);
       expect((imageOptimizer as any).cache.size).toBeLessThanOrEqual(100);
       
       imageOptimizer.clearCache();
-      expect((imageOptimizer as any).cache.size).toBe(0);
-    });
+      expect((imageOptimizer as any).cache.size).toBe(0)
+  })
   });
 
   describe('Browser Compatibility', () => {
     test('should handle missing canvas support', () => {
       document.createElement = jest.fn((tagName) => {
         if (tagName === 'canvas') {
-          return null;
-        }
-        return document.createElement(tagName);
-      }) as any;
+          return null
+  }
+        return document.createElement(tagName)
+  }) as any;
 
       expect(() => {
-        new ImageOptimizer();
-      }).not.toThrow();
-    });
+        new ImageOptimizer()
+  }).not.toThrow()
+  });
 
     test('should detect WebP support correctly', () => {
       // Mock WebP support
       mockCanvas.toDataURL = jest.fn((type) => {
         if (type === 'image/webp') {
-          return 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
-        }
-        return 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD//2Q==';
-      });
+          return 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA='
+  }
+        return 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD//2Q=='
+  });
 
       const supportsWebP = (imageOptimizer as any).supportsWebP();
       expect(supportsWebP).toBe(true);
@@ -793,8 +793,8 @@ describe('imageOptimization', () => {
       );
 
       const doesNotSupportWebP = (imageOptimizer as any).supportsWebP();
-      expect(doesNotSupportWebP).toBe(false);
-    });
+      expect(doesNotSupportWebP).toBe(false)
+  })
   });
 
   describe('Real-world Integration', () => {
@@ -824,8 +824,8 @@ describe('imageOptimization', () => {
       // Get optimal format;
       const optimalFormat = imageOptimizer.getOptimalFormat(optimizedImage);
       expect(optimalFormat).toBeTruthy();
-      expect(optimalFormat.url).toContain(imageUrl);
-    });
+      expect(optimalFormat.url).toContain(imageUrl)
+  });
 
     test('should handle video thumbnail optimization', () => {
       const videoThumbnail = 'https://video.example.com/thumbnail/abc123.jpg';
@@ -841,7 +841,7 @@ describe('imageOptimization', () => {
       // Should have proper video-optimized dimensions;
       const thumbnailFormats = optimizedImage.formats.filter(f => f.width === 320);
       expect(thumbnailFormats.length).toBe(2); // WebP and JPEG
-      expect(thumbnailFormats[0].height).toBe(180); // 16:9 ratio;
-    });
+      expect(thumbnailFormats[0].height).toBe(180); // 16: 9 ratio
+  })
+  })
   });
-});

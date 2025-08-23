@@ -22,9 +22,9 @@ export const useAuth = () => {
         user: null,
         isAnonymous: false,
         helperProfile: null,
-        userToken: null;
-      }
+        userToken: null
+  }
     }
   
-  return context;
-};
+  return context
+  };

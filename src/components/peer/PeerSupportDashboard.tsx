@@ -52,10 +52,10 @@ export const PeerSupportDashboard: React.FC = () => {
   const handleSupportRequest = async () => {
     let maxWaitTime = 60; // default for low urgency
     if (urgencyLevel === 'high') {
-      maxWaitTime = 10;;
+      maxWaitTime = 10
   } else if (urgencyLevel === 'medium') {
-      maxWaitTime = 30;
-    }
+      maxWaitTime = 30
+  }
 
     const request: PeerSupportRequest = {
       id: Date.now().toString(),
@@ -71,21 +71,21 @@ export const PeerSupportDashboard: React.FC = () => {
     };
 
     await findPeerSupport(request);
-    setShowSupportRequestModal(false);
+    setShowSupportRequestModal(false)
   };
 
   /**
    * Handle creating a session with a matched peer
    */;
   const handleCreateSession = async (match: PeerMatch) => {
-    const sessionId = await createSupportSession(;
+    const sessionId = await createSupportSession(;;
       Date.now().toString(),
       match.peerId
     );
     
     if (sessionId) {
-      console.log(`Created session: ${sessionId}`);
-    }
+      console.log(`Created session: ${sessionId}`)
+  }
   };
 
   return (
@@ -291,15 +291,14 @@ export const PeerSupportDashboard: React.FC = () => {
             <div className="grid grid-cols-2 gap-2">
               {experienceAreas.map((area) => (
                 <label key={area} className="flex items-center">
-                  <input;
-                    type="checkbox"
+                  <input type="checkbox"
                     checked={selectedExperiences.includes(area)}
                     onChange={(e) => {
                       if (e.target.checked) {
-                        setSelectedExperiences([...selectedExperiences, area]);;
+                        setSelectedExperiences([...selectedExperiences, area])
   } else {
-                        setSelectedExperiences(selectedExperiences.filter(exp => exp !== area));
-                      }
+                        setSelectedExperiences(selectedExperiences.filter(exp => exp !== area))
+  }
                     }}
                     className="mr-2"
                   />
@@ -373,5 +372,5 @@ export const PeerSupportDashboard: React.FC = () => {
         </div>
       </Modal>
     </div>
-  );
-};
+  )
+  };

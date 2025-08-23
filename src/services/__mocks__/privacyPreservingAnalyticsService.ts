@@ -29,12 +29,12 @@ export const privacyPreservingAnalyticsService = {
   anonymizeData: jest.fn((data) => ({
     ...data,
     userId: 'anonymous',
-    personalInfo: null;
+    personalInfo: null
   })),
   hashIdentifier: jest.fn((id) => `hashed_${id}`),
   aggregateData: jest.fn((data) => ({
     count: Array.isArray(data) ? data.length : 1,
-    summary: 'aggregated';
+    summary: 'aggregated'
   })),
   applyDifferentialPrivacy: jest.fn((data) => data),
   validatePrivacyCompliance: jest.fn(() => true),
@@ -42,7 +42,7 @@ export const privacyPreservingAnalyticsService = {
     compliance: true,
     dataCategories: [],
     processingActivities: [],
-    risks: [];
+    risks: []
   }))
 };
 

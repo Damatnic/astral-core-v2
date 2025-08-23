@@ -35,8 +35,8 @@ describe('authService', () => {
           id: 'achievement-1',
           name: 'First Week',
           description: 'Completed first week as helper',
-          icon: '🎉';
-        }
+          icon: '🎉'
+  }
       ],
       xp: 500,
       level: 5,
@@ -44,22 +44,22 @@ describe('authService', () => {
       applicationStatus: 'approved',
       applicationNotes: 'Great candidate',
       trainingCompleted: true,
-      quizScore: 95;
-    };
+      quizScore: 95
+  };
 
     // Clear console.error mock before each test
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   afterEach(() => {
     // Reset internal state by clearing the updater
-    authService.setUpdater(() => {});
+    authService.setUpdater(() => {})
   });
 
   describe('setUpdater', () => {
     it.skip('should set the updater function', () => {
-      expect(() => authService.setUpdater(mockUpdater)).not.toThrow();
-    });
+      expect(() => authService.setUpdater(mockUpdater)).not.toThrow()
+  });
 
     it.skip('should allow setting updater multiple times', () => {
       const firstUpdater = jest.fn();
@@ -71,17 +71,17 @@ describe('authService', () => {
       // Should use the most recently set updater
       authService.updateHelperProfile(testHelper);
       expect(firstUpdater).not.toHaveBeenCalled();
-      expect(secondUpdater).toHaveBeenCalledWith(testHelper);
-    });
+      expect(secondUpdater).toHaveBeenCalledWith(testHelper)
+  });
 
     it.skip('should accept updater function that takes Helper parameter', () => {
       const typedUpdater = (profile: Helper) => {
         expect(profile).toBeDefined();
-        expect(typeof profile.id).toBe('string');
-      };
+        expect(typeof profile.id).toBe('string')
+  };
 
-      expect(() => authService.setUpdater(typedUpdater)).not.toThrow();
-    });
+      expect(() => authService.setUpdater(typedUpdater)).not.toThrow()
+  })
   });
 
   describe('updateHelperProfile', () => {
@@ -90,8 +90,8 @@ describe('authService', () => {
       authService.updateHelperProfile(testHelper);
 
       expect(mockUpdater).toHaveBeenCalledTimes(1);
-      expect(mockUpdater).toHaveBeenCalledWith(testHelper);
-    });
+      expect(mockUpdater).toHaveBeenCalledWith(testHelper)
+  });
 
     it.skip('should pass complete helper profile to updater', () => {
       authService.setUpdater(mockUpdater);
@@ -101,8 +101,8 @@ describe('authService', () => {
       expect(calledWith).toEqual(testHelper);
       expect(calledWith.id).toBe('helper-123');
       expect(calledWith.displayName).toBe('Johnny');
-      expect(calledWith.expertise).toEqual(['anxiety', 'depression']);
-    });
+      expect(calledWith.expertise).toEqual(['anxiety', 'depression'])
+  });
 
     it.skip('should log error when updater is not set', () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
@@ -117,16 +117,16 @@ describe('authService', () => {
         'AuthService updater not set. Cannot update helper profile.'
       );
 
-      consoleSpy.mockRestore();
-    });
+      consoleSpy.mockRestore()
+  });
 
     it.skip('should not throw error when updater is not set', () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
       expect(() => authService.updateHelperProfile(testHelper)).not.toThrow();
 
-      consoleSpy.mockRestore();
-    });
+      consoleSpy.mockRestore()
+  });
 
     it.skip('should handle multiple profile updates with same updater', () => {
       authService.setUpdater(mockUpdater);
@@ -135,16 +135,16 @@ describe('authService', () => {
         ...testHelper,
         id: 'helper-456',
         displayName: 'Jane',
-        reputation: 200;
-      };
+        reputation: 200
+  };
 
       authService.updateHelperProfile(testHelper);
       authService.updateHelperProfile(secondHelper);
 
       expect(mockUpdater).toHaveBeenCalledTimes(2);
       expect(mockUpdater).toHaveBeenNthCalledWith(1, testHelper);
-      expect(mockUpdater).toHaveBeenNthCalledWith(2, secondHelper);
-    });
+      expect(mockUpdater).toHaveBeenNthCalledWith(2, secondHelper)
+  });
 
     it.skip('should work with minimal helper profile', () => {
       const minimalHelper: Helper = {
@@ -162,14 +162,14 @@ describe('authService', () => {
         level: 1,
         nextLevelXp: 100,
         applicationStatus: 'none',
-        trainingCompleted: false;
-      };
+        trainingCompleted: false
+  };
 
       authService.setUpdater(mockUpdater);
       authService.updateHelperProfile(minimalHelper);
 
-      expect(mockUpdater).toHaveBeenCalledWith(minimalHelper);
-    });
+      expect(mockUpdater).toHaveBeenCalledWith(minimalHelper)
+  });
 
     it.skip('should work with certified helper profile', () => {
       const certifiedHelper: Helper = {
@@ -185,8 +185,8 @@ describe('authService', () => {
             id: 'cert-1',
             name: 'Certified Helper',
             description: 'Completed certification process',
-            icon: '🏆';
-          }
+            icon: '🏆'
+  }
         ]
       };
 
@@ -195,8 +195,8 @@ describe('authService', () => {
 
       expect(mockUpdater).toHaveBeenCalledWith(certifiedHelper);
       expect(mockUpdater.mock.calls[0][0].helperType).toBe('Certified');
-      expect(mockUpdater.mock.calls[0][0].quizScore).toBe(98);
-    });
+      expect(mockUpdater.mock.calls[0][0].quizScore).toBe(98)
+  });
 
     it.skip('should work with moderator profile', () => {
       const moderatorHelper: Helper = {
@@ -209,8 +209,8 @@ describe('authService', () => {
             id: 'mod-1',
             name: 'Moderator Badge',
             description: 'Community moderator',
-            icon: '🛡️';
-          }
+            icon: '🛡️'
+  }
         ]
       };
 
@@ -218,38 +218,38 @@ describe('authService', () => {
       authService.updateHelperProfile(moderatorHelper);
 
       expect(mockUpdater).toHaveBeenCalledWith(moderatorHelper);
-      expect(mockUpdater.mock.calls[0][0].role).toBe('Moderator');
-    });
+      expect(mockUpdater.mock.calls[0][0].role).toBe('Moderator')
+  });
 
     it.skip('should handle helper with pending application status', () => {
       const pendingHelper: Helper = {
         ...testHelper,
         applicationStatus: 'pending',
         applicationNotes: 'Application under review',
-        trainingCompleted: false;
-      };
+        trainingCompleted: false
+  };
 
       authService.setUpdater(mockUpdater);
       authService.updateHelperProfile(pendingHelper);
 
       expect(mockUpdater).toHaveBeenCalledWith(pendingHelper);
-      expect(mockUpdater.mock.calls[0][0].applicationStatus).toBe('pending');
-    });
+      expect(mockUpdater.mock.calls[0][0].applicationStatus).toBe('pending')
+  });
 
     it.skip('should handle helper with rejected application status', () => {
       const rejectedHelper: Helper = {
         ...testHelper,
         applicationStatus: 'rejected',
         applicationNotes: 'Does not meet requirements',
-        trainingCompleted: false;
-      };
+        trainingCompleted: false
+  };
 
       authService.setUpdater(mockUpdater);
       authService.updateHelperProfile(rejectedHelper);
 
       expect(mockUpdater).toHaveBeenCalledWith(rejectedHelper);
-      expect(mockUpdater.mock.calls[0][0].applicationStatus).toBe('rejected');
-    });
+      expect(mockUpdater.mock.calls[0][0].applicationStatus).toBe('rejected')
+  });
 
     it.skip('should preserve all optional helper properties', () => {
       const fullHelper: Helper = {
@@ -260,8 +260,8 @@ describe('authService', () => {
         averageRating: 4.8,
         profileImageUrl: 'https://example.com/full-profile.jpg',
         applicationNotes: 'Excellent candidate with great experience',
-        quizScore: 100;
-      };
+        quizScore: 100
+  };
 
       authService.setUpdater(mockUpdater);
       authService.updateHelperProfile(fullHelper);
@@ -273,21 +273,21 @@ describe('authService', () => {
       expect(calledWith.averageRating).toBe(4.8);
       expect(calledWith.profileImageUrl).toBe('https://example.com/full-profile.jpg');
       expect(calledWith.applicationNotes).toBe('Excellent candidate with great experience');
-      expect(calledWith.quizScore).toBe(100);
-    });
+      expect(calledWith.quizScore).toBe(100)
+  })
   });
 
   describe('error handling', () => {
     it.skip('should handle updater function that throws error', () => {
       const errorUpdater = jest.fn().mockImplementation(() => {
-        throw new Error('Updater error');
-      });
+        throw new Error('Updater error')
+  });
 
       authService.setUpdater(errorUpdater);
 
       expect(() => authService.updateHelperProfile(testHelper)).toThrow('Updater error');
-      expect(errorUpdater).toHaveBeenCalledWith(testHelper);
-    });
+      expect(errorUpdater).toHaveBeenCalledWith(testHelper)
+  });
 
     it.skip('should handle null updater parameter gracefully', () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
@@ -300,8 +300,8 @@ describe('authService', () => {
         'AuthService updater not set. Cannot update helper profile.'
       );
 
-      consoleSpy.mockRestore();
-    });
+      consoleSpy.mockRestore()
+  });
 
     it.skip('should handle undefined updater parameter gracefully', () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
@@ -314,28 +314,28 @@ describe('authService', () => {
         'AuthService updater not set. Cannot update helper profile.'
       );
 
-      consoleSpy.mockRestore();
-    });
+      consoleSpy.mockRestore()
+  })
   });
 
   describe('integration scenarios', () => {
     it.skip('should support profile update workflow', () => {
       let storedProfile: Helper | null = null;
       const profileStore = (profile: Helper) => {
-        storedProfile = profile;
-      };
+        storedProfile = profile
+  };
 
       authService.setUpdater(profileStore);
       authService.updateHelperProfile(testHelper);
 
-      expect(storedProfile).toEqual(testHelper);
-    });
+      expect(storedProfile).toEqual(testHelper)
+  });
 
     it.skip('should support multiple profile management systems', () => {
       const profiles: Helper[] = [];
       const multiUpdater = (profile: Helper) => {
-        profiles.push({ ...profile });
-      };
+        profiles.push({ ...profile })
+  };
 
       authService.setUpdater(multiUpdater);
 
@@ -350,15 +350,15 @@ describe('authService', () => {
       expect(profiles).toHaveLength(3);
       expect(profiles[0].id).toBe('helper-1');
       expect(profiles[1].id).toBe('helper-2');
-      expect(profiles[2].id).toBe('helper-3');
-    });
+      expect(profiles[2].id).toBe('helper-3')
+  });
 
     it.skip('should work with async updater function', async () => {
       let updateCompleted = false;
       const asyncUpdater = jest.fn().mockImplementation(async () => {
         await new Promise(resolve => setTimeout(resolve, 10));
-        updateCompleted = true;
-      });
+        updateCompleted = true
+  });
 
       authService.setUpdater(asyncUpdater);
       
@@ -369,8 +369,8 @@ describe('authService', () => {
       
       // Wait for async operation
       await new Promise(resolve => setTimeout(resolve, 20));
-      expect(updateCompleted).toBe(true);
-    });
+      expect(updateCompleted).toBe(true)
+  })
   });
 
   describe('state management', () => {
@@ -380,8 +380,8 @@ describe('authService', () => {
       authService.updateHelperProfile(testHelper);
       authService.updateHelperProfile({ ...testHelper, id: 'helper-2' });
 
-      expect(mockUpdater).toHaveBeenCalledTimes(2);
-    });
+      expect(mockUpdater).toHaveBeenCalledTimes(2)
+  });
 
     it.skip('should replace previous updater when new one is set', () => {
       const firstUpdater = jest.fn();
@@ -393,7 +393,7 @@ describe('authService', () => {
       authService.updateHelperProfile(testHelper);
 
       expect(firstUpdater).not.toHaveBeenCalled();
-      expect(secondUpdater).toHaveBeenCalledWith(testHelper);
-    });
+      expect(secondUpdater).toHaveBeenCalledWith(testHelper)
+  })
+  })
   });
-});

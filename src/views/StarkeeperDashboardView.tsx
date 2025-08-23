@@ -13,8 +13,8 @@ const getReactionEmoji = (reactionType: string) => {
         case 'heart': return '❤️';
         case 'strength': return '💪';
         case 'hug': return '🤗';
-        default: return '👍';
-    }
+        default: return '👍'
+  }
 };
 
 export const StarkeeperDashboardView: React.FC = () => {
@@ -28,23 +28,23 @@ export const StarkeeperDashboardView: React.FC = () => {
             setIsLoading(true);
             try {
                 const data = demoDataService.getDemoData('user');
-                setStarkeeperData(data);
-            } catch (error) {
-                console.error('Failed to load starkeeper data:', error);
-            } finally {
-                setIsLoading(false);
-            }
+                setStarkeeperData(data)
+  } catch (error) {
+                console.error('Failed to load starkeeper data:', error)
+  } finally {
+                setIsLoading(false)
+  }
         };
 
-        loadStarkeeperData();
-    };
+        loadStarkeeperData()
+  };
   }, []);
 
     if (isLoading) {
-        return <div className="loading-spinner" />;
-    }
+        return <div className="loading-spinner" />
+  }
 
-    const renderOverviewTab = () => (;
+    const renderOverviewTab = () => (;;
         <div className="starkeeper-overview">
             <Card className="welcome-card">
                 <h3>🌟 Welcome back, {user?.name || 'Starkeeper'}!</h3>
@@ -98,7 +98,7 @@ export const StarkeeperDashboardView: React.FC = () => {
         </div>
     );
 
-    const renderJournalTab = () => (;
+    const renderJournalTab = () => (;;
         <div className="journal-section">
             <Card>
                 <h3>📖 Your Personal Journal</h3>
@@ -124,7 +124,7 @@ export const StarkeeperDashboardView: React.FC = () => {
         </div>
     );
 
-    const renderMoodTab = () => (;
+    const renderMoodTab = () => (;;
         <div className="mood-section">
             <Card>
                 <h3>😊 Mood Tracking</h3>
@@ -164,7 +164,7 @@ export const StarkeeperDashboardView: React.FC = () => {
         </div>
     );
 
-    const renderSupportTab = () => (;
+    const renderSupportTab = () => (;;
         <div className="support-section">
             <Card>
                 <h3>🤝 Get Support</h3>
@@ -205,7 +205,7 @@ export const StarkeeperDashboardView: React.FC = () => {
         </div>
     );
 
-    const renderCommunityTab = () => (;
+    const renderCommunityTab = () => (;;
         <div className="community-section">
             <Card>
                 <h3>🌍 Community Connection</h3>
@@ -254,32 +254,27 @@ export const StarkeeperDashboardView: React.FC = () => {
             />
             
             <div className="dashboard-tabs">
-                <AppButton; 
-                    className={activeTab === 'overview' ? 'active' : ''} 
+                <AppButton className={activeTab === 'overview' ? 'active' : ''} 
                     onClick={() => setActiveTab('overview')}
                 >
                     📊 Overview
                 </AppButton>
-                <AppButton; 
-                    className={activeTab === 'journal' ? 'active' : ''} 
+                <AppButton className={activeTab === 'journal' ? 'active' : ''} 
                     onClick={() => setActiveTab('journal')}
                 >
                     📖 Journal
                 </AppButton>
-                <AppButton; 
-                    className={activeTab === 'mood' ? 'active' : ''} 
+                <AppButton className={activeTab === 'mood' ? 'active' : ''} 
                     onClick={() => setActiveTab('mood')}
                 >
                     😊 Mood
                 </AppButton>
-                <AppButton; 
-                    className={activeTab === 'support' ? 'active' : ''} 
+                <AppButton className={activeTab === 'support' ? 'active' : ''} 
                     onClick={() => setActiveTab('support')}
                 >
                     🤝 Support
                 </AppButton>
-                <AppButton; 
-                    className={activeTab === 'community' ? 'active' : ''} 
+                <AppButton className={activeTab === 'community' ? 'active' : ''} 
                     onClick={() => setActiveTab('community')}
                 >
                     🌍 Community
@@ -294,7 +289,7 @@ export const StarkeeperDashboardView: React.FC = () => {
                 {activeTab === 'community' && renderCommunityTab()}
             </div>
         </div>
-    );
-};
+    )
+  };
 
 export default StarkeeperDashboardView;

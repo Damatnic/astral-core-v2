@@ -15,8 +15,8 @@ interface PeerMatch {
   interests: string[];
   matchScore: number;
   isOnline: boolean;
-  lastActive: string;
-}
+  lastActive: string
+  }
 
 export const PeerSupportView: React.FC<{ userToken?: string | null }> = ({ userToken: propUserToken }) => {
     const { userToken: contextUserToken } = useAuth();
@@ -27,7 +27,7 @@ export const PeerSupportView: React.FC<{ userToken?: string | null }> = ({ userT
   const { addToast } = useNotification();
 
   useEffect(() => {
-    loadMatches();
+    loadMatches()
   };
   }, []);
 
@@ -44,8 +44,8 @@ export const PeerSupportView: React.FC<{ userToken?: string | null }> = ({ userT
           interests: ['Anxiety', 'Stress', 'Mindfulness'],
           matchScore: 0.95,
           isOnline: true,
-          lastActive: new Date().toISOString();
-        },
+          lastActive: new Date().toISOString()
+  },
         {
           id: '2',
           userToken: 'peer-2',
@@ -54,8 +54,8 @@ export const PeerSupportView: React.FC<{ userToken?: string | null }> = ({ userT
           interests: ['Depression', 'Recovery', 'Self-care'],
           matchScore: 0.87,
           isOnline: false,
-          lastActive: new Date(Date.now() - 3600000).toISOString();
-        },
+          lastActive: new Date(Date.now() - 3600000).toISOString()
+  },
         {
           id: '3',
           userToken: 'peer-3',
@@ -64,16 +64,16 @@ export const PeerSupportView: React.FC<{ userToken?: string | null }> = ({ userT
           interests: ['Mental Health', 'Support Groups', 'Wellness'],
           matchScore: 0.82,
           isOnline: true,
-          lastActive: new Date().toISOString();
-        }
+          lastActive: new Date().toISOString()
+  }
       ];
-      setMatches(mockMatches);
-    } catch (error) {
+      setMatches(mockMatches)
+  } catch (error) {
       console.error('Failed to load peer matches:', error);
-      addToast('Failed to load peer matches', 'error');
-    } finally {
-      setIsLoading(false);
-    }
+      addToast('Failed to load peer matches', 'error')
+  } finally {
+      setIsLoading(false)
+  }
   };
 
   const connectWithPeer = async (peer: PeerMatch) => {
@@ -102,15 +102,15 @@ export const PeerSupportView: React.FC<{ userToken?: string | null }> = ({ userT
         sessionStorage.setItem('activePeerConnection', JSON.stringify({
           peer,
           connectionId: data.connectionId,
-          timestamp: new Date().toISOString();
-        }));;
+          timestamp: new Date().toISOString()
+  }))
   } else {
-        throw new Error('Connection request failed');
-      }
+        throw new Error('Connection request failed')
+  }
     } catch (error) {
       console.error('Failed to connect with peer:', error);
-      addToast('Failed to connect with peer', 'error');
-    }
+      addToast('Failed to connect with peer', 'error')
+  }
   };
 
   if (isLoading) {
@@ -122,7 +122,7 @@ export const PeerSupportView: React.FC<{ userToken?: string | null }> = ({ userT
         />
         <div className="loading-spinner" style={{ margin: '3rem auto' }}></div>
       </div>
-    );
+    )
   }
 
   return (
@@ -196,8 +196,7 @@ export const PeerSupportView: React.FC<{ userToken?: string | null }> = ({ userT
                       <MessageCircleIcon />
                       {peer.isOnline ? 'Connect Now' : 'Offline'}
                     </AppButton>
-                    <AppButton;
-                      variant="secondary"
+                    <AppButton variant="secondary"
                       size="sm"
                       onClick={() => console.log('Saving peer:', peer.id)}
                     >
@@ -222,7 +221,7 @@ export const PeerSupportView: React.FC<{ userToken?: string | null }> = ({ userT
         </div>
       </div>
     </div>
-  );
-};
+  )
+  };
 
 export default PeerSupportView;

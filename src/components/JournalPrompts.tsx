@@ -7,8 +7,8 @@ interface JournalPrompt {
   category: 'gratitude' | 'reflection' | 'growth' | 'emotions' | 'creativity';
   prompt: string;
   followUp?: string;
-  emoji: string;
-}
+  emoji: string
+  }
 
 const prompts: JournalPrompt[] = [
   // Gratitude
@@ -17,21 +17,21 @@ const prompts: JournalPrompt[] = [
     category: 'gratitude',
     prompt: 'What are three small things that brought you joy today?',
     followUp: 'How can you create more of these moments?',
-    emoji: '🙏';
+    emoji: '🙏'
   },
   {
     id: 'g2',
     category: 'gratitude',
     prompt: 'Who in your life are you most grateful for right now?',
     followUp: 'How can you express this gratitude to them?',
-    emoji: '💝';
+    emoji: '💝'
   },
   {
     id: 'g3',
     category: 'gratitude',
     prompt: 'What ability or skill do you have that you\'re thankful for?',
     followUp: 'How has this helped you recently?',
-    emoji: '✨';
+    emoji: '✨'
   },
   
   // Reflection
@@ -40,21 +40,21 @@ const prompts: JournalPrompt[] = [
     category: 'reflection',
     prompt: 'If today had a color, what would it be and why?',
     followUp: 'What emotions does this color represent for you?',
-    emoji: '🎨';
+    emoji: '🎨'
   },
   {
     id: 'r2',
     category: 'reflection',
     prompt: 'What pattern have you noticed in your thoughts lately?',
     followUp: 'Is this pattern serving you or holding you back?',
-    emoji: '🔄';
+    emoji: '🔄'
   },
   {
     id: 'r3',
     category: 'reflection',
     prompt: 'What would you tell your younger self about where you are now?',
     followUp: 'What advice would they give you?',
-    emoji: '⏰';
+    emoji: '⏰'
   },
   
   // Growth
@@ -63,21 +63,21 @@ const prompts: JournalPrompt[] = [
     category: 'growth',
     prompt: 'What challenge are you currently facing that could help you grow?',
     followUp: 'What\'s one small step you can take today?',
-    emoji: '🌱';
+    emoji: '🌱'
   },
   {
     id: 'gr2',
     category: 'growth',
     prompt: 'What fear would you like to overcome?',
     followUp: 'What would your life look like without this fear?',
-    emoji: '🦋';
+    emoji: '🦋'
   },
   {
     id: 'gr3',
     category: 'growth',
     prompt: 'What new habit would most improve your wellbeing?',
     followUp: 'How can you make this habit easier to start?',
-    emoji: '🌟';
+    emoji: '🌟'
   },
   
   // Emotions
@@ -86,21 +86,21 @@ const prompts: JournalPrompt[] = [
     category: 'emotions',
     prompt: 'What emotion have you been avoiding lately?',
     followUp: 'What is this emotion trying to tell you?',
-    emoji: '💭';
+    emoji: '💭'
   },
   {
     id: 'e2',
     category: 'emotions',
     prompt: 'How does your body feel right now? Scan from head to toe.',
     followUp: 'Where are you holding tension or stress?',
-    emoji: '🧘';
+    emoji: '🧘'
   },
   {
     id: 'e3',
     category: 'emotions',
     prompt: 'What makes you feel most like yourself?',
     followUp: 'When did you last feel this way?',
-    emoji: '💫';
+    emoji: '💫'
   },
   
   // Creativity
@@ -109,27 +109,27 @@ const prompts: JournalPrompt[] = [
     category: 'creativity',
     prompt: 'If your current mood was weather, what would it be?',
     followUp: 'Draw or describe this weather in detail.',
-    emoji: '🌦️';
+    emoji: '🌦️'
   },
   {
     id: 'c2',
     category: 'creativity',
     prompt: 'Write a haiku about how you\'re feeling right now.',
     followUp: 'What images come to mind?',
-    emoji: '📝';
+    emoji: '📝'
   },
   {
     id: 'c3',
     category: 'creativity',
     prompt: 'If you could design your perfect day, what would it include?',
     followUp: 'Which elements could you incorporate tomorrow?',
-    emoji: '🎭';
+    emoji: '🎭'
   }
 ];
 
 interface JournalPromptsProps {
-  onPromptSelect?: (prompt: string) => void;
-}
+  onPromptSelect?: (prompt: string) => void
+  }
 
 export const JournalPrompts: React.FC<JournalPromptsProps> = ({ 
   onPromptSelect
@@ -143,14 +143,14 @@ export const JournalPrompts: React.FC<JournalPromptsProps> = ({
     // Load used prompts from localStorage;
     const saved = localStorage.getItem('usedJournalPrompts');
     if (saved) {
-      setUsedPromptIds(new Set(JSON.parse(saved)));
-    }
+      setUsedPromptIds(new Set(JSON.parse(saved)))
+  }
   };
   }, []);
   
   useEffect(() => {
     // Save used prompts to localStorage
-    localStorage.setItem('usedJournalPrompts', JSON.stringify(Array.from(usedPromptIds)));
+    localStorage.setItem('usedJournalPrompts', JSON.stringify(Array.from(usedPromptIds)))
   };
   }, [usedPromptIds]);
   
@@ -160,17 +160,17 @@ export const JournalPrompts: React.FC<JournalPromptsProps> = ({
     if (availablePrompts.length === 0) {
       // Reset if all prompts have been used
       setUsedPromptIds(new Set());
-      availablePrompts = prompts;
-    }
+      availablePrompts = prompts
+  }
     
     if (category && category !== 'all') {
-      availablePrompts = availablePrompts.filter(p => p.category === category);
-    }
+      availablePrompts = availablePrompts.filter(p => p.category === category)
+  }
     
     if (availablePrompts.length === 0) return null;
     
     const randomIndex = Math.floor(Math.random() * availablePrompts.length);
-    return availablePrompts[randomIndex];
+    return availablePrompts[randomIndex]
   };
   
   const selectNewPrompt = () => {
@@ -181,12 +181,12 @@ export const JournalPrompts: React.FC<JournalPromptsProps> = ({
       setUsedPromptIds(prev => new Set([...prev, prompt.id]));
       
       if (onPromptSelect) {
-        onPromptSelect(prompt.prompt);
-      }
+        onPromptSelect(prompt.prompt)
+  }
     }
   };
   
-  const categories = [;
+  const categories = [;;
     { id: 'all', name: 'All Prompts', emoji: '🌈' },
     { id: 'gratitude', name: 'Gratitude', emoji: '🙏' },
     { id: 'reflection', name: 'Reflection', emoji: '🪞' },
@@ -214,8 +214,8 @@ export const JournalPrompts: React.FC<JournalPromptsProps> = ({
             className={`category-btn ${selectedFilter === cat.id ? 'active' : ''}`}
             onClick={() => {
               setSelectedFilter(cat.id);
-              setCurrentPrompt(null);
-            }}
+              setCurrentPrompt(null)
+  }}
           >
             <span className="category-emoji">{cat.emoji}</span>
             <span className="category-name">{cat.name}</span>
@@ -234,8 +234,7 @@ export const JournalPrompts: React.FC<JournalPromptsProps> = ({
             <p className="prompt-text">{currentPrompt.prompt}</p>
             
             {currentPrompt.followUp && (
-              <button;
-                className="follow-up-toggle"
+              <button className="follow-up-toggle"
                 onClick={() => setShowFollowUp(!showFollowUp)}
               >
                 {showFollowUp ? 'Hide' : 'Show'} follow-up question
@@ -251,23 +250,21 @@ export const JournalPrompts: React.FC<JournalPromptsProps> = ({
           </div>
           
           <div className="prompt-actions">
-            <button;
-              className="use-prompt-btn"
+            <button className="use-prompt-btn"
               onClick={() => {
                 if (onPromptSelect && currentPrompt) {
-                  const fullPrompt = showFollowUp && currentPrompt.followUp;
+                  const fullPrompt = showFollowUp && currentPrompt.followUp;;
                     ? `${currentPrompt.prompt}\n\n${currentPrompt.followUp}`
                     : currentPrompt.prompt;
-                  onPromptSelect(fullPrompt);
-                }
+                  onPromptSelect(fullPrompt)
+  }
               }}
             >
               <HeartIcon />
               Use This Prompt
             </button>
             
-            <button;
-              className="new-prompt-btn"
+            <button className="new-prompt-btn"
               onClick={selectNewPrompt}
             >
               <RefreshIcon />
@@ -280,8 +277,7 @@ export const JournalPrompts: React.FC<JournalPromptsProps> = ({
           <p className="empty-message">
             Select a category and click the button below to get started
           </p>
-          <button;
-            className="get-started-btn"
+          <button className="get-started-btn"
             onClick={selectNewPrompt}
           >
             <SparkleIcon />
@@ -296,5 +292,5 @@ export const JournalPrompts: React.FC<JournalPromptsProps> = ({
         </p>
       </div>
     </div>
-  );
-};
+  )
+  };

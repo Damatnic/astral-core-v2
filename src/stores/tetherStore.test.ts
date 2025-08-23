@@ -49,8 +49,8 @@ const initialProfile: TetherProfile = {
     "You're safe",
     "This will pass"
   ],
-  breathingPattern: 'box';
-};
+  breathingPattern: 'box'
+  };
 
 const mockTetherMember: TetherCircleMember = {
   id: 'member-1',
@@ -72,8 +72,8 @@ const mockActiveTether: ActiveTether = {
   isInitiator: true,
   hapticEnabled: true,
   audioEnabled: true,
-  drawingEnabled: false;
-};
+  drawingEnabled: false
+  };
 
 const mockTetherSession: TetherSession = {
   id: 'session-456',
@@ -88,7 +88,7 @@ const mockTetherSession: TetherSession = {
   patterns: {
     peakIntensity: 90,
     averageStrength: 65,
-    disconnections: 1;
+    disconnections: 1
   }
 };
 
@@ -109,11 +109,11 @@ describe('tetherStore', () => {
     });
     jest.clearAllMocks();
     mockedFetch.mockClear();
-    mockSessionStorage.getItem.mockReturnValue('test-token');
+    mockSessionStorage.getItem.mockReturnValue('test-token')
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    jest.restoreAllMocks()
   });
 
   describe('initial state', () => {
@@ -129,8 +129,8 @@ describe('tetherStore', () => {
       expect(state.escalationContacts).toEqual([]);
       expect(state.escalationTimeout).toBe(5);
       expect(state.silentMode).toBe(false);
-      expect(state.lowBandwidthMode).toBe(false);
-    });
+      expect(state.lowBandwidthMode).toBe(false)
+  });
 
     test('should have all required action functions', () => {
       const state = useTetherStore.getState();
@@ -148,16 +148,16 @@ describe('tetherStore', () => {
       expect(typeof state.updateAvailability).toBe('function');
       expect(typeof state.loadSessionHistory).toBe('function');
       expect(typeof state.triggerWellnessCheck).toBe('function');
-      expect(typeof state.escalateToCrisis).toBe('function');
-    });
+      expect(typeof state.escalateToCrisis).toBe('function')
+  })
   });
 
   describe('initiateTether action', () => {
     test('should successfully initiate a tether session', async () => {
       const mockResponse = {
         sessionId: 'new-session-123',
-        partnerName: 'Test Partner';
-      };
+        partnerName: 'Test Partner'
+  };
 
       mockedFetch.mockResolvedValueOnce({
         ok: true,
@@ -165,8 +165,8 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        await useTetherStore.getState().initiateTether('partner-1', 'support');
-      });
+        await useTetherStore.getState().initiateTether('partner-1', 'support')
+  });
 
       const state = useTetherStore.getState();
       
@@ -187,17 +187,17 @@ describe('tetherStore', () => {
         mode: 'support',
         isInitiator: true,
         hapticEnabled: true,
-        drawingEnabled: false;
-      });
+        drawingEnabled: false
+  });
 
-      expect(global.WebSocket).toHaveBeenCalledWith('wss://api.astralcore.app/tether/new-session-123');
-    });
+      expect(global.WebSocket).toHaveBeenCalledWith('wss: //api.astralcore.app/tether/new-session-123')
+  });
 
     test('should set up WebSocket message handling', async () => {
       const mockResponse = {
         sessionId: 'ws-session-123',
-        partnerName: 'WS Partner';
-      };
+        partnerName: 'WS Partner'
+  };
 
       mockedFetch.mockResolvedValueOnce({
         ok: true,
@@ -205,28 +205,28 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        await useTetherStore.getState().initiateTether('partner-1', 'support');
-      });
+        await useTetherStore.getState().initiateTether('partner-1', 'support')
+  });
 
       // Test WebSocket message handling;
       const strengthMessage = {
         type: 'strength_update',
-        strength: 85;
-      };
+        strength: 85
+  };
 
       act(() => {
-        mockWebSocket.onmessage?.({ data: JSON.stringify(strengthMessage) } as MessageEvent);
-      });
+        mockWebSocket.onmessage?.({ data: JSON.stringify(strengthMessage) } as MessageEvent)
+  });
 
       const state = useTetherStore.getState();
-      expect(state.activeTether?.connectionStrength).toBe(85);
-    });
+      expect(state.activeTether?.connectionStrength).toBe(85)
+  });
 
     test('should handle haptic WebSocket messages', async () => {
       const mockResponse = {
         sessionId: 'haptic-session',
-        partnerName: 'Haptic Partner';
-      };
+        partnerName: 'Haptic Partner'
+  };
 
       mockedFetch.mockResolvedValueOnce({
         ok: true,
@@ -234,8 +234,8 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        await useTetherStore.getState().initiateTether('partner-1', 'support');
-      });
+        await useTetherStore.getState().initiateTether('partner-1', 'support')
+  });
 
       const hapticMessage = {
         type: 'haptic',
@@ -243,11 +243,11 @@ describe('tetherStore', () => {
       };
 
       act(() => {
-        mockWebSocket.onmessage?.({ data: JSON.stringify(hapticMessage) } as MessageEvent);
-      });
+        mockWebSocket.onmessage?.({ data: JSON.stringify(hapticMessage) } as MessageEvent)
+  });
 
-      expect(navigator.vibrate).toHaveBeenCalledWith([100, 50, 100]);
-    });
+      expect(navigator.vibrate).toHaveBeenCalledWith([100, 50, 100])
+  });
 
     test('should handle API errors gracefully', async () => {
       mockedFetch.mockRejectedValueOnce(new Error('Network error'));
@@ -257,16 +257,16 @@ describe('tetherStore', () => {
       ).rejects.toThrow('Network error');
 
       const state = useTetherStore.getState();
-      expect(state.activeTether).toBeNull();
-    });
+      expect(state.activeTether).toBeNull()
+  });
 
     test('should set up auto-escalation for crisis mode', async () => {
       jest.useFakeTimers();
       
       const mockResponse = {
         sessionId: 'crisis-session',
-        partnerName: 'Crisis Partner';
-      };
+        partnerName: 'Crisis Partner'
+  };
 
       mockedFetch.mockResolvedValueOnce({
         ok: true,
@@ -276,8 +276,8 @@ describe('tetherStore', () => {
       useTetherStore.setState({ autoEscalation: true, escalationTimeout: 1 }); // 1 minute
 
       await act(async () => {
-        await useTetherStore.getState().initiateTether('partner-1', 'crisis');
-      });
+        await useTetherStore.getState().initiateTether('partner-1', 'crisis')
+  });
 
       // Fast-forward time to trigger escalation
       act(() => {
@@ -285,16 +285,16 @@ describe('tetherStore', () => {
       });
 
       // Auto-escalation should be set up but not tested here as it depends on state at timeout
-      jest.useRealTimers();
-    });
+      jest.useRealTimers()
+  });
 
     test('should disable audio when silent mode is enabled', async () => {
       useTetherStore.setState({ silentMode: true });
 
       const mockResponse = {
         sessionId: 'silent-session',
-        partnerName: 'Silent Partner';
-      };
+        partnerName: 'Silent Partner'
+  };
 
       mockedFetch.mockResolvedValueOnce({
         ok: true,
@@ -302,12 +302,12 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        await useTetherStore.getState().initiateTether('partner-1', 'support');
-      });
+        await useTetherStore.getState().initiateTether('partner-1', 'support')
+  });
 
       const state = useTetherStore.getState();
-      expect(state.activeTether?.audioEnabled).toBe(false);
-    });
+      expect(state.activeTether?.audioEnabled).toBe(false)
+  })
   });
 
   describe('acceptTether action', () => {
@@ -317,14 +317,14 @@ describe('tetherStore', () => {
         from: 'requester-1',
         fromName: 'Requester',
         message: 'Please help',
-        timestamp: new Date();
-      };
+        timestamp: new Date()
+  };
 
       useTetherStore.setState({ pendingRequests: [mockRequest] });
 
       const mockResponse = {
-        sessionId: 'accepted-session-123';
-      };
+        sessionId: 'accepted-session-123'
+  };
 
       mockedFetch.mockResolvedValueOnce({
         ok: true,
@@ -332,8 +332,8 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        await useTetherStore.getState().acceptTether('request-123');
-      });
+        await useTetherStore.getState().acceptTether('request-123')
+  });
 
       const state = useTetherStore.getState();
       
@@ -351,21 +351,21 @@ describe('tetherStore', () => {
         partnerId: 'requester-1',
         partnerName: 'Requester',
         mode: 'support',
-        isInitiator: false;
-      });
+        isInitiator: false
+  });
 
-      expect(state.pendingRequests).toHaveLength(0);
-    });
+      expect(state.pendingRequests).toHaveLength(0)
+  });
 
     test('should handle non-existent request gracefully', async () => {
       await act(async () => {
-        await useTetherStore.getState().acceptTether('non-existent-request');
-      });
+        await useTetherStore.getState().acceptTether('non-existent-request')
+  });
 
       expect(mockedFetch).not.toHaveBeenCalled();
       const state = useTetherStore.getState();
-      expect(state.activeTether).toBeNull();
-    });
+      expect(state.activeTether).toBeNull()
+  });
 
     test('should handle API errors gracefully', async () => {
       const mockRequest = {
@@ -373,20 +373,20 @@ describe('tetherStore', () => {
         from: 'requester-1',
         fromName: 'Requester',
         message: 'Please help',
-        timestamp: new Date();
-      };
+        timestamp: new Date()
+  };
 
       useTetherStore.setState({ pendingRequests: [mockRequest] });
       mockedFetch.mockRejectedValueOnce(new Error('API Error'));
 
       await act(async () => {
-        await useTetherStore.getState().acceptTether('error-request');
-      });
+        await useTetherStore.getState().acceptTether('error-request')
+  });
 
       // Should not crash and should preserve pending requests;
       const state = useTetherStore.getState();
-      expect(state.pendingRequests).toContain(mockRequest);
-    });
+      expect(state.pendingRequests).toContain(mockRequest)
+  })
   });
 
   describe('declineTether action', () => {
@@ -396,8 +396,8 @@ describe('tetherStore', () => {
         from: 'requester-1',
         fromName: 'Requester',
         message: 'Please help',
-        timestamp: new Date();
-      };
+        timestamp: new Date()
+  };
 
       useTetherStore.setState({ pendingRequests: [mockRequest] });
 
@@ -407,8 +407,8 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        await useTetherStore.getState().declineTether('decline-request');
-      });
+        await useTetherStore.getState().declineTether('decline-request')
+  });
 
       expect(mockedFetch).toHaveBeenCalledWith('/api/tether/decline', {
         method: 'POST',
@@ -420,8 +420,8 @@ describe('tetherStore', () => {
       });
 
       const state = useTetherStore.getState();
-      expect(state.pendingRequests).toHaveLength(0);
-    });
+      expect(state.pendingRequests).toHaveLength(0)
+  });
 
     test('should handle API errors gracefully', async () => {
       const mockRequest = {
@@ -429,20 +429,20 @@ describe('tetherStore', () => {
         from: 'requester-1',
         fromName: 'Requester',
         message: 'Please help',
-        timestamp: new Date();
-      };
+        timestamp: new Date()
+  };
 
       useTetherStore.setState({ pendingRequests: [mockRequest] });
       mockedFetch.mockRejectedValueOnce(new Error('Decline Error'));
 
       await act(async () => {
-        await useTetherStore.getState().declineTether('error-decline');
-      });
+        await useTetherStore.getState().declineTether('error-decline')
+  });
 
       // Should still remove from pending requests on error;
       const state = useTetherStore.getState();
-      expect(state.pendingRequests).toHaveLength(0);
-    });
+      expect(state.pendingRequests).toHaveLength(0)
+  })
   });
 
   describe('endTether action', () => {
@@ -456,8 +456,8 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        await useTetherStore.getState().endTether('Great session!', 5);
-      });
+        await useTetherStore.getState().endTether('Great session!', 5)
+  });
 
       expect(mockedFetch).toHaveBeenCalledWith('/api/tether/end', {
         method: 'POST',
@@ -468,8 +468,8 @@ describe('tetherStore', () => {
         body: JSON.stringify({
           sessionId: activeTether.id,
           notes: 'Great session!',
-          rating: 5;
-        })
+          rating: 5
+  })
       });
 
       const state = useTetherStore.getState();
@@ -481,9 +481,9 @@ describe('tetherStore', () => {
         partnerName: activeTether.partnerName,
         mode: activeTether.mode,
         notes: 'Great session!',
-        helpfulnessRating: 5;
-      });
-    });
+        helpfulnessRating: 5
+  })
+  });
 
     test('should handle ending session without notes or rating', async () => {
       const activeTether = { ...mockActiveTether };
@@ -495,21 +495,21 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        await useTetherStore.getState().endTether();
-      });
+        await useTetherStore.getState().endTether()
+  });
 
       const state = useTetherStore.getState();
       expect(state.sessionHistory[0].notes).toBeUndefined();
-      expect(state.sessionHistory[0].helpfulnessRating).toBeUndefined();
-    });
+      expect(state.sessionHistory[0].helpfulnessRating).toBeUndefined()
+  });
 
     test('should not do anything when no active tether', async () => {
       await act(async () => {
-        await useTetherStore.getState().endTether();
-      });
+        await useTetherStore.getState().endTether()
+  });
 
-      expect(mockedFetch).not.toHaveBeenCalled();
-    });
+      expect(mockedFetch).not.toHaveBeenCalled()
+  });
 
     test('should trigger haptic feedback on end', async () => {
       const activeTether = { ...mockActiveTether };
@@ -521,11 +521,11 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        await useTetherStore.getState().endTether();
-      });
+        await useTetherStore.getState().endTether()
+  });
 
-      expect(navigator.vibrate).toHaveBeenCalledWith([100, 50, 50, 50, 25]);
-    });
+      expect(navigator.vibrate).toHaveBeenCalledWith([100, 50, 50, 50, 25])
+  });
 
     test('should not trigger haptic in silent mode', async () => {
       const activeTether = { ...mockActiveTether };
@@ -537,11 +537,11 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        await useTetherStore.getState().endTether();
-      });
+        await useTetherStore.getState().endTether()
+  });
 
-      expect(navigator.vibrate).not.toHaveBeenCalled();
-    });
+      expect(navigator.vibrate).not.toHaveBeenCalled()
+  })
   });
 
   describe('updateConnectionStrength action', () => {
@@ -550,42 +550,42 @@ describe('tetherStore', () => {
       useTetherStore.setState({ activeTether });
 
       act(() => {
-        useTetherStore.getState().updateConnectionStrength(85);
-      });
+        useTetherStore.getState().updateConnectionStrength(85)
+  });
 
       const state = useTetherStore.getState();
-      expect(state.activeTether?.connectionStrength).toBe(85);
-    });
+      expect(state.activeTether?.connectionStrength).toBe(85)
+  });
 
     test('should clamp connection strength to 0-100 range', () => {
       const activeTether = { ...mockActiveTether };
       useTetherStore.setState({ activeTether });
 
       act(() => {
-        useTetherStore.getState().updateConnectionStrength(-10);
-      });
+        useTetherStore.getState().updateConnectionStrength(-10)
+  });
 
       let state = useTetherStore.getState();
       expect(state.activeTether?.connectionStrength).toBe(0);
 
       act(() => {
-        useTetherStore.getState().updateConnectionStrength(150);
-      });
+        useTetherStore.getState().updateConnectionStrength(150)
+  });
 
       state = useTetherStore.getState();
-      expect(state.activeTether?.connectionStrength).toBe(100);
-    });
+      expect(state.activeTether?.connectionStrength).toBe(100)
+  });
 
     test('should not update when no active tether', () => {
       const originalState = useTetherStore.getState();
 
       act(() => {
-        useTetherStore.getState().updateConnectionStrength(85);
-      });
+        useTetherStore.getState().updateConnectionStrength(85)
+  });
 
       const newState = useTetherStore.getState();
-      expect(newState).toEqual(originalState);
-    });
+      expect(newState).toEqual(originalState)
+  })
   });
 
   describe('sendHapticPulse action', () => {
@@ -599,8 +599,8 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        useTetherStore.getState().sendHapticPulse(8);
-      });
+        useTetherStore.getState().sendHapticPulse(8)
+  });
 
       expect(mockedFetch).toHaveBeenCalledWith('/api/tether/haptic', {
         method: 'POST',
@@ -610,8 +610,8 @@ describe('tetherStore', () => {
         },
         body: JSON.stringify({
           sessionId: activeTether.id,
-          intensity: 8;
-        })
+          intensity: 8
+  })
       });
 
       expect(navigator.vibrate).toHaveBeenCalledWith(80); // intensity * 10
@@ -622,21 +622,21 @@ describe('tetherStore', () => {
       useTetherStore.setState({ activeTether });
 
       act(() => {
-        useTetherStore.getState().sendHapticPulse(8);
-      });
+        useTetherStore.getState().sendHapticPulse(8)
+  });
 
       expect(mockedFetch).not.toHaveBeenCalled();
-      expect(navigator.vibrate).not.toHaveBeenCalled();
-    });
+      expect(navigator.vibrate).not.toHaveBeenCalled()
+  });
 
     test('should not send haptic when no active tether', () => {
       act(() => {
-        useTetherStore.getState().sendHapticPulse(8);
-      });
+        useTetherStore.getState().sendHapticPulse(8)
+  });
 
       expect(mockedFetch).not.toHaveBeenCalled();
-      expect(navigator.vibrate).not.toHaveBeenCalled();
-    });
+      expect(navigator.vibrate).not.toHaveBeenCalled()
+  });
 
     test('should not vibrate in silent mode', async () => {
       const activeTether = { ...mockActiveTether, hapticEnabled: true };
@@ -648,12 +648,12 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        useTetherStore.getState().sendHapticPulse(8);
-      });
+        useTetherStore.getState().sendHapticPulse(8)
+  });
 
       expect(mockedFetch).toHaveBeenCalled(); // Still sends to partner
       expect(navigator.vibrate).not.toHaveBeenCalled(); // But doesn't vibrate locally
-    });
+    })
   });
 
   describe('toggleDrawing action', () => {
@@ -662,38 +662,38 @@ describe('tetherStore', () => {
       useTetherStore.setState({ activeTether });
 
       act(() => {
-        useTetherStore.getState().toggleDrawing();
-      });
+        useTetherStore.getState().toggleDrawing()
+  });
 
       let state = useTetherStore.getState();
       expect(state.activeTether?.drawingEnabled).toBe(true);
 
       act(() => {
-        useTetherStore.getState().toggleDrawing();
-      });
+        useTetherStore.getState().toggleDrawing()
+  });
 
       state = useTetherStore.getState();
-      expect(state.activeTether?.drawingEnabled).toBe(false);
-    });
+      expect(state.activeTether?.drawingEnabled).toBe(false)
+  });
 
     test('should not toggle when no active tether', () => {
       const originalState = useTetherStore.getState();
 
       act(() => {
-        useTetherStore.getState().toggleDrawing();
-      });
+        useTetherStore.getState().toggleDrawing()
+  });
 
       const newState = useTetherStore.getState();
-      expect(newState).toEqual(originalState);
-    });
+      expect(newState).toEqual(originalState)
+  })
   });
 
   describe('updateTetherProfile action', () => {
     test('should update tether profile partially', async () => {
       const profileUpdate = {
         vibrationPattern: 'rhythmic' as const,
-        color: '#FF0000';
-      };
+        color: '#FF0000'
+  };
 
       mockedFetch.mockResolvedValueOnce({
         ok: true,
@@ -701,8 +701,8 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        useTetherStore.getState().updateTetherProfile(profileUpdate);
-      });
+        useTetherStore.getState().updateTetherProfile(profileUpdate)
+  });
 
       const state = useTetherStore.getState();
       expect(state.tetherProfile?.vibrationPattern).toBe('rhythmic');
@@ -715,19 +715,19 @@ describe('tetherStore', () => {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer test-token'
         },
-        body: JSON.stringify(state.tetherProfile);
-      });
-    });
+        body: JSON.stringify(state.tetherProfile)
+  })
+  });
 
     test('should handle null profile gracefully', async () => {
       useTetherStore.setState({ tetherProfile: null });
 
       await act(async () => {
-        useTetherStore.getState().updateTetherProfile({ color: '#FF0000' });
-      });
+        useTetherStore.getState().updateTetherProfile({ color: '#FF0000' })
+  });
 
-      expect(mockedFetch).not.toHaveBeenCalled();
-    });
+      expect(mockedFetch).not.toHaveBeenCalled()
+  });
 
     test('should update comfort messages', async () => {
       const newMessages = ['You are strong', 'This too shall pass'];
@@ -738,12 +738,12 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        useTetherStore.getState().updateTetherProfile({ comfortMessages: newMessages });
-      });
+        useTetherStore.getState().updateTetherProfile({ comfortMessages: newMessages })
+  });
 
       const state = useTetherStore.getState();
-      expect(state.tetherProfile?.comfortMessages).toEqual(newMessages);
-    });
+      expect(state.tetherProfile?.comfortMessages).toEqual(newMessages)
+  })
   });
 
   describe('addToCircle action', () => {
@@ -756,8 +756,8 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        useTetherStore.getState().addToCircle(newMember);
-      });
+        useTetherStore.getState().addToCircle(newMember)
+  });
 
       const state = useTetherStore.getState();
       expect(state.tetherCircle).toContain(newMember);
@@ -769,9 +769,9 @@ describe('tetherStore', () => {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer test-token'
         },
-        body: JSON.stringify(newMember);
-      });
-    });
+        body: JSON.stringify(newMember)
+  })
+  });
 
     test('should add multiple members to circle', async () => {
       const member1 = { ...mockTetherMember, id: 'member-1' };
@@ -784,14 +784,14 @@ describe('tetherStore', () => {
 
       await act(async () => {
         useTetherStore.getState().addToCircle(member1);
-        useTetherStore.getState().addToCircle(member2);
-      });
+        useTetherStore.getState().addToCircle(member2)
+  });
 
       const state = useTetherStore.getState();
       expect(state.tetherCircle).toHaveLength(2);
       expect(state.tetherCircle).toContain(member1);
-      expect(state.tetherCircle).toContain(member2);
-    });
+      expect(state.tetherCircle).toContain(member2)
+  })
   });
 
   describe('removeFromCircle action', () => {
@@ -806,8 +806,8 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        useTetherStore.getState().removeFromCircle('member-1');
-      });
+        useTetherStore.getState().removeFromCircle('member-1')
+  });
 
       const state = useTetherStore.getState();
       expect(state.tetherCircle).toHaveLength(1);
@@ -819,8 +819,8 @@ describe('tetherStore', () => {
         headers: {
           'Authorization': 'Bearer test-token'
         }
-      });
-    });
+      })
+  });
 
     test('should handle removing non-existent member gracefully', async () => {
       const member1 = { ...mockTetherMember, id: 'member-1' };
@@ -831,13 +831,13 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        useTetherStore.getState().removeFromCircle('non-existent');
-      });
+        useTetherStore.getState().removeFromCircle('non-existent')
+  });
 
       const state = useTetherStore.getState();
       expect(state.tetherCircle).toHaveLength(1);
-      expect(state.tetherCircle).toContain(member1);
-    });
+      expect(state.tetherCircle).toContain(member1)
+  })
   });
 
   describe('updateAvailability action', () => {
@@ -848,8 +848,8 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        useTetherStore.getState().updateAvailability('busy');
-      });
+        useTetherStore.getState().updateAvailability('busy')
+  });
 
       expect(mockedFetch).toHaveBeenCalledWith('/api/tether/availability', {
         method: 'PUT',
@@ -858,8 +858,8 @@ describe('tetherStore', () => {
           'Authorization': 'Bearer test-token'
         },
         body: JSON.stringify({ status: 'busy' })
-      });
-    });
+      })
+  });
 
     test('should handle all availability states', async () => {
       mockedFetch.mockResolvedValue({
@@ -871,8 +871,8 @@ describe('tetherStore', () => {
 
       for (const status of statuses) {
         await act(async () => {
-          useTetherStore.getState().updateAvailability(status);
-        });
+          useTetherStore.getState().updateAvailability(status)
+  });
 
         expect(mockedFetch).toHaveBeenLastCalledWith('/api/tether/availability', {
           method: 'PUT',
@@ -881,9 +881,9 @@ describe('tetherStore', () => {
             'Authorization': 'Bearer test-token'
           },
           body: JSON.stringify({ status })
-        });
-      }
-    });
+        })
+  }
+    })
   });
 
   describe('loadSessionHistory action', () => {
@@ -896,8 +896,8 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        await useTetherStore.getState().loadSessionHistory();
-      });
+        await useTetherStore.getState().loadSessionHistory()
+  });
 
       const state = useTetherStore.getState();
       expect(state.sessionHistory).toEqual(mockSessions);
@@ -906,15 +906,15 @@ describe('tetherStore', () => {
         headers: {
           'Authorization': 'Bearer test-token'
         }
-      });
-    });
+      })
+  });
 
     test('should handle API errors gracefully', async () => {
       mockedFetch.mockRejectedValueOnce(new Error('History load failed'));
 
       await act(async () => {
-        await useTetherStore.getState().loadSessionHistory();
-      });
+        await useTetherStore.getState().loadSessionHistory()
+  });
 
       const state = useTetherStore.getState();
       expect(state.sessionHistory).toEqual([]); // Should remain unchanged
@@ -927,12 +927,12 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        await useTetherStore.getState().loadSessionHistory();
-      });
+        await useTetherStore.getState().loadSessionHistory()
+  });
 
       const state = useTetherStore.getState();
-      expect(state.sessionHistory).toEqual([]);
-    });
+      expect(state.sessionHistory).toEqual([])
+  })
   });
 
   describe('triggerWellnessCheck action', () => {
@@ -943,8 +943,8 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        await useTetherStore.getState().triggerWellnessCheck('partner-123');
-      });
+        await useTetherStore.getState().triggerWellnessCheck('partner-123')
+  });
 
       expect(mockedFetch).toHaveBeenCalledWith('/api/tether/wellness-check', {
         method: 'POST',
@@ -953,19 +953,19 @@ describe('tetherStore', () => {
           'Authorization': 'Bearer test-token'
         },
         body: JSON.stringify({ partnerId: 'partner-123' })
-      });
-    });
+      })
+  });
 
     test('should handle wellness check API errors', async () => {
       mockedFetch.mockRejectedValueOnce(new Error('Wellness check failed'));
 
       await act(async () => {
-        await useTetherStore.getState().triggerWellnessCheck('partner-123');
-      });
+        await useTetherStore.getState().triggerWellnessCheck('partner-123')
+  });
 
       // Should not throw or crash
-      expect(mockedFetch).toHaveBeenCalled();
-    });
+      expect(mockedFetch).toHaveBeenCalled()
+  })
   });
 
   describe('escalateToCrisis action', () => {
@@ -979,8 +979,8 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        await useTetherStore.getState().escalateToCrisis();
-      });
+        await useTetherStore.getState().escalateToCrisis()
+  });
 
       expect(mockedFetch).toHaveBeenCalledWith('/api/tether/escalate', {
         method: 'POST',
@@ -989,29 +989,29 @@ describe('tetherStore', () => {
           'Authorization': 'Bearer test-token'
         },
         body: JSON.stringify({ contacts: escalationContacts })
-      });
-    });
+      })
+  });
 
     test('should not escalate when no contacts are configured', async () => {
       useTetherStore.setState({ escalationContacts: [] });
 
       await act(async () => {
-        await useTetherStore.getState().escalateToCrisis();
-      });
+        await useTetherStore.getState().escalateToCrisis()
+  });
 
-      expect(mockedFetch).not.toHaveBeenCalled();
-    });
+      expect(mockedFetch).not.toHaveBeenCalled()
+  });
 
     test('should handle escalation API errors', async () => {
       useTetherStore.setState({ escalationContacts: ['contact@example.com'] });
       mockedFetch.mockRejectedValueOnce(new Error('Escalation failed'));
 
       await act(async () => {
-        await useTetherStore.getState().escalateToCrisis();
-      });
+        await useTetherStore.getState().escalateToCrisis()
+  });
 
-      expect(mockedFetch).toHaveBeenCalled();
-    });
+      expect(mockedFetch).toHaveBeenCalled()
+  })
   });
 
   describe('complex state interactions', () => {
@@ -1023,8 +1023,8 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        useTetherStore.getState().addToCircle(mockTetherMember);
-      });
+        useTetherStore.getState().addToCircle(mockTetherMember)
+  });
 
       // Initiate tether
       mockedFetch.mockResolvedValueOnce({
@@ -1033,13 +1033,13 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        await useTetherStore.getState().initiateTether('partner-1', 'support');
-      });
+        await useTetherStore.getState().initiateTether('partner-1', 'support')
+  });
 
       // Update connection strength
       act(() => {
-        useTetherStore.getState().updateConnectionStrength(90);
-      });
+        useTetherStore.getState().updateConnectionStrength(90)
+  });
 
       // Send haptic pulse
       mockedFetch.mockResolvedValueOnce({
@@ -1048,8 +1048,8 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        useTetherStore.getState().sendHapticPulse(7);
-      });
+        useTetherStore.getState().sendHapticPulse(7)
+  });
 
       // End tether
       mockedFetch.mockResolvedValueOnce({
@@ -1058,15 +1058,15 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        await useTetherStore.getState().endTether('Great session!', 5);
-      });
+        await useTetherStore.getState().endTether('Great session!', 5)
+  });
 
       const state = useTetherStore.getState();
       expect(state.tetherCircle).toHaveLength(1);
       expect(state.activeTether).toBeNull();
       expect(state.sessionHistory).toHaveLength(1);
-      expect(state.sessionHistory[0].helpfulnessRating).toBe(5);
-    });
+      expect(state.sessionHistory[0].helpfulnessRating).toBe(5)
+  });
 
     test('should handle concurrent operations', async () => {
       // Mock all fetch calls to succeed
@@ -1082,22 +1082,22 @@ describe('tetherStore', () => {
           useTetherStore.getState().addToCircle(mockTetherMember),
           useTetherStore.getState().updateAvailability('available'),
           useTetherStore.getState().loadSessionHistory()
-        ]);
-      });
+        ])
+  });
 
       // All operations should complete without conflicts;
       const state = useTetherStore.getState();
       expect(state.tetherProfile?.color).toBe('#FF0000');
-      expect(state.tetherCircle).toHaveLength(1);
-    });
+      expect(state.tetherCircle).toHaveLength(1)
+  })
   });
 
   describe('edge cases and error handling', () => {
     test('should handle malformed WebSocket messages', async () => {
       const mockResponse = {
         sessionId: 'malformed-ws-session',
-        partnerName: 'WS Partner';
-      };
+        partnerName: 'WS Partner'
+  };
 
       mockedFetch.mockResolvedValueOnce({
         ok: true,
@@ -1105,54 +1105,54 @@ describe('tetherStore', () => {
       } as Response);
 
       await act(async () => {
-        await useTetherStore.getState().initiateTether('partner-1', 'support');
-      });
+        await useTetherStore.getState().initiateTether('partner-1', 'support')
+  });
 
       // Send malformed message
       act(() => {
-        mockWebSocket.onmessage?.({ data: 'invalid-json' } as MessageEvent);
-      });
+        mockWebSocket.onmessage?.({ data: 'invalid-json' } as MessageEvent)
+  });
 
       // Should not crash;
       const state = useTetherStore.getState();
-      expect(state.activeTether).toBeTruthy();
-    });
+      expect(state.activeTether).toBeTruthy()
+  });
 
     test('should handle extreme connection strength values', () => {
       const activeTether = { ...mockActiveTether };
       useTetherStore.setState({ activeTether });
 
       act(() => {
-        useTetherStore.getState().updateConnectionStrength(Number.MAX_VALUE);
-      });
+        useTetherStore.getState().updateConnectionStrength(Number.MAX_VALUE)
+  });
 
       let state = useTetherStore.getState();
       expect(state.activeTether?.connectionStrength).toBe(100);
 
       act(() => {
         // Use a negative number to test the minimum clamping
-        useTetherStore.getState().updateConnectionStrength(-100);
-      });
+        useTetherStore.getState().updateConnectionStrength(-100)
+  });
 
       state = useTetherStore.getState();
       expect(state.activeTether?.connectionStrength).toBe(0);
 
       // Also test Number.MIN_VALUE (smallest positive number)
       act(() => {
-        useTetherStore.getState().updateConnectionStrength(Number.MIN_VALUE);
-      });
+        useTetherStore.getState().updateConnectionStrength(Number.MIN_VALUE)
+  });
 
       state = useTetherStore.getState();
       // Number.MIN_VALUE is a very small positive number, so it stays as is (within 0-100 range)
-      expect(state.activeTether?.connectionStrength).toBeCloseTo(Number.MIN_VALUE);
-    });
+      expect(state.activeTether?.connectionStrength).toBeCloseTo(Number.MIN_VALUE)
+  });
 
     test('should handle missing session token gracefully', async () => {
       mockSessionStorage.getItem.mockReturnValue(null);
 
       await act(async () => {
-        await useTetherStore.getState().initiateTether('partner-1', 'support');
-      });
+        await useTetherStore.getState().initiateTether('partner-1', 'support')
+  });
 
       expect(mockedFetch).toHaveBeenCalledWith(
         expect.any(String),
@@ -1161,8 +1161,8 @@ describe('tetherStore', () => {
             'Authorization': 'Bearer null'
           })
         })
-      );
-    });
+      )
+  });
 
     test('should handle network timeouts', async () => {
       const timeoutError = new Error('Network timeout');
@@ -1172,8 +1172,8 @@ describe('tetherStore', () => {
 
       await expect(
         useTetherStore.getState().initiateTether('partner-1', 'support')
-      ).rejects.toThrow('Network timeout');
-    });
+      ).rejects.toThrow('Network timeout')
+  });
 
     test('should preserve state consistency during errors', async () => {
       const originalState = useTetherStore.getState();
@@ -1182,8 +1182,8 @@ describe('tetherStore', () => {
 
       await act(async () => {
         try {
-          await useTetherStore.getState().initiateTether('partner-1', 'support');
-        } catch (error) {
+          await useTetherStore.getState().initiateTether('partner-1', 'support')
+  } catch (error) {
           // Expected to throw
         }
       });
@@ -1191,8 +1191,8 @@ describe('tetherStore', () => {
       const newState = useTetherStore.getState();
       expect(newState.activeTether).toBeNull(); // Should remain null
       expect(newState.tetherCircle).toEqual(originalState.tetherCircle);
-      expect(newState.sessionHistory).toEqual(originalState.sessionHistory);
-    });
+      expect(newState.sessionHistory).toEqual(originalState.sessionHistory)
+  })
   });
 
   describe('settings and configuration', () => {
@@ -1201,56 +1201,56 @@ describe('tetherStore', () => {
       
       timeouts.forEach(timeout => {
         act(() => {
-          useTetherStore.setState({ escalationTimeout: timeout });
-        });
+          useTetherStore.setState({ escalationTimeout: timeout })
+  });
 
         const state = useTetherStore.getState();
-        expect(state.escalationTimeout).toBe(timeout);
-      });
-    });
+        expect(state.escalationTimeout).toBe(timeout)
+  })
+  });
 
     test('should handle auto-escalation toggle', () => {
       act(() => {
-        useTetherStore.setState({ autoEscalation: false });
-      });
+        useTetherStore.setState({ autoEscalation: false })
+  });
 
       let state = useTetherStore.getState();
       expect(state.autoEscalation).toBe(false);
 
       act(() => {
-        useTetherStore.setState({ autoEscalation: true });
-      });
+        useTetherStore.setState({ autoEscalation: true })
+  });
 
       state = useTetherStore.getState();
-      expect(state.autoEscalation).toBe(true);
-    });
+      expect(state.autoEscalation).toBe(true)
+  });
 
     test('should handle multiple escalation contacts', () => {
-      const contacts = [;
+      const contacts = [;;
         'primary@example.com',
         'secondary@example.com',
         'emergency@example.com'
       ];
 
       act(() => {
-        useTetherStore.setState({ escalationContacts: contacts });
-      });
+        useTetherStore.setState({ escalationContacts: contacts })
+  });
 
       const state = useTetherStore.getState();
-      expect(state.escalationContacts).toEqual(contacts);
-    });
+      expect(state.escalationContacts).toEqual(contacts)
+  });
 
     test('should handle bandwidth and accessibility modes', () => {
       act(() => {
         useTetherStore.setState({ 
           lowBandwidthMode: true, 
-          silentMode: true ;
-        });
-      });
+          silentMode: true
+  })
+  });
 
       const state = useTetherStore.getState();
       expect(state.lowBandwidthMode).toBe(true);
-      expect(state.silentMode).toBe(true);
-    });
+      expect(state.silentMode).toBe(true)
+  })
+  })
   });
-});

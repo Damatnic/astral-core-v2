@@ -19,8 +19,8 @@ interface KeyboardNavigationOptions {
   /** Restore focus to trigger element on unmount */
   restoreFocus?: boolean;
   /** Prevent tab cycling outside container */
-  preventTabOutside?: boolean;
-}
+  preventTabOutside?: boolean
+  }
 
 export interface ModalKeyboardNavigationHook {
   focusFirst: () => void;
@@ -28,8 +28,8 @@ export interface ModalKeyboardNavigationHook {
   focusNext: () => void;
   focusPrevious: () => void;
   getFocusableElements: () => HTMLElement[];
-  trapFocusInContainer: (enabled: boolean) => void;
-}
+  trapFocusInContainer: (enabled: boolean) => void
+  }
 
 export const useKeyboardNavigation = (
   containerRef: React.RefObject<HTMLElement>,
@@ -62,8 +62,8 @@ export const useKeyboardNavigation = (
     ).filter((element) => {
       const el = element as HTMLElement;
       const isDisabled = (el as HTMLInputElement | HTMLButtonElement | HTMLSelectElement | HTMLTextAreaElement).disabled;
-      return !isDisabled && el.offsetParent !== null;
-    }) as HTMLElement[];
+      return !isDisabled && el.offsetParent !== null
+  }) as HTMLElement[]
   };
   }, [containerRef, selector]);
 
@@ -71,7 +71,7 @@ export const useKeyboardNavigation = (
     const elements = getFocusableElements();
     if (elements.length === 0) return;
 
-    const targetIndex = wrap ;
+    const targetIndex = wrap ;;
       ? ((index % elements.length) + elements.length) % elements.length
       : Math.max(0, Math.min(index, elements.length - 1));
 
@@ -79,8 +79,8 @@ export const useKeyboardNavigation = (
     if (element) {
       element.focus();
       currentIndexRef.current = targetIndex;
-      onNavigate?.(targetIndex, element);
-    }
+      onNavigate?.(targetIndex, element)
+  }
   };
   }, [getFocusableElements, wrap, onNavigate]);
 
@@ -89,17 +89,17 @@ export const useKeyboardNavigation = (
     const element = elements[index];
     if (element) {
       if (element.tagName === 'BUTTON' || element.getAttribute('role') === 'button') {
-        element.click();;
+        element.click()
   } else if (element.tagName === 'A') {
-        element.click();;
+        element.click()
   } else if (element.tagName === 'INPUT') {
         const input = element as HTMLInputElement;
         if (input.type === 'checkbox' || input.type === 'radio') {
-          input.click();
-        }
+          input.click()
+  }
       }
-      onActivate?.(index, element);
-    }
+      onActivate?.(index, element)
+  }
   };
   }, [getFocusableElements, onActivate]);
 
@@ -126,8 +126,8 @@ export const useKeyboardNavigation = (
         if (orientation === 'horizontal' || orientation === 'both') {
           event.preventDefault();
           return { handled: true, newIndex: currentIndex - 1 }
-        break;
-    }
+        break
+  }
     
     return { handled: false, newIndex: currentIndex };
   }, [enableArrowKeys, orientation]);
@@ -152,10 +152,10 @@ export const useKeyboardNavigation = (
     if ((event.key === 'Enter' || event.key === ' ') && currentElement && elements.includes(currentElement)) {
       event.preventDefault();
       activateElement(currentIndex);
-      return true;
-    }
+      return true
+  }
     
-    return false;
+    return false
   };
   }, [enableEnterSpace, activateElement]);
 
@@ -163,9 +163,9 @@ export const useKeyboardNavigation = (
     if (enableEscape && event.key === 'Escape') {
       event.preventDefault();
       onEscape?.();
-      return true;
-    }
-    return false;
+      return true
+  }
+    return false
   };
   }, [enableEscape, onEscape]);
 
@@ -183,23 +183,23 @@ export const useKeyboardNavigation = (
     const arrowResult = handleArrowKeys(event, currentIndex);
     if (arrowResult.handled) {
       focusElement(arrowResult.newIndex);
-      return;
-    }
+      return
+  }
 
     // Handle home/end keys;
     const homeEndResult = handleHomeEndKeys(event, currentIndex, elements.length);
     if (homeEndResult.handled) {
       focusElement(homeEndResult.newIndex);
-      return;
-    }
+      return
+  }
 
     // Handle activation keys
     if (handleActivationKeys(event, currentIndex, currentElement, elements)) {
-      return;
-    }
+      return
+  }
 
     // Handle escape key
-    handleEscapeKey(event);
+    handleEscapeKey(event)
   };
   }, [
     containerRef,
@@ -213,7 +213,7 @@ export const useKeyboardNavigation = (
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown)
   };
   }, [handleKeyDown]);
 
@@ -221,9 +221,10 @@ export const useKeyboardNavigation = (
     if (autoFocus && containerRef.current) {
       const elements = getFocusableElements();
       if (elements.length > 0) {
-        elements[0].focus();
-      }
+        elements[0].focus()
+  }
     }
+  };
   };
   };
   }, [autoFocus, containerRef, getFocusableElements]);
@@ -235,8 +236,8 @@ export const useKeyboardNavigation = (
     focusPrevious: () => focusElement(currentIndexRef.current - 1),
     getFocusableElements,
     trapFocusInContainer: (enabled: boolean) => {
-      focusTrapEnabled.current = enabled;
-    }
+      focusTrapEnabled.current = enabled
+  }
   };
 
 // Hook for managing focus traps (modal dialogs, etc.);
@@ -246,7 +247,7 @@ export const useFocusTrap = (
   options: { 
     autoFocus?: boolean;
     restoreFocus?: boolean;
-    fallbackFocus?: string;
+    fallbackFocus?: string
   } = {}
 ) => {
   const {
@@ -265,8 +266,8 @@ export const useFocusTrap = (
       )
     ).filter((element) => {
       const el = element as HTMLElement;
-      return el.offsetParent !== null;
-    }) as HTMLElement[];
+      return el.offsetParent !== null
+  }) as HTMLElement[]
   };
   }, [containerRef]);
 
@@ -284,13 +285,13 @@ export const useFocusTrap = (
         // Shift + Tab
         if (document.activeElement === firstElement) {
           event.preventDefault();
-          lastElement.focus();
-        };
+          lastElement.focus()
+  }
   } else if (document.activeElement === lastElement) {
         // Tab
         event.preventDefault();
-        firstElement.focus();
-      }
+        firstElement.focus()
+  }
     }
   };
   }, [isActive, containerRef, getFocusableElements]);
@@ -304,15 +305,15 @@ export const useFocusTrap = (
       if (autoFocus && containerRef.current) {
         const focusableElements = getFocusableElements();
         if (focusableElements.length > 0) {
-          focusableElements[0].focus();;
+          focusableElements[0].focus()
   } else {
           // Fallback: focus the container or a specific element;
           const fallback = containerRef.current.querySelector(fallbackFocus) as HTMLElement;
           if (fallback) {
-            fallback.focus();;
+            fallback.focus()
   } else {
-            containerRef.current.focus();
-          }
+            containerRef.current.focus()
+  }
         }
       }
 
@@ -323,9 +324,10 @@ export const useFocusTrap = (
 
         // Restore focus to the previously focused element
         if (restoreFocus && lastFocusedElement.current) {
-          lastFocusedElement.current.focus();
-        }
+          lastFocusedElement.current.focus()
+  }
       }
+  };
   };
   };
   }, [isActive, autoFocus, restoreFocus, fallbackFocus, containerRef, getFocusableElements, handleTabKey]);
@@ -333,12 +335,12 @@ export const useFocusTrap = (
   return {
     focusFirst: () => {
       const elements = getFocusableElements();
-      if (elements.length > 0) elements[0].focus();
-    },
+      if (elements.length > 0) elements[0].focus()
+  },
     focusLast: () => {
       const elements = getFocusableElements();
-      if (elements.length > 0) elements[elements.length - 1].focus();
-    }
+      if (elements.length > 0) elements[elements.length - 1].focus()
+  }
   };
 
 // Hook for skip navigation links;
@@ -356,8 +358,8 @@ export const useSkipNavigation = () => {
       announcement.className = 'sr-only';
       announcement.textContent = 'Skipped to main content';
       document.body.appendChild(announcement);
-      setTimeout(() => document.body.removeChild(announcement), 1000);
-    }
+      setTimeout(() => document.body.removeChild(announcement), 1000)
+  }
   };
   }, []);
 
@@ -375,8 +377,8 @@ export const useSkipNavigation = () => {
         announcement.className = 'sr-only';
         announcement.textContent = 'Skipped to navigation';
         document.body.appendChild(announcement);
-        setTimeout(() => document.body.removeChild(announcement), 1000);
-      }
+        setTimeout(() => document.body.removeChild(announcement), 1000)
+  }
     }
   };
   }, []);
@@ -390,7 +392,7 @@ export const useRovingTabindex = (
     selector?: string;
     orientation?: 'horizontal' | 'vertical' | 'both';
     wrap?: boolean;
-    defaultIndex?: number;
+    defaultIndex?: number
   } = {}
 ) => {
   const {
@@ -405,17 +407,17 @@ export const useRovingTabindex = (
   const updateTabindexes = useCallback(() => {
     if (!containerRef.current) return;
 
-    const elements = Array.from(;
+    const elements = Array.from(;;
       containerRef.current.querySelectorAll(selector)
     );
 
     elements.forEach((element, index) => {
       const htmlElement = element as HTMLElement;
       if (index === currentIndexRef.current) {
-        htmlElement.setAttribute('tabindex', '0');;
+        htmlElement.setAttribute('tabindex', '0')
   } else {
-        htmlElement.setAttribute('tabindex', '-1');
-      }
+        htmlElement.setAttribute('tabindex', '-1')
+  }
     };
   };
   };
@@ -424,24 +426,24 @@ export const useRovingTabindex = (
   const setActiveIndex = useCallback((index: number) => {
     if (!containerRef.current) return;
 
-    const elements = Array.from(;
+    const elements = Array.from(;;
       containerRef.current.querySelectorAll(selector)
     );
 
     if (elements.length === 0) return;
 
-    const newIndex = wrap;
+    const newIndex = wrap;;
       ? ((index % elements.length) + elements.length) % elements.length
       : Math.max(0, Math.min(index, elements.length - 1));
 
     currentIndexRef.current = newIndex;
     updateTabindexes();
-    (elements[newIndex] as HTMLElement)?.focus();
+    (elements[newIndex] as HTMLElement)?.focus()
   };
   }, [containerRef, selector, wrap, updateTabindexes]);
 
   useEffect(() => {
-    updateTabindexes();
+    updateTabindexes()
   };
   }, [updateTabindexes]);
 
@@ -455,15 +457,15 @@ export const useRovingTabindex = (
     selector,
     onNavigate: (index: number) => {
       currentIndexRef.current = index;
-      updateTabindexes();
-    }
+      updateTabindexes()
+  }
   };
 
   useKeyboardNavigation(containerRef, navigationOptions);
 
   return {
     setActiveIndex,
-    getCurrentIndex: () => currentIndexRef.current;
+    getCurrentIndex: () => currentIndexRef.current
   };
 
 // Utility for announcing keyboard shortcuts;
@@ -473,14 +475,14 @@ export const announceKeyboardShortcut = (shortcut: string, action: string) => {
   announcement.className = 'sr-only';
   announcement.textContent = `Keyboard shortcut: ${shortcut} for ${action}`;
   document.body.appendChild(announcement);
-  setTimeout(() => document.body.removeChild(announcement), 2000);
-};
+  setTimeout(() => document.body.removeChild(announcement), 2000)
+  };
 
 // Global keyboard shortcuts manager;
 export const useGlobalKeyboardShortcuts = (shortcuts: Record<string, () => void>) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const key = [;
+      const key = [;;
         event.ctrlKey && 'ctrl',
         event.altKey && 'alt',
         event.shiftKey && 'shift',
@@ -490,14 +492,14 @@ export const useGlobalKeyboardShortcuts = (shortcuts: Record<string, () => void>
 
       if (shortcuts[key]) {
         event.preventDefault();
-        shortcuts[key]();
-      }
+        shortcuts[key]()
+  }
     };
 
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown)
   };
-  }, [shortcuts]);
-};
+  }, [shortcuts])
+  };
 
 export default useKeyboardNavigation;

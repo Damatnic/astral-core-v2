@@ -8,8 +8,8 @@ import { useLazyStyles, cssOptimization } from './useLazyStyles';
 // Mock React Router;
 const mockLocation = { pathname: '/test' };
 jest.mock('react-router-dom', () => ({
-  useLocation: () => mockLocation;
-}));
+  useLocation: () => mockLocation
+  }));
 
 // Mock DOM methods;
 const mockAppendChild = jest.fn();
@@ -32,13 +32,13 @@ const mockCreateElement = jest.fn((tagName: string) => {
     // Simulate loading behavior
     setTimeout(() => {
       if ((element as HTMLLinkElement).onload) {
-        (element as HTMLLinkElement).onload!(new Event('load'));
-      }
-    }, 0);
+        (element as HTMLLinkElement).onload!(new Event('load'))
+  }
+    }, 0)
   }
   
-  return element;
-});
+  return element
+  });
 
 // Override document.createElement but ensure it returns real DOM nodes
 jest.spyOn(document, 'createElement').mockImplementation(mockCreateElement);
@@ -47,10 +47,10 @@ jest.spyOn(document, 'createElement').mockImplementation(mockCreateElement);
 jest.spyOn(document.body, 'appendChild').mockImplementation(function(node) {
   // Only append if it's a real node
   if (node && node.nodeType) {
-    return originalBodyAppendChild(node);
+    return originalBodyAppendChild(node)
   }
-  return node;
-});
+  return node
+  });
 
 // Mock document.head with tracking
 Object.defineProperty(document, 'head', {
@@ -58,16 +58,16 @@ Object.defineProperty(document, 'head', {
     ...originalHead,
     appendChild: mockAppendChild.mockImplementation(function(node) {
       // Track the call but don't actually append (to avoid side effects)
-      return node;
-    }),
+      return node
+  }),
     removeChild: mockRemoveChild.mockImplementation(function(node) {
-      return node;
-    }),
-    querySelectorAll: mockQuerySelectorAll;
+      return node
+  }),
+    querySelectorAll: mockQuerySelectorAll
   },
   writable: true,
-  configurable: true;
-});
+  configurable: true
+  });
 
 // Mock documentElement.classList
 Object.defineProperty(document, 'documentElement', {
@@ -86,27 +86,27 @@ Object.defineProperty(document, 'documentElement', {
       forEach: jest.fn(),
       entries: jest.fn(),
       keys: jest.fn(),
-      values: jest.fn();
-    }
+      values: jest.fn()
+  }
   },
   writable: true,
-  configurable: true;
-});
+  configurable: true
+  });
 
 // Mock window methods if not already mocked
 if (!window.addEventListener || !jest.isMockFunction(window.addEventListener)) {
-  window.addEventListener = jest.fn();
-}
+  window.addEventListener = jest.fn()
+  }
 
 if (!window.removeEventListener || !jest.isMockFunction(window.removeEventListener)) {
-  window.removeEventListener = jest.fn();
-}
+  window.removeEventListener = jest.fn()
+  }
 
 Object.defineProperty(window, 'innerWidth', {
   value: 1024,
   writable: true,
-  configurable: true;
-});
+  configurable: true
+  });
 
 if (!window.matchMedia || !jest.isMockFunction(window.matchMedia)) {
   Object.defineProperty(window, 'matchMedia', {
@@ -121,9 +121,9 @@ if (!window.matchMedia || !jest.isMockFunction(window.matchMedia)) {
       dispatchEvent: jest.fn(),
     })),
     writable: true,
-    configurable: true;
-  });
-}
+    configurable: true
+  })
+  }
 
 
 describe('useLazyStyles Hook', () => {
@@ -135,12 +135,12 @@ describe('useLazyStyles Hook', () => {
     mockAppendChild.mockClear();
     mockRemoveChild.mockClear();
     mockQuerySelectorAll.mockClear();
-    mockCreateElement.mockClear();
+    mockCreateElement.mockClear()
   });
   
   afterEach(() => {
     // Cleanup any created elements
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   it.skip('should initialize without errors', () => {
@@ -150,7 +150,7 @@ describe('useLazyStyles Hook', () => {
     expect(result.current).toHaveProperty('loadCrisisStyles');
     expect(result.current).toHaveProperty('preloadStyles');
     expect(result.current).toHaveProperty('isStyleLoaded');
-    expect(result.current).toHaveProperty('cssManager');
+    expect(result.current).toHaveProperty('cssManager')
   });
 
   it.skip('should load immediate styles on mount', () => {
@@ -158,7 +158,7 @@ describe('useLazyStyles Hook', () => {
     
     // Should create link elements for immediate styles
     expect(mockCreateElement).toHaveBeenCalled();
-    expect(mockAppendChild).toHaveBeenCalled();
+    expect(mockAppendChild).toHaveBeenCalled()
   });
 
   it.skip('should load route-specific styles when route changes', () => {
@@ -169,49 +169,49 @@ describe('useLazyStyles Hook', () => {
     rerender();
     
     // Should load mood tracker styles
-    expect(mockCreateElement).toHaveBeenCalled();
+    expect(mockCreateElement).toHaveBeenCalled()
   });
 
   it.skip('should load emotional state styles', async () => {
     const { result } = renderHook(() => useLazyStyles());
     
     await act(async () => {
-      await result.current.loadEmotionalStyles('seeking-help');
-    });
+      await result.current.loadEmotionalStyles('seeking-help')
+  });
     
-    expect(mockCreateElement).toHaveBeenCalled();
+    expect(mockCreateElement).toHaveBeenCalled()
   });
 
   it.skip('should load crisis styles immediately', async () => {
     const { result } = renderHook(() => useLazyStyles());
     
     await act(async () => {
-      await result.current.loadCrisisStyles();
-    });
+      await result.current.loadCrisisStyles()
+  });
     
-    expect(mockCreateElement).toHaveBeenCalled();
+    expect(mockCreateElement).toHaveBeenCalled()
   });
 
   it.skip('should preload styles', () => {
     const { result } = renderHook(() => useLazyStyles());
     
     act(() => {
-      result.current.preloadStyles('/test.css');
-    });
+      result.current.preloadStyles('/test.css')
+  });
     
-    expect(mockCreateElement).toHaveBeenCalled();
+    expect(mockCreateElement).toHaveBeenCalled()
   });
 
   it.skip('should handle responsive styles based on viewport', () => {
     // Mock mobile viewport
     Object.defineProperty(window, 'innerWidth', {
       value: 500,
-      writable: true;
-    });
+      writable: true
+  });
     
     renderHook(() => useLazyStyles());
     
-    expect(mockCreateElement).toHaveBeenCalled();
+    expect(mockCreateElement).toHaveBeenCalled()
   });
 
   it.skip('should setup interaction-based loading', () => {
@@ -223,7 +223,7 @@ describe('useLazyStyles Hook', () => {
     // Should setup event listeners for interaction on document
     expect(addEventListenerSpy).toHaveBeenCalled();
     
-    addEventListenerSpy.mockRestore();
+    addEventListenerSpy.mockRestore()
   });
 
   it.skip('should handle custom strategy', () => {
@@ -235,7 +235,7 @@ describe('useLazyStyles Hook', () => {
     
     renderHook(() => useLazyStyles(customStrategy));
     
-    expect(mockCreateElement).toHaveBeenCalled();
+    expect(mockCreateElement).toHaveBeenCalled()
   });
 
   it.skip('should track loaded styles to prevent duplicates', async () => {
@@ -244,13 +244,13 @@ describe('useLazyStyles Hook', () => {
     // Load same style multiple times
     await act(async () => {
       result.current.preloadStyles('/test.css');
-      result.current.preloadStyles('/test.css');
-    });
+      result.current.preloadStyles('/test.css')
+  });
     
     // Should only create element once per unique style
-    expect(result.current.isStyleLoaded('/test.css')).toBeDefined();
+    expect(result.current.isStyleLoaded('/test.css')).toBeDefined()
+  })
   });
-});
 
 describe('CSS Optimization Utilities', () => {
   beforeEach(() => {
@@ -260,26 +260,26 @@ describe('CSS Optimization Utilities', () => {
     mockAppendChild.mockClear();
     mockRemoveChild.mockClear();
     mockQuerySelectorAll.mockClear();
-    mockCreateElement.mockClear();
+    mockCreateElement.mockClear()
   });
 
   it.skip('should mark critical CSS as loaded', () => {
     cssOptimization.markCriticalCSSLoaded();
     
-    expect(document.documentElement.classList.add).toHaveBeenCalledWith('css-loaded');
+    expect(document.documentElement.classList.add).toHaveBeenCalledWith('css-loaded')
   });
 
   it.skip('should handle CSS performance monitoring', () => {
     // Mock PerformanceObserver
     global.PerformanceObserver = jest.fn().mockImplementation((_callback) => ({
       observe: jest.fn(),
-      disconnect: jest.fn();
-    })) as any;
+      disconnect: jest.fn()
+  })) as any;
     (global.PerformanceObserver as any).supportedEntryTypes = ['resource'];
     
     cssOptimization.monitorCSSPerformance();
     
-    expect(global.PerformanceObserver).toHaveBeenCalled();
+    expect(global.PerformanceObserver).toHaveBeenCalled()
   });
 
   it.skip('should get CSS metrics when performance API is available', () => {
@@ -291,8 +291,8 @@ describe('CSS Optimization Utilities', () => {
           { name: 'other.css', duration: 200 }
         ])
       },
-      writable: true;
-    });
+      writable: true
+  });
     
     const metrics = cssOptimization.getCSSMetrics();
     
@@ -301,7 +301,7 @@ describe('CSS Optimization Utilities', () => {
     expect(metrics).toHaveProperty('avgCSSLoadTime');
     expect(metrics.totalCSSFiles).toBe(2);
     expect(metrics.totalCSSLoadTime).toBe(300);
-    expect(metrics.avgCSSLoadTime).toBe(150);
+    expect(metrics.avgCSSLoadTime).toBe(150)
   });
 
   it.skip('should handle missing performance API gracefully', () => {
@@ -314,9 +314,9 @@ describe('CSS Optimization Utilities', () => {
     expect(metrics).toEqual({});
     
     // Restore
-    window.performance = originalPerformance;
+    window.performance = originalPerformance
+  })
   });
-});
 
 describe('CSS Loading Manager', () => {
   it.skip('should handle CSS loading errors gracefully', async () => {
@@ -333,19 +333,19 @@ describe('CSS Loading Manager', () => {
       onload: null,
       onerror: null,
       addEventListener: jest.fn(),
-      removeEventListener: jest.fn();
-    });
+      removeEventListener: jest.fn()
+  });
     
     await act(async () => {
       try {
-        await result.current.loadEmotionalStyles('invalid-state');
-      } catch (error) {
+        await result.current.loadEmotionalStyles('invalid-state')
+  } catch (error) {
         // Expected to handle errors gracefully - test passes if no error thrown
-        expect(error).toBeDefined();
-      }
+        expect(error).toBeDefined()
+  }
     });
     
-    consoleSpy.mockRestore();
+    consoleSpy.mockRestore()
   });
 
   it.skip('should prioritize crisis styles', async () => {
@@ -353,17 +353,17 @@ describe('CSS Loading Manager', () => {
     if (!document.getElementById('root')) {
       const root = document.createElement('div');
       root.id = 'root';
-      document.body.appendChild(root);
-    }
+      document.body.appendChild(root)
+  }
     
     const { result } = renderHook(() => useLazyStyles());
     
     await act(async () => {
-      await result.current.loadCrisisStyles();
-    });
+      await result.current.loadCrisisStyles()
+  });
     
     // Crisis styles should be loaded with immediate priority
-    expect(mockCreateElement).toHaveBeenCalled();
+    expect(mockCreateElement).toHaveBeenCalled()
   });
 
   it.skip('should handle mental health journey patterns', () => {
@@ -374,10 +374,10 @@ describe('CSS Loading Manager', () => {
       const { unmount } = renderHook(() => useLazyStyles());
       
       expect(mockCreateElement).toHaveBeenCalled();
-      unmount();
-    });
+      unmount()
+  })
+  })
   });
-});
 
 describe('Integration with Mental Health Platform', () => {
   it.skip('should support crisis intervention workflow', async () => {
@@ -386,10 +386,10 @@ describe('Integration with Mental Health Platform', () => {
     // Simulate crisis detection workflow
     await act(async () => {
       await result.current.loadCrisisStyles();
-      await result.current.loadEmotionalStyles('in-crisis');
-    });
+      await result.current.loadEmotionalStyles('in-crisis')
+  });
     
-    expect(mockCreateElement).toHaveBeenCalled();
+    expect(mockCreateElement).toHaveBeenCalled()
   });
 
   it.skip('should support mood tracking journey', async () => {
@@ -397,10 +397,10 @@ describe('Integration with Mental Health Platform', () => {
     const { result } = renderHook(() => useLazyStyles());
     
     await act(async () => {
-      await result.current.loadEmotionalStyles('maintenance');
-    });
+      await result.current.loadEmotionalStyles('maintenance')
+  });
     
-    expect(mockCreateElement).toHaveBeenCalled();
+    expect(mockCreateElement).toHaveBeenCalled()
   });
 
   it.skip('should handle help-seeking behavior', async () => {
@@ -408,9 +408,9 @@ describe('Integration with Mental Health Platform', () => {
     const { result } = renderHook(() => useLazyStyles());
     
     await act(async () => {
-      await result.current.loadEmotionalStyles('seeking-help');
-    });
-    
-    expect(mockCreateElement).toHaveBeenCalled();
+      await result.current.loadEmotionalStyles('seeking-help')
   });
-});
+    
+    expect(mockCreateElement).toHaveBeenCalled()
+  })
+  });

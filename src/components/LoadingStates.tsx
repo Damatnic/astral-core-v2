@@ -11,8 +11,8 @@ export const LoadingSpinner: React.FC<{
   size?: 'small' | 'medium' | 'large';
   color?: string;
   label?: string;
-  fullScreen?: boolean;
-}> = ({ 
+  fullScreen?: boolean
+  }> = ({ 
   size = 'medium', 
   color = 'var(--color-primary)',
   label = 'Loading...',
@@ -21,7 +21,7 @@ export const LoadingSpinner: React.FC<{
   const { announce } = useAccessibility();
   
   useEffect(() => {
-    announce(label, 'polite');
+    announce(label, 'polite')
   };
   }, [label, announce]);
 
@@ -31,29 +31,25 @@ export const LoadingSpinner: React.FC<{
     large: 'w-12 h-12',
   };
 
-  const spinner = (;
-    <div;
-      className={`loading-spinner ${sizeClasses[size]}`}
+  const spinner = (;;
+    <div className={`loading-spinner ${sizeClasses[size]}`}
       role="status"
       aria-label={label}
     >
-      <svg;
-        className="animate-spin"
+      <svg className="animate-spin"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         style={{ color }}
       >
-        <circle;
-          className="opacity-25"
+        <circle className="opacity-25"
           cx="12"
           cy="12"
           r="10"
           stroke="currentColor"
           strokeWidth="4"
         />
-        <path;
-          className="opacity-75"
+        <path className="opacity-75"
           fill="currentColor"
           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
         />
@@ -70,11 +66,11 @@ export const LoadingSpinner: React.FC<{
           <p className="loading-fullscreen-text">{label}</p>
         </div>
       </div>
-    );
+    )
   }
 
-  return spinner;
-};
+  return spinner
+  };
 
 // Skeleton Loader Component;
 export const SkeletonLoader: React.FC<{
@@ -82,8 +78,8 @@ export const SkeletonLoader: React.FC<{
   height?: string | number;
   variant?: 'text' | 'circular' | 'rectangular';
   animation?: 'pulse' | 'wave' | 'none';
-  className?: string;
-}> = ({
+  className?: string
+  }> = ({
   width = '100%',
   height = '20px',
   variant = 'text',
@@ -103,16 +99,15 @@ export const SkeletonLoader: React.FC<{
   };
 
   return (
-    <div;
-      className={`skeleton-loader ${variantClasses[variant]} ${animationClasses[animation]} ${className}`}
+    <div className={`skeleton-loader ${variantClasses[variant]} ${animationClasses[animation]} ${className}`}
       style={{
         width: typeof width === 'number' ? `${width}px` : width,
         height: typeof height === 'number' ? `${height}px` : height,
       }}
       aria-hidden="true"
     />
-  );
-};
+  )
+  };
 
 // Progress Bar Component;
 export const ProgressBar: React.FC<{
@@ -122,8 +117,8 @@ export const ProgressBar: React.FC<{
   showPercentage?: boolean;
   color?: string;
   size?: 'small' | 'medium' | 'large';
-  indeterminate?: boolean;
-}> = ({
+  indeterminate?: boolean
+  }> = ({
   value,
   max = 100,
   label = 'Loading progress',
@@ -137,8 +132,8 @@ export const ProgressBar: React.FC<{
 
   useEffect(() => {
     if (!indeterminate && percentage % 25 === 0) {
-      announce(`${percentage}% complete`);
-    }
+      announce(`${percentage}% complete`)
+  }
   };
   }, [percentage, indeterminate, announce]);
 
@@ -155,8 +150,7 @@ export const ProgressBar: React.FC<{
          aria-valuemax={max}
          aria-label={label}>
       <div className={`progress-bar ${sizeClasses[size]}`}>
-        <div;
-          className={indeterminate ? 'progress-fill progress-indeterminate' : 'progress-fill'}
+        <div className={indeterminate ? 'progress-fill progress-indeterminate' : 'progress-fill'}
           style={{
             width: indeterminate ? '30%' : `${percentage}%`,
             backgroundColor: color,
@@ -167,8 +161,8 @@ export const ProgressBar: React.FC<{
         <span className="progress-label">{percentage}%</span>
       )}
     </div>
-  );
-};
+  )
+  };
 
 // Loading Button Component;
 export const LoadingButton: React.FC<{
@@ -178,8 +172,8 @@ export const LoadingButton: React.FC<{
   loadingText?: string;
   children: React.ReactNode;
   className?: string;
-  variant?: 'primary' | 'secondary' | 'danger';
-}> = ({
+  variant?: 'primary' | 'secondary' | 'danger'
+  }> = ({
   loading,
   disabled = false,
   onClick,
@@ -205,8 +199,8 @@ export const LoadingButton: React.FC<{
         children
       )}
     </button>
-  );
-};
+  )
+  };
 
 // Content Loader Component;
 export const ContentLoader: React.FC<{
@@ -217,8 +211,8 @@ export const ContentLoader: React.FC<{
   errorMessage?: string;
   onRetry?: () => void;
   children: React.ReactNode;
-  skeleton?: React.ReactNode;
-}> = ({
+  skeleton?: React.ReactNode
+  }> = ({
   loading,
   error,
   empty = false,
@@ -232,15 +226,15 @@ export const ContentLoader: React.FC<{
 
   useEffect(() => {
     if (error) {
-      announce(errorMessage, 'assertive');;
+      announce(errorMessage, 'assertive')
   } else if (empty) {
-      announce(emptyMessage, 'polite');
-    }
+      announce(emptyMessage, 'polite')
+  }
   };
   }, [error, empty, errorMessage, emptyMessage, announce]);
 
   if (loading) {
-    return skeleton || <LoadingSpinner />;
+    return skeleton || <LoadingSpinner />
   }
 
   if (error) {
@@ -259,7 +253,7 @@ export const ContentLoader: React.FC<{
           </button>
         )}
       </div>
-    );
+    )
   }
 
   if (empty) {
@@ -267,36 +261,36 @@ export const ContentLoader: React.FC<{
       <div className="content-empty" role="status">
         <p className="content-empty-message">{emptyMessage}</p>
       </div>
-    );
+    )
   }
 
-  return <>{children}</>;
-};
+  return <>{children}</>
+  };
 
 // Lazy Load Wrapper Component;
 export const LazyLoadWrapper: React.FC<{
   children: React.ReactNode;
   placeholder?: React.ReactNode;
-  delay?: number;
-}> = ({ children, placeholder, delay = 200 }) => {
+  delay?: number
+  }> = ({ children, placeholder, delay = 200 }) => {
   const [showContent, setShowContent] = useState(delay === 0);
 
   useEffect(() => {
     if (delay > 0) {
       const timer = setTimeout(() => {
-        setShowContent(true);
-      }, delay);
-      return () => clearTimeout(timer);
-    }
+        setShowContent(true)
+  }, delay);
+      return () => clearTimeout(timer)
+  }
   };
   }, [delay]);
 
   if (!showContent) {
-    return <>{placeholder || <LoadingSpinner />}</>;
+    return <>{placeholder || <LoadingSpinner />}</>
   }
 
-  return <>{children}</>;
-};
+  return <>{children}</>
+  };
 
 // Infinite Scroll Loader Component;
 export const InfiniteScrollLoader: React.FC<{
@@ -304,8 +298,8 @@ export const InfiniteScrollLoader: React.FC<{
   hasMore: boolean;
   onLoadMore: () => void;
   threshold?: number;
-  children: React.ReactNode;
-}> = ({
+  children: React.ReactNode
+  }> = ({
   loading,
   hasMore,
   onLoadMore,
@@ -317,11 +311,11 @@ export const InfiniteScrollLoader: React.FC<{
   useEffect(() => {
     if (!loaderRef || !hasMore || loading) return;
 
-    const observer = new IntersectionObserver(;
+    const observer = new IntersectionObserver(;;
       (entries) => {
         if (entries[0].isIntersecting) {
-          onLoadMore();
-        }
+          onLoadMore()
+  }
       },
       { rootMargin: `${threshold}px` }
     );
@@ -330,8 +324,8 @@ export const InfiniteScrollLoader: React.FC<{
 
     return () => {
       if (loaderRef) {
-        observer.unobserve(loaderRef);
-      }
+        observer.unobserve(loaderRef)
+  }
     };
   }, [loaderRef, hasMore, loading, onLoadMore, threshold]);
 
@@ -344,8 +338,8 @@ export const InfiniteScrollLoader: React.FC<{
         </div>
       )}
     </>
-  );
-};
+  )
+  };
 
 // Async Data Hook;
 export const useAsyncData = <T,>(
@@ -361,16 +355,17 @@ export const useAsyncData = <T,>(
     setError(null);
     try {
       const result = await asyncFunction();
-      setData(result);
-    } catch (err) {
-      setError(err as Error);
-    } finally {
-      setLoading(false);
-    }
+      setData(result)
+  } catch (err) {
+      setError(err as Error)
+  } finally {
+      setLoading(false)
+  }
   }, dependencies);
 
   useEffect(() => {
-    execute();
+    execute()
+  };
   };
   };
   }, [execute]);
@@ -380,8 +375,8 @@ export const useAsyncData = <T,>(
 // Loading Dots Component;
 export const LoadingDots: React.FC<{
   color?: string;
-  size?: 'small' | 'medium' | 'large';
-}> = ({ color = 'var(--color-primary)', size = 'medium' }) => {
+  size?: 'small' | 'medium' | 'large'
+  }> = ({ color = 'var(--color-primary)', size = 'medium' }) => {
   const sizeClasses = {
     small: 'loading-dots--small',
     medium: 'loading-dots--medium',
@@ -394,18 +389,18 @@ export const LoadingDots: React.FC<{
       <span style={{ backgroundColor: color }} />
       <span style={{ backgroundColor: color }} />
     </div>
-  );
-};
+  )
+  };
 
 // Typing Indicator Component;
 export const TypingIndicator: React.FC<{
-  user?: string;
-}> = ({ user }) => {
+  user?: string
+  }> = ({ user }) => {
   const { announce } = useAccessibility();
   const message = user ? `${user} is typing` : 'Someone is typing';
 
   useEffect(() => {
-    announce(message, 'polite');
+    announce(message, 'polite')
   };
   }, [message, announce]);
 
@@ -416,8 +411,8 @@ export const TypingIndicator: React.FC<{
       <span className="typing-dot" />
       <span className="sr-only">{message}</span>
     </div>
-  );
-};
+  )
+  };
 
 export default {
   LoadingSpinner,

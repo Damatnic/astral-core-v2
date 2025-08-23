@@ -14,17 +14,17 @@ export interface MLCrisisAnalysisResult {
   psychologicalAssessment?: {
     depressionIndicators: number;
     anxietyIndicators: number;
-    suicidalIdeation: number;
+    suicidalIdeation: number
   };
   behavioralPattern?: {
     communicationStyle: string;
     helpSeekingBehavior: string;
-    escalationTriggers: string[];
+    escalationTriggers: string[]
   };
   biasAdjustments?: Array<{
     type: string;
     description: string;
-    severity: number;
+    severity: number
   }>;
   // Legacy properties for backward compatibility
   hasCrisisIndicators?: boolean;
@@ -33,8 +33,8 @@ export interface MLCrisisAnalysisResult {
     interventionUrgency: number;
     recommendedInterventions: Array<{
       priority: number;
-      description: string;
-    }>;
+      description: string
+  }>
   };
   emotionalState?: any;
   mlConfidence?: number; // Alias for confidence
@@ -43,7 +43,7 @@ export interface MLCrisisAnalysisResult {
 class EnhancedAICrisisDetectionService {
   async analyzeCrisisWithML(text: string, context?: any): Promise<MLCrisisAnalysisResult> {
     // Simple keyword-based crisis detection for browser compatibility;
-    const crisisKeywords = [;
+    const crisisKeywords = [;;
       'suicide', 'suicidal', 'kill myself', 'end it all', 'can\'t go on', 'hopeless', 'worthless',
       'want to die', 'better off dead', 'no reason to live', 'end my life', 'overdose',
       'cutting', 'self-harm', 'hurt myself', 'hurting myself', 'drunk', 'drinking heavily',
@@ -67,13 +67,13 @@ class EnhancedAICrisisDetectionService {
       psychologicalAssessment: {
         depressionIndicators: crisisLevel * 0.8,
         anxietyIndicators: crisisLevel * 0.6,
-        suicidalIdeation: crisisLevel * 0.9;
-      },
+        suicidalIdeation: crisisLevel * 0.9
+  },
       behavioralPattern: {
         communicationStyle: crisisLevel > 0.5 ? 'distressed' : 'normal',
         helpSeekingBehavior: crisisLevel > 0.3 ? 'active' : 'passive',
-        escalationTriggers: matchedKeywords;
-      },
+        escalationTriggers: matchedKeywords
+  },
       realTimeRisk: {
         immediateRisk: crisisLevel * 100, // Convert to 0-100 scale
         interventionUrgency: crisisLevel * 10,
@@ -90,16 +90,16 @@ class EnhancedAICrisisDetectionService {
         valence: -crisisLevel,
         arousal: crisisLevel * 0.8,
         dominance: -crisisLevel * 0.5,
-        timestamp: Date.now();
-      }
+        timestamp: Date.now()
+  }
     }
 
   async detectCrisis(text: string): Promise<{ isCrisis: boolean; severity: number }> {
     const analysis = await this.analyzeCrisisWithML(text);
     return {
       isCrisis: analysis.crisisLevel > 0.3,
-      severity: analysis.crisisLevel;
-    }
+      severity: analysis.crisisLevel
+  }
 }
 
 export const enhancedAICrisisDetectionService = new EnhancedAICrisisDetectionService();

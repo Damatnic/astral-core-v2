@@ -14,8 +14,8 @@ export const DonationView: React.FC = () => {
 
     const handleAmountSelect = (amount: number) => {
         setSelectedAmount(amount);
-        setCustomAmount('');
-    };
+        setCustomAmount('')
+  };
 
     const handleCustomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -23,8 +23,8 @@ export const DonationView: React.FC = () => {
             setCustomAmount(value);
             const cents = Math.round(parseFloat(value) * 100);
             if (!isNaN(cents) && cents > 0) {
-                setSelectedAmount(cents);
-            }
+                setSelectedAmount(cents)
+  }
         }
     };
     
@@ -38,10 +38,10 @@ export const DonationView: React.FC = () => {
         } catch (error) {
             console.error(error);
             const errorMessage = isError(error) ? error.message : 'An error occurred';
-            alert(`Donation failed: ${errorMessage}`);
-        } finally {
-            setIsProcessing(false);
-        }
+            alert(`Donation failed: ${errorMessage}`)
+  } finally {
+            setIsProcessing(false)
+  }
     };
 
     return (
@@ -74,8 +74,7 @@ export const DonationView: React.FC = () => {
                 <div className="auth-separator">or enter a custom amount</div>
 
                 <div className="form-group" style={{marginTop: '1.5rem'}}>
-                    <input;
-                        type="number";
+                    <input type="number";
                         className="form-control"
                         placeholder="e.g., 15.00"
                         value={customAmount}
@@ -98,8 +97,8 @@ export const DonationView: React.FC = () => {
                 </p>
             </Card>
         </>
-    );
-};
+    )
+  };
 
 
 export default DonationView;

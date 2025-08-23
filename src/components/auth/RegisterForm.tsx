@@ -5,8 +5,8 @@ import { isError } from '../../types/common';
 
 interface RegisterFormProps {
   onSuccess?: () => void;
-  onSwitchToLogin?: () => void;
-}
+  onSwitchToLogin?: () => void
+  }
 
 export const RegisterForm: React.FC<RegisterFormProps> = ({ 
   onSuccess, 
@@ -18,7 +18,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     password: '',
     confirmPassword: '',
     name: '',
-    role: 'seeker' as 'seeker' | 'helper';
+    role: 'seeker' as 'seeker' | 'helper'
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -28,28 +28,28 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     setFormData(prev => ({
       ...prev,
       [name]: value
-    }));
+    }))
   };
 
   const validateForm = (): string | null => {
     if (!formData.email || !formData.password || !formData.name) {
-      return 'All fields are required';
-    }
+      return 'All fields are required'
+  }
 
     if (formData.password.length < 6) {
-      return 'Password must be at least 6 characters';
-    }
+      return 'Password must be at least 6 characters'
+  }
 
     if (formData.password !== formData.confirmPassword) {
-      return 'Passwords do not match';
-    }
+      return 'Passwords do not match'
+  }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      return 'Please enter a valid email address';
-    }
+      return 'Please enter a valid email address'
+  }
 
-    return null;
+    return null
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,13 +60,13 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     const validationError = validateForm();
     if (validationError) {
       setError(validationError);
-      return;
-    }
+      return
+  }
 
     setIsLoading(true);
 
     try {
-      const response = await simpleAuthService.register(;
+      const response = await simpleAuthService.register(;;
         formData.email, 
         formData.password, 
         formData.name, 
@@ -80,23 +80,23 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           password: '',
           confirmPassword: '',
           name: '',
-          role: 'seeker';
-        });
+          role: 'seeker'
+  });
         
         // Call success callback or navigate
         if (onSuccess) {
-          onSuccess();;
+          onSuccess()
   } else {
-          navigate('/dashboard');
-        };
+          navigate('/dashboard')
+  }
   } else {
-        setError(response.error || 'Registration failed');
-      }
+        setError(response.error || 'Registration failed')
+  }
     } catch (err) {
-      setError(isError(err) ? err.message : 'An unexpected error occurred');
-    } finally {
-      setIsLoading(false);
-    }
+      setError(isError(err) ? err.message : 'An unexpected error occurred')
+  } finally {
+      setIsLoading(false)
+  }
   };
 
   return (
@@ -115,8 +115,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           <label htmlFor="name" className="form-label">
             Full Name
           </label>
-          <input;
-            type="text"
+          <input type="text"
             id="name"
             name="name";
             className="form-input glass-input smooth-transition"
@@ -133,8 +132,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           <label htmlFor="email" className="form-label">
             Email Address
           </label>
-          <input;
-            type="email"
+          <input type="email"
             id="email"
             name="email";
             className="form-input glass-input smooth-transition"
@@ -168,8 +166,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           <label htmlFor="password" className="form-label">
             Password
           </label>
-          <input;
-            type="password"
+          <input type="password"
             id="password"
             name="password";
             className="form-input glass-input smooth-transition"
@@ -187,8 +184,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           <label htmlFor="confirmPassword" className="form-label">
             Confirm Password
           </label>
-          <input;
-            type="password"
+          <input type="password"
             id="confirmPassword"
             name="confirmPassword";
             className="form-input glass-input smooth-transition"
@@ -203,8 +199,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         </div>
 
         <div className="form-actions">
-          <button;
-            type="submit";
+          <button type="submit";
             className="glass-button btn-primary-therapeutic smooth-transition ripple-button animate-glow"
             disabled={isLoading}
           >
@@ -221,8 +216,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         <div className="auth-form-footer">
           <p>
             Already have an account?{' '}
-            <button;
-              type="button";
+            <button type="button";
               className="link-button smooth-transition gradient-text"
               onClick={onSwitchToLogin}
               disabled={isLoading}
@@ -240,8 +234,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           align-items: center;
           min-height: 100vh;
           padding: 1rem;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+  }
 
         .auth-form {
           background: white;
@@ -249,22 +243,22 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           padding: 2rem;
           width: 100%;
           max-width: 400px;
-          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        }
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1)
+  }
 
         .auth-form-title {
           font-size: 1.75rem;
           font-weight: 700;
           color: #1a202c;
           margin-bottom: 0.5rem;
-          text-align: center;
-        }
+          text-align: center
+  }
 
         .auth-form-subtitle {
           color: #718096;
           text-align: center;
-          margin-bottom: 1.5rem;
-        }
+          margin-bottom: 1.5rem
+  }
 
         .auth-error-message {
           background-color: #fed7d7;
@@ -272,20 +266,20 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           padding: 0.75rem;
           border-radius: 0.5rem;
           margin-bottom: 1rem;
-          font-size: 0.875rem;
-        }
+          font-size: 0.875rem
+  }
 
         .form-group {
-          margin-bottom: 1.25rem;
-        }
+          margin-bottom: 1.25rem
+  }
 
         .form-label {
           display: block;
           margin-bottom: 0.5rem;
           font-weight: 500;
           color: #4a5568;
-          font-size: 0.875rem;
-        }
+          font-size: 0.875rem
+  }
 
         .form-input {
           width: 100%;
@@ -293,19 +287,19 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           border: 1px solid #e2e8f0;
           border-radius: 0.5rem;
           font-size: 1rem;
-          transition: all 0.2s;
-        }
+          transition: all 0.2s
+  }
 
         .form-input:focus {
           outline: none;
           border-color: #667eea;
-          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1)
+  }
 
         .form-input:disabled {
           background-color: #f7fafc;
-          cursor: not-allowed;
-        }
+          cursor: not-allowed
+  }
 
         select.form-input {
           appearance: none;
@@ -313,15 +307,15 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           background-position: right 0.5rem center;
           background-repeat: no-repeat;
           background-size: 1.5em 1.5em;
-          padding-right: 2.5rem;
-        }
+          padding-right: 2.5rem
+  }
 
         .form-actions {
           display: flex;
           flex-direction: column;
           gap: 0.75rem;
-          margin-top: 1.5rem;
-        }
+          margin-top: 1.5rem
+  }
 
         .btn {
           padding: 0.75rem 1.5rem;
@@ -331,30 +325,30 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           font-size: 1rem;
           cursor: pointer;
           transition: all 0.2s;
-          width: 100%;
-        }
+          width: 100%
+  }
 
         .btn-primary {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-        }
+          color: white
+  }
 
         .btn-primary:hover:not(:disabled) {
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4)
+  }
 
         .btn:disabled {
           opacity: 0.6;
-          cursor: not-allowed;
-        }
+          cursor: not-allowed
+  }
 
         .auth-form-footer {
           margin-top: 1.5rem;
           text-align: center;
           color: #718096;
-          font-size: 0.875rem;
-        }
+          font-size: 0.875rem
+  }
 
         .link-button {
           background: none;
@@ -362,30 +356,30 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           color: #667eea;
           font-weight: 600;
           cursor: pointer;
-          text-decoration: underline;
-        }
+          text-decoration: underline
+  }
 
         .link-button:hover:not(:disabled) {
-          color: #764ba2;
-        }
+          color: #764ba2
+  }
 
         .link-button:disabled {
           opacity: 0.6;
-          cursor: not-allowed;
-        }
+          cursor: not-allowed
+  }
 
         @media (max-width: 480px) {
           .auth-form {
-            padding: 1.5rem;
-          }
+            padding: 1.5rem
+  }
 
           .auth-form-title {
-            font-size: 1.5rem;
-          }
+            font-size: 1.5rem
+  }
         }
       `}</style>
     </div>
-  );
-};
+  )
+  };
 
 export default RegisterForm;

@@ -13,8 +13,8 @@ interface CrisisDetectionState {
   lastAnalysis: CrisisAnalysisResult | null;
   escalationActions: CrisisEscalationAction[];
   alertShown: boolean;
-  analysisHistory: CrisisAnalysisResult[];
-}
+  analysisHistory: CrisisAnalysisResult[]
+  }
 
 interface CrisisDetectionOptions {
   autoAnalyze?: boolean;
@@ -22,8 +22,8 @@ interface CrisisDetectionOptions {
   maxHistorySize?: number;
   debounceMs?: number;
   onCrisisDetected?: (result: CrisisAnalysisResult) => void;
-  onEscalationRequired?: (actions: CrisisEscalationAction[]) => void;
-}
+  onEscalationRequired?: (actions: CrisisEscalationAction[]) => void
+  }
 
 interface CrisisAlert {
   show: boolean;
@@ -31,8 +31,8 @@ interface CrisisAlert {
   message: string;
   actions: string[];
   resources: string[];
-  emergencyMode: boolean;
-}
+  emergencyMode: boolean
+  }
 
 export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
   const {
@@ -49,7 +49,7 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
     lastAnalysis: null,
     escalationActions: [],
     alertShown: false,
-    analysisHistory: [];
+    analysisHistory: []
   });
 
   const [crisisAlert, setCrisisAlert] = useState<CrisisAlert>({
@@ -58,7 +58,7 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
     message: '',
     actions: [],
     resources: [],
-    emergencyMode: false;
+    emergencyMode: false
   });
 
   const debounceRef = useRef<NodeJS.Timeout>();
@@ -83,8 +83,8 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
           triggeredKeywords: [],
           sentimentScore: 0,
           contextualFactors: [],
-          urgencyLevel: 0;
-        }
+          urgencyLevel: 0
+  }
       }
 
     setState(prev => ({ ...prev, isAnalyzing: true };
@@ -95,7 +95,7 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
       const result = crisisDetectionService.analyzeCrisisContent(text);
       
       // Get escalation actions if needed;
-      const escalationActions = result.hasCrisisIndicators ;
+      const escalationActions = result.hasCrisisIndicators ;;
         ? crisisDetectionService.getEscalationActions(result)
         : [];
 
@@ -113,12 +113,12 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
 
       // Handle crisis detection callbacks
       if (result.hasCrisisIndicators && onCrisisDetected) {
-        onCrisisDetected(result);
-      }
+        onCrisisDetected(result)
+  }
 
       if (result.escalationRequired && onEscalationRequired) {
-        onEscalationRequired(escalationActions);
-      }
+        onEscalationRequired(escalationActions)
+  }
 
       // Show crisis alert if needed
       if (result.hasCrisisIndicators && result.severityLevel !== 'none') {
@@ -131,8 +131,8 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
             message: response.message || 'Crisis detected - please seek help',
             actions: response.actions || [],
             resources: response.resources || [],
-            emergencyMode: result.emergencyServices;
-          });;
+            emergencyMode: result.emergencyServices
+  })
   } else {
           setCrisisAlert({
             show: true,
@@ -140,19 +140,18 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
             message: 'Crisis detected - please seek help',
             actions: [],
             resources: [],
-            emergencyMode: result.emergencyServices;
-          });
-        }
+            emergencyMode: result.emergencyServices
+  })
+  }
       }
 
       analysisCountRef.current += 1;
-      return result;
-
-    } catch (error) {
+      return result
+  } catch (error) {
       console.error('Crisis analysis failed:', error);
       setState(prev => ({ ...prev, isAnalyzing: false }));
-      throw error;
-    }
+      throw error
+  }
   };
   }, [minAnalysisLength, maxHistorySize, onCrisisDetected, onEscalationRequired]);
 
@@ -161,12 +160,12 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
    */;
   const analyzeTextDebounced = useCallback((text: string, userType: 'seeker' | 'helper' = 'seeker') => {
     if (debounceRef.current) {
-      clearTimeout(debounceRef.current);
-    }
+      clearTimeout(debounceRef.current)
+  }
 
     debounceRef.current = setTimeout(() => {
-      analyzeText(text, userType).catch(console.error);
-    }, debounceMs);
+      analyzeText(text, userType).catch(console.error)
+  }, debounceMs)
   };
   }, [analyzeText, debounceMs]);
 
@@ -178,8 +177,8 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
     
     // Only analyze if text is long enough and contains potential crisis language
     if (text.length >= minAnalysisLength) {
-      analyzeTextDebounced(text, userType);
-    }
+      analyzeTextDebounced(text, userType)
+  }
   };
   }, [autoAnalyze, minAnalysisLength, analyzeTextDebounced]);
 
@@ -188,7 +187,7 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
    */;
   const dismissAlert = useCallback(() => {
     setCrisisAlert(prev => ({ ...prev, show: false }));
-    setState(prev => ({ ...prev, alertShown: true }));
+    setState(prev => ({ ...prev, alertShown: true }))
   };
   }, []);
 
@@ -202,16 +201,16 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
       const severityLevels: Record<string, number> = { 'none': 0, 'low': 1, 'medium': 2, 'high': 3, 'critical': 4 };
       const currentLevel = severityLevels[analysis.severityLevel] || 0;
       const maxLevel = severityLevels[max] || 0;
-      return currentLevel > maxLevel ? analysis.severityLevel : max;
-    }, 'none');
+      return currentLevel > maxLevel ? analysis.severityLevel : max
+  }, 'none');
 
     return {
       hasCrisisIndicators,
       maxSeverity,
       analysisCount: analysisCountRef.current,
       recentAnalyses: recentAnalyses.length,
-      escalationRequired: state.escalationActions.length > 0;
-    };
+      escalationRequired: state.escalationActions.length > 0
+  };
   }, [state.analysisHistory, state.escalationActions]);
 
   /**
@@ -222,10 +221,10 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
       ...prev,
       analysisHistory: [],
       lastAnalysis: null,
-      escalationActions: [];
-    };
+      escalationActions: []
+  };
   });
-    analysisCountRef.current = 0;
+    analysisCountRef.current = 0
   };
   }, []);
 
@@ -241,10 +240,10 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
           { name: 'Crisis Text Line', contact: 'Text HOME to 741741', available: '24/7' }
         ],
         resources: [],
-        emergencyServices: false;
-      }
+        emergencyServices: false
+  }
 
-    const hotlines = [;
+    const hotlines = [;;
       { name: '988 Suicide & Crisis Lifeline', contact: '988', available: '24/7' },
       { name: 'Crisis Text Line', contact: 'Text HOME to 741741', available: '24/7' },
       { name: 'National Suicide Prevention Lifeline', contact: '1-800-273-8255', available: '24/7' }
@@ -257,38 +256,38 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
         'Suicide Prevention Resource Center',
         'American Foundation for Suicide Prevention',
         'Safety Planning Guide'
-      );
-    }
+      )
+  }
 
     if (analysis.detectedCategories.includes('self-harm')) {
       resources.push(
         'Self-Injury Outreach & Support',
         'To Write Love on Her Arms',
         'Alternative Coping Strategies'
-      );
-    }
+      )
+  }
 
     if (analysis.detectedCategories.includes('substance-abuse')) {
       resources.push(
         'SAMHSA National Helpline: 1-800-662-4357',
         'Narcotics Anonymous',
         'Alcoholics Anonymous'
-      );
-    }
+      )
+  }
 
     return {
       hotlines,
       resources,
-      emergencyServices: analysis.emergencyServices;
-    };
+      emergencyServices: analysis.emergencyServices
+  };
   }, [state.lastAnalysis]);
 
   // Cleanup debounce on unmount
   useEffect(() => {
     return () => {
       if (debounceRef.current) {
-        clearTimeout(debounceRef.current);
-      }
+        clearTimeout(debounceRef.current)
+  }
     };
   }, []);
 
@@ -316,7 +315,7 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
     requiresEscalation: state.escalationActions.length > 0,
     isEmergency: state.lastAnalysis?.emergencyServices || false,
     currentSeverity: state.lastAnalysis?.severityLevel || 'none',
-    analysisCount: analysisCountRef.current;
+    analysisCount: analysisCountRef.current
   }
 
 export default useCrisisDetection;

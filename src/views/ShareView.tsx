@@ -16,8 +16,8 @@ import { AIAssistanceIndicator } from '../components/AIAssistanceIndicator';
 
 export const ShareView: React.FC<{
     onPostSubmit: (dilemma: Omit<Dilemma, 'id' | 'userToken' | 'supportCount' | 'isSupported' | 'isReported' | 'reportReason' | 'status' | 'assignedHelperId' | 'resolved_by_seeker' | 'requestedHelperId' | 'summary' | 'summaryLoading' | 'moderation' | 'aiMatchReason'>) => void;
-    userToken: string | null;
-}> = ({ onPostSubmit, userToken }) => {
+    userToken: string | null
+  }> = ({ onPostSubmit, userToken }) => {
     // Component State;
     const [viewMode, setViewMode] = useState<'chat' | 'form'>('chat');
     
@@ -48,15 +48,15 @@ export const ShareView: React.FC<{
              setChatMessages([
                 { id: crypto.randomUUID(), sender: 'ai', text: i18n.t('ai_welcome'), timestamp: new Date().toISOString() }
             ]);
-            setIsAiTyping(false);
-        }, 1000);
-    };
+            setIsAiTyping(false)
+  }, 1000)
+  };
   }, []);
 
     // Scroll to bottom of chat
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    };
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  };
   }, [chatMessages, isAiTyping]);
 
     const handleSendMessage = async () => {
@@ -66,8 +66,8 @@ export const ShareView: React.FC<{
             id: crypto.randomUUID(),
             sender: 'user',
             text: userInput,
-            timestamp: new Date().toISOString();
-        };
+            timestamp: new Date().toISOString()
+  };
         
         const updatedMessages = [...chatMessages, newUserMessage];
         setChatMessages(updatedMessages);
@@ -82,21 +82,21 @@ export const ShareView: React.FC<{
                 id: crypto.randomUUID(),
                 sender: 'ai',
                 text: aiResponse.response,
-                timestamp: new Date().toISOString();
-            };
-            setChatMessages(prev => [...prev, newAiMessage]);
-        } catch (e) {
+                timestamp: new Date().toISOString()
+  };
+            setChatMessages(prev => [...prev, newAiMessage])
+  } catch (e) {
             console.error("AI chat error:", e);
             const errorMessage: AIChatMessage = {
                 id: crypto.randomUUID(),
                 sender: 'ai',
                 text: "I'm having a little trouble connecting. Please try again in a moment.",
-                timestamp: new Date().toISOString();
-            };
-            setChatMessages(prev => [...prev, errorMessage]);
-        } finally {
-            setIsAiTyping(false);
-        }
+                timestamp: new Date().toISOString()
+  };
+            setChatMessages(prev => [...prev, errorMessage])
+  } finally {
+            setIsAiTyping(false)
+  }
     };
 
     const handleDraftPost = async () => {
@@ -107,13 +107,13 @@ export const ShareView: React.FC<{
             setPostContent(draftedContent);
             setPostCategory(draftedCategory);
             setWasAIDrafted(true);
-            setViewMode('form');
-        } catch (e) {
+            setViewMode('form')
+  } catch (e) {
              console.error("AI draft error:", e);
-             addToast("Sorry, I couldn't draft a post right now. Please try again.", 'error');
-        } finally {
-            setIsDrafting(false);
-        }
+             addToast("Sorry, I couldn't draft a post right now. Please try again.", 'error')
+  } finally {
+            setIsDrafting(false)
+  }
     };
 
     // Check for crisis content whenever post content changes
@@ -122,8 +122,8 @@ export const ShareView: React.FC<{
             const crisisCheck = detectCrisis(postContent);
             if (crisisCheck.isCrisis && crisisCheck.severity !== 'low') {
                 setShowCrisisAlert(true);
-                setCrisisSeverity(crisisCheck.severity);
-            }
+                setCrisisSeverity(crisisCheck.severity)
+  }
         }
     };
   }, [postContent]);
@@ -155,15 +155,15 @@ export const ShareView: React.FC<{
              setChatMessages([
                 { id: crypto.randomUUID(), sender: 'ai', text: "Your post has been shared! If you'd like to draft another one, just start chatting.", timestamp: new Date().toISOString() }
              ]);
-             setIsSubmitting(false);
-        }, 500);
-    };
+             setIsSubmitting(false)
+  }, 500)
+  };
 
     const getCharCounterClass = () => {
         if (postContent.length > MAX_CONTENT_LENGTH) return 'error';
         if (postContent.length > MAX_CONTENT_LENGTH - 100) return 'warning';
-        return '';
-    };
+        return ''
+  };
 
     if (viewMode === 'chat') {
         return (
@@ -194,8 +194,7 @@ export const ShareView: React.FC<{
                 </div>
                 <div className="chat-composer" style={{flexShrink: 0}}>
                     <AppButton onClick={handleDraftPost} variant="secondary" isLoading={isDrafting} disabled={chatMessages.length <= 1} className="draft-btn">{i18n.t('draft_post_from_chat')}</AppButton>
-                    <AppInput;
-                        type="text"
+                    <AppInput type="text"
                         placeholder={i18n.t('chat_with_ai_here')}
                         value={userInput}
                         onChange={(e) => setUserInput(e.target.value)}
@@ -233,8 +232,7 @@ export const ShareView: React.FC<{
             </div>
             <Card>
                 {wasAIDrafted && (
-                    <AIAssistanceIndicator; 
-                        variant="default" 
+                    <AIAssistanceIndicator variant="default" 
                         message="AI-Drafted Content";
                         className="mb-3"
                     />
@@ -262,8 +260,7 @@ export const ShareView: React.FC<{
                     />
                     <div className="form-actions">
                         <AppButton onClick={() => setViewMode('chat')} variant="ghost" disabled={isSubmitting}>{i18n.t('back_to_chat')}</AppButton>
-                        <AppButton;
-                            type="submit"
+                        <AppButton type="submit"
                             onClick={handleSubmit}
                             disabled={!postContent.trim() || isSubmitting || postContent.length > MAX_CONTENT_LENGTH}
                             isLoading={isSubmitting}
@@ -274,7 +271,7 @@ export const ShareView: React.FC<{
                 </form>
             </Card>
         </>
-    );
-};
+    )
+  };
 
 export default ShareView;

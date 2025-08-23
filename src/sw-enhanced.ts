@@ -37,10 +37,10 @@ self.addEventListener('activate', (event) => {
       // Take control of all pages
       await self.clients.claim();
       
-      console.log('[Enhanced SW] Initialization complete');
-    })()
-  );
-});
+      console.log('[Enhanced SW] Initialization complete')
+  })()
+  )
+  });
 
 // Enhanced fetch handling with intelligent strategies
 self.addEventListener('fetch', (event) => {
@@ -48,7 +48,7 @@ self.addEventListener('fetch', (event) => {
   
   // Skip non-GET requests and chrome-extension requests
   if (request.method !== 'GET' || request.url.startsWith('chrome-extension://')) {
-    return;
+    return
   }
 
   event.respondWith(
@@ -57,25 +57,25 @@ self.addEventListener('fetch', (event) => {
         // Try intelligent cache coordinator first;
         const coordinatorResponse = await cacheCoordinator.handleFetch(request);
         if (coordinatorResponse) {
-          return coordinatorResponse;
-        }
+          return coordinatorResponse
+  }
         
         // Fallback to specialized handlers
-        return await handleSpecializedFetch(request);
-      } catch (error) {
+        return await handleSpecializedFetch(request)
+  } catch (error) {
         console.error('[Enhanced SW] Fetch handling failed:', error);
         
         // Ultimate fallback to network
         try {
-          return await fetch(request);
-        } catch (networkError) {
+          return await fetch(request)
+  } catch (networkError) {
           console.error('[Enhanced SW] Network fallback failed:', networkError);
-          return await handleOfflineFallback(request);
-        }
+          return await handleOfflineFallback(request)
+  }
       }
     })()
-  );
-});
+  )
+  });
 
 /**
  * Handle specialized fetch scenarios not covered by coordinator
@@ -85,27 +85,27 @@ async function handleSpecializedFetch(request: Request): Promise<Response> {
   
   // Crisis resources - highest priority, never timeout
   if (isCrisisResource(url)) {
-    return handleCrisisResourceFetch(request);
+    return handleCrisisResourceFetch(request)
   }
   
   // API endpoints with background sync
   if (isApiEndpoint(url)) {
-    return handleApiEndpointFetch(request);
+    return handleApiEndpointFetch(request)
   }
   
   // Large video content with smart caching
   if (isVideoContent(url)) {
-    return handleVideoContentFetch(request);
+    return handleVideoContentFetch(request)
   }
   
   // Navigation requests
   if (request.mode === 'navigate') {
-    return handleNavigationFetch(request);
+    return handleNavigationFetch(request)
   }
   
   // Default to network
-  return fetch(request);
-}
+  return fetch(request)
+  }
 
 /**
  * Handle crisis resource fetching with maximum reliability
@@ -117,7 +117,7 @@ async function handleCrisisResourceFetch(request: Request): Promise<Response> {
   const cachedResponse = await crisisCache.match(request);
   if (cachedResponse) {
     console.log('[Enhanced SW] Serving crisis resource from cache:', request.url);
-    return cachedResponse;
+    return cachedResponse
   }
   
   try {
@@ -126,26 +126,26 @@ async function handleCrisisResourceFetch(request: Request): Promise<Response> {
     const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 seconds;
     
     const networkResponse = await fetch(request, {
-      signal: controller.signal;
-    });
+      signal: controller.signal
+  });
     
     clearTimeout(timeoutId);
     
     if (networkResponse.ok) {
       // Always cache crisis resources regardless of size
       await crisisCache.put(request, networkResponse.clone());
-      console.log('[Enhanced SW] Cached new crisis resource:', request.url);
-    }
+      console.log('[Enhanced SW] Cached new crisis resource:', request.url)
+  }
     
-    return networkResponse;
+    return networkResponse
   } catch (error) {
     console.error('[Enhanced SW] Crisis resource fetch failed:', error);
     
     // Return emergency offline crisis page;
     const offlineResponse = await crisisCache.match('/offline-crisis.html');
     if (offlineResponse) {
-      return offlineResponse;
-    }
+      return offlineResponse
+  }
     
     // Create minimal crisis response if nothing else available
     return new Response(
@@ -153,13 +153,13 @@ async function handleCrisisResourceFetch(request: Request): Promise<Response> {
         emergency: '988',
         text: '988',
         international: '+1-741-741-741',
-        message: 'You are not alone. Help is available.';
-      }),
+        message: 'You are not alone. Help is available.'
+  }),
       {
         headers: { 'Content-Type': 'application/json' },
-        status: 200;
-      }
-    );
+        status: 200
+  }
+    )
   }
 }
 
@@ -171,22 +171,22 @@ async function handleApiEndpointFetch(request: Request): Promise<Response> {
   const url = new URL(request.url);
   
   // Check if this is a critical API endpoint;
-  const isCriticalApi = url.pathname.includes('/crisis') || ;
+  const isCriticalApi = url.pathname.includes('/crisis') || ;;
                        url.pathname.includes('/emergency') ||
                        url.pathname.includes('/safety-plan');
   
   try {
     // Network first for fresh data;
     const networkResponse = await fetch(request, {
-      signal: AbortSignal.timeout(isCriticalApi ? 20000 : 10000);
-    });
+      signal: AbortSignal.timeout(isCriticalApi ? 20000 : 10000)
+  });
     
     if (networkResponse.ok) {
       // Cache successful responses
-      await apiCache.put(request, networkResponse.clone());
-    }
+      await apiCache.put(request, networkResponse.clone())
+  }
     
-    return networkResponse;
+    return networkResponse
   } catch (error) {
     console.warn('[Enhanced SW] API network failed, trying cache:', error);
     
@@ -194,8 +194,8 @@ async function handleApiEndpointFetch(request: Request): Promise<Response> {
     const cachedResponse = await apiCache.match(request);
     if (cachedResponse) {
       console.log('[Enhanced SW] Serving API response from cache:', request.url);
-      return cachedResponse;
-    }
+      return cachedResponse
+  }
     
     // For POST/PUT requests, queue for background sync
     if (request.method !== 'GET') {
@@ -204,16 +204,16 @@ async function handleApiEndpointFetch(request: Request): Promise<Response> {
       return new Response(
         JSON.stringify({ 
           queued: true, 
-          message: 'Request queued for when connection is restored' ;
-        }),
+          message: 'Request queued for when connection is restored'
+  }),
         {
           headers: { 'Content-Type': 'application/json' },
-          status: 202;
-        }
-      );
-    }
+          status: 202
+  }
+      )
+  }
     
-    throw error;
+    throw error
   }
 }
 
@@ -226,7 +226,7 @@ async function handleVideoContentFetch(request: Request): Promise<Response> {
   // Check cache first;
   const cachedResponse = await videoCache.match(request);
   if (cachedResponse) {
-    return cachedResponse;
+    return cachedResponse
   }
   
   // Check storage availability before caching large videos;
@@ -244,12 +244,12 @@ async function handleVideoContentFetch(request: Request): Promise<Response> {
     // Only cache videos smaller than 50MB
     if (responseSize < 50 * 1024 * 1024) {
       await videoCache.put(request, networkResponse.clone());
-      console.log('[Enhanced SW] Cached video content:', request.url);
-    }
+      console.log('[Enhanced SW] Cached video content:', request.url)
+  }
   }
   
-  return networkResponse;
-}
+  return networkResponse
+  }
 
 /**
  * Handle navigation requests with offline fallbacks
@@ -257,7 +257,7 @@ async function handleVideoContentFetch(request: Request): Promise<Response> {
 async function handleNavigationFetch(request: Request): Promise<Response> {
   try {
     const networkResponse = await fetch(request);
-    return networkResponse;
+    return networkResponse
   } catch (error) {
     console.warn('[Enhanced SW] Navigation network failed:', error);
     
@@ -267,16 +267,16 @@ async function handleNavigationFetch(request: Request): Promise<Response> {
       const crisisCache = await caches.open('crisis-resources-enhanced');
       const offlineCrisis = await crisisCache.match('/offline-crisis.html');
       if (offlineCrisis) {
-        return offlineCrisis;
-      }
+        return offlineCrisis
+  }
     }
     
     // Default offline page;
     const mainCache = await caches.open('workbox-precache-v2-https://astralcore.netlify.app/');
     const offlinePage = await mainCache.match('/offline.html');
     if (offlinePage) {
-      return offlinePage;
-    }
+      return offlinePage
+  }
     
     // Create basic offline response
     return new Response(
@@ -306,9 +306,9 @@ async function handleNavigationFetch(request: Request): Promise<Response> {
       `,
       {
         headers: { 'Content-Type': 'text/html' },
-        status: 200;
-      }
-    );
+        status: 200
+  }
+    )
   }
 }
 
@@ -324,8 +324,8 @@ async function handleOfflineFallback(request: Request): Promise<Response> {
     const response = await cache.match(request);
     if (response) {
       console.log(`[Enhanced SW] Served from ${cacheName}:`, request.url);
-      return response;
-    }
+      return response
+  }
   }
   
   // Return appropriate offline response based on request type
@@ -333,13 +333,13 @@ async function handleOfflineFallback(request: Request): Promise<Response> {
     return new Response(
       JSON.stringify({ 
         error: 'Offline', 
-        message: 'This feature requires an internet connection' ;
-      }),
+        message: 'This feature requires an internet connection'
+  }),
       {
         headers: { 'Content-Type': 'application/json' },
-        status: 503;
-      }
-    );
+        status: 503
+  }
+    )
   }
   
   // For HTML requests, return basic offline page
@@ -347,10 +347,10 @@ async function handleOfflineFallback(request: Request): Promise<Response> {
     '<!DOCTYPE html><html><body><h1>Offline</h1><p>Check your connection</p></body></html>',
     {
       headers: { 'Content-Type': 'text/html' },
-      status: 503;
-    }
-  );
-}
+      status: 503
+  }
+  )
+  }
 
 /**
  * Queue requests for background sync
@@ -366,16 +366,16 @@ async function queueForBackgroundSync(request: Request): Promise<void> {
       method: request.method,
       headers: Object.fromEntries(request.headers.entries()),
       body: request.method !== 'GET' ? await request.text() : null,
-      timestamp: Date.now();
-    };
+      timestamp: Date.now()
+  };
     
     const typedDb = db as IDBDatabase;
     const transaction = typedDb.transaction(['sync-queue'], 'readwrite');
     const store = transaction.objectStore('sync-queue');
     await store.add(requestData);
-    console.log('[Enhanced SW] Queued request for background sync:', request.url);
+    console.log('[Enhanced SW] Queued request for background sync:', request.url)
   } catch (error) {
-    console.error('[Enhanced SW] Failed to queue request:', error);
+    console.error('[Enhanced SW] Failed to queue request:', error)
   }
 }
 
@@ -394,12 +394,12 @@ async function openSyncQueue(): Promise<unknown> {
       if (!db.objectStoreNames.contains('sync-queue')) {
         const store = db.createObjectStore('sync-queue', { 
           keyPath: 'id', 
-          autoIncrement: true ;
-        });
-        store.createIndex('timestamp', 'timestamp');
-      }
-    });
-}
+          autoIncrement: true
+  });
+        store.createIndex('timestamp', 'timestamp')
+  }
+    })
+  }
 
 /**
  * Helper functions to identify resource types
@@ -409,24 +409,24 @@ function isCrisisResource(url: URL): boolean {
          url.pathname.includes('/emergency') ||
          url.pathname.includes('/988') ||
          url.pathname.includes('/safety') ||
-         url.pathname.includes('/suicide-prevention');
-}
+         url.pathname.includes('/suicide-prevention')
+  }
 
 function isApiEndpoint(url: URL): boolean {
   return url.pathname.includes('/.netlify/functions/') ||
-         url.pathname.includes('/api/');
-}
+         url.pathname.includes('/api/')
+  }
 
 function isVideoContent(url: URL): boolean {
   return /\.(mp4|webm|ogg|m4v)$/i.test(url.pathname) ||
-         url.pathname.includes('/video/');
-}
+         url.pathname.includes('/video/')
+  }
 
 // Background sync event handling
 self.addEventListener('sync', (event: Event) => {
   const syncEvent = event as Event & { tag?: string; waitUntil?: (promise: Promise<any>) => void };
   if (syncEvent.tag === 'background-sync' && syncEvent.waitUntil) {
-    syncEvent.waitUntil(handleBackgroundSync());
+    syncEvent.waitUntil(handleBackgroundSync())
   }
 });
 
@@ -443,8 +443,8 @@ async function handleBackgroundSync(): Promise<void> {
     const getAllRequest = store.getAll();
     const requests = await new Promise<any[]>((resolve, reject) => {
       getAllRequest.onsuccess = () => resolve(getAllRequest.result || []);
-      getAllRequest.onerror = () => reject(getAllRequest.error);
-    });
+      getAllRequest.onerror = () => reject(getAllRequest.error)
+  });
     
     console.log(`[Enhanced SW] Processing ${requests.length} queued requests`);
     
@@ -453,19 +453,19 @@ async function handleBackgroundSync(): Promise<void> {
         const response = await fetch(requestData.url, {
           method: requestData.method,
           headers: requestData.headers,
-          body: requestData.body;
-        });
+          body: requestData.body
+  });
         
         if (response.ok) {
           await store.delete(requestData.id);
-          console.log('[Enhanced SW] Successfully synced request:', requestData.url);
-        }
+          console.log('[Enhanced SW] Successfully synced request:', requestData.url)
+  }
       } catch (error) {
-        console.warn('[Enhanced SW] Background sync failed for:', requestData.url, error);
-      }
+        console.warn('[Enhanced SW] Background sync failed for:', requestData.url, error)
+  }
     }
   } catch (error) {
-    console.error('[Enhanced SW] Background sync processing failed:', error);
+    console.error('[Enhanced SW] Background sync processing failed:', error)
   }
 }
 
@@ -486,12 +486,12 @@ self.addEventListener('message', (event) => {
             data: {
               storage: storageInfo,
               analytics,
-              cacheStats: stats;
-            }
-          });
-        });
-      })()
-    );
+              cacheStats: stats
+  }
+          })
+  })
+  })()
+    )
   }
 });
 
@@ -502,9 +502,9 @@ self.addEventListener('message', (event) => {
       (async () => {
         await cacheCoordinator.performCacheCleanup();
         await intelligentCache.cleanupExpiredEntries();
-        console.log('[Enhanced SW] Cache maintenance completed');
-      })()
-    );
+        console.log('[Enhanced SW] Cache maintenance completed')
+  })()
+    )
   }
 });
 

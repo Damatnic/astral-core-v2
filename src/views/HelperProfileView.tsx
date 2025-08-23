@@ -7,7 +7,7 @@ import { View } from '../types';
 import { Card } from '../components/Card';
 import { isError } from '../types/common';
 
-const EXPERTISE_OPTIONS = [;
+const EXPERTISE_OPTIONS = [;;
     'Anxiety & Stress',
     'Depression',
     'Grief & Loss',
@@ -20,8 +20,8 @@ const EXPERTISE_OPTIONS = [;
 
 export const HelperProfileView: React.FC<{ 
     onProfileUpdated: () => void; 
-    setActiveView: (view: View) => void;
-}> = ({ onProfileUpdated, setActiveView }) => {
+    setActiveView: (view: View) => void
+  }> = ({ onProfileUpdated, setActiveView }) => {
     const { helperProfile, reloadProfile } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [displayName, setDisplayName] = useState('');
@@ -34,16 +34,16 @@ export const HelperProfileView: React.FC<{
         if (helperProfile) {
             setDisplayName(helperProfile.displayName);
             setExpertise(helperProfile.expertise || []);
-            setBio(helperProfile.bio || '');
-        }
+            setBio(helperProfile.bio || '')
+  }
     };
   }, [helperProfile]);
 
     const handleExpertiseChange = (option: string) => {
         setExpertise(prev =>
             prev.includes(option) ? prev.filter(item => item !== option) : [...prev, option]
-        );
-    };
+        )
+  };
 
     const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -51,35 +51,35 @@ export const HelperProfileView: React.FC<{
         setError('');
         if (!displayName.trim()) {
             setError('Display name cannot be empty.');
-            return;
-        }
+            return
+  }
         setIsSubmitting(true);
         try {
             await ApiClient.helpers.updateProfile(helperProfile.id, { displayName, expertise, bio });
             await reloadProfile(); // Reload profile in context
             onProfileUpdated(); // Notify parent
-            setIsEditing(false);
-        } catch (err) {
+            setIsEditing(false)
+  } catch (err) {
             const errorMessage = isError(err) ? err.message : 'Failed to update profile.';
-            setError(errorMessage);
-        } finally {
-            setIsSubmitting(false);
-        }
+            setError(errorMessage)
+  } finally {
+            setIsSubmitting(false)
+  }
     };
     
     const handleCancel = () => {
         if(helperProfile) {
             setDisplayName(helperProfile.displayName);
             setExpertise(helperProfile.expertise);
-            setBio(helperProfile.bio || '');
-        }
+            setBio(helperProfile.bio || '')
+  }
         setIsEditing(false);
-        setError('');
-    }
+        setError('')
+  }
 
     if (!helperProfile) {
-        return <div className="loading-spinner" style={{ margin: '5rem auto' }}></div>;
-    }
+        return <div className="loading-spinner" style={{ margin: '5rem auto' }}></div>
+  }
 
     return (
         <>
@@ -133,8 +133,7 @@ export const HelperProfileView: React.FC<{
                         <div className="expertise-options" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
                             {EXPERTISE_OPTIONS.map(option => (
                                 <div key={option} className="radio-group">
-                                    <input;
-                                        type="checkbox"
+                                    <input type="checkbox"
                                         id={`expertise-edit-${option}`}
                                         name="expertise"
                                         value={option}
@@ -175,7 +174,7 @@ export const HelperProfileView: React.FC<{
                 </form>
             </Card>
         </>
-    );
-};
+    )
+  };
 
 export default HelperProfileView;

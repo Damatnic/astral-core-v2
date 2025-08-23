@@ -27,7 +27,7 @@ interface SyncRequest {
   metadata?: {
     type: 'crisis-event' | 'safety-plan' | 'session-data' | 'analytics' | 'user-data';
     userId?: string;
-    sessionId?: string;
+    sessionId?: string
   }
 
 interface SyncResult {
@@ -35,8 +35,8 @@ interface SyncResult {
   requestId: string;
   response?: any;
   error?: string;
-  timestamp: number;
-}
+  timestamp: number
+  }
 
 interface BackgroundSyncOptions {
   enablePeriodicSync?: boolean;
@@ -44,8 +44,8 @@ interface BackgroundSyncOptions {
   maxQueueSize?: number;
   enableBatching?: boolean;
   batchSize?: number;
-  conflictResolution?: 'client-wins' | 'server-wins' | 'merge';
-}
+  conflictResolution?: 'client-wins' | 'server-wins' | 'merge'
+  }
 
 class BackgroundSyncService {
   private static instance: BackgroundSyncService;
@@ -69,14 +69,14 @@ class BackgroundSyncService {
       conflictResolution: 'client-wins',
       ...options
     };
-    this.initialize();
+    this.initialize()
   }
 
   static getInstance(options?: BackgroundSyncOptions): BackgroundSyncService {
     if (!BackgroundSyncService.instance) {
-      BackgroundSyncService.instance = new BackgroundSyncService(options);
-    }
-    return BackgroundSyncService.instance;
+      BackgroundSyncService.instance = new BackgroundSyncService(options)
+  }
+    return BackgroundSyncService.instance
   }
 
   /**
@@ -98,13 +98,13 @@ class BackgroundSyncService {
       
       // Setup periodic sync fallback
       if (this.options.enablePeriodicSync) {
-        this.setupPeriodicSync();
-      }
+        this.setupPeriodicSync()
+  }
       
-      console.log('[BackgroundSync] Service initialized');
-    } catch (error) {
-      console.error('[BackgroundSync] Initialization failed:', error);
-    }
+      console.log('[BackgroundSync] Service initialized')
+  } catch (error) {
+      console.error('[BackgroundSync] Initialization failed:', error)
+  }
   }
 
   /**
@@ -116,14 +116,14 @@ class BackgroundSyncService {
       
       request.onerror = () => {
         console.error('[BackgroundSync] Failed to open database');
-        reject(request.error);
-      };
+        reject(request.error)
+  };
       
       request.onsuccess = () => {
         this.db = request.result;
         console.log('[BackgroundSync] Database opened successfully');
-        resolve();
-      };
+        resolve()
+  };
       
       request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
         const db = (event.target as IDBOpenDBRequest).result;
@@ -133,15 +133,15 @@ class BackgroundSyncService {
           const store = db.createObjectStore('syncQueue', { keyPath: 'id' });
           store.createIndex('priority', 'priority', { unique: false });
           store.createIndex('timestamp', 'timestamp', { unique: false });
-          store.createIndex('type', ['metadata', 'type'], { unique: false });
-        }
+          store.createIndex('type', ['metadata', 'type'], { unique: false })
+  }
         
         // Create sync results store
         if (!db.objectStoreNames.contains('syncResults')) {
           const store = db.createObjectStore('syncResults', { keyPath: 'requestId' });
-          store.createIndex('timestamp', 'timestamp', { unique: false });
-        }
-      });
+          store.createIndex('timestamp', 'timestamp', { unique: false })
+  }
+      })
   }
 
   /**
@@ -159,19 +159,19 @@ class BackgroundSyncService {
         request.onsuccess = () => {
           const items = request.result as SyncRequest[];
           items.forEach(item => {
-            this.syncQueue.set(item.id, item);
-          });
+            this.syncQueue.set(item.id, item)
+  });
           console.log(`[BackgroundSync] Loaded ${items.length} queued items`);
-          resolve();
-        };
+          resolve()
+  };
         
         request.onerror = () => {
           console.error('[BackgroundSync] Failed to load queue');
-          reject(request.error);
-        });
-    } catch (error) {
-      console.error('[BackgroundSync] Error loading queue:', error);
-    }
+          reject(request.error)
+  })
+  } catch (error) {
+      console.error('[BackgroundSync] Error loading queue:', error)
+  }
   }
 
   /**
@@ -181,13 +181,13 @@ class BackgroundSyncService {
     window.addEventListener('online', () => {
       console.log('[BackgroundSync] Network online, triggering sync');
       this.isOnline = true;
-      this.triggerSync();
-    });
+      this.triggerSync()
+  });
     
     window.addEventListener('offline', () => {
       console.log('[BackgroundSync] Network offline');
-      this.isOnline = false;
-    });
+      this.isOnline = false
+  })
   }
 
   /**
@@ -196,8 +196,8 @@ class BackgroundSyncService {
   private async registerBackgroundSync(): Promise<void> {
     if (!('serviceWorker' in navigator) || !('sync' in ServiceWorkerRegistration.prototype)) {
       console.warn('[BackgroundSync] Background Sync API not supported');
-      return;
-    }
+      return
+  }
     
     try {
       await navigator.serviceWorker.ready;
@@ -205,14 +205,14 @@ class BackgroundSyncService {
       // Listen for sync messages from service worker
       navigator.serviceWorker.addEventListener('message', (event) => {
         if (event.data.type === 'sync-complete') {
-          this.handleSyncComplete(event.data.results);
-        }
+          this.handleSyncComplete(event.data.results)
+  }
       });
       
-      console.log('[BackgroundSync] Registered with service worker');
-    } catch (error) {
-      console.error('[BackgroundSync] Service worker registration failed:', error);
-    }
+      console.log('[BackgroundSync] Registered with service worker')
+  } catch (error) {
+      console.error('[BackgroundSync] Service worker registration failed:', error)
+  }
   }
 
   /**
@@ -221,16 +221,16 @@ class BackgroundSyncService {
   private setupPeriodicSync(): void {
     // Clear existing interval if any
     if (this.periodicSyncInterval) {
-      clearInterval(this.periodicSyncInterval);
-    }
+      clearInterval(this.periodicSyncInterval)
+  }
     
     // Setup periodic sync
     this.periodicSyncInterval = window.setInterval(() => {
       if (this.isOnline && this.syncQueue.size > 0) {
         console.log('[BackgroundSync] Periodic sync triggered');
-        this.processSyncQueue();
-      }
-    }, this.options.syncInterval!);
+        this.processSyncQueue()
+  }
+    }, this.options.syncInterval!)
   }
 
   /**
@@ -240,16 +240,16 @@ class BackgroundSyncService {
     // Check queue size limit
     if (this.syncQueue.size >= this.options.maxQueueSize!) {
       console.warn('[BackgroundSync] Queue size limit reached, removing oldest items');
-      await this.pruneQueue();
-    }
+      await this.pruneQueue()
+  }
     
     const syncRequest: SyncRequest = {
       ...request,
       id: this.generateRequestId(),
       timestamp: Date.now(),
       retryCount: 0,
-      maxRetries: request.maxRetries || 3;
-    };
+      maxRetries: request.maxRetries || 3
+  };
     
     // Add to queue
     this.syncQueue.set(syncRequest.id, syncRequest);
@@ -259,11 +259,11 @@ class BackgroundSyncService {
     
     // Trigger sync if online
     if (this.isOnline) {
-      this.triggerSync();
-    }
+      this.triggerSync()
+  }
     
     console.log(`[BackgroundSync] Added request ${syncRequest.id} to queue`);
-    return syncRequest.id;
+    return syncRequest.id
   }
 
   /**
@@ -275,10 +275,10 @@ class BackgroundSyncService {
     try {
       const transaction = this.db.transaction(['syncQueue'], 'readwrite');
       const store = transaction.objectStore('syncQueue');
-      await store.put(request);
-    } catch (error) {
-      console.error('[BackgroundSync] Failed to persist request:', error);
-    }
+      await store.put(request)
+  } catch (error) {
+      console.error('[BackgroundSync] Failed to persist request:', error)
+  }
   }
 
   /**
@@ -290,10 +290,10 @@ class BackgroundSyncService {
     try {
       const transaction = this.db.transaction(['syncQueue'], 'readwrite');
       const store = transaction.objectStore('syncQueue');
-      await store.delete(requestId);
-    } catch (error) {
-      console.error('[BackgroundSync] Failed to remove from storage:', error);
-    }
+      await store.delete(requestId)
+  } catch (error) {
+      console.error('[BackgroundSync] Failed to remove from storage:', error)
+  }
   }
 
   /**
@@ -301,8 +301,8 @@ class BackgroundSyncService {
    */
   async triggerSync(): Promise<void> {
     if (!this.isOnline || this.isSyncing || this.syncQueue.size === 0) {
-      return;
-    }
+      return
+  }
     
     // Try to use Background Sync API
     if ('serviceWorker' in navigator && 'sync' in ServiceWorkerRegistration.prototype) {
@@ -310,14 +310,14 @@ class BackgroundSyncService {
         const registration = await navigator.serviceWorker.ready;
         await (registration as any).sync.register('data-sync');
         console.log('[BackgroundSync] Background sync registered');
-        return;
-      } catch (error) {
-        console.warn('[BackgroundSync] Failed to register background sync:', error);
-      }
+        return
+  } catch (error) {
+        console.warn('[BackgroundSync] Failed to register background sync:', error)
+  }
     }
     
     // Fallback to direct processing
-    await this.processSyncQueue();
+    await this.processSyncQueue()
   }
 
   /**
@@ -333,8 +333,8 @@ class BackgroundSyncService {
     const sortedQueue = Array.from(this.syncQueue.values()).sort((a, b) => {
       const priorityOrder = { critical: 0, high: 1, normal: 2, low: 3 };
       const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
-      return priorityDiff !== 0 ? priorityDiff : a.timestamp - b.timestamp;
-    });
+      return priorityDiff !== 0 ? priorityDiff : a.timestamp - b.timestamp
+  });
     
     // Process in batches if enabled;
     const batchSize = this.options.enableBatching ? this.options.batchSize! : sortedQueue.length;
@@ -343,22 +343,22 @@ class BackgroundSyncService {
       const batch = sortedQueue.slice(i, i + batchSize);
       
       if (this.options.enableBatching && batch.length > 1) {
-        await this.processBatch(batch);;
+        await this.processBatch(batch)
   } else {
         for (const request of batch) {
-          await this.processRequest(request);
-        }
+          await this.processRequest(request)
+  }
       }
       
       // Break if offline
       if (!this.isOnline) {
         console.log('[BackgroundSync] Network offline, stopping sync');
-        break;
-      }
+        break
+  }
     }
     
     this.isSyncing = false;
-    console.log('[BackgroundSync] Queue processing complete');
+    console.log('[BackgroundSync] Queue processing complete')
   }
 
   /**
@@ -380,8 +380,8 @@ class BackgroundSyncService {
       };
       
       if (request.body && ['POST', 'PUT', 'PATCH'].includes(request.method)) {
-        fetchOptions.body = JSON.stringify(request.body);
-      }
+        fetchOptions.body = JSON.stringify(request.body)
+  }
       
       // Make the request with timeout;
       const controller = new AbortController();
@@ -404,21 +404,21 @@ class BackgroundSyncService {
           success: true,
           requestId: request.id,
           response: responseData,
-          timestamp: Date.now();
-        };
+          timestamp: Date.now()
+  };
         
         await this.saveSyncResult(result);
         this.notifySyncListeners(result);
         
-        console.log(`[BackgroundSync] Request ${request.id} synced successfully`);;
+        console.log(`[BackgroundSync] Request ${request.id} synced successfully`)
   } else {
         // Server error - handle based on status
-        await this.handleSyncError(request, `Server error: ${response.status}`);
-      }
+        await this.handleSyncError(request, `Server error: ${response.status}`)
+  }
     } catch (error) {
       // Network or other error
-      await this.handleSyncError(request, error instanceof Error ? error.message : 'Unknown error');
-    }
+      await this.handleSyncError(request, error instanceof Error ? error.message : 'Unknown error')
+  }
   }
 
   /**
@@ -435,8 +435,8 @@ class BackgroundSyncService {
           method: req.method,
           headers: req.headers,
           body: req.body,
-          metadata: req.metadata;
-        }))
+          metadata: req.metadata
+  }))
       };
       
       const response = await fetch('/api/batch-sync', {
@@ -445,8 +445,8 @@ class BackgroundSyncService {
           'Content-Type': 'application/json',
           'X-Batch-Sync': 'true'
         },
-        body: JSON.stringify(batchRequest);
-      });
+        body: JSON.stringify(batchRequest)
+  });
       
       if (response.ok) {
         const results = await response.json();
@@ -463,29 +463,29 @@ class BackgroundSyncService {
                 success: true,
                 requestId: request.id,
                 response: result.response,
-                timestamp: Date.now();
-              };
+                timestamp: Date.now()
+  };
               
               await this.saveSyncResult(syncResult);
-              this.notifySyncListeners(syncResult);;
+              this.notifySyncListeners(syncResult)
   } else {
-              await this.handleSyncError(request, result.error);
-            }
+              await this.handleSyncError(request, result.error)
+  }
           }
-        };
+        }
   } else {
         // Batch failed - process individually
         console.warn('[BackgroundSync] Batch sync failed, processing individually');
         for (const request of batch) {
-          await this.processRequest(request);
-        }
+          await this.processRequest(request)
+  }
       }
     } catch (error) {
       console.error('[BackgroundSync] Batch processing error:', error);
       // Process individually on batch error
       for (const request of batch) {
-        await this.processRequest(request);
-      }
+        await this.processRequest(request)
+  }
     }
   }
 
@@ -509,11 +509,11 @@ class BackgroundSyncService {
         success: false,
         requestId: request.id,
         error: `Failed after ${request.maxRetries} retries: ${error}`,
-        timestamp: Date.now();
-      };
+        timestamp: Date.now()
+  };
       
       await this.saveSyncResult(result);
-      this.notifySyncListeners(result);;
+      this.notifySyncListeners(result)
   } else {
       // Update retry count and persist
       this.syncQueue.set(request.id, request);
@@ -525,10 +525,10 @@ class BackgroundSyncService {
       
       setTimeout(() => {
         if (this.isOnline) {
-          this.processRequest(request);
-        }
-      }, delay);
-    }
+          this.processRequest(request)
+  }
+      }, delay)
+  }
   }
 
   /**
@@ -540,10 +540,10 @@ class BackgroundSyncService {
     try {
       const transaction = this.db.transaction(['syncResults'], 'readwrite');
       const store = transaction.objectStore('syncResults');
-      await store.put(result);
-    } catch (error) {
-      console.error('[BackgroundSync] Failed to save result:', error);
-    }
+      await store.put(result)
+  } catch (error) {
+      console.error('[BackgroundSync] Failed to save result:', error)
+  }
   }
 
   /**
@@ -553,10 +553,10 @@ class BackgroundSyncService {
     results.forEach(result => {
       if (result.success) {
         this.syncQueue.delete(result.requestId);
-        this.removeFromStorage(result.requestId);
-      }
-      this.notifySyncListeners(result);
-    });
+        this.removeFromStorage(result.requestId)
+  }
+      this.notifySyncListeners(result)
+  })
   }
 
   /**
@@ -565,35 +565,35 @@ class BackgroundSyncService {
   private notifySyncListeners(result: SyncResult): void {
     this.syncListeners.forEach(listener => {
       try {
-        listener(result);
-      } catch (error) {
-        console.error('[BackgroundSync] Listener error:', error);
-      }
-    });
+        listener(result)
+  } catch (error) {
+        console.error('[BackgroundSync] Listener error:', error)
+  }
+    })
   }
 
   /**
    * Prune old items from queue
    */
   private async pruneQueue(): Promise<void> {
-    const sortedQueue = Array.from(this.syncQueue.values());
+    const sortedQueue = Array.from(this.syncQueue.values());;
       .sort((a, b) => a.timestamp - b.timestamp);
     
     const itemsToRemove = sortedQueue.slice(0, 10); // Remove oldest 10 items
     
     for (const item of itemsToRemove) {
       this.syncQueue.delete(item.id);
-      await this.removeFromStorage(item.id);
-    }
+      await this.removeFromStorage(item.id)
+  }
     
-    console.log(`[BackgroundSync] Pruned ${itemsToRemove.length} old items from queue`);
+    console.log(`[BackgroundSync] Pruned ${itemsToRemove.length} old items from queue`)
   }
 
   /**
    * Generate unique request ID
    */
   private generateRequestId(): string {
-    return `sync-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return `sync-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
   }
 
   /**
@@ -604,14 +604,14 @@ class BackgroundSyncService {
    * Check if a request is in the queue
    */
   isQueued(requestId: string): boolean {
-    return this.syncQueue.has(requestId);
+    return this.syncQueue.has(requestId)
   }
 
   /**
    * Get queue size
    */
   getQueueSize(): number {
-    return this.syncQueue.size;
+    return this.syncQueue.size
   }
 
   /**
@@ -625,8 +625,8 @@ class BackgroundSyncService {
       id: string;
       priority: string;
       retryCount: number;
-      timestamp: number;
-    }>;
+      timestamp: number
+  }>
   } {
     return {
       size: this.syncQueue.size,
@@ -636,8 +636,8 @@ class BackgroundSyncService {
         id: r.id,
         priority: r.priority,
         retryCount: r.retryCount,
-        timestamp: r.timestamp;
-      };
+        timestamp: r.timestamp
+  };
   })
     }
 
@@ -652,10 +652,10 @@ class BackgroundSyncService {
         const transaction = this.db.transaction(['syncQueue'], 'readwrite');
         const store = transaction.objectStore('syncQueue');
         await store.clear();
-        console.log('[BackgroundSync] Queue cleared');
-      } catch (error) {
-        console.error('[BackgroundSync] Failed to clear queue:', error);
-      }
+        console.log('[BackgroundSync] Queue cleared')
+  } catch (error) {
+        console.error('[BackgroundSync] Failed to clear queue:', error)
+  }
     }
   }
 
@@ -663,14 +663,14 @@ class BackgroundSyncService {
    * Add sync listener
    */
   addSyncListener(listener: (result: SyncResult) => void): void {
-    this.syncListeners.add(listener);
+    this.syncListeners.add(listener)
   }
 
   /**
    * Remove sync listener
    */
   removeSyncListener(listener: (result: SyncResult) => void): void {
-    this.syncListeners.delete(listener);
+    this.syncListeners.delete(listener)
   }
 
   /**
@@ -678,7 +678,7 @@ class BackgroundSyncService {
    */
   async forceSyncNow(): Promise<void> {
     console.log('[BackgroundSync] Force sync triggered');
-    await this.processSyncQueue();
+    await this.processSyncQueue()
   }
 
   /**
@@ -700,20 +700,20 @@ class BackgroundSyncService {
           const cursor = request.result;
           if (cursor && results.length < limit) {
             results.push(cursor.value);
-            cursor.continue();;
+            cursor.continue()
   } else {
-            resolve(results);
-          }
+            resolve(results)
+  }
         };
         
         request.onerror = () => {
           console.error('[BackgroundSync] Failed to get history');
-          reject(request.error);
-        });
-    } catch (error) {
+          reject(request.error)
+  })
+  } catch (error) {
       console.error('[BackgroundSync] Error getting history:', error);
-      return [];
-    }
+      return []
+  }
   }
 
   /**
@@ -737,15 +737,15 @@ class BackgroundSyncService {
         if (cursor) {
           if (cursor.value.timestamp < cutoffTime) {
             cursor.delete();
-            deletedCount++;
-          }
-          cursor.continue();;
+            deletedCount++
+  }
+          cursor.continue()
   } else {
-          console.log(`[BackgroundSync] Cleaned up ${deletedCount} old results`);
-        }
+          console.log(`[BackgroundSync] Cleaned up ${deletedCount} old results`)
+  }
       } catch (error) {
-      console.error('[BackgroundSync] Cleanup failed:', error);
-    }
+      console.error('[BackgroundSync] Cleanup failed:', error)
+  }
   }
 }
 

@@ -19,8 +19,8 @@ import { isError } from '../types/common';
 export const ChatView: React.FC<{
     session: ChatSession;
     dilemma: Dilemma;
-    onViewHelperProfile: (helperId: string) => void;
-}> = ({ session, dilemma, onViewHelperProfile }) => {
+    onViewHelperProfile: (helperId: string) => void
+  }> = ({ session, dilemma, onViewHelperProfile }) => {
     const [newMessage, setNewMessage] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const { userToken, helperProfile } = useAuth();
@@ -49,8 +49,8 @@ export const ChatView: React.FC<{
         // Simple break prompt logic
         if (session.messages.length > 20 && session.messages.length % 10 === 0) {
             setShowBreakPrompt(true);
-            setTimeout(() => setShowBreakPrompt(false), 10000);
-        }
+            setTimeout(() => setShowBreakPrompt(false), 10000)
+  }
     };
   }, [session.messages, session.isTyping]);
 
@@ -58,8 +58,8 @@ export const ChatView: React.FC<{
         if (!newMessage.trim()) return;
         sendMessage(session.dilemmaId, newMessage);
         setNewMessage('');
-        setTyping(session.dilemmaId, false);
-    };
+        setTyping(session.dilemmaId, false)
+  };
 
     const handleBlockUser = async () => {
         const blockerId = perspective === 'helper' ? helperProfile?.id : userToken;
@@ -67,8 +67,8 @@ export const ChatView: React.FC<{
 
         if (!blockerId || !blockedId) {
             addToast("Could not identify users to block.", 'error');
-            return;
-        }
+            return
+  }
         
         showConfirmationModal({
             title: 'Block User?',
@@ -79,19 +79,19 @@ export const ChatView: React.FC<{
                 try {
                     await ApiClient.userBlocking.blockUser(blockerId, blockedId);
                     addToast("User has been blocked. This chat will now close.", 'info');
-                    closeChat(dilemma.id);
-                } catch (err) {
+                    closeChat(dilemma.id)
+  } catch (err) {
                     const errorMessage = isError(err) ? err.message : "Failed to block user.";
-                    addToast(errorMessage, 'error');
-                }
+                    addToast(errorMessage, 'error')
+  }
             }
-        });
-    }
+        })
+  }
 
     const handleFavoriteClick = () => {
         if (session.helpSessionId) {
-            toggleFavorite(session.helpSessionId);
-        }
+            toggleFavorite(session.helpSessionId)
+  }
     };
     
     // --- Emergency Button Logic ---;
@@ -106,8 +106,8 @@ export const ChatView: React.FC<{
                     (position) => {
                         const { latitude, longitude } = position.coords;
                         ApiClient.emergency.trigger(dilemma.id, { latitude, longitude });
-                        addToast("Emergency alert sent with your approximate location.", 'success');
-                    },
+                        addToast("Emergency alert sent with your approximate location.", 'success')
+  },
                     (error) => {
                         let errorMessage = 'Could not get your location. ';
                         
@@ -122,9 +122,8 @@ export const ChatView: React.FC<{
                             case error.TIMEOUT:
                                 errorMessage += 'Location request timed out. Please check your internet connection.';
                                 break;
-                            default:
-                                errorMessage += 'An unknown error occurred while getting your location.';
-                        }
+                            default: errorMessage += 'An unknown error occurred while getting your location.'
+  }
                         
                         console.error("Geolocation error:", error.code, error.message);
                         
@@ -137,20 +136,20 @@ export const ChatView: React.FC<{
                             onConfirm: () => {
                                 ApiClient.emergency.trigger(dilemma.id)
                                     .then(() => {
-                                        addToast("Emergency alert sent successfully without location data.", 'warning');
-                                    })
+                                        addToast("Emergency alert sent successfully without location data.", 'warning')
+  })
                                     .catch((err) => {
                                         console.error("Failed to send emergency alert:", err);
-                                        addToast("Failed to send emergency alert. Please try again or call 911.", 'error');
-                                    });
-                            }
-                        });
-                    },
+                                        addToast("Failed to send emergency alert. Please try again or call 911.", 'error')
+  })
+  }
+                        })
+  },
                     { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-                );
-            }
-        });
-    };
+                )
+  }
+        })
+  };
 
     const startHold = () => {
         if (holdTimerRef.current) clearTimeout(holdTimerRef.current);
@@ -165,41 +164,41 @@ export const ChatView: React.FC<{
             const progress = Math.min(elapsed / duration, 1);
             setHoldProgress(progress);
             if (progress < 1) {
-                animationFrameRef.current = requestAnimationFrame(animateProgress);
-            }
+                animationFrameRef.current = requestAnimationFrame(animateProgress)
+  }
         };
         animationFrameRef.current = requestAnimationFrame(animateProgress);
 
         holdTimerRef.current = window.setTimeout(() => {
             triggerEmergency();
-            endHold();
-        }, duration);
-    };
+            endHold()
+  }, duration)
+  };
 
     const endHold = () => {
         setIsHolding(false);
         setHoldProgress(0);
         if (holdTimerRef.current) {
             clearTimeout(holdTimerRef.current);
-            holdTimerRef.current = null;
-        }
+            holdTimerRef.current = null
+  }
         if (animationFrameRef.current) {
             cancelAnimationFrame(animationFrameRef.current);
-            animationFrameRef.current = null;
-        }
+            animationFrameRef.current = null
+  }
     };
 
     const getHeaderTitle = () => {
         if (perspective === 'helper') return 'Chat with Seeker';
         if (helperForChat) return `Chat with ${helperForChat.displayName}`;
-        return 'Waiting for a helper...';
-    };
+        return 'Waiting for a helper...'
+  };
 
     const getHeaderSubTitle = () => {
          if (perspective === 'helper') return `About: "${dilemma.content.substring(0, 30)}..."`;
          if (helperForChat) return `Reputation: ${helperForChat.reputation.toFixed(1)}/5.0`;
-         return `Your conversation about "${dilemma.content.substring(0, 30)}..."`;
-    }
+         return `Your conversation about "${dilemma.content.substring(0, 30)}..."`
+  }
 
     return (
         <div className="chat-view">
@@ -208,8 +207,7 @@ export const ChatView: React.FC<{
                 <div className="chat-header-info">
                     <h2>
                         {helperForChat && perspective !== 'helper' ? (
-                            <button; 
-                                type="button"
+                            <button type="button"
                                 onClick={() => onViewHelperProfile(helperForChat.id)}
                                 style={{
                                     background: 'none',
@@ -218,8 +216,8 @@ export const ChatView: React.FC<{
                                     textDecoration: 'underline',
                                     cursor: 'pointer',
                                     font: 'inherit',
-                                    padding: 0;
-                                }}
+                                    padding: 0
+  }}
                             >
                                 {getHeaderTitle()}
                             </button>
@@ -229,8 +227,7 @@ export const ChatView: React.FC<{
                 </div>
                 <div className="chat-header-actions" style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
                     {perspective === 'seeker' && session.helpSessionId && (
-                         <AppButton; 
-                            variant="ghost"; 
+                         <AppButton variant="ghost"; 
                             className={`btn-sm btn-support ${isFavorited ? 'supported' : ''}`}
                             onClick={handleFavoriteClick}
                             style={{padding: '0.5rem'}}
@@ -274,8 +271,7 @@ export const ChatView: React.FC<{
             
             <MobileChatComposer style={{position: 'relative'}}>
                 {perspective === 'seeker' && (
-                    <button;
-                        className="btn btn-danger"
+                    <button className="btn btn-danger"
                         onMouseDown={startHold}
                         onMouseUp={endHold}
                         onTouchStart={startHold}
@@ -292,39 +288,38 @@ export const ChatView: React.FC<{
                             gap: '0.5rem',
                             overflow: 'hidden',
                             minHeight: '44px', // Touch target size
-                            borderRadius: '20px';
-                        }}
+                            borderRadius: '20px'
+  }}
                     >
                         <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, background: 'rgba(255,255,255,0.3)', width: `${holdProgress * 100}%` }}></div>
                         <CrisisIcon />
                         <span style={{position: 'relative'}}>Emergency</span>
                     </button>
                 )}
-                <MobileAppInput;
-                    type="text"
+                <MobileAppInput type="text"
                     placeholder="Type your message..."
                     value={newMessage}
                     onChange={(e) => {
                         setNewMessage(e.target.value);
                         if (e.target.value) {
-                            setTyping(session.dilemmaId, true);;
+                            setTyping(session.dilemmaId, true)
   } else {
-                             setTyping(session.dilemmaId, false);
-                        }
+                             setTyping(session.dilemmaId, false)
+  }
                     }}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter' && !e.shiftKey) {
                             e.preventDefault();
-                            handleSend();
-                        }
+                            handleSend()
+  }
                     }}
                     className="chat-input"
                     containerStyle={{ flexGrow: 1, marginBottom: 0 }}
                     style={{ 
                         fontSize: '16px', // Prevent zoom on iOS
                         padding: '12px 16px',
-                        borderRadius: '20px';
-                    }}
+                        borderRadius: '20px'
+  }}
                 />
                 <AppButton 
                     onClick={handleSend} 
@@ -338,8 +333,8 @@ export const ChatView: React.FC<{
                         alignItems: 'center',
                         justifyContent: 'center',
                         padding: 0,
-                        marginLeft: '8px';
-                    }}
+                        marginLeft: '8px'
+  }}
                 >
                     <SendIcon />
                 </AppButton>
@@ -350,7 +345,7 @@ export const ChatView: React.FC<{
                 <GuidancePanel guidance={guidance} onDismiss={dismissGuidance} />
             )}
         </div>
-    );
-};
+    )
+  };
 
 export default ChatView;

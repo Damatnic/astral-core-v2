@@ -30,8 +30,8 @@ interface NetworkInfo {
   effectiveType: '2g' | '3g' | '4g' | 'slow-2g';
   downlink: number;
   saveData: boolean;
-  rtt: number;
-}
+  rtt: number
+  }
 
 // Device capabilities interface;
 interface DeviceInfo {
@@ -41,8 +41,8 @@ interface DeviceInfo {
   isMobile: boolean;
   isLowEnd: boolean;
   supportsSW: boolean;
-  supportsWASM: boolean;
-}
+  supportsWASM: boolean
+  }
 
 // Performance context interface;
 interface MobilePerformanceContextValue {
@@ -55,8 +55,8 @@ interface MobilePerformanceContextValue {
   trackComponentRender: (componentName: string, duration: number) => void;
   preloadResource: (resource: string, priority: 'low' | 'high') => void;
   reportWebVital: (name: string, value: number) => void;
-  optimizeForMobile: boolean;
-}
+  optimizeForMobile: boolean
+  }
 
 // Default values;
 const defaultMetrics: PerformanceMetrics = {
@@ -106,7 +106,7 @@ const MobilePerformanceContext = createContext<MobilePerformanceContextValue>({
 class PerformanceUtils {
   // Get network information
   static getNetworkInfo(): NetworkInfo {
-    const connection = (navigator as any).connection || ;
+    const connection = (navigator as any).connection || ;;
                       (navigator as any).mozConnection || 
                       (navigator as any).webkitConnection;
     
@@ -122,11 +122,11 @@ class PerformanceUtils {
     const deviceMemory = (navigator as any).deviceMemory || 4;
     const hardwareConcurrency = navigator.hardwareConcurrency || 4;
     const maxTouchPoints = navigator.maxTouchPoints || 0;
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || ;
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || ;;
                      window.innerWidth <= 768;
     
     // Determine if device is low-end;
-    const isLowEnd = deviceMemory < 2 || hardwareConcurrency < 2 || ;
+    const isLowEnd = deviceMemory < 2 || hardwareConcurrency < 2 || ;;
                      (isMobile && window.screen.width < 375);
 
     return {
@@ -148,15 +148,15 @@ class PerformanceUtils {
           const fcpEntry = entries.find(entry => entry.name === 'first-contentful-paint');
           if (fcpEntry) {
             resolve(fcpEntry.startTime);
-            observer.disconnect();
-          }
+            observer.disconnect()
+  }
         };
   };
-        observer.observe({ entryTypes: ['paint'] });;
+        observer.observe({ entryTypes: ['paint'] })
   } else {
-        resolve(0);
-      }
-    });
+        resolve(0)
+  }
+    })
   }
 
   // Measure Largest Contentful Paint
@@ -166,19 +166,19 @@ class PerformanceUtils {
         const observer = new PerformanceObserver((list) => {
           const entries = list.getEntries();
           const lastEntry = entries[entries.length - 1];
-          resolve(lastEntry.startTime);
-        });
+          resolve(lastEntry.startTime)
+  });
         observer.observe({ entryTypes: ['largest-contentful-paint'] });
         
         // Fallback timeout
         setTimeout(() => {
           observer.disconnect();
-          resolve(0);
-        }, 5000);;
+          resolve(0)
+  }, 5000)
   } else {
-        resolve(0);
-      }
-    });
+        resolve(0)
+  }
+    })
   }
 
   // Measure First Input Delay
@@ -190,20 +190,20 @@ class PerformanceUtils {
           const fidEntry = entries.find(entry => entry.name === 'first-input');
           if (fidEntry) {
             resolve((fidEntry as any).processingStart - fidEntry.startTime);
-            observer.disconnect();
-          }
+            observer.disconnect()
+  }
         });
         observer.observe({ entryTypes: ['first-input'] });
         
         // Fallback timeout
         setTimeout(() => {
           observer.disconnect();
-          resolve(0);
-        }, 10000);;
+          resolve(0)
+  }, 10000)
   } else {
-        resolve(0);
-      }
-    });
+        resolve(0)
+  }
+    })
   }
 
   // Measure memory usage
@@ -211,27 +211,27 @@ class PerformanceUtils {
     if ('memory' in performance) {
       return (performance as any).memory.usedJSHeapSize / 1024 / 1024; // MB
     }
-    return 0;
+    return 0
   }
 
   // Check if connection is optimal for loading
   static isOptimalConnection(networkInfo: NetworkInfo): boolean {
     return networkInfo.effectiveType === '4g' && 
            !networkInfo.saveData && 
-           networkInfo.downlink > 5;
+           networkInfo.downlink > 5
   }
 
   // Determine preferred quality based on device and network
   static getPreferredQuality(networkInfo: NetworkInfo, deviceInfo: DeviceInfo): 'low' | 'medium' | 'high' {
     if (deviceInfo.isLowEnd || networkInfo.saveData || networkInfo.effectiveType === '2g') {
-      return 'low';
-    }
+      return 'low'
+  }
     
     if (networkInfo.effectiveType === '3g' || networkInfo.downlink < 5) {
-      return 'medium';
-    }
+      return 'medium'
+  }
     
-    return 'high';
+    return 'high'
   }
 
   // Preload critical resources based on priority
@@ -246,16 +246,16 @@ class PerformanceUtils {
     link.as = as;
     
     if (priority === 'high') {
-      link.setAttribute('importance', 'high');
-    }
+      link.setAttribute('importance', 'high')
+  }
     
-    document.head.appendChild(link);
+    document.head.appendChild(link)
   }
 
   // Resource hints for better performance
   static addResourceHints(): void {
     // DNS prefetch for external domains;
-    const dnsPrefetch = [;
+    const dnsPrefetch = [;;
       'fonts.googleapis.com',
       'fonts.gstatic.com',
     ];
@@ -264,11 +264,11 @@ class PerformanceUtils {
       const link = document.createElement('link');
       link.rel = 'dns-prefetch';
       link.href = `//${domain}`;
-      document.head.appendChild(link);
-    });
+      document.head.appendChild(link)
+  });
 
     // Preconnect for critical external resources;
-    const preconnect = [;
+    const preconnect = [;;
       'https://fonts.googleapis.com',
     ];
 
@@ -277,8 +277,8 @@ class PerformanceUtils {
       link.rel = 'preconnect';
       link.href = url;
       link.crossOrigin = 'anonymous';
-      document.head.appendChild(link);
-    });
+      document.head.appendChild(link)
+  })
   }
 }
 
@@ -292,11 +292,11 @@ export const useComponentRenderTracker = (componentName: string) => {
     return () => {
       const endTime = performance.now();
       const duration = endTime - startTime;
-      trackComponentRender(componentName, duration);
-    };
+      trackComponentRender(componentName, duration)
   };
-  }, [componentName, trackComponentRender]);
-};
+  };
+  }, [componentName, trackComponentRender])
+  };
 
 // Network-aware loading hook;
 export const useNetworkAwareLoading = () => {
@@ -305,12 +305,13 @@ export const useNetworkAwareLoading = () => {
   const shouldLoadHighRes = useMemo(() => {
     return !deviceInfo.isLowEnd && 
            networkInfo.effectiveType === '4g' && 
-           !networkInfo.saveData;
+           !networkInfo.saveData
   };
   }, [deviceInfo.isLowEnd, networkInfo.effectiveType, networkInfo.saveData]);
   
   const shouldLoadImmediately = useMemo(() => {
-    return PerformanceUtils.isOptimalConnection(networkInfo) && !deviceInfo.isLowEnd;
+    return PerformanceUtils.isOptimalConnection(networkInfo) && !deviceInfo.isLowEnd
+  };
   };
   };
   }, [networkInfo, deviceInfo.isLowEnd]);
@@ -335,28 +336,28 @@ export const usePerformanceMonitoring = () => {
         list.getEntries().forEach((entry) => {
           if (entry.entryType === 'navigation') {
             const navEntry = entry as PerformanceNavigationTiming;
-            reportWebVital('ttfb', navEntry.responseStart - navEntry.requestStart);
-          }
+            reportWebVital('ttfb', navEntry.responseStart - navEntry.requestStart)
+  }
         };
   };
       });
       
       observer.observe({ entryTypes: ['navigation'] });
-      return () => observer.disconnect();
-    }
+      return () => observer.disconnect()
+  }
   };
   }, [reportWebVital]);
 
-  return metrics;
-};
+  return metrics
+  };
 
 // Main provider component;
 interface MobilePerformanceProviderProps {
   children: React.ReactNode;
   enableMonitoring?: boolean;
   enablePreloading?: boolean;
-  optimizeForMobile?: boolean;
-}
+  optimizeForMobile?: boolean
+  }
 
 export const MobilePerformanceProvider: React.FC<MobilePerformanceProviderProps> = ({
   children,
@@ -375,8 +376,8 @@ export const MobilePerformanceProvider: React.FC<MobilePerformanceProviderProps>
 
     // Add resource hints
     if (enablePreloading) {
-      PerformanceUtils.addResourceHints();
-    }
+      PerformanceUtils.addResourceHints()
+  }
   };
   }, [enablePreloading]);
 
@@ -385,13 +386,13 @@ export const MobilePerformanceProvider: React.FC<MobilePerformanceProviderProps>
     const connection = (navigator as any).connection;
     if (connection) {
       const handleConnectionChange = () => {
-        setNetworkInfo(PerformanceUtils.getNetworkInfo());
-      };
+        setNetworkInfo(PerformanceUtils.getNetworkInfo())
+  };
 
       connection.addEventListener('change', handleConnectionChange);
       return () => {
-        connection.removeEventListener('change', handleConnectionChange);
-      }
+        connection.removeEventListener('change', handleConnectionChange)
+  }
   };
   }, []);
 
@@ -412,8 +413,8 @@ export const MobilePerformanceProvider: React.FC<MobilePerformanceProviderProps>
         lcp,
         fid,
         memoryUsage: PerformanceUtils.getMemoryUsage(),
-      }));
-    };
+      }))
+  };
 
     initMetrics();
 
@@ -423,32 +424,32 @@ export const MobilePerformanceProvider: React.FC<MobilePerformanceProviderProps>
         let clsValue = 0;
         list.getEntries().forEach((entry) => {
           if (!(entry as any).hadRecentInput) {
-            clsValue += (entry as any).value;
-          }
+            clsValue += (entry as any).value
+  }
         });
         
-        setMetrics(prev => ({ ...prev, cls: clsValue }));
-      });
+        setMetrics(prev => ({ ...prev, cls: clsValue }))
+  });
       
       observer.observe({ entryTypes: ['layout-shift'] });
-      return () => observer.disconnect();
-    }
+      return () => observer.disconnect()
+  }
   };
   }, [enableMonitoring]);
 
   // Calculate derived values;
   const isOptimalLoading = useMemo(() => {
-    return PerformanceUtils.isOptimalConnection(networkInfo) && !deviceInfo.isLowEnd;
+    return PerformanceUtils.isOptimalConnection(networkInfo) && !deviceInfo.isLowEnd
   };
   }, [networkInfo, deviceInfo.isLowEnd]);
 
   const shouldPreload = useMemo(() => {
-    return enablePreloading && isOptimalLoading;
+    return enablePreloading && isOptimalLoading
   };
   }, [enablePreloading, isOptimalLoading]);
 
   const preferredQuality = useMemo(() => {
-    return PerformanceUtils.getPreferredQuality(networkInfo, deviceInfo);
+    return PerformanceUtils.getPreferredQuality(networkInfo, deviceInfo)
   };
   }, [networkInfo, deviceInfo]);
 
@@ -460,15 +461,15 @@ export const MobilePerformanceProvider: React.FC<MobilePerformanceProviderProps>
         ...prev.componentRenderTime,
         [componentName]: duration,
       },
-    }));
+    }))
   };
   }, []);
 
   // Preload resources with priority;
   const preloadResource = useCallback((resource: string, priority: 'low' | 'high') => {
     if (shouldPreload || priority === 'high') {
-      PerformanceUtils.preloadResource(resource, 'script', priority);
-    }
+      PerformanceUtils.preloadResource(resource, 'script', priority)
+  }
   };
   }, [shouldPreload]);
 
@@ -486,8 +487,8 @@ export const MobilePerformanceProvider: React.FC<MobilePerformanceProviderProps>
         (window as any).gtag('event', name, {
           value: Math.round(value),
           metric_id: name,
-        });
-      }
+        })
+  }
     }
   };
   }, []);
@@ -509,24 +510,24 @@ export const MobilePerformanceProvider: React.FC<MobilePerformanceProviderProps>
     <MobilePerformanceContext.Provider value={contextValue}>
       {children}
     </MobilePerformanceContext.Provider>
-  );
-};
+  )
+  };
 
 // Hook to access performance context;
 export const useMobilePerformance = () => {
   const context = useContext(MobilePerformanceContext);
   if (!context) {
-    throw new Error('useMobilePerformance must be used within MobilePerformanceProvider');
+    throw new Error('useMobilePerformance must be used within MobilePerformanceProvider')
   }
-  return context;
-};
+  return context
+  };
 
 // Performance debugger component (development only);
 export const PerformanceDebugger: React.FC = () => {
   const { metrics, networkInfo, deviceInfo } = useMobilePerformance();
 
   if (process.env.NODE_ENV !== 'development') {
-    return null;
+    return null
   }
 
   return (
@@ -563,8 +564,8 @@ export const PerformanceDebugger: React.FC = () => {
       <div>Mobile: {deviceInfo.isMobile ? 'Yes' : 'No'}</div>
       <div>Low-end: {deviceInfo.isLowEnd ? 'Yes' : 'No'}</div>
     </div>
-  );
-};
+  )
+  };
 
 // Named export for the full object (for existing imports);
 export const MobilePerformanceBundle = {

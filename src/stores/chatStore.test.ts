@@ -18,7 +18,7 @@ const initialState = useChatStore.getState();
 describe('chatStore', () => {
   beforeEach(() => {
     useChatStore.setState(initialState);
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   test('startChat should fetch messages and set the active chat', async () => {
@@ -33,14 +33,14 @@ describe('chatStore', () => {
     mockedApiClient.helpers.getById.mockResolvedValue({ id: 'h1', displayName: 'Helper' } as any);
 
     await act(async () => {
-      await useChatStore.getState().startChat(dilemmaId, 'seeker');
-    });
+      await useChatStore.getState().startChat(dilemmaId, 'seeker')
+  });
 
     const state = useChatStore.getState();
     expect(state.activeChatId).toBe(dilemmaId);
     expect(state.chatSessions[dilemmaId]).toBeDefined();
     expect(state.chatSessions[dilemmaId].messages).toEqual(mockMessages);
-    expect(state.chatSessions[dilemmaId].perspective).toBe('seeker');
+    expect(state.chatSessions[dilemmaId].perspective).toBe('seeker')
   });
 
   test('sendMessage should add an optimistic message and call the API', async () => {
@@ -57,8 +57,8 @@ describe('chatStore', () => {
           messages: [], 
           perspective: 'seeker',
           unread: false,
-          isTyping: false;
-        } as any 
+          isTyping: false
+  } as any 
       }
     });
     
@@ -66,14 +66,14 @@ describe('chatStore', () => {
     mockedApiClient.chat.sendMessage.mockResolvedValue(mockSavedMessage as any);
 
     await act(async () => {
-      await useChatStore.getState().sendMessage(dilemmaId, text);
-    });
+      await useChatStore.getState().sendMessage(dilemmaId, text)
+  });
 
     const state = useChatStore.getState();
     expect(state.chatSessions[dilemmaId].messages).toHaveLength(1);
     expect(state.chatSessions[dilemmaId].messages[0].text).toBe(text);
     expect(state.chatSessions[dilemmaId].messages[0].sender).toBe('poster'); // 'poster' for seeker perspective
-    expect(mockedApiClient.chat.sendMessage).toHaveBeenCalledWith(dilemmaId, text, 'poster', 'user123');
+    expect(mockedApiClient.chat.sendMessage).toHaveBeenCalledWith(dilemmaId, text, 'poster', 'user123')
   });
 
   test('closeChat should clear active chat and trigger feedback modal', () => {
@@ -88,8 +88,8 @@ describe('chatStore', () => {
           messages: [],
           perspective: 'seeker',
           unread: false,
-          isTyping: false;
-        } as any 
+          isTyping: false
+  } as any 
       }
     });
     
@@ -98,14 +98,14 @@ describe('chatStore', () => {
     // mockedSessionStore.getState.mockReturnValue({ endHelpSession: endSessionMock });
 
     act(() => {
-      useChatStore.getState().closeChat(dilemmaId);
-    });
+      useChatStore.getState().closeChat(dilemmaId)
+  });
     
     const state = useChatStore.getState();
     expect(state.activeChatId).toBeNull();
     expect(state.isFeedbackModalOpen).toBe(true);
     expect(state.lastChatDilemmaId).toBe(dilemmaId);
     // endHelpSession is no longer called as per the implementation
-    // expect(endSessionMock).toHaveBeenCalledWith(sessionId);
+    // expect(endSessionMock).toHaveBeenCalledWith(sessionId)
+  })
   });
-});

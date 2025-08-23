@@ -3,10 +3,10 @@ import { PlayIcon, PauseIcon, RefreshIcon, VolumeIcon } from './icons.dynamic';
 import './MeditationTimer.css';
 
 interface MeditationTimerProps {
-  onComplete?: () => void;
-}
+  onComplete?: () => void
+  }
 
-const PRESET_TIMES = [;
+const PRESET_TIMES = [;;
   { minutes: 3, label: '3 min', description: 'Quick reset' },
   { minutes: 5, label: '5 min', description: 'Brief meditation' },
   { minutes: 10, label: '10 min', description: 'Standard session' },
@@ -15,7 +15,7 @@ const PRESET_TIMES = [;
   { minutes: 30, label: '30 min', description: 'Full session' }
 ];
 
-const AMBIENT_SOUNDS = [;
+const AMBIENT_SOUNDS = [;;
   { id: 'none', name: 'Silence', emoji: '🔇' },
   { id: 'rain', name: 'Rain', emoji: '🌧️' },
   { id: 'ocean', name: 'Ocean Waves', emoji: '🌊' },
@@ -36,7 +36,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
   const gainNodeRef = useRef<GainNode>();
   
   useEffect(() => {
-    setTimeRemaining(selectedTime * 60);
+    setTimeRemaining(selectedTime * 60)
   };
   }, [selectedTime]);
   
@@ -48,42 +48,42 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
             setIsRunning(false);
             playCompletionSound();
             onComplete?.();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);;
+            return 0
+  }
+          return prev - 1
+  })
+  }, 1000)
   } else {
       if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+        clearInterval(intervalRef.current)
+  }
     }
     
     return () => {
       if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+        clearInterval(intervalRef.current)
+  }
     };
   }, [isRunning, timeRemaining, onComplete]);
   
   useEffect(() => {
     // Initialize audio context for ambient sounds
     if (typeof window !== 'undefined' && !audioContextRef.current) {
-      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
-    }
+      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)()
+  }
     
     return () => {
-      stopAmbientSound();
-    };
+      stopAmbientSound()
+  };
   };
   }, []);
   
   useEffect(() => {
     if (isRunning && selectedSound !== 'none') {
-      playAmbientSound();;
+      playAmbientSound()
   } else {
-      stopAmbientSound();
-    }
+      stopAmbientSound()
+  }
   };
   }, [isRunning, selectedSound]);
   
@@ -133,25 +133,25 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
         const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const output = noiseBuffer.getChannelData(0);
         for (let i = 0; i < bufferSize; i++) {
-          output[i] = Math.random() * 2 - 1;
-        }
+          output[i] = Math.random() * 2 - 1
+  }
         const whiteNoise = ctx.createBufferSource();
         whiteNoise.buffer = noiseBuffer;
         whiteNoise.loop = true;
         whiteNoise.connect(gainNodeRef.current);
         gainNodeRef.current.gain.value = 0.01;
         whiteNoise.start();
-        return;
-    }
+        return
+  }
     
-    oscillatorRef.current.start();
+    oscillatorRef.current.start()
   };
   
   const stopAmbientSound = () => {
     if (oscillatorRef.current) {
       oscillatorRef.current.stop();
-      oscillatorRef.current = undefined;
-    }
+      oscillatorRef.current = undefined
+  }
   };
   
   const playCompletionSound = () => {
@@ -173,27 +173,27 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
     gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1);
     
     osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 1);
+    osc.stop(ctx.currentTime + 1)
   };
   
   const toggleTimer = () => {
-    setIsRunning(!isRunning);
+    setIsRunning(!isRunning)
   };
   
   const resetTimer = () => {
     setIsRunning(false);
     setTimeRemaining(selectedTime * 60);
-    stopAmbientSound();
+    stopAmbientSound()
   };
   
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
   };
   
   const getProgress = () => {
-    return ((selectedTime * 60 - timeRemaining) / (selectedTime * 60)) * 100;
+    return ((selectedTime * 60 - timeRemaining) / (selectedTime * 60)) * 100
   };
   
   const getGuidanceMessage = () => {
@@ -203,7 +203,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
     if (progress < 50) return "Let thoughts pass like clouds in the sky...";
     if (progress < 70) return "Return to your breath when your mind wanders...";
     if (progress < 90) return "You're doing great, stay present...";
-    return "Gently prepare to return...";
+    return "Gently prepare to return..."
   };
   
   return (
@@ -233,8 +233,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
       <div className="timer-display-container">
         <div className="timer-circle">
           <svg className="timer-svg" viewBox="0 0 200 200">
-            <circle;
-              className="timer-circle-bg"
+            <circle className="timer-circle-bg"
               cx="100"
               cy="100"
               r="90"
@@ -242,8 +241,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
               stroke="rgba(102, 126, 234, 0.1)"
               strokeWidth="8"
             />
-            <circle;
-              className="timer-circle-progress"
+            <circle className="timer-circle-progress"
               cx="100"
               cy="100"
               r="90"
@@ -293,16 +291,14 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
       
       {/* Controls */}
       <div className="timer-controls">
-        <button;
-          className="timer-btn primary"
+        <button className="timer-btn primary"
           onClick={toggleTimer}
         >
           {isRunning ? <PauseIcon /> : <PlayIcon />}
           <span>{isRunning ? 'Pause' : 'Start'}</span>
         </button>
         
-        <button;
-          className="timer-btn secondary"
+        <button className="timer-btn secondary"
           onClick={resetTimer}
         >
           <RefreshIcon />
@@ -313,8 +309,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
       {/* Settings */}
       <div className="timer-settings">
         <label className="setting-toggle">
-          <input;
-            type="checkbox"
+          <input type="checkbox"
             checked={showGuidance}
             onChange={(e) => setShowGuidance(e.target.checked)}
           />
@@ -322,5 +317,5 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
         </label>
       </div>
     </div>
-  );
-};
+  )
+  };

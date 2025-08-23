@@ -4,8 +4,8 @@ interface AnimatedNumberProps {
   value: number;
   duration?: number;
   formatter?: (value: number) => string;
-  className?: string;
-}
+  className?: string
+  }
 
 export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
   value,
@@ -35,25 +35,24 @@ export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
       setDisplayValue(currentValue);
       
       if (progress < 1) {
-        requestAnimationFrame(animate);;
+        requestAnimationFrame(animate)
   } else {
-        setIsAnimating(false);
-      }
+        setIsAnimating(false)
+  }
     };
 
-    requestAnimationFrame(animate);
+    requestAnimationFrame(animate)
   };
   }, [value, duration, displayValue]);
 
   return (
-    <output; 
-      className={`animated-number${isAnimating ? ' animating' : ''} ${className}`}
+    <output className={`animated-number${isAnimating ? ' animating' : ''} ${className}`}
       aria-live="polite"
       aria-label={`Current value: ${formatter(displayValue)}`}
     >
       {formatter(displayValue)}
     </output>
-  );
-};
+  )
+  };
 
 AnimatedNumber.displayName = 'AnimatedNumber';

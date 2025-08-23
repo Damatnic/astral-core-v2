@@ -21,8 +21,8 @@ interface WebVitalMetric {
   route?: string;
   userAgent?: string;
   connectionType?: string;
-  isCrisisSituation?: boolean;
-}
+  isCrisisSituation?: boolean
+  }
 
 interface WebVitalsReport {
   metrics: WebVitalMetric[];
@@ -35,7 +35,7 @@ interface WebVitalsReport {
   crisisMetrics?: {
     timeToFirstCrisisResource: number;
     crisisPageLoadTime: number;
-    emergencyButtonResponseTime: number;
+    emergencyButtonResponseTime: number
   }
 
 interface PerformanceBudget {
@@ -69,7 +69,7 @@ class CoreWebVitalsService {
     this.sessionId = this.generateSessionId();
     this.deviceType = this.detectDeviceType();
     this.connectionType = this.detectConnectionType();
-    this.setupRouteTracking();
+    this.setupRouteTracking()
   }
 
   /**
@@ -93,8 +93,8 @@ class CoreWebVitalsService {
 
       // Monitor Interaction to Next Paint if available
       if ('PerformanceObserver' in window) {
-        this.setupINPMonitoring();
-      }
+        this.setupINPMonitoring()
+  }
 
       // Monitor custom crisis-specific metrics
       this.setupCrisisMetrics();
@@ -102,10 +102,10 @@ class CoreWebVitalsService {
       // Set up periodic reporting
       this.setupPeriodicReporting();
 
-      console.log('🚀 Core Web Vitals monitoring initialized');
-    } catch (error) {
-      console.warn('Core Web Vitals monitoring not available:', error);
-    }
+      console.log('🚀 Core Web Vitals monitoring initialized')
+  } catch (error) {
+      console.warn('Core Web Vitals monitoring not available:', error)
+  }
   }
 
   /**
@@ -123,16 +123,16 @@ class CoreWebVitalsService {
       route: window.location.pathname,
       userAgent: navigator.userAgent,
       connectionType: this.connectionType,
-      isCrisisSituation: this.isCrisisRoute();
-    };
+      isCrisisSituation: this.isCrisisRoute()
+  };
 
     this.metrics.push(webVitalMetric);
     this.handleRealTimeAlerts(webVitalMetric);
 
     // Special handling for crisis situations
     if (webVitalMetric.isCrisisSituation) {
-      this.handleCrisisPerformanceMetric(webVitalMetric);
-    }
+      this.handleCrisisPerformanceMetric(webVitalMetric)
+  }
   }
 
   /**
@@ -144,7 +144,7 @@ class CoreWebVitalsService {
 
     if (value <= budget.good) return 'good';
     if (value <= budget.needsImprovement) return 'needs-improvement';
-    return 'poor';
+    return 'poor'
   }
 
   /**
@@ -163,20 +163,20 @@ class CoreWebVitalsService {
                 value: inpValue,
                 delta: inpValue,
                 id: `inp-${Date.now()}`,
-                navigationType: 'navigate';
-              });
-            }
+                navigationType: 'navigate'
+  })
+  }
           }
         }
       });
 
       this.performanceObserver.observe({ 
         type: 'event', 
-        buffered: true ;
-      });
-    } catch (error) {
-      console.warn('INP monitoring not supported:', error);
-    }
+        buffered: true
+  })
+  } catch (error) {
+      console.warn('INP monitoring not supported:', error)
+  }
   }
 
   /**
@@ -190,7 +190,7 @@ class CoreWebVitalsService {
     this.setupEmergencyButtonMonitoring();
     
     // Monitor offline functionality performance
-    this.setupOfflineMetrics();
+    this.setupOfflineMetrics()
   }
 
   /**
@@ -199,7 +199,7 @@ class CoreWebVitalsService {
   private calculateCrisisResourceRating(duration: number): PerformanceRating {
     if (duration < 1000) return 'good';
     if (duration < 2500) return 'needs-improvement';
-    return 'poor';
+    return 'poor'
   }
 
   /**
@@ -220,15 +220,15 @@ class CoreWebVitalsService {
             id: `crisis-resource-${Date.now()}`,
             timestamp: Date.now(),
             route: window.location.pathname,
-            isCrisisSituation: true;
-          };
+            isCrisisSituation: true
+  };
 
-          this.metrics.push(crisisMetric);
-        }
+          this.metrics.push(crisisMetric)
+  }
       }
     });
 
-    observer.observe({ type: 'resource', buffered: true });
+    observer.observe({ type: 'resource', buffered: true })
   }
 
   /**
@@ -237,7 +237,7 @@ class CoreWebVitalsService {
   private calculateEmergencyResponseRating(responseTime: number): PerformanceRating {
     if (responseTime < 50) return 'good';
     if (responseTime < 100) return 'needs-improvement';
-    return 'poor';
+    return 'poor'
   }
 
   /**
@@ -264,18 +264,18 @@ class CoreWebVitalsService {
             id: `emergency-response-${Date.now()}`,
             timestamp: Date.now(),
             route: window.location.pathname,
-            isCrisisSituation: true;
-          };
+            isCrisisSituation: true
+  };
 
           this.metrics.push(emergencyMetric);
           
           // Immediate alert for poor emergency response times
           if (emergencyMetric.rating === 'poor') {
-            console.warn('🚨 Poor emergency button response time:', responseTime, 'ms');
-          }
-        });
-      }
-    });
+            console.warn('🚨 Poor emergency button response time:', responseTime, 'ms')
+  }
+        })
+  }
+    })
   }
 
   /**
@@ -283,12 +283,12 @@ class CoreWebVitalsService {
    */
   private setupOfflineMetrics(): void {
     window.addEventListener('online', () => {
-      this.trackNetworkChange('online');
-    });
+      this.trackNetworkChange('online')
+  });
 
     window.addEventListener('offline', () => {
-      this.trackNetworkChange('offline');
-    });
+      this.trackNetworkChange('offline')
+  })
   }
 
   /**
@@ -303,10 +303,10 @@ class CoreWebVitalsService {
       id: `network-${status}-${Date.now()}`,
       timestamp: Date.now(),
       route: window.location.pathname,
-      isCrisisSituation: this.isCrisisRoute();
-    };
+      isCrisisSituation: this.isCrisisRoute()
+  };
 
-    this.metrics.push(networkMetric);
+    this.metrics.push(networkMetric)
   }
 
   /**
@@ -321,8 +321,8 @@ class CoreWebVitalsService {
       });
 
       // Could trigger notifications to development team
-      this.notifyDevelopmentTeam(metric);
-    }
+      this.notifyDevelopmentTeam(metric)
+  }
   }
 
   /**
@@ -336,11 +336,11 @@ class CoreWebVitalsService {
       route: window.location.pathname,
       sessionId: this.sessionId,
       deviceType: this.deviceType,
-      connectionType: this.connectionType;
-    };
+      connectionType: this.connectionType
+  };
 
     // Store crisis metrics locally for analysis
-    this.storeCrisisMetrics(crisisData);
+    this.storeCrisisMetrics(crisisData)
   }
 
   /**
@@ -354,13 +354,13 @@ class CoreWebVitalsService {
       
       // Keep only last 100 crisis metrics
       if (metrics.length > 100) {
-        metrics.splice(0, metrics.length - 100);
-      }
+        metrics.splice(0, metrics.length - 100)
+  }
       
-      localStorage.setItem('crisis-performance-metrics', JSON.stringify(metrics));
-    } catch (error) {
-      console.warn('Could not store crisis metrics:', error);
-    }
+      localStorage.setItem('crisis-performance-metrics', JSON.stringify(metrics))
+  } catch (error) {
+      console.warn('Could not store crisis metrics:', error)
+  }
   }
 
   /**
@@ -371,14 +371,14 @@ class CoreWebVitalsService {
     return path.includes('crisis') || 
            path.includes('emergency') || 
            path.includes('safety') ||
-           path.includes('offline-crisis');
+           path.includes('offline-crisis')
   }
 
   /**
    * Generate unique session ID
    */
   private generateSessionId(): string {
-    return `cwv-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return `cwv-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
   }
 
   /**
@@ -388,7 +388,7 @@ class CoreWebVitalsService {
     const width = window.innerWidth;
     if (width < 768) return 'mobile';
     if (width < 1024) return 'tablet';
-    return 'desktop';
+    return 'desktop'
   }
 
   /**
@@ -396,7 +396,7 @@ class CoreWebVitalsService {
    */
   private detectConnectionType(): string {
     const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
-    return connection?.effectiveType || 'unknown';
+    return connection?.effectiveType || 'unknown'
   }
 
   /**
@@ -412,8 +412,8 @@ class CoreWebVitalsService {
       originalPushState.apply(history, args);
       this.userJourney.push(window.location.pathname);
       if (this.userJourney.length > 20) {
-        this.userJourney.shift();
-      }
+        this.userJourney.shift()
+  }
     }
 
   /**
@@ -423,14 +423,14 @@ class CoreWebVitalsService {
     // Report metrics every 30 seconds
     setInterval(() => {
       if (this.metrics.length > 0) {
-        this.generateReport();
-      }
+        this.generateReport()
+  }
     }, 30000);
 
     // Report on page unload
     window.addEventListener('beforeunload', () => {
-      this.generateReport();
-    });
+      this.generateReport()
+  })
   }
 
   /**
@@ -444,24 +444,24 @@ class CoreWebVitalsService {
       connectionType: this.connectionType,
       timestamp: Date.now(),
       route: window.location.pathname,
-      userJourney: [...this.userJourney];
-    };
+      userJourney: [...this.userJourney]
+  };
 
     // Add crisis-specific metrics if applicable;
     const crisisMetrics = this.calculateCrisisMetrics();
     if (crisisMetrics) {
-      report.crisisMetrics = crisisMetrics;
-    }
+      report.crisisMetrics = crisisMetrics
+  }
 
     // Send to reporting endpoint if configured
     if (this.reportingEndpoint) {
-      this.sendReport(report);
-    }
+      this.sendReport(report)
+  }
 
     // Clear metrics after reporting
     this.metrics = [];
 
-    return report;
+    return report
   }
 
   /**
@@ -498,12 +498,12 @@ class CoreWebVitalsService {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(report);
-      };
+        body: JSON.stringify(report)
+  };
   };
     } catch (error) {
-      console.warn('Failed to send Web Vitals report:', error);
-    }
+      console.warn('Failed to send Web Vitals report:', error)
+  }
   }
 
   /**
@@ -511,7 +511,7 @@ class CoreWebVitalsService {
    */
   private notifyDevelopmentTeam(metric: WebVitalMetric): void {
     // In production, this could send alerts to monitoring services
-    console.error('🚨 Critical performance issue detected:', metric);
+    console.error('🚨 Critical performance issue detected:', metric)
   }
 
   /**
@@ -525,8 +525,8 @@ class CoreWebVitalsService {
       crisisMetrics: this.metrics.filter(m => m.isCrisisSituation).length,
       deviceType: this.deviceType,
       connectionType: this.connectionType,
-      sessionId: this.sessionId;
-     }
+      sessionId: this.sessionId
+  }
 
   /**
    * Stop monitoring
@@ -534,11 +534,11 @@ class CoreWebVitalsService {
   public stop(): void {
     if (this.performanceObserver) {
       this.performanceObserver.disconnect();
-      this.performanceObserver = null;
-    }
+      this.performanceObserver = null
+  }
     
     // Generate final report
-    this.generateReport();
+    this.generateReport()
   }
 }
 

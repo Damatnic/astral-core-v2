@@ -17,7 +17,7 @@ const createTouchEvent = (type: string, touches: Array<{ clientX: number; client
     screenX: touch.clientX,
     screenY: touch.clientY,
     pageX: touch.clientX,
-    pageY: touch.clientY;
+    pageY: touch.clientY
   }));
 
   // Create event with proper touches array;
@@ -28,7 +28,7 @@ const createTouchEvent = (type: string, touches: Array<{ clientX: number; client
     cancelable: true,
     touches: touchesArray,
     changedTouches: touchList,
-    targetTouches: touchesArray;
+    targetTouches: touchesArray
   } as any);
 
   // Ensure touches has a length property and array-like behavior
@@ -36,32 +36,32 @@ const createTouchEvent = (type: string, touches: Array<{ clientX: number; client
     Object.defineProperty(event, 'touches', {
       value: touchesArray,
       writable: false,
-      configurable: true;
-    });
+      configurable: true
+  })
   }
   
   // Ensure the touches array has proper array methods
   if (event.touches && !event.touches[Symbol.iterator]) {
     Object.defineProperty(event.touches, 'length', {
       value: touchesArray.length,
-      writable: false;
-    });
+      writable: false
+  });
     for (let i = 0; i < touchesArray.length; i++) {
-      event.touches[i] = touchesArray[i];
-    }
+      event.touches[i] = touchesArray[i]
+  }
   }
 
-  return event;
-};
+  return event
+  };
 
 describe('useSwipeGesture Hook', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.useFakeTimers();
+    jest.useFakeTimers()
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   it.skip('should initialize with correct default state', async () => {
@@ -69,7 +69,7 @@ describe('useSwipeGesture Hook', () => {
     
     expect(result.current.isTracking).toBe(false);
     expect(typeof result.current.attachListeners).toBe('function');
-    expect(typeof result.current.detachListeners).toBe('function');
+    expect(typeof result.current.detachListeners).toBe('function')
   });
 
   it.skip('should attach and detach listeners to an element', async () => {
@@ -89,7 +89,7 @@ describe('useSwipeGesture Hook', () => {
 
     expect(removeEventListenerSpy).toHaveBeenCalledWith('touchstart', expect.any(Function));
     expect(removeEventListenerSpy).toHaveBeenCalledWith('touchmove', expect.any(Function));
-    expect(removeEventListenerSpy).toHaveBeenCalledWith('touchend', expect.any(Function));
+    expect(removeEventListenerSpy).toHaveBeenCalledWith('touchend', expect.any(Function))
   });
 
   it.skip('should use non-passive listeners when preventDefaultTouchMove is enabled', async () => {
@@ -100,7 +100,7 @@ describe('useSwipeGesture Hook', () => {
 
     result.current.attachListeners(element);
 
-    expect(addEventListenerSpy).toHaveBeenCalledWith('touchmove', expect.any(Function), { passive: false });
+    expect(addEventListenerSpy).toHaveBeenCalledWith('touchmove', expect.any(Function), { passive: false })
   });
 
   it.skip('should detect left swipe gesture', async () => {
@@ -111,8 +111,8 @@ describe('useSwipeGesture Hook', () => {
       onSwipeLeft, 
       onSwipe,
       threshold: 50,
-      velocityThreshold: 0.1;
-    }));
+      velocityThreshold: 0.1
+  }));
     
     const element = document.createElement('div');
     result.current.attachListeners(element);
@@ -129,27 +129,27 @@ describe('useSwipeGesture Hook', () => {
     // Simulate touch move
     act(() => {
       const touchMove = createTouchEvent('touchmove', [{ clientX: 100, clientY: 100 }]);
-      element.dispatchEvent(touchMove);
-    });
+      element.dispatchEvent(touchMove)
+  });
 
     act(() => {
-      element.dispatchEvent(touchEnd);
-    });
+      element.dispatchEvent(touchEnd)
+  });
 
     expect(onSwipeLeft).toHaveBeenCalledWith(
       expect.objectContaining({
         direction: 'left',
         distance: 100,
         velocity: expect.any(Number),
-        duration: expect.any(Number);
-      })
+        duration: expect.any(Number)
+  })
     );
 
     expect(onSwipe).toHaveBeenCalledWith(
       expect.objectContaining({
-        direction: 'left';
-      })
-    );
+        direction: 'left'
+  })
+    )
   });
 
   it.skip('should detect right swipe gesture', async () => {
@@ -158,8 +158,8 @@ describe('useSwipeGesture Hook', () => {
     const { result } = renderHook(() => useSwipeGesture({ 
       onSwipeRight,
       threshold: 50,
-      velocityThreshold: 0.1;
-    }));
+      velocityThreshold: 0.1
+  }));
     
     const element = document.createElement('div');
     result.current.attachListeners(element);
@@ -168,25 +168,25 @@ describe('useSwipeGesture Hook', () => {
     act(() => {
       const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
       element.dispatchEvent(touchStart);
-      jest.setSystemTime(Date.now() + 100);
-    });
+      jest.setSystemTime(Date.now() + 100)
+  });
 
     act(() => {
       const touchMove = createTouchEvent('touchmove', [{ clientX: 200, clientY: 100 }]);
-      element.dispatchEvent(touchMove);
-    });
+      element.dispatchEvent(touchMove)
+  });
 
     act(() => {
       const touchEnd = createTouchEvent('touchend', []);
-      element.dispatchEvent(touchEnd);
-    });
+      element.dispatchEvent(touchEnd)
+  });
 
     expect(onSwipeRight).toHaveBeenCalledWith(
       expect.objectContaining({
         direction: 'right',
-        distance: 100;
-      })
-    );
+        distance: 100
+  })
+    )
   });
 
   it.skip('should detect up swipe gesture', async () => {
@@ -195,8 +195,8 @@ describe('useSwipeGesture Hook', () => {
     const { result } = renderHook(() => useSwipeGesture({ 
       onSwipeUp,
       threshold: 50,
-      velocityThreshold: 0.1;
-    }));
+      velocityThreshold: 0.1
+  }));
     
     const element = document.createElement('div');
     result.current.attachListeners(element);
@@ -205,25 +205,25 @@ describe('useSwipeGesture Hook', () => {
     act(() => {
       const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 200 }]);
       element.dispatchEvent(touchStart);
-      jest.setSystemTime(Date.now() + 100);
-    });
+      jest.setSystemTime(Date.now() + 100)
+  });
 
     act(() => {
       const touchMove = createTouchEvent('touchmove', [{ clientX: 100, clientY: 100 }]);
-      element.dispatchEvent(touchMove);
-    });
+      element.dispatchEvent(touchMove)
+  });
 
     act(() => {
       const touchEnd = createTouchEvent('touchend', []);
-      element.dispatchEvent(touchEnd);
-    });
+      element.dispatchEvent(touchEnd)
+  });
 
     expect(onSwipeUp).toHaveBeenCalledWith(
       expect.objectContaining({
         direction: 'up',
-        distance: 100;
-      })
-    );
+        distance: 100
+  })
+    )
   });
 
   it.skip('should detect down swipe gesture', async () => {
@@ -232,8 +232,8 @@ describe('useSwipeGesture Hook', () => {
     const { result } = renderHook(() => useSwipeGesture({ 
       onSwipeDown,
       threshold: 50,
-      velocityThreshold: 0.1;
-    }));
+      velocityThreshold: 0.1
+  }));
     
     const element = document.createElement('div');
     result.current.attachListeners(element);
@@ -242,25 +242,25 @@ describe('useSwipeGesture Hook', () => {
     act(() => {
       const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
       element.dispatchEvent(touchStart);
-      jest.setSystemTime(Date.now() + 100);
-    });
+      jest.setSystemTime(Date.now() + 100)
+  });
 
     act(() => {
       const touchMove = createTouchEvent('touchmove', [{ clientX: 100, clientY: 200 }]);
-      element.dispatchEvent(touchMove);
-    });
+      element.dispatchEvent(touchMove)
+  });
 
     act(() => {
       const touchEnd = createTouchEvent('touchend', []);
-      element.dispatchEvent(touchEnd);
-    });
+      element.dispatchEvent(touchEnd)
+  });
 
     expect(onSwipeDown).toHaveBeenCalledWith(
       expect.objectContaining({
         direction: 'down',
-        distance: 100;
-      })
-    );
+        distance: 100
+  })
+    )
   });
 
   it.skip('should not trigger swipe if distance is below threshold', async () => {
@@ -268,8 +268,8 @@ describe('useSwipeGesture Hook', () => {
     
     const { result } = renderHook(() => useSwipeGesture({ 
       onSwipe,
-      threshold: 100;
-    }));
+      threshold: 100
+  }));
     
     const element = document.createElement('div');
     result.current.attachListeners(element);
@@ -278,20 +278,20 @@ describe('useSwipeGesture Hook', () => {
     act(() => {
       const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
       element.dispatchEvent(touchStart);
-      jest.setSystemTime(Date.now() + 100);
-    });
+      jest.setSystemTime(Date.now() + 100)
+  });
 
     act(() => {
       const touchMove = createTouchEvent('touchmove', [{ clientX: 150, clientY: 100 }]);
-      element.dispatchEvent(touchMove);
-    });
+      element.dispatchEvent(touchMove)
+  });
 
     act(() => {
       const touchEnd = createTouchEvent('touchend', []);
-      element.dispatchEvent(touchEnd);
-    });
+      element.dispatchEvent(touchEnd)
+  });
 
-    expect(onSwipe).not.toHaveBeenCalled();
+    expect(onSwipe).not.toHaveBeenCalled()
   });
 
   it.skip('should not trigger swipe if velocity is below threshold', async () => {
@@ -300,8 +300,8 @@ describe('useSwipeGesture Hook', () => {
     const { result } = renderHook(() => useSwipeGesture({ 
       onSwipe,
       threshold: 50,
-      velocityThreshold: 1.0 // High velocity threshold;
-    }));
+      velocityThreshold: 1.0 // High velocity threshold
+  }));
     
     const element = document.createElement('div');
     result.current.attachListeners(element);
@@ -315,15 +315,15 @@ describe('useSwipeGesture Hook', () => {
 
     act(() => {
       const touchMove = createTouchEvent('touchmove', [{ clientX: 200, clientY: 100 }]);
-      element.dispatchEvent(touchMove);
-    });
+      element.dispatchEvent(touchMove)
+  });
 
     act(() => {
       const touchEnd = createTouchEvent('touchend', []);
-      element.dispatchEvent(touchEnd);
-    });
+      element.dispatchEvent(touchEnd)
+  });
 
-    expect(onSwipe).not.toHaveBeenCalled();
+    expect(onSwipe).not.toHaveBeenCalled()
   });
 
   it.skip('should ignore multi-touch events', async () => {
@@ -336,14 +336,14 @@ describe('useSwipeGesture Hook', () => {
 
     // Simulate multi-touch start
     act(() => {
-      const touchStart = createTouchEvent('touchstart', [;
+      const touchStart = createTouchEvent('touchstart', [;;
         { clientX: 100, clientY: 100 },
         { clientX: 200, clientY: 200 }
       ]);
-      element.dispatchEvent(touchStart);
-    });
+      element.dispatchEvent(touchStart)
+  });
 
-    expect(result.current.isTracking).toBe(false);
+    expect(result.current.isTracking).toBe(false)
   });
 
   it.skip('should handle touchend without touchmove', async () => {
@@ -356,19 +356,19 @@ describe('useSwipeGesture Hook', () => {
 
     act(() => {
       const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
-      element.dispatchEvent(touchStart);
-    });
+      element.dispatchEvent(touchStart)
+  });
 
     expect(result.current.isTracking).toBe(true);
 
     // End without move
     act(() => {
       const touchEnd = createTouchEvent('touchend', []);
-      element.dispatchEvent(touchEnd);
-    });
+      element.dispatchEvent(touchEnd)
+  });
 
     expect(result.current.isTracking).toBe(false);
-    expect(onSwipe).not.toHaveBeenCalled();
+    expect(onSwipe).not.toHaveBeenCalled()
   });
 
   it.skip('should update tracking state correctly', async () => {
@@ -381,19 +381,19 @@ describe('useSwipeGesture Hook', () => {
 
     act(() => {
       const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
-      element.dispatchEvent(touchStart);
-    });
+      element.dispatchEvent(touchStart)
+  });
 
     expect(result.current.isTracking).toBe(true);
 
     act(() => {
       const touchEnd = createTouchEvent('touchend', []);
-      element.dispatchEvent(touchEnd);
-    });
-
-    expect(result.current.isTracking).toBe(false);
+      element.dispatchEvent(touchEnd)
   });
-});
+
+    expect(result.current.isTracking).toBe(false)
+  })
+  });
 
 describe('useSwipeRef Hook', () => {
   it.skip('should return ref and tracking state', async () => {
@@ -401,7 +401,7 @@ describe('useSwipeRef Hook', () => {
     
     expect(result.current.ref).toBeDefined();
     expect(result.current.ref.current).toBeNull();
-    expect(result.current.isTracking).toBe(false);
+    expect(result.current.isTracking).toBe(false)
   });
 
   it.skip('should automatically attach listeners when ref is set', async () => {
@@ -412,22 +412,22 @@ describe('useSwipeRef Hook', () => {
     const addEventListenerSpy = jest.spyOn(element, 'addEventListener');
 
     act(() => {
-      (result.current.ref as any).current = element;
-    });
+      (result.current.ref as any).current = element
+  });
 
     // Trigger useEffect by re-rendering
     act(() => {
-      rerender();
-    });
-
-    expect(addEventListenerSpy).toHaveBeenCalled();
+      rerender()
   });
-});
+
+    expect(addEventListenerSpy).toHaveBeenCalled()
+  })
+  });
 
 describe('usePullToRefresh Hook', () => {
   beforeEach(() => {
     // Mock scrollY and scrollTop
-    Object.defineProperty(window, 'scrollY', { value: 0, writable: true });
+    Object.defineProperty(window, 'scrollY', { value: 0, writable: true })
   });
 
   it.skip('should initialize with correct default state', async () => {
@@ -438,7 +438,7 @@ describe('usePullToRefresh Hook', () => {
     expect(result.current.pullDistance).toBe(0);
     expect(result.current.isRefreshing).toBe(false);
     expect(result.current.pullProgress).toBe(0);
-    expect(result.current.ref).toBeDefined();
+    expect(result.current.ref).toBeDefined()
   });
 
   it.skip('should start pulling when swiping down from top', () => {
@@ -449,29 +449,29 @@ describe('usePullToRefresh Hook', () => {
     Object.defineProperty(element, 'scrollTop', { value: 0, writable: true });
 
     act(() => {
-      (result.current.ref as any).current = element;
-    });
+      (result.current.ref as any).current = element
+  });
 
     // Force re-render to trigger useEffect
     act(() => {
-      rerender();
-    });
+      rerender()
+  });
 
     // Simulate touch start at top
     act(() => {
       const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
-      element.dispatchEvent(touchStart);
-    });
+      element.dispatchEvent(touchStart)
+  });
 
     // Simulate pulling down
     act(() => {
       const touchMove = createTouchEvent('touchmove', [{ clientX: 100, clientY: 150 }]);
-      element.dispatchEvent(touchMove);
-    });
+      element.dispatchEvent(touchMove)
+  });
 
     expect(result.current.isPulling).toBe(true);
     expect(result.current.pullDistance).toBeGreaterThan(0);
-    expect(result.current.pullProgress).toBeGreaterThan(0);
+    expect(result.current.pullProgress).toBeGreaterThan(0)
   });
 
   it.skip('should not start pulling when not at top', async () => {
@@ -482,16 +482,16 @@ describe('usePullToRefresh Hook', () => {
     Object.defineProperty(element, 'scrollTop', { value: 100, writable: true });
 
     act(() => {
-      (result.current.ref as any).current = element;
-    });
+      (result.current.ref as any).current = element
+  });
 
     // Simulate touch start when scrolled
     act(() => {
       const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
-      element.dispatchEvent(touchStart);
-    });
+      element.dispatchEvent(touchStart)
+  });
 
-    expect(result.current.isPulling).toBe(false);
+    expect(result.current.isPulling).toBe(false)
   });
 
   it.skip('should trigger refresh when threshold is exceeded', async () => {
@@ -502,33 +502,33 @@ describe('usePullToRefresh Hook', () => {
     Object.defineProperty(element, 'scrollTop', { value: 0, writable: true });
 
     act(() => {
-      (result.current.ref as any).current = element;
-    });
+      (result.current.ref as any).current = element
+  });
 
     // Force re-render to trigger useEffect
     act(() => {
-      rerender();
-    });
+      rerender()
+  });
 
     // Start pull
     act(() => {
       const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
-      element.dispatchEvent(touchStart);
-    });
+      element.dispatchEvent(touchStart)
+  });
 
     // Pull down beyond threshold
     act(() => {
       const touchMove = createTouchEvent('touchmove', [{ clientX: 100, clientY: 160 }]);
-      element.dispatchEvent(touchMove);
-    });
+      element.dispatchEvent(touchMove)
+  });
 
     // Release
     await act(async () => {
       const touchEnd = createTouchEvent('touchend', []);
-      element.dispatchEvent(touchEnd);
-    });
+      element.dispatchEvent(touchEnd)
+  });
 
-    expect(mockOnRefresh).toHaveBeenCalled();
+    expect(mockOnRefresh).toHaveBeenCalled()
   });
 
   it.skip('should not trigger refresh when below threshold', async () => {
@@ -539,30 +539,30 @@ describe('usePullToRefresh Hook', () => {
     Object.defineProperty(element, 'scrollTop', { value: 0, writable: true });
 
     act(() => {
-      (result.current.ref as any).current = element;
-    });
+      (result.current.ref as any).current = element
+  });
 
     // Start pull
     act(() => {
       const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
-      element.dispatchEvent(touchStart);
-    });
+      element.dispatchEvent(touchStart)
+  });
 
     // Pull down but not enough
     act(() => {
       const touchMove = createTouchEvent('touchmove', [{ clientX: 100, clientY: 130 }]);
-      element.dispatchEvent(touchMove);
-    });
+      element.dispatchEvent(touchMove)
+  });
 
     // Release
     act(() => {
       const touchEnd = createTouchEvent('touchend', []);
-      element.dispatchEvent(touchEnd);
-    });
+      element.dispatchEvent(touchEnd)
+  });
 
     expect(mockOnRefresh).not.toHaveBeenCalled();
     expect(result.current.isPulling).toBe(false);
-    expect(result.current.pullDistance).toBe(0);
+    expect(result.current.pullDistance).toBe(0)
   });
 
   it.skip('should handle refresh errors gracefully', async () => {
@@ -573,33 +573,33 @@ describe('usePullToRefresh Hook', () => {
     Object.defineProperty(element, 'scrollTop', { value: 0, writable: true });
 
     act(() => {
-      (result.current.ref as any).current = element;
-    });
+      (result.current.ref as any).current = element
+  });
 
     // Force re-render to trigger useEffect
     act(() => {
-      rerender();
-    });
+      rerender()
+  });
 
     // Start and complete pull gesture
     act(() => {
       const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
-      element.dispatchEvent(touchStart);
-    });
+      element.dispatchEvent(touchStart)
+  });
 
     act(() => {
       const touchMove = createTouchEvent('touchmove', [{ clientX: 100, clientY: 160 }]);
-      element.dispatchEvent(touchMove);
-    });
+      element.dispatchEvent(touchMove)
+  });
 
     await act(async () => {
       const touchEnd = createTouchEvent('touchend', []);
-      element.dispatchEvent(touchEnd);
-    });
+      element.dispatchEvent(touchEnd)
+  });
 
     expect(mockOnRefresh).toHaveBeenCalled();
     expect(result.current.isRefreshing).toBe(false);
-    expect(result.current.isPulling).toBe(false);
+    expect(result.current.isPulling).toBe(false)
   });
 
   it.skip('should not pull when disabled', () => {
@@ -610,16 +610,16 @@ describe('usePullToRefresh Hook', () => {
     Object.defineProperty(element, 'scrollTop', { value: 0, writable: true });
 
     act(() => {
-      (result.current.ref as any).current = element;
-    });
+      (result.current.ref as any).current = element
+  });
 
     // Try to start pull
     act(() => {
       const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
-      element.dispatchEvent(touchStart);
-    });
+      element.dispatchEvent(touchStart)
+  });
 
-    expect(result.current.isPulling).toBe(false);
+    expect(result.current.isPulling).toBe(false)
   });
 
   it.skip('should apply resistance to pull distance', () => {
@@ -630,27 +630,27 @@ describe('usePullToRefresh Hook', () => {
     Object.defineProperty(element, 'scrollTop', { value: 0, writable: true });
 
     act(() => {
-      (result.current.ref as any).current = element;
-    });
+      (result.current.ref as any).current = element
+  });
 
     // Force re-render to trigger useEffect
     act(() => {
-      rerender();
-    });
+      rerender()
+  });
 
     // Start pull
     act(() => {
       const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
-      element.dispatchEvent(touchStart);
-    });
+      element.dispatchEvent(touchStart)
+  });
 
     // Pull down 100px
     act(() => {
       const touchMove = createTouchEvent('touchmove', [{ clientX: 100, clientY: 200 }]);
-      element.dispatchEvent(touchMove);
-    });
+      element.dispatchEvent(touchMove)
+  });
 
     // With 0.5 resistance, 100px pull should result in 50px distance
-    expect(result.current.pullDistance).toBe(50);
+    expect(result.current.pullDistance).toBe(50)
+  })
   });
-});

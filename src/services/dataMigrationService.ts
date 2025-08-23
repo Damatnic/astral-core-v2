@@ -13,15 +13,15 @@ export interface MigrationReport {
   warnings: string[];
   encryptionStats: any;
   complianceCheck: any;
-  migrationTime: number;
-}
+  migrationTime: number
+  }
 
 export interface MigrationOptions {
   dryRun?: boolean;
   backupExisting?: boolean;
   forceUpdate?: boolean;
-  enableLogging?: boolean;
-}
+  enableLogging?: boolean
+  }
 
 class DataMigrationService {
   private secureStorage = getSecureStorage();
@@ -40,8 +40,8 @@ class DataMigrationService {
       warnings: [],
       encryptionStats: {},
       complianceCheck: {},
-      migrationTime: 0;
-    }
+      migrationTime: 0
+  }
 
   /**
    * Process all keys for migration
@@ -53,15 +53,15 @@ class DataMigrationService {
       try {
         const migrated = await this.migrateKey(key, options);
         if (migrated) {
-          report.migratedKeys++;;
+          report.migratedKeys++
   } else {
-          report.skippedKeys++;
-        }
+          report.skippedKeys++
+  }
       } catch (error) {
         report.failedKeys++;
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        report.errors.push(`Failed to migrate key '${key}': ${errorMessage}`);
-      }
+        report.errors.push(`Failed to migrate key '${key}': ${errorMessage}`)
+  }
     }
   }
 
@@ -78,8 +78,8 @@ class DataMigrationService {
     // Add warnings for non-compliant data
     if (!report.complianceCheck.compliant) {
       report.warnings.push('HIPAA compliance violations detected');
-      report.warnings.push(...report.complianceCheck.violations);
-    }
+      report.warnings.push(...report.complianceCheck.violations)
+  }
   }
 
   /**
@@ -91,13 +91,13 @@ class DataMigrationService {
 
     try {
       if (options.enableLogging) {
-        console.log('Starting data migration for HIPAA compliance...');
-      }
+        console.log('Starting data migration for HIPAA compliance...')
+  }
 
       // Create backup if requested
       if (options.backupExisting && !options.dryRun) {
-        await this.createBackup();
-      }
+        await this.createBackup()
+  }
 
       // Get all localStorage keys and process them;
       const allKeys = this.getAllLocalStorageKeys();
@@ -105,8 +105,8 @@ class DataMigrationService {
 
       // Run encryption service migration for any remaining data
       if (!options.dryRun) {
-        await this.encryptionService.migrateExistingData();
-      }
+        await this.encryptionService.migrateExistingData()
+  }
 
       // Finalize report with statistics and compliance check
       await this.finalizeMigrationReport(report, options);
@@ -114,17 +114,16 @@ class DataMigrationService {
       report.migrationTime = Date.now() - startTime;
 
       if (options.enableLogging) {
-        this.logMigrationReport(report);
-      }
+        this.logMigrationReport(report)
+  }
 
-      return report;
-
-    } catch (error) {
+      return report
+  } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       report.errors.push(`Migration failed: ${errorMessage}`);
       report.migrationTime = Date.now() - startTime;
-      return report;
-    }
+      return report
+  }
   }
 
   /**
@@ -133,23 +132,23 @@ class DataMigrationService {
   private async migrateKey(key: string, options: MigrationOptions): Promise<boolean> {
     // Skip system keys
     if (this.isSystemKey(key)) {
-      return false;
-    }
+      return false
+  }
 
     const existingValue = localStorage.getItem(key);
     if (!existingValue) {
-      return false;
-    }
+      return false
+  }
 
     // Check if already encrypted
     if (this.isAlreadyEncrypted(existingValue)) {
-      return false;
-    }
+      return false
+  }
 
     // Check if this key needs encryption
     if (!this.shouldEncryptKey(key)) {
-      return false;
-    }
+      return false
+  }
 
     if (options.dryRun) {
       return true; // Would migrate this key
@@ -157,14 +156,14 @@ class DataMigrationService {
 
     // Migrate to secure storage
     await this.secureStorage.setItem(key, existingValue);
-    return true;
+    return true
   }
 
   /**
    * Check if a key is a system key that shouldn't be migrated
    */
   private isSystemKey(key: string): boolean {
-    const systemKeys = [;
+    const systemKeys = [;;
       '_secure_storage_log',
       'security_logs',
       'analytics_opted_out',
@@ -172,7 +171,7 @@ class DataMigrationService {
       'analytics_failed'
     ];
     
-    return systemKeys.includes(key) || key.startsWith('_');
+    return systemKeys.includes(key) || key.startsWith('_')
   }
 
   /**
@@ -181,17 +180,17 @@ class DataMigrationService {
   private isAlreadyEncrypted(value: string): boolean {
     try {
       const parsed = JSON.parse(value);
-      return parsed.encrypted === true;
-    } catch {
-      return false;
-    }
+      return parsed.encrypted === true
+  } catch {
+      return false
+  }
   }
 
   /**
    * Check if a key should be encrypted based on data classification
    */
   private shouldEncryptKey(key: string): boolean {
-    const sensitiveKeyPatterns = [;
+    const sensitiveKeyPatterns = [;;
       'safetyPlan',
       'mood_analyses',
       'userToken',
@@ -204,7 +203,7 @@ class DataMigrationService {
 
     return sensitiveKeyPatterns.some(pattern => 
       key.toLowerCase().includes(pattern.toLowerCase())
-    );
+    )
   }
 
   /**
@@ -215,10 +214,10 @@ class DataMigrationService {
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key) {
-        keys.push(key);
-      }
+        keys.push(key)
+  }
     }
-    return keys;
+    return keys
   }
 
   /**
@@ -231,7 +230,7 @@ class DataMigrationService {
     // Store backup in secure storage
     await this.secureStorage.setItem(backupKey, JSON.stringify(backup));
     
-    console.log(`Backup created with key: ${backupKey}`);
+    console.log(`Backup created with key: ${backupKey}`)
   }
 
   /**
@@ -246,15 +245,15 @@ class DataMigrationService {
     console.log(`Migration time: ${report.migrationTime}ms`);
     
     if (report.errors.length > 0) {
-      console.warn('Migration errors:', report.errors);
-    }
+      console.warn('Migration errors:', report.errors)
+  }
     
     if (report.warnings.length > 0) {
-      console.warn('Migration warnings:', report.warnings);
-    }
+      console.warn('Migration warnings:', report.warnings)
+  }
     
     console.log('Encryption stats:', report.encryptionStats);
-    console.log('HIPAA compliance:', report.complianceCheck);
+    console.log('HIPAA compliance:', report.complianceCheck)
   }
 
   /**
@@ -263,7 +262,7 @@ class DataMigrationService {
   public async validateMigration(): Promise<{
     isValid: boolean;
     issues: string[];
-    recommendations: string[];
+    recommendations: string[]
   }> {
     const issues: string[] = [];
     const recommendations: string[] = [];
@@ -272,23 +271,23 @@ class DataMigrationService {
     const encryptionStats = this.encryptionService.getEncryptionStats();
     if (!encryptionStats.isSupported) {
       issues.push('Browser does not support required encryption features');
-      recommendations.push('Use a modern browser that supports Web Crypto API');
-    }
+      recommendations.push('Use a modern browser that supports Web Crypto API')
+  }
 
     // Check HIPAA compliance;
     const complianceCheck = this.encryptionService.performHIPAAComplianceCheck();
     if (!complianceCheck.compliant) {
       issues.push('HIPAA compliance violations detected');
       issues.push(...complianceCheck.violations);
-      recommendations.push(...complianceCheck.recommendations);
-    }
+      recommendations.push(...complianceCheck.recommendations)
+  }
 
     // Check data integrity;
     const integrityCheck = await this.encryptionService.validateDataIntegrity();
     if (integrityCheck.invalid > 0) {
       issues.push(`${integrityCheck.invalid} encrypted items failed integrity check`);
-      recommendations.push('Re-run migration for failed items');
-    }
+      recommendations.push('Re-run migration for failed items')
+  }
 
     return { isValid: issues.length === 0,
       issues,
@@ -302,7 +301,7 @@ class DataMigrationService {
     needsMigration: boolean;
     reason: string;
     urgency: 'low' | 'medium' | 'high' | 'critical';
-    sensitiveKeysFound: string[];
+    sensitiveKeysFound: string[]
   } {
     const sensitiveKeys: string[] = [];
     let hasUnencryptedSensitiveData = false;
@@ -314,8 +313,8 @@ class DataMigrationService {
         const value = localStorage.getItem(key);
         if (value && !this.isAlreadyEncrypted(value)) {
           sensitiveKeys.push(key);
-          hasUnencryptedSensitiveData = true;
-        }
+          hasUnencryptedSensitiveData = true
+  }
       }
     }
 
@@ -323,20 +322,20 @@ class DataMigrationService {
     let urgency: 'low' | 'medium' | 'high' | 'critical' = 'low';
     
     if (sensitiveKeys.some(key => key.includes('crisis'))) {
-      urgency = 'critical';;
+      urgency = 'critical'
   } else if (sensitiveKeys.some(key => key.includes('health') || key.includes('mood'))) {
-      urgency = 'high';;
+      urgency = 'high'
   } else if (sensitiveKeys.some(key => key.includes('chat') || key.includes('personal'))) {
-      urgency = 'medium';
-    }
+      urgency = 'medium'
+  }
 
     return { needsMigration: hasUnencryptedSensitiveData,
       reason: hasUnencryptedSensitiveData 
         ? 'Unencrypted sensitive data detected'
         : 'All sensitive data is properly encrypted',
       urgency,
-      sensitiveKeysFound: sensitiveKeys;
-     }
+      sensitiveKeysFound: sensitiveKeys
+  }
 
   /**
    * Set up automatic data protection for new data
@@ -353,11 +352,11 @@ class DataMigrationService {
       localStorage.setItem = (key: string, value: string) => {
         if (this.shouldEncryptKey(key)) {
           // Use secure storage for sensitive data
-          this.secureStorage.setItem(key, value);;
+          this.secureStorage.setItem(key, value)
   } else {
           // Use original localStorage for non-sensitive data
-          originalSetItem.call(localStorage, key, value);
-        }
+          originalSetItem.call(localStorage, key, value)
+  }
       };
 
       localStorage.getItem = (key: string) => {
@@ -365,18 +364,18 @@ class DataMigrationService {
           // This will return a Promise, but localStorage getItem should be sync
           // We'll need to handle this differently in the actual implementation
           console.warn(`Attempting to synchronously access encrypted data for key: ${key}`);
-          return null;;
+          return null
   } else {
-          return originalGetItem.call(localStorage, key);
-        }
+          return originalGetItem.call(localStorage, key)
+  }
       };
 
       localStorage.removeItem = (key: string) => {
         if (this.shouldEncryptKey(key)) {
-          this.secureStorage.removeItem(key);;
+          this.secureStorage.removeItem(key)
   } else {
-          originalRemoveItem.call(localStorage, key);
-        }
+          originalRemoveItem.call(localStorage, key)
+  }
       }
   }
 }
@@ -389,10 +388,10 @@ let migrationServiceInstance: DataMigrationService | null = null;
  */;
 export const getDataMigrationService = (): DataMigrationService => {
   if (!migrationServiceInstance) {
-    migrationServiceInstance = new DataMigrationService();
+    migrationServiceInstance = new DataMigrationService()
   }
-  return migrationServiceInstance;
-};
+  return migrationServiceInstance
+  };
 
 /**
  * React hook for data migration
@@ -404,7 +403,7 @@ export const useDataMigration = () => {
     performMigration: (options?: MigrationOptions) => service.performMigration(options),
     validateMigration: () => service.validateMigration(),
     getMigrationStatus: () => service.getMigrationStatus(),
-    setupDataProtection: () => service.setupDataProtection();
+    setupDataProtection: () => service.setupDataProtection()
   };
 
 export default DataMigrationService;

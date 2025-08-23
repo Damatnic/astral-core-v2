@@ -12,8 +12,8 @@ export interface CulturalContext {
   mentalHealthStigma: 'low' | 'medium' | 'high';
   familyInvolvement: 'individual' | 'family-centered' | 'community-based';
   crisisEscalation: 'direct' | 'gradual' | 'authority-based';
-  communicationStyle: 'direct' | 'indirect' | 'contextual';
-}
+  communicationStyle: 'direct' | 'indirect' | 'contextual'
+  }
 
 class CulturalContextService {
   private readonly culturalContexts: Record<string, CulturalContext> = {
@@ -22,64 +22,64 @@ class CulturalContextService {
       mentalHealthStigma: 'medium',
       familyInvolvement: 'individual',
       crisisEscalation: 'direct',
-      communicationStyle: 'direct';
-    },
+      communicationStyle: 'direct'
+  },
     'es': {
       region: 'Hispanic/Latino',
       mentalHealthStigma: 'high',
       familyInvolvement: 'family-centered',
       crisisEscalation: 'gradual',
-      communicationStyle: 'contextual';
-    },
+      communicationStyle: 'contextual'
+  },
     'pt-BR': {
       region: 'Brazilian',
       mentalHealthStigma: 'high',
       familyInvolvement: 'family-centered',
       crisisEscalation: 'gradual',
-      communicationStyle: 'contextual';
-    },
+      communicationStyle: 'contextual'
+  },
     'pt': {
       region: 'Portuguese',
       mentalHealthStigma: 'medium',
       familyInvolvement: 'family-centered',
       crisisEscalation: 'gradual',
-      communicationStyle: 'contextual';
-    },
+      communicationStyle: 'contextual'
+  },
     'ar': {
       region: 'Arabic',
       mentalHealthStigma: 'high',
       familyInvolvement: 'family-centered',
       crisisEscalation: 'authority-based',
-      communicationStyle: 'indirect';
-    },
+      communicationStyle: 'indirect'
+  },
     'zh': {
       region: 'Chinese',
       mentalHealthStigma: 'high',
       familyInvolvement: 'family-centered',
       crisisEscalation: 'gradual',
-      communicationStyle: 'indirect';
-    },
+      communicationStyle: 'indirect'
+  },
     'vi': {
       region: 'Vietnamese',
       mentalHealthStigma: 'high',
       familyInvolvement: 'family-centered',
       crisisEscalation: 'authority-based',
-      communicationStyle: 'indirect';
-    },
+      communicationStyle: 'indirect'
+  },
     'tl': {
       region: 'Filipino',
       mentalHealthStigma: 'high',
       familyInvolvement: 'family-centered',
       crisisEscalation: 'gradual',
-      communicationStyle: 'contextual';
-    }
+      communicationStyle: 'contextual'
+  }
   };
 
   /**
    * Get cultural context for a language
    */
   getCulturalContext(language: string): CulturalContext {
-    return this.culturalContexts[language] || this.culturalContexts['en'];
+    return this.culturalContexts[language] || this.culturalContexts['en']
   }
 
   /**
@@ -92,7 +92,7 @@ class CulturalContextService {
    * Get cultural regions list
    */
   getCulturalRegions(): string[] {
-    return [...new Set(Object.values(this.culturalContexts).map(c => c.region))];
+    return [...new Set(Object.values(this.culturalContexts).map(c => c.region))]
   }
 }
 

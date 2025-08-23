@@ -8,7 +8,7 @@
 import React, { Component, ReactNode, ErrorInfo } from 'react';
 
 // Simple icon components to avoid external dependencies;
-const AlertCircleIcon = () => (;
+const AlertCircleIcon = () => (;;
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <circle cx="12" cy="12" r="10"/>
     <line x1="12" y1="8" x2="12" y2="12"/>
@@ -16,7 +16,7 @@ const AlertCircleIcon = () => (;
   </svg>
 );
 
-const RefreshIcon = () => (;
+const RefreshIcon = () => (;;
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <polyline points="23 4 23 10 17 10"/>
     <polyline points="1 20 1 14 7 14"/>
@@ -24,14 +24,14 @@ const RefreshIcon = () => (;
   </svg>
 );
 
-const HomeIcon = () => (;
+const HomeIcon = () => (;;
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
     <polyline points="9,22 9,12 15,12 15,22"/>
   </svg>
 );
 
-const PhoneIcon = () => (;
+const PhoneIcon = () => (;;
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
   </svg>
@@ -79,7 +79,7 @@ export interface ErrorBoundaryConfig {
   crisisContactInfo?: {
     phone: string;
     text: string;
-    chat: string;
+    chat: string
   };
   
   // User experience
@@ -89,8 +89,8 @@ export interface ErrorBoundaryConfig {
   
   // Development options
   isDevelopment?: boolean;
-  logToConsole?: boolean;
-}
+  logToConsole?: boolean
+  }
 
 // Error information for fallback components;
 export interface ErrorFallbackProps {
@@ -100,8 +100,8 @@ export interface ErrorFallbackProps {
   severity: ErrorSeverity;
   category: ErrorCategory;
   config: ErrorBoundaryConfig;
-  retryCount: number;
-}
+  retryCount: number
+  }
 
 // Error boundary state;
 interface ErrorBoundaryState {
@@ -112,16 +112,16 @@ interface ErrorBoundaryState {
   retryCount: number;
   severity: ErrorSeverity;
   category: ErrorCategory;
-  timestamp: Date;
-}
+  timestamp: Date
+  }
 
 // Props for the error boundary component;
 interface ErrorBoundaryProps extends ErrorBoundaryConfig {
   children: ReactNode;
   onError?: (error: Error, errorInfo: ErrorInfo, errorId: string) => void;
   onRetry?: (retryCount: number) => void;
-  onReport?: (errorReport: ErrorReport) => void;
-}
+  onReport?: (errorReport: ErrorReport) => void
+  }
 
 // Error report structure;
 interface ErrorReport {
@@ -130,7 +130,7 @@ interface ErrorReport {
   error: {
     name: string;
     message: string;
-    stack?: string;
+    stack?: string
   };
   errorInfo?: ErrorInfo;
   severity: ErrorSeverity;
@@ -143,7 +143,7 @@ interface ErrorReport {
   context: {
     isCrisisContext: boolean;
     route: string;
-    userState?: any;
+    userState?: any
   };
 }
 
@@ -164,8 +164,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       retryCount: 0,
       severity: 'low',
       category: 'unknown',
-      timestamp: new Date();
-    };
+      timestamp: new Date()
+  };
   }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
@@ -179,8 +179,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       errorId,
       severity,
       category,
-      timestamp: new Date();
-    };
+      timestamp: new Date()
+  };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -189,31 +189,31 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     
     // Report error if enabled
     if (this.props.reportErrors !== false) {
-      this.reportError(error, errorInfo);
-    }
+      this.reportError(error, errorInfo)
+  }
     
     // Log to console in development
     if (this.props.isDevelopment || this.props.logToConsole) {
-      console.error('Error Boundary caught an error:', error, errorInfo);
-    }
+      console.error('Error Boundary caught an error:', error, errorInfo)
+  }
     
     // Call error callback
     this.props.onError?.(error, errorInfo, this.state.errorId);
     
     // Auto-retry if enabled
     if (this.props.autoRetry && this.state.retryCount < (this.props.maxRetries || 3)) {
-      this.scheduleRetry();
-    }
+      this.scheduleRetry()
+  }
     
     // Special handling for crisis context
     if (this.props.isCrisisContext) {
-      this.handleCrisisError(error, errorInfo);
-    }
+      this.handleCrisisError(error, errorInfo)
+  }
   }
 
   componentWillUnmount() {
     // Clean up retry timeouts
-    this.retryTimeouts.forEach(timeout => clearTimeout(timeout));
+    this.retryTimeouts.forEach(timeout => clearTimeout(timeout))
   }
 
   // Determine error severity based on error characteristics
@@ -228,8 +228,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       message.includes('suicide') ||
       stack.includes('crisis')
     ) {
-      return 'critical';
-    }
+      return 'critical'
+  }
     
     // High severity errors
     if (
@@ -239,8 +239,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       message.includes('authentication') ||
       message.includes('unauthorized')
     ) {
-      return 'high';
-    }
+      return 'high'
+  }
     
     // Medium severity errors
     if (
@@ -249,10 +249,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       message.includes('timeout') ||
       error.name === 'TypeError'
     ) {
-      return 'medium';
-    }
+      return 'medium'
+  }
     
-    return 'low';
+    return 'low'
   }
 
   // Categorize error for specialized handling
@@ -261,34 +261,34 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     const name = error.name.toLowerCase();
     
     if (message.includes('crisis') || message.includes('emergency')) {
-      return 'crisis-intervention';
-    }
+      return 'crisis-intervention'
+  }
     
     if (name.includes('chunkerror') || message.includes('loading')) {
-      return 'network';
-    }
+      return 'network'
+  }
     
     if (message.includes('unauthorized') || message.includes('forbidden')) {
-      return 'authentication';
-    }
+      return 'authentication'
+  }
     
     if (message.includes('validation') || message.includes('schema')) {
-      return 'validation';
-    }
+      return 'validation'
+  }
     
     if (message.includes('serviceworker') || message.includes('sw')) {
-      return 'service-worker';
-    }
+      return 'service-worker'
+  }
     
     if (name.includes('typeerror') || message.includes('render')) {
-      return 'ui-rendering';
-    }
+      return 'ui-rendering'
+  }
     
     if (message.includes('corrupt') || message.includes('malformed')) {
-      return 'data-corruption';
-    }
+      return 'data-corruption'
+  }
     
-    return 'unknown';
+    return 'unknown'
   }
 
   // Generate comprehensive error report
@@ -299,8 +299,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       error: {
         name: error.name,
         message: error.message,
-        stack: this.props.includeStackTrace ? error.stack : undefined;
-      },
+        stack: this.props.includeStackTrace ? error.stack : undefined
+  },
       errorInfo: this.props.includeErrorInfo ? errorInfo : undefined,
       severity: this.state.severity,
       category: this.state.category,
@@ -314,8 +314,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
           // Include additional context in development
           localStorage: Object.keys(localStorage).length,
           sessionStorage: Object.keys(sessionStorage).length,
-          online: navigator.onLine;
-        } : undefined
+          online: navigator.onLine
+  } : undefined
       }
     };
   }
@@ -335,8 +335,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(report);
-        };
+          body: JSON.stringify(report)
+  };
   };
       }
       
@@ -346,8 +346,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       localStorage.setItem('error_reports', JSON.stringify(localReports.slice(-10))); // Keep last 10
       
     } catch (reportingError) {
-      console.warn('Failed to report error:', reportingError);
-    }
+      console.warn('Failed to report error:', reportingError)
+  }
   }
 
   // Special handling for crisis context errors
@@ -359,16 +359,16 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     localStorage.setItem('crisis_error', JSON.stringify({
       error: error.message,
       timestamp: new Date().toISOString(),
-      context: 'crisis_intervention';
-    }));
+      context: 'crisis_intervention'
+  }));
     
     // Attempt to show crisis resources immediately
     if (this.props.crisisContactInfo) {
       // Could trigger immediate crisis resource modal
       window.dispatchEvent(new CustomEvent('crisis-error', {
-        detail: this.props.crisisContactInfo;
-      }));
-    }
+        detail: this.props.crisisContactInfo
+  }))
+  }
   }
 
   // Schedule automatic retry
@@ -377,12 +377,12 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     
     const timeout = setTimeout(() => {
       this.setState(prevState => ({
-        retryCount: prevState.retryCount + 1;
-      }));
-      this.resetErrorBoundary();
-    }, delay);
+        retryCount: prevState.retryCount + 1
+  }));
+      this.resetErrorBoundary()
+  }, delay);
     
-    this.retryTimeouts.push(timeout);
+    this.retryTimeouts.push(timeout)
   }
 
   // Reset error boundary state
@@ -393,14 +393,14 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       hasError: false,
       error: null,
       errorInfo: null,
-      errorId: '';
-    });
+      errorId: ''
+  })
   };
 
   // Redirect to safe route
   private redirectToSafeRoute() {
     const safeRoute = this.props.redirectOnError || '/';
-    window.location.href = safeRoute;
+    window.location.href = safeRoute
   }
 
   render() {
@@ -414,23 +414,23 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
           severity: this.state.severity,
           category: this.state.category,
           config: this.props,
-          retryCount: this.state.retryCount;
-        };
+          retryCount: this.state.retryCount
+  };
         
         if (typeof this.props.fallback === 'function') {
           const fallbackFunction = this.props.fallback as (error: Error, errorInfo: ErrorInfo) => ReactNode;
-          return fallbackFunction(this.state.error, this.state.errorInfo!);;
+          return fallbackFunction(this.state.error, this.state.errorInfo!)
   } else {
           const FallbackComponent = this.props.fallback as React.ComponentType<ErrorFallbackProps>;
-          return <FallbackComponent {...fallbackProps} />;
-        }
+          return <FallbackComponent {...fallbackProps} />
+  }
       }
       
       // Use default fallback based on severity and category
-      return this.renderDefaultFallback();
-    }
+      return this.renderDefaultFallback()
+  }
 
-    return this.props.children;
+    return this.props.children
   }
 
   private renderDefaultFallback() {
@@ -447,8 +447,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
           maxRetries={maxRetries}
           crisisContactInfo={crisisContactInfo}
         />
-      );
-    }
+      )
+  }
     
     // High severity errors get prominent treatment
     if (severity === 'critical' || severity === 'high') {
@@ -460,8 +460,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
           retryCount={retryCount}
           maxRetries={maxRetries}
         />
-      );
-    }
+      )
+  }
     
     // Medium and low severity get standard treatment
     return (
@@ -475,7 +475,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         maxRetries={maxRetries}
         showDetails={this.props.showErrorDetails}
       />
-    );
+    )
   }
 }
 
@@ -549,8 +549,8 @@ const HighSeverityFallbackUI: React.FC<{
   onRetry?: () => void;
   onRedirect: () => void;
   retryCount: number;
-  maxRetries: number;
-}> = ({ category, onRetry, onRedirect, retryCount, maxRetries }) => (
+  maxRetries: number
+  }> = ({ category, onRetry, onRedirect, retryCount, maxRetries }) => (
   <div className="high-severity-error-fallback" role="alert">
   <div className="error-container">
     <AlertCircleIcon />
@@ -589,8 +589,8 @@ const StandardFallbackUI: React.FC<{
   onDismiss?: () => void;
   retryCount: number;
   maxRetries: number;
-  showDetails?: boolean;
-}> = ({ error, severity, category, onRetry, onDismiss, retryCount, maxRetries, showDetails }) => (
+  showDetails?: boolean
+  }> = ({ error, severity, category, onRetry, onDismiss, retryCount, maxRetries, showDetails }) => (
   <div className="standard-error-fallback" role="alert">
   <div className="error-banner">
     <AlertCircleIcon />

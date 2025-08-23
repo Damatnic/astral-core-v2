@@ -18,7 +18,7 @@ export const SafetyTipsModal: React.FC = () => {
   
   const handleClose = () => {
     localStorage.setItem('astral-safety-tips-seen', 'true');
-    setShowModal(false);
+    setShowModal(false)
   };
   
   return (
@@ -101,5 +101,5 @@ export const SafetyTipsModal: React.FC = () => {
         </div>
       </div>
     </Modal>
-  );
-};
+  )
+  };

@@ -24,7 +24,7 @@ class MockTouchEvent extends Event {
     super(type, init);
     this.touches = init?.touches || [];
     this.targetTouches = init?.targetTouches || [];
-    this.changedTouches = init?.changedTouches || [];
+    this.changedTouches = init?.changedTouches || []
   }
 }
 
@@ -49,34 +49,34 @@ class MockResponse {
     if (init?.headers) {
       if (init.headers instanceof Headers) {
         init.headers.forEach((value, key) => {
-          this.headers.set(key, value);
-        });;
+          this.headers.set(key, value)
+  })
   } else if (Array.isArray(init.headers)) {
         init.headers.forEach(([key, value]) => {
-          this.headers.set(key, value);
-        });;
+          this.headers.set(key, value)
+  })
   } else {
         Object.entries(init.headers).forEach(([key, value]) => {
-          this.headers.set(key, value as string);
-        });
-      }
+          this.headers.set(key, value as string)
+  })
+  }
     }
   }
   
   async json() {
-    return typeof this.body === 'string' ? JSON.parse(this.body) : this.body;
+    return typeof this.body === 'string' ? JSON.parse(this.body) : this.body
   }
   
   async text() {
-    return typeof this.body === 'string' ? this.body : JSON.stringify(this.body);
+    return typeof this.body === 'string' ? this.body : JSON.stringify(this.body)
   }
   
   clone() {
     return new MockResponse(this.body, {
       status: this.status,
       statusText: this.statusText,
-      headers: Array.from(this.headers.entries());
-    });
+      headers: Array.from(this.headers.entries())
+  })
   }
 }
 
@@ -88,11 +88,11 @@ class MockRequest {
   
   constructor(input: string | Request, init?: RequestInit) {
     if (typeof input === 'string') {
-      this.url = input;;
+      this.url = input
   } else {
       this.url = input.url;
-      this.method = input.method;
-    }
+      this.method = input.method
+  }
     
     this.method = init?.method || 'GET';
     this.headers = new Map();
@@ -101,17 +101,17 @@ class MockRequest {
     if (init?.headers) {
       if (init.headers instanceof Headers) {
         init.headers.forEach((value, key) => {
-          this.headers.set(key, value);
-        });;
+          this.headers.set(key, value)
+  })
   } else if (Array.isArray(init.headers)) {
         init.headers.forEach(([key, value]) => {
-          this.headers.set(key, value);
-        });;
+          this.headers.set(key, value)
+  })
   } else {
         Object.entries(init.headers).forEach(([key, value]) => {
-          this.headers.set(key, value as string);
-        });
-      }
+          this.headers.set(key, value as string)
+  })
+  }
     }
   }
   
@@ -119,8 +119,8 @@ class MockRequest {
     return new MockRequest(this.url, {
       method: this.method,
       headers: Array.from(this.headers.entries()),
-      body: this.body;
-    });
+      body: this.body
+  })
   }
 }
 
@@ -132,56 +132,56 @@ class MockHeaders {
     if (init) {
       if (Array.isArray(init)) {
         init.forEach(([key, value]) => {
-          this.headers.set(key.toLowerCase(), value);
-        });;
+          this.headers.set(key.toLowerCase(), value)
+  })
   } else if (init instanceof MockHeaders) {
         init.forEach((value, key) => {
-          this.headers.set(key.toLowerCase(), value);
-        });;
+          this.headers.set(key.toLowerCase(), value)
+  })
   } else {
         Object.entries(init).forEach(([key, value]) => {
-          this.headers.set(key.toLowerCase(), value as string);
-        });
-      }
+          this.headers.set(key.toLowerCase(), value as string)
+  })
+  }
     }
   }
   
   append(key: string, value: string) {
-    this.headers.set(key.toLowerCase(), value);
+    this.headers.set(key.toLowerCase(), value)
   }
   
   delete(key: string) {
-    this.headers.delete(key.toLowerCase());
+    this.headers.delete(key.toLowerCase())
   }
   
   get(key: string) {
-    return this.headers.get(key.toLowerCase()) || null;
+    return this.headers.get(key.toLowerCase()) || null
   }
   
   has(key: string) {
-    return this.headers.has(key.toLowerCase());
+    return this.headers.has(key.toLowerCase())
   }
   
   set(key: string, value: string) {
-    this.headers.set(key.toLowerCase(), value);
+    this.headers.set(key.toLowerCase(), value)
   }
   
   forEach(callback: (value: string, key: string, headers: MockHeaders) => void) {
     this.headers.forEach((value, key) => {
-      callback(value, key, this);
-    });
+      callback(value, key, this)
+  })
   }
   
   entries() {
-    return this.headers.entries();
+    return this.headers.entries()
   }
   
   keys() {
-    return this.headers.keys();
+    return this.headers.keys()
   }
   
   values() {
-    return this.headers.values();
+    return this.headers.values()
   }
 }
 
@@ -220,12 +220,12 @@ jest.mock('./hooks/useCrisisStressTesting', () => ({
         failureThresholds: {
           responseTime: 1000,
           errorRate: 0.01,
-          availability: 0.99;
-        },
-        emergencyBreakConditions: [];
-      },
-      selectedScenarios: [];
-    },
+          availability: 0.99
+  },
+        emergencyBreakConditions: []
+  },
+      selectedScenarios: []
+  },
     actions: {
       runStressTests: jest.fn(() => Promise.resolve()),
       runFailoverTests: jest.fn(() => Promise.resolve()),
@@ -243,8 +243,8 @@ jest.mock('./hooks/useCrisisStressTesting', () => ({
       critical: 0,
       avgResponseTime: 0,
       avgAvailability: 1,
-      safetyScore: 100;
-    }
+      safetyScore: 100
+  }
   }))
 }));
 
@@ -264,8 +264,8 @@ jest.mock('./services/crisisStressTestingSystem', () => ({
           targetComponents: ['mock-component'],
           expectedOutcome: 'Mock success',
           failureConditions: [],
-          recoveryTime: 50;
-        },
+          recoveryTime: 50
+  },
         success: true,
         responseTime: 50,
         errorRate: 0,
@@ -275,11 +275,11 @@ jest.mock('./services/crisisStressTestingSystem', () => ({
         impactAssessment: {
           userImpact: 'none',
           businessImpact: 'none',
-          safetyImpact: 'none';
-        },
+          safetyImpact: 'none'
+  },
         recommendations: [],
-        emergencyProcedures: [];
-      }
+        emergencyProcedures: []
+  }
     ])),
     runEmergencyFailoverTests: jest.fn(() => Promise.resolve([
       {
@@ -293,8 +293,8 @@ jest.mock('./services/crisisStressTestingSystem', () => ({
           actualFailoverTime: 500,
           fallbackWorked: true,
           userExperience: 'Seamless - user unaware of failover',
-          dataIntegrity: true;
-        }
+          dataIntegrity: true
+  }
       },
       {
         id: 'ai-service-failover',
@@ -307,8 +307,8 @@ jest.mock('./services/crisisStressTestingSystem', () => ({
           actualFailoverTime: 300,
           fallbackWorked: true,
           userExperience: 'Minimal disruption',
-          dataIntegrity: true;
-        }
+          dataIntegrity: true
+  }
       },
       {
         id: 'database-connection-failover',
@@ -321,8 +321,8 @@ jest.mock('./services/crisisStressTestingSystem', () => ({
           actualFailoverTime: 200,
           fallbackWorked: true,
           userExperience: 'No disruption',
-          dataIntegrity: true;
-        }
+          dataIntegrity: true
+  }
       },
       {
         id: 'api-rate-limit-failover',
@@ -335,8 +335,8 @@ jest.mock('./services/crisisStressTestingSystem', () => ({
           actualFailoverTime: 1500,
           fallbackWorked: true,
           userExperience: 'Brief delay but service continues',
-          dataIntegrity: true;
-        }
+          dataIntegrity: true
+  }
       },
       {
         id: 'network-partition-failover',
@@ -349,14 +349,14 @@ jest.mock('./services/crisisStressTestingSystem', () => ({
           actualFailoverTime: 50,
           fallbackWorked: true,
           userExperience: 'Seamless - local fallback activated',
-          dataIntegrity: true;
-        }
+          dataIntegrity: true
+  }
       }
     ])),
   },
   CrisisStressTestingSystem: jest.fn().mockImplementation(() => ({
     runCrisisStressTests: jest.fn(() => Promise.resolve([])),
-    runEmergencyFailoverTests: jest.fn(() => Promise.resolve([]));
+    runEmergencyFailoverTests: jest.fn(() => Promise.resolve([]))
   })),
   CRISIS_COMPONENTS: {
     EMERGENCY_BUTTON: 'emergency-button',
@@ -368,11 +368,11 @@ jest.mock('./services/crisisStressTestingSystem', () => ({
     CRISIS_ALERTS: 'crisis-alerts',
     EMERGENCY_SERVICES: 'emergency-services',
     SAFETY_PLAN: 'safety-plan',
-    CRISIS_INTERVENTION: 'crisis-intervention';
+    CRISIS_INTERVENTION: 'crisis-intervention'
   },
   CRISIS_TEST_SCENARIOS: [],
-  EMERGENCY_FAILOVER_TESTS: [];
-}));
+  EMERGENCY_FAILOVER_TESTS: []
+  }));
 
 // Automatically mock commonly used services
 jest.mock('./services/crisisDetectionService', () => {
@@ -390,8 +390,8 @@ jest.mock('./services/crisisDetectionService', () => {
       triggeredKeywords: [],
       sentimentScore: 0,
       contextualFactors: [],
-      urgencyLevel: 0;
-    }
+      urgencyLevel: 0
+  }
   }));
   
   const mockService = {
@@ -399,35 +399,35 @@ jest.mock('./services/crisisDetectionService', () => {
     analyzeMessageRisk: jest.fn(() => ({
       riskLevel: 'low',
       indicators: [],
-      confidence: 0.1;
-    })),
+      confidence: 0.1
+  })),
     detectCrisis: jest.fn(() => ({
       isInCrisis: false,
       severity: 'none',
       confidence: 0,
-      keywords: [];
-    })),
+      keywords: []
+  })),
     getEscalationActions: jest.fn(() => ({
       type: 'support',
       description: 'Monitor and provide support',
       contacts: [],
       resources: [],
-      timeline: 'Ongoing';
-    })),
+      timeline: 'Ongoing'
+  })),
     generateCrisisResponse: jest.fn(() => ({
       message: 'Support message',
       actions: [],
       resources: [],
-      followUp: [];
-    })),
-    reset: jest.fn();
+      followUp: []
+  })),
+    reset: jest.fn()
   };
   
   return {
     enhancedCrisisDetectionService: mockService,
     crisisDetectionService: mockService,
     astralCoreCrisisDetection: mockService,
-    default: mockService;
+    default: mockService
   };
   };
 
@@ -436,11 +436,11 @@ jest.mock('./services/aiModerationService', () => ({
     moderateMessage: jest.fn(() => ({
       safe: true,
       category: null,
-      escalate: false;
-    })),
+      escalate: false
+  })),
     generateSafeResponse: jest.fn(() => 'Content has been moderated for safety.'),
     sanitizeForDisplay: jest.fn((text) => text),
-    needsHumanIntervention: jest.fn(() => false);
+    needsHumanIntervention: jest.fn(() => false)
   }
 }));
 
@@ -451,13 +451,13 @@ jest.mock('./services/coreWebVitalsService', () => ({
       timestamp: Date.now(),
       url: 'http://localhost',
       metrics: { lcp: 1200, fid: 80, cls: 0.05 },
-      grade: 'A';
-    })),
+      grade: 'A'
+  })),
     getPerformanceSummary: jest.fn(() => ({
       overall: 'good',
       metrics: {},
-      recommendations: [];
-    }))
+      recommendations: []
+  }))
   }
 }));
 
@@ -488,7 +488,7 @@ jest.mock('./services/privacyPreservingAnalyticsService', () => ({
     clearAnalytics: jest.fn(() => Promise.resolve()),
     exportAnalytics: jest.fn(() => Promise.resolve({})),
     setUserConsent: jest.fn(() => Promise.resolve()),
-    getUserConsent: jest.fn(() => Promise.resolve(true));
+    getUserConsent: jest.fn(() => Promise.resolve(true))
   }
 }));
 
@@ -498,15 +498,15 @@ jest.mock('./services/enhancedOfflineService', () => ({
     isOnline: jest.fn(() => true),
     getOfflineCapabilities: jest.fn(() => ({
       canCache: true,
-      canSync: true;
-    })),
+      canSync: true
+  })),
     addToSyncQueue: jest.fn(),
     processSyncQueue: jest.fn(() => Promise.resolve()),
     onStatusChange: jest.fn(),
     getCrisisResources: jest.fn(() => Promise.resolve([])),
     getAvailableContent: jest.fn(() => Promise.resolve([])),
     syncCrisisData: jest.fn(() => Promise.resolve()),
-    clearOfflineData: jest.fn(() => Promise.resolve());
+    clearOfflineData: jest.fn(() => Promise.resolve())
   }
 }));
 
@@ -516,7 +516,7 @@ jest.mock('./services/peerSupportNetworkService', () => ({
     connect: jest.fn(() => Promise.resolve()),
     disconnect: jest.fn(),
     sendMessage: jest.fn(),
-    getActiveConnections: jest.fn(() => []);
+    getActiveConnections: jest.fn(() => [])
   }
 }));
 
@@ -528,8 +528,8 @@ if (typeof document !== 'undefined') {
   if (!document.body) {
     const body = document.createElement('body');
     if (document.documentElement) {
-      document.documentElement.appendChild(body);
-    }
+      document.documentElement.appendChild(body)
+  }
   }
 }
 
@@ -549,8 +549,8 @@ HTMLCanvasElement.prototype.getContext = jest.fn((contextType) => {
       globalCompositeOperation: 'source-over',
       canvas: {
         width: 300,
-        height: 150;
-      },
+        height: 150
+  },
       clearRect: jest.fn(),
       fillRect: jest.fn(),
       strokeRect: jest.fn(),
@@ -581,34 +581,34 @@ HTMLCanvasElement.prototype.getContext = jest.fn((contextType) => {
       setTransform: jest.fn(),
       resetTransform: jest.fn(),
       createLinearGradient: jest.fn(() => ({
-        addColorStop: jest.fn();
-      })),
+        addColorStop: jest.fn()
+  })),
       createRadialGradient: jest.fn(() => ({
-        addColorStop: jest.fn();
-      })),
+        addColorStop: jest.fn()
+  })),
       createPattern: jest.fn(() => null),
       createImageData: jest.fn(() => ({
         data: new Uint8ClampedArray(),
         width: 0,
-        height: 0;
-      })),
+        height: 0
+  })),
       getImageData: jest.fn(() => ({
         data: new Uint8ClampedArray(),
         width: 0,
-        height: 0;
-      })),
+        height: 0
+  })),
       putImageData: jest.fn(),
       drawImage: jest.fn(),
       getLineDash: jest.fn(() => []),
-      setLineDash: jest.fn();
-    }
-  return null;
-}) as any;
+      setLineDash: jest.fn()
+  }
+  return null
+  }) as any;
 
 HTMLCanvasElement.prototype.toDataURL = jest.fn(() => 'data:image/png;base64,mock');
 HTMLCanvasElement.prototype.toBlob = jest.fn((callback) => {
   if (callback) {
-    callback(new Blob(['mock'], { type: 'image/png' }));
+    callback(new Blob(['mock'], { type: 'image/png' }))
   }
 }) as any;
 
@@ -616,23 +616,23 @@ HTMLCanvasElement.prototype.toBlob = jest.fn((callback) => {
 const OriginalBlob = global.Blob;
 global.Blob = class MockBlob extends OriginalBlob {
   constructor(parts?: BlobPart[], options?: BlobPropertyBag) {
-    super(parts, options);
+    super(parts, options)
   }
   
   text(): Promise<string> {
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result as string);
-      reader.readAsText(this);
-    });
+      reader.readAsText(this)
+  })
   }
   
   arrayBuffer(): Promise<ArrayBuffer> {
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result as ArrayBuffer);
-      reader.readAsArrayBuffer(this);
-    });
+      reader.readAsArrayBuffer(this)
+  })
   }
 } as any;
 
@@ -646,7 +646,7 @@ global.Blob = class MockBlob extends OriginalBlob {
     // Handle Blob created by the actual implementation
     if (blob instanceof Blob) {
       // Use the Blob constructor's internal structure to get the content;
-      const blobParts = (blob as any)[Symbol.for('nodejs.util.inspect.custom')] ? ;
+      const blobParts = (blob as any)[Symbol.for('nodejs.util.inspect.custom')] ? ;;
         [(blob as any).toString()] : 
         (blob as any)._parts || (blob as any).parts || [blob];
       
@@ -657,30 +657,30 @@ global.Blob = class MockBlob extends OriginalBlob {
           if (typeof blob.arrayBuffer === 'function') {
             blob.arrayBuffer().then(buffer => {
               this.result = new TextDecoder().decode(buffer);
-              if (this.onload) this.onload();
-            });;
+              if (this.onload) this.onload()
+  })
   } else {
             // Fallback for mock blobs;
             const text = blobParts.map((part: any) => {
               if (typeof part === 'string') return part;
               if (part instanceof ArrayBuffer) return new TextDecoder().decode(part);
-              return String(part);
-            }).join('');
+              return String(part)
+  }).join('');
             this.result = text;
-            if (this.onload) this.onload();
-          }
+            if (this.onload) this.onload()
+  }
         } catch (e) {
           // Fallback to mock data
           this.result = 'mock file content';
-          if (this.onload) this.onload();
-        }
-      });;
+          if (this.onload) this.onload()
+  }
+      })
   } else {
       this.result = 'mock file content';
       setTimeout(() => {
-        if (this.onload) this.onload();
-      }, 0);
-    }
+        if (this.onload) this.onload()
+  }, 0)
+  }
   }
   
   readAsArrayBuffer(blob: Blob): void {
@@ -688,15 +688,15 @@ global.Blob = class MockBlob extends OriginalBlob {
     const buffer = parts[0] instanceof ArrayBuffer ? parts[0] : new TextEncoder().encode(String(parts[0])).buffer;
     this.result = buffer;
     setTimeout(() => {
-      if (this.onload) this.onload();
-    }, 0);
+      if (this.onload) this.onload()
+  }, 0)
   }
   
   readAsDataURL(blob: Blob): void {
     this.result = 'data:application/octet-stream;base64,mock';
     setTimeout(() => {
-      if (this.onload) this.onload();
-    }, 0);
+      if (this.onload) this.onload()
+  }, 0)
   }
 };
 
@@ -719,9 +719,9 @@ global.Blob = class MockBlob extends OriginalBlob {
       this.naturalHeight = 100;
       this.complete = true;
       if (this.onload) {
-        this.onload();
-      }
-    }, 0);
+        this.onload()
+  }
+    }, 0)
   }
 };
 
@@ -755,26 +755,26 @@ const localStorageMock = (() => {
   return {
     getItem: jest.fn((key: string) => store[key] || null),
     setItem: jest.fn((key: string, value: string) => {
-      store[key] = value.toString();
-    }),
+      store[key] = value.toString()
+  }),
     removeItem: jest.fn((key: string) => {
-      delete store[key];
-    }),
+      delete store[key]
+  }),
     clear: jest.fn(() => {
       store = {}),
     get length() {
-      return Object.keys(store).length;
-    },
+      return Object.keys(store).length
+  },
     key: jest.fn((index: number) => {
       const keys = Object.keys(store);
-      return keys[index] || null;
-    })
+      return keys[index] || null
+  })
   })();
 
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
-  writable: true;
-};
+  writable: true
+  };
   };
 
 // Mock sessionStorage;
@@ -783,26 +783,26 @@ const sessionStorageMock = (() => {
   return {
     getItem: jest.fn((key: string) => store[key] || null),
     setItem: jest.fn((key: string, value: string) => {
-      store[key] = value.toString();
-    }),
+      store[key] = value.toString()
+  }),
     removeItem: jest.fn((key: string) => {
-      delete store[key];
-    }),
+      delete store[key]
+  }),
     clear: jest.fn(() => {
       store = {}),
     get length() {
-      return Object.keys(store).length;
-    },
+      return Object.keys(store).length
+  },
     key: jest.fn((index: number) => {
       const keys = Object.keys(store);
-      return keys[index] || null;
-    })
+      return keys[index] || null
+  })
   })();
 
 Object.defineProperty(window, 'sessionStorage', {
   value: sessionStorageMock,
-  writable: true;
-};
+  writable: true
+  };
   };
 
 // Mock matchMedia
@@ -835,8 +835,8 @@ window.location = {
   assign: jest.fn(),
   replace: jest.fn(),
   reload: jest.fn(),
-  toString: jest.fn(() => 'http://localhost/');
-} as any;
+  toString: jest.fn(() => 'http://localhost/')
+  } as any;
 
 // Mock window methods
 window.open = jest.fn();
@@ -848,8 +848,8 @@ window.scrollTo = jest.fn();
 // Mock requestAnimationFrame
 window.requestAnimationFrame = jest.fn(cb => {
   setTimeout(cb, 0);
-  return 0;
-});
+  return 0
+  });
 window.cancelAnimationFrame = jest.fn();
 
 // Ensure timer functions are available in the global scope
@@ -870,8 +870,8 @@ if (typeof window !== 'undefined') {
   window.setInterval = window.setInterval || originalSetInterval;
   window.clearInterval = window.clearInterval || originalClearInterval;
   window.setTimeout = window.setTimeout || originalSetTimeout;
-  window.clearTimeout = window.clearTimeout || originalClearTimeout;
-}
+  window.clearTimeout = window.clearTimeout || originalClearTimeout
+  }
 
 // Mock performance API
 if (!window.performance) {
@@ -887,7 +887,7 @@ window.performance = {
   getEntriesByType: jest.fn(() => []),
   navigation: {
     type: 0,
-    redirectCount: 0;
+    redirectCount: 0
   } as any,
   timing: {} as any
 } as any;
@@ -910,14 +910,14 @@ window.performance = {
 // Mock Notification API
 (window as any).Notification = {
   permission: 'default',
-  requestPermission: jest.fn(() => Promise.resolve('granted'));
-};
+  requestPermission: jest.fn(() => Promise.resolve('granted'))
+  };
 
 // Mock navigator APIs
 Object.defineProperty(navigator, 'onLine', {
   writable: true,
-  value: true;
-});
+  value: true
+  });
 
 Object.defineProperty(navigator, 'geolocation', {
   writable: true,
@@ -931,13 +931,13 @@ Object.defineProperty(navigator, 'geolocation', {
           accuracy: 10,
           altitudeAccuracy: null,
           heading: null,
-          speed: null;
-        },
-        timestamp: Date.now();
-      });
-    }),
+          speed: null
+  },
+        timestamp: Date.now()
+  })
+  }),
     watchPosition: jest.fn(),
-    clearWatch: jest.fn();
+    clearWatch: jest.fn()
   }
 });
 
@@ -948,34 +948,34 @@ Object.defineProperty(navigator, 'serviceWorker', {
       waiting: null,
       active: {
         scriptURL: '/sw.js',
-        state: 'activated';
-      },
+        state: 'activated'
+  },
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
-      postMessage: jest.fn();
-    })),
+      postMessage: jest.fn()
+  })),
     ready: Promise.resolve({
       installing: null,
       waiting: null,
       active: {
         scriptURL: '/sw.js',
-        state: 'activated';
-      },
+        state: 'activated'
+  },
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
-      postMessage: jest.fn();
-    }),
+      postMessage: jest.fn()
+  }),
     controller: {
       scriptURL: '/sw.js',
       state: 'activated',
-      postMessage: jest.fn();
-    },
+      postMessage: jest.fn()
+  },
     addEventListener: jest.fn(),
     removeEventListener: jest.fn(),
-    getRegistration: jest.fn(() => Promise.resolve(null));
+    getRegistration: jest.fn(() => Promise.resolve(null))
   },
-  writable: true;
-});
+  writable: true
+  });
 
 // Headers class is already defined above, just reassign it
 (global as any).Headers = MockHeaders;
@@ -992,8 +992,8 @@ global.fetch = jest.fn(() =>
       ok: true,
       status: 200,
       json: async () => ({}),
-      headers: new MockHeaders();
-    })
+      headers: new MockHeaders()
+  })
   } as Response)
 );
 
@@ -1004,10 +1004,10 @@ global.crypto.randomUUID = () => {
   const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     const r = Math.random() * 16 | 0;
     const v = c === 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
+    return v.toString(16)
   });
-  return uuid as `${string}-${string}-${string}-${string}-${string}`;
-};
+  return uuid as `${string}-${string}-${string}-${string}-${string}`
+  };
 
 // Mock scrollIntoView
 Element.prototype.scrollIntoView = jest.fn();
@@ -1022,9 +1022,9 @@ if (!Element.prototype.getBoundingClientRect || Element.prototype.getBoundingCli
     top: 0,
     width: 0,
     x: 0,
-    y: 0;
-  } as DOMRect));
-}
+    y: 0
+  } as DOMRect))
+  }
 
 // Don't override these critical DOM methods as they break createElement
 // Element.prototype.closest = jest.fn(() => null);
@@ -1034,8 +1034,8 @@ if (!Element.prototype.getBoundingClientRect || Element.prototype.getBoundingCli
 
 // Ensure document is available globally
 if (typeof global.document === 'undefined' && typeof document !== 'undefined') {
-  global.document = document;
-}
+  global.document = document
+  }
 
 // Mock comprehensive window.getComputedStyle with getPropertyValue;
 const createMockComputedStyle = () => {
@@ -1101,9 +1101,8 @@ const createMockComputedStyle = () => {
       case 'overflow-x':
       case 'overflow-y':
         return 'visible';
-      default:
-        return '';
-    }
+      default: return ''
+  }
   });
 
   return {
@@ -1146,19 +1145,19 @@ const createMockComputedStyle = () => {
     zIndex: 'auto',
     overflow: 'visible',
     overflowX: 'visible',
-    overflowY: 'visible';
+    overflowY: 'visible'
   };
 
 window.getComputedStyle = jest.fn((element: Element, pseudoElt?: string | null) => {
-  return createMockComputedStyle() as any;
-};
+  return createMockComputedStyle() as any
+  };
   };
 
 // Also mock it on the global object for broader compatibility
 Object.defineProperty(window, 'getComputedStyle', {
   writable: true,
   value: jest.fn((element: Element, pseudoElt?: string | null) => {
-    return createMockComputedStyle() as any;
+    return createMockComputedStyle() as any
   })
 });
 
@@ -1201,9 +1200,9 @@ beforeAll(() => {
        message.includes('ReactDOM.render') ||
        message.includes('act()'))
     ) {
-      return;
-    }
-    originalError(message, ...args);
+      return
+  }
+    originalError(message, ...args)
   });
 
   console.warn = jest.fn((message, ...args) => {
@@ -1213,24 +1212,24 @@ beforeAll(() => {
       (message.includes('componentWill') ||
        message.includes('findDOMNode'))
     ) {
-      return;
-    }
-    originalWarn(message, ...args);
+      return
+  }
+    originalWarn(message, ...args)
+  })
   });
-});
 
 afterAll(() => {
   console.error = originalError;
   console.warn = originalWarn;
-  cleanupPerformanceMocks();
-});
+  cleanupPerformanceMocks()
+  });
 
 // Ensure DOM root element exists initially for React 18
 if (typeof document !== 'undefined') {
   // Always ensure body exists first
   if (!document.body) {
     const body = document.createElement('body');
-    document.documentElement.appendChild(body);
+    document.documentElement.appendChild(body)
   }
   
   // Don't add a root element here - let tests create their own containers
@@ -1247,24 +1246,24 @@ beforeEach(() => {
   
   // Reset all localStorage mocks - check if they are jest mocks first
   if (typeof localStorage.getItem === 'function' && 'mockClear' in localStorage.getItem) {
-    (localStorage.getItem as jest.Mock).mockClear();
+    (localStorage.getItem as jest.Mock).mockClear()
   }
   if (typeof localStorage.setItem === 'function' && 'mockClear' in localStorage.setItem) {
-    (localStorage.setItem as jest.Mock).mockClear();
+    (localStorage.setItem as jest.Mock).mockClear()
   }
   if (typeof localStorage.removeItem === 'function' && 'mockClear' in localStorage.removeItem) {
-    (localStorage.removeItem as jest.Mock).mockClear();
+    (localStorage.removeItem as jest.Mock).mockClear()
   }
   if (typeof localStorage.clear === 'function' && 'mockClear' in localStorage.clear) {
-    (localStorage.clear as jest.Mock).mockClear();
+    (localStorage.clear as jest.Mock).mockClear()
   }
   if (typeof localStorage.key === 'function' && 'mockClear' in localStorage.key) {
-    (localStorage.key as jest.Mock).mockClear();
+    (localStorage.key as jest.Mock).mockClear()
   }
   
   // Reset timer mocks
-  jest.clearAllTimers();
-});
+  jest.clearAllTimers()
+  });
 
 // Cleanup after each test
 afterEach(async () => {
@@ -1283,7 +1282,7 @@ afterEach(async () => {
   
   // Run pending timers before clearing them
   if (typeof setTimeout !== 'undefined' && jest.isMockFunction(setTimeout)) {
-    jest.runOnlyPendingTimers();
+    jest.runOnlyPendingTimers()
   }
   
   // Clear timers
@@ -1291,12 +1290,12 @@ afterEach(async () => {
   
   // If using fake timers, ensure they're reset
   if (typeof setTimeout !== 'undefined' && jest.isMockFunction(setTimeout)) {
-    jest.useRealTimers();
+    jest.useRealTimers()
   }
   
   // Clean up DOM for next test using our utility
-  cleanupDOM();
-});
+  cleanupDOM()
+  });
 
 // Mock Cache API;
 const mockCache = {
@@ -1306,16 +1305,16 @@ const mockCache = {
   addAll: jest.fn(() => Promise.resolve()),
   put: jest.fn(() => Promise.resolve()),
   delete: jest.fn(() => Promise.resolve(true)),
-  keys: jest.fn(() => Promise.resolve([]));
-};
+  keys: jest.fn(() => Promise.resolve([]))
+  };
 
 const mockCaches = {
   open: jest.fn(() => Promise.resolve(mockCache)),
   has: jest.fn(() => Promise.resolve(false)),
   delete: jest.fn(() => Promise.resolve(true)),
   keys: jest.fn(() => Promise.resolve([])),
-  match: jest.fn(() => Promise.resolve(undefined));
-};
+  match: jest.fn(() => Promise.resolve(undefined))
+  };
 
 (global as any).caches = mockCaches;
 

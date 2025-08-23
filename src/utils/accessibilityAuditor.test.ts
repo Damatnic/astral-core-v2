@@ -63,11 +63,11 @@ describe('accessibilityAuditor', () => {
           ...defaultStyle,
           outline: '2px solid blue',
           boxShadow: '0 0 0 2px rgba(0, 123, 255, 0.5)',
-        } as CSSStyleDeclaration;
-      }
+        } as CSSStyleDeclaration
+  }
 
-      return defaultStyle as CSSStyleDeclaration;
-    };
+      return defaultStyle as CSSStyleDeclaration
+  };
   };
 
     // Mock canvas for color parsing;
@@ -84,26 +84,26 @@ describe('accessibilityAuditor', () => {
     const originalCreateElement = document.createElement.bind(document);
     document.createElement = jest.fn((tagName: string) => {
       if (tagName === 'canvas') {
-        return mockCanvas;
-      }
-      return originalCreateElement(tagName);
-    });
+        return mockCanvas
+  }
+      return originalCreateElement(tagName)
+  });
 
     // Default auditor configuration
     auditor = new MobileAccessibilityAuditor();
 
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    jest.restoreAllMocks()
   });
 
   describe('Constructor and Configuration', () => {
     test.skip('should initialize with default configuration', () => {
       const defaultAuditor = new MobileAccessibilityAuditor();
-      expect(defaultAuditor).toBeInstanceOf(MobileAccessibilityAuditor);
-    });
+      expect(defaultAuditor).toBeInstanceOf(MobileAccessibilityAuditor)
+  });
 
     test.skip('should accept custom configuration', () => {
       const customConfig = {
@@ -115,8 +115,8 @@ describe('accessibilityAuditor', () => {
       };
 
       const customAuditor = new MobileAccessibilityAuditor(customConfig);
-      expect(customAuditor).toBeInstanceOf(MobileAccessibilityAuditor);
-    });
+      expect(customAuditor).toBeInstanceOf(MobileAccessibilityAuditor)
+  });
 
     test.skip('should merge custom config with defaults', () => {
       const partialConfig = {
@@ -125,8 +125,8 @@ describe('accessibilityAuditor', () => {
       };
 
       const auditorWithPartialConfig = new MobileAccessibilityAuditor(partialConfig);
-      expect(auditorWithPartialConfig).toBeInstanceOf(MobileAccessibilityAuditor);
-    });
+      expect(auditorWithPartialConfig).toBeInstanceOf(MobileAccessibilityAuditor)
+  })
   });
 
   describe('auditPage', () => {
@@ -141,14 +141,14 @@ describe('accessibilityAuditor', () => {
       expect(typeof result.score).toBe('number');
       expect(Array.isArray(result.issues)).toBe(true);
       expect(Array.isArray(result.suggestions)).toBe(true);
-      expect(Array.isArray(result.compliantAreas)).toBe(true);
-    });
+      expect(Array.isArray(result.compliantAreas)).toBe(true)
+  });
 
     test.skip('should calculate score <= 100', () => {
       const result = auditor.auditPage();
       expect(result.score).toBeGreaterThanOrEqual(0);
-      expect(result.score <= 100);
-    });
+      expect(result.score <= 100)
+  });
 
     test.skip('.skip($2should run all audit checks', () => {
       // Add elements that will trigger various checks
@@ -160,8 +160,8 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      expect(result.issues.length >= 0);
-    });
+      expect(result.issues.length >= 0)
+  })
   });
 
   describe('Image Alternatives (WCAG 1.1.1)', () => {
@@ -169,25 +169,25 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<img src="test.jpg">';
 
       const result = auditor.auditPage();
-      const imageIssues = result.issues.filter(issue => ;
+      const imageIssues = result.issues.filter(issue => ;;
         issue.description.includes('Image missing alternative text')
       );
 
       expect(imageIssues.length).toBeGreaterThan(0);
       expect(imageIssues[0].wcagCriterion).toBe('1.1.1');
-      expect(imageIssues[0].severity).toBe('high');
-    });
+      expect(imageIssues[0].severity).toBe('high')
+  });
 
     test.skip('should not flag images with proper alt text', () => {
       document.body.innerHTML = '<img src="test.jpg" alt="A beautiful sunset">';
 
       const result = auditor.auditPage();
-      const imageIssues = result.issues.filter(issue => ;
+      const imageIssues = result.issues.filter(issue => ;;
         issue.description.includes('Image missing alternative text')
       );
 
-      expect(imageIssues.length).toBe(0);
-    });
+      expect(imageIssues.length).toBe(0)
+  });
 
     test.skip('should not flag decorative images', () => {
       document.body.innerHTML = `
@@ -197,24 +197,24 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const imageIssues = result.issues.filter(issue => ;
+      const imageIssues = result.issues.filter(issue => ;;
         issue.description.includes('Image missing alternative text')
       );
 
-      expect(imageIssues.length).toBe(0);
-    });
+      expect(imageIssues.length).toBe(0)
+  });
 
     test.skip('should detect redundant alt text', () => {
       document.body.innerHTML = '<img src="test.jpg" alt="Image of a sunset">';
 
       const result = auditor.auditPage();
-      const redundantIssues = result.issues.filter(issue => ;
+      const redundantIssues = result.issues.filter(issue => ;;
         issue.description.includes('redundant words')
       );
 
       expect(redundantIssues.length).toBeGreaterThan(0);
-      expect(redundantIssues[0].severity).toBe('low');
-    });
+      expect(redundantIssues[0].severity).toBe('low')
+  });
 
     test.skip('should detect background images without alternatives', () => {
       const div = document.createElement('div');
@@ -227,12 +227,12 @@ describe('accessibilityAuditor', () => {
       } as any));
 
       const result = auditor.auditPage();
-      const bgImageIssues = result.issues.filter(issue => ;
+      const bgImageIssues = result.issues.filter(issue => ;;
         issue.description.includes('Background image may convey information')
       );
 
-      expect(bgImageIssues.length).toBeGreaterThan(0);
-    });
+      expect(bgImageIssues.length).toBeGreaterThan(0)
+  })
   });
 
   describe('Form Labels (WCAG 1.3.1, 3.3.2)', () => {
@@ -240,13 +240,13 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<input type="text" name="email">';
 
       const result = auditor.auditPage();
-      const labelIssues = result.issues.filter(issue => ;
+      const labelIssues = result.issues.filter(issue => ;;
         issue.description.includes('Form control missing accessible name')
       );
 
       expect(labelIssues.length).toBeGreaterThan(0);
-      expect(labelIssues[0].severity).toBe('high');
-    });
+      expect(labelIssues[0].severity).toBe('high')
+  });
 
     test.skip('.skip($2should accept various labeling methods', () => {
       document.body.innerHTML = `
@@ -262,24 +262,24 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const labelIssues = result.issues.filter(issue => ;
+      const labelIssues = result.issues.filter(issue => ;;
         issue.description.includes('Form control missing accessible name')
       );
 
-      expect(labelIssues.length).toBe(0);
-    });
+      expect(labelIssues.length).toBe(0)
+  });
 
     test.skip('should detect placeholder-as-label antipattern', () => {
       document.body.innerHTML = '<input type="text" placeholder="Enter your email">';
 
       const result = auditor.auditPage();
-      const placeholderIssues = result.issues.filter(issue => ;
+      const placeholderIssues = result.issues.filter(issue => ;;
         issue.description.includes('Using placeholder as label')
       );
 
       expect(placeholderIssues.length).toBeGreaterThan(0);
-      expect(placeholderIssues[0].severity).toBe('medium');
-    });
+      expect(placeholderIssues[0].severity).toBe('medium')
+  })
   });
 
   describe('Heading Structure (WCAG 1.3.1)', () => {
@@ -287,12 +287,12 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<p>Content without any headings</p>';
 
       const result = auditor.auditPage();
-      const headingIssues = result.issues.filter(issue => ;
+      const headingIssues = result.issues.filter(issue => ;;
         issue.description.includes('No headings found')
       );
 
-      expect(headingIssues.length).toBeGreaterThan(0);
-    });
+      expect(headingIssues.length).toBeGreaterThan(0)
+  });
 
     test.skip('.skip($2should detect missing H1', () => {
       document.body.innerHTML = `
@@ -301,12 +301,12 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const h1Issues = result.issues.filter(issue => ;
+      const h1Issues = result.issues.filter(issue => ;;
         issue.description.includes('No H1 heading found')
       );
 
-      expect(h1Issues.length).toBeGreaterThan(0);
-    });
+      expect(h1Issues.length).toBeGreaterThan(0)
+  });
 
     test.skip('.skip($2should detect multiple H1s', () => {
       document.body.innerHTML = `
@@ -315,12 +315,12 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const multipleH1Issues = result.issues.filter(issue => ;
+      const multipleH1Issues = result.issues.filter(issue => ;;
         issue.description.includes('Multiple H1 headings found')
       );
 
-      expect(multipleH1Issues.length).toBeGreaterThan(0);
-    });
+      expect(multipleH1Issues.length).toBeGreaterThan(0)
+  });
 
     test.skip('.skip($2should detect heading level jumps', () => {
       document.body.innerHTML = `
@@ -329,24 +329,24 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const jumpIssues = result.issues.filter(issue => ;
+      const jumpIssues = result.issues.filter(issue => ;;
         issue.description.includes('Heading level jumps')
       );
 
-      expect(jumpIssues.length).toBeGreaterThan(0);
-    });
+      expect(jumpIssues.length).toBeGreaterThan(0)
+  });
 
     test.skip('should detect empty headings', () => {
       document.body.innerHTML = '<h1></h1>';
 
       const result = auditor.auditPage();
-      const emptyIssues = result.issues.filter(issue => ;
+      const emptyIssues = result.issues.filter(issue => ;;
         issue.description.includes('Empty heading found')
       );
 
       expect(emptyIssues.length).toBeGreaterThan(0);
-      expect(emptyIssues[0].severity).toBe('high');
-    });
+      expect(emptyIssues[0].severity).toBe('high')
+  });
 
     test.skip('.skip($2should accept proper heading hierarchy', () => {
       document.body.innerHTML = `
@@ -357,12 +357,12 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const hierarchyIssues = result.issues.filter(issue => ;
+      const hierarchyIssues = result.issues.filter(issue => ;;
         issue.description.includes('Heading level jumps')
       );
 
-      expect(hierarchyIssues.length).toBe(0);
-    });
+      expect(hierarchyIssues.length).toBe(0)
+  })
   });
 
   describe('Color Contrast (WCAG 1.4.3, 1.4.6)', () => {
@@ -392,17 +392,17 @@ describe('accessibilityAuditor', () => {
             width: 0,
             height: 0,
             getContext: () => mockContext,
-          } as any;
-        }
-        return document.createElement.call(document, tagName);
-      };
+          } as any
+  }
+        return document.createElement.call(document, tagName)
+  };
   };
 
       const result = auditor.auditPage();
       
       // Should detect contrast issues (though this test is complex due to color calculation)
-      expect(result.issues.length >= 0);
-    });
+      expect(result.issues.length >= 0)
+  });
 
     test.skip('should handle transparent backgrounds', () => {
       document.body.innerHTML = '<span>Text with transparent background</span>';
@@ -415,9 +415,9 @@ describe('accessibilityAuditor', () => {
       } as any));
 
       expect(() => {
-        auditor.auditPage();
-      }).not.toThrow();
-    });
+        auditor.auditPage()
+  }).not.toThrow()
+  })
   });
 
   describe('Focus Indicators (WCAG 2.4.7)', () => {
@@ -438,29 +438,29 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<button>Test Button</button>';
 
       const result = auditor.auditPage();
-      const focusIssues = result.issues.filter(issue => ;
+      const focusIssues = result.issues.filter(issue => ;;
         issue.description.includes('No global focus styles detected')
       );
 
       expect(focusIssues.length).toBeGreaterThan(0);
-      expect(focusIssues[0].severity).toBe('high');
-    });
+      expect(focusIssues[0].severity).toBe('high')
+  });
 
     test.skip('should handle cross-origin stylesheet errors', () => {
       // Mock stylesheet that throws error when accessing cssRules
       Object.defineProperty(document, 'styleSheets', {
         value: [{
           get cssRules() {
-            throw new Error('Cannot access cross-origin stylesheet');
-          },
+            throw new Error('Cannot access cross-origin stylesheet')
+  },
         }] as any as CSSStyleSheet[],
         writable: true,
       });
 
       expect(() => {
-        auditor.auditPage();
-      }).not.toThrow();
-    });
+        auditor.auditPage()
+  }).not.toThrow()
+  })
   });
 
   describe('Keyboard Navigation (WCAG 2.1.1)', () => {
@@ -468,25 +468,25 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<div tabindex="5">Positive tabindex</div>';
 
       const result = auditor.auditPage();
-      const tabindexIssues = result.issues.filter(issue => ;
+      const tabindexIssues = result.issues.filter(issue => ;;
         issue.description.includes('Positive tabindex found')
       );
 
       expect(tabindexIssues.length).toBeGreaterThan(0);
-      expect(tabindexIssues[0].severity).toBe('medium');
-    });
+      expect(tabindexIssues[0].severity).toBe('medium')
+  });
 
     test.skip('.skip($2should detect click handlers without keyboard support', () => {
       document.body.innerHTML = '<div onclick="doSomething()">Clickable div</div>';
 
       const result = auditor.auditPage();
-      const keyboardIssues = result.issues.filter(issue => ;
+      const keyboardIssues = result.issues.filter(issue => ;;
         issue.description.includes('Click handler without keyboard support')
       );
 
       expect(keyboardIssues.length).toBeGreaterThan(0);
-      expect(keyboardIssues[0].severity).toBe('high');
-    });
+      expect(keyboardIssues[0].severity).toBe('high')
+  });
 
     test.skip('.skip($2should accept proper interactive elements', () => {
       document.body.innerHTML = `
@@ -496,12 +496,12 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const keyboardIssues = result.issues.filter(issue => ;
+      const keyboardIssues = result.issues.filter(issue => ;;
         issue.description.includes('Click handler without keyboard support')
       );
 
-      expect(keyboardIssues.length).toBe(0);
-    });
+      expect(keyboardIssues.length).toBe(0)
+  })
   });
 
   describe('Touch Targets (WCAG 2.5.5) - Mobile Specific', () => {
@@ -529,12 +529,12 @@ describe('accessibilityAuditor', () => {
       } as any));
 
       const result = mobileAuditor.auditPage();
-      const touchTargetIssues = result.issues.filter(issue => ;
+      const touchTargetIssues = result.issues.filter(issue => ;;
         issue.description.includes('Touch target too small')
       );
 
-      expect(touchTargetIssues.length).toBeGreaterThan(0);
-    });
+      expect(touchTargetIssues.length).toBeGreaterThan(0)
+  });
 
     test.skip('.skip($2should not check touch targets when mobile optimization disabled', () => {
       const desktopAuditor = new MobileAccessibilityAuditor({ mobileOptimized: false });
@@ -542,12 +542,12 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<button>Small Button</button>';
 
       const result = desktopAuditor.auditPage();
-      const touchTargetIssues = result.issues.filter(issue => ;
+      const touchTargetIssues = result.issues.filter(issue => ;;
         issue.description.includes('Touch target too small')
       );
 
-      expect(touchTargetIssues.length).toBe(0);
-    });
+      expect(touchTargetIssues.length).toBe(0)
+  });
 
     test.skip('should accept adequately sized touch targets', () => {
       const mobileAuditor = new MobileAccessibilityAuditor({ mobileOptimized: true });
@@ -572,12 +572,12 @@ describe('accessibilityAuditor', () => {
       } as any));
 
       const result = mobileAuditor.auditPage();
-      const touchTargetIssues = result.issues.filter(issue => ;
+      const touchTargetIssues = result.issues.filter(issue => ;;
         issue.description.includes('Touch target too small')
       );
 
-      expect(touchTargetIssues.length).toBe(0);
-    });
+      expect(touchTargetIssues.length).toBe(0)
+  })
   });
 
   describe('Landmarks (WCAG 1.3.1)', () => {
@@ -585,13 +585,13 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<div>Content without main landmark</div>';
 
       const result = auditor.auditPage();
-      const mainIssues = result.issues.filter(issue => ;
+      const mainIssues = result.issues.filter(issue => ;;
         issue.description.includes('Missing main landmark')
       );
 
       expect(mainIssues.length).toBeGreaterThan(0);
-      expect(mainIssues[0].severity).toBe('high');
-    });
+      expect(mainIssues[0].severity).toBe('high')
+  });
 
     test.skip('should detect multiple main landmarks', () => {
       document.body.innerHTML = `
@@ -600,12 +600,12 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const multipleMainIssues = result.issues.filter(issue => ;
+      const multipleMainIssues = result.issues.filter(issue => ;;
         issue.description.includes('Multiple main landmarks found')
       );
 
-      expect(multipleMainIssues.length).toBeGreaterThan(0);
-    });
+      expect(multipleMainIssues.length).toBeGreaterThan(0)
+  });
 
     test.skip('should accept proper landmark structure', () => {
       document.body.innerHTML = `
@@ -617,24 +617,24 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const landmarkIssues = result.issues.filter(issue => ;
+      const landmarkIssues = result.issues.filter(issue => ;;
         issue.description.includes('Missing main landmark')
       );
 
-      expect(landmarkIssues.length).toBe(0);
-    });
+      expect(landmarkIssues.length).toBe(0)
+  });
 
     test.skip('should warn about missing navigation landmark', () => {
       document.body.innerHTML = '<main>Content without navigation</main>';
 
       const result = auditor.auditPage();
-      const navIssues = result.issues.filter(issue => ;
+      const navIssues = result.issues.filter(issue => ;;
         issue.description.includes('No navigation landmark found')
       );
 
       expect(navIssues.length).toBeGreaterThan(0);
-      expect(navIssues[0].severity).toBe('low');
-    });
+      expect(navIssues[0].severity).toBe('low')
+  })
   });
 
   describe('ARIA Usage (WCAG 4.1.2)', () => {
@@ -642,35 +642,35 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<button aria-label="">Button</button>';
 
       const result = auditor.auditPage();
-      const ariaIssues = result.issues.filter(issue => ;
+      const ariaIssues = result.issues.filter(issue => ;;
         issue.description.includes('Empty aria-label attribute')
       );
 
-      expect(ariaIssues.length).toBeGreaterThan(0);
-    });
+      expect(ariaIssues.length).toBeGreaterThan(0)
+  });
 
     test.skip('should detect invalid aria-labelledby references', () => {
       document.body.innerHTML = '<button aria-labelledby="nonexistent">Button</button>';
 
       const result = auditor.auditPage();
-      const labelledbyIssues = result.issues.filter(issue => ;
+      const labelledbyIssues = result.issues.filter(issue => ;;
         issue.description.includes('aria-labelledby references non-existent ID')
       );
 
       expect(labelledbyIssues.length).toBeGreaterThan(0);
-      expect(labelledbyIssues[0].severity).toBe('high');
-    });
+      expect(labelledbyIssues[0].severity).toBe('high')
+  });
 
     test.skip('should detect invalid aria-describedby references', () => {
       document.body.innerHTML = '<button aria-describedby="missing">Button</button>';
 
       const result = auditor.auditPage();
-      const describedbyIssues = result.issues.filter(issue => ;
+      const describedbyIssues = result.issues.filter(issue => ;;
         issue.description.includes('aria-describedby references non-existent ID')
       );
 
-      expect(describedbyIssues.length).toBeGreaterThan(0);
-    });
+      expect(describedbyIssues.length).toBeGreaterThan(0)
+  });
 
     test.skip('should accept valid ARIA references', () => {
       document.body.innerHTML = `
@@ -680,12 +680,12 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const ariaIssues = result.issues.filter(issue => ;
+      const ariaIssues = result.issues.filter(issue => ;;
         issue.description.includes('references non-existent ID')
       );
 
-      expect(ariaIssues.length).toBe(0);
-    });
+      expect(ariaIssues.length).toBe(0)
+  })
   });
 
   describe('Text Alternatives (WCAG 1.1.1)', () => {
@@ -693,12 +693,12 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<svg><rect width="100" height="100"/></svg>';
 
       const result = auditor.auditPage();
-      const svgIssues = result.issues.filter(issue => ;
+      const svgIssues = result.issues.filter(issue => ;;
         issue.description.includes('SVG missing accessible name')
       );
 
-      expect(svgIssues.length).toBeGreaterThan(0);
-    });
+      expect(svgIssues.length).toBeGreaterThan(0)
+  });
 
     test.skip('should accept SVG with proper alternatives', () => {
       document.body.innerHTML = `
@@ -708,23 +708,23 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const svgIssues = result.issues.filter(issue => ;
+      const svgIssues = result.issues.filter(issue => ;;
         issue.description.includes('SVG missing accessible name')
       );
 
-      expect(svgIssues.length).toBe(0);
-    });
+      expect(svgIssues.length).toBe(0)
+  });
 
     test.skip('should detect canvas without alternative content', () => {
       document.body.innerHTML = '<canvas width="100" height="100"></canvas>';
 
       const result = auditor.auditPage();
-      const canvasIssues = result.issues.filter(issue => ;
+      const canvasIssues = result.issues.filter(issue => ;;
         issue.description.includes('Canvas missing alternative content')
       );
 
-      expect(canvasIssues.length).toBeGreaterThan(0);
-    });
+      expect(canvasIssues.length).toBeGreaterThan(0)
+  })
   });
 
   describe('Language Specification (WCAG 3.1.1)', () => {
@@ -736,13 +736,13 @@ describe('accessibilityAuditor', () => {
       });
 
       const result = auditor.auditPage();
-      const langIssues = result.issues.filter(issue => ;
+      const langIssues = result.issues.filter(issue => ;;
         issue.description.includes('Page missing language declaration')
       );
 
       expect(langIssues.length).toBeGreaterThan(0);
-      expect(langIssues[0].severity).toBe('high');
-    });
+      expect(langIssues[0].severity).toBe('high')
+  });
 
     test.skip('should accept proper language declaration', () => {
       Object.defineProperty(document.documentElement, 'getAttribute', {
@@ -751,29 +751,29 @@ describe('accessibilityAuditor', () => {
       });
 
       const result = auditor.auditPage();
-      const langIssues = result.issues.filter(issue => ;
+      const langIssues = result.issues.filter(issue => ;;
         issue.description.includes('Page missing language declaration')
       );
 
-      expect(langIssues.length).toBe(0);
-    });
+      expect(langIssues.length).toBe(0)
+  })
   });
 
   describe('Mobile-Specific Checks', () => {
     let mobileAuditor: MobileAccessibilityAuditor;
 
     beforeEach(() => {
-      mobileAuditor = new MobileAccessibilityAuditor({ mobileOptimized: true });
-    });
+      mobileAuditor = new MobileAccessibilityAuditor({ mobileOptimized: true })
+  });
 
     test.skip('should detect missing viewport meta tag', () => {
       const result = mobileAuditor.auditPage();
-      const viewportIssues = result.issues.filter(issue => ;
+      const viewportIssues = result.issues.filter(issue => ;;
         issue.description.includes('Missing viewport meta tag')
       );
 
-      expect(viewportIssues.length).toBeGreaterThan(0);
-    });
+      expect(viewportIssues.length).toBeGreaterThan(0)
+  });
 
     test.skip('should detect viewport that prevents zooming', () => {
       const meta = document.createElement('meta');
@@ -782,13 +782,13 @@ describe('accessibilityAuditor', () => {
       document.head.appendChild(meta);
 
       const result = mobileAuditor.auditPage();
-      const zoomIssues = result.issues.filter(issue => ;
+      const zoomIssues = result.issues.filter(issue => ;;
         issue.description.includes('Viewport prevents zooming')
       );
 
       expect(zoomIssues.length).toBeGreaterThan(0);
-      expect(zoomIssues[0].severity).toBe('high');
-    });
+      expect(zoomIssues[0].severity).toBe('high')
+  });
 
     test.skip('should accept proper viewport configuration', () => {
       const meta = document.createElement('meta');
@@ -797,12 +797,12 @@ describe('accessibilityAuditor', () => {
       document.head.appendChild(meta);
 
       const result = mobileAuditor.auditPage();
-      const viewportIssues = result.issues.filter(issue => ;
+      const viewportIssues = result.issues.filter(issue => ;;
         issue.description.includes('viewport')
       );
 
-      expect(viewportIssues.length).toBe(0);
-    });
+      expect(viewportIssues.length).toBe(0)
+  });
 
     test.skip('should detect horizontal scrolling', () => {
       // Mock document body with horizontal scroll
@@ -810,12 +810,12 @@ describe('accessibilityAuditor', () => {
       Object.defineProperty(window, 'innerWidth', { value: 800, writable: true });
 
       const result = mobileAuditor.auditPage();
-      const scrollIssues = result.issues.filter(issue => ;
+      const scrollIssues = result.issues.filter(issue => ;;
         issue.description.includes('horizontal scrolling')
       );
 
-      expect(scrollIssues.length).toBeGreaterThan(0);
-    });
+      expect(scrollIssues.length).toBeGreaterThan(0)
+  })
   });
 
   describe('Custom Rules', () => {
@@ -836,13 +836,13 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<div>Test content</div>';
 
       const result = customAuditor.auditPage();
-      const customIssues = result.issues.filter(issue => ;
+      const customIssues = result.issues.filter(issue => ;;
         issue.description === 'Custom test rule'
       );
 
       expect(customIssues.length).toBeGreaterThan(0);
-      expect(customRule.check).toHaveBeenCalled();
-    });
+      expect(customRule.check).toHaveBeenCalled()
+  })
   });
 
   describe('Configuration Options', () => {
@@ -856,8 +856,8 @@ describe('accessibilityAuditor', () => {
       const result = noWarningsAuditor.auditPage();
       const warnings = result.issues.filter(issue => issue.type === 'warning');
 
-      expect(warnings.length).toBe(0);
-    });
+      expect(warnings.length).toBe(0)
+  });
 
     test.skip('should skip elements with aria-hidden when configured', () => {
       const skipHiddenAuditor = new MobileAccessibilityAuditor({
@@ -868,8 +868,8 @@ describe('accessibilityAuditor', () => {
 
       const result = skipHiddenAuditor.auditPage();
       // Should not have issues for hidden elements
-      expect(result.issues.length >= 0);
-    });
+      expect(result.issues.length >= 0)
+  });
 
     test.skip('should use AAA level when configured', () => {
       const aaaAuditor = new MobileAccessibilityAuditor({
@@ -878,8 +878,8 @@ describe('accessibilityAuditor', () => {
 
       // This would affect color contrast calculations;
       const result = aaaAuditor.auditPage();
-      expect(result).toBeDefined();
-    });
+      expect(result).toBeDefined()
+  })
   });
 
   describe('Score Calculation', () => {
@@ -893,8 +893,8 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      expect(result.score <= 100);
-    });
+      expect(result.score <= 100)
+  });
 
     test.skip('should provide appropriate suggestions based on issues', () => {
       document.body.innerHTML = '<img src="test.jpg">';
@@ -903,8 +903,8 @@ describe('accessibilityAuditor', () => {
       expect(result.suggestions.length).toBeGreaterThan(0);
       
       if (result.issues.some(issue => issue.type === 'error')) {
-        expect(result.suggestions).toContain('Fix critical accessibility errors first');
-      }
+        expect(result.suggestions).toContain('Fix critical accessibility errors first')
+  }
     });
 
     test.skip('should identify compliant areas', () => {
@@ -919,9 +919,9 @@ describe('accessibilityAuditor', () => {
       const result = auditor.auditPage();
       
       if (result.issues.filter(issue => issue.type === 'error').length === 0) {
-        expect(result.compliantAreas).toContain('No critical accessibility errors found');
-      }
-    });
+        expect(result.compliantAreas).toContain('No critical accessibility errors found')
+  }
+    })
   });
 
   describe('Static Methods', () => {
@@ -933,8 +933,8 @@ describe('accessibilityAuditor', () => {
       expect(result).toHaveProperty('score');
       expect(result).toHaveProperty('issues');
       expect(result).toHaveProperty('suggestions');
-      expect(result).toHaveProperty('compliantAreas');
-    });
+      expect(result).toHaveProperty('compliantAreas')
+  });
 
     test.skip('should provide comprehensiveAudit method', () => {
       document.body.innerHTML = '<h1>Test Page</h1>';
@@ -945,8 +945,8 @@ describe('accessibilityAuditor', () => {
       });
       
       expect(result).toHaveProperty('score');
-      expect(result.issues).toBeInstanceOf(Array);
-    });
+      expect(result.issues).toBeInstanceOf(Array)
+  })
   });
 
   describe('Error Handling', () => {
@@ -954,36 +954,36 @@ describe('accessibilityAuditor', () => {
       // Mock querySelector to throw error;
       const originalQuerySelector = document.querySelector;
       document.querySelector = jest.fn(() => {
-        throw new Error('DOM error');
-      });
+        throw new Error('DOM error')
+  });
 
       expect(() => {
-        auditor.auditPage();
-      }).not.toThrow();
+        auditor.auditPage()
+  }).not.toThrow();
 
       // Restore
-      document.querySelector = originalQuerySelector;
-    });
+      document.querySelector = originalQuerySelector
+  });
 
     test.skip('should handle missing elements gracefully', () => {
       document.querySelectorAll = jest.fn(() => [] as any);
 
       const result = auditor.auditPage();
-      expect(result.score).toBeGreaterThanOrEqual(0);
-    });
+      expect(result.score).toBeGreaterThanOrEqual(0)
+  });
 
     test.skip('should handle getBoundingClientRect errors', () => {
       document.body.innerHTML = '<button>Test</button>';
       
       const mockButton = document.querySelector('button');
       mockButton!.getBoundingClientRect = jest.fn(() => {
-        throw new Error('getBoundingClientRect error');
-      });
+        throw new Error('getBoundingClientRect error')
+  });
 
       expect(() => {
-        auditor.auditPage();
-      }).not.toThrow();
-    });
+        auditor.auditPage()
+  }).not.toThrow()
+  });
 
     test.skip('should handle color parsing errors', () => {
       document.body.innerHTML = '<p>Test text</p>';
@@ -995,16 +995,16 @@ describe('accessibilityAuditor', () => {
             width: 0,
             height: 0,
             getContext: () => null, // Return null to simulate error
-          } as any;
-        }
-        return document.createElement.call(document, tagName);
-      };
+          } as any
+  }
+        return document.createElement.call(document, tagName)
+  };
   };
 
       expect(() => {
-        auditor.auditPage();
-      }).not.toThrow();
-    });
+        auditor.auditPage()
+  }).not.toThrow()
+  })
   });
 
   describe('Performance', () => {
@@ -1027,33 +1027,33 @@ describe('accessibilityAuditor', () => {
       const duration = endTime - startTime;
 
       expect(duration).toBeLessThan(5000); // Should complete within 5 seconds
-      expect(result.issues.length >= 0);
-    });
+      expect(result.issues.length >= 0)
+  });
 
     test.skip('should not cause memory leaks with repeated audits', () => {
       document.body.innerHTML = '<h1>Test</h1><img src="test.jpg"><button>Click</button>';
 
       // Run multiple audits
       for (let i = 0; i < 100; i++) {
-        auditor.auditPage();
-      }
+        auditor.auditPage()
+  }
 
       // Should complete without issues
-      expect(true).toBe(true);
-    });
+      expect(true).toBe(true)
+  })
   });
 
   describe('Default Export', () => {
     test.skip('should export MobileAccessibilityAuditor as default', () => {
       const DefaultExport = require('./accessibilityAuditor').default;
-      expect(DefaultExport).toBe(MobileAccessibilityAuditor);
-    });
+      expect(DefaultExport).toBe(MobileAccessibilityAuditor)
+  })
+  })
   });
-});
 
 // Dummy test to keep suite active
 describe('Test Suite Active', () => {
   it('Placeholder test to prevent empty suite', () => {
-    expect(true).toBe(true);
+    expect(true).toBe(true)
+  })
   });
-});

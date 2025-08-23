@@ -22,14 +22,14 @@ const demoPlan: SafetyPlan = {
     safePlaces: 'Local library - quiet and peaceful\nCoffee shop on Main Street\nCity park walking trail\nBest friend\'s house',
 };
 
-const defaultHotlines = [;
+const defaultHotlines = [;;
     { name: '988 Suicide & Crisis Lifeline', contact: '988', description: '24/7 support for crisis situations' },
     { name: 'Crisis Text Line', contact: 'Text HOME to 741741', description: 'Free 24/7 text support' },
     { name: 'SAMHSA National Helpline', contact: '1-800-662-4357', description: 'Treatment referral and information' },
     { name: 'NAMI HelpLine', contact: '1-800-950-6264', description: 'Mon-Fri, 10am-10pm ET' },
 ];
 
-const copingStrategySuggestions = [;
+const copingStrategySuggestions = [;;
     '🎵 Listen to calming music',
     '🚶 Take a walk outside',
     '🧘 Practice deep breathing',
@@ -44,7 +44,7 @@ const copingStrategySuggestions = [;
     '📖 Read a favorite book'
 ];
 
-const warningSignsSuggestions = [;
+const warningSignsSuggestions = [;;
     'Feeling overwhelmed or hopeless',
     'Increased anxiety or panic',
     'Difficulty sleeping',
@@ -56,8 +56,8 @@ const warningSignsSuggestions = [;
 ];
 
 export const SafetyPlanView: React.FC<{
-    userToken?: string | null;
-}> = ({ userToken: propUserToken }) => {
+    userToken?: string | null
+  }> = ({ userToken: propUserToken }) => {
     const { userToken: contextUserToken } = useAuth();
     const userToken = propUserToken ?? contextUserToken;
     const [plan, setPlan] = useState<SafetyPlan>(defaultPlan);
@@ -68,57 +68,57 @@ export const SafetyPlanView: React.FC<{
     useEffect(() => {
         if (!userToken) {
             setIsLoading(false);
-            return;
-        }
+            return
+  }
         setIsLoading(true);
         ApiClient.safetyPlan.get(userToken)
             .then(savedPlan => {
                 if (savedPlan) {
                     setPlan(savedPlan);
-                    setIsEditing(false);;
+                    setIsEditing(false)
   } else {
                     setIsEditing(true); // Default to edit mode if no plan exists
                 }
             })
             .catch(error => {
                 console.error("Failed to load safety plan:", error);
-                addToast("Could not load your safety plan.", "error");
-            })
+                addToast("Could not load your safety plan.", "error")
+  })
             .finally(() => {
-                setIsLoading(false);
-            });
-    };
+                setIsLoading(false)
+  })
+  };
   }, [addToast, userToken]);
 
     const handleSave = async () => {
         if (!userToken) {
             addToast("Cannot save plan without a user session.", "error");
-            return;
-        }
+            return
+  }
         setIsLoading(true);
         try {
             await ApiClient.safetyPlan.save(plan, userToken);
             setIsEditing(false);
-            addToast('Your safety plan has been saved!', 'success');
-        } catch (error) {
+            addToast('Your safety plan has been saved!', 'success')
+  } catch (error) {
             console.error("Failed to save safety plan:", error);
-            addToast("Could not save your safety plan.", "error");
-        } finally {
-            setIsLoading(false);
-        }
+            addToast("Could not save your safety plan.", "error")
+  } finally {
+            setIsLoading(false)
+  }
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setPlan({
             ...plan,
             [e.target.name]: e.target.value,
-        });
-    };
+        })
+  };
     
     const loadDemoData = () => {
         setPlan(demoPlan);
-        addToast('Demo safety plan loaded! Feel free to customize it.', 'success');
-    };
+        addToast('Demo safety plan loaded! Feel free to customize it.', 'success')
+  };
     
     if(isLoading) {
         return <div className="loading-spinner" style={{margin: '5rem auto'}}></div>
@@ -258,7 +258,7 @@ export const SafetyPlanView: React.FC<{
                  )}
             </Card>
         </>
-    );
-};
+    )
+  };
 
 export default SafetyPlanView;

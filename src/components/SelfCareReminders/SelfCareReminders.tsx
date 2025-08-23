@@ -9,16 +9,16 @@ interface SelfCareActivity {
   category: 'physical' | 'mental' | 'social' | 'spiritual' | 'practical';
   frequency: 'daily' | 'weekly' | 'monthly';
   lastCompleted?: string;
-  streak?: number;
-}
+  streak?: number
+  }
 
 interface Reminder {
   id: string;
   activityId: string;
   time: string;
   days: string[];
-  enabled: boolean;
-}
+  enabled: boolean
+  }
 
 const DEFAULT_ACTIVITIES: SelfCareActivity[] = [
   // Physical
@@ -67,19 +67,19 @@ export const SelfCareReminders: React.FC = () => {
     const savedReminders = localStorage.getItem('selfCareReminders');
     
     if (savedActivities) {
-      setActivities(JSON.parse(savedActivities));;
+      setActivities(JSON.parse(savedActivities))
   } else {
       setActivities(DEFAULT_ACTIVITIES);
-      localStorage.setItem('selfCareActivities', JSON.stringify(DEFAULT_ACTIVITIES));
-    }
+      localStorage.setItem('selfCareActivities', JSON.stringify(DEFAULT_ACTIVITIES))
+  }
     
     if (savedReminders) {
-      setReminders(JSON.parse(savedReminders));
-    }
+      setReminders(JSON.parse(savedReminders))
+  }
 
     // Check for due reminders every minute;
     const interval = setInterval(checkReminders, 60000);
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   };
   }, []);
 
@@ -92,10 +92,10 @@ export const SelfCareReminders: React.FC = () => {
       if (reminder.enabled && reminder.time === currentTime && reminder.days.includes(currentDay)) {
         const activity = activities.find(a => a.id === reminder.activityId);
         if (activity) {
-          showNotification(activity);
-        }
+          showNotification(activity)
+  }
       }
-    });
+    })
   };
 
   const showNotification = (activity: SelfCareActivity) => {
@@ -105,9 +105,9 @@ export const SelfCareReminders: React.FC = () => {
         icon: '/icon-192.png',
         badge: '/icon-192.png',
         tag: activity.id,
-        requireInteraction: true;
-      });
-    }
+        requireInteraction: true
+  })
+  }
   };
 
   const requestNotificationPermission = async () => {
@@ -120,9 +120,9 @@ export const SelfCareReminders: React.FC = () => {
           description: 'You\'ll now receive self-care reminders',
           icon: '✅',
           category: 'mental',
-          frequency: 'daily';
-        });
-      }
+          frequency: 'daily'
+  })
+  }
     }
   };
 
@@ -131,20 +131,20 @@ export const SelfCareReminders: React.FC = () => {
       if (activity.id === activityId) {
         const lastDate = activity.lastCompleted ? new Date(activity.lastCompleted) : null;
         const today = new Date().toDateString();
-        const isConsecutive = lastDate && ;
+        const isConsecutive = lastDate && ;;
           new Date(lastDate.getTime() + 86400000).toDateString() === today;
         
         return {
           ...activity,
           lastCompleted: new Date().toISOString(),
-          streak: isConsecutive ? (activity.streak || 0) + 1 : 1;
-        }
-      return activity;
-    };
+          streak: isConsecutive ? (activity.streak || 0) + 1 : 1
+  }
+      return activity
+  };
   };
     
     setActivities(updatedActivities);
-    localStorage.setItem('selfCareActivities', JSON.stringify(updatedActivities));
+    localStorage.setItem('selfCareActivities', JSON.stringify(updatedActivities))
   };
 
   const addReminder = () => {
@@ -155,32 +155,32 @@ export const SelfCareReminders: React.FC = () => {
       activityId: selectedActivity.id,
       time: customTime,
       days: selectedDays,
-      enabled: true;
-    };
+      enabled: true
+  };
     
     const updatedReminders = [...reminders, newReminder];
     setReminders(updatedReminders);
     localStorage.setItem('selfCareReminders', JSON.stringify(updatedReminders));
     
     setShowAddReminder(false);
-    setSelectedActivity(null);
+    setSelectedActivity(null)
   };
 
   const toggleReminder = (reminderId: string) => {
-    const updatedReminders = reminders.map(r => ;
+    const updatedReminders = reminders.map(r => ;;
       r.id === reminderId ? { ...r, enabled: !r.enabled } : r
     );
     setReminders(updatedReminders);
-    localStorage.setItem('selfCareReminders', JSON.stringify(updatedReminders));
+    localStorage.setItem('selfCareReminders', JSON.stringify(updatedReminders))
   };
 
   const deleteReminder = (reminderId: string) => {
     const updatedReminders = reminders.filter(r => r.id !== reminderId);
     setReminders(updatedReminders);
-    localStorage.setItem('selfCareReminders', JSON.stringify(updatedReminders));
+    localStorage.setItem('selfCareReminders', JSON.stringify(updatedReminders))
   };
 
-  const filteredActivities = selectedCategory === 'all' ;
+  const filteredActivities = selectedCategory === 'all' ;;
     ? activities 
     : activities.filter(a => a.category === selectedCategory);
 
@@ -190,9 +190,9 @@ export const SelfCareReminders: React.FC = () => {
       mental: '#8b5cf6',
       social: '#3b82f6',
       spiritual: '#10b981',
-      practical: '#f59e0b';
-    };
-    return colors[category] || '#6b7280';
+      practical: '#f59e0b'
+  };
+    return colors[category] || '#6b7280'
   };
 
   const getDaysAgo = (dateString?: string) => {
@@ -204,15 +204,14 @@ export const SelfCareReminders: React.FC = () => {
     
     if (diffDays === 0) return 'Today';
     if (diffDays === 1) return 'Yesterday';
-    return `${diffDays} days ago`;
+    return `${diffDays} days ago`
   };
 
   return (
     <div className="self-care-reminders">
       <div className="reminders-header">
         <h2>Self-Care Activities</h2>
-        <button; 
-          className="notification-btn"
+        <button className="notification-btn"
           onClick={requestNotificationPermission}
         >
           🔔 Enable Notifications
@@ -220,38 +219,32 @@ export const SelfCareReminders: React.FC = () => {
       </div>
 
       <div className="category-filters">
-        <button; 
-          className={`filter-btn ${selectedCategory === 'all' ? 'active' : ''}`}
+        <button className={`filter-btn ${selectedCategory === 'all' ? 'active' : ''}`}
           onClick={() => setSelectedCategory('all')}
         >
           All
         </button>
-        <button; 
-          className={`filter-btn physical ${selectedCategory === 'physical' ? 'active' : ''}`}
+        <button className={`filter-btn physical ${selectedCategory === 'physical' ? 'active' : ''}`}
           onClick={() => setSelectedCategory('physical')}
         >
           🏃 Physical
         </button>
-        <button; 
-          className={`filter-btn mental ${selectedCategory === 'mental' ? 'active' : ''}`}
+        <button className={`filter-btn mental ${selectedCategory === 'mental' ? 'active' : ''}`}
           onClick={() => setSelectedCategory('mental')}
         >
           🧠 Mental
         </button>
-        <button; 
-          className={`filter-btn social ${selectedCategory === 'social' ? 'active' : ''}`}
+        <button className={`filter-btn social ${selectedCategory === 'social' ? 'active' : ''}`}
           onClick={() => setSelectedCategory('social')}
         >
           👥 Social
         </button>
-        <button; 
-          className={`filter-btn spiritual ${selectedCategory === 'spiritual' ? 'active' : ''}`}
+        <button className={`filter-btn spiritual ${selectedCategory === 'spiritual' ? 'active' : ''}`}
           onClick={() => setSelectedCategory('spiritual')}
         >
           🌟 Spiritual
         </button>
-        <button; 
-          className={`filter-btn practical ${selectedCategory === 'practical' ? 'active' : ''}`}
+        <button className={`filter-btn practical ${selectedCategory === 'practical' ? 'active' : ''}`}
           onClick={() => setSelectedCategory('practical')}
         >
           📋 Practical
@@ -261,7 +254,7 @@ export const SelfCareReminders: React.FC = () => {
       <div className="activities-grid">
         {filteredActivities.map(activity => {
           const activityReminders = reminders.filter(r => r.activityId === activity.id);
-          const isCompleteToday = activity.lastCompleted && ;
+          const isCompleteToday = activity.lastCompleted && ;;
             new Date(activity.lastCompleted).toDateString() === new Date().toDateString();
           
           return (
@@ -291,19 +284,17 @@ export const SelfCareReminders: React.FC = () => {
               </div>
 
               <div className="activity-actions">
-                <button; 
-                  className="complete-btn"
+                <button className="complete-btn"
                   onClick={() => markActivityComplete(activity.id)}
                   disabled={!!isCompleteToday}
                 >
                   {isCompleteToday ? '✅ Done Today' : '⭕ Mark Complete'}
                 </button>
-                <button; 
-                  className="reminder-btn"
+                <button className="reminder-btn"
                   onClick={() => {
                     setSelectedActivity(activity);
-                    setShowAddReminder(true);
-                  }}
+                    setShowAddReminder(true)
+  }}
                 >
                   ⏰ {activityReminders.length > 0 ? `${activityReminders.length} Reminder${activityReminders.length > 1 ? 's' : ''}` : 'Add Reminder'}
                 </button>
@@ -316,14 +307,12 @@ export const SelfCareReminders: React.FC = () => {
                       <span className="reminder-time">{reminder.time}</span>
                       <span className="reminder-days">{reminder.days.join(', ')}</span>
                       <div className="reminder-controls">
-                        <button; 
-                          className={`toggle-btn ${reminder.enabled ? 'enabled' : ''}`}
+                        <button className={`toggle-btn ${reminder.enabled ? 'enabled' : ''}`}
                           onClick={() => toggleReminder(reminder.id)}
                         >
                           {reminder.enabled ? '🔔' : '🔕'}
                         </button>
-                        <button; 
-                          className="delete-btn"
+                        <button className="delete-btn"
                           onClick={() => deleteReminder(reminder.id)}
                         >
                           ×
@@ -334,8 +323,8 @@ export const SelfCareReminders: React.FC = () => {
                 </div>
               )}
             </div>
-          );
-        })}
+          )
+  })}
       </div>
 
       {showAddReminder && selectedActivity && (
@@ -345,8 +334,7 @@ export const SelfCareReminders: React.FC = () => {
             
             <div className="form-group">
               <label>Time</label>
-              <input; 
-                type="time" 
+              <input type="time" 
                 value={customTime}
                 onChange={(e) => setCustomTime(e.target.value)}
               />
@@ -361,10 +349,10 @@ export const SelfCareReminders: React.FC = () => {
                     className={`day-btn ${selectedDays.includes(day) ? 'selected' : ''}`}
                     onClick={() => {
                       if (selectedDays.includes(day)) {
-                        setSelectedDays(selectedDays.filter(d => d !== day));;
+                        setSelectedDays(selectedDays.filter(d => d !== day))
   } else {
-                        setSelectedDays([...selectedDays, day]);
-                      }
+                        setSelectedDays([...selectedDays, day])
+  }
                     }}
                   >
                     {day}
@@ -385,7 +373,7 @@ export const SelfCareReminders: React.FC = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 export default SelfCareReminders;

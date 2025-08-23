@@ -14,7 +14,7 @@ import { renderHook, render } from '@testing-library/react';
 // Mock dependencies
 jest.mock('../components/EnhancedLazyComponent', () => ({
   createEnhancedLazyComponent: jest.fn().mockImplementation((importFn) => {
-    return React.lazy(importFn);
+    return React.lazy(importFn)
   }),
   ComponentPreloader: {
     addToQueue: jest.fn(),
@@ -86,11 +86,11 @@ describe('enhancedRouting', () => {
     (EnhancedRouteManager as any).navigationHistory = [];
     (EnhancedRouteManager as any).preloadCache = new Set();
     (EnhancedRouteManager as any).currentRoute = '';
-    (EnhancedRouteManager as any).isInitialized = false;
+    (EnhancedRouteManager as any).isInitialized = false
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    jest.restoreAllMocks()
   });
 
   describe('EnhancedRouteManager', () => {
@@ -101,23 +101,23 @@ describe('enhancedRouting', () => {
         EnhancedRouteManager.initialize();
         EnhancedRouteManager.initialize(); // Second call
         
-        expect(initializeBundleOptimization).toHaveBeenCalledTimes(1);
-      });
+        expect(initializeBundleOptimization).toHaveBeenCalledTimes(1)
+  });
 
       it('should setup navigation monitoring', () => {
         EnhancedRouteManager.initialize();
         
         // Verify history methods are wrapped
         expect(typeof window.history.pushState).toBe('function');
-        expect(typeof window.history.replaceState).toBe('function');
-      });
+        expect(typeof window.history.replaceState).toBe('function')
+  });
 
       it.skip('should setup intersection observers for viewport preloading', () => {
         // Skipped: IntersectionObserver mock not behaving as expected
         EnhancedRouteManager.initialize();
         
-        expect(mockIntersectionObserver).toHaveBeenCalled();
-      });
+        expect(mockIntersectionObserver).toHaveBeenCalled()
+  });
 
       it('should log initialization in development', () => {
         const originalEnv = process.env.NODE_ENV;
@@ -130,16 +130,16 @@ describe('enhancedRouting', () => {
         expect(consoleSpy).toHaveBeenCalledWith('🚀 Enhanced Route Manager initialized');
         
         process.env.NODE_ENV = originalEnv;
-        consoleSpy.mockRestore();
-      });
-    });
+        consoleSpy.mockRestore()
+  })
+  });
 
     describe('registerRoute', () => {
       const TestComponent = () => React.createElement('div', null, 'Test');
 
       beforeEach(() => {
-        EnhancedRouteManager.initialize();
-      });
+        EnhancedRouteManager.initialize()
+  });
 
       it('should register a route with default configuration', () => {
         const component = EnhancedRouteManager.registerRoute({
@@ -161,8 +161,8 @@ describe('enhancedRouting', () => {
           prefetchTrigger: 'immediate',
         });
 
-        expect(component).toBeDefined();
-      });
+        expect(component).toBeDefined()
+  });
 
       it('should schedule preload when preload is true', () => {
         const { ComponentPreloader } = require('../components/EnhancedLazyComponent');
@@ -178,28 +178,28 @@ describe('enhancedRouting', () => {
           'route_/preload-test',
           expect.any(Function),
           'high'
-        );
-      });
-    });
+        )
+  })
+  });
 
     describe('createLazyRoute', () => {
       const mockImportFn = () => Promise.resolve({ default: () => React.createElement('div', null, 'Test') });
 
       beforeEach(() => {
-        EnhancedRouteManager.initialize();
-      });
+        EnhancedRouteManager.initialize()
+  });
 
       it('should create lazy route with default options', () => {
-        const component = EnhancedRouteManager.createLazyRoute(;
+        const component = EnhancedRouteManager.createLazyRoute(;;
           mockImportFn,
           '/lazy-test'
         );
 
-        expect(component).toBeDefined();
-      });
+        expect(component).toBeDefined()
+  });
 
       it('should create lazy route with custom options', () => {
-        const component = EnhancedRouteManager.createLazyRoute(;
+        const component = EnhancedRouteManager.createLazyRoute(;;
           mockImportFn,
           '/lazy-test',
           {
@@ -209,14 +209,14 @@ describe('enhancedRouting', () => {
           }
         );
 
-        expect(component).toBeDefined();
-      });
-    });
+        expect(component).toBeDefined()
+  })
+  });
 
     describe('navigation tracking', () => {
       beforeEach(() => {
-        EnhancedRouteManager.initialize();
-      });
+        EnhancedRouteManager.initialize()
+  });
 
       it('should record navigation patterns', () => {
         // Simulate navigation;
@@ -225,22 +225,22 @@ describe('enhancedRouting', () => {
 
         const stats = EnhancedRouteManager.getNavigationStats();
         expect(stats.totalNavigations).toBeGreaterThan(0);
-        expect(stats.currentRoute).toBe('/new-page');
-      });
+        expect(stats.currentRoute).toBe('/new-page')
+  });
 
       it('should handle popstate events', () => {
         const popstateEvent = new Event('popstate');
         window.dispatchEvent(popstateEvent);
 
         // Should not throw error
-        expect(true).toBe(true);
-      });
-    });
+        expect(true).toBe(true)
+  })
+  });
 
     describe('preloading', () => {
       beforeEach(() => {
-        EnhancedRouteManager.initialize();
-      });
+        EnhancedRouteManager.initialize()
+  });
 
       it.skip('should preload critical routes on initialization', () => {
         // Skipped: preloadCriticalRoutes method not accessible;
@@ -256,8 +256,8 @@ describe('enhancedRouting', () => {
           '/',
           expect.any(Function),
           'high'
-        );
-      });
+        )
+  });
 
       it('should not duplicate preload requests', () => {
         const TestComponent = () => React.createElement('div', null, 'Test');
@@ -276,14 +276,14 @@ describe('enhancedRouting', () => {
         });
 
         // Should only preload once
-        expect((EnhancedRouteManager as any).preloadCache.has('/duplicate')).toBe(true);
-      });
-    });
+        expect((EnhancedRouteManager as any).preloadCache.has('/duplicate')).toBe(true)
+  })
+  });
 
     describe('performance tracking', () => {
       beforeEach(() => {
-        EnhancedRouteManager.initialize();
-      });
+        EnhancedRouteManager.initialize()
+  });
 
       it('should provide navigation statistics', () => {
         const stats = EnhancedRouteManager.getNavigationStats();
@@ -296,8 +296,8 @@ describe('enhancedRouting', () => {
         expect(typeof stats.totalNavigations).toBe('number');
         expect(typeof stats.currentRoute).toBe('string');
         expect(Array.isArray(stats.preloadedRoutes)).toBe(true);
-        expect(Array.isArray(stats.registeredRoutes)).toBe(true);
-      });
+        expect(Array.isArray(stats.registeredRoutes)).toBe(true)
+  });
 
       it('should provide route metrics', () => {
         const TestComponent = () => React.createElement('div', null, 'Test');
@@ -314,31 +314,31 @@ describe('enhancedRouting', () => {
         expect(metrics).toHaveProperty('registered', true);
         expect(metrics).toHaveProperty('preloaded');
         expect(metrics).toHaveProperty('priority', 'high');
-        expect(metrics).toHaveProperty('mobileOptimized', true);
-      });
+        expect(metrics).toHaveProperty('mobileOptimized', true)
+  });
 
       it('should return metrics for non-existent route', () => {
         const metrics = EnhancedRouteManager.getRouteMetrics('/non-existent');
         
         expect(metrics.registered).toBe(false);
-        expect(metrics.preloaded).toBe(false);
-      });
-    });
+        expect(metrics.preloaded).toBe(false)
+  })
+  });
 
     describe('viewport-based preloading', () => {
       beforeEach(() => {
         EnhancedRouteManager.initialize();
         // Mock DOM methods
-        document.querySelectorAll = jest.fn().mockReturnValue([]);
-      });
+        document.querySelectorAll = jest.fn().mockReturnValue([])
+  });
 
       it.skip('should setup intersection observer for viewport preloading', () => {
         // Skipped: IntersectionObserver mock issues
         expect(mockIntersectionObserver).toHaveBeenCalledWith(
           expect.any(Function),
           { rootMargin: '100px' }
-        );
-      });
+        )
+  });
 
       it('should observe links when they are added to DOM', () => {
         // Simulate MutationObserver callback;
@@ -357,14 +357,14 @@ describe('enhancedRouting', () => {
         ]);
 
         // Should not throw error
-        expect(true).toBe(true);
-      });
-    });
+        expect(true).toBe(true)
+  })
+  });
 
     describe('hover-based preloading', () => {
       beforeEach(() => {
-        EnhancedRouteManager.initialize();
-      });
+        EnhancedRouteManager.initialize()
+  });
 
       it.skip('should setup hover preloading for specified routes', () => {
         // Skipped: document.addEventListener not properly mocked;
@@ -380,14 +380,14 @@ describe('enhancedRouting', () => {
         // Event object would be used in actual implementation;
 
         const hoverListener = document.addEventListener as jest.Mock;
-        expect(hoverListener).toHaveBeenCalledWith('mouseover', expect.any(Function));
-      });
-    });
+        expect(hoverListener).toHaveBeenCalledWith('mouseover', expect.any(Function))
+  })
+  });
 
     describe('interaction-based preloading', () => {
       beforeEach(() => {
-        EnhancedRouteManager.initialize();
-      });
+        EnhancedRouteManager.initialize()
+  });
 
       it.skip('should setup interaction preloading for specified routes', () => {
         // Skipped: document.addEventListener not properly mocked;
@@ -409,14 +409,14 @@ describe('enhancedRouting', () => {
           'mousedown',
           expect.any(Function),
           { passive: true }
-        );
-      });
-    });
+        )
+  })
+  });
 
     describe('cleanup and memory management', () => {
       beforeEach(() => {
-        EnhancedRouteManager.initialize();
-      });
+        EnhancedRouteManager.initialize()
+  });
 
       it('should cleanup unused resources in development', () => {
         const originalEnv = process.env.NODE_ENV;
@@ -429,9 +429,9 @@ describe('enhancedRouting', () => {
         expect(consoleSpy).toHaveBeenCalledWith('🧹 Cleaning up unused route resources');
         
         process.env.NODE_ENV = originalEnv;
-        consoleSpy.mockRestore();
-      });
-    });
+        consoleSpy.mockRestore()
+  })
+  })
   });
 
   describe('useEnhancedRouting hook', () => {
@@ -440,8 +440,8 @@ describe('enhancedRouting', () => {
       
       renderHook(() => useEnhancedRouting());
       
-      expect(initSpy).toHaveBeenCalled();
-    });
+      expect(initSpy).toHaveBeenCalled()
+  });
 
     it('should return route utilities', () => {
       const { result } = renderHook(() => useEnhancedRouting());
@@ -452,8 +452,8 @@ describe('enhancedRouting', () => {
       
       expect(typeof result.current.createLazyRoute).toBe('function');
       expect(typeof result.current.getNavigationStats).toBe('function');
-      expect(typeof result.current.getRouteMetrics).toBe('function');
-    });
+      expect(typeof result.current.getRouteMetrics).toBe('function')
+  });
 
     it.skip('should provide access to route manager methods', () => {
       // Skipped: navigationHistory undefined issue;
@@ -463,8 +463,8 @@ describe('enhancedRouting', () => {
       expect(stats).toBeDefined();
       
       const metrics = result.current.getRouteMetrics('/test');
-      expect(metrics).toBeDefined();
-    });
+      expect(metrics).toBeDefined()
+  })
   });
 
   describe('withRouteTracking HOC', () => {
@@ -475,8 +475,8 @@ describe('enhancedRouting', () => {
       const TrackedComponent = withRouteTracking(TestComponent, '/test-route');
       
       expect(TrackedComponent).toBeDefined();
-      expect(TrackedComponent.displayName).toBe('withRouteTracking(TestComponent)');
-    });
+      expect(TrackedComponent.displayName).toBe('withRouteTracking(TestComponent)')
+  });
 
     it('should track render performance in development', () => {
       const originalEnv = process.env.NODE_ENV;
@@ -496,8 +496,8 @@ describe('enhancedRouting', () => {
       );
       
       process.env.NODE_ENV = originalEnv;
-      consoleSpy.mockRestore();
-    });
+      consoleSpy.mockRestore()
+  });
 
     it('should handle component without display name', () => {
       const TestComponent = () => React.createElement('div', null, 'Test');
@@ -506,17 +506,17 @@ describe('enhancedRouting', () => {
       
       const TrackedComponent = withRouteTracking(TestComponent, '/no-name');
       
-      expect(TrackedComponent.displayName).toBe('withRouteTracking(TestComponent)');
-    });
+      expect(TrackedComponent.displayName).toBe('withRouteTracking(TestComponent)')
+  });
 
     it('should handle anonymous components', () => {
-      const TrackedComponent = withRouteTracking(;
+      const TrackedComponent = withRouteTracking(;;
         () => React.createElement('div', null, 'Anonymous'),
         '/anonymous'
       );
       
-      expect(TrackedComponent.displayName).toContain('withRouteTracking');
-    });
+      expect(TrackedComponent.displayName).toContain('withRouteTracking')
+  });
 
     it('should pass props correctly to wrapped component', () => {
       const TestComponent = ({ testProp }: { testProp: string }) => 
@@ -528,14 +528,14 @@ describe('enhancedRouting', () => {
         React.createElement(TrackedComponent, { testProp: 'test-value' })
       );
       
-      expect(container.textContent).toBe('test-value');
-    });
+      expect(container.textContent).toBe('test-value')
+  })
   });
 
   describe('navigation patterns and prediction', () => {
     beforeEach(() => {
-      EnhancedRouteManager.initialize();
-    });
+      EnhancedRouteManager.initialize()
+  });
 
     it('should track and predict navigation patterns', () => {
       // Simulate navigation sequence;
@@ -547,27 +547,27 @@ describe('enhancedRouting', () => {
       pushState.call(window.history, {}, '', '/page2');
 
       const stats = EnhancedRouteManager.getNavigationStats();
-      expect(stats.totalNavigations).toBeGreaterThan(0);
-    });
+      expect(stats.totalNavigations).toBeGreaterThan(0)
+  });
 
     it('should limit navigation history to prevent memory leaks', () => {
       // Simulate many navigations;
       const pushState = window.history.pushState;
       
       for (let i = 0; i < 150; i++) {
-        pushState.call(window.history, {}, '', `/page${i}`);
-      }
+        pushState.call(window.history, {}, '', `/page${i}`)
+  }
 
       const stats = EnhancedRouteManager.getNavigationStats();
       // Should maintain reasonable history size
-      expect(stats.totalNavigations).toBeLessThanOrEqual(100);
-    });
+      expect(stats.totalNavigations).toBeLessThanOrEqual(100)
+  })
   });
 
   describe('error handling', () => {
     beforeEach(() => {
-      EnhancedRouteManager.initialize();
-    });
+      EnhancedRouteManager.initialize()
+  });
 
     it('should handle intersection observer unavailability', () => {
       // Mock missing IntersectionObserver;
@@ -575,12 +575,12 @@ describe('enhancedRouting', () => {
       delete (window as any).IntersectionObserver;
 
       expect(() => {
-        EnhancedRouteManager.initialize();
-      }).not.toThrow();
+        EnhancedRouteManager.initialize()
+  }).not.toThrow();
 
       // Restore
-      window.IntersectionObserver = originalIO;
-    });
+      window.IntersectionObserver = originalIO
+  });
 
     it('should handle mutation observer unavailability', () => {
       // Mock missing MutationObserver;
@@ -588,12 +588,12 @@ describe('enhancedRouting', () => {
       delete (window as any).MutationObserver;
 
       expect(() => {
-        EnhancedRouteManager.initialize();
-      }).not.toThrow();
+        EnhancedRouteManager.initialize()
+  }).not.toThrow();
 
       // Restore
-      window.MutationObserver = originalMO;
-    });
+      window.MutationObserver = originalMO
+  });
 
     it.skip('should handle performance API unavailability', () => {
       // Skipped: performance.now deletion not working correctly in test env
@@ -605,18 +605,18 @@ describe('enhancedRouting', () => {
       const TrackedComponent = withRouteTracking(TestComponent, '/no-perf');
 
       expect(() => {
-        render(React.createElement(TrackedComponent));
-      }).not.toThrow();
+        render(React.createElement(TrackedComponent))
+  }).not.toThrow();
 
       // Restore
-      window.performance.now = originalPerf;
-    });
+      window.performance.now = originalPerf
+  })
   });
 
   describe('mobile optimization', () => {
     beforeEach(() => {
-      EnhancedRouteManager.initialize();
-    });
+      EnhancedRouteManager.initialize()
+  });
 
     it('should respect mobile optimization settings', () => {
       const TestComponent = () => React.createElement('div', null, 'Test');
@@ -628,8 +628,8 @@ describe('enhancedRouting', () => {
       });
 
       const metrics = EnhancedRouteManager.getRouteMetrics('/mobile-optimized');
-      expect(metrics.mobileOptimized).toBe(true);
-    });
+      expect(metrics.mobileOptimized).toBe(true)
+  });
 
     it('should handle data saver mode', () => {
       const TestComponent = () => React.createElement('div', null, 'Test');
@@ -641,20 +641,20 @@ describe('enhancedRouting', () => {
       );
 
       // Should create component without throwing
-      expect(true).toBe(true);
-    });
+      expect(true).toBe(true)
+  })
   });
 
   describe('bundle integration', () => {
     beforeEach(() => {
-      EnhancedRouteManager.initialize();
-    });
+      EnhancedRouteManager.initialize()
+  });
 
     it('should integrate with bundle optimization', () => {
       const { initializeBundleOptimization } = require('./bundleOptimization');
       
-      expect(initializeBundleOptimization).toHaveBeenCalled();
-    });
+      expect(initializeBundleOptimization).toHaveBeenCalled()
+  });
 
     it('should work with enhanced lazy components', () => {
       const { createEnhancedLazyComponent } = require('../components/EnhancedLazyComponent');
@@ -666,7 +666,7 @@ describe('enhancedRouting', () => {
         component: TestComponent,
       });
 
-      expect(createEnhancedLazyComponent).toHaveBeenCalled();
-    });
+      expect(createEnhancedLazyComponent).toHaveBeenCalled()
+  })
+  })
   });
-});

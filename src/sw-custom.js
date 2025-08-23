@@ -28,13 +28,13 @@ self.addEventListener('install', (event) => {
         '/crisis-resources.json',
         '/offline-coping-strategies.json',
         '/emergency-contacts.json'
-      ]);
-    })
+      ])
+  })
   );
   
   // Skip waiting to activate immediately
-  self.skipWaiting();
-});
+  self.skipWaiting()
+  });
 
 self.addEventListener('activate', (event) => {
   console.log('[SW] Activating enhanced service worker');
@@ -50,8 +50,8 @@ self.addEventListener('activate', (event) => {
       // Initialize crisis resource validation
       validateCrisisResources()
     ])
-  );
-});
+  )
+  });
 
 // Push notification handling
 self.addEventListener('push', (event) => {
@@ -59,27 +59,27 @@ self.addEventListener('push', (event) => {
   
   if (!event.data) {
     console.warn('[SW] Push event but no data');
-    return;
+    return
   }
 
   let notificationData;
   try {
-    notificationData = event.data.json();
+    notificationData = event.data.json()
   } catch (error) {
     console.warn('[SW] Failed to parse push notification data:', error);
     notificationData = {
       title: 'Astral Core',
       body: event.data.text(),
-      type: 'general';
-    };
+      type: 'general'
+  };
   }
 
   const options = createNotificationOptions(notificationData);
   
   event.waitUntil(
     self.registration.showNotification(notificationData.title, options)
-  );
-});
+  )
+  });
 
 // Notification click handling
 self.addEventListener('notificationclick', (event) => {
@@ -96,17 +96,17 @@ self.addEventListener('notificationclick', (event) => {
         // Try to focus existing window
         for (const client of clientList) {
           if (client.url.includes(urlToOpen) && 'focus' in client) {
-            return client.focus();
-          }
+            return client.focus()
+  }
         }
         
         // Open new window if none found
         if (clients.openWindow) {
-          return clients.openWindow(urlToOpen);
-        }
+          return clients.openWindow(urlToOpen)
+  }
       })
-  );
-});
+  )
+  });
 
 // Background sync for failed requests;
 const crisisBackgroundSync = new BackgroundSync('crisis-requests', {
@@ -124,28 +124,28 @@ const crisisBackgroundSync = new BackgroundSync('crisis-requests', {
           await self.registration.showNotification('Crisis Request Sent', {
             body: 'Your crisis support request has been processed.',
             icon: '/icon-192.png',
-            tag: 'crisis-sync-success';
-          });
-        }
+            tag: 'crisis-sync-success'
+  })
+  }
       } catch (error) {
         console.error('[SW] Failed to sync crisis request:', error);
         await queue.unshiftRequest(entry);
-        throw error;
-      }
+        throw error
+  }
     }
   }
 });
 
 const regularBackgroundSync = new BackgroundSync('regular-requests', {
-  maxRetentionTime: 60 * 60 * 24 * 3 // 3 days;
-});
+  maxRetentionTime: 60 * 60 * 24 * 3 // 3 days
+  });
 
 // Background sync route registration
 registerRoute(
   /\/\.netlify\/functions\/(crisis|emergency|help)/,
   new NetworkFirst({
     cacheName: 'crisis-api-cache',
-    plugins: [crisisBackgroundSync];
+    plugins: [crisisBackgroundSync]
   }),
   'POST'
 );
@@ -154,7 +154,7 @@ registerRoute(
   /\/\.netlify\/functions\/(?!crisis|emergency|help)/,
   new NetworkFirst({
     cacheName: 'regular-api-cache',
-    plugins: [regularBackgroundSync];
+    plugins: [regularBackgroundSync]
   }),
   'POST'
 );
@@ -185,7 +185,7 @@ self.addEventListener('message', (event) => {
       break;
       
     default:
-      console.log('[SW] Unknown message type:', type);
+      console.log('[SW] Unknown message type:', type)
   }
 });
 
@@ -199,13 +199,13 @@ setCatchHandler(async ({ request, event }) => {
     const cachedResponse = await cache.match('/offline-crisis.html');
     
     if (cachedResponse) {
-      return cachedResponse;
-    }
+      return cachedResponse
+  }
   }
   
   // For API requests during crisis, return cached emergency data
   if (request.url.includes('/functions/')) {
-    return handleOfflineApiRequest(request);
+    return handleOfflineApiRequest(request)
   }
   
   // For other resources, try emergency cache;
@@ -213,7 +213,7 @@ setCatchHandler(async ({ request, event }) => {
   const cachedResponse = await emergencyCache.match(request);
   
   if (cachedResponse) {
-    return cachedResponse;
+    return cachedResponse
   }
   
   // Ultimate fallback
@@ -221,14 +221,14 @@ setCatchHandler(async ({ request, event }) => {
     JSON.stringify({
       error: 'Offline',
       message: 'You are currently offline. Crisis resources are still available.',
-      timestamp: new Date().toISOString();
-    }),
+      timestamp: new Date().toISOString()
+  }),
     {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     }
-  );
-});
+  )
+  });
 
 // Utility functions;
 function createNotificationOptions(data) {
@@ -237,7 +237,7 @@ function createNotificationOptions(data) {
     badge: '/icon-192.png',
     vibrate: [200, 100, 200],
     requireInteraction: false,
-    data: data;
+    data: data
   };
 
   switch (data.type) {
@@ -270,15 +270,15 @@ function createNotificationOptions(data) {
         ...baseOptions,
         body: data.body || 'System update available',
         tag: 'system-update',
-        requireInteraction: false;
-      };
+        requireInteraction: false
+  };
       
     default:
       return {
         ...baseOptions,
         body: data.body || 'New notification from Astral Core',
-        tag: 'general';
-      };
+        tag: 'general'
+  };
   }
 }
 
@@ -290,8 +290,7 @@ function getNotificationUrl(data, tag) {
       return data.dilemmaId ? `/chat/${data.dilemmaId}` : '/dashboard';
     case 'system-update':
       return '/settings';
-    default:
-      return '/';
+    default: return '/'
   }
 }
 
@@ -315,17 +314,17 @@ async function handleCrisisMode(payload) {
       payload: { cached: true }
     };
   };
-  });
-}
+  })
+  }
 
 async function requestNotificationPermission() {
   if ('Notification' in self && Notification.permission === 'default') {
     const clients = await self.clients.matchAll();
     clients.forEach(client => {
       client.postMessage({
-        type: 'REQUEST_NOTIFICATION_PERMISSION_UI';
-      });
-    });
+        type: 'REQUEST_NOTIFICATION_PERMISSION_UI'
+  })
+  })
   }
 }
 
@@ -333,8 +332,8 @@ async function subscribeUserToPush(payload) {
   try {
     const subscription = await self.registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: payload.vapidPublicKey;
-    });
+      applicationServerKey: payload.vapidPublicKey
+  });
     
     // Send subscription to server;
     const clients = await self.clients.matchAll();
@@ -342,8 +341,8 @@ async function subscribeUserToPush(payload) {
       client.postMessage({
         type: 'PUSH_SUBSCRIPTION_SUCCESS',
         payload: { subscription }
-      });
-    });
+      })
+  })
   } catch (error) {
     console.error('[SW] Failed to subscribe to push notifications:', error);
     
@@ -352,15 +351,15 @@ async function subscribeUserToPush(payload) {
       client.postMessage({
         type: 'PUSH_SUBSCRIPTION_ERROR',
         payload: { error: error.message }
-      });
-    });
+      })
+  })
   }
 }
 
 async function cacheCrisisResources() {
   const cache = await caches.open(CRISIS_CACHE_NAME);
   
-  const criticalResources = [;
+  const criticalResources = [;;
     '/offline-crisis.html',
     '/crisis-resources.json',
     '/offline-coping-strategies.json',
@@ -373,9 +372,9 @@ async function cacheCrisisResources() {
   
   try {
     await cache.addAll(criticalResources);
-    console.log('[SW] Crisis resources cached successfully');
+    console.log('[SW] Crisis resources cached successfully')
   } catch (error) {
-    console.error('[SW] Failed to cache crisis resources:', error);
+    console.error('[SW] Failed to cache crisis resources:', error)
   }
 }
 
@@ -383,12 +382,12 @@ async function handleOfflineApiRequest(request) {
   // Return cached crisis data when offline
   if (request.url.includes('crisis-resources')) {
     const cache = await caches.open(CRISIS_CACHE_NAME);
-    return cache.match('/crisis-resources.json');
+    return cache.match('/crisis-resources.json')
   }
   
   if (request.url.includes('emergency-contacts')) {
     const cache = await caches.open(CRISIS_CACHE_NAME);
-    return cache.match('/emergency-contacts.json');
+    return cache.match('/emergency-contacts.json')
   }
   
   // Return offline response for other API calls
@@ -396,18 +395,18 @@ async function handleOfflineApiRequest(request) {
     JSON.stringify({
       offline: true,
       message: 'This feature requires an internet connection. Crisis resources remain available.',
-      cached_at: new Date().toISOString();
-    }),
+      cached_at: new Date().toISOString()
+  }),
     {
       status: 503,
       headers: { 'Content-Type': 'application/json' }
     }
-  );
-}
+  )
+  }
 
 async function validateCrisisResources() {
   const cache = await caches.open(CRISIS_CACHE_NAME);
-  const criticalResources = [;
+  const criticalResources = [;;
     '/offline-crisis.html',
     '/crisis-resources.json',
     '/emergency-contacts.json'
@@ -421,11 +420,11 @@ async function validateCrisisResources() {
         const response = await fetch(resource);
         if (response.ok) {
           await cache.put(resource, response);
-          console.log(`[SW] Cached missing critical resource: ${resource}`);
-        }
+          console.log(`[SW] Cached missing critical resource: ${resource}`)
+  }
       } catch (error) {
-        console.error(`[SW] Failed to cache critical resource ${resource}:`, error);
-      }
+        console.error(`[SW] Failed to cache critical resource ${resource}:`, error)
+  }
     }
   }
 }

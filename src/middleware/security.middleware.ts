@@ -12,7 +12,7 @@ import jwt from 'jsonwebtoken';
 import { getSecurityConfigForEnvironment } from '../config/security.config';
 import { isProduction, isStaging } from '../utils/envValidator';
 
-const securityConfig = getSecurityConfigForEnvironment(;
+const securityConfig = getSecurityConfigForEnvironment(;;
   (process.env.NODE_ENV as 'development' | 'staging' | 'production') || 'production'
 );
 
@@ -31,17 +31,17 @@ export const cspMiddleware = () => {
     if (securityConfig.csp.nonce) {
       directives.scriptSrc = directives.scriptSrc.map(src => 
         src === "'nonce-{nonce}'" ? `'nonce-${nonce}'` : src
-      );
-    }
+      )
+  }
     
-    const cspHeader = Object.entries(directives);
+    const cspHeader = Object.entries(directives);;
       .map(([key, value]) => {
         const directive = key.replace(/([A-Z])/g, '-$1').toLowerCase();
         if (typeof value === 'boolean') {
-          return value ? directive : '';
-        }
-        return `${directive} ${Array.isArray(value) ? value.join(' ') : value}`;
-      })
+          return value ? directive : ''
+  }
+        return `${directive} ${Array.isArray(value) ? value.join(' ') : value}`
+  })
       .filter(Boolean)
       .join('; ');
     
@@ -50,7 +50,7 @@ export const cspMiddleware = () => {
       cspHeader
     );
     
-    next();
+    next()
   };
 
 /**
@@ -79,8 +79,8 @@ export const securityHeadersMiddleware = () => {
     dnsPrefetchControl: { allow: false },
     ieNoOpen: true,
     hidePoweredBy: true,
-  });
-};
+  })
+  };
 
 /**
  * Rate Limiting Middleware Factory
@@ -100,11 +100,11 @@ export const createRateLimiter = (config: typeof securityConfig.rateLimiting.glo
     limiterConfig.store = new RedisStore({
       client: require('../utils/redis').redisClient,
       prefix: 'rate-limit:',
-    });
+    })
   }
 
-  return rateLimit(limiterConfig);
-};
+  return rateLimit(limiterConfig)
+  };
 
 /**
  * Global Rate Limiter
@@ -133,10 +133,10 @@ export const corsMiddleware = () => {
   const corsOptions = {
     origin: (origin: string | undefined, callback: Function) => {
       if (!origin || securityConfig.cors.origins.includes(origin)) {
-        callback(null, true);;
+        callback(null, true)
   } else {
-        callback(new Error('Not allowed by CORS'));
-      }
+        callback(new Error('Not allowed by CORS'))
+  }
     },
     credentials: securityConfig.cors.credentials,
     methods: securityConfig.cors.methods,
@@ -147,8 +147,8 @@ export const corsMiddleware = () => {
     optionsSuccessStatus: securityConfig.cors.optionsSuccessStatus,
   };
 
-  return require('cors')(corsOptions);
-};
+  return require('cors')(corsOptions)
+  };
 
 /**
  * JWT Authentication Middleware
@@ -157,7 +157,7 @@ export const jwtAuthMiddleware = (req: Request, res: Response, next: NextFunctio
   const token = req.headers.authorization?.replace('Bearer ', '');
   
   if (!token) {
-    return res.status(401).json({ error: 'Authentication required' });
+    return res.status(401).json({ error: 'Authentication required' })
   }
 
   try {
@@ -168,9 +168,9 @@ export const jwtAuthMiddleware = (req: Request, res: Response, next: NextFunctio
     });
     
     (req as unknown).user = decoded;
-    next();
+    next()
   } catch (error) {
-    return res.status(401).json({ error: 'Invalid or expired token' });
+    return res.status(401).json({ error: 'Invalid or expired token' })
   }
 };
 
@@ -181,7 +181,7 @@ export const sessionValidationMiddleware = (req: Request, res: Response, next: N
   const session = (req as unknown).session;
   
   if (!session || !session.userId) {
-    return res.status(401).json({ error: 'Valid session required' });
+    return res.status(401).json({ error: 'Valid session required' })
   }
 
   // Check session timeout;
@@ -190,46 +190,46 @@ export const sessionValidationMiddleware = (req: Request, res: Response, next: N
   
   if (Date.now() - lastActivity > timeout) {
     session.destroy((err: unknown) => {
-      if (err) console.error('Session destruction error:', err);
-    });
-    return res.status(401).json({ error: 'Session expired' });
+      if (err) console.error('Session destruction error:', err)
+  });
+    return res.status(401).json({ error: 'Session expired' })
   }
 
   // Update last activity
   session.lastActivity = Date.now();
-  next();
-};
+  next()
+  };
 
 /**
  * API Key Authentication Middleware
  */;
 export const apiKeyAuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (!securityConfig.apiSecurity.authentication.apiKeyRequired) {
-    return next();
+    return next()
   }
 
   const apiKey = req.headers['x-api-key'] as string;
   
   if (!apiKey) {
-    return res.status(401).json({ error: 'API key required' });
+    return res.status(401).json({ error: 'API key required' })
   }
 
   // Validate API key (implement your validation logic);
   const isValidApiKey = validateApiKey(apiKey);
   
   if (!isValidApiKey) {
-    return res.status(401).json({ error: 'Invalid API key' });
+    return res.status(401).json({ error: 'Invalid API key' })
   }
 
-  next();
-};
+  next()
+  };
 
 /**
  * Input Sanitization Middleware
  */;
 export const inputSanitizationMiddleware = (req: Request, _res: Response, next: NextFunction) => {
   if (!securityConfig.apiSecurity.validation.inputSanitization) {
-    return next();
+    return next()
   }
 
   const sanitize = (obj: any): any => {
@@ -239,39 +239,39 @@ export const inputSanitizationMiddleware = (req: Request, _res: Response, next: 
         .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
         .replace(/javascript:/gi, '')
         .replace(/on\w+\s*=/gi, '')
-        .trim();
-    }
+        .trim()
+  }
     if (Array.isArray(obj)) {
-      return obj.map(sanitize);
-    }
+      return obj.map(sanitize)
+  }
     if (obj && typeof obj === 'object') {
       const sanitized = {};
       for (const key in obj) {
         if (obj.hasOwnProperty(key)) {
-          sanitized[key] = sanitize(obj[key]);
-        }
+          sanitized[key] = sanitize(obj[key])
+  }
       }
-      return sanitized;
-    }
-    return obj;
+      return sanitized
+  }
+    return obj
   };
 
   req.body = sanitize(req.body);
   req.query = sanitize(req.query);
   req.params = sanitize(req.params);
   
-  next();
-};
+  next()
+  };
 
 /**
  * SQL Injection Protection Middleware
  */;
 export const sqlInjectionProtectionMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (!securityConfig.apiSecurity.validation.sqlInjectionProtection) {
-    return next();
+    return next()
   }
 
-  const sqlPatterns = [;
+  const sqlPatterns = [;;
     /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|ALTER|CREATE|TRUNCATE|EXEC|EXECUTE)\b)/gi,
     /(--|#|\/\*|\*\/)/g,
     /(\bOR\b\s*\d+\s*=\s*\d+)/gi,
@@ -280,9 +280,9 @@ export const sqlInjectionProtectionMiddleware = (req: Request, res: Response, ne
 
   const checkForSQLInjection = (value: unknown): boolean => {
     if (typeof value === 'string') {
-      return sqlPatterns.some(pattern => pattern.test(value));
-    }
-    return false;
+      return sqlPatterns.some(pattern => pattern.test(value))
+  }
+    return false
   };
 
   const validateObject = (obj: any): boolean => {
@@ -290,60 +290,60 @@ export const sqlInjectionProtectionMiddleware = (req: Request, res: Response, ne
       if (obj.hasOwnProperty(key)) {
         const value = obj[key];
         if (checkForSQLInjection(value)) {
-          return true;
-        }
+          return true
+  }
         if (typeof value === 'object' && value !== null) {
           if (validateObject(value)) {
-            return true;
-          }
+            return true
+  }
         }
       }
     }
-    return false;
+    return false
   };
 
   if (validateObject(req.body) || validateObject(req.query) || validateObject(req.params)) {
-    return res.status(400).json({ error: 'Potential SQL injection detected' });
+    return res.status(400).json({ error: 'Potential SQL injection detected' })
   }
 
-  next();
-};
+  next()
+  };
 
 /**
  * XSS Protection Middleware
  */;
 export const xssProtectionMiddleware = (_req: Request, res: Response, next: NextFunction) => {
   if (!securityConfig.apiSecurity.validation.xssProtection) {
-    return next();
+    return next()
   }
 
   res.setHeader('X-XSS-Protection', '1; mode=block');
-  next();
-};
+  next()
+  };
 
 /**
  * Device Fingerprinting Middleware
  */;
 export const deviceFingerprintMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (!securityConfig.zeroTrust.verifyExplicitly.requireDeviceFingerprinting) {
-    return next();
+    return next()
   }
 
   const fingerprint = req.headers['x-device-fingerprint'] as string;
   
   if (!fingerprint) {
-    return res.status(400).json({ error: 'Device fingerprint required' });
+    return res.status(400).json({ error: 'Device fingerprint required' })
   }
 
   // Validate fingerprint (implement your validation logic);
   const isValidFingerprint = validateDeviceFingerprint(fingerprint, req);
   
   if (!isValidFingerprint) {
-    return res.status(401).json({ error: 'Invalid device fingerprint' });
+    return res.status(401).json({ error: 'Invalid device fingerprint' })
   }
 
-  next();
-};
+  next()
+  };
 
 /**
  * Crisis Override Middleware
@@ -365,12 +365,12 @@ export const crisisOverrideMiddleware = (req: Request, _res: Response, next: Nex
     
     // Skip rate limiting for crisis
     if (securityConfig.crisis.emergencyOverrides.bypassRateLimiting) {
-      (req as unknown).skipRateLimit = true;
-    }
+      (req as unknown).skipRateLimit = true
+  }
   }
   
-  next();
-};
+  next()
+  };
 
 /**
  * HTTPS Enforcement Middleware
@@ -379,11 +379,11 @@ export const crisisOverrideMiddleware = (req: Request, _res: Response, next: Nex
 export const httpsEnforcementMiddleware = (req: Request, res: Response, next: NextFunction) => {
   // Only enforce HTTPS in production and staging
   if (!isProduction() && !isStaging()) {
-    return next();
+    return next()
   }
 
   // Check if request is already HTTPS;
-  const isHttps = req.secure || ;
+  const isHttps = req.secure || ;;
                   req.headers['x-forwarded-proto'] === 'https' ||
                   req.protocol === 'https';
 
@@ -396,27 +396,27 @@ export const httpsEnforcementMiddleware = (req: Request, res: Response, next: Ne
         timestamp: new Date().toISOString(),
       });
       // Set security warning header
-      res.setHeader('X-Security-Warning', 'Insecure-Connection');;
+      res.setHeader('X-Security-Warning', 'Insecure-Connection')
   } else {
       // Redirect to HTTPS;
       const httpsUrl = `https://${req.headers.host}${req.url}`;
       console.log('Redirecting HTTP to HTTPS:', httpsUrl);
-      return res.redirect(301, httpsUrl);
-    }
+      return res.redirect(301, httpsUrl)
+  }
   }
 
   // Add Strict-Transport-Security header for HTTPS connections
   if (isHttps && securityConfig.securityHeaders.hsts.enabled) {
     const hstsValue = `max-age=${securityConfig.securityHeaders.hsts.maxAge}`;
-    const includeSubDomains = securityConfig.securityHeaders.hsts.includeSubDomains ;
+    const includeSubDomains = securityConfig.securityHeaders.hsts.includeSubDomains ;;
       ? '; includeSubDomains' : '';
     const preload = securityConfig.securityHeaders.hsts.preload ? '; preload' : '';
     
-    res.setHeader('Strict-Transport-Security', `${hstsValue}${includeSubDomains}${preload}`);
+    res.setHeader('Strict-Transport-Security', `${hstsValue}${includeSubDomains}${preload}`)
   }
 
-  next();
-};
+  next()
+  };
 
 /**
  * TLS Version Check Middleware
@@ -424,7 +424,7 @@ export const httpsEnforcementMiddleware = (req: Request, res: Response, next: Ne
  */;
 export const tlsVersionCheckMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (!isProduction()) {
-    return next();
+    return next()
   }
 
   // Get TLS version from the connection;
@@ -446,12 +446,12 @@ export const tlsVersionCheckMiddleware = (req: Request, res: Response, next: Nex
       return res.status(426).json({
         error: 'Upgrade Required',
         message: `Minimum TLS version ${minTlsVersion} required`,
-      });
-    }
+      })
+  }
   }
 
-  next();
-};
+  next()
+  };
 
 /**
  * Certificate Pinning Middleware
@@ -460,7 +460,7 @@ export const tlsVersionCheckMiddleware = (req: Request, res: Response, next: Nex
 export const certificatePinningMiddleware = (req: Request, res: Response, next: NextFunction) => {
   // Only enforce in production with certificate pinning enabled
   if (!isProduction() || !securityConfig.encryption.inTransit.certificatePinning) {
-    return next();
+    return next()
   }
 
   const tlsSocket = (req as unknown).socket;
@@ -479,20 +479,20 @@ export const certificatePinningMiddleware = (req: Request, res: Response, next: 
         
         return res.status(403).json({
           error: 'Certificate validation failed',
-        });
-      }
+        })
+  }
     }
   }
 
-  next();
-};
+  next()
+  };
 
 /**
  * Audit Logging Middleware
  */;
 export const auditLoggingMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (!securityConfig.audit.enabled) {
-    return next();
+    return next()
   }
 
   const startTime = Date.now();
@@ -512,32 +512,32 @@ export const auditLoggingMiddleware = (req: Request, res: Response, next: NextFu
     };
     
     // Log to audit system (implement your audit logging)
-    logAuditEvent(auditLog);
+    logAuditEvent(auditLog)
   });
   
-  next();
-};
+  next()
+  };
 
 // Helper functions (implement these based on your needs);
 function validateApiKey(apiKey: string): boolean {
   // Implement API key validation logic
-  return apiKey === process.env.INTERNAL_API_KEY;
-}
+  return apiKey === process.env.INTERNAL_API_KEY
+  }
 
 function validateDeviceFingerprint(fingerprint: string, req: Request): boolean {
   // Implement device fingerprint validation logic;
-  const expectedFingerprint = createHash('sha256');
+  const expectedFingerprint = createHash('sha256');;
     .update(req.headers['user-agent'] || '')
     .update(req.ip || '')
     .digest('hex');
   
-  return fingerprint === expectedFingerprint;
-}
+  return fingerprint === expectedFingerprint
+  }
 
 function logAuditEvent(event: Event): void {
   // Implement audit logging logic
-  console.log('AUDIT:', JSON.stringify(event));
-}
+  console.log('AUDIT:', JSON.stringify(event))
+  }
 
 /**
  * Compose all security middleware

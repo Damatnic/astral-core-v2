@@ -14,15 +14,15 @@ jest.mock('../../utils/accessibilityUtils', () => ({
       const attrs: Record<string, string> = {};
       for (let i = 0; i < el.attributes.length; i++) {
         const attr = el.attributes[i];
-        attrs[attr.name] = attr.value;
-      }
-      return attrs;
-    }),
+        attrs[attr.name] = attr.value
+  }
+      return attrs
+  }),
     isCrisisElement: jest.fn((el: Element) => el.classList.contains('crisis') || el.getAttribute('data-crisis') === 'true'),
     getComplianceThresholds: jest.fn((level: WCAGLevel) => ({
-      maxHigh: level === WCAGLevel.AAA ? 0 : level === WCAGLevel.AA ? 2 : 5;
-    })),
-    findComplexText: jest.fn(() => []);
+      maxHigh: level === WCAGLevel.AAA ? 0 : level === WCAGLevel.AA ? 2 : 5
+  })),
+    findComplexText: jest.fn(() => [])
   }
 }));
 
@@ -59,34 +59,33 @@ describe('AccessibilityAuditSystem', () => {
               return 'none';
             case 'border':
               return '1px solid #ccc';
-            default:
-              return '';
-          }
+            default: return ''
+  }
         })
       })),
       writable: true,
     });
 
-    auditSystem = new AccessibilityAuditSystem();
+    auditSystem = new AccessibilityAuditSystem()
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   describe('WCAG Enums and Types', () => {
     test.skip('should have correct WCAG levels', () => {
       expect(WCAGLevel.A).toBe('A');
       expect(WCAGLevel.AA).toBe('AA');
-      expect(WCAGLevel.AAA).toBe('AAA');
-    });
+      expect(WCAGLevel.AAA).toBe('AAA')
+  });
 
     test.skip('should have correct WCAG principles', () => {
       expect(WCAGPrinciple.PERCEIVABLE).toBe('perceivable');
       expect(WCAGPrinciple.OPERABLE).toBe('operable');
       expect(WCAGPrinciple.UNDERSTANDABLE).toBe('understandable');
-      expect(WCAGPrinciple.ROBUST).toBe('robust');
-    });
+      expect(WCAGPrinciple.ROBUST).toBe('robust')
+  })
   });
 
   describe('ContrastAnalyzer', () => {
@@ -97,11 +96,11 @@ describe('AccessibilityAuditSystem', () => {
 
       // Test same color (no contrast);
       const noContrast = (auditSystem as any).contrastAnalyzer.calculateContrastRatio('#ffffff', '#ffffff');
-      expect(noContrast).toBe(1);
-    });
+      expect(noContrast).toBe(1)
+  });
 
     test.skip('should check WCAG contrast compliance', () => {
-      const meetsAA = (auditSystem as any).contrastAnalyzer.meetsWCAGContrast(;
+      const meetsAA = (auditSystem as any).contrastAnalyzer.meetsWCAGContrast(;;
         '#000000', 
         '#ffffff', 
         WCAGLevel.AA, 
@@ -109,18 +108,18 @@ describe('AccessibilityAuditSystem', () => {
       );
       expect(meetsAA).toBe(true);
 
-      const failsAA = (auditSystem as any).contrastAnalyzer.meetsWCAGContrast(;
+      const failsAA = (auditSystem as any).contrastAnalyzer.meetsWCAGContrast(;;
         '#999999', 
         '#aaaaaa', 
         WCAGLevel.AA, 
         false
       );
-      expect(failsAA).toBe(false);
-    });
+      expect(failsAA).toBe(false)
+  });
 
     test.skip('should handle large text contrast differently', () => {
       // Large text has more lenient contrast requirements;
-      const largeTextAA = (auditSystem as any).contrastAnalyzer.meetsWCAGContrast(;
+      const largeTextAA = (auditSystem as any).contrastAnalyzer.meetsWCAGContrast(;;
         '#777777', 
         '#ffffff', 
         WCAGLevel.AA, 
@@ -128,22 +127,22 @@ describe('AccessibilityAuditSystem', () => {
       );
       expect(largeTextAA).toBe(true);
 
-      const smallTextAA = (auditSystem as any).contrastAnalyzer.meetsWCAGContrast(;
+      const smallTextAA = (auditSystem as any).contrastAnalyzer.meetsWCAGContrast(;;
         '#777777', 
         '#ffffff', 
         WCAGLevel.AA, 
         false // small text
       );
-      expect(smallTextAA).toBe(false);
-    });
+      expect(smallTextAA).toBe(false)
+  })
   });
 
   describe('KeyboardNavigationTester', () => {
     beforeEach(() => {
       // Mock AccessibilityUtils.getFocusableElements;
       const mockGetFocusableElements = require('../../utils/accessibilityUtils').AccessibilityUtils.getFocusableElements;
-      mockGetFocusableElements.mockReturnValue([]);
-    });
+      mockGetFocusableElements.mockReturnValue([])
+  });
 
     test.skip('should detect missing skip links', async () => {
       // Set up HTML without skip links (the code looks for first-child anchor or .skip-link class)
@@ -161,8 +160,8 @@ describe('AccessibilityAuditSystem', () => {
       
       const skipLinkIssues = result.issues.filter(issue => issue.id === 'missing-skip-links');
       expect(skipLinkIssues.length).toBeGreaterThan(0);
-      expect(skipLinkIssues[0].severity).toBe('medium');
-    });
+      expect(skipLinkIssues[0].severity).toBe('medium')
+  });
 
     test.skip('should not detect missing skip links when they exist', async () => {
       // Set up HTML with proper skip links
@@ -178,8 +177,8 @@ describe('AccessibilityAuditSystem', () => {
       const result = await auditSystem.runAccessibilityAudit();
       
       const skipLinkIssues = result.issues.filter(issue => issue.id === 'missing-skip-links');
-      expect(skipLinkIssues.length).toBe(0);
-    });
+      expect(skipLinkIssues.length).toBe(0)
+  });
 
     test.skip('should detect custom tab order issues', async () => {
       const button1 = document.createElement('button');
@@ -199,8 +198,8 @@ describe('AccessibilityAuditSystem', () => {
       const result = await auditSystem.runAccessibilityAudit();
       
       const tabOrderIssues = result.issues.filter(issue => issue.id === 'tab-order-custom');
-      expect(tabOrderIssues.length).toBeGreaterThan(0);
-    });
+      expect(tabOrderIssues.length).toBeGreaterThan(0)
+  });
 
     test.skip('should detect missing focus indicators', async () => {
       const button = document.createElement('button');
@@ -220,9 +219,8 @@ describe('AccessibilityAuditSystem', () => {
               return 'none';
             case 'box-shadow':
               return 'none';
-            default:
-              return '';
-          }
+            default: return ''
+  }
         })
       });
 
@@ -233,8 +231,8 @@ describe('AccessibilityAuditSystem', () => {
       
       const focusIssues = result.issues.filter(issue => issue.id.includes('focus-indicator'));
       expect(focusIssues.length).toBeGreaterThan(0);
-      expect(focusIssues[0].severity).toBe('high');
-    });
+      expect(focusIssues[0].severity).toBe('high')
+  })
   });
 
   describe('ScreenReaderTester', () => {
@@ -250,8 +248,8 @@ describe('AccessibilityAuditSystem', () => {
       const result = await auditSystem.runAccessibilityAudit();
       
       const labelIssues = result.issues.filter(issue => issue.id.includes('missing-label'));
-      expect(labelIssues.length).toBeGreaterThan(0);
-    });
+      expect(labelIssues.length).toBeGreaterThan(0)
+  });
 
     test.skip('should detect improper heading structure', async () => {
       document.body.innerHTML = `
@@ -262,11 +260,11 @@ describe('AccessibilityAuditSystem', () => {
 
       const result = await auditSystem.runAccessibilityAudit();
       
-      const headingIssues = result.issues.filter(issue => ;
+      const headingIssues = result.issues.filter(issue => ;;
         issue.id === 'heading-start-level' || issue.id.includes('heading-skip-level')
       );
-      expect(headingIssues.length).toBeGreaterThan(0);
-    });
+      expect(headingIssues.length).toBeGreaterThan(0)
+  });
 
     test.skip('should detect missing alt text', async () => {
       document.body.innerHTML = `
@@ -277,11 +275,11 @@ describe('AccessibilityAuditSystem', () => {
 
       const result = await auditSystem.runAccessibilityAudit();
       
-      const altIssues = result.issues.filter(issue => ;
+      const altIssues = result.issues.filter(issue => ;;
         issue.id.includes('missing-alt') || issue.id.includes('alt-too-long')
       );
-      expect(altIssues.length).toBeGreaterThan(0);
-    });
+      expect(altIssues.length).toBeGreaterThan(0)
+  });
 
     test.skip('should detect missing form labels', async () => {
       document.body.innerHTML = `
@@ -297,8 +295,8 @@ describe('AccessibilityAuditSystem', () => {
       const result = await auditSystem.runAccessibilityAudit();
       
       const formLabelIssues = result.issues.filter(issue => issue.id.includes('form-missing-label'));
-      expect(formLabelIssues.length).toBeGreaterThan(0);
-    });
+      expect(formLabelIssues.length).toBeGreaterThan(0)
+  });
 
     test.skip('should detect missing landmarks', async () => {
       document.body.innerHTML = `
@@ -311,8 +309,8 @@ describe('AccessibilityAuditSystem', () => {
       const result = await auditSystem.runAccessibilityAudit();
       
       const landmarkIssues = result.issues.filter(issue => issue.id === 'missing-landmarks');
-      expect(landmarkIssues.length).toBeGreaterThan(0);
-    });
+      expect(landmarkIssues.length).toBeGreaterThan(0)
+  });
 
     test.skip('should detect missing live regions for dynamic content', async () => {
       document.body.innerHTML = `
@@ -324,8 +322,8 @@ describe('AccessibilityAuditSystem', () => {
       const result = await auditSystem.runAccessibilityAudit();
       
       const liveRegionIssues = result.issues.filter(issue => issue.id.includes('missing-live-region'));
-      expect(liveRegionIssues.length).toBeGreaterThan(0);
-    });
+      expect(liveRegionIssues.length).toBeGreaterThan(0)
+  })
   });
 
   describe('MentalHealthAccessibilityChecker', () => {
@@ -352,8 +350,8 @@ describe('AccessibilityAuditSystem', () => {
               case 'border': return 'none';
               case 'outline': return 'none';
               case 'box-shadow': return 'none';
-              default: return '';
-            };
+              default: return ''
+  }
   } else {
             switch (property) {
               case 'display': return 'block';
@@ -363,8 +361,8 @@ describe('AccessibilityAuditSystem', () => {
               case 'border': return 'none';
               case 'outline': return 'none';
               case 'box-shadow': return 'none';
-              default: return '';
-            }
+              default: return ''
+  }
           }
         });
 
@@ -395,8 +393,8 @@ describe('AccessibilityAuditSystem', () => {
       
       const crisisIssues = result.issues.filter(issue => issue.isCrisisRelated);
       expect(crisisIssues.length).toBeGreaterThan(0);
-      expect(crisisIssues.some(issue => issue.severity === 'critical')).toBe(true);
-    });
+      expect(crisisIssues.some(issue => issue.severity === 'critical')).toBe(true)
+  });
 
     test.skip('should detect flashing content', async () => {
       document.body.innerHTML = `
@@ -408,8 +406,8 @@ describe('AccessibilityAuditSystem', () => {
       
       const flashingIssues = result.issues.filter(issue => issue.id.includes('flashing-content'));
       expect(flashingIssues.length).toBeGreaterThan(0);
-      expect(flashingIssues[0].severity).toBe('high');
-    });
+      expect(flashingIssues[0].severity).toBe('high')
+  });
 
     test.skip('should detect autoplay media', async () => {
       document.body.innerHTML = `
@@ -424,8 +422,8 @@ describe('AccessibilityAuditSystem', () => {
       const result = await auditSystem.runAccessibilityAudit();
       
       const autoplayIssues = result.issues.filter(issue => issue.id === 'autoplay-media');
-      expect(autoplayIssues.length).toBeGreaterThan(0);
-    });
+      expect(autoplayIssues.length).toBeGreaterThan(0)
+  });
 
     test.skip('should check chat accessibility', async () => {
       document.body.innerHTML = `
@@ -438,8 +436,8 @@ describe('AccessibilityAuditSystem', () => {
       const result = await auditSystem.runAccessibilityAudit();
       
       const chatIssues = result.issues.filter(issue => issue.id.includes('chat-message-incomplete'));
-      expect(chatIssues.length).toBeGreaterThan(0);
-    });
+      expect(chatIssues.length).toBeGreaterThan(0)
+  });
 
     test.skip('should check emoji accessibility', async () => {
       document.body.innerHTML = `
@@ -450,8 +448,8 @@ describe('AccessibilityAuditSystem', () => {
       const result = await auditSystem.runAccessibilityAudit();
       
       const emojiIssues = result.issues.filter(issue => issue.id.includes('emoji-no-alt'));
-      expect(emojiIssues.length).toBeGreaterThan(0);
-    });
+      expect(emojiIssues.length).toBeGreaterThan(0)
+  })
   });
 
   describe('Comprehensive Audit', () => {
@@ -489,8 +487,8 @@ describe('AccessibilityAuditSystem', () => {
       expect(result.wcagLevel).toBe(WCAGLevel.AA);
       expect(typeof result.isCompliant).toBe('boolean');
       expect(result.mentalHealthCompliance).toBeDefined();
-      expect(result.assistiveTechSupport).toBeDefined();
-    });
+      expect(result.assistiveTechSupport).toBeDefined()
+  });
 
     test.skip('should calculate accessibility scores correctly', async () => {
       const result = await auditSystem.runAccessibilityAudit();
@@ -502,8 +500,8 @@ describe('AccessibilityAuditSystem', () => {
       expect(result.score.understandable).toBeGreaterThanOrEqual(0);
       expect(result.score.robust).toBeGreaterThanOrEqual(0);
       expect(result.score.mentalHealthOptimized).toBeGreaterThanOrEqual(0);
-      expect(result.score.crisisAccessibility).toBeGreaterThanOrEqual(0);
-    });
+      expect(result.score.crisisAccessibility).toBeGreaterThanOrEqual(0)
+  });
 
     test.skip('should generate appropriate recommendations', async () => {
       document.body.innerHTML = `
@@ -521,11 +519,11 @@ describe('AccessibilityAuditSystem', () => {
       expect(result.recommendations.length).toBeGreaterThan(0);
       
       // Should prioritize crisis-related issues;
-      const crisisRecommendations = result.recommendations.filter(rec => ;
+      const crisisRecommendations = result.recommendations.filter(rec => ;;
         rec.includes('CRISIS PRIORITY')
       );
-      expect(crisisRecommendations.length).toBeGreaterThan(0);
-    });
+      expect(crisisRecommendations.length).toBeGreaterThan(0)
+  });
 
     test.skip('should check WCAG compliance correctly', async () => {
       // Create a page with no critical issues
@@ -545,8 +543,8 @@ describe('AccessibilityAuditSystem', () => {
       const criticalIssues = result.issues.filter(issue => issue.severity === 'critical');
       
       // Should have better compliance with fewer issues
-      expect(result.isCompliant).toBe(criticalIssues.length === 0);
-    });
+      expect(result.isCompliant).toBe(criticalIssues.length === 0)
+  });
 
     test.skip('should handle different WCAG levels', async () => {
       const resultA = await auditSystem.runAccessibilityAudit(WCAGLevel.A);
@@ -558,8 +556,8 @@ describe('AccessibilityAuditSystem', () => {
       expect(resultAAA.wcagLevel).toBe(WCAGLevel.AAA);
 
       // Higher levels should potentially have more issues
-      expect(resultAAA.issues.length).toBeGreaterThanOrEqual(resultAA.issues.length);
-    });
+      expect(resultAAA.issues.length).toBeGreaterThanOrEqual(resultAA.issues.length)
+  })
   });
 
   describe('Mental Health Compliance', () => {
@@ -591,8 +589,8 @@ describe('AccessibilityAuditSystem', () => {
       expect(typeof compliance.crisisResourcesReadability).toBe('boolean');
       expect(typeof compliance.cognitiveLoadReduction).toBe('boolean');
       expect(typeof compliance.chatAccessibility).toBe('boolean');
-      expect(typeof compliance.emojiAltText).toBe('boolean');
-    });
+      expect(typeof compliance.emojiAltText).toBe('boolean')
+  });
 
     test.skip('should evaluate assistive technology support', async () => {
       const result = await auditSystem.runAccessibilityAudit();
@@ -602,20 +600,20 @@ describe('AccessibilityAuditSystem', () => {
       expect(typeof support.screenReader).toBe('boolean');
       expect(typeof support.keyboardNavigation).toBe('boolean');
       expect(typeof support.voiceControl).toBe('boolean');
-      expect(typeof support.eyeTracking).toBe('boolean');
-    });
+      expect(typeof support.eyeTracking).toBe('boolean')
+  })
   });
 
   describe('Singleton Instance', () => {
     test.skip('should export singleton instance', () => {
-      expect(accessibilityAuditSystem).toBeInstanceOf(AccessibilityAuditSystem);
-    });
+      expect(accessibilityAuditSystem).toBeInstanceOf(AccessibilityAuditSystem)
+  });
 
     test.skip('should maintain same instance', () => {
       const instance1 = accessibilityAuditSystem;
       const instance2 = accessibilityAuditSystem;
-      expect(instance1).toBe(instance2);
-    });
+      expect(instance1).toBe(instance2)
+  })
   });
 
   describe('Error Handling', () => {
@@ -628,32 +626,32 @@ describe('AccessibilityAuditSystem', () => {
         callCount++;
         // Only throw error on the first few calls to simulate partial failure
         if (callCount <= 2 && selector.includes('*[style*=')) {
-          throw new Error('DOM access error');
-        }
+          throw new Error('DOM access error')
+  }
         // Otherwise use the original method
-        return originalQuerySelectorAll(selector);
-      }) as any;
+        return originalQuerySelectorAll(selector)
+  }) as any;
 
       let result;
       let errorThrown = false;
       
       try {
-        result = await auditSystem.runAccessibilityAudit();
-      } catch (error) {
-        errorThrown = true;
-      } finally {
-        document.querySelectorAll = originalQuerySelectorAll;
-      }
+        result = await auditSystem.runAccessibilityAudit()
+  } catch (error) {
+        errorThrown = true
+  } finally {
+        document.querySelectorAll = originalQuerySelectorAll
+  }
 
       // The audit should handle the error gracefully and still return a result
       // or at least fail gracefully
       if (result) {
         expect(result).toBeDefined();
-        expect(Array.isArray(result.issues)).toBe(true);;
+        expect(Array.isArray(result.issues)).toBe(true)
   } else {
         // If it failed completely, that's also acceptable as long as it didn't crash
-        expect(errorThrown).toBe(true);
-      }
+        expect(errorThrown).toBe(true)
+  }
     });
 
     test.skip('should handle missing elements gracefully', async () => {
@@ -663,7 +661,7 @@ describe('AccessibilityAuditSystem', () => {
       const result = await auditSystem.runAccessibilityAudit();
       
       expect(result).toBeDefined();
-      expect(result.score).toBeDefined();
-    });
+      expect(result.score).toBeDefined()
+  })
+  })
   });
-});

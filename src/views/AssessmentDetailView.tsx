@@ -10,8 +10,8 @@ import { isError } from '../types/common';
 
 interface AssessmentDetailViewProps {
     type: 'phq-9' | 'gad-7';
-    setActiveView: (view: ActiveView) => void;
-}
+    setActiveView: (view: ActiveView) => void
+  }
 
 export const AssessmentDetailView: React.FC<AssessmentDetailViewProps> = ({ type, setActiveView }) => {
     const { submitPhq9Result, submitGad7Result } = useAssessmentStore();
@@ -24,7 +24,7 @@ export const AssessmentDetailView: React.FC<AssessmentDetailViewProps> = ({ type
                 questions: phq9Questions,
                 getResult: getPhq9Result,
                 submit: submitPhq9Result,
-                maxScore: 27,;
+                maxScore: 27,
   } else {
              return {
                 title: 'GAD-7 Anxiety Assessment',
@@ -43,14 +43,14 @@ export const AssessmentDetailView: React.FC<AssessmentDetailViewProps> = ({ type
     const handleAnswerChange = (questionIndex: number, value: number) => {
         const newAnswers = [...answers];
         newAnswers[questionIndex] = value;
-        setAnswers(newAnswers);
-    };
+        setAnswers(newAnswers)
+  };
 
     const handleSubmit = async () => {
         if (answers.some(a => a === null)) {
             addToast('Please answer all questions.', 'error');
-            return;
-        }
+            return
+  }
         setIsSubmitting(true);
         const finalAnswers = answers as number[];
         const score = finalAnswers.reduce((sum, val) => sum + val, 0);
@@ -58,13 +58,13 @@ export const AssessmentDetailView: React.FC<AssessmentDetailViewProps> = ({ type
         try {
             await assessmentDetails.submit(score, finalAnswers);
             const resultData = assessmentDetails.getResult(score);
-            setResult(resultData);
-        } catch (error) {
+            setResult(resultData)
+  } catch (error) {
             const errorMessage = isError(error) ? error.message : 'Failed to submit assessment.';
-            addToast(errorMessage, 'error');
-        } finally {
-            setIsSubmitting(false);
-        }
+            addToast(errorMessage, 'error')
+  } finally {
+            setIsSubmitting(false)
+  }
     };
     
     if (result) {
@@ -97,8 +97,8 @@ export const AssessmentDetailView: React.FC<AssessmentDetailViewProps> = ({ type
                     </div>
                 </Card>
             </>
-        );
-    }
+        )
+  }
     
     return (
         <>
@@ -111,8 +111,7 @@ export const AssessmentDetailView: React.FC<AssessmentDetailViewProps> = ({ type
                         <div className="assessment-options">
                             {q.options.map(option => (
                                 <div key={option.value} className="radio-group">
-                                    <input;
-                                        type="radio"
+                                    <input type="radio"
                                         id={`q${index}-${option.value}`}
                                         name={`question-${index}`}
                                         value={option.value}

@@ -18,8 +18,8 @@ interface RouteConfig {
   roles?: string[];
   preload?: boolean;
   priority?: 'critical' | 'high' | 'medium' | 'low';
-  chunkName?: string;
-}
+  chunkName?: string
+  }
 
 // Route Components with optimized chunking;
 const routeComponents = {
@@ -156,7 +156,7 @@ class RoutePerformanceTracker {
       startTime,
       path,
       timestamp: new Date().toISOString(),
-    });
+    })
   }
   
   trackRouteComplete(path: string) {
@@ -175,10 +175,10 @@ class RoutePerformanceTracker {
         `route-${path}`,
         `route-${path}-start`,
         `route-${path}-end`
-      );
-    } catch (e) {
-      console.warn('Failed to measure route performance:', e);
-    }
+      )
+  } catch (e) {
+      console.warn('Failed to measure route performance:', e)
+  }
     
     // Log performance data
     console.log(`Route ${path} loaded in ${duration.toFixed(2)}ms`);
@@ -191,7 +191,7 @@ class RoutePerformanceTracker {
     });
     
     // Clean up
-    this.metrics.delete(path);
+    this.metrics.delete(path)
   }
   
   private sendAnalytics(data: any) {
@@ -201,8 +201,8 @@ class RoutePerformanceTracker {
         path: data.path,
         duration: data.duration,
         category: 'Performance',
-      });
-    }
+      })
+  }
   }
 }
 
@@ -213,7 +213,7 @@ class PreloadManager {
   
   constructor() {
     this.setupIntersectionObserver();
-    this.setupIdlePreloading();
+    this.setupIdlePreloading()
   }
   
   private setupIntersectionObserver() {
@@ -226,13 +226,13 @@ class PreloadManager {
             const link = entry.target as HTMLElement;
             const href = link.getAttribute('href');
             if (href) {
-              this.preloadRoute(href);
-            }
+              this.preloadRoute(href)
+  }
           }
-        });
-      },
+        })
+  },
       { rootMargin: '50px' }
-    );
+    )
   }
   
   private setupIdlePreloading() {
@@ -242,8 +242,8 @@ class PreloadManager {
       // Preload critical routes
       routeConfig
         .filter(route => route.preload || route.priority === 'critical')
-        .forEach(route => this.preloadRoute(route.path));
-    });
+        .forEach(route => this.preloadRoute(route.path))
+  })
   }
   
   preloadRoute(path: string) {
@@ -255,26 +255,26 @@ class PreloadManager {
     // Trigger component preload
     if ('preload' in route.component && typeof route.component.preload === 'function') {
       route.component.preload();
-      this.preloadedRoutes.add(path);
-    }
+      this.preloadedRoutes.add(path)
+  }
   }
   
   observeLink(element: HTMLElement) {
     if (this.observer) {
-      this.observer.observe(element);
-    }
+      this.observer.observe(element)
+  }
   }
   
   unobserveLink(element: HTMLElement) {
     if (this.observer) {
-      this.observer.unobserve(element);
-    }
+      this.observer.unobserve(element)
+  }
   }
   
   cleanup() {
     if (this.observer) {
-      this.observer.disconnect();
-    }
+      this.observer.disconnect()
+  }
   }
 }
 
@@ -284,10 +284,10 @@ const RouteLoadingFallback: React.FC<{ route?: string }> = ({ route }) => {
   
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowSlowWarning(true);
-    }, 3000);
+      setShowSlowWarning(true)
+  }, 3000);
     
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timer)
   };
   }, []);
   
@@ -301,8 +301,8 @@ const RouteLoadingFallback: React.FC<{ route?: string }> = ({ route }) => {
         </p>
       )}
     </div>
-  );
-};
+  )
+  };
 
 // Optimized Router Component;
 export const OptimizedRouter: React.FC = () => {
@@ -316,16 +316,16 @@ export const OptimizedRouter: React.FC = () => {
     performanceTracker.current.trackRouteChange(location.pathname);
     
     return () => {
-      performanceTracker.current.trackRouteComplete(location.pathname);
-    };
+      performanceTracker.current.trackRouteComplete(location.pathname)
+  };
   };
   }, [location]);
   
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      preloadManager.current.cleanup();
-    };
+      preloadManager.current.cleanup()
+  };
   };
   }, []);
   
@@ -337,8 +337,8 @@ export const OptimizedRouter: React.FC = () => {
       if (currentRouteIndex !== -1 && currentRouteIndex < routeConfig.length - 1) {
         const nextRoute = routeConfig[currentRouteIndex + 1];
         if (nextRoute.priority !== 'low') {
-          preloadManager.current.preloadRoute(nextRoute.path);
-        }
+          preloadManager.current.preloadRoute(nextRoute.path)
+  }
       }
     }
   };
@@ -369,35 +369,35 @@ export const OptimizedRouter: React.FC = () => {
         </Routes>
       </Suspense>
     </ErrorBoundary>
-  );
-};
+  )
+  };
 
 // Link component with preloading support;
 export const OptimizedLink: React.FC<{
   to: string;
   children: React.ReactNode;
   className?: string;
-  preload?: boolean;
-}> = ({ to, children, className, preload = true }) => {
+  preload?: boolean
+  }> = ({ to, children, className, preload = true }) => {
   const linkRef = useRef<HTMLAnchorElement>(null);
   const preloadManager = useRef(new PreloadManager());
   
   useEffect(() => {
     if (preload && linkRef.current) {
-      preloadManager.current.observeLink(linkRef.current);
-    }
+      preloadManager.current.observeLink(linkRef.current)
+  }
     
     return () => {
       if (linkRef.current) {
-        preloadManager.current.unobserveLink(linkRef.current);
-      }
+        preloadManager.current.unobserveLink(linkRef.current)
+  }
     };
   }, [preload]);
   
   const handleMouseEnter = useCallback(() => {
     if (preload) {
-      preloadManager.current.preloadRoute(to);
-    }
+      preloadManager.current.preloadRoute(to)
+  }
   };
   }, [to, preload]);
   
@@ -411,15 +411,15 @@ export const OptimizedLink: React.FC<{
     >
       {children}
     </a>
-  );
-};
+  )
+  };
 
 // Export route configuration for external use;
 export { routeConfig, RoutePerformanceTracker, PreloadManager };
 
 declare global {
   interface Window {
-    gtag?: (...args: unknown[]) => void;
+    gtag?: (...args: unknown[]) => void
   }
 }
 

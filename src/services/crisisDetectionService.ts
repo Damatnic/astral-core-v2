@@ -10,8 +10,8 @@ interface CrisisIndicator {
   severity: 'low' | 'medium' | 'high' | 'critical';
   context: string[];
   category: 'suicidal' | 'self-harm' | 'substance-abuse' | 'violence' | 'emergency' | 'general-distress';
-  immediateAction: boolean;
-}
+  immediateAction: boolean
+  }
 
 interface CrisisAnalysisResult {
   hasCrisisIndicators: boolean;
@@ -27,7 +27,7 @@ interface CrisisAnalysisResult {
     triggeredKeywords: CrisisIndicator[];
     sentimentScore: number;
     contextualFactors: string[];
-    urgencyLevel: number;
+    urgencyLevel: number
   }
 
 interface CrisisEscalationAction {
@@ -35,8 +35,8 @@ interface CrisisEscalationAction {
   description: string;
   contacts: string[];
   resources: string[];
-  timeline: string;
-}
+  timeline: string
+  }
 
 class EnhancedCrisisDetectionService {
   // Critical immediate danger keywords
@@ -146,8 +146,8 @@ class EnhancedCrisisDetectionService {
           triggeredKeywords: [],
           sentimentScore: 0,
           contextualFactors: [],
-          urgencyLevel: 0;
-        }
+          urgencyLevel: 0
+  }
       }
 
     const normalizedText = text.toLowerCase().trim();
@@ -166,20 +166,20 @@ class EnhancedCrisisDetectionService {
         
         // Update max severity
         if (this.getSeverityWeight(indicator.severity) > this.getSeverityWeight(maxSeverity)) {
-          maxSeverity = indicator.severity;
-        }
+          maxSeverity = indicator.severity
+  }
         
         // Check for immediate action requirements
         if (indicator.immediateAction) {
           escalationRequired = true;
           if (indicator.severity === 'critical') {
-            emergencyServices = true;
-          }
+            emergencyServices = true
+  }
         }
         
         // Calculate urgency based on context
-        urgencyLevel += this.calculateUrgency(normalizedText, indicator);
-      }
+        urgencyLevel += this.calculateUrgency(normalizedText, indicator)
+  }
     }
 
     // Analyze sentiment and context;
@@ -193,8 +193,8 @@ class EnhancedCrisisDetectionService {
     if (urgencyLevel > 4 && maxSeverity !== 'none') {
       escalationRequired = true;
       if (urgencyLevel > 7) {
-        maxSeverity = this.escalateSeverity(maxSeverity);
-      }
+        maxSeverity = this.escalateSeverity(maxSeverity)
+  }
     }
     
     // Check if this is a past recovery story - should not flag as crisis
@@ -217,8 +217,8 @@ class EnhancedCrisisDetectionService {
             triggeredKeywords: [],
             sentimentScore,
             contextualFactors,
-            urgencyLevel: 0;
-          }
+            urgencyLevel: 0
+  }
         }
     }
     
@@ -235,14 +235,14 @@ class EnhancedCrisisDetectionService {
         
         // Log when protective factors reduce severity for transparency
         if (originalSeverity !== maxSeverity) {
-          console.log(`[Crisis Detection] Severity reduced from ${originalSeverity} to ${maxSeverity} due to protective factors:`, identifiedProtectiveFactors);
-        }
+          console.log(`[Crisis Detection] Severity reduced from ${originalSeverity} to ${maxSeverity} due to protective factors:`, identifiedProtectiveFactors)
+  }
       }
       
       // Reduce escalation requirement if protective factors are strong
       if (protectiveScore > 0.5 && escalationRequired && maxSeverity !== 'high') {
-        escalationRequired = false;
-      }
+        escalationRequired = false
+  }
     }
 
     // Generate recommended actions (now accounting for protective factors);
@@ -252,8 +252,8 @@ class EnhancedCrisisDetectionService {
       urgencyLevel,
       emergencyServices,
       escalationRequired,
-      protectiveFactors: identifiedProtectiveFactors;
-    };
+      protectiveFactors: identifiedProtectiveFactors
+  };
   };
 
     // Calculate confidence score (now includes protective factors);
@@ -263,8 +263,8 @@ class EnhancedCrisisDetectionService {
       urgencyLevel,
       sentimentScore,
       contextualFactors: contextualFactors.length,
-      protectiveFactors: identifiedProtectiveFactors.length;
-    });
+      protectiveFactors: identifiedProtectiveFactors.length
+  });
 
     return {
       hasCrisisIndicators: triggeredKeywords.length > 0,
@@ -293,7 +293,7 @@ class EnhancedCrisisDetectionService {
     const normalizedText = text.replace(/[!.,;?#]/g, '').toLowerCase();
     
     // Check for keyword match (handle k!ll -> kill type variations);
-    const keywordVariations = [;
+    const keywordVariations = [;;
       normalizedKeyword,
       normalizedKeyword.replace(/!/g, 'i'),
       normalizedKeyword.replace(/0/g, 'o'),
@@ -304,8 +304,8 @@ class EnhancedCrisisDetectionService {
     
     // Also check for common misspellings
     if (normalizedKeyword.includes('kill')) {
-      keywordVariations.push(normalizedKeyword.replace('kill', 'kll'));
-    }
+      keywordVariations.push(normalizedKeyword.replace('kill', 'kll'))
+  }
     
     let keywordFound = false;
     let keywordIndex = -1;
@@ -314,26 +314,26 @@ class EnhancedCrisisDetectionService {
       if (normalizedText.includes(variation)) {
         keywordFound = true;
         keywordIndex = normalizedText.indexOf(variation);
-        break;
-      }
+        break
+  }
     }
     
     if (!keywordFound) {
-      return false;
-    }
+      return false
+  }
 
     // If no context required, return true
     if (indicator.context.length === 0) {
-      return true;
-    }
+      return true
+  }
 
     // Check if any context words appear near the keyword;
-    const surroundingText = normalizedText.substring(;
+    const surroundingText = normalizedText.substring(;;
       Math.max(0, keywordIndex - 50),
       Math.min(normalizedText.length, keywordIndex + normalizedKeyword.length + 50)
     );
 
-    return indicator.context.some(context => surroundingText.includes(context));
+    return indicator.context.some(context => surroundingText.includes(context))
   }
 
   /**
@@ -347,8 +347,8 @@ class EnhancedCrisisDetectionService {
       case 'critical': urgency += 4; break;
       case 'high': urgency += 3; break;
       case 'medium': urgency += 2; break;
-      case 'low': urgency += 1; break;
-    }
+      case 'low': urgency += 1; break
+  }
 
     // Check for urgency modifiers;
     const urgencyWords = this.urgencyModifiers.filter(modifier => text.includes(modifier));
@@ -356,10 +356,10 @@ class EnhancedCrisisDetectionService {
 
     // Immediate action indicators
     if (indicator.immediateAction) {
-      urgency += 3;
-    }
+      urgency += 3
+  }
 
-    return urgency;
+    return urgency
   }
 
   /**
@@ -372,15 +372,15 @@ class EnhancedCrisisDetectionService {
     let sentiment = 0;
     
     positiveWords.forEach(word => {
-      if (text.includes(word)) sentiment += 1;
-    };
+      if (text.includes(word)) sentiment += 1
+  };
   };
     
     negativeWords.forEach(word => {
-      if (text.includes(word)) sentiment -= 1;
-    });
+      if (text.includes(word)) sentiment -= 1
+  });
     
-    return sentiment;
+    return sentiment
   }
 
   /**
@@ -391,25 +391,25 @@ class EnhancedCrisisDetectionService {
     
     // Isolation indicators
     if (/\b(alone|lonely|no one|nobody)\b/.test(text)) {
-      factors.push('social_isolation');
-    }
+      factors.push('social_isolation')
+  }
     
     // Time-based urgency
     if (/\b(tonight|today|now|soon)\b/.test(text)) {
-      factors.push('immediate_timeframe');
-    }
+      factors.push('immediate_timeframe')
+  }
     
     // Method references
     if (/\b(pills|knife|gun|rope|bridge|jump)\b/.test(text)) {
-      factors.push('method_reference');
-    }
+      factors.push('method_reference')
+  }
     
     // Support system
     if (/\b(family|friends|therapist|doctor|help)\b/.test(text)) {
-      factors.push('support_available');
-    }
+      factors.push('support_available')
+  }
     
-    return factors;
+    return factors
   }
 
   /**
@@ -419,22 +419,22 @@ class EnhancedCrisisDetectionService {
     const riskFactors: string[] = [];
     
     if (/\b(drinking|drugs|alcohol|high|drunk)\b/.test(text)) {
-      riskFactors.push('substance_use');
-    }
+      riskFactors.push('substance_use')
+  }
     
     if (/\b(plan|method|when|how|where)\b/.test(text)) {
-      riskFactors.push('specific_planning');
-    }
+      riskFactors.push('specific_planning')
+  }
     
     if (/\b(alone|isolated|no one knows)\b/.test(text)) {
-      riskFactors.push('isolation');
-    }
+      riskFactors.push('isolation')
+  }
     
     if (/\b(failed|worthless|burden|waste)\b/.test(text)) {
-      riskFactors.push('negative_self_perception');
-    }
+      riskFactors.push('negative_self_perception')
+  }
     
-    return riskFactors;
+    return riskFactors
   }
 
   /**
@@ -445,7 +445,7 @@ class EnhancedCrisisDetectionService {
     const normalizedText = text.toLowerCase();
     
     // Check for past tense recovery FIRST - this should negate crisis indicators;
-    const pastTensePatterns = [;
+    const pastTensePatterns = [;;
       /used to (have|feel|think about) suicidal/,
       /had suicidal thoughts (years|long) ago/,
       /(overcame|overcome|recovered from) (suicidal|self-harm|depression)/,
@@ -456,10 +456,10 @@ class EnhancedCrisisDetectionService {
     for (const pattern of pastTensePatterns) {
       if (pattern.test(normalizedText)) {
         if (!factors.includes('past_recovery')) {
-          factors.push('past_recovery');
-        }
-        break;
-      }
+          factors.push('past_recovery')
+  }
+        break
+  }
     }
     
     // Check each protective factor category
@@ -467,8 +467,8 @@ class EnhancedCrisisDetectionService {
       for (const keyword of keywords) {
         if (normalizedText.includes(keyword)) {
           if (!factors.includes(factorName)) {
-            factors.push(factorName);
-          }
+            factors.push(factorName)
+  }
           break; // Move to next factor category once one keyword is found
         }
       }
@@ -477,11 +477,11 @@ class EnhancedCrisisDetectionService {
     // Special check for ambivalence with 'would never actually' pattern
     if (/would\s+never\s+actually|never\s+actually/.test(normalizedText)) {
       if (!factors.includes('ambivalence')) {
-        factors.push('ambivalence');
-      }
+        factors.push('ambivalence')
+  }
     }
     
-    return factors;
+    return factors
   }
   
   /**
@@ -500,16 +500,16 @@ class EnhancedCrisisDetectionService {
       coping_strategies: 0.10,     // Having ways to cope
       reasons_for_living: 0.15,    // Having meaning/purpose
       ambivalence: 0.10,          // Uncertainty about harming self
-      past_recovery: 0.75         // Past tense strongly indicates recovery - should mostly negate current crisis;
-    };
+      past_recovery: 0.75         // Past tense strongly indicates recovery - should mostly negate current crisis
+  };
     
     let totalScore = 0;
     for (const factor of protectiveFactors) {
-      totalScore += weights[factor] || 0.05;
-    }
+      totalScore += weights[factor] || 0.05
+  }
     
     // Cap at 0.7 to avoid completely negating high-risk situations
-    return Math.min(totalScore, 0.7);
+    return Math.min(totalScore, 0.7)
   }
 
   /**
@@ -521,60 +521,60 @@ class EnhancedCrisisDetectionService {
     urgencyLevel: number;
     emergencyServices: boolean;
     escalationRequired: boolean;
-    protectiveFactors?: string[];
+    protectiveFactors?: string[]
   }): string[] {
     const actions: string[] = [];
 
     if (params.emergencyServices) {
       actions.push('IMMEDIATE: Contact emergency services (911)');
       actions.push('IMMEDIATE: Do not leave user alone');
-      actions.push('IMMEDIATE: Activate crisis intervention protocol');
-    }
+      actions.push('IMMEDIATE: Activate crisis intervention protocol')
+  }
 
     if (params.escalationRequired) {
       actions.push('Escalate to crisis counselor immediately');
       actions.push('Initiate suicide risk assessment');
-      actions.push('Contact designated emergency contacts');
-    }
+      actions.push('Contact designated emergency contacts')
+  }
 
     if (params.categories.includes('suicidal')) {
       actions.push('Provide suicide prevention resources');
       actions.push('Share safety planning tools');
-      actions.push('Connect with crisis hotline');
-    }
+      actions.push('Connect with crisis hotline')
+  }
 
     if (params.categories.includes('self-harm')) {
       actions.push('Offer self-harm alternatives');
       actions.push('Provide coping strategies');
-      actions.push('Connect with self-harm support resources');
-    }
+      actions.push('Connect with self-harm support resources')
+  }
 
     if (params.severityLevel === 'medium' || params.severityLevel === 'high') {
       actions.push('Schedule follow-up check-in');
       actions.push('Provide comprehensive resource list');
-      actions.push('Connect with peer support');
-    }
+      actions.push('Connect with peer support')
+  }
     
     // Add actions based on protective factors
     if (params.protectiveFactors && params.protectiveFactors.length > 0) {
       if (params.protectiveFactors.includes('professional_support')) {
-        actions.push('Encourage continued engagement with current treatment');
-      }
+        actions.push('Encourage continued engagement with current treatment')
+  }
       if (params.protectiveFactors.includes('help_seeking')) {
-        actions.push('Facilitate connection to requested support resources');
-      }
+        actions.push('Facilitate connection to requested support resources')
+  }
       if (params.protectiveFactors.includes('life_responsibilities')) {
-        actions.push('Reinforce importance of responsibilities and connections');
-      }
+        actions.push('Reinforce importance of responsibilities and connections')
+  }
       if (params.protectiveFactors.includes('coping_strategies')) {
-        actions.push('Support and expand existing coping mechanisms');
-      }
+        actions.push('Support and expand existing coping mechanisms')
+  }
       if (params.protectiveFactors.includes('social_connection')) {
-        actions.push('Encourage reaching out to support network');
-      }
+        actions.push('Encourage reaching out to support network')
+  }
     }
 
-    return actions;
+    return actions
   }
 
   /**
@@ -586,7 +586,7 @@ class EnhancedCrisisDetectionService {
     urgencyLevel: number;
     sentimentScore: number;
     contextualFactors: number;
-    protectiveFactors?: number;
+    protectiveFactors?: number
   }): number {
     let confidence = 0;
 
@@ -605,15 +605,15 @@ class EnhancedCrisisDetectionService {
 
     // Sentiment analysis
     if (params.sentimentScore < -2) {
-      confidence += 10;
-    }
+      confidence += 10
+  }
     
     // Protective factors increase confidence in our assessment
     if (params.protectiveFactors && params.protectiveFactors > 0) {
-      confidence += Math.min(params.protectiveFactors * 2, 10);
-    }
+      confidence += Math.min(params.protectiveFactors * 2, 10)
+  }
 
-    return Math.min(confidence, 100);
+    return Math.min(confidence, 100)
   }
 
   /**
@@ -621,7 +621,7 @@ class EnhancedCrisisDetectionService {
    */
   private getSeverityWeight(severity: string): number {
     const weights = { 'none': 0, 'low': 1, 'medium': 2, 'high': 3, 'critical': 4 };
-    return weights[severity as keyof typeof weights] || 0;
+    return weights[severity as keyof typeof weights] || 0
   }
 
   /**
@@ -634,7 +634,7 @@ class EnhancedCrisisDetectionService {
       'high': 'critical',
       'critical': 'critical'
     };
-    return escalationMap[currentSeverity as keyof typeof escalationMap] || currentSeverity;
+    return escalationMap[currentSeverity as keyof typeof escalationMap] || currentSeverity
   }
 
   /**
@@ -647,7 +647,7 @@ class EnhancedCrisisDetectionService {
       'medium': 'low',
       'low': 'low'
     };
-    return reductionMap[currentSeverity as keyof typeof reductionMap] || currentSeverity;
+    return reductionMap[currentSeverity as keyof typeof reductionMap] || currentSeverity
   }
 
   /**
@@ -662,9 +662,9 @@ class EnhancedCrisisDetectionService {
         description: 'Contact emergency services immediately - active suicide attempt or imminent danger',
         contacts: ['911', '988 Suicide & Crisis Lifeline', 'Local emergency services'],
         resources: ['Crisis intervention team', 'Emergency psychiatric services', 'Mobile crisis unit'],
-        timeline: 'Within 5 minutes';
-      });
-    }
+        timeline: 'Within 5 minutes'
+  })
+  }
 
     if (analysisResult.escalationRequired) {
       actions.push({
@@ -672,9 +672,9 @@ class EnhancedCrisisDetectionService {
         description: 'Escalate to crisis counselor - high risk situation requiring immediate professional intervention',
         contacts: ['Crisis hotline counselor', 'Platform crisis team', 'Mental health professionals'],
         resources: ['Suicide risk assessment', 'Safety planning', 'Crisis counseling'],
-        timeline: 'Within 15 minutes';
-      });
-    }
+        timeline: 'Within 15 minutes'
+  })
+  }
 
     if (analysisResult.severityLevel === 'high' || analysisResult.severityLevel === 'medium') {
       actions.push({
@@ -682,9 +682,9 @@ class EnhancedCrisisDetectionService {
         description: 'Implement enhanced monitoring and support protocols',
         contacts: ['Peer support team', 'Regular check-in coordinator', 'Mental health navigator'],
         resources: ['Increased check-ins', 'Safety plan review', 'Additional coping resources'],
-        timeline: 'Within 1 hour';
-      });
-    }
+        timeline: 'Within 1 hour'
+  })
+  }
 
     if (analysisResult.hasCrisisIndicators) {
       actions.push({
@@ -692,11 +692,11 @@ class EnhancedCrisisDetectionService {
         description: 'Provide immediate emotional support and resource connection',
         contacts: ['Peer supporters', 'Crisis chat volunteers', 'Mental health advocates'],
         resources: ['Crisis chat', 'Emotional support', 'Resource navigation', 'Coping strategies'],
-        timeline: 'Immediately available';
-      });
-    }
+        timeline: 'Immediately available'
+  })
+  }
 
-    return actions;
+    return actions
   }
 
   /**
@@ -706,7 +706,7 @@ class EnhancedCrisisDetectionService {
     message: string;
     actions: string[];
     resources: string[];
-    followUp: string[];
+    followUp: string[]
   } {
     const isSeeker = userType === 'seeker';
     

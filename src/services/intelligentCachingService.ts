@@ -15,23 +15,23 @@ interface CacheEntry {
   lastAccessed: number;
   size: number;
   priority: CachePriority;
-  resourceType: ResourceType;
-}
+  resourceType: ResourceType
+  }
 
 interface CacheAnalytics {
   hitRate: number;
   missRate: number;
   evictionCount: number;
   storageUsage: number;
-  performanceMetrics: PerformanceMetrics;
-}
+  performanceMetrics: PerformanceMetrics
+  }
 
 interface PerformanceMetrics {
   averageLoadTime: number;
   cacheRetrievalTime: number;
   networkFallbackTime: number;
-  offlineRequestCount: number;
-}
+  offlineRequestCount: number
+  }
 
 enum CachePriority {
   CRITICAL = 'critical',     // Crisis resources, safety plans - never purge
@@ -61,8 +61,8 @@ interface CacheDB extends DBSchema {
       'by-priority': CachePriority;
       'by-type': ResourceType;
       'by-timestamp': number;
-      'by-access': number;
-    };
+      'by-access': number
+  };
   cache_analytics: {
     key: string;
     value: CacheAnalytics & { id: string };
@@ -73,8 +73,8 @@ interface CacheDB extends DBSchema {
       quota: number;
       usage: number;
       timestamp: number;
-      warningThreshold: number;
-    };
+      warningThreshold: number
+  };
 }
 export class IntelligentCachingService {
   private db: IDBPDatabase<CacheDB> | null = null;
@@ -87,8 +87,8 @@ export class IntelligentCachingService {
       averageLoadTime: 0,
       cacheRetrievalTime: 0,
       networkFallbackTime: 0,
-      offlineRequestCount: 0;
-    }
+      offlineRequestCount: 0
+  }
   };
 
   // Critical resources that should never be evicted
@@ -120,7 +120,7 @@ export class IntelligentCachingService {
 
   constructor() {
     this.initializeDatabase();
-    this.monitorStorageQuota();
+    this.monitorStorageQuota()
   }
 
   /**
@@ -132,8 +132,8 @@ export class IntelligentCachingService {
         upgrade(db) {
           // Cache entries store;
           const cacheStore = db.createObjectStore('cache_entries', {
-            keyPath: 'url';
-          });
+            keyPath: 'url'
+  });
           cacheStore.createIndex('by-priority', 'priority');
           cacheStore.createIndex('by-type', 'resourceType');
           cacheStore.createIndex('by-timestamp', 'timestamp');
@@ -141,20 +141,20 @@ export class IntelligentCachingService {
 
           // Analytics store
           db.createObjectStore('cache_analytics', {
-            keyPath: 'id';
-          });
+            keyPath: 'id'
+  });
 
           // Storage quota tracking
           db.createObjectStore('storage_quota', {
-            keyPath: 'id';
-          });
-        }
+            keyPath: 'id'
+  })
+  }
       });
 
-      console.log('[IntelligentCache] Database initialized successfully');
-    } catch (error) {
-      console.error('[IntelligentCache] Failed to initialize database:', error);
-    }
+      console.log('[IntelligentCache] Database initialized successfully')
+  } catch (error) {
+      console.error('[IntelligentCache] Failed to initialize database:', error)
+  }
   }
 
   /**
@@ -170,23 +170,23 @@ export class IntelligentCachingService {
 
       // Warm critical resources first
       for (const resource of this.CRITICAL_RESOURCES) {
-        warmingPromises.push(this.warmResource(cache, resource, CachePriority.CRITICAL));
-      }
+        warmingPromises.push(this.warmResource(cache, resource, CachePriority.CRITICAL))
+  }
 
       // Warm resources by pattern
       for (const pattern of this.CACHE_WARMING_PATTERNS) {
-        warmingPromises.push(this.warmByPattern(cache, pattern.pattern, pattern.priority));
-      }
+        warmingPromises.push(this.warmByPattern(cache, pattern.pattern, pattern.priority))
+  }
 
       await Promise.allSettled(warmingPromises);
 
       const endTime = performance.now();
       console.log(`[IntelligentCache] Cache warming completed in ${endTime - startTime}ms`);
 
-      await this.updateAnalytics('warmup', endTime - startTime);
-    } catch (error) {
-      console.error('[IntelligentCache] Cache warming failed:', error);
-    }
+      await this.updateAnalytics('warmup', endTime - startTime)
+  } catch (error) {
+      console.error('[IntelligentCache] Cache warming failed:', error)
+  }
   }
 
   /**
@@ -205,11 +205,11 @@ export class IntelligentCachingService {
       if (response.ok) {
         await cache.put(request, response.clone());
         await this.trackCacheEntry(url, priority, this.getResourceType(url), response);
-        console.log(`[IntelligentCache] Warmed: ${url}`);
-      }
+        console.log(`[IntelligentCache] Warmed: ${url}`)
+  }
     } catch (error) {
-      console.warn(`[IntelligentCache] Failed to warm ${url}:`, error);
-    }
+      console.warn(`[IntelligentCache] Failed to warm ${url}:`, error)
+  }
   }
 
   /**
@@ -222,11 +222,11 @@ export class IntelligentCachingService {
       const knownUrls = await this.getUrlsMatchingPattern(pattern);
       
       for (const url of knownUrls) {
-        await this.warmResource(cache, url, priority);
-      }
+        await this.warmResource(cache, url, priority)
+  }
     } catch (error) {
-      console.warn(`[IntelligentCache] Failed to warm pattern ${pattern}:`, error);
-    }
+      console.warn(`[IntelligentCache] Failed to warm pattern ${pattern}:`, error)
+  }
   }
 
   /**
@@ -240,21 +240,21 @@ export class IntelligentCachingService {
         const cache = await caches.open(cacheName);
         const deleted = await cache.delete(url);
         if (deleted) {
-          console.log(`[IntelligentCache] Invalidated ${url} from ${cacheName} (${reason})`);
-        }
+          console.log(`[IntelligentCache] Invalidated ${url} from ${cacheName} (${reason})`)
+  }
       });
 
       await Promise.all(invalidationPromises);
 
       // Update database
       if (this.db) {
-        await this.db.delete('cache_entries', url);
-      }
+        await this.db.delete('cache_entries', url)
+  }
 
-      await this.updateAnalytics('invalidation', 0, reason);
-    } catch (error) {
-      console.error(`[IntelligentCache] Failed to invalidate ${url}:`, error);
-    }
+      await this.updateAnalytics('invalidation', 0, reason)
+  } catch (error) {
+      console.error(`[IntelligentCache] Failed to invalidate ${url}:`, error)
+  }
   }
 
   /**
@@ -272,12 +272,12 @@ export class IntelligentCachingService {
 
       // Only evict if we're over 80% usage
       if (usagePercentage < 0.8) {
-        return;
-      }
+        return
+  }
 
       // Get all cache entries sorted by eviction priority;
       const entries = await this.db.getAll('cache_entries');
-      const evictionCandidates = entries;
+      const evictionCandidates = entries;;
         .filter(entry => entry.priority !== CachePriority.CRITICAL)
         .sort((a, b) => this.calculateEvictionScore(a) - this.calculateEvictionScore(b));
 
@@ -287,14 +287,14 @@ export class IntelligentCachingService {
         if (usagePercentage < 0.7) break;
 
         await this.evictCacheEntry(entry);
-        evictedCount++;
-      }
+        evictedCount++
+  }
 
       console.log(`[IntelligentCache] Evicted ${evictedCount} cache entries`);
-      this.analytics.evictionCount += evictedCount;
-    } catch (error) {
-      console.error('[IntelligentCache] Intelligent eviction failed:', error);
-    }
+      this.analytics.evictionCount += evictedCount
+  } catch (error) {
+      console.error('[IntelligentCache] Intelligent eviction failed:', error)
+  }
   }
 
   /**
@@ -307,7 +307,7 @@ export class IntelligentCachingService {
     const priorityWeight = this.getPriorityWeight(entry.priority);
 
     // Lower score = higher eviction priority
-    return (priorityWeight * hitCountWeight) / (daysSinceAccess + 1);
+    return (priorityWeight * hitCountWeight) / (daysSinceAccess + 1)
   }
 
   /**
@@ -319,8 +319,8 @@ export class IntelligentCachingService {
       case CachePriority.HIGH: return 100;
       case CachePriority.MEDIUM: return 10;
       case CachePriority.LOW: return 1;
-      default: return 1;
-    }
+      default: return 1
+  }
   }
 
   /**
@@ -340,29 +340,29 @@ export class IntelligentCachingService {
             quota,
             usage,
             timestamp: Date.now(),
-            warningThreshold: 0.8;
-          });
-        }
+            warningThreshold: 0.8
+  })
+  }
 
         // Emit storage warnings
         if (usagePercentage > 0.9) {
-          this.emitStorageWarning('critical', usagePercentage);;
+          this.emitStorageWarning('critical', usagePercentage)
   } else if (usagePercentage > 0.8) {
-          this.emitStorageWarning('warning', usagePercentage);
-        }
+          this.emitStorageWarning('warning', usagePercentage)
+  }
 
         // Auto-eviction at 85%
         if (usagePercentage > 0.85) {
-          await this.performIntelligentEviction();
-        }
+          await this.performIntelligentEviction()
+  }
       };
 
       // Check immediately and then every 5 minutes
       await checkQuota();
-      setInterval(checkQuota, 5 * 60 * 1000);
-    } catch (error) {
-      console.error('[IntelligentCache] Storage monitoring failed:', error);
-    }
+      setInterval(checkQuota, 5 * 60 * 1000)
+  } catch (error) {
+      console.error('[IntelligentCache] Storage monitoring failed:', error)
+  }
   }
 
   /**
@@ -390,10 +390,10 @@ export class IntelligentCachingService {
         resourceType
       };
 
-      await this.db.put('cache_entries', entry);
-    } catch (error) {
-      console.error('[IntelligentCache] Failed to track cache entry:', error);
-    }
+      await this.db.put('cache_entries', entry)
+  } catch (error) {
+      console.error('[IntelligentCache] Failed to track cache entry:', error)
+  }
   }
 
   /**
@@ -412,7 +412,7 @@ export class IntelligentCachingService {
       '/fonts/**/*': ['/fonts/inter-regular.woff2', '/fonts/inter-bold.woff2']
     };
 
-    return knownPatterns[pattern] || [];
+    return knownPatterns[pattern] || []
   }
 
   /**
@@ -420,30 +420,30 @@ export class IntelligentCachingService {
    */
   private getResourceType(url: string): ResourceType {
     if (url.includes('crisis') || url.includes('emergency') || url.includes('988')) {
-      return ResourceType.CRISIS_RESOURCE;
-    }
+      return ResourceType.CRISIS_RESOURCE
+  }
     if (url.includes('safety-plan')) {
-      return ResourceType.SAFETY_PLAN;
-    }
+      return ResourceType.SAFETY_PLAN
+  }
     if (url.includes('chat') || url.includes('message')) {
-      return ResourceType.CHAT_HISTORY;
-    }
+      return ResourceType.CHAT_HISTORY
+  }
     if (url.includes('user') || url.includes('profile')) {
-      return ResourceType.USER_DATA;
-    }
+      return ResourceType.USER_DATA
+  }
     if (url.includes('community') || url.includes('post')) {
-      return ResourceType.COMMUNITY_CONTENT;
-    }
+      return ResourceType.COMMUNITY_CONTENT
+  }
     if (url.match(/\.(png|jpg|jpeg|svg|gif|webp)$/i)) {
-      return ResourceType.IMAGE;
-    }
+      return ResourceType.IMAGE
+  }
     if (url.match(/\.(mp4|webm|ogg)$/i)) {
-      return ResourceType.VIDEO;
-    }
+      return ResourceType.VIDEO
+  }
     if (url.includes('/api/') || url.includes('/.netlify/functions/')) {
-      return ResourceType.API_RESPONSE;
-    }
-    return ResourceType.STATIC_ASSET;
+      return ResourceType.API_RESPONSE
+  }
+    return ResourceType.STATIC_ASSET
   }
 
   /**
@@ -451,7 +451,7 @@ export class IntelligentCachingService {
    */
   private estimateResponseSize(response: Response): number {
     const contentLength = response.headers.get('content-length');
-    return contentLength ? parseInt(contentLength, 10) : 0;
+    return contentLength ? parseInt(contentLength, 10) : 0
   }
 
   /**
@@ -460,10 +460,10 @@ export class IntelligentCachingService {
   private async evictCacheEntry(entry: CacheEntry): Promise<void> {
     try {
       await this.invalidateCache(entry.url, 'expired');
-      console.log(`[IntelligentCache] Evicted: ${entry.url} (priority: ${entry.priority})`);
-    } catch (error) {
-      console.error(`[IntelligentCache] Failed to evict ${entry.url}:`, error);
-    }
+      console.log(`[IntelligentCache] Evicted: ${entry.url} (priority: ${entry.priority})`)
+  } catch (error) {
+      console.error(`[IntelligentCache] Failed to evict ${entry.url}:`, error)
+  }
   }
 
   /**
@@ -475,7 +475,7 @@ export class IntelligentCachingService {
     });
     self.dispatchEvent(event);
     
-    console.warn(`[IntelligentCache] Storage ${level}: ${Math.round(usagePercentage * 100)}% used`);
+    console.warn(`[IntelligentCache] Storage ${level}: ${Math.round(usagePercentage * 100)}% used`)
   }
 
   /**
@@ -491,10 +491,10 @@ export class IntelligentCachingService {
       await this.db.put('cache_analytics', {
         id: 'current',
         ...this.analytics
-      });
-    } catch (error) {
-      console.error('[IntelligentCache] Failed to update analytics:', error);
-    }
+      })
+  } catch (error) {
+      console.error('[IntelligentCache] Failed to update analytics:', error)
+  }
   }
 
   /**
@@ -505,11 +505,11 @@ export class IntelligentCachingService {
 
     try {
       const stored = await this.db.get('cache_analytics', 'current');
-      return stored || this.analytics;
-    } catch (error) {
+      return stored || this.analytics
+  } catch (error) {
       console.error('[IntelligentCache] Failed to get analytics:', error);
-      return this.analytics;
-    }
+      return this.analytics
+  }
   }
 
   /**
@@ -519,7 +519,7 @@ export class IntelligentCachingService {
     usage: number;
     quota: number;
     usagePercentage: number;
-    cacheEntries: number;
+    cacheEntries: number
   }> {
     try {
       const estimate = await navigator.storage.estimate();
@@ -530,8 +530,8 @@ export class IntelligentCachingService {
       let cacheEntries = 0;
       if (this.db) {
         const entries = await this.db.getAll('cache_entries');
-        cacheEntries = entries.length;
-      }
+        cacheEntries = entries.length
+  }
 
       return {
         usage,
@@ -544,8 +544,8 @@ export class IntelligentCachingService {
         usage: 0,
         quota: 0,
         usagePercentage: 0,
-        cacheEntries: 0;
-      }
+        cacheEntries: 0
+  }
   }
 
   /**
@@ -576,21 +576,21 @@ export class IntelligentCachingService {
             break;
           case CachePriority.LOW:
             maxAge = 3; // 3 days for low priority
-            break;
-        }
+            break
+  }
 
         if (ageInDays > maxAge) {
           await this.evictCacheEntry(entry);
-          cleanedCount++;
-        }
+          cleanedCount++
+  }
       }
 
       console.log(`[IntelligentCache] Cleaned up ${cleanedCount} expired entries`);
-      return cleanedCount;
-    } catch (error) {
+      return cleanedCount
+  } catch (error) {
       console.error('[IntelligentCache] Cleanup failed:', error);
-      return 0;
-    }
+      return 0
+  }
   }
 }
 

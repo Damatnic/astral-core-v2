@@ -5,8 +5,8 @@ interface ReflectionCardProps {
   className?: string;
   style?: React.CSSProperties;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  'aria-label'?: string;
-}
+  'aria-label'?: string
+  }
 
 const ReflectionCard: React.FC<ReflectionCardProps> = ({
   children,
@@ -21,13 +21,12 @@ const ReflectionCard: React.FC<ReflectionCardProps> = ({
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (onClick && (event.key === 'Enter' || event.key === ' ')) {
       event.preventDefault();
-      onClick(event as any as React.MouseEvent<HTMLDivElement>);
-    }
+      onClick(event as any as React.MouseEvent<HTMLDivElement>)
+  }
   };
 
   return (
-    <div;
-      className={classes}
+    <div className={classes}
       style={style}
       onClick={onClick}
       onKeyDown={isInteractive ? handleKeyDown : undefined}
@@ -37,8 +36,8 @@ const ReflectionCard: React.FC<ReflectionCardProps> = ({
     >
       {children}
     </div>
-  );
-};
+  )
+  };
 
 export { ReflectionCard };
 export default ReflectionCard;

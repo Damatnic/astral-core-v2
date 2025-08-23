@@ -34,25 +34,24 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   React.useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
+      setIsMobile(window.innerWidth <= 768)
+  };
     
     checkMobile();
     window.addEventListener('resize', checkMobile);
     
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile)
   }, []);
 
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+    setIsMobileMenuOpen(!isMobileMenuOpen)
   };
 
   return (
     <div className="app-layout">
       {/* Mobile menu toggle button - only visible on mobile */}
-      {isMobile && (
-        <button; 
-          className="mobile-menu-toggle"
+              {isMobile && (
+          <button className="mobile-menu-toggle"
           onClick={toggleMobileMenu}
           aria-label="Toggle navigation menu"
         >
@@ -69,8 +68,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       
       {/* Mobile overlay */}
       {isMobileMenuOpen && (
-        <div; 
-          className="sidebar-overlay active"
+        <div className="sidebar-overlay active"
           onClick={() => setIsMobileMenuOpen(false)}
           aria-hidden="true"
         />
@@ -85,8 +83,8 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <PWAInstallBanner />
       <CrisisHelpWidget />
     </div>
-  );
-};
+  )
+  };
 
 // Main App Component;
 const App: React.FC = () => {
@@ -100,18 +98,16 @@ const App: React.FC = () => {
         timestamp: Date.now(),
         userAgent: navigator.userAgent,
         platform: navigator.platform
-;
       }
     });
-  };
   }, [trackEvent]);
 
   useEffect(() => {
     // Set up viewport for mobile;
     const viewport = document.querySelector('meta[name="viewport"]');
     if (viewport) {
-      viewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes');
-    }
+      viewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes')
+  }
 
     // Add app-specific classes to body
     document.body.classList.add('astral-core-app');
@@ -119,25 +115,22 @@ const App: React.FC = () => {
     // Detect and add platform classes;
     const platform = navigator.platform.toLowerCase();
     if (platform.includes('mac')) {
-      document.body.classList.add('platform-mac');
-;
+      document.body.classList.add('platform-mac')
   } else if (platform.includes('win')) {
-      document.body.classList.add('platform-windows');
-;
+      document.body.classList.add('platform-windows')
   } else if (platform.includes('linux')) {
-      document.body.classList.add('platform-linux');
-    }
+      document.body.classList.add('platform-linux')
+  }
 
     // Detect mobile;
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     if (isMobile) {
-      document.body.classList.add('is-mobile');
-    }
+      document.body.classList.add('is-mobile')
+  }
 
     return () => {
       document.body.classList.remove('astral-core-app', 'platform-mac', 'platform-windows', 'platform-linux', 'is-mobile');
     };
-  };
   }, []);
 
   return (
@@ -148,8 +141,8 @@ const App: React.FC = () => {
         </OptionalAuthProvider>
       </NotificationProvider>
     </ErrorBoundary>
-  );
-};
+  )
+  };
 
 // Inner component that can use auth;
 const AppWithAuth: React.FC = () => {
@@ -173,7 +166,7 @@ const AppWithAuth: React.FC = () => {
         </SessionProvider>
       </OfflineProvider>
     </ThemeProvider>
-  );
-};
+  )
+  };
 
 export default App;

@@ -32,8 +32,8 @@ interface WellnessData {
   // Additional metadata
   lastSyncTime: Date | null;
   syncStatus: 'idle' | 'syncing' | 'synced' | 'error';
-  offlineQueue: Array<{ action: string; data: any; timestamp: Date }>;
-}
+  offlineQueue: Array<{ action: string; data: any; timestamp: Date }>
+  }
 
 interface WellnessActions {
   // Original actions
@@ -51,8 +51,8 @@ interface WellnessActions {
   clearOfflineQueue: () => void;
   addToOfflineQueue: (action: string, data: any) => void;
   refreshAll: () => Promise<void>;
-  clearAllData: () => void;
-}
+  clearAllData: () => void
+  }
 
 type EnhancedWellnessState = WithEnhancedState<WellnessData & WellnessActions>;
 
@@ -63,13 +63,13 @@ const wellnessCache = new StoreCache<any>(300); // 5 minute cache
 let syncTimeout: NodeJS.Timeout | null = null;
 const debouncedSync = (syncFn: () => Promise<void>) => {
   if (syncTimeout) {
-    clearTimeout(syncTimeout);
+    clearTimeout(syncTimeout)
   }
   syncTimeout = setTimeout(() => {
     syncFn();
-    syncTimeout = null;
-  }, 2000);
-};
+    syncTimeout = null
+  }, 2000)
+  };
 
 export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
   persist(
@@ -96,15 +96,15 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
         const userToken = authState.userToken;
         if (!userToken) {
           set({ history: [], isLoading: false });
-          return;
-        }
+          return
+  }
         
         // Check cache first;
         const cached = wellnessCache.get(`history-${userToken}`);
         if (cached) {
           set({ history: cached, isLoading: false });
-          return;
-        }
+          return
+  }
         
         set({ isLoading: true, loadingMessage: 'Loading mood history...' });
         
@@ -116,73 +116,73 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
               history: data,
               lastSyncTime: new Date(),
               syncStatus: 'synced',
-              updateCount: get().updateCount + 1;
-            });
-            return data;
-          },
+              updateCount: get().updateCount + 1
+  });
+            return data
+  },
           get().setError,
           get().setLoading,
           3
         ).catch(() => {
           // Fallback to demo data on error;
           const demoHistory = generateDemoHistory(userToken);
-          set({ history: demoHistory });
-        }).finally(() => {
-          set({ isLoading: false });
-        });
-      },
+          set({ history: demoHistory })
+  }).finally(() => {
+          set({ isLoading: false })
+  })
+  },
       
       postCheckIn: async (checkInData) => {
         const userToken = authState.userToken;
         if (!userToken) {
           get().setError('User not authenticated', 'AUTH_REQUIRED');
-          return;
-        }
+          return
+  }
         
         const tempId = `temp-${Date.now()}`;
         const optimisticCheckIn: MoodCheckIn = {
           ...checkInData,
           id: tempId,
           userToken,
-          timestamp: new Date().toISOString();
-        };
+          timestamp: new Date().toISOString()
+  };
         
         await withOptimisticUpdate(
           // Optimistic update
           () => {
             set(state => ({
               history: [optimisticCheckIn, ...state.history]
-            }));
-          },
+            }))
+  },
           // Actual update
           async () => {
             const result = await ApiClient.mood.postCheckIn(checkInData, userToken);
             // Invalidate cache
             wellnessCache.invalidate(`history-${userToken}`);
             await get().fetchHistory();
-            return result;
-          },
+            return result
+  },
           // Rollback
           () => {
             set(state => ({
-              history: state.history.filter(h => h.id !== tempId);
-            }));
-          },
+              history: state.history.filter(h => h.id !== tempId)
+  }))
+  },
           get().setError
         ).catch((error) => {
           // Add to offline queue if network error
           if (error.message?.includes('network') || error.message?.includes('offline')) {
-            get().addToOfflineQueue('postCheckIn', { checkInData, userToken });
-          }
-        });
-      },
+            get().addToOfflineQueue('postCheckIn', { checkInData, userToken })
+  }
+        })
+  },
       
       fetchHabits: async () => {
         const userToken = authState.userToken;
         if (!userToken) {
           set({ predefinedHabits: [], trackedHabits: [], isLoading: false });
-          return;
-        }
+          return
+  }
         
         set({ isLoading: true, loadingMessage: 'Loading habits...' });
         
@@ -195,7 +195,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
             ]);
             
             // Create TrackedHabit objects from the tracked IDs;
-            const trackedHabits = predefined;
+            const trackedHabits = predefined;;
               .filter(habit => trackedIds.includes(habit.id))
               .map(habit => {
                 const habitCompletions = completions.filter(c => c.habitId === habit.id);
@@ -217,8 +217,8 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
               trackedHabits: trackedHabits,
               completions: completions,
               lastSyncTime: new Date(),
-              syncStatus: 'synced';
-            });
+              syncStatus: 'synced'
+  });
             
             return { predefined, trackedHabits, completions },
           get().setError,
@@ -228,26 +228,26 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
           // Provide demo habits on error
           set({
             predefinedHabits: generateDemoHabits(),
-            trackedHabits: [];
-          };
+            trackedHabits: []
+  };
   };
         }).finally(() => {
-          set({ isLoading: false });
-        });
-      },
+          set({ isLoading: false })
+  })
+  },
       
       trackHabit: async (habitId: string) => {
         const userToken = authState.userToken;
         if (!userToken) {
           get().setError('User not authenticated', 'AUTH_REQUIRED');
-          return;
-        }
+          return
+  }
         
         const habit = get().predefinedHabits.find(h => h.id === habitId);
         if (!habit) {
           get().setError('Habit not found', 'HABIT_NOT_FOUND');
-          return;
-        }
+          return
+  }
         
         await withOptimisticUpdate(
           // Optimistic update
@@ -258,33 +258,33 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
               trackedAt: new Date().toISOString(),
               currentStreak: 0,
               longestStreak: 0,
-              isCompletedToday: false;
-            };
+              isCompletedToday: false
+  };
             set(state => ({
               trackedHabits: [...state.trackedHabits, trackedHabit]
-            }));
-          },
+            }))
+  },
           // Actual update
           async () => {
             await ApiClient.habits.trackHabit(userToken, habitId);
-            await get().fetchHabits();
-          },
+            await get().fetchHabits()
+  },
           // Rollback
           () => {
             set(state => ({
-              trackedHabits: state.trackedHabits.filter(h => h.habitId !== habitId);
-            }));
-          },
+              trackedHabits: state.trackedHabits.filter(h => h.habitId !== habitId)
+  }))
+  },
           get().setError
-        );
-      },
+        )
+  },
       
       untrackHabit: async (habitId: string) => {
         const userToken = authState.userToken;
         if (!userToken) {
           get().setError('User not authenticated', 'AUTH_REQUIRED');
-          return;
-        }
+          return
+  }
         
         const originalHabits = get().trackedHabits;
         
@@ -292,35 +292,35 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
           // Optimistic update
           () => {
             set(state => ({
-              trackedHabits: state.trackedHabits.filter(h => h.habitId !== habitId);
-            }));
-          },
+              trackedHabits: state.trackedHabits.filter(h => h.habitId !== habitId)
+  }))
+  },
           // Actual update
           async () => {
             await ApiClient.habits.untrackHabit(userToken, habitId);
-            await get().fetchHabits();
-          },
+            await get().fetchHabits()
+  },
           // Rollback
           () => {
-            set({ trackedHabits: originalHabits });
-          },
+            set({ trackedHabits: originalHabits })
+  },
           get().setError
-        );
-      },
+        )
+  },
       
       logCompletion: async (habitId: string) => {
         const userToken = authState.userToken;
         if (!userToken) {
           get().setError('User not authenticated', 'AUTH_REQUIRED');
-          return;
-        }
+          return
+  }
         
         const tempCompletion: HabitCompletion = {
           id: `temp-${Date.now()}`,
           habitId,
           completedAt: new Date().toISOString(),
-          userId: userToken;
-        };
+          userId: userToken
+  };
         
         await withOptimisticUpdate(
           // Optimistic update
@@ -334,19 +334,19 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
                   return {
                     ...h,
                     currentStreak: streaks.current,
-                    longestStreak: streaks.longest;
-                  }
-                return h;
-              })
+                    longestStreak: streaks.longest
+  }
+                return h
+  })
             };
-  });
-          },
+  })
+  },
           // Actual update
           async () => {
             const today = new Date().toISOString().split('T')[0];
             await ApiClient.habits.logCompletion(userToken, habitId, today);
-            await get().fetchHabits();
-          },
+            await get().fetchHabits()
+  },
           // Rollback
           () => {
             set(state => ({
@@ -354,34 +354,34 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
               trackedHabits: state.trackedHabits.map(h => {
                 if (h.habitId === habitId) {
                   // Simplified rollback without completions property access
-                  return h;
-                }
-                return h;
-              })
-            }));
-          },
+                  return h
+  }
+                return h
+  })
+            }))
+  },
           get().setError
         ).catch((error) => {
           // Add to offline queue if network error
           if (error.message?.includes('network') || error.message?.includes('offline')) {
-            get().addToOfflineQueue('logCompletion', { habitId, userToken });
-          }
-        });
-      },
+            get().addToOfflineQueue('logCompletion', { habitId, userToken })
+  }
+        })
+  },
       
       fetchJournalEntries: async () => {
         const userToken = authState.userToken;
         if (!userToken) {
           set({ journalEntries: [] });
-          return;
-        }
+          return
+  }
         
         // Check cache first;
         const cached = wellnessCache.get(`journal-${userToken}`);
         if (cached) {
           set({ journalEntries: cached });
-          return;
-        }
+          return
+  }
         
         set({ isLoading: true, loadingMessage: 'Loading journal entries...' });
         
@@ -391,27 +391,27 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
             wellnessCache.set(`journal-${userToken}`, entries);
             set({ 
               journalEntries: entries,
-              lastSyncTime: new Date();
-            });
-            return entries;
-          },
+              lastSyncTime: new Date()
+  });
+            return entries
+  },
           get().setError,
           get().setLoading,
           3
         ).catch(() => {
           // Provide demo entries on error
-          set({ journalEntries: generateDemoJournalEntries() });
-        }).finally(() => {
-          set({ isLoading: false });
-        });
-      },
+          set({ journalEntries: generateDemoJournalEntries() })
+  }).finally(() => {
+          set({ isLoading: false })
+  })
+  },
       
       postJournalEntry: async (content: string) => {
         const userToken = authState.userToken;
         if (!userToken) {
           get().setError('User not authenticated', 'AUTH_REQUIRED');
-          return;
-        }
+          return
+  }
         
         const tempEntry: JournalEntry = {
           id: `temp-${Date.now()}`,
@@ -425,28 +425,28 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
           () => {
             set(state => ({
               journalEntries: [tempEntry, ...state.journalEntries]
-            }));
-          },
+            }))
+  },
           // Actual update
           async () => {
             await ApiClient.journal.postEntry(content, userToken);
             wellnessCache.invalidate(`journal-${userToken}`);
-            await get().fetchJournalEntries();
-          },
+            await get().fetchJournalEntries()
+  },
           // Rollback
           () => {
             set(state => ({
-              journalEntries: state.journalEntries.filter(e => e.id !== tempEntry.id);
-            }));
-          },
+              journalEntries: state.journalEntries.filter(e => e.id !== tempEntry.id)
+  }))
+  },
           get().setError
         ).catch((error) => {
           // Add to offline queue if network error
           if (error.message?.includes('network') || error.message?.includes('offline')) {
-            get().addToOfflineQueue('postJournalEntry', { content, userToken });
-          }
-        });
-      },
+            get().addToOfflineQueue('postJournalEntry', { content, userToken })
+  }
+        })
+  },
       
       // Enhanced actions
       syncOfflineData: async () => {
@@ -466,39 +466,39 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
                 break;
               case 'postJournalEntry':
                 await ApiClient.journal.postEntry(item.data.content, item.data.userToken);
-                break;
-            }
+                break
+  }
             
             // Remove from queue after successful sync
             set(state => ({
-              offlineQueue: state.offlineQueue.filter(i => i !== item);
-            }));
-          } catch (error) {
-            console.error(`Failed to sync offline action ${item.action}:`, error);
-          }
+              offlineQueue: state.offlineQueue.filter(i => i !== item)
+  }))
+  } catch (error) {
+            console.error(`Failed to sync offline action ${item.action}:`, error)
+  }
         }
         
         // Refresh all data after sync
         await get().refreshAll();
-        set({ syncStatus: 'synced', lastSyncTime: new Date() });
-      },
+        set({ syncStatus: 'synced', lastSyncTime: new Date() })
+  },
       
       clearOfflineQueue: () => {
-        set({ offlineQueue: [] });
-      },
+        set({ offlineQueue: [] })
+  },
       
       addToOfflineQueue: (action: string, data: any) => {
         set(state => ({
           offlineQueue: [...state.offlineQueue, {
             action,
             data,
-            timestamp: new Date();
-          }]
+            timestamp: new Date()
+  }]
         }));
         
         // Try to sync after a delay
-        debouncedSync(async () => await get().syncOfflineData());
-      },
+        debouncedSync(async () => await get().syncOfflineData())
+  },
       
       refreshAll: async () => {
         set({ isLoading: true, loadingMessage: 'Refreshing all data...' });
@@ -508,10 +508,10 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
             get().fetchHistory(),
             get().fetchHabits(),
             get().fetchJournalEntries()
-          ]);
-        } finally {
-          set({ isLoading: false });
-        }
+          ])
+  } finally {
+          set({ isLoading: false })
+  }
       },
       
       clearAllData: () => {
@@ -526,9 +526,9 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
           syncStatus: 'idle',
           offlineQueue: [],
           error: null,
-          isLoading: false;
-        });
-      }
+          isLoading: false
+  })
+  }
     }),
     { name: 'wellness-store' }
     ),
@@ -542,18 +542,18 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
         trackedHabits: state.trackedHabits,
         completions: state.completions,
         offlineQueue: state.offlineQueue,
-        lastSyncTime: state.lastSyncTime;
-      }),
+        lastSyncTime: state.lastSyncTime
+  }),
       migrate: (persistedState: any, version: number) => {
         if (version === 0) {
           // Migration from version 0 to 1
           return {
             ...persistedState,
             offlineQueue: persistedState.offlineQueue || [],
-            lastSyncTime: persistedState.lastSyncTime || null;
-          }
-        return persistedState;
-      }
+            lastSyncTime: persistedState.lastSyncTime || null
+  }
+        return persistedState
+  }
     };
   });
 
@@ -585,10 +585,10 @@ function generateDemoHistory(userToken: string): MoodCheckIn[] {
         'Feeling more balanced',
         'Working through some challenges'
       ][Math.floor(Math.random() * 7)]
-    });
+    })
   }
-  return demoHistory;
-}
+  return demoHistory
+  }
 
 function generateDemoHabits(): Habit[] {
   return [
@@ -597,8 +597,8 @@ function generateDemoHabits(): Habit[] {
     { id: 'h3', name: 'Gratitude Journal', category: 'Self-Care', description: 'Write down three things you are grateful for' },
     { id: 'h4', name: 'Deep Breathing', category: 'Mindfulness', description: 'Practice deep breathing exercises' },
     { id: 'h5', name: 'Healthy Breakfast', category: 'Self-Care', description: 'Enjoy a nutritious start to your day' }
-  ];
-}
+  ]
+  }
 
 function generateDemoJournalEntries(): JournalEntry[] {
   return [
@@ -606,16 +606,16 @@ function generateDemoJournalEntries(): JournalEntry[] {
       id: 'j1',
       content: 'Today was challenging but I managed to practice self-compassion.',
       timestamp: new Date(Date.now() - 86400000).toISOString(),
-      userToken: 'demo-user';
-    },
+      userToken: 'demo-user'
+  },
     {
       id: 'j2',
       content: 'Feeling grateful for the support from my friends and family.',
       timestamp: new Date(Date.now() - 172800000).toISOString(),
-      userToken: 'demo-user';
-    }
-  ];
-}
+      userToken: 'demo-user'
+  }
+  ]
+  }
 
 // Export for backward compatibility;
 export const useWellnessStore = useEnhancedWellnessStore;

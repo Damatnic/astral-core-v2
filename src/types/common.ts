@@ -13,29 +13,29 @@ export type JsonArray = JsonValue[];
 
 // For event properties and analytics data;
 export type EventProperties = {
-  [key: string]: string | number | boolean | undefined | null | Date;
-};
+  [key: string]: string | number | boolean | undefined | null | Date
+  };
 
 // For form data;
 export type FormData = {
-  [key: string]: string | number | boolean | File | FileList | undefined;
-};
+  [key: string]: string | number | boolean | File | FileList | undefined
+  };
 
 // For API responses;
 export interface ApiResponse<T = unknown> {
   data?: T;
   error?: string;
   status: number;
-  message?: string;
-}
+  message?: string
+  }
 
 // For error objects;
 export interface ErrorWithMessage {
   message: string;
   code?: string;
   stack?: string;
-  [key: string]: unknown;
-}
+  [key: string]: unknown
+  }
 
 // For DOM event handlers;
 export type EventHandler<T = Element> = (event: React.SyntheticEvent<T>) => void;
@@ -45,8 +45,8 @@ export type KeyboardEventHandler<T = Element> = (event: React.KeyboardEvent<T>) 
 
 // For component props with children;
 export interface PropsWithChildren {
-  children?: React.ReactNode;
-}
+  children?: React.ReactNode
+  }
 
 // For async functions;
 export type AsyncFunction<T = void, Args extends unknown[] = []> = (...args: Args) => Promise<T>;
@@ -69,15 +69,15 @@ export function isError(error: unknown): error is ErrorWithMessage {
     error !== null &&
     'message' in error &&;
     typeof (error as ErrorWithMessage).message === 'string'
-  );
-}
+  )
+  }
 
 // Type guard for checking if value is defined;
 export function isDefined<T>(value: T | undefined | null): value is T {
-  return value !== undefined && value !== null;
-}
+  return value !== undefined && value !== null
+  }
 
 // Type guard for checking if value is an object;
 export function isObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+  }

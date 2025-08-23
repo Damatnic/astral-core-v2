@@ -23,7 +23,7 @@ export interface AutoSaveIndicatorProps {
     saved: string;
     error: string;
     idle: string;
-    nextSave: string;
+    nextSave: string
   }
 
 const DEFAULT_LABELS = {
@@ -31,8 +31,8 @@ const DEFAULT_LABELS = {
   saved: 'Saved',
   error: 'Save failed',
   idle: 'Draft ready',
-  nextSave: 'Next save in';
-};
+  nextSave: 'Next save in'
+  };
 
 /**
  * Visual indicator component for auto-save status
@@ -54,9 +54,9 @@ export const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
     const remainingSeconds = seconds % 60;
     
     if (minutes > 0) {
-      return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-    }
-    return `${seconds}s`;
+      return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
+  }
+    return `${seconds}s`
   };
 
   const getStatusIcon = (): string => {
@@ -68,9 +68,8 @@ export const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
       case 'error':
         return '❌';
       case 'idle':
-      default:
-        return state.isDirty ? '📝' : '💾';
-    }
+      default: return state.isDirty ? '📝' : '💾'
+  }
   };
 
   const getStatusText = (): string => {
@@ -82,9 +81,8 @@ export const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
       case 'error':
         return labels.error;
       case 'idle':
-      default:
-        return labels.idle;
-    }
+      default: return labels.idle
+  }
   };
 
   const getStatusColor = (): string => {
@@ -96,16 +94,15 @@ export const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
       case 'error':
         return 'red';
       case 'idle':
-      default:
-        return state.isDirty ? 'orange' : 'gray';
-    }
+      default: return state.isDirty ? 'orange' : 'gray'
+  }
   };
 
   if (!state.isEnabled) {
-    return null;
+    return null
   }
 
-  const containerClasses = [;
+  const containerClasses = [;;
     'auto-save-indicator',
     `auto-save-indicator--${position}`,
     `auto-save-indicator--${state.saveStatus}`,
@@ -160,7 +157,7 @@ export const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
         </div>
       )}
     </output>
-  );
-};
+  )
+  };
 
 export default AutoSaveIndicator;

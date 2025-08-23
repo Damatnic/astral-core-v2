@@ -21,7 +21,7 @@ const USER_DATA_SYNC_QUEUE = 'user-data-sync-queue';
 const ANALYTICS_SYNC_QUEUE = 'analytics-sync-queue';
 
 // Crisis detection patterns;
-const CRISIS_PATTERNS = [;
+const CRISIS_PATTERNS = [;;
   /crisis/i,
   /emergency/i,
   /suicide/i,
@@ -41,10 +41,10 @@ class IntelligentServiceWorker {
     this.userSession = {
       startTime: Date.now(),
       routeChanges: 0,
-      crisisDetected: false;
-    };
+      crisisDetected: false
+  };
     
-    this.initialize();
+    this.initialize()
   }
 
   /**
@@ -85,8 +85,8 @@ class IntelligentServiceWorker {
             console.error('[Crisis Sync] Failed to sync crisis data:', error);
             // Re-add to queue for retry
             await queue.unshiftRequest(entry);
-            break;
-          }
+            break
+  }
         }
       }
     }));
@@ -103,8 +103,8 @@ class IntelligentServiceWorker {
           } catch (error) {
             console.error('[User Data Sync] Failed to sync user data:', error);
             // Don't retry user data indefinitely
-            break;
-          }
+            break
+  }
         }
       }
     }));
@@ -121,11 +121,11 @@ class IntelligentServiceWorker {
           } catch (error) {
             console.error('[Analytics Sync] Failed to sync analytics:', error);
             // Skip failed analytics
-            continue;
-          }
+            continue
+  }
         }
       }
-    }));
+    }))
   }
 
   /**
@@ -139,8 +139,8 @@ class IntelligentServiceWorker {
         strategy.pattern,
         this.createAdaptiveHandler(strategy),
         'GET'
-      );
-    });
+      )
+  });
 
     // Special handling for POST requests (user data, crisis reports)
     registerRoute(
@@ -153,7 +153,7 @@ class IntelligentServiceWorker {
     setCatchHandler(this.handleFallback.bind(this));
     
     // Default handler with intelligent decision making
-    setDefaultHandler(this.handleDefault.bind(this));
+    setDefaultHandler(this.handleDefault.bind(this))
   }
 
   /**
@@ -167,18 +167,18 @@ class IntelligentServiceWorker {
       // Crisis requests always get priority handling
       if (isCrisisRequest) {
         this.userSession.crisisDetected = true;
-        return this.handleCrisisRequest(request, strategy);
-      }
+        return this.handleCrisisRequest(request, strategy)
+  }
       
       // Adapt strategy based on network conditions
       if (userMetrics.networkCondition === 'slow' || userMetrics.deviceCapabilities.isLowEnd) {
-        return this.handleLowPerformanceRequest(request, strategy);
-      }
+        return this.handleLowPerformanceRequest(request, strategy)
+  }
       
       // Default to configured strategy;
       const handler = this.getHandler(strategy.strategy);
-      return handler.handle({ request, event });
-    };
+      return handler.handle({ request, event })
+  };
   }
 
   /**
@@ -196,8 +196,8 @@ class IntelligentServiceWorker {
         // Update cache in background
         this.updateCrisisCache(request, cache);
         
-        return cachedResponse;
-      }
+        return cachedResponse
+  }
       
       // If not in cache, try network with extended timeout;
       const controller = new AbortController();
@@ -205,8 +205,8 @@ class IntelligentServiceWorker {
       
       try {
         const response = await fetch(request.clone(), {
-          signal: controller.signal;
-        });
+          signal: controller.signal
+  });
         clearTimeout(timeoutId);
         
         if (response.ok) {
@@ -215,20 +215,19 @@ class IntelligentServiceWorker {
           // Crisis resource cached successfully
         }
         
-        return response;
-        
-      } catch (fetchError) {
+        return response
+  } catch (fetchError) {
         clearTimeout(timeoutId);
         console.error('[Crisis Handler] Network failed, using fallback:', fetchError);
         
         // Return crisis fallback content
-        return this.getCrisisFallback(request);
-      }
+        return this.getCrisisFallback(request)
+  }
       
     } catch (error) {
       console.error('[Crisis Handler] Critical error:', error);
-      return this.getCrisisFallback(request);
-    }
+      return this.getCrisisFallback(request)
+  }
   }
 
   /**
@@ -253,13 +252,13 @@ class IntelligentServiceWorker {
             credentials: request.credentials,
             cache: request.cache,
             redirect: request.redirect,
-            referrer: request.referrer;
-          });
-        }
+            referrer: request.referrer
+  })
+  }
       }]
     });
     
-    return handler.handle({ request });
+    return handler.handle({ request })
   }
 
   /**
@@ -277,26 +276,25 @@ class IntelligentServiceWorker {
         this.prefetchManager.updateUserBehavior(
           new URL(request.url).pathname,
           0 // API calls don't have time spent
-        );
-      }
+        )
+  }
       
-      return response;
-      
-    } catch (error) {
+      return response
+  } catch (error) {
       console.error('[API Handler] Network failed, queuing for sync:', request.url, error);
       
       // Queue for background sync based on request type
       if (isCrisisAPI) {
-        await this.backgroundSyncQueues.get('crisis').addRequest(request);;
+        await this.backgroundSyncQueues.get('crisis').addRequest(request)
   } else if (isUserDataAPI) {
-        await this.backgroundSyncQueues.get('userData').addRequest(request);;
+        await this.backgroundSyncQueues.get('userData').addRequest(request)
   } else {
-        await this.backgroundSyncQueues.get('analytics').addRequest(request);
-      }
+        await this.backgroundSyncQueues.get('analytics').addRequest(request)
+  }
       
       // Return appropriate offline response
-      return this.getOfflineAPIResponse(request);
-    }
+      return this.getOfflineAPIResponse(request)
+  }
   }
 
   /**
@@ -310,18 +308,18 @@ class IntelligentServiceWorker {
       if (isCrisisPage) {
         return caches.match('/offline-crisis.html') || 
                caches.match('/offline.html') ||
-               this.createEmergencyResponse();
-      }
+               this.createEmergencyResponse()
+  }
       
-      return caches.match('/offline.html') || this.createOfflineResponse();
-    }
+      return caches.match('/offline.html') || this.createOfflineResponse()
+  }
     
     // For other requests, return appropriate fallback
     return new Response('Offline - Content Not Available', {
       status: 503,
       statusText: 'Service Unavailable',
       headers: { 'Content-Type': 'text/plain' }
-    });
+    })
   }
 
   /**
@@ -334,23 +332,23 @@ class IntelligentServiceWorker {
     if (request.url.includes('chrome-extension') || 
         request.url.includes('_devtools') ||
         request.url.includes('analytics')) {
-      return fetch(request);
-    }
+      return fetch(request)
+  }
     
     // Use network-first for dynamic content
     if (request.url.includes('/api/') || request.url.includes('/.netlify/functions/')) {
       const handler = new NetworkFirst({
         cacheName: 'api-cache-v3',
-        networkTimeoutSeconds: userMetrics.networkCondition === 'slow' ? 30 : 10;
-      });
-      return handler.handle({ request, event });
-    }
+        networkTimeoutSeconds: userMetrics.networkCondition === 'slow' ? 30 : 10
+  });
+      return handler.handle({ request, event })
+  }
     
     // Use stale-while-revalidate for static assets;
     const handler = new StaleWhileRevalidate({
-      cacheName: 'default-cache-v3';
-    });
-    return handler.handle({ request, event });
+      cacheName: 'default-cache-v3'
+  });
+    return handler.handle({ request, event })
   }
 
   /**
@@ -372,8 +370,8 @@ class IntelligentServiceWorker {
           // Skip waiting for immediate activation
           self.skipWaiting()
         ])
-      );
-    });
+      )
+  });
 
     // Enhanced activate event
     self.addEventListener('activate', (event) => {
@@ -390,41 +388,41 @@ class IntelligentServiceWorker {
           // Initialize prefetch manager
           this.startIntelligentPrefetching()
         ])
-      );
-    });
+      )
+  });
 
     // Message handling for client communication
     self.addEventListener('message', (event) => {
-      this.handleMessage(event);
-    });
+      this.handleMessage(event)
+  });
 
     // Fetch event with intelligent handling
     self.addEventListener('fetch', (event) => {
       // Skip non-GET requests that aren't API calls
       if (event.request.method !== 'GET' && !event.request.url.includes('/api/')) {
-        return;
-      }
+        return
+  }
       
-      event.respondWith(this.handleFetch(event));
-    });
+      event.respondWith(this.handleFetch(event))
+  });
 
     // Background sync event
     self.addEventListener('sync', (event) => {
       // Background sync event triggered
       
       if (event.tag.startsWith('crisis-sync')) {
-        event.waitUntil(this.backgroundSyncQueues.get('crisis').replayRequests());;
+        event.waitUntil(this.backgroundSyncQueues.get('crisis').replayRequests())
   } else if (event.tag.startsWith('user-data-sync')) {
-        event.waitUntil(this.backgroundSyncQueues.get('userData').replayRequests());;
+        event.waitUntil(this.backgroundSyncQueues.get('userData').replayRequests())
   } else if (event.tag.startsWith('analytics-sync')) {
-        event.waitUntil(this.backgroundSyncQueues.get('analytics').replayRequests());
-      }
+        event.waitUntil(this.backgroundSyncQueues.get('analytics').replayRequests())
+  }
     });
 
     // Push notification handling
     self.addEventListener('push', (event) => {
-      this.handlePushNotification(event);
-    });
+      this.handlePushNotification(event)
+  })
   }
 
   /**
@@ -433,13 +431,13 @@ class IntelligentServiceWorker {
   setupPrefetchScheduler() {
     // Schedule periodic prefetching
     setInterval(() => {
-      this.prefetchManager.intelligentPrefetch();
-    }, 30000); // Every 30 seconds
+      this.prefetchManager.intelligentPrefetch()
+  }, 30000); // Every 30 seconds
 
     // Schedule storage optimization
     setInterval(() => {
-      this.prefetchManager.optimizeStorage();
-    }, 300000); // Every 5 minutes
+      this.prefetchManager.optimizeStorage()
+  }, 300000); // Every 5 minutes
   }
 
   /**
@@ -447,7 +445,7 @@ class IntelligentServiceWorker {
    */
   isCrisisRequest(request) {
     const url = request.url.toLowerCase();
-    return CRISIS_PATTERNS.some(pattern => pattern.test(url));
+    return CRISIS_PATTERNS.some(pattern => pattern.test(url))
   }
 
   /**
@@ -461,9 +459,8 @@ class IntelligentServiceWorker {
         return new NetworkFirst();
       case 'StaleWhileRevalidate':
         return new StaleWhileRevalidate();
-      default:
-        return new NetworkFirst();
-    }
+      default: return new NetworkFirst()
+  }
   }
 
   /**
@@ -477,8 +474,8 @@ class IntelligentServiceWorker {
         // Crisis cache updated
       }
     } catch (error) {
-      console.warn('[Crisis Cache] Background update failed:', error);
-    }
+      console.warn('[Crisis Cache] Background update failed:', error)
+  }
   }
 
   /**
@@ -487,15 +484,15 @@ class IntelligentServiceWorker {
   async getCrisisFallback(request) {
     // Try to get cached crisis resources;
     const crisisCache = await caches.open('crisis-resources-v3');
-    const fallback = await crisisCache.match('/emergency-contacts.json') ||;
+    const fallback = await crisisCache.match('/emergency-contacts.json') ||;;
                     await crisisCache.match('/crisis-resources.json');
     
     if (fallback) {
-      return fallback;
-    }
+      return fallback
+  }
     
     // Return hardcoded emergency response
-    return this.createEmergencyResponse();
+    return this.createEmergencyResponse()
   }
 
   /**
@@ -508,13 +505,13 @@ class IntelligentServiceWorker {
         {
           name: 'National Suicide Prevention Lifeline',
           phone: '988',
-          available: '24/7';
-        },
+          available: '24/7'
+  },
         {
           name: 'Crisis Text Line',
           phone: 'Text HOME to 741741',
-          available: '24/7';
-        }
+          available: '24/7'
+  }
       ],
       message: 'You are not alone. Help is available.',
       offline_resources: [
@@ -527,8 +524,8 @@ class IntelligentServiceWorker {
     
     return new Response(JSON.stringify(emergencyData), {
       headers: { 'Content-Type': 'application/json' },
-      status: 200;
-    });
+      status: 200
+  })
   }
 
   /**
@@ -557,8 +554,8 @@ class IntelligentServiceWorker {
       case 'GET_CACHE_STATUS': {
         const status = await this.getCacheStatus();
         event.ports[0]?.postMessage({ type: 'CACHE_STATUS', data: status });
-        break;
-      }
+        break
+  }
     }
   }
 
@@ -566,7 +563,7 @@ class IntelligentServiceWorker {
    * Prefetch crisis resources immediately
    */
   async prefetchCrisisResources() {
-    const crisisResources = [;
+    const crisisResources = [;;
       '/crisis-resources.json',
       '/emergency-contacts.json',
       '/offline-crisis.html',
@@ -583,8 +580,8 @@ class IntelligentServiceWorker {
           // Crisis resource prefetch cached
         }
       } catch (error) {
-        console.warn('[Crisis Prefetch] Failed for:', resource, error);
-      }
+        console.warn('[Crisis Prefetch] Failed for:', resource, error)
+  }
     }
   }
 
@@ -597,33 +594,33 @@ class IntelligentServiceWorker {
       caches: [],
       totalSize: 0,
       userMetrics: this.prefetchManager.getUserMetrics(),
-      session: this.userSession;
-    };
+      session: this.userSession
+  };
     
     for (const cacheName of cacheNames) {
       const cache = await caches.open(cacheName);
       const keys = await cache.keys();
       status.caches.push({
         name: cacheName,
-        entryCount: keys.length;
-      });
-    }
+        entryCount: keys.length
+  })
+  }
     
-    return status;
+    return status
   }
 
   // Additional helper methods...
   async precacheCriticalResources() {
-    return precacheAndRoute(self.__WB_MANIFEST);
+    return precacheAndRoute(self.__WB_MANIFEST)
   }
 
   async startIntelligentPrefetching() {
-    return this.prefetchManager.intelligentPrefetch();
+    return this.prefetchManager.intelligentPrefetch()
   }
 
   async handleFetch(event) {
     // Implementation handled by registered routes
-    return fetch(event.request);
+    return fetch(event.request)
   }
 
   createOfflineResponse() {
@@ -638,18 +635,18 @@ class IntelligentServiceWorker {
       </html>
     `, {
       headers: { 'Content-Type': 'text/html' }
-    });
+    })
   }
 
   getOfflineAPIResponse(request) {
     return new Response(JSON.stringify({
       error: 'offline',
       message: 'Request queued for when connection is restored',
-      queued: true;
-    }), {
+      queued: true
+  }), {
       headers: { 'Content-Type': 'application/json' },
-      status: 202;
-    });
+      status: 202
+  })
   }
 
   async handlePushNotification(event) {
@@ -669,8 +666,8 @@ class IntelligentServiceWorker {
             { action: 'dismiss', title: 'Dismiss' }
           ]
         })
-      );
-    }
+      )
+  }
   }
 
   async updatePrefetchStrategies(preferences) {

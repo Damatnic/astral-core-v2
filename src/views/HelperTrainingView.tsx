@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useNotification } from '../contexts/NotificationContext';
 import { isError } from '../types/common';
 
-const lessons = [;
+const lessons = [;;
     {
         title: "Lesson 1: The Role of a Peer Supporter",
         content: "Your role is to listen, validate, and support. You are not a therapist. Avoid giving advice or trying to 'fix' someone's problem. Your presence and empathy are the most powerful tools you have."
@@ -25,27 +25,27 @@ const lessons = [;
     }
 ];
 
-const quizQuestions = [;
+const quizQuestions = [;;
     {
         question: "What is your primary role as a peer supporter?",
         options: ["To give advice", "To fix their problem", "To listen and validate feelings", "To act as a therapist"],
-        correctAnswer: "To listen and validate feelings";
-    },
+        correctAnswer: "To listen and validate feelings"
+  },
     {
         question: "A user says 'I feel so alone.' What is the BEST response?",
         options: ["'You should try going out more.'", "'I know exactly how you feel, one time I...'", "'It sounds incredibly difficult to feel so alone. I'm here to listen.'", "'Don't worry, you'll be fine.'"],
-        correctAnswer: "'It sounds incredibly difficult to feel so alone. I'm here to listen.'";
-    },
+        correctAnswer: "'It sounds incredibly difficult to feel so alone. I'm here to listen.'"
+  },
      {
         question: "A user says they are going to harm themselves right now. What should you do?",
         options: ["Try to talk them out of it yourself.", "Ask for their location so you can call for help.", "Ignore it, they are probably not serious.", "Use the 'Alert Moderator' tool and disengage."],
-        correctAnswer: "Use the 'Alert Moderator' tool and disengage.";
-    }
+        correctAnswer: "Use the 'Alert Moderator' tool and disengage."
+  }
 ];
 
 export const HelperTrainingView: React.FC<{
-    onTrainingComplete: () => void;
-}> = ({ onTrainingComplete }) => {
+    onTrainingComplete: () => void
+  }> = ({ onTrainingComplete }) => {
     const { helperProfile } = useAuth();
     const { addToast, showConfirmationModal } = useNotification();
     const [step, setStep] = useState(0); // 0 to lessons.length-1 for lessons, lessons.length for quiz;
@@ -55,13 +55,13 @@ export const HelperTrainingView: React.FC<{
     const handleAnswerChange = (questionIndex: number, answer: string) => {
         const newAnswers = [...answers];
         newAnswers[questionIndex] = answer;
-        setAnswers(newAnswers);
-    };
+        setAnswers(newAnswers)
+  };
 
     const handleSubmitQuiz = async () => {
         const score = answers.reduce((correctCount, answer, index) => {
-            return answer === quizQuestions[index].correctAnswer ? correctCount + 1 : correctCount;
-        }, 0);
+            return answer === quizQuestions[index].correctAnswer ? correctCount + 1 : correctCount
+  }, 0);
         
         const passed = score / quizQuestions.length >= 0.75;
 
@@ -75,14 +75,14 @@ export const HelperTrainingView: React.FC<{
                         message: `Congratulations! You scored ${score}/${quizQuestions.length}. You can now apply for certification from your profile page.`,
                         confirmText: "Continue",
                         onConfirm: onTrainingComplete,
-                    });
-                }
+                    })
+  }
             } catch (err) {
                 const errorMessage = isError(err) ? err.message : "Failed to submit quiz results.";
-                addToast(errorMessage, 'error');
-            } finally {
-                setIsSubmitting(false);
-            };
+                addToast(errorMessage, 'error')
+  } finally {
+                setIsSubmitting(false)
+  }
   } else {
             showConfirmationModal({
                 title: "Quiz Results",
@@ -90,10 +90,10 @@ export const HelperTrainingView: React.FC<{
                 confirmText: "Try Again",
                 onConfirm: () => {
                     setAnswers(Array(quizQuestions.length).fill(null));
-                    setStep(0);
-                },
-            });
-        }
+                    setStep(0)
+  },
+            })
+  }
     };
 
     if (step < lessons.length) {
@@ -125,8 +125,7 @@ export const HelperTrainingView: React.FC<{
                         <div className="radio-group" style={{flexDirection: 'column', alignItems: 'stretch', gap: '0.5rem'}}>
                             {q.options.map(option => (
                                 <div key={option}>
-                                    <input;
-                                        type="radio"
+                                    <input type="radio"
                                         id={`q${index}-${option}`}
                                         name={`question-${index}`}
                                         value={option}
@@ -144,7 +143,7 @@ export const HelperTrainingView: React.FC<{
                 </div>
             </Card>
         </>
-    );
-};
+    )
+  };
 
 export default HelperTrainingView;

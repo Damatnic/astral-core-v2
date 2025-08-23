@@ -11,18 +11,18 @@ import { logger } from '../utils/logger';
 const getEnvVar = (key: string, defaultValue: string) => {
   // In test environment, use defaultValue
   if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
-    return defaultValue;
+    return defaultValue
   }
   // In browser/Vite environment, use import.meta.env
   if (typeof window !== 'undefined' && (window as any).import?.meta?.env) {
-    return (window as any).import.meta.env[key] || defaultValue;
+    return (window as any).import.meta.env[key] || defaultValue
   }
   // Fallback to process.env for Node.js environments or default
   if (typeof process !== 'undefined' && process.env[key]) {
-    return process.env[key];
+    return process.env[key]
   }
-  return defaultValue;
-};
+  return defaultValue
+  };
 
 const AUTH0_DOMAIN = getEnvVar('VITE_AUTH0_DOMAIN', 'demo.auth0.com');
 const AUTH0_CLIENT_ID = getEnvVar('VITE_AUTH0_CLIENT_ID', 'demo-client-id');
@@ -35,8 +35,8 @@ if (typeof process === 'undefined' || process.env.NODE_ENV !== 'test') {
     // Check if we're on non-Netlify dev port;
     const currentPort = typeof window !== 'undefined' ? window.location.port : '';
     if (currentPort && currentPort !== '8888') {
-        logger.info('✓ Running in demo mode - Auth0 not required', undefined, 'AuthContext');
-    }
+        logger.info('✓ Running in demo mode - Auth0 not required', undefined, 'AuthContext')
+  }
   }
 }
 
@@ -60,7 +60,7 @@ export interface AuthContextType {
     isAuthenticated: boolean;
     user: AuthUser | null;
     helperProfile: Helper | null;
-    userToken: string | null;
+    userToken: string | null
   }; // Added for test compatibility
   register?: () => Promise<void>; // Added for test compatibility
 }
@@ -70,8 +70,8 @@ export const authState: {
   isAuthenticated: boolean;
   user: AuthUser | null;
   helperProfile: Helper | null;
-  userToken: string | null;
-} = {
+  userToken: string | null
+  } = {
   isAuthenticated: false,
   user: null,
   helperProfile: null,
@@ -90,18 +90,18 @@ const jwtDecode = (token: string): JWTPayload | null => {
         const base64Url = token.split('.')[1];
         if (!base64Url) {
             logger.error("Invalid JWT: Missing payload part.", undefined, 'AuthContext');
-            return null;
-        }
+            return null
+  }
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
         const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+  }).join(''));
 
-        return JSON.parse(jsonPayload);
-    } catch (e) {
+        return JSON.parse(jsonPayload)
+  } catch (e) {
         logger.error("Failed to decode JWT", e, 'AuthContext');
-        return null;
-    }
+        return null
+  }
 };
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -133,16 +133,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const profile = await ApiClient.helpers.getProfile(auth0UserId);
         if (profile) {
             setHelperProfile(profile);
-            setIsNewUser(false);
-        } else {
+            setIsNewUser(false)
+  } else {
             setHelperProfile(null);
-            setIsNewUser(true);
-        }
+            setIsNewUser(true)
+  }
     } catch (error) {
         logger.error("Failed to fetch helper profile", error, 'AuthContext');
         setHelperProfile(null);
-        setIsNewUser(true);
-    }
+        setIsNewUser(true)
+  }
   };
   }, []);
 
@@ -154,18 +154,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             setUser({
                 ...decodedToken,
                 id: decodedToken.sub,
-                email: decodedToken.email || '';
-            } as AuthUser);
-        }
+                email: decodedToken.email || ''
+  } as AuthUser)
+  }
         if (decodedToken?.sub) {
-            await fetchHelperProfile(decodedToken.sub);
-        }
+            await fetchHelperProfile(decodedToken.sub)
+  }
     } else {
         sessionStorage.removeItem('accessToken');
         setUser(null);
         setHelperProfile(null);
-        setIsNewUser(false);
-    }
+        setIsNewUser(false)
+  }
   };
   }, [fetchHelperProfile]);
   
@@ -174,9 +174,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     let token = localStorage.getItem('userToken');
     if (!token) {
       token = crypto.randomUUID();
-      localStorage.setItem('userToken', token);
-    }
-    setUserToken(token);
+      localStorage.setItem('userToken', token)
+  }
+    setUserToken(token)
   };
   }, []);
 
@@ -206,15 +206,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         
         // Reload to reset the app state
         window.location.reload();
-        return;
-    }
+        return
+  }
     
     // Original logout logic for real authentication
     await setAuthData(null);
     if (discovery?.endSessionEndpoint) {
         const logoutUrl = `${discovery.endSessionEndpoint}?client_id=${AUTH0_CLIENT_ID}&returnTo=${encodeURIComponent(window.location.origin)}`;
-        window.location.assign(logoutUrl);
-    }
+        window.location.assign(logoutUrl)
+  }
   };
   }, [discovery, setAuthData]);
 
@@ -236,11 +236,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 // Set helper profile if this is a helper/admin demo user
                 if (userData.helperProfile) {
                     setHelperProfile(userData.helperProfile);
-                    setIsNewUser(false);
-                } else {
+                    setIsNewUser(false)
+  } else {
                     setHelperProfile(null);
-                    setIsNewUser(userData.userType === 'helper' || userData.userType === 'admin');
-                }
+                    setIsNewUser(userData.userType === 'helper' || userData.userType === 'admin')
+  }
                 
                 // Update global auth state for demo user
                 authState.isAuthenticated = true;
@@ -249,8 +249,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 authState.userToken = demoToken;
                 
                 setIsLoading(false);
-                return;
-            }
+                return
+  }
             
             // Original token loading logic for real authentication;
             const storedToken = sessionStorage.getItem('accessToken');
@@ -259,35 +259,35 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 const decodedToken = jwtDecode(storedToken);
                 // Check if token is valid and not expired
                 if (decodedToken && decodedToken.exp * 1000 > Date.now()) {
-                    await setAuthData(storedToken);
-                } else {
+                    await setAuthData(storedToken)
+  } else {
                     // Token is expired or invalid, clear it
-                    await setAuthData(null);
-                }
+                    await setAuthData(null)
+  }
             } else {
                 logger.debug("No stored token, clearing auth data", undefined, 'AuthContext');
-                await setAuthData(null);
-            }
+                await setAuthData(null)
+  }
         } catch (error) {
             logger.error("Critical error during token loading:", error, 'AuthContext');
             // Ensure auth state is cleared on any error
-            await setAuthData(null);
-        } finally {
+            await setAuthData(null)
+  } finally {
             logger.debug("Token load complete, setting isLoading to false", undefined, 'AuthContext');
-            setIsLoading(false);
-        }
+            setIsLoading(false)
+  }
     };
-    loadToken();
+    loadToken()
   };
   }, [setAuthData]);
 
   useEffect(() => {
     if (response?.type === 'success' && response.params.access_token) {
-        setAuthData(response.params.access_token);
-    } else if (response?.type === 'error') {
+        setAuthData(response.params.access_token)
+  } else if (response?.type === 'error') {
         addToast('Authentication error: ' + (response.params.error_description || response.error?.message), 'error');
-        logger.error("Authentication error", response.error, 'AuthContext');
-    }
+        logger.error("Authentication error", response.error, 'AuthContext')
+  }
   };
   }, [response, setAuthData, addToast]);
 
@@ -297,9 +297,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const errorMessage = "Authentication service is not configured correctly.";
         logger.error(errorMessage, undefined, 'AuthContext');
         addToast(errorMessage, 'error');
-        return;
-    }
-    await promptAsync();
+        return
+  }
+    await promptAsync()
   };
   }, [request, promptAsync, addToast]);
 
@@ -308,25 +308,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const handleAuthError = () => {
         logger.warn("Authentication error detected. Forcing logout.", undefined, 'AuthContext');
         addToast("Your session has expired or is invalid. Please log in again.", 'error');
-        logout();
-    };
+        logout()
+  };
     window.addEventListener('auth-error', handleAuthError);
     return () => {
-        window.removeEventListener('auth-error', handleAuthError);
-    };
+        window.removeEventListener('auth-error', handleAuthError)
+  };
   };
   }, [logout, addToast]);
 
 
   const reloadProfile = useCallback(async () => {
     if (user?.sub) {
-      await fetchHelperProfile(user.sub);
-    }
+      await fetchHelperProfile(user.sub)
+  }
   };
   }, [user, fetchHelperProfile]);
   
   const updateHelperProfile = useCallback((updatedProfile: Helper) => {
-    setHelperProfile(updatedProfile);
+    setHelperProfile(updatedProfile)
   };
   }, []);
 
@@ -350,20 +350,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       authState.isAuthenticated = value.isAuthenticated;
       authState.user = value.user;
       authState.helperProfile = value.helperProfile;
-      authState.userToken = value.userToken;
+      authState.userToken = value.userToken
   };
   }, [value]);
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  };
 
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useAuth must be used within an AuthProvider')
   }
-  return context;
-};
+  return context
+  };
 
 // --- Legal Consent Hook ---;
 const LEGAL_DOC_VERSIONS = {
@@ -385,15 +385,15 @@ export const useLegalConsents = () => {
             if (!currentUserId) {
                 logger.debug("Consent check: No user ID, setting allConsentsGiven to false", undefined, 'AuthContext');
                 setAllConsentsGiven(false);
-                return;
-            }
+                return
+  }
 
             setRequiredConsent(null);
 
             let requiredDocs: string[] = ['terms_of_service', 'privacy_policy'];
             if (isAuthenticated) {
-                requiredDocs.push('helper_agreement');
-            }
+                requiredDocs.push('helper_agreement')
+  }
             logger.debug("Consent check: Required docs = " + JSON.stringify(requiredDocs), undefined, 'AuthContext');
 
             // For development: Skip consent checks and allow app to load
@@ -401,8 +401,8 @@ export const useLegalConsents = () => {
             // Uncomment the block below for production consent checking
             logger.debug("Consent check: All consents satisfied, setting allConsentsGiven to true", undefined, 'AuthContext');
             setRequiredConsent(null);
-            setAllConsentsGiven(true);
-        } catch (error) {
+            setAllConsentsGiven(true)
+  } catch (error) {
             logger.error("Failed to check consents:", error, 'AuthContext');
             addToast("Could not verify legal agreements. Please try again later.", "error");
             setAllConsentsGiven(false); // Fail safe
@@ -411,8 +411,8 @@ export const useLegalConsents = () => {
   }, [userToken, helperProfile, isAuthenticated, addToast]);
 
     useEffect(() => {
-        checkConsents();
-    };
+        checkConsents()
+  };
   }, [checkConsents]);
 
     const acceptConsent = async () => {
@@ -427,8 +427,8 @@ export const useLegalConsents = () => {
             await checkConsents(); // Re-check after accepting
         } catch (err) {
             logger.error("Failed to save agreement", err, 'AuthContext');
-            addToast("Failed to save your agreement. Please try again.", 'error');
-        }
+            addToast("Failed to save your agreement. Please try again.", 'error')
+  }
     };
     
     const getConsentContent = (docType: string | null) => {
@@ -437,8 +437,8 @@ export const useLegalConsents = () => {
         switch(docType) {
             case 'terms_of_service': return {
                 title: `Terms of Service (v${version})`,
-                text: 'Please review and accept our updated Terms of Service to continue. Our terms outline the rules for community conduct and the scope of our peer support services.';
-            };
+                text: 'Please review and accept our updated Terms of Service to continue. Our terms outline the rules for community conduct and the scope of our peer support services.'
+  };
             case 'privacy_policy': return {
                 title: `Privacy Policy (v${version})`,
                 text: 'Our Privacy Policy has been updated. Please review how we handle data, ensure your anonymity, and protect your privacy.'

@@ -23,16 +23,16 @@ interface PostCardProps {
     isHelperView?: boolean;
     isMyPostView?: boolean;
     filteredCategories?: string[];
-    aiMatchReason?: string;
-}
+    aiMatchReason?: string
+  }
 
 const getColorIndex = (str: string): number => {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
-        hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return Math.abs(hash % 8);
-};
+        hash = str.charCodeAt(i) + ((hash << 5) - hash)
+  }
+    return Math.abs(hash % 8)
+  };
 
 const PostCardComponent: React.FC<PostCardProps> = (props) => {
     const { 
@@ -69,24 +69,24 @@ const PostCardComponent: React.FC<PostCardProps> = (props) => {
                 setSwipeAction('support');
                 setTimeout(() => {
                     handleSupportClick({} as React.MouseEvent<HTMLButtonElement>);
-                    setSwipeAction(null);
-                }, 150);
-            }
+                    setSwipeAction(null)
+  }, 150)
+  }
         },
         onSwipeRight: () => {
             if (isHelperView && dilemma.status === 'active') {
                 setSwipeAction('accept');
                 setTimeout(() => {
                     onAcceptDilemma?.(dilemma.id);
-                    setSwipeAction(null);
-                }, 150);
-            }
+                    setSwipeAction(null)
+  }, 150)
+  }
         },
     });
 
     useEffect(() => {
-        setIsRevealed(false);
-    };
+        setIsRevealed(false)
+  };
   }, [filteredCategories]);
 
     const handleSupportClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -97,8 +97,8 @@ const PostCardComponent: React.FC<PostCardProps> = (props) => {
             setTimeout(() => setIsAnimatingSupport(false), 300); // Duration of the animation
         }
         if (onStartChat) {
-            onStartChat(dilemma.id);
-        }
+            onStartChat(dilemma.id)
+  }
     };
 
     if (isFiltered) {
@@ -129,8 +129,8 @@ const PostCardComponent: React.FC<PostCardProps> = (props) => {
                     <AppButton variant="success" className="btn-sm" onClick={() => onAcceptDilemma?.(dilemma.id)}>Accept Request</AppButton>
                     <AppButton variant="danger" className="btn-sm" onClick={() => onDeclineRequest?.(dilemma.id)}>Decline</AppButton>
                 </div>
-            );
-        }
+            )
+  }
 
         if (dilemma.status === 'in_progress') {
              return (
@@ -142,8 +142,8 @@ const PostCardComponent: React.FC<PostCardProps> = (props) => {
                         Video Chat
                     </AppButton>}
                 </div>
-            );
-        }
+            )
+  }
 
         if (dilemma.isReported) {
              return (
@@ -151,8 +151,8 @@ const PostCardComponent: React.FC<PostCardProps> = (props) => {
                     <AppButton variant="danger" className="btn-sm" onClick={() => onRemovePost?.(dilemma.id)}>Remove Post</AppButton>
                     <AppButton variant="secondary" className="btn-sm" onClick={() => onDismissReport?.(dilemma.id)}>Dismiss Report</AppButton>
                 </div>
-            );
-        }
+            )
+  }
         
         return (
             <div className="form-actions-group">
@@ -165,8 +165,8 @@ const PostCardComponent: React.FC<PostCardProps> = (props) => {
                     Accept Dilemma
                 </AppButton>
             </div>
-        );
-    }
+        )
+  }
 
     return (
         <div 
@@ -211,8 +211,8 @@ const PostCardComponent: React.FC<PostCardProps> = (props) => {
                                 font: 'inherit',
                                 fontSize: '1.1em',
                                 fontWeight: 'bold',
-                                minHeight: '44px';
-                            }}
+                                minHeight: '44px'
+  }}
                             aria-expanded={isSummaryVisible}
                         >
                             AI Summary {isSummaryVisible ? '▼' : '►'}
@@ -260,7 +260,7 @@ const PostCardComponent: React.FC<PostCardProps> = (props) => {
                 </div>
             )}
         </div>
-    );
-};
+    )
+  };
 
 export const PostCard = React.memo(PostCardComponent);

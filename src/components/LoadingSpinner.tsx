@@ -2,8 +2,8 @@ import React from "react";
 interface LoadingSpinnerProps {
   size?: "small" | "medium" | "large";
   message?: string;
-  className?: string;
-}
+  className?: string
+  }
 
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = "medium",
@@ -13,7 +13,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   const sizeClasses = {
     small: "w-4 h-4",
     medium: "w-8 h-8",
-    large: "w-12 h-12";
+    large: "w-12 h-12"
   };
 
   return (
@@ -30,7 +30,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         </p>
       )}
     </div>
-  );
-}
+  )
+  }
 
 export default LoadingSpinner;

@@ -13,7 +13,7 @@ export interface RolePermissions {
     canManageUsers: boolean;
     canViewAnalytics: boolean;
     canCreateContent: boolean;
-    canParticipateInCommunity: boolean;
+    canParticipateInCommunity: boolean
   }
 
 // Define comprehensive role permissions;
@@ -62,8 +62,8 @@ export const ROLE_PERMISSIONS: Record<UserRole, RolePermissions> = {
       canManageUsers: false,
       canViewAnalytics: false,
       canCreateContent: true,
-      canParticipateInCommunity: true;
-    }
+      canParticipateInCommunity: true
+  }
   },
   Community: {
     role: 'Community',
@@ -92,8 +92,8 @@ export const ROLE_PERMISSIONS: Record<UserRole, RolePermissions> = {
       canManageUsers: false,
       canViewAnalytics: false,
       canCreateContent: true,
-      canParticipateInCommunity: true;
-    }
+      canParticipateInCommunity: true
+  }
   },
   Certified: {
     role: 'Certified',
@@ -122,8 +122,8 @@ export const ROLE_PERMISSIONS: Record<UserRole, RolePermissions> = {
       canManageUsers: false,
       canViewAnalytics: false,
       canCreateContent: true,
-      canParticipateInCommunity: true;
-    }
+      canParticipateInCommunity: true
+  }
   },
   Moderator: {
     role: 'Moderator',
@@ -152,8 +152,8 @@ export const ROLE_PERMISSIONS: Record<UserRole, RolePermissions> = {
       canManageUsers: true,
       canViewAnalytics: true,
       canCreateContent: true,
-      canParticipateInCommunity: true;
-    }
+      canParticipateInCommunity: true
+  }
   },
   Admin: {
     role: 'Admin',
@@ -182,8 +182,8 @@ export const ROLE_PERMISSIONS: Record<UserRole, RolePermissions> = {
       canManageUsers: true,
       canViewAnalytics: true,
       canCreateContent: true,
-      canParticipateInCommunity: true;
-    }
+      canParticipateInCommunity: true
+  }
   }
 };
 
@@ -201,42 +201,42 @@ export const getRolePermissions = (role: UserRole): RolePermissions => {
 export const canAccessView = (userRole: UserRole | undefined, view: View): boolean => {
   if (!userRole) {
     // Unauthenticated users get Starkeeper permissions
-    return ROLE_PERMISSIONS.Starkeeper.allowedViews.includes(view);
+    return ROLE_PERMISSIONS.Starkeeper.allowedViews.includes(view)
   }
   
   const permissions = getRolePermissions(userRole);
-  return permissions.allowedViews.includes(view);
-};
+  return permissions.allowedViews.includes(view)
+  };
 
 export const isViewDenied = (userRole: UserRole | undefined, view: View): boolean => {
   if (!userRole) {
     // Unauthenticated users get Starkeeper permissions
-    return ROLE_PERMISSIONS.Starkeeper.deniedViews.includes(view);
+    return ROLE_PERMISSIONS.Starkeeper.deniedViews.includes(view)
   }
   
   const permissions = getRolePermissions(userRole);
-  return permissions.deniedViews.includes(view);
-};
+  return permissions.deniedViews.includes(view)
+  };
 
 export const getUserRole = (helper: Helper | null): UserRole => {
   if (!helper || !helper.role) {
-    return 'Starkeeper';
+    return 'Starkeeper'
   }
   
-  return helper.role as UserRole;
-};
+  return helper.role as UserRole
+  };
 
 export const hasPermission = (
   userRole: UserRole | undefined, 
   permission: keyof RolePermissions['features']
 ): boolean => {
   if (!userRole) {
-    return ROLE_PERMISSIONS.Starkeeper.features[permission];
+    return ROLE_PERMISSIONS.Starkeeper.features[permission]
   }
   
   const permissions = getRolePermissions(userRole);
-  return permissions.features[permission];
-};
+  return permissions.features[permission]
+  };
 
 export const getDefaultViewForRole = (userRole: UserRole): View => {
   switch (userRole) {
@@ -249,8 +249,7 @@ export const getDefaultViewForRole = (userRole: UserRole): View => {
       return 'constellation-guide-dashboard';
     case 'Admin':
       return 'admin-dashboard';
-    default:
-      return 'feed';
+    default: return 'feed'
   }
 };
 

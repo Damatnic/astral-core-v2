@@ -15,16 +15,16 @@ export interface AuthContextType {
   userToken: string | null;
   isAnonymous?: boolean;
   authState?: any;
-  register?: () => Promise<void>;
-}
+  register?: () => Promise<void>
+  }
 
 // Global state object to bridge context and stores;
 export const authState: {
   isAuthenticated: boolean;
   user: any;
   helperProfile: Helper | null;
-  userToken: string | null;
-} = {
+  userToken: string | null
+  } = {
   isAuthenticated: false,
   user: null,
   helperProfile: null,
@@ -68,16 +68,16 @@ export const AuthProvider: React.FC<{ children: ReactNode; value?: Partial<AuthC
     <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
-  );
-};
+  )
+  };
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    return defaultAuthContext;
+    return defaultAuthContext
   }
-  return context;
-};
+  return context
+  };
 
 // Mock useLegalConsents hook;
 export const useLegalConsents = () => ({

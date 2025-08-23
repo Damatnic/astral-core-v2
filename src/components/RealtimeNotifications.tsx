@@ -13,16 +13,16 @@ interface Notification {
   read?: boolean;
   actionUrl?: string;
   senderId?: string;
-  senderName?: string;
-}
+  senderName?: string
+  }
 
 interface RealtimeNotificationsProps {
   userId: string;
   position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
   maxVisible?: number;
   autoHide?: boolean;
-  autoHideDelay?: number;
-}
+  autoHideDelay?: number
+  }
 
 export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
   userId,
@@ -41,13 +41,13 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
 
     // Subscribe to notifications;
     const unsubscribe = realtimeService.on('notification', (notification: Notification) => {
-      handleNewNotification(notification);
-    });
+      handleNewNotification(notification)
+  });
 
     // Subscribe to crisis alerts;
     const unsubscribeCrisis = realtimeService.on('crisis-alert', (alert: any) => {
-      handleCrisisAlert(alert);
-    });
+      handleCrisisAlert(alert)
+  });
 
     // Load stored notifications
     loadStoredNotifications();
@@ -57,8 +57,8 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
 
     return () => {
       unsubscribe();
-      unsubscribeCrisis();
-    };
+      unsubscribeCrisis()
+  };
   };
   }, [userId]);
 
@@ -66,20 +66,20 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
     setNotifications(prev => {
       const updated = [notification, ...prev];
       // Keep only last 50 notifications
-      return updated.slice(0, 50);
-    });
+      return updated.slice(0, 50)
+  });
 
     // Auto-hide non-urgent notifications
     if (autoHide && notification.urgency !== 'high' && notification.urgency !== 'critical') {
       setTimeout(() => {
-        dismissNotification(notification.id);
-      }, autoHideDelay);
-    }
+        dismissNotification(notification.id)
+  }, autoHideDelay)
+  }
 
     // Play sound for important notifications
     if (notification.urgency === 'high' || notification.urgency === 'critical') {
-      playNotificationSound();
-    }
+      playNotificationSound()
+  }
   };
 
   const handleCrisisAlert = (alert: any) => {
@@ -93,7 +93,7 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
       actionUrl: `/crisis/respond/${alert.alertId}`
     };
 
-    handleNewNotification(crisisNotification);
+    handleNewNotification(crisisNotification)
   };
 
   const loadStoredNotifications = () => {
@@ -101,28 +101,28 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        setNotifications(parsed);
-      } catch (error) {
-        console.error('Failed to load stored notifications:', error);
-      }
+        setNotifications(parsed)
+  } catch (error) {
+        console.error('Failed to load stored notifications:', error)
+  }
     }
   };
 
   const requestNotificationPermission = async () => {
     if ('Notification' in window && Notification.permission === 'default') {
       const permission = await Notification.requestPermission();
-      console.log('Notification permission:', permission);
-    }
+      console.log('Notification permission:', permission)
+  }
   };
 
   const playNotificationSound = () => {
     const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBiuBzvLZizEGFWW66+OZURE');
     audio.volume = 0.3;
-    audio.play().catch(e => console.log('Could not play notification sound:', e));
+    audio.play().catch(e => console.log('Could not play notification sound:', e))
   };
 
   const dismissNotification = (id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
+    setNotifications(prev => prev.filter(n => n.id !== id))
   };
 
   const markAsRead = async (id: string) => {
@@ -137,15 +137,15 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
         }
-      });
-    } catch (error) {
-      console.error('Failed to mark notification as read:', error);
-    }
+      })
+  } catch (error) {
+      console.error('Failed to mark notification as read:', error)
+  }
   };
 
   const clearAll = () => {
     setNotifications([]);
-    localStorage.removeItem('notifications');
+    localStorage.removeItem('notifications')
   };
 
   const getNotificationIcon = (type: string) => {
@@ -158,9 +158,8 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
         return '❌';
       case 'crisis':
         return '🚨';
-      default:
-        return 'ℹ️';
-    }
+      default: return 'ℹ️'
+  }
   };
 
   const getNotificationColor = (type: string) => {
@@ -173,9 +172,8 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
         return '#ef4444';
       case 'crisis':
         return '#dc2626';
-      default:
-        return '#3b82f6';
-    }
+      default: return '#3b82f6'
+  }
   };
 
   const visibleNotifications = showAll ? notifications : notifications.slice(0, maxVisible);
@@ -185,8 +183,7 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
     <>
       {/* Notification Bell */}
       <div className="notification-bell-container">
-        <button;
-          className="notification-bell"
+        <button className="notification-bell"
           onClick={() => setShowAll(!showAll)}
           aria-label="Toggle notifications"
         >
@@ -209,16 +206,15 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
             key={notification.id}
             className={`notification-item notification-${notification.type} ${notification.read ? 'read' : 'unread'}`}
             style={{
-              borderLeftColor: getNotificationColor(notification.type);
-            }}
+              borderLeftColor: getNotificationColor(notification.type)
+  }}
           >
             <div className="notification-header">
               <span className="notification-icon">
                 {getNotificationIcon(notification.type)}
               </span>
               <span className="notification-title">{notification.title}</span>
-              <button;
-                className="notification-close"
+              <button className="notification-close"
                 onClick={() => dismissNotification(notification.id)}
                 aria-label="Dismiss notification"
               >
@@ -239,8 +235,7 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
                 </span>
 
                 {!notification.read && (
-                  <button;
-                    className="notification-mark-read"
+                  <button className="notification-mark-read"
                     onClick={() => markAsRead(notification.id)}
                   >
                     Mark as read
@@ -268,8 +263,7 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
         ))}
 
         {notifications.length > maxVisible && !showAll && (
-          <button;
-            className="notification-show-all"
+          <button className="notification-show-all"
             onClick={() => setShowAll(true)}
           >
             Show all {notifications.length} notifications
@@ -278,14 +272,12 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
 
         {showAll && notifications.length > 0 && (
           <div className="notification-actions">
-            <button;
-              className="notification-clear-all"
+            <button className="notification-clear-all"
               onClick={clearAll}
             >
               Clear all
             </button>
-            <button;
-              className="notification-collapse"
+            <button className="notification-collapse"
               onClick={() => setShowAll(false)}
             >
               Collapse
@@ -300,8 +292,8 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
         )}
       </div>
     </>
-  );
-};
+  )
+  };
 
 // Mini notification component for inline use;
 export const NotificationBadge: React.FC<{ userId: string }> = () => {
@@ -310,10 +302,10 @@ export const NotificationBadge: React.FC<{ userId: string }> = () => {
 
   useEffect(() => {
     const unsubscribe = realtimeService.on('notification', () => {
-      setUnreadCount(prev => prev + 1);
-    });
+      setUnreadCount(prev => prev + 1)
+  });
 
-    return () => unsubscribe();
+    return () => unsubscribe()
   };
   }, []);
 
@@ -323,5 +315,5 @@ export const NotificationBadge: React.FC<{ userId: string }> = () => {
     <div className="notification-badge-inline">
       {unreadCount > 99 ? '99+' : unreadCount}
     </div>
-  );
-};
+  )
+  };

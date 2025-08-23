@@ -17,12 +17,12 @@ export interface EmergencyContact {
   specialization?: string; // therapist, psychiatrist, counselor, etc.
   availability?: {
     days: string[];
-    hours: string;
+    hours: string
   };
   notificationPreferences?: {
     sms: boolean;
     email: boolean;
-    call: boolean;
+    call: boolean
   }
 
 export interface CrisisLine {
@@ -43,8 +43,8 @@ interface EmergencyNotification {
   type: 'sms' | 'email' | 'call';
   status: 'pending' | 'sent' | 'failed';
   message?: string;
-  error?: string;
-}
+  error?: string
+  }
 
 class EmergencyContactService {
   private contacts: EmergencyContact[] = [];
@@ -56,7 +56,7 @@ class EmergencyContactService {
   constructor() {
     this.initializeService();
     this.loadDefaultCrisisLines();
-    logger.info("EmergencyContactService initialized", undefined, "EmergencyContactService");
+    logger.info("EmergencyContactService initialized", undefined, "EmergencyContactService")
   }
 
   private initializeService(): void {
@@ -64,10 +64,10 @@ class EmergencyContactService {
     const savedContacts = localStorageService.getItem(this.STORAGE_KEY);
     if (savedContacts) {
       try {
-        this.contacts = JSON.parse(savedContacts);
-      } catch (error) {
-        logger.error("Failed to load emergency contacts", error, "EmergencyContactService");
-      }
+        this.contacts = JSON.parse(savedContacts)
+  } catch (error) {
+        logger.error("Failed to load emergency contacts", error, "EmergencyContactService")
+  }
     }
   }
 
@@ -132,7 +132,7 @@ class EmergencyContactService {
     ];
 
     // Save to local storage
-    localStorageService.setItem(this.CRISIS_LINES_KEY, JSON.stringify(this.crisisLines));
+    localStorageService.setItem(this.CRISIS_LINES_KEY, JSON.stringify(this.crisisLines))
   }
 
   /**
@@ -146,14 +146,14 @@ class EmergencyContactService {
 
     // If this is set as primary, update other contacts
     if (newContact.isPrimary) {
-      this.contacts.forEach(c => c.isPrimary = false);
-    }
+      this.contacts.forEach(c => c.isPrimary = false)
+  }
 
     this.contacts.push(newContact);
     this.saveContacts();
 
     logger.info("Emergency contact added", { contactId: newContact.id }, "EmergencyContactService");
-    return newContact;
+    return newContact
   }
 
   /**
@@ -163,19 +163,19 @@ class EmergencyContactService {
     const index = this.contacts.findIndex(c => c.id === id);
     if (index === -1) {
       logger.warn("Contact not found for update", { contactId: id }, "EmergencyContactService");
-      return null;
-    }
+      return null
+  }
 
     // If setting as primary, update others
     if (updates.isPrimary) {
-      this.contacts.forEach(c => c.isPrimary = false);
-    }
+      this.contacts.forEach(c => c.isPrimary = false)
+  }
 
     this.contacts[index] = { ...this.contacts[index], ...updates };
     this.saveContacts();
 
     logger.info("Emergency contact updated", { contactId: id }, "EmergencyContactService");
-    return this.contacts[index];
+    return this.contacts[index]
   }
 
   /**
@@ -188,31 +188,31 @@ class EmergencyContactService {
     if (this.contacts.length < initialLength) {
       this.saveContacts();
       logger.info("Emergency contact removed", { contactId: id }, "EmergencyContactService");
-      return true;
-    }
+      return true
+  }
     
-    return false;
+    return false
   }
 
   /**
    * Get all emergency contacts
    */
   getContacts(): EmergencyContact[] {
-    return [...this.contacts];
+    return [...this.contacts]
   }
 
   /**
    * Get primary emergency contact
    */
   getPrimaryContact(): EmergencyContact | null {
-    return this.contacts.find(c => c.isPrimary) || null;
+    return this.contacts.find(c => c.isPrimary) || null
   }
 
   /**
    * Get healthcare professional contacts
    */
   getHealthcareProfessionals(): EmergencyContact[] {
-    return this.contacts.filter(c => c.isHealthcareProfessional);
+    return this.contacts.filter(c => c.isHealthcareProfessional)
   }
 
   /**
@@ -222,9 +222,9 @@ class EmergencyContactService {
     if (country) {
       return this.crisisLines.filter(line => 
         line.country.toLowerCase() === country.toLowerCase()
-      );
-    }
-    return [...this.crisisLines];
+      )
+  }
+    return [...this.crisisLines]
   }
 
   /**
@@ -233,7 +233,7 @@ class EmergencyContactService {
   getCrisisLinesBySpecialization(specialization: string): CrisisLine[] {
     return this.crisisLines.filter(line => 
       line.specializations.includes(specialization.toLowerCase())
-    );
+    )
   }
 
   /**
@@ -244,7 +244,7 @@ class EmergencyContactService {
     contactIds?: string[],
     notificationType: 'sms' | 'email' | 'call' = 'sms'
   ): Promise<void> {
-    const contactsToNotify = contactIds ;
+    const contactsToNotify = contactIds ;;
       ? this.contacts.filter(c => contactIds.includes(c.id))
       : this.contacts.filter(c => c.isPrimary);
 
@@ -263,17 +263,17 @@ class EmergencyContactService {
         notification.status = 'sent';
         logger.info("Emergency notification sent", { 
           contactId: contact.id, 
-          type: notificationType ;
-        }, "EmergencyContactService");
-      } catch (error) {
+          type: notificationType
+  }, "EmergencyContactService")
+  } catch (error) {
         notification.status = 'failed';
         notification.error = error instanceof Error ? error.message : 'Unknown error';
-        logger.error("Failed to send emergency notification", error, "EmergencyContactService");
-      }
+        logger.error("Failed to send emergency notification", error, "EmergencyContactService")
+  }
   }
 
-  this.notificationHistory.push(notification);
-    }
+  this.notificationHistory.push(notification)
+  }
   }
 
   /**
@@ -303,9 +303,9 @@ class EmergencyContactService {
    */
   getNotificationHistory(contactId?: string): EmergencyNotification[] {
     if (contactId) {
-      return this.notificationHistory.filter(n => n.contactId === contactId);
-    }
-    return [...this.notificationHistory];
+      return this.notificationHistory.filter(n => n.contactId === contactId)
+  }
+    return [...this.notificationHistory]
   }
 
   /**
@@ -313,21 +313,21 @@ class EmergencyContactService {
    */
   clearNotificationHistory(): void {
     this.notificationHistory = [];
-    logger.info("Notification history cleared", undefined, "EmergencyContactService");
+    logger.info("Notification history cleared", undefined, "EmergencyContactService")
   }
 
   /**
    * Check if user has emergency contacts configured
    */
   hasEmergencyContacts(): boolean {
-    return this.contacts.length > 0;
+    return this.contacts.length > 0
   }
 
   /**
    * Check if user has a primary contact
    */
   hasPrimaryContact(): boolean {
-    return this.contacts.some(c => c.isPrimary);
+    return this.contacts.some(c => c.isPrimary)
   }
 
   /**
@@ -337,22 +337,22 @@ class EmergencyContactService {
     const errors: string[] = [];
 
     if (!contact.name || contact.name.trim().length === 0) {
-      errors.push("Contact name is required");
-    }
+      errors.push("Contact name is required")
+  }
 
     if (!contact.phone || !this.isValidPhoneNumber(contact.phone)) {
-      errors.push("Valid phone number is required");
-    }
+      errors.push("Valid phone number is required")
+  }
 
     if (contact.email && !this.isValidEmail(contact.email)) {
-      errors.push("Invalid email address");
-    }
+      errors.push("Invalid email address")
+  }
 
     if (!contact.relationship || contact.relationship.trim().length === 0) {
-      errors.push("Relationship is required");
-    }
+      errors.push("Relationship is required")
+  }
 
-    return errors;
+    return errors
   }
 
   /**
@@ -361,7 +361,7 @@ class EmergencyContactService {
   private isValidPhoneNumber(phone: string): boolean {
     // Basic phone validation - can be enhanced based on region;
     const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-    return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 10;
+    return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 10
   }
 
   /**
@@ -369,14 +369,14 @@ class EmergencyContactService {
    */
   private isValidEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    return emailRegex.test(email)
   }
 
   /**
    * Save contacts to local storage
    */
   private saveContacts(): void {
-    localStorageService.setItem(this.STORAGE_KEY, JSON.stringify(this.contacts));
+    localStorageService.setItem(this.STORAGE_KEY, JSON.stringify(this.contacts))
   }
 
   /**
@@ -386,8 +386,8 @@ class EmergencyContactService {
     return JSON.stringify({
       contacts: this.contacts,
       exportDate: new Date().toISOString(),
-      version: '1.0';
-    }, null, 2);
+      version: '1.0'
+  }, null, 2)
   }
 
   /**
@@ -400,16 +400,16 @@ class EmergencyContactService {
         this.contacts = parsed.contacts;
         this.saveContacts();
         logger.info("Contacts imported successfully", { 
-          count: this.contacts.length ;
-        }, "EmergencyContactService");
-        return true;
-      }
+          count: this.contacts.length
+  }, "EmergencyContactService");
+        return true
+  }
     } catch (error) {
-      logger.error("Failed to import contacts", error, "EmergencyContactService");
-    }
+      logger.error("Failed to import contacts", error, "EmergencyContactService")
+  }
   }
 
-  return false;
+  return false
   }
 
   /**
@@ -417,7 +417,7 @@ class EmergencyContactService {
    */
   getQuickDialInfo(): {
     primaryContact: EmergencyContact | null;
-    localCrisisLine: CrisisLine | null;
+    localCrisisLine: CrisisLine | null
   } {
     const primaryContact = this.getPrimaryContact();
     const localCrisisLine = this.crisisLines.find(line => line.available24x7) || null;
@@ -448,12 +448,12 @@ export interface EmergencyContact {
   specialization?: string; // therapist, psychiatrist, counselor, etc.
   availability?: {
     days: string[];
-    hours: string;
+    hours: string
   };
   notificationPreferences?: {
     sms: boolean;
     email: boolean;
-    call: boolean;
+    call: boolean
   }
 
 export interface CrisisLine {
@@ -474,8 +474,8 @@ interface EmergencyNotification {
   type: 'sms' | 'email' | 'call';
   status: 'pending' | 'sent' | 'failed';
   message?: string;
-  error?: string;
-}
+  error?: string
+  }
 
 class EmergencyContactService {
   private contacts: EmergencyContact[] = [];
@@ -487,7 +487,7 @@ class EmergencyContactService {
   constructor() {
     this.initializeService();
     this.loadDefaultCrisisLines();
-    logger.info("EmergencyContactService initialized", undefined, "EmergencyContactService");
+    logger.info("EmergencyContactService initialized", undefined, "EmergencyContactService")
   }
 
   private initializeService(): void {
@@ -495,10 +495,10 @@ class EmergencyContactService {
     const savedContacts = localStorageService.getItem(this.STORAGE_KEY);
     if (savedContacts) {
       try {
-        this.contacts = JSON.parse(savedContacts);
-      } catch (error) {
-        logger.error("Failed to load emergency contacts", error, "EmergencyContactService");
-      }
+        this.contacts = JSON.parse(savedContacts)
+  } catch (error) {
+        logger.error("Failed to load emergency contacts", error, "EmergencyContactService")
+  }
     }
   }
 
@@ -563,7 +563,7 @@ class EmergencyContactService {
     ];
 
     // Save to local storage
-    localStorageService.setItem(this.CRISIS_LINES_KEY, JSON.stringify(this.crisisLines));
+    localStorageService.setItem(this.CRISIS_LINES_KEY, JSON.stringify(this.crisisLines))
   }
 
   /**
@@ -577,14 +577,14 @@ class EmergencyContactService {
 
     // If this is set as primary, update other contacts
     if (newContact.isPrimary) {
-      this.contacts.forEach(c => c.isPrimary = false);
-    }
+      this.contacts.forEach(c => c.isPrimary = false)
+  }
 
     this.contacts.push(newContact);
     this.saveContacts();
 
     logger.info("Emergency contact added", { contactId: newContact.id }, "EmergencyContactService");
-    return newContact;
+    return newContact
   }
 
   /**
@@ -594,19 +594,19 @@ class EmergencyContactService {
     const index = this.contacts.findIndex(c => c.id === id);
     if (index === -1) {
       logger.warn("Contact not found for update", { contactId: id }, "EmergencyContactService");
-      return null;
-    }
+      return null
+  }
 
     // If setting as primary, update others
     if (updates.isPrimary) {
-      this.contacts.forEach(c => c.isPrimary = false);
-    }
+      this.contacts.forEach(c => c.isPrimary = false)
+  }
 
     this.contacts[index] = { ...this.contacts[index], ...updates };
     this.saveContacts();
 
     logger.info("Emergency contact updated", { contactId: id }, "EmergencyContactService");
-    return this.contacts[index];
+    return this.contacts[index]
   }
 
   /**
@@ -619,31 +619,31 @@ class EmergencyContactService {
     if (this.contacts.length < initialLength) {
       this.saveContacts();
       logger.info("Emergency contact removed", { contactId: id }, "EmergencyContactService");
-      return true;
-    }
+      return true
+  }
     
-    return false;
+    return false
   }
 
   /**
    * Get all emergency contacts
    */
   getContacts(): EmergencyContact[] {
-    return [...this.contacts];
+    return [...this.contacts]
   }
 
   /**
    * Get primary emergency contact
    */
   getPrimaryContact(): EmergencyContact | null {
-    return this.contacts.find(c => c.isPrimary) || null;
+    return this.contacts.find(c => c.isPrimary) || null
   }
 
   /**
    * Get healthcare professional contacts
    */
   getHealthcareProfessionals(): EmergencyContact[] {
-    return this.contacts.filter(c => c.isHealthcareProfessional);
+    return this.contacts.filter(c => c.isHealthcareProfessional)
   }
 
   /**
@@ -653,9 +653,9 @@ class EmergencyContactService {
     if (country) {
       return this.crisisLines.filter(line => 
         line.country.toLowerCase() === country.toLowerCase()
-      );
-    }
-    return [...this.crisisLines];
+      )
+  }
+    return [...this.crisisLines]
   }
 
   /**
@@ -664,7 +664,7 @@ class EmergencyContactService {
   getCrisisLinesBySpecialization(specialization: string): CrisisLine[] {
     return this.crisisLines.filter(line => 
       line.specializations.includes(specialization.toLowerCase())
-    );
+    )
   }
 
   /**
@@ -675,7 +675,7 @@ class EmergencyContactService {
     contactIds?: string[],
     notificationType: 'sms' | 'email' | 'call' = 'sms'
   ): Promise<void> {
-    const contactsToNotify = contactIds ;
+    const contactsToNotify = contactIds ;;
       ? this.contacts.filter(c => contactIds.includes(c.id))
       : this.contacts.filter(c => c.isPrimary);
 
@@ -694,17 +694,17 @@ class EmergencyContactService {
         notification.status = 'sent';
         logger.info("Emergency notification sent", { 
           contactId: contact.id, 
-          type: notificationType ;
-        }, "EmergencyContactService");
-      } catch (error) {
+          type: notificationType
+  }, "EmergencyContactService")
+  } catch (error) {
         notification.status = 'failed';
         notification.error = error instanceof Error ? error.message : 'Unknown error';
-        logger.error("Failed to send emergency notification", error, "EmergencyContactService");
-      }
+        logger.error("Failed to send emergency notification", error, "EmergencyContactService")
+  }
   }
 
-  this.notificationHistory.push(notification);
-    }
+  this.notificationHistory.push(notification)
+  }
   }
 
   /**
@@ -734,9 +734,9 @@ class EmergencyContactService {
    */
   getNotificationHistory(contactId?: string): EmergencyNotification[] {
     if (contactId) {
-      return this.notificationHistory.filter(n => n.contactId === contactId);
-    }
-    return [...this.notificationHistory];
+      return this.notificationHistory.filter(n => n.contactId === contactId)
+  }
+    return [...this.notificationHistory]
   }
 
   /**
@@ -744,21 +744,21 @@ class EmergencyContactService {
    */
   clearNotificationHistory(): void {
     this.notificationHistory = [];
-    logger.info("Notification history cleared", undefined, "EmergencyContactService");
+    logger.info("Notification history cleared", undefined, "EmergencyContactService")
   }
 
   /**
    * Check if user has emergency contacts configured
    */
   hasEmergencyContacts(): boolean {
-    return this.contacts.length > 0;
+    return this.contacts.length > 0
   }
 
   /**
    * Check if user has a primary contact
    */
   hasPrimaryContact(): boolean {
-    return this.contacts.some(c => c.isPrimary);
+    return this.contacts.some(c => c.isPrimary)
   }
 
   /**
@@ -768,22 +768,22 @@ class EmergencyContactService {
     const errors: string[] = [];
 
     if (!contact.name || contact.name.trim().length === 0) {
-      errors.push("Contact name is required");
-    }
+      errors.push("Contact name is required")
+  }
 
     if (!contact.phone || !this.isValidPhoneNumber(contact.phone)) {
-      errors.push("Valid phone number is required");
-    }
+      errors.push("Valid phone number is required")
+  }
 
     if (contact.email && !this.isValidEmail(contact.email)) {
-      errors.push("Invalid email address");
-    }
+      errors.push("Invalid email address")
+  }
 
     if (!contact.relationship || contact.relationship.trim().length === 0) {
-      errors.push("Relationship is required");
-    }
+      errors.push("Relationship is required")
+  }
 
-    return errors;
+    return errors
   }
 
   /**
@@ -792,7 +792,7 @@ class EmergencyContactService {
   private isValidPhoneNumber(phone: string): boolean {
     // Basic phone validation - can be enhanced based on region;
     const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-    return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 10;
+    return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 10
   }
 
   /**
@@ -800,14 +800,14 @@ class EmergencyContactService {
    */
   private isValidEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    return emailRegex.test(email)
   }
 
   /**
    * Save contacts to local storage
    */
   private saveContacts(): void {
-    localStorageService.setItem(this.STORAGE_KEY, JSON.stringify(this.contacts));
+    localStorageService.setItem(this.STORAGE_KEY, JSON.stringify(this.contacts))
   }
 
   /**
@@ -817,8 +817,8 @@ class EmergencyContactService {
     return JSON.stringify({
       contacts: this.contacts,
       exportDate: new Date().toISOString(),
-      version: '1.0';
-    }, null, 2);
+      version: '1.0'
+  }, null, 2)
   }
 
   /**
@@ -831,16 +831,16 @@ class EmergencyContactService {
         this.contacts = parsed.contacts;
         this.saveContacts();
         logger.info("Contacts imported successfully", { 
-          count: this.contacts.length ;
-        }, "EmergencyContactService");
-        return true;
-      }
+          count: this.contacts.length
+  }, "EmergencyContactService");
+        return true
+  }
     } catch (error) {
-      logger.error("Failed to import contacts", error, "EmergencyContactService");
-    }
+      logger.error("Failed to import contacts", error, "EmergencyContactService")
+  }
   }
 
-  return false;
+  return false
   }
 
   /**
@@ -848,7 +848,7 @@ class EmergencyContactService {
    */
   getQuickDialInfo(): {
     primaryContact: EmergencyContact | null;
-    localCrisisLine: CrisisLine | null;
+    localCrisisLine: CrisisLine | null
   } {
     const primaryContact = this.getPrimaryContact();
     const localCrisisLine = this.crisisLines.find(line => line.available24x7) || null;

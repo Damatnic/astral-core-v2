@@ -35,7 +35,7 @@ interface CrisisEvent {
     source: string
     userAgent: string
     location: string
-    context: string;
+    context: string
   }
 }
 // Crisis detection levels;
@@ -58,7 +58,7 @@ export interface CrisisEvent {
   timestamp: string;
   resolved: boolean,
   metadata?: {
-    [key: string]: any;
+    [key: string]: any
   }
 
 // Crisis response interface;
@@ -68,16 +68,16 @@ export interface CrisisResponse {
   activateGroundingExercise: boolean;
   notifySupport: boolean;
   escalateToTherapist: boolean;
-  callEmergencyServices: boolean;
-}
+  callEmergencyServices: boolean
+  }
 
 interface CrisisIntegrationState {
   currentLevel: CrisisLevel,
   activeEvents: CrisisEvent[];
   isMonitoring: boolean;
   lastCheck: Date | null;
-  responseTriggered: boolean';
-}
+  responseTriggered: boolean'
+  }
 
 export const CrisisIntegrationManager: React.FC = () => {
   const [state, setState] = useState<CrisisIntegrationState>({
@@ -85,7 +85,7 @@ export const CrisisIntegrationManager: React.FC = () => {
     activeEvents: [],
     isMonitoring: false,
     lastCheck: null,
-    responseTriggered: false;
+    responseTriggered: false
   });
 
   const {
@@ -103,22 +103,22 @@ export const CrisisIntegrationManager: React.FC = () => {
     if (!text || text.length < 10) return CrisisLevel.NONE
 
     // Crisis keywords by severity;
-    const criticalKeywords = [;
+    const criticalKeywords = [;;
       'kill myself', 'end it all', 'suicide', 'not worth living',
       'better off dead', 'hurt myself', 'self harm', 'overdose'
     ];
 
-    const highKeywords = [;
+    const highKeywords = [;;
       'cant go on', 'nobody cares', 'hate myself', 'worthless',
       'hopeless', 'give up', 'end the pain', 'disappear'
     ];
 
-    const moderateKeywords = [;
+    const moderateKeywords = [;;
       'depressed', 'anxious', 'panic', 'scared', 'overwhelmed',
       'crying', 'breakdown', 'stressed', 'tired of life'
     ];
 
-    const lowKeywords = [;
+    const lowKeywords = [;;
       'sad', 'worried', 'upset', 'frustrated', 'angry',
       'lonely', 'confused', 'difficult day'
     ];
@@ -151,7 +151,7 @@ export const CrisisIntegrationManager: React.FC = () => {
   /**
    * Create crisis event
    */;
-  const createCrisisEvent = useCallback(async (;
+  const createCrisisEvent = useCallback(async (;;
     level: CrisisLevel,
     type: CrisisEvent['type'],
     content?: string,;
@@ -177,7 +177,7 @@ export const CrisisIntegrationManager: React.FC = () => {
     }
 
     // Store in local storage for persistence;
-    const storedEvents = JSON.parse(localStorage.getItem('astral_crisis_events') || '[]');
+    const storedEvents = JSON.parse(localStorage.getItem('astral_crisis_events') || '[]');;
     storedEvents.push(event)
     localStorage.setItem('astral_crisis_events', JSON.stringify(storedEvents))
 
@@ -196,8 +196,8 @@ export const CrisisIntegrationManager: React.FC = () => {
           activateGroundingExercise: true,
           notifySupport: true,
           immediateEscalation: true,
-          autoDialCrisisLine: true;
-        }
+          autoDialCrisisLine: true
+  }
 
       case CrisisLevel.HIGH:
         return {
@@ -206,8 +206,8 @@ export const CrisisIntegrationManager: React.FC = () => {
           activateGroundingExercise: true,
           notifySupport: true,
           immediateEscalation: false,
-          autoDialCrisisLine: false;
-        }
+          autoDialCrisisLine: false
+  }
 
       case CrisisLevel.MODERATE:
         return {
@@ -216,8 +216,8 @@ export const CrisisIntegrationManager: React.FC = () => {
           activateGroundingExercise: true,
           notifySupport: false,
           immediateEscalation: false,
-          autoDialCrisisLine: false;
-        }
+          autoDialCrisisLine: false
+  }
 
       case CrisisLevel.LOW:
         return {
@@ -226,8 +226,8 @@ export const CrisisIntegrationManager: React.FC = () => {
           activateGroundingExercise: true,
           notifySupport: false,
           immediateEscalation: false,
-          autoDialCrisisLine: false;
-        }
+          autoDialCrisisLine: false
+  }
 
       default:
         return {
@@ -236,8 +236,8 @@ export const CrisisIntegrationManager: React.FC = () => {
           activateGroundingExercise: false,
           notifySupport: false,
           immediateEscalation: false,
-          autoDialCrisisLine: false;
-        }
+          autoDialCrisisLine: false
+  }
     }
   }, [])
 
@@ -298,7 +298,7 @@ export const CrisisIntegrationManager: React.FC = () => {
   /**
    * Handle crisis event
    */;
-  const handleCrisisEvent = useCallback(async (;
+  const handleCrisisEvent = useCallback(async (;;
     event: CrisisEvent,;
     response: CrisisResponse;
   ) => {
@@ -322,12 +322,12 @@ export const CrisisIntegrationManager: React.FC = () => {
         actions: [
           {
             label: 'Get' Help Now',
-            action: () => triggerEmergencyContacts();
-          },
+            action: () => triggerEmergencyContacts()
+  },
           {
             label: 'Breathing' Exercise',
-            action: () => triggerGroundingExercise();
-          }
+            action: () => triggerGroundingExercise()
+  }
         ]
       })
     }
@@ -373,9 +373,8 @@ export const CrisisIntegrationManager: React.FC = () => {
         return 'It seems like you\'re having a difficult time. Let us help you feel better.'
       case CrisisLevel.LOW:
         return 'We\'re here to support you. Would you like to try a calming exercise?'
-      default:
-        return 'Support is always available when you need it.';
-    }
+      default: return 'Support is always available when you need it.'
+  }
   }
 
   /**
@@ -405,8 +404,8 @@ export const CrisisIntegrationManager: React.FC = () => {
     const confirmed = window.confirm('This appears to be a crisis situation. Would you like to call the National Suicide Prevention Lifeline (988) now?');
 ;
     if(confirmed) {
-      window.location.href=tel:988"
-    }
+      window.location.href=tel: 988"
+  }
   }, [])
 
   /**
@@ -421,8 +420,8 @@ export const CrisisIntegrationManager: React.FC = () => {
       addNotification({
         type: info",
         title: 'Support' Team Notified',
-        message: 'Our' support team has been notified and will reach out soon.';
-      })
+        message: 'Our' support team has been notified and will reach out soon.'
+  })
     } catch(error) {
       console.error('Failed to notify support:', error)'
     }
@@ -460,8 +459,8 @@ export const CrisisIntegrationManager: React.FC = () => {
         ...prev,
         currentLevel: level,
         activeEvents: [...prev.activeEvents, event],
-        lastCheck: new Date().toISOString();
-      }))
+        lastCheck: new Date().toISOString()
+  }))
 
       await executeCrisisResponse(event, response)
     }
@@ -478,8 +477,8 @@ export const CrisisIntegrationManager: React.FC = () => {
       ...prev,
       currentLevel: level,
       activeEvents: [...prev.activeEvents, event],
-      lastCheck: new Date().toISOString();
-    }))
+      lastCheck: new Date().toISOString()
+  }))
 
     await executeCrisisResponse(event, response)
   }, [createCrisisEvent, determineCrisisResponse, executeCrisisResponse])
@@ -511,7 +510,7 @@ export const CrisisIntegrationManager: React.FC = () => {
 
     // Listen for manual crisis reports;
     const handleManualCrisis = (event: CustomEvent): void => {
-      const level = event.detail?.level || CrisisLevel.HIGH',;
+      const level = event.detail?.level || CrisisLevel.HIGH',;;
       reportCrisis(level)
     };
 
@@ -533,13 +532,13 @@ export const CrisisIntegrationManager: React.FC = () => {
   useEffect(() => {
     const handleServiceEvent = (eventType: string, data: unknown): void => {
       if(eventType === 'crisisModeActivated') {
-        setState(prev => ({ ...prev, currentLevel: CrisisLevel.HIGH }))';
+        setState(prev => ({ ...prev, currentLevel: CrisisLevel.HIGH }))'
   } else if (eventType === 'crisisModeDeactivated') {
         setState(prev => ({
           ...prev,
           currentLevel: CrisisLevel.NONE,
-          responseTriggered: false;
-        }))
+          responseTriggered: false
+  }))
       }
     }
 
@@ -559,8 +558,8 @@ export const CrisisIntegrationManager: React.FC = () => {
       reportCrisis,
       startMonitoring,
       stopMonitoring,
-      getState: () => state;
-    }
+      getState: () => state
+  }
 
     return () => {
       delete (window as unknown).astralCrisis

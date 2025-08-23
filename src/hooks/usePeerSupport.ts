@@ -29,7 +29,7 @@ export interface UsePeerSupportReturn {
     seekerRating?: number;
     supporterRating?: number;
     finalRiskLevel: number;
-    followUpNeeded: boolean;
+    followUpNeeded: boolean
   }) => Promise<void>;
   
   // Community Features
@@ -50,8 +50,8 @@ export interface UsePeerSupportReturn {
   
   // Actions
   refreshMatches: () => Promise<void>;
-  refreshStatistics: () => void;
-}
+  refreshStatistics: () => void
+  }
 
 export const usePeerSupport = (userToken: string, language: string): UsePeerSupportReturn => {
   const [peerMatches, setPeerMatches] = useState<PeerMatch[]>([]);
@@ -77,13 +77,13 @@ export const usePeerSupport = (userToken: string, language: string): UsePeerSupp
         userToken
       });
       
-      return peerId;
-    } catch (err) {
+      return peerId
+  } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to register as peer supporter');
-      return null;
-    } finally {
-      setIsRegistering(false);
-    }
+      return null
+  } finally {
+      setIsRegistering(false)
+  }
   };
   }, [userToken]);
 
@@ -92,7 +92,7 @@ export const usePeerSupport = (userToken: string, language: string): UsePeerSupp
    */;
   const updateAvailability = useCallback((status: 'available' | 'busy' | 'offline') => {
     // Implementation would update the peer's availability in the service
-    console.log(`[Peer Support Hook] Updated availability to: ${status}`);
+    console.log(`[Peer Support Hook] Updated availability to: ${status}`)
   };
   }, []);
 
@@ -106,13 +106,13 @@ export const usePeerSupport = (userToken: string, language: string): UsePeerSupp
       
       const matches = await peerSupportNetworkService.findCompatiblePeers(request);
       setPeerMatches(matches);
-      return matches;
-    } catch (err) {
+      return matches
+  } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to find peer support matches');
-      return [];
-    } finally {
-      setIsFindingMatches(false);
-    }
+      return []
+  } finally {
+      setIsFindingMatches(false)
+  }
   };
   }, []);
 
@@ -135,17 +135,17 @@ export const usePeerSupport = (userToken: string, language: string): UsePeerSupp
         sessionType: 'text-chat',
         description: 'Seeking peer support',
         timestamp: Date.now(),
-        maxWaitTime: 30;
-      };
+        maxWaitTime: 30
+  };
       
       const sessionId = await peerSupportNetworkService.createPeerSupportSession(mockRequest, supporterId);
-      return sessionId;
-    } catch (err) {
+      return sessionId
+  } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create support session');
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
+      return null
+  } finally {
+      setIsLoading(false)
+  }
   };
   }, [userToken, language]);
 
@@ -156,7 +156,7 @@ export const usePeerSupport = (userToken: string, language: string): UsePeerSupp
     seekerRating?: number;
     supporterRating?: number;
     finalRiskLevel: number;
-    followUpNeeded: boolean;
+    followUpNeeded: boolean
   }): Promise<void> => {
     try {
       setIsLoading(true);
@@ -165,12 +165,12 @@ export const usePeerSupport = (userToken: string, language: string): UsePeerSupp
       await peerSupportNetworkService.completePeerSupportSession(sessionId, feedback);
       
       // Remove from active sessions
-      setActiveSessions(prev => prev.filter(session => session.id !== sessionId));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to complete support session');
-    } finally {
-      setIsLoading(false);
-    }
+      setActiveSessions(prev => prev.filter(session => session.id !== sessionId))
+  } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to complete support session')
+  } finally {
+      setIsLoading(false)
+  }
   };
   }, []);
 
@@ -178,7 +178,7 @@ export const usePeerSupport = (userToken: string, language: string): UsePeerSupp
    * Get community groups for current language/culture
    */;
   const getCommunityGroups = useCallback((lang: string, culturalContext?: string): CommunityGroup[] => {
-    return peerSupportNetworkService.getCommunityGroups(lang, culturalContext);
+    return peerSupportNetworkService.getCommunityGroups(lang, culturalContext)
   };
   }, []);
 
@@ -192,13 +192,13 @@ export const usePeerSupport = (userToken: string, language: string): UsePeerSupp
       
       // Implementation would handle group joining logic
       console.log(`[Peer Support Hook] Joining group: ${groupId}`);
-      return true;
-    } catch (err) {
+      return true
+  } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to join community group');
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
+      return false
+  } finally {
+      setIsLoading(false)
+  }
   };
   }, []);
 
@@ -211,12 +211,12 @@ export const usePeerSupport = (userToken: string, language: string): UsePeerSupp
       setError(null);
       
       // Would refresh current matches based on user's criteria
-      console.log('[Peer Support Hook] Refreshing peer matches...');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to refresh matches');
-    } finally {
-      setIsFindingMatches(false);
-    }
+      console.log('[Peer Support Hook] Refreshing peer matches...')
+  } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to refresh matches')
+  } finally {
+      setIsFindingMatches(false)
+  }
   };
   }, []);
 
@@ -226,10 +226,10 @@ export const usePeerSupport = (userToken: string, language: string): UsePeerSupp
   const refreshStatistics = useCallback(() => {
     try {
       const stats = peerSupportNetworkService.getPeerSupportStatistics();
-      setPeerStatistics(stats);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to refresh statistics');
-    }
+      setPeerStatistics(stats)
+  } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to refresh statistics')
+  }
   };
   }, []);
 
@@ -244,25 +244,26 @@ export const usePeerSupport = (userToken: string, language: string): UsePeerSupp
         setCommunityGroups(groups);
         
         // Load statistics
-        refreshStatistics();
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load initial data');
-      } finally {
-        setIsLoading(false);
-      }
+        refreshStatistics()
+  } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load initial data')
+  } finally {
+        setIsLoading(false)
+  }
     };
 
-    loadInitialData();
+    loadInitialData()
   };
   }, [language, getCommunityGroups, refreshStatistics]);
 
   // Periodic statistics refresh
   useEffect(() => {
     const interval = setInterval(() => {
-      refreshStatistics();
-    }, 30000); // Refresh every 30 seconds
+      refreshStatistics()
+  }, 30000); // Refresh every 30 seconds
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
+  };
   };
   };
   }, [refreshStatistics]);

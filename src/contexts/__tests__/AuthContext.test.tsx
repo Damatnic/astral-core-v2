@@ -45,7 +45,7 @@ describe('AuthContext', () => {
     // Mock crypto.randomUUID
     global.crypto = {
       randomUUID: jest.fn(() => 'mock-uuid-test'),
-    } as any;
+    } as any
   });
 
   describe('AuthProvider', () => {
@@ -59,36 +59,36 @@ describe('AuthContext', () => {
             <span data-testid="user">{auth.user ? 'User exists' : 'No user'}</span>
             <span data-testid="token">{auth.userToken || 'No token'}</span>
           </div>
-        );
-      };
+        )
+  };
 
       await act(async () => {
         render(
           <AuthProvider>
             <TestComponent />
           </AuthProvider>
-        );
-      });
+        )
+  });
 
       // Wait for initialization to complete
       await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 0));
-      });
+        await new Promise(resolve => setTimeout(resolve, 0))
+  });
 
       expect(screen.getByTestId('authenticated')).toHaveTextContent('false');
       expect(screen.getByTestId('loading')).toHaveTextContent('false');
       expect(screen.getByTestId('user')).toHaveTextContent('No user');
       // Anonymous users always get a token
-      expect(screen.getByTestId('token')).toHaveTextContent('mock-uuid-test');
-    });
+      expect(screen.getByTestId('token')).toHaveTextContent('mock-uuid-test')
+  });
 
     it('should handle login function', async () => {
       const TestComponent = () => {
         const auth = useAuth();
         return (
           <button onClick={() => auth.login()}>Login</button>
-        );
-      };
+        )
+  };
 
       render(
         <AuthProvider>
@@ -101,17 +101,17 @@ describe('AuthContext', () => {
       
       // Login function should be callable without throwing
       await act(async () => {
-        loginButton.click();
-      });
-    });
+        loginButton.click()
+  })
+  });
 
     it('should handle logout function', async () => {
       const TestComponent = () => {
         const auth = useAuth();
         return (
           <button onClick={() => auth.logout()}>Logout</button>
-        );
-      };
+        )
+  };
 
       render(
         <AuthProvider>
@@ -124,9 +124,9 @@ describe('AuthContext', () => {
       
       // Logout function should be callable without throwing
       await act(async () => {
-        logoutButton.click();
-      });
-    });
+        logoutButton.click()
+  })
+  });
 
     it('should handle updateHelperProfile', () => {
       const TestComponent = () => {
@@ -143,8 +143,8 @@ describe('AuthContext', () => {
             rating: 5,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-          } as any);
-        };
+          } as any)
+  };
         
         return (
           <div>
@@ -153,8 +153,8 @@ describe('AuthContext', () => {
               {auth.helperProfile ? auth.helperProfile.name : 'No profile'}
             </span>
           </div>
-        );
-      };
+        )
+  };
 
       render(
         <AuthProvider>
@@ -167,9 +167,9 @@ describe('AuthContext', () => {
       // Should be able to call updateHelperProfile;
       const updateButton = screen.getByText('Update Profile');
       act(() => {
-        updateButton.click();
-      });
-    });
+        updateButton.click()
+  })
+  })
   });
 
   describe('useAuth hook', () => {
@@ -180,15 +180,15 @@ describe('AuthContext', () => {
 
       const TestComponent = () => {
         useAuth();
-        return null;
-      };
+        return null
+  };
 
       expect(() => {
-        render(<TestComponent />);
-      }).toThrow('useAuth must be used within an AuthProvider');
+        render(<TestComponent />)
+  }).toThrow('useAuth must be used within an AuthProvider');
 
-      console.error = originalError;
-    });
+      console.error = originalError
+  });
 
     it('should return auth context when used within provider', () => {
       const TestComponent = () => {
@@ -197,8 +197,8 @@ describe('AuthContext', () => {
           <div data-testid="auth-status">
             {auth ? 'Auth available' : 'No auth'}
           </div>
-        );
-      };
+        )
+  };
 
       render(
         <AuthProvider>
@@ -206,8 +206,8 @@ describe('AuthContext', () => {
         </AuthProvider>
       );
 
-      expect(screen.getByTestId('auth-status')).toHaveTextContent('Auth available');
-    });
+      expect(screen.getByTestId('auth-status')).toHaveTextContent('Auth available')
+  })
   });
 
   describe('Global authState', () => {
@@ -229,7 +229,7 @@ describe('AuthContext', () => {
       authState.userToken = originalToken;
       authState.isAuthenticated = false;
       authState.user = null;
-      authState.helperProfile = null;
-    });
+      authState.helperProfile = null
+  })
+  })
   });
-});

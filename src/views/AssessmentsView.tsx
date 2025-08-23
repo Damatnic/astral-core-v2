@@ -6,8 +6,8 @@ import { ViewHeader } from '../components/ViewHeader';
 import { culturalContextService } from '../services/culturalContextService';
 
 export const AssessmentsView: React.FC<{
-    setActiveView?: (view: ActiveView) => void;
-}> = ({ setActiveView }) => {
+    setActiveView?: (view: ActiveView) => void
+  }> = ({ setActiveView }) => {
     const [showCulturalOption, setShowCulturalOption] = useState(false);
     const [selectedCulturalContext, setSelectedCulturalContext] = useState(
         culturalContextService.getCulturalContext('en').region
@@ -20,11 +20,11 @@ export const AssessmentsView: React.FC<{
                 type,
                 ...(cultural && {
                     culturalContext: selectedCulturalContext,
-                    cultural: true;
-                })
+                    cultural: true
+  })
             }
-        });
-    };
+        })
+  };
 
     // Style objects for esbuild compatibility;
     const culturalCardStyle: React.CSSProperties = { marginBottom: '1rem', backgroundColor: '#eff6ff', border: '1px solid #bfdbfe' };
@@ -48,8 +48,8 @@ export const AssessmentsView: React.FC<{
         backgroundColor: '#e0f2fe', 
         color: '#0369a1', 
         padding: '0.25rem 0.5rem', 
-        borderRadius: '0.25rem' ;
-    };
+        borderRadius: '0.25rem'
+  };
     const assessmentButtonContainerStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: '0.5rem' };
     const culturalAssessmentButtonStyle: React.CSSProperties = { fontSize: '0.875rem' };
     const hrStyle: React.CSSProperties = { margin: '1rem 0', border: 'none', borderBottom: '1px solid var(--border-color)' };
@@ -72,8 +72,7 @@ export const AssessmentsView: React.FC<{
                         <p style={culturalDescriptionStyle}>
                             Get assessments adapted for your cultural context that respect cultural differences in mental health expression.
                         </p>
-                        <AppButton;
-                            variant="secondary"
+                        <AppButton variant="secondary"
                             onClick={() => setShowCulturalOption(!showCulturalOption)}
                             style={culturalButtonStyle}
                         >
@@ -128,8 +127,7 @@ export const AssessmentsView: React.FC<{
                                 Standard Assessment
                             </AppButton>
                             {showCulturalOption && (
-                                <AppButton; 
-                                    variant="secondary" 
+                                <AppButton variant="secondary" 
                                     onClick={() => startAssessment('phq-9', true)}
                                     style={culturalAssessmentButtonStyle}
                                 >
@@ -156,8 +154,7 @@ export const AssessmentsView: React.FC<{
                                 Standard Assessment
                             </AppButton>
                             {showCulturalOption && (
-                                <AppButton; 
-                                    variant="secondary" 
+                                <AppButton variant="secondary" 
                                     onClick={() => startAssessment('gad-7', true)}
                                     style={culturalAssessmentButtonStyle}
                                 >
@@ -175,7 +172,7 @@ export const AssessmentsView: React.FC<{
                 </div>
             </Card>
         </>
-    );
-};
+    )
+  };
 
 export default AssessmentsView;

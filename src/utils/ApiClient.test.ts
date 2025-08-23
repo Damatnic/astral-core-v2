@@ -73,7 +73,7 @@ describe('ApiClient', () => {
     (global as any).netlifyFunctionsAvailable = null;
     
     // Re-initialize ApiClient with the new environment
-    await ApiClient.initialize();
+    await ApiClient.initialize()
   });
 
   afterEach(() => {
@@ -89,14 +89,14 @@ describe('ApiClient', () => {
     Object.defineProperty(process, 'env', {
       value: originalProcess.env,
       writable: true,
-    });
+    })
   });
 
   describe('Initialization', () => {
     test('should have initialize method', async () => {
       expect(typeof ApiClient.initialize).toBe('function');
-      await expect(ApiClient.initialize()).resolves.toBeUndefined();
-    });
+      await expect(ApiClient.initialize()).resolves.toBeUndefined()
+  });
 
     test('should check Netlify Functions availability in development', async () => {
       setupDevelopmentEnvironment();
@@ -124,8 +124,8 @@ describe('ApiClient', () => {
           protocol: 'http:',
           pathname: '/',
           search: '',
-          hash: '';
-        },
+          hash: ''
+  },
         writable: true,
         configurable: true,
       });
@@ -158,8 +158,8 @@ describe('ApiClient', () => {
       consoleSpy.mockRestore();
       
       // Reset to production environment for other tests
-      setupProductionEnvironment();
-    });
+      setupProductionEnvironment()
+  })
   });
 
   describe('Resources API', () => {
@@ -184,8 +184,8 @@ describe('ApiClient', () => {
           }),
         })
       );
-      expect(result).toEqual(mockResources);
-    });
+      expect(result).toEqual(mockResources)
+  })
   });
 
   describe('Assessments API', () => {
@@ -200,7 +200,7 @@ describe('ApiClient', () => {
         json: jest.fn().mockResolvedValue(mockAssessment),
       } as any);
 
-      const result = await ApiClient.assessments.submitPhq9Result(;
+      const result = await ApiClient.assessments.submitPhq9Result(;;
         'user123',
         10,
         [1, 2, 1, 2, 0, 1, 1, 0, 0]
@@ -218,8 +218,8 @@ describe('ApiClient', () => {
           }),
         })
       );
-      expect(result).toEqual(mockAssessment);
-    });
+      expect(result).toEqual(mockAssessment)
+  });
 
     test('should submit GAD-7 result', async () => {
       setupProductionEnvironment();
@@ -232,7 +232,7 @@ describe('ApiClient', () => {
         json: jest.fn().mockResolvedValue(mockAssessment),
       } as any);
 
-      const result = await ApiClient.assessments.submitGad7Result(;
+      const result = await ApiClient.assessments.submitGad7Result(;;
         'user123',
         8,
         [2, 1, 1, 2, 0, 1, 1]
@@ -250,13 +250,13 @@ describe('ApiClient', () => {
           }),
         })
       );
-      expect(result).toEqual(mockAssessment);
-    });
+      expect(result).toEqual(mockAssessment)
+  });
 
     test('should get assessment history', async () => {
       setupProductionEnvironment();
       
-      const mockHistory = [;
+      const mockHistory = [;;
         { id: '1', score: 10, type: 'phq-9' },
         { id: '2', score: 8, type: 'gad-7' },
       ];
@@ -273,8 +273,8 @@ describe('ApiClient', () => {
         '/.netlify/functions/wellness/assessments/history/user123',
         expect.any(Object)
       );
-      expect(result).toEqual(mockHistory);
-    });
+      expect(result).toEqual(mockHistory)
+  })
   });
 
   describe('Habits API', () => {
@@ -295,8 +295,8 @@ describe('ApiClient', () => {
         '/.netlify/functions/wellness/habits/predefined',
         expect.any(Object)
       );
-      expect(result).toEqual(mockHabits);
-    });
+      expect(result).toEqual(mockHabits)
+  });
 
     test('should track habit', async () => {
       setupProductionEnvironment();
@@ -318,8 +318,8 @@ describe('ApiClient', () => {
             habitId: 'habit456',
           }),
         })
-      );
-    });
+      )
+  });
 
     test('should log habit completion', async () => {
       setupProductionEnvironment();
@@ -336,7 +336,7 @@ describe('ApiClient', () => {
         json: jest.fn().mockResolvedValue(mockCompletion),
       } as any);
 
-      const result = await ApiClient.habits.logCompletion(;
+      const result = await ApiClient.habits.logCompletion(;;
         'user123',
         'habit456',
         '2024-01-15'
@@ -353,8 +353,8 @@ describe('ApiClient', () => {
           }),
         })
       );
-      expect(result).toEqual(mockCompletion);
-    });
+      expect(result).toEqual(mockCompletion)
+  })
   });
 
   describe('Mood API', () => {
@@ -392,13 +392,13 @@ describe('ApiClient', () => {
           body: JSON.stringify({ ...checkInData, userToken: 'user123' }),
         })
       );
-      expect(result).toEqual(mockCheckIn);
-    });
+      expect(result).toEqual(mockCheckIn)
+  });
 
     test('should get mood history', async () => {
       setupProductionEnvironment();
       
-      const mockHistory = [;
+      const mockHistory = [;;
         { id: 'checkin1', mood: 7, timestamp: new Date() },
         { id: 'checkin2', mood: 8, timestamp: new Date() },
       ];
@@ -415,8 +415,8 @@ describe('ApiClient', () => {
         '/.netlify/functions/wellness/mood/history/user123',
         expect.any(Object)
       );
-      expect(result).toEqual(mockHistory);
-    });
+      expect(result).toEqual(mockHistory)
+  })
   });
 
   describe('Journal API', () => {
@@ -425,14 +425,14 @@ describe('ApiClient', () => {
       jest.spyOn(localStorage, 'getItem').mockImplementation((key) => {
         if (key === 'demo_token') return 'demo-token';
         if (key === 'demo_user') return JSON.stringify({ userType: 'seeker' });
-        return null;
-      });
+        return null
+  });
 
       const result = await ApiClient.journal.getEntries('user123');
 
       // Should return empty array from mocked demo data
-      expect(result).toEqual([]);
-    });
+      expect(result).toEqual([])
+  });
 
     test('should post journal entry', async () => {
       setupProductionEnvironment();
@@ -450,7 +450,7 @@ describe('ApiClient', () => {
         json: jest.fn().mockResolvedValue(mockEntry),
       } as any);
 
-      const result = await ApiClient.journal.postEntry(;
+      const result = await ApiClient.journal.postEntry(;;
         'Today was a good day',
         'user123'
       );
@@ -465,15 +465,15 @@ describe('ApiClient', () => {
           }),
         })
       );
-      expect(result).toEqual(mockEntry);
-    });
+      expect(result).toEqual(mockEntry)
+  })
   });
 
   describe('Videos API', () => {
     test('should get wellness videos', async () => {
       setupProductionEnvironment();
       
-      const mockVideos = [;
+      const mockVideos = [;;
         { id: 'video1', title: 'Meditation Guide' },
         { id: 'video2', title: 'Breathing Exercise' },
       ];
@@ -490,8 +490,8 @@ describe('ApiClient', () => {
         '/.netlify/functions/wellness/videos',
         expect.any(Object)
       );
-      expect(result).toEqual(mockVideos);
-    });
+      expect(result).toEqual(mockVideos)
+  });
 
     test('should like video', async () => {
       setupProductionEnvironment();
@@ -512,8 +512,8 @@ describe('ApiClient', () => {
           method: 'POST',
         })
       );
-      expect(result).toEqual(mockVideo);
-    });
+      expect(result).toEqual(mockVideo)
+  });
 
     test('should upload video', async () => {
       setupProductionEnvironment();
@@ -529,7 +529,7 @@ describe('ApiClient', () => {
         json: jest.fn().mockResolvedValue(mockVideo),
       } as any);
 
-      const result = await ApiClient.videos.uploadVideo(;
+      const result = await ApiClient.videos.uploadVideo(;;
         mockFile,
         'Test video description',
         'user123'
@@ -546,8 +546,8 @@ describe('ApiClient', () => {
           }),
         })
       );
-      expect(result).toEqual(mockVideo);
-    });
+      expect(result).toEqual(mockVideo)
+  })
   });
 
   describe('Safety Plan API', () => {
@@ -572,8 +572,8 @@ describe('ApiClient', () => {
         '/.netlify/functions/users/safety-plan/user123',
         expect.any(Object)
       );
-      expect(result).toEqual(mockSafetyPlan);
-    });
+      expect(result).toEqual(mockSafetyPlan)
+  });
 
     test('should save safety plan', async () => {
       setupProductionEnvironment();
@@ -600,8 +600,8 @@ describe('ApiClient', () => {
             userToken: 'user123',
           }),
         })
-      );
-    });
+      )
+  })
   });
 
   describe('Legal API', () => {
@@ -625,8 +625,8 @@ describe('ApiClient', () => {
         '/.netlify/functions/users/consent/user123/privacy-policy',
         expect.any(Object)
       );
-      expect(result).toEqual(mockConsent);
-    });
+      expect(result).toEqual(mockConsent)
+  });
 
     test('should record consent', async () => {
       setupProductionEnvironment();
@@ -655,8 +655,8 @@ describe('ApiClient', () => {
             documentVersion: '1.0',
           }),
         })
-      );
-    });
+      )
+  })
   });
 
   describe('Payment API', () => {
@@ -674,8 +674,8 @@ describe('ApiClient', () => {
         clientSecret: expect.stringContaining('pi_mock-uuid-123_secret_mock-uuid-123'),
       });
       
-      jest.useRealTimers();
-    });
+      jest.useRealTimers()
+  });
 
     test('should log donation amount in development', async () => {
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
@@ -686,8 +686,8 @@ describe('ApiClient', () => {
         'Simulating creating a payment intent for $10.00'
       );
       
-      consoleSpy.mockRestore();
-    });
+      consoleSpy.mockRestore()
+  })
   });
 
   describe('Emergency API', () => {
@@ -700,8 +700,8 @@ describe('ApiClient', () => {
         '!!! EMERGENCY TRIGGERED for Dilemma dilemma123 !!!'
       );
       
-      consoleSpy.mockRestore();
-    });
+      consoleSpy.mockRestore()
+  });
 
     test('should trigger emergency with location', async () => {
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
@@ -718,8 +718,8 @@ describe('ApiClient', () => {
         '  > Location: lat=40.7128, lon=-74.006'
       );
       
-      consoleSpy.mockRestore();
-    });
+      consoleSpy.mockRestore()
+  })
   });
 
   describe('Error Handling', () => {
@@ -741,8 +741,8 @@ describe('ApiClient', () => {
         expect.objectContaining({
           type: 'auth-error',
         })
-      );
-    });
+      )
+  });
 
     test('should handle network errors', async () => {
       setupProductionEnvironment();
@@ -751,8 +751,8 @@ describe('ApiClient', () => {
 
       await expect(ApiClient.resources.getResources()).rejects.toThrow(
         'Network error'
-      );
-    });
+      )
+  });
 
     test('should handle non-JSON error responses', async () => {
       setupProductionEnvironment();
@@ -766,8 +766,8 @@ describe('ApiClient', () => {
 
       await expect(ApiClient.resources.getResources()).rejects.toThrow(
         'An unknown API error occurred.'
-      );
-    });
+      )
+  });
 
     test('should handle HTML responses in development', async () => {
       setupDevelopmentEnvironment();
@@ -780,8 +780,8 @@ describe('ApiClient', () => {
 
       await expect(ApiClient.resources.getResources()).rejects.toThrow(
         'Demo mode - API skipped'
-      );
-    });
+      )
+  });
 
     test('should handle successful HTML responses in development', async () => {
       setupDevelopmentEnvironment();
@@ -794,8 +794,8 @@ describe('ApiClient', () => {
 
       await expect(ApiClient.resources.getResources()).rejects.toThrow(
         'Demo mode - API skipped'
-      );
-    });
+      )
+  })
   });
 
   describe('Authentication', () => {
@@ -819,8 +819,8 @@ describe('ApiClient', () => {
             'Authorization': 'Bearer test-token',
           }),
         })
-      );
-    });
+      )
+  });
 
     test('should not include authorization header when token is not present', async () => {
       setupProductionEnvironment();
@@ -837,8 +837,8 @@ describe('ApiClient', () => {
 
       const call = mockFetch.mock.calls[0];
       const headers = (call[1] as any).headers;
-      expect(headers).not.toHaveProperty('Authorization');
-    });
+      expect(headers).not.toHaveProperty('Authorization')
+  })
   });
 
   describe('Demo Mode', () => {
@@ -847,8 +847,8 @@ describe('ApiClient', () => {
         if (key === 'demo_token') return 'demo-token';
         if (key === 'demo_user') return JSON.stringify({ userType: 'seeker' });
         if (key === 'astral_core_anonymous_id') return null;
-        return null;
-      });
+        return null
+  });
       process.env.VITE_USE_DEMO_DATA = undefined;
 
       // Set up production environment
@@ -876,16 +876,16 @@ describe('ApiClient', () => {
       // Verify demo_token was checked
       expect(localStorageSpy).toHaveBeenCalled();
       const calls = localStorageSpy.mock.calls.map(call => call[0]);
-      expect(calls).toContain('demo_token');
-    });
+      expect(calls).toContain('demo_token')
+  });
 
     test('should detect demo mode with environment variable', () => {
       jest.spyOn(localStorage, 'getItem').mockReturnValue(null);
       process.env.VITE_USE_DEMO_DATA = 'true';
 
       // This would be tested through API calls that check demo mode
-      expect(process.env.VITE_USE_DEMO_DATA).toBe('true');
-    });
+      expect(process.env.VITE_USE_DEMO_DATA).toBe('true')
+  })
   });
 
   describe('Dilemmas API', () => {
@@ -920,7 +920,7 @@ describe('ApiClient', () => {
         json: jest.fn().mockResolvedValue(mockDilemma),
       } as any);
 
-      const result = await ApiClient.dilemmas.postDilemma(;
+      const result = await ApiClient.dilemmas.postDilemma(;;
         dilemmaData as any,
         'user123'
       );
@@ -932,8 +932,8 @@ describe('ApiClient', () => {
           body: JSON.stringify({ ...dilemmaData, userToken: 'user123' }),
         })
       );
-      expect(result).toEqual(mockDilemma);
-    });
+      expect(result).toEqual(mockDilemma)
+  })
   });
 
   describe('Helpers API', () => {
@@ -941,8 +941,8 @@ describe('ApiClient', () => {
       jest.spyOn(localStorage, 'getItem').mockImplementation((key) => {
         if (key === 'demo_token') return 'demo-token';
         if (key === 'demo_user') return JSON.stringify({ userType: 'helper' });
-        return null;
-      });
+        return null
+  });
 
       const result = await ApiClient.helpers.getProfile('auth0|123');
 
@@ -969,8 +969,8 @@ describe('ApiClient', () => {
           }),
         })
       );
-      expect(result).toBe(25);
-    });
+      expect(result).toBe(25)
+  });
 
     test('should fallback to demo count on error', async () => {
       const error = new Error('Demo mode - API skipped');
@@ -979,15 +979,15 @@ describe('ApiClient', () => {
 
       const result = await ApiClient.helpers.getOnlineHelperCount();
 
-      expect(result).toBe(12);
-    });
+      expect(result).toBe(12)
+  })
   });
 
   describe('AI API', () => {
     test('should handle chat request', async () => {
       setupProductionEnvironment();
       
-      const messages = [;
+      const messages = [;;
         { id: '1', sender: 'user' as const, text: 'Hello', timestamp: '2023-01-01T00:00:00Z' },
         { id: '2', sender: 'ai' as const, text: 'Hi there!', timestamp: '2023-01-01T00:00:01Z' },
       ];
@@ -1010,8 +1010,8 @@ describe('ApiClient', () => {
           body: JSON.stringify({ messages, userId: systemInstruction, provider: 'openai' }),
         })
       );
-      expect(result).toEqual(mockResponse);
-    });
+      expect(result).toEqual(mockResponse)
+  });
 
     test('should handle invalid AI response', async () => {
       setupProductionEnvironment();
@@ -1025,8 +1025,8 @@ describe('ApiClient', () => {
 
       // The AI chat returns whatever the API returns;
       const result = await ApiClient.ai.chat([], 'Be helpful');
-      expect(result).toEqual({});
-    });
+      expect(result).toEqual({})
+  });
 
     test('should load chat history with demo fallback', async () => {
       const error = new Error('Demo mode - API skipped');
@@ -1035,8 +1035,8 @@ describe('ApiClient', () => {
 
       const result = await ApiClient.ai.loadChatHistory('test-user-id');
 
-      expect(result).toEqual([]);
-    });
+      expect(result).toEqual([])
+  })
   });
 
   describe('Configuration', () => {
@@ -1056,8 +1056,8 @@ describe('ApiClient', () => {
       expect(mockFetch).toHaveBeenCalledWith(
         'https://api.example.com/wellness/resources',
         expect.any(Object)
-      );
-    });
+      )
+  });
 
     test('should use default Netlify Functions URL', async () => {
       setupProductionEnvironment();
@@ -1075,8 +1075,8 @@ describe('ApiClient', () => {
       expect(mockFetch).toHaveBeenCalledWith(
         expect.stringContaining('/wellness/resources'),
         expect.any(Object)
-      );
-    });
+      )
+  })
   });
 
   describe('Response Handling', () => {
@@ -1091,8 +1091,8 @@ describe('ApiClient', () => {
 
       const result = await ApiClient.habits.trackHabit('user123', 'habit456');
 
-      expect(result).toBeUndefined();
-    });
+      expect(result).toBeUndefined()
+  });
 
     test('should handle responses without content-type header', async () => {
       setupProductionEnvironment();
@@ -1106,8 +1106,8 @@ describe('ApiClient', () => {
 
       const result = await ApiClient.resources.getResources();
 
-      expect(result).toEqual({ success: true });
-    });
+      expect(result).toEqual({ success: true })
+  })
   });
 
   describe('Performance', () => {
@@ -1121,10 +1121,10 @@ describe('ApiClient', () => {
           status: 200,
           headers: new Headers({ 'content-type': 'application/json' }),
           json: jest.fn().mockResolvedValue([]),
-        } as any);
-      }
+        } as any)
+  }
 
-      const promises = [;
+      const promises = [;;
         ApiClient.resources.getResources(),
         ApiClient.videos.getVideos(),
         ApiClient.habits.getPredefinedHabits(),
@@ -1135,8 +1135,8 @@ describe('ApiClient', () => {
       const results = await Promise.all(promises);
 
       expect(results).toHaveLength(5);
-      expect(mockFetch).toHaveBeenCalledTimes(5);
-    });
+      expect(mockFetch).toHaveBeenCalledTimes(5)
+  });
 
     test('should not interfere with parallel requests on error', async () => {
       setupProductionEnvironment();
@@ -1151,7 +1151,7 @@ describe('ApiClient', () => {
         json: jest.fn().mockResolvedValue([]),
       } as any);
 
-      const promises = [;
+      const promises = [;;
         ApiClient.resources.getResources().catch(e => e.message),
         ApiClient.videos.getVideos(),
       ];
@@ -1159,7 +1159,7 @@ describe('ApiClient', () => {
       const results = await Promise.all(promises);
 
       expect(results[0]).toBe('Network error');
-      expect(results[1]).toEqual([]);
-    });
+      expect(results[1]).toEqual([])
+  })
+  })
   });
-});

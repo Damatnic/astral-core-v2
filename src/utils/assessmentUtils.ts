@@ -3,15 +3,15 @@ export interface AssessmentQuestion {
   text: string;
   options: {
     value: number;
-    text: string;
-  }[];
-}
+    text: string
+  }[]
+  }
 
 export interface AssessmentResult {
   score: number;
   severity: string;
-  recommendation: string;
-}
+  recommendation: string
+  }
 
 // PHQ-9 Depression Assessment Questions;
 export const phq9Questions: AssessmentQuestion[] = [
@@ -187,28 +187,28 @@ export const getPhq9Result = (score: number): AssessmentResult => {
     return {
       score,
       severity: 'Minimal Depression',
-      recommendation: 'Your symptoms suggest minimal depression. Continue monitoring your mental health and maintain healthy lifestyle habits.';
-    } else if (score <= 9) {
+      recommendation: 'Your symptoms suggest minimal depression. Continue monitoring your mental health and maintain healthy lifestyle habits.'
+  } else if (score <= 9) {
     return {
       score,
       severity: 'Mild Depression',
-      recommendation: 'Your symptoms suggest mild depression. Consider reaching out to a mental health professional for support and guidance.';
-    } else if (score <= 14) {
+      recommendation: 'Your symptoms suggest mild depression. Consider reaching out to a mental health professional for support and guidance.'
+  } else if (score <= 14) {
     return {
       score,
       severity: 'Moderate Depression',
-      recommendation: 'Your symptoms suggest moderate depression. We recommend speaking with a healthcare provider about treatment options.';
-    } else if (score <= 19) {
+      recommendation: 'Your symptoms suggest moderate depression. We recommend speaking with a healthcare provider about treatment options.'
+  } else if (score <= 19) {
     return {
       score,
       severity: 'Moderately Severe Depression',
-      recommendation: 'Your symptoms suggest moderately severe depression. Please consider seeking professional help soon for proper evaluation and treatment.';
-    } else {
+      recommendation: 'Your symptoms suggest moderately severe depression. Please consider seeking professional help soon for proper evaluation and treatment.'
+  } else {
     return {
       score,
       severity: 'Severe Depression',
-      recommendation: 'Your symptoms suggest severe depression. We strongly recommend contacting a mental health professional immediately for proper care and support.';
-    }
+      recommendation: 'Your symptoms suggest severe depression. We strongly recommend contacting a mental health professional immediately for proper care and support.'
+  }
 };
 
 // GAD-7 Score Interpretation;
@@ -217,21 +217,21 @@ export const getGad7Result = (score: number): AssessmentResult => {
     return {
       score,
       severity: 'Minimal Anxiety',
-      recommendation: 'Your symptoms suggest minimal anxiety. Continue practicing stress management and healthy coping strategies.';
-    } else if (score <= 9) {
+      recommendation: 'Your symptoms suggest minimal anxiety. Continue practicing stress management and healthy coping strategies.'
+  } else if (score <= 9) {
     return {
       score,
       severity: 'Mild Anxiety',
-      recommendation: 'Your symptoms suggest mild anxiety. Consider learning relaxation techniques and speaking with a mental health professional if symptoms persist.';
-    } else if (score <= 14) {
+      recommendation: 'Your symptoms suggest mild anxiety. Consider learning relaxation techniques and speaking with a mental health professional if symptoms persist.'
+  } else if (score <= 14) {
     return {
       score,
       severity: 'Moderate Anxiety',
-      recommendation: 'Your symptoms suggest moderate anxiety. We recommend consulting with a healthcare provider about treatment options and coping strategies.';
-    } else {
+      recommendation: 'Your symptoms suggest moderate anxiety. We recommend consulting with a healthcare provider about treatment options and coping strategies.'
+  } else {
     return {
       score,
       severity: 'Severe Anxiety',
-      recommendation: 'Your symptoms suggest severe anxiety. Please consider seeking professional help soon for proper evaluation and treatment to improve your quality of life.';
-    }
+      recommendation: 'Your symptoms suggest severe anxiety. Please consider seeking professional help soon for proper evaluation and treatment to improve your quality of life.'
+  }
 };

@@ -16,8 +16,8 @@ interface Language {
   name: string;
   nativeName: string;
   flag: string;
-  rtl: boolean;
-}
+  rtl: boolean
+  }
 
 interface LanguageSwitcherProps {
   variant?: 'dropdown' | 'inline' | 'modal';
@@ -25,8 +25,8 @@ interface LanguageSwitcherProps {
   showNativeNames?: boolean;
   compact?: boolean;
   className?: string;
-  onLanguageChange?: (language: string) => void;
-}
+  onLanguageChange?: (language: string) => void
+  }
 
 const languages: Language[] = [
   { code: 'en', name: 'English', nativeName: 'English', flag: '🇺🇸', rtl: false },
@@ -56,11 +56,11 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 
   // Initialize selected language
   useEffect(() => {
-    const currentLang = languages.find(lang => ;
+    const currentLang = languages.find(lang => ;;
       lang.code === i18n.language || 
       i18n.language.startsWith(lang.code.split('-')[0])
     );
-    setSelectedLanguage(currentLang || languages[0]);
+    setSelectedLanguage(currentLang || languages[0])
   };
   }, [i18n.language]);
 
@@ -68,14 +68,14 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
+        setIsOpen(false)
+  }
     };
 
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+  }
   };
   }, [isOpen]);
 
@@ -83,16 +83,16 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Escape') {
       setIsOpen(false);
-      buttonRef.current?.focus();
-    }
+      buttonRef.current?.focus()
+  }
   };
 
   // Handle language change;
   const handleLanguageSelect = async (language: Language) => {
     if (language.code === i18n.language) {
       setIsOpen(false);
-      return;
-    }
+      return
+  }
 
     setIsChanging(true);
     
@@ -107,12 +107,12 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
       if (language.rtl) {
         document.documentElement.dir = 'rtl';
         document.documentElement.lang = language.code;
-        document.body.classList.add('rtl-mode');;
+        document.body.classList.add('rtl-mode')
   } else {
         document.documentElement.dir = 'ltr';
         document.documentElement.lang = language.code;
-        document.body.classList.remove('rtl-mode');
-      }
+        document.body.classList.remove('rtl-mode')
+  }
       
       // Store preference
       localStorage.setItem('preferred_language', language.code);
@@ -120,20 +120,20 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
       
       // Notify parent component
       if (onLanguageChange) {
-        onLanguageChange(language.code);
-      }
+        onLanguageChange(language.code)
+  }
       
       // Show success notification
       showNotification(t('language.changed', { language: language.nativeName }));
       
-      setSelectedLanguage(language);
-    } catch (error) {
+      setSelectedLanguage(language)
+  } catch (error) {
       console.error('Failed to change language:', error);
-      showNotification(t('language.changeFailed'), 'error');
-    } finally {
+      showNotification(t('language.changeFailed'), 'error')
+  } finally {
       setIsChanging(false);
-      setIsOpen(false);
-    }
+      setIsOpen(false)
+  }
   };
 
   // Show notification;
@@ -152,9 +152,9 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     setTimeout(() => {
       notification.classList.add('fade-out');
       setTimeout(() => {
-        document.body.removeChild(notification);
-      }, 300);
-    }, 3000);
+        document.body.removeChild(notification)
+  }, 300)
+  }, 3000)
   };
 
   // Render dropdown variant
@@ -180,8 +180,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
               {showNativeNames ? selectedLanguage.nativeName : selectedLanguage.name}
             </span>
           )}
-          <svg;
-            className={isOpen ? 'language-arrow language-arrow--open' : 'language-arrow'}
+          <svg className={isOpen ? 'language-arrow language-arrow--open' : 'language-arrow'}
             width="12"
             height="12"
             viewBox="0 0 12 12"
@@ -199,8 +198,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         </button>
         
         {isOpen && (
-          <ul;
-            className="language-menu"
+          <ul className="language-menu"
             role="listbox"
             aria-label={t('language.availableLanguages')}
             onKeyDown={handleKeyDown}
@@ -214,8 +212,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
                   language.code === i18n.language ? 'language-option--selected' : ''
                 } ${language.rtl ? 'language-option--rtl' : ''}`}
               >
-                <button;
-                  className="language-option__button"
+                <button className="language-option__button"
                   onClick={() => handleLanguageSelect(language)}
                   disabled={isChanging}
                   dir={language.rtl ? 'rtl' : 'ltr'}
@@ -232,8 +229,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
                     )}
                   </div>
                   {language.code === i18n.language && (
-                    <svg;
-                      className="language-check"
+                    <svg className="language-check"
                       width="16"
                       height="16"
                       viewBox="0 0 16 16"
@@ -255,7 +251,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
           </ul>
         )}
       </div>
-    );
+    )
   }
 
   // Render inline variant
@@ -291,14 +287,13 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
           ))}
         </div>
       </div>
-    );
+    )
   }
 
   // Render modal variant
   return (
     <div className={`language-switcher language-switcher--modal ${className}`}>
-      <button;
-        className="language-switcher__trigger"
+      <button className="language-switcher__trigger"
         onClick={() => setIsOpen(true)}
         aria-label={t('language.selectLanguage')}
         disabled={isChanging}
@@ -314,13 +309,11 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
       </button>
       
       {isOpen && (
-        <div;
-          className="language-modal-overlay"
+        <div className="language-modal-overlay"
           onClick={() => setIsOpen(false)}
           aria-hidden="true"
         >
-          <div;
-            className="language-modal"
+          <div className="language-modal"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
@@ -328,8 +321,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
           >
             <div className="language-modal__header">
               <h2 id="language-modal-title">{t('language.selectLanguage')}</h2>
-              <button;
-                className="language-modal__close"
+              <button className="language-modal__close"
                 onClick={() => setIsOpen(false)}
                 aria-label={t('common.close')}
               >
@@ -371,25 +363,25 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 // Styles;
-const styles = `;
+const styles = `;;
   /* Base styles */
   .language-switcher {
     position: relative;
-    font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+    font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif)
   }
 
   .language-flag {
     font-size: 20px;
-    line-height: 1;
+    line-height: 1
   }
 
   /* Dropdown variant */
   .language-switcher--dropdown {
-    display: inline-block;
+    display: inline-block
   }
 
   .language-switcher__button {
@@ -405,30 +397,30 @@ const styles = `;
     color: #374151;
     cursor: pointer;
     transition: all 0.2s;
-    min-height: 44px;
+    min-height: 44px
   }
 
   .language-switcher__button:hover {
     background: #f9fafb;
-    border-color: #d1d5db;
+    border-color: #d1d5db
   }
 
   .language-switcher__button:focus {
     outline: 2px solid #3b82f6;
-    outline-offset: 2px;
+    outline-offset: 2px
   }
 
   .language-switcher__button:disabled {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: not-allowed
   }
 
   .language-arrow {
-    transition: transform 0.2s;
+    transition: transform 0.2s
   }
 
   .language-arrow--open {
-    transform: rotate(180deg);
+    transform: rotate(180deg)
   }
 
   .language-menu {
@@ -446,11 +438,11 @@ const styles = `;
     margin: 0;
     padding: 4px;
     z-index: 1000;
-    animation: slideDown 0.2s ease-out;
+    animation: slideDown 0.2s ease-out
   }
 
   .language-option {
-    list-style: none;
+    list-style: none
   }
 
   .language-option__button {
@@ -466,48 +458,48 @@ const styles = `;
     color: #374151;
     text-align: left;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.2s
   }
 
   .language-option--rtl .language-option__button {
     text-align: right;
-    flex-direction: row-reverse;
+    flex-direction: row-reverse
   }
 
   .language-option__button:hover {
-    background: #f3f4f6;
+    background: #f3f4f6
   }
 
   .language-option__button:focus {
     outline: 2px solid #3b82f6;
-    outline-offset: -2px;
+    outline-offset: -2px
   }
 
   .language-option--selected .language-option__button {
     background: #eff6ff;
     color: #2563eb;
-    font-weight: 600;
+    font-weight: 600
   }
 
   .language-names {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 2px
   }
 
   .language-native {
     font-size: 12px;
-    color: #6b7280;
+    color: #6b7280
   }
 
   .language-check {
-    color: #10b981;
+    color: #10b981
   }
 
   /* Inline variant */
   .language-switcher--inline {
-    display: inline-block;
+    display: inline-block
   }
 
   .language-inline-list {
@@ -515,7 +507,7 @@ const styles = `;
     gap: 4px;
     padding: 4px;
     background: #f3f4f6;
-    border-radius: 8px;
+    border-radius: 8px
   }
 
   .language-inline-option {
@@ -530,34 +522,34 @@ const styles = `;
     color: #6b7280;
     cursor: pointer;
     transition: all 0.2s;
-    min-height: 36px;
+    min-height: 36px
   }
 
   .language-inline-option:hover {
     background: white;
-    color: #374151;
+    color: #374151
   }
 
   .language-inline-option:focus {
     outline: 2px solid #3b82f6;
-    outline-offset: -2px;
+    outline-offset: -2px
   }
 
   .language-inline-option--selected {
     background: white;
     color: #2563eb;
     font-weight: 600;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)
   }
 
   .language-code {
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 600
   }
 
   /* Modal variant */
   .language-switcher--modal {
-    display: inline-block;
+    display: inline-block
   }
 
   .language-switcher__trigger {
@@ -572,7 +564,7 @@ const styles = `;
     font-weight: 500;
     color: #374151;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s
   }
 
   .language-modal-overlay {
@@ -586,7 +578,7 @@ const styles = `;
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    animation: fadeIn 0.2s ease-out;
+    animation: fadeIn 0.2s ease-out
   }
 
   .language-modal {
@@ -596,7 +588,7 @@ const styles = `;
     background: white;
     border-radius: 16px;
     overflow: hidden;
-    animation: scaleIn 0.2s ease-out;
+    animation: scaleIn 0.2s ease-out
   }
 
   .language-modal__header {
@@ -604,14 +596,14 @@ const styles = `;
     align-items: center;
     justify-content: space-between;
     padding: 20px;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb
   }
 
   .language-modal__header h2 {
     margin: 0;
     font-size: 20px;
     font-weight: 600;
-    color: #111827;
+    color: #111827
   }
 
   .language-modal__close {
@@ -626,24 +618,24 @@ const styles = `;
     font-size: 24px;
     color: #6b7280;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s
   }
 
   .language-modal__close:hover {
     background: #f3f4f6;
-    color: #374151;
+    color: #374151
   }
 
   .language-modal__content {
     padding: 20px;
-    overflow-y: auto;
+    overflow-y: auto
   }
 
   .language-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 20px
   }
 
   .language-card {
@@ -657,40 +649,40 @@ const styles = `;
     border: 2px solid #e5e7eb;
     border-radius: 12px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s
   }
 
   .language-card:hover {
     border-color: #9ca3af;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)
   }
 
   .language-card:focus {
     outline: 2px solid #3b82f6;
-    outline-offset: 2px;
+    outline-offset: 2px
   }
 
   .language-card--selected {
     border-color: #3b82f6;
-    background: #eff6ff;
+    background: #eff6ff
   }
 
   .language-card__flag {
-    font-size: 32px;
+    font-size: 32px
   }
 
   .language-card__name {
     font-size: 14px;
     font-weight: 600;
     color: #374151;
-    text-align: center;
+    text-align: center
   }
 
   .language-card__native {
     font-size: 12px;
     color: #6b7280;
-    text-align: center;
+    text-align: center
   }
 
   .language-card__rtl {
@@ -702,7 +694,7 @@ const styles = `;
     color: #78350f;
     font-size: 10px;
     font-weight: 600;
-    border-radius: 4px;
+    border-radius: 4px
   }
 
   .language-card__selected {
@@ -717,23 +709,23 @@ const styles = `;
     background: #10b981;
     color: white;
     border-radius: 50%;
-    font-size: 12px;
+    font-size: 12px
   }
 
   .language-modal__info {
     padding: 16px;
     background: #f9fafb;
-    border-radius: 8px;
+    border-radius: 8px
   }
 
   .language-modal__info p {
     margin: 0 0 8px 0;
     font-size: 14px;
-    color: #6b7280;
+    color: #6b7280
   }
 
   .language-modal__info p:last-child {
-    margin-bottom: 0;
+    margin-bottom: 0
   }
 
   /* Notification styles */
@@ -750,69 +742,69 @@ const styles = `;
     font-weight: 500;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 10000;
-    animation: slideUp 0.3s ease-out;
+    animation: slideUp 0.3s ease-out
   }
 
   .language-notification--error {
-    background: #ef4444;
+    background: #ef4444
   }
 
   .language-notification.fade-out {
-    animation: fadeOut 0.3s ease-out forwards;
+    animation: fadeOut 0.3s ease-out forwards
   }
 
   /* Animations */
   @keyframes slideDown {
     from {
       opacity: 0;
-      transform: translateY(-10px);
-    }
+      transform: translateY(-10px)
+  }
     to {
       opacity: 1;
-      transform: translateY(0);
-    }
+      transform: translateY(0)
+  }
   }
 
   @keyframes slideUp {
     from {
       opacity: 0;
-      transform: translate(-50%, 20px);
-    }
+      transform: translate(-50%, 20px)
+  }
     to {
       opacity: 1;
-      transform: translate(-50%, 0);
-    }
+      transform: translate(-50%, 0)
+  }
   }
 
   @keyframes fadeIn {
     from {
-      opacity: 0;
-    }
+      opacity: 0
+  }
     to {
-      opacity: 1;
-    }
+      opacity: 1
+  }
   }
 
   @keyframes fadeOut {
     from {
       opacity: 1;
-      transform: translate(-50%, 0);
-    }
+      transform: translate(-50%, 0)
+  }
     to {
       opacity: 0;
-      transform: translate(-50%, 20px);
-    }
+      transform: translate(-50%, 20px)
+  }
   }
 
   @keyframes scaleIn {
     from {
       opacity: 0;
-      transform: scale(0.95);
-    }
+      transform: scale(0.95)
+  }
     to {
       opacity: 1;
-      transform: scale(1);
-    }
+      transform: scale(1)
+  }
   }
 
   /* Dark mode support */
@@ -821,120 +813,120 @@ const styles = `;
     .language-switcher__trigger {
       background: #1f2937;
       border-color: #374151;
-      color: #f3f4f6;
-    }
+      color: #f3f4f6
+  }
 
     .language-switcher__button:hover,
     .language-switcher__trigger:hover {
       background: #111827;
-      border-color: #4b5563;
-    }
+      border-color: #4b5563
+  }
 
     .language-menu {
       background: #1f2937;
-      border-color: #374151;
-    }
+      border-color: #374151
+  }
 
     .language-option__button {
-      color: #f3f4f6;
-    }
+      color: #f3f4f6
+  }
 
     .language-option__button:hover {
-      background: #374151;
-    }
+      background: #374151
+  }
 
     .language-option--selected .language-option__button {
       background: #1e3a8a;
-      color: #93bbfc;
-    }
+      color: #93bbfc
+  }
 
     .language-modal {
-      background: #1f2937;
-    }
+      background: #1f2937
+  }
 
     .language-modal__header {
-      border-color: #374151;
-    }
+      border-color: #374151
+  }
 
     .language-modal__header h2 {
-      color: #f3f4f6;
-    }
+      color: #f3f4f6
+  }
 
     .language-modal__close {
-      color: #9ca3af;
-    }
+      color: #9ca3af
+  }
 
     .language-modal__close:hover {
       background: #374151;
-      color: #f3f4f6;
-    }
+      color: #f3f4f6
+  }
 
     .language-card {
       background: #111827;
-      border-color: #374151;
-    }
+      border-color: #374151
+  }
 
     .language-card:hover {
-      border-color: #6b7280;
-    }
+      border-color: #6b7280
+  }
 
     .language-card--selected {
       background: #1e3a8a;
-      border-color: #2563eb;
-    }
+      border-color: #2563eb
+  }
 
     .language-card__name {
-      color: #f3f4f6;
-    }
+      color: #f3f4f6
+  }
 
     .language-card__native {
-      color: #9ca3af;
-    }
+      color: #9ca3af
+  }
 
     .language-modal__info {
-      background: #111827;
-    }
+      background: #111827
+  }
 
     .language-modal__info p {
-      color: #9ca3af;
-    }
+      color: #9ca3af
+  }
 
     .language-inline-list {
-      background: #374151;
-    }
+      background: #374151
+  }
 
     .language-inline-option {
-      color: #9ca3af;
-    }
+      color: #9ca3af
+  }
 
     .language-inline-option:hover {
       background: #1f2937;
-      color: #f3f4f6;
-    }
+      color: #f3f4f6
+  }
 
     .language-inline-option--selected {
       background: #1f2937;
-      color: #60a5fa;
-    }
+      color: #60a5fa
+  }
   }
 
   /* RTL support */
   [dir="rtl"] .language-switcher__button,
   [dir="rtl"] .language-menu {
-    text-align: right;
+    text-align: right
   }
 
   [dir="rtl"] .language-menu {
     left: auto;
-    right: 0;
+    right: 0
   }
 
   [dir="rtl"] .language-option__button {
-    text-align: right;
+    text-align: right
   }
 
   [dir="rtl"] .language-modal__header {
-    flex-direction: row-reverse;
+    flex-direction: row-reverse
   }
 
   /* Reduced motion */
@@ -944,39 +936,39 @@ const styles = `;
     .language-inline-option,
     .language-card,
     .language-arrow {
-      transition: none;
-    }
+      transition: none
+  }
 
     .language-menu,
     .language-modal-overlay,
     .language-modal,
     .language-notification {
-      animation: none;
-    }
+      animation: none
+  }
   }
 
   /* Mobile responsive */
   @media (max-width: 640px) {
     .language-menu {
-      min-width: 160px;
-    }
+      min-width: 160px
+  }
 
     .language-modal {
       width: 95%;
-      max-height: 90vh;
-    }
+      max-height: 90vh
+  }
 
     .language-grid {
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    }
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr))
+  }
 
     .language-card {
-      padding: 12px;
-    }
+      padding: 12px
+  }
 
     .language-card__flag {
-      font-size: 24px;
-    }
+      font-size: 24px
+  }
   }
 `;
 
@@ -985,7 +977,7 @@ if (typeof document !== 'undefined' && !document.getElementById('language-switch
   const styleElement = document.createElement('style');
   styleElement.id = 'language-switcher-styles';
   styleElement.textContent = styles;
-  document.head.appendChild(styleElement);
-}
+  document.head.appendChild(styleElement)
+  }
 
 export default LanguageSwitcher;

@@ -26,7 +26,7 @@ export const notificationService = {
     soundEnabled: false,
     crisisAlerts: true,
     sessionReminders: true,
-    encouragementMessages: true;
+    encouragementMessages: true
   })),
   updatePreferences: jest.fn(() => Promise.resolve()),
   

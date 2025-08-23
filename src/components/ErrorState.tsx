@@ -24,8 +24,8 @@ interface ErrorStateProps {
   onRetry?: () => void;
   showRetry?: boolean;
   className?: string;
-  isRetrying?: boolean;
-}
+  isRetrying?: boolean
+  }
 
 export const ErrorState: React.FC<ErrorStateProps> = ({
   title = "Something went wrong",
@@ -44,8 +44,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
       <p className="error-state-message">{message}</p>
       {showRetry && onRetry && (
         <div className="error-state-actions">
-          <button; 
-            className="retry-button"
+          <button className="retry-button"
             onClick={onRetry}
             disabled={isRetrying}
             aria-label="Retry the previous action"
@@ -55,7 +54,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 export default ErrorState;

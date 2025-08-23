@@ -10,15 +10,15 @@ interface ModerationResult {
   reason?: string;
   category?: 'harmful' | 'crisis' | 'spam' | 'inappropriate' | 'manipulation';
   suggestedResponse?: string;
-  escalate?: boolean;
-}
+  escalate?: boolean
+  }
 
 interface SafetyFilter {
   pattern: RegExp;
   category: ModerationResult['category'];
   severity: 'low' | 'medium' | 'high';
-  response: string;
-}
+  response: string
+  }
 
 class AIModerationService {
   private safetyFilters: SafetyFilter[] = [
@@ -47,30 +47,30 @@ class AIModerationService {
       pattern: /\b(goodbye|final|last)\s+(message|words?|note)/i,
       category: 'crisis',
       severity: 'high',
-      response: "Your message deeply concerns me. This sounds like you may be saying goodbye, and I want you to know that your life matters. Please reach out for immediate help: Call 988 for the Suicide & Crisis Lifeline or 911 for emergency services. There are people who want to help you through this.";
-    },
+      response: "Your message deeply concerns me. This sounds like you may be saying goodbye, and I want you to know that your life matters. Please reach out for immediate help: Call 988 for the Suicide & Crisis Lifeline or 911 for emergency services. There are people who want to help you through this."
+  },
     
     // Inappropriate content
     {
       pattern: /\b(sexual|explicit|nude|porn)/i,
       category: 'inappropriate',
       severity: 'medium',
-      response: "I'm here to provide mental health support in a safe and appropriate way. Let's focus on how I can help you with your emotional wellbeing. What's on your mind today?";
-    },
+      response: "I'm here to provide mental health support in a safe and appropriate way. Let's focus on how I can help you with your emotional wellbeing. What's on your mind today?"
+  },
     {
       pattern: /\b(fuck|shit|damn|hell)\s+(you|off|this)/i,
       category: 'inappropriate',
       severity: 'low',
-      response: "I can sense you're feeling frustrated or angry. Those are valid emotions. Would you like to talk about what's causing these feelings?";
-    },
+      response: "I can sense you're feeling frustrated or angry. Those are valid emotions. Would you like to talk about what's causing these feelings?"
+  },
     
     // Manipulation attempts
     {
       pattern: /\b(ignore|forget|disregard)\s+(your|all|previous)\s+(instructions?|rules?|guidelines?)/i,
       category: 'manipulation',
       severity: 'medium',
-      response: "I'm designed to provide mental health support within safe and ethical guidelines. How can I help support your wellbeing today?";
-    },
+      response: "I'm designed to provide mental health support within safe and ethical guidelines. How can I help support your wellbeing today?"
+  },
     {
       pattern: /\b(pretend|act like|roleplay)\s+(you('re|\s+are)|as)\s+(a\s+)?(therapist|counselor|doctor|psychiatrist)/i,
       category: 'manipulation',
@@ -83,8 +83,8 @@ class AIModerationService {
       pattern: /(.)\1{10,}/,  // Repeated characters
       category: 'spam',
       severity: 'low',
-      response: "I'm having trouble understanding your message. Could you rephrase what you'd like to talk about?";
-    }
+      response: "I'm having trouble understanding your message. Could you rephrase what you'd like to talk about?"
+  }
   ];
   
   private contextualFactors = {
@@ -122,12 +122,12 @@ class AIModerationService {
     for (const filter of this.safetyFilters) {
       if (filter.pattern.test(normalizedMessage)) {
         // Check for contextual factors;
-        const hasProtectiveIndicators = this.contextualFactors.protectiveIndicators.some(;
+        const hasProtectiveIndicators = this.contextualFactors.protectiveIndicators.some(;;
           indicator => normalizedMessage.includes(indicator)
         );
         
         // If high severity and no protective factors, escalate;
-        const shouldEscalate = filter.severity === 'high' && ;
+        const shouldEscalate = filter.severity === 'high' && ;;
                                !hasProtectiveIndicators &&
                                filter.category === 'crisis';
         
@@ -136,8 +136,8 @@ class AIModerationService {
           reason: `Content matches ${filter.category} filter`,
           category: filter.category,
           suggestedResponse: filter.response,
-          escalate: shouldEscalate;
-        }
+          escalate: shouldEscalate
+  }
     }
     
     // Check for repetitive spam;
@@ -151,8 +151,8 @@ class AIModerationService {
           safe: false,
           reason: 'Message appears to be spam',
           category: 'spam',
-          suggestedResponse: 'Could you please share what\'s on your mind in your own words?';
-        }
+          suggestedResponse: 'Could you please share what\'s on your mind in your own words?'
+  }
     }
     
     return { safe: true  }
@@ -162,8 +162,8 @@ class AIModerationService {
    */
   public generateSafeResponse(moderationResult: ModerationResult): string {
     if (moderationResult.suggestedResponse) {
-      return moderationResult.suggestedResponse;
-    }
+      return moderationResult.suggestedResponse
+  }
     
     switch (moderationResult.category) {
       case 'harmful':
@@ -181,9 +181,8 @@ class AIModerationService {
       case 'manipulation':
         return "I'm here to provide emotional support within my capabilities as an AI companion. How can I best support you today?";
       
-      default:
-        return "I want to make sure I'm providing appropriate support. Could you help me understand what you need right now?";
-    }
+      default: return "I want to make sure I'm providing appropriate support. Could you help me understand what you need right now?"
+  }
   }
   
   /**
@@ -191,7 +190,7 @@ class AIModerationService {
    */
   public needsHumanIntervention(messages: Array<{ text: string; sender: 'user' | 'ai' }>): boolean {
     // Check recent user messages for crisis indicators;
-    const recentUserMessages = messages;
+    const recentUserMessages = messages;;
       .filter(m => m.sender === 'user')
       .slice(-5); // Last 5 user messages;
     
@@ -201,11 +200,11 @@ class AIModerationService {
     for (const message of recentUserMessages) {
       const moderation = this.moderateMessage(message.text);
       if (moderation.category === 'crisis') crisisCount++;
-      if (moderation.category === 'harmful') harmfulCount++;
-    }
+      if (moderation.category === 'harmful') harmfulCount++
+  }
     
     // Escalate if multiple crisis/harmful messages
-    return crisisCount >= 2 || harmfulCount >= 3;
+    return crisisCount >= 2 || harmfulCount >= 3
   }
   
   /**
@@ -218,7 +217,7 @@ class AIModerationService {
       .replace(/<iframe[^>]*>.*?<\/iframe>/gi, '')
       .replace(/javascript:/gi, '')
       .replace(/on\w+\s*=/gi, '')
-      .trim();
+      .trim()
   }
 }
 

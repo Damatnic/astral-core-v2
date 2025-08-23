@@ -9,8 +9,8 @@ interface UseAIChatOptions {
     userId?: string;
     provider?: 'openai' | 'claude';
     enableCrisisDetection?: boolean;
-    enableModeration?: boolean;
-}
+    enableModeration?: boolean
+  }
 
 export const useAIChat = (options: UseAIChatOptions = {}) => {
     const {
@@ -30,32 +30,32 @@ export const useAIChat = (options: UseAIChatOptions = {}) => {
             const messages = await ApiClient.ai.loadChatHistory(userId);
             // Ensure messages is always an array;
             const validMessages = Array.isArray(messages) ? messages : [];
-            setSession(prev => ({ ...prev, messages: validMessages }));
-        } catch (error) {
+            setSession(prev => ({ ...prev, messages: validMessages }))
+  } catch (error) {
             // In development, provide a more specific message for API unavailability
             if ((error as Error).message?.includes('API endpoint not available in development') || 
                 (error as Error).message?.includes('not valid JSON')) {
-                console.warn("AI chat history unavailable in development mode - using empty state");;
+                console.warn("AI chat history unavailable in development mode - using empty state")
   } else {
-                console.error("Failed to load AI chat history:", error);
-            }
+                console.error("Failed to load AI chat history:", error)
+  }
             // Initialize with empty array on error
-            setSession(prev => ({ ...prev, messages: [] }));
-        }
+            setSession(prev => ({ ...prev, messages: [] }))
+  }
     };
   }, [userId]);
 
     useEffect(() => {
-        fetchHistory();
-    };
+        fetchHistory()
+  };
   }, [fetchHistory]);
     
     const resetAIChat = async () => {
         await ApiClient.ai.resetAIChat(userId);
         setSession({ messages: [], isTyping: false });
         setCrisisDetected(false);
-        setError(null);
-    };
+        setError(null)
+  };
 
     const sendMessage = async (text: string) => {
         if (!text.trim()) return;
@@ -63,8 +63,8 @@ export const useAIChat = (options: UseAIChatOptions = {}) => {
         // Check authentication before sending message
         if (!authState.userToken) {
             console.warn('User is not authenticated. Cannot send messages.');
-            return;
-        }
+            return
+  }
         
         setError(null);
         
@@ -86,10 +86,10 @@ export const useAIChat = (options: UseAIChatOptions = {}) => {
                 }));
                 
                 if (moderationResult.escalate) {
-                    setCrisisDetected(true);
-                }
-                return;
-            }
+                    setCrisisDetected(true)
+  }
+                return
+  }
         }
         
         // Crisis detection
@@ -97,16 +97,16 @@ export const useAIChat = (options: UseAIChatOptions = {}) => {
             const crisisAnalysis = enhancedCrisisDetectionService.analyzeCrisisContent(text);
             if (crisisAnalysis.hasCrisisIndicators && 
                 (crisisAnalysis.severityLevel === 'high' || crisisAnalysis.severityLevel === 'critical')) {
-                setCrisisDetected(true);
-            }
+                setCrisisDetected(true)
+  }
         }
 
         const userMessage: AIChatMessage = { 
             id: crypto.randomUUID(), 
             sender: 'user', 
             text: aiModerationService.sanitizeForDisplay(text), 
-            timestamp: new Date().toISOString() ;
-        };
+            timestamp: new Date().toISOString()
+  };
 
         const updatedMessages = [...session.messages, userMessage];
         setSession({ messages: updatedMessages, isTyping: true });
@@ -119,17 +119,17 @@ export const useAIChat = (options: UseAIChatOptions = {}) => {
                 sender: 'ai', 
                 text: response.response, 
                 timestamp: new Date().toISOString(),
-                metadata: response.metadata;
-            };
+                metadata: response.metadata
+  };
             
             if (response.metadata?.crisisDetected) {
-                setCrisisDetected(true);
-            }
+                setCrisisDetected(true)
+  }
             
             const finalMessages = [...updatedMessages, aiMessage];
             setSession({ messages: finalMessages, isTyping: false });
-            await ApiClient.ai.saveChatHistory(userId, finalMessages);
-        } catch (e) {
+            await ApiClient.ai.saveChatHistory(userId, finalMessages)
+  } catch (e) {
             console.error('AI chat error:', e);
             setError('Unable to connect to AI service. Please try again.');
             
@@ -137,26 +137,26 @@ export const useAIChat = (options: UseAIChatOptions = {}) => {
                 id: crypto.randomUUID(), 
                 sender: 'ai', 
                 text: "I'm sorry, I'm having trouble connecting right now. Please try again in a moment. If you're in crisis, please contact 988 or emergency services.", 
-                timestamp: new Date().toISOString() ;
-            };
+                timestamp: new Date().toISOString()
+  };
             
             setSession({ 
                 messages: [...updatedMessages, errorMessage], 
-                isTyping: false ;
-            });
-        }
+                isTyping: false
+  })
+  }
     };
     
     const switchProvider = (newProvider: 'openai' | 'claude') => {
-        setCurrentProvider(newProvider);
-    };
+        setCurrentProvider(newProvider)
+  };
     
     const checkNeedsIntervention = () => {
         if (!enableModeration) return false;
         return aiModerationService.needsHumanIntervention(
             session.messages.map(m => ({ text: m.text, sender: m.sender }))
-        );
-    };
+        )
+  };
 
     return {
         session,
@@ -166,5 +166,5 @@ export const useAIChat = (options: UseAIChatOptions = {}) => {
         error,
         currentProvider,
         switchProvider,
-        needsIntervention: checkNeedsIntervention();
-    };
+        needsIntervention: checkNeedsIntervention()
+  };

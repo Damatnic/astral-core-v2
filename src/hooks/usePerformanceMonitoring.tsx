@@ -28,11 +28,11 @@ export const usePerformanceMetrics = (refreshInterval = 10000) => {
         const currentMetrics = comprehensivePerformanceMonitor.getCurrentMetrics();
         setMetrics(currentMetrics);
         setIsLoading(false);
-        setError(null);
-      } catch (err) {
+        setError(null)
+  } catch (err) {
         setError(err as Error);
-        setIsLoading(false);
-      }
+        setIsLoading(false)
+  }
     };
 
     // Initial load
@@ -41,7 +41,8 @@ export const usePerformanceMetrics = (refreshInterval = 10000) => {
     // Set up periodic updates;
     const interval = setInterval(updateMetrics, refreshInterval);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
+  };
   };
   };
   }, [refreshInterval]);
@@ -61,16 +62,16 @@ export const usePerformanceAlerts = () => {
       const existingIndex = updated.findIndex(a => a.id === alert.id);
       
       if (existingIndex >= 0) {
-        updated[existingIndex] = alert;;
+        updated[existingIndex] = alert
   } else {
         updated.push(alert);
         // Increment new alert count
-        setNewAlertCount(count => count + 1);
-      }
+        setNewAlertCount(count => count + 1)
+  }
       
       alertsRef.current = updated;
-      return updated;
-    };
+      return updated
+  };
   };
   };
   }, []);
@@ -84,17 +85,17 @@ export const usePerformanceAlerts = () => {
     // Subscribe to new alerts;
     const unsubscribe = comprehensivePerformanceMonitor.onAlert(handleAlertUpdate);
 
-    return unsubscribe;
+    return unsubscribe
   };
   }, [handleAlertUpdate]);
 
   const clearNewAlerts = useCallback(() => {
-    setNewAlertCount(0);
+    setNewAlertCount(0)
   };
   }, []);
 
   const dismissAlert = useCallback((alertId: string) => {
-    setAlerts(prev => prev.filter(alert => alert.id !== alertId));
+    setAlerts(prev => prev.filter(alert => alert.id !== alertId))
   };
   }, []);
 
@@ -117,11 +118,11 @@ export const useOptimizationRecommendations = (maxRecommendations = 10) => {
         await new Promise(resolve => setTimeout(resolve, 0));
         const recs = comprehensivePerformanceMonitor.generateOptimizationRecommendations();
         setRecommendations(recs.slice(0, maxRecommendations));
-        setIsLoading(false);
-      } catch (error) {
+        setIsLoading(false)
+  } catch (error) {
         console.error('Failed to generate optimization recommendations:', error);
-        setIsLoading(false);
-      }
+        setIsLoading(false)
+  }
     };
 
     updateRecommendations();
@@ -129,7 +130,8 @@ export const useOptimizationRecommendations = (maxRecommendations = 10) => {
     // Update recommendations when metrics change significantly;
     const interval = setInterval(updateRecommendations, 30000); // Every 30 seconds
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
+  };
   };
   };
   }, [maxRecommendations]);
@@ -152,21 +154,21 @@ export const usePerformanceGrade = () => {
         
         // Set color based on grade
         if (gradeText.includes('Excellent') || gradeText.includes('A+')) {
-          setGradeColor('#22c55e'); // green;
+          setGradeColor('#22c55e'); // green
   } else if (gradeText.includes('Good') || gradeText.includes('A')) {
-          setGradeColor('#3b82f6'); // blue;
+          setGradeColor('#3b82f6'); // blue
   } else if (gradeText.includes('Fair') || gradeText.includes('B')) {
-          setGradeColor('#eab308'); // yellow;
+          setGradeColor('#eab308'); // yellow
   } else if (gradeText.includes('Needs Improvement') || gradeText.includes('C')) {
-          setGradeColor('#f97316'); // orange;
+          setGradeColor('#f97316'); // orange
   } else {
           setGradeColor('#ef4444'); // red
         }
       } catch (error) {
         console.error('Failed to calculate performance grade:', error);
         setGrade('Error');
-        setGradeColor('#ef4444');
-      }
+        setGradeColor('#ef4444')
+  }
     };
 
     updateGrade();
@@ -174,7 +176,7 @@ export const usePerformanceGrade = () => {
     // Update grade periodically;
     const interval = setInterval(updateGrade, 15000); // Every 15 seconds
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   };
   }, []);
 
@@ -185,7 +187,7 @@ export const useCrisisPerformanceMonitoring = () => {
   const [crisisMetrics, setCrisisMetrics] = useState({
     responseTime: 0,
     isHealthy: true,
-    lastCheck: Date.now();
+    lastCheck: Date.now()
   };
   };
 
@@ -200,13 +202,13 @@ export const useCrisisPerformanceMonitoring = () => {
         setCrisisMetrics({
           responseTime,
           isHealthy,
-          lastCheck: Date.now();
-        });
+          lastCheck: Date.now()
+  });
 
         // Log critical issues
         if (!isHealthy) {
-          console.error(`🚨 Crisis detection performance degraded: ${responseTime}ms`);
-        }
+          console.error(`🚨 Crisis detection performance degraded: ${responseTime}ms`)
+  }
       }
     };
 
@@ -216,12 +218,12 @@ export const useCrisisPerformanceMonitoring = () => {
     // Check frequently for crisis performance;
     const interval = setInterval(checkCrisisPerformance, 5000); // Every 5 seconds
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval)
   };
   }, []);
 
-  return crisisMetrics;
-};
+  return crisisMetrics
+  };
 
 // Performance context provider for app-wide performance monitoring;
 export const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -234,16 +236,16 @@ export const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({ c
       const criticalIssues: string[] = [];
       
       if (metrics.crisisDetectionResponseTime > 500) {
-        criticalIssues.push('Crisis detection severely degraded');
-      }
+        criticalIssues.push('Crisis detection severely degraded')
+  }
       
       if (metrics.memoryUsage > 200) {
-        criticalIssues.push('Memory usage critically high');
-      }
+        criticalIssues.push('Memory usage critically high')
+  }
       
       if (metrics.largestContentfulPaint > 5000) {
-        criticalIssues.push('Page loading extremely slow');
-      }
+        criticalIssues.push('Page loading extremely slow')
+  }
 
       // Log critical issues for monitoring
       if (criticalIssues.length > 0) {
@@ -251,22 +253,22 @@ export const PerformanceProvider: React.FC<{ children: React.ReactNode }> = ({ c
         
         // Could trigger notifications, fallback modes, etc.
         // notifyDevOps(criticalIssues);
-        // enablePerformanceEmergencyMode();
-      }
+        // enablePerformanceEmergencyMode()
+  }
     }
   };
   }, [metrics]);
 
-  return <>{children}</>;
-};
+  return <>{children}</>
+  };
 
 // Utility function to generate performance summary;
 export const generatePerformanceSummary = (): string => {
   try {
-    return comprehensivePerformanceMonitor.generatePerformanceReport();
+    return comprehensivePerformanceMonitor.generatePerformanceReport()
   } catch (error) {
     console.error('Failed to generate performance summary:', error);
-    return 'Performance summary unavailable';
+    return 'Performance summary unavailable'
   }
 };
 
@@ -283,10 +285,10 @@ export const exportPerformanceData = (hours = 24) => {
       metrics,
       alerts,
       recommendations,
-      summary: generatePerformanceSummary();
-    } catch (error) {
+      summary: generatePerformanceSummary()
+  } catch (error) {
     console.error('Failed to export performance data:', error);
-    return null;
+    return null
   }
 };
 
@@ -297,7 +299,7 @@ export const isPerformanceMonitoringHealthy = (): boolean => {
     return metrics !== null && metrics.timestamp > Date.now() - 60000; // Data less than 1 minute old
   } catch (error) {
     console.error('Performance monitoring health check failed:', error);
-    return false;
+    return false
   }
 };
 
@@ -307,7 +309,7 @@ export const PerformanceDebugInfo: React.FC = () => {
   const { alerts } = usePerformanceAlerts();
 
   if (process.env.NODE_ENV !== 'development') {
-    return null;
+    return null
   }
 
   if (!metrics) {
@@ -322,11 +324,11 @@ export const PerformanceDebugInfo: React.FC = () => {
         borderRadius: '5px',
         fontSize: '12px',
         fontFamily: 'monospace',
-        zIndex: 9999;
-      }}>
+        zIndex: 9999
+  }}>
         Performance data loading...
       </div>
-    );
+    )
   }
 
   return (
@@ -343,8 +345,8 @@ export const PerformanceDebugInfo: React.FC = () => {
       zIndex: 9999,
       maxWidth: '300px',
       maxHeight: '400px',
-      overflow: 'auto';
-    }}>
+      overflow: 'auto'
+  }}>
       <h4 style={{ margin: '0 0 8px 0', color: '#60a5fa' }}>🔍 Performance Debug</h4>
       
       <div style={{ marginBottom: '8px' }}>
@@ -373,8 +375,8 @@ export const PerformanceDebugInfo: React.FC = () => {
       
       <div style={{ 
         marginBottom: '8px',
-        color: metrics.crisisDetectionResponseTime > 300 ? '#f87171' : '#34d399';
-      }}>
+        color: metrics.crisisDetectionResponseTime > 300 ? '#f87171' : '#34d399'
+  }}>
         <strong>Crisis Response:</strong> {metrics.crisisDetectionResponseTime.toFixed(0)}ms
         {metrics.crisisDetectionResponseTime > 300 && ' 🚨'}
       </div>
@@ -387,23 +389,23 @@ export const PerformanceDebugInfo: React.FC = () => {
         <div style={{ 
           marginTop: '8px',
           paddingTop: '8px',
-          borderTop: '1px solid #374151';
-        }}>
+          borderTop: '1px solid #374151'
+  }}>
           <strong style={{ color: '#f87171' }}>Alerts ({alerts.length}):</strong>
           {alerts.slice(0, 3).map(alert => (
             <div key={alert.id} style={{ 
               fontSize: '10px',
               color: '#fbbf24',
-              marginTop: '2px';
-            }}>
+              marginTop: '2px'
+  }}>
               {alert.severity.toUpperCase()}: {alert.metric}
             </div>
           ))}
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 export default {
   usePerformanceMetrics,

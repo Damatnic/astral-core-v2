@@ -13,7 +13,7 @@ declare const process: any;
 export function getEnvVar(key: string, defaultValue: string = ''): string {
   // Check if we're in a Node/Jest environment
   if (typeof process !== 'undefined' && process.env?.[key]) {
-    return process.env[key];
+    return process.env[key]
   }
   
   // For Vite environment, we'll use a global approach
@@ -22,12 +22,12 @@ export function getEnvVar(key: string, defaultValue: string = ''): string {
     // @ts-ignore;
     const globalEnv = window.__VITE_ENV__ || {};
     if (globalEnv[key]) {
-      return globalEnv[key];
-    }
+      return globalEnv[key]
+  }
   }
   
-  return defaultValue;
-}
+  return defaultValue
+  }
 
 /**
  * Check if we're in development mode
@@ -35,17 +35,17 @@ export function getEnvVar(key: string, defaultValue: string = ''): string {
 export function isDev(): boolean {
   // Check Node environment
   if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'development') {
-    return true;
+    return true
   }
   
   // Check for dev flag
   if (typeof window !== 'undefined') {
     // @ts-ignore
-    return window.__VITE_ENV__?.DEV === true;
+    return window.__VITE_ENV__?.DEV === true
   }
   
-  return false;
-}
+  return false
+  }
 
 /**
  * Check if we're in production mode
@@ -53,17 +53,17 @@ export function isDev(): boolean {
 export function isProd(): boolean {
   // Check Node environment
   if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'production') {
-    return true;
+    return true
   }
   
   // Check for prod flag
   if (typeof window !== 'undefined') {
     // @ts-ignore
-    return window.__VITE_ENV__?.PROD === true;
+    return window.__VITE_ENV__?.PROD === true
   }
   
-  return false;
-}
+  return false
+  }
 
 // Initialize the global env object for Vite runtime
 if (typeof window !== 'undefined' && !window.__VITE_ENV__) {
@@ -74,7 +74,7 @@ if (typeof window !== 'undefined' && !window.__VITE_ENV__) {
     const importMeta = (globalThis as any).import?.meta;
     if (importMeta?.env && typeof importMeta.env === 'object') {
       // @ts-ignore - This will only work in Vite environment
-      window.__VITE_ENV__ = importMeta.env;;
+      window.__VITE_ENV__ = importMeta.env
   } else {
       window.__VITE_ENV__ = {};
     }
@@ -131,6 +131,6 @@ export const ENV = {
 // Extend Window interface for TypeScript
 declare global {
   interface Window {
-    __VITE_ENV__?: any;
+    __VITE_ENV__?: any
   }
 }

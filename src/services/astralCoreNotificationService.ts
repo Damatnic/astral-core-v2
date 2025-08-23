@@ -44,14 +44,14 @@ export interface Notification {
   soundEnabled?: boolean;
   vibrationPattern?: number[];
   requireInteraction?: boolean;
-  expiresAt?: Date;
-}
+  expiresAt?: Date
+  }
 
 export interface NotificationAction {
   action: string;
   title: string;
-  icon?: string;
-}
+  icon?: string
+  }
 
 export interface NotificationPreferences {
   enabled: boolean;
@@ -64,10 +64,10 @@ export interface NotificationPreferences {
   quietHours: {
     enabled: boolean;
     start: string; // HH:MM format
-    end: string; // HH:MM format;
+    end: string; // HH: MM format
   };
-  blockedTypes: NotificationType[];
-}
+  blockedTypes: NotificationType[]
+  }
 
 /**
  * Astral Core Notification Service
@@ -84,7 +84,7 @@ class AstralCoreNotificationService {
     this.vapidPublicKey = getEnv('VITE_VAPID_PUBLIC_KEY') || '';
     this.preferences = this.loadPreferences();
     // Initialize service asynchronously to avoid constructor async operation
-    setTimeout(() => this.initializeService(), 0);
+    setTimeout(() => this.initializeService(), 0)
   }
 
   /**
@@ -94,8 +94,8 @@ class AstralCoreNotificationService {
     // Check browser support
     if (!('Notification' in window)) {
       console.warn('Astral Core: Browser does not support notifications');
-      return;
-    }
+      return
+  }
 
     // Get current permission
     this.permission = Notification.permission;
@@ -104,27 +104,27 @@ class AstralCoreNotificationService {
     if ('serviceWorker' in navigator) {
       try {
         this.swRegistration = await navigator.serviceWorker.ready;
-        console.log('Astral Core: Service worker ready for notifications');
-      } catch (error) {
-        console.error('Astral Core: Service worker registration failed:', error);
-      }
+        console.log('Astral Core: Service worker ready for notifications')
+  } catch (error) {
+        console.error('Astral Core: Service worker registration failed:', error)
+  }
     }
 
     // Listen for online/offline events
     window.addEventListener('online', () => {
       this.isOnline = true;
-      this.processQueuedNotifications();
-    });
+      this.processQueuedNotifications()
+  });
 
     window.addEventListener('offline', () => {
-      this.isOnline = false;
-    });
+      this.isOnline = false
+  });
 
     // Listen for push notifications
     if (this.swRegistration) {
       this.swRegistration.addEventListener('push', this.handlePushEvent.bind(this));
-      this.swRegistration.addEventListener('notificationclick', this.handleNotificationClick.bind(this));
-    }
+      this.swRegistration.addEventListener('notificationclick', this.handleNotificationClick.bind(this))
+  }
   }
 
   /**
@@ -132,13 +132,13 @@ class AstralCoreNotificationService {
    */
   async requestPermission(): Promise<boolean> {
     if (this.permission === 'granted') {
-      return true;
-    }
+      return true
+  }
 
     if (this.permission === 'denied') {
       console.warn('Astral Core: Notification permission denied');
-      return false;
-    }
+      return false
+  }
 
     try {
       const permission = await Notification.requestPermission();
@@ -147,14 +147,14 @@ class AstralCoreNotificationService {
       if (permission === 'granted') {
         await this.subscribeToPush();
         this.showWelcomeNotification();
-        return true;
-      }
+        return true
+  }
 
-      return false;
-    } catch (error) {
+      return false
+  } catch (error) {
       console.error('Astral Core: Failed to request notification permission:', error);
-      return false;
-    }
+      return false
+  }
   }
 
   /**
@@ -162,8 +162,8 @@ class AstralCoreNotificationService {
    */
   private async subscribeToPush(): Promise<void> {
     if (!this.swRegistration || !this.vapidPublicKey) {
-      return;
-    }
+      return
+  }
 
     try {
       // Check if already subscribed;
@@ -182,11 +182,11 @@ class AstralCoreNotificationService {
           preferences: this.preferences,
         });
 
-        console.log('Astral Core: Subscribed to push notifications');
-      }
+        console.log('Astral Core: Subscribed to push notifications')
+  }
     } catch (error) {
-      console.error('Astral Core: Failed to subscribe to push notifications:', error);
-    }
+      console.error('Astral Core: Failed to subscribe to push notifications:', error)
+  }
   }
 
   /**
@@ -195,8 +195,8 @@ class AstralCoreNotificationService {
   async show(notification: Partial<Notification>): Promise<void> {
     // Check preferences
     if (!this.shouldShowNotification(notification)) {
-      return;
-    }
+      return
+  }
 
     // Create full notification object;
     const fullNotification: Notification = {
@@ -213,8 +213,8 @@ class AstralCoreNotificationService {
     // Queue if offline and not crisis
     if (!this.isOnline && fullNotification.priority !== NotificationPriority.CRISIS) {
       this.notificationQueue.push(fullNotification);
-      return;
-    }
+      return
+  }
 
     // Show notification
     await this.displayNotification(fullNotification);
@@ -223,7 +223,7 @@ class AstralCoreNotificationService {
     await this.storeNotification(fullNotification);
 
     // Send analytics
-    this.trackNotification(fullNotification);
+    this.trackNotification(fullNotification)
   }
 
   /**
@@ -232,8 +232,8 @@ class AstralCoreNotificationService {
   private async displayNotification(notification: Notification): Promise<void> {
     if (this.permission !== 'granted') {
       console.warn('Astral Core: Cannot show notification - permission not granted');
-      return;
-    }
+      return
+  }
 
     const options: NotificationOptions = {
       body: notification.body,
@@ -247,11 +247,11 @@ class AstralCoreNotificationService {
 
     // Use service worker if available
     if (this.swRegistration) {
-      await this.swRegistration.showNotification(notification.title, options);;
+      await this.swRegistration.showNotification(notification.title, options)
   } else {
       // Fallback to browser notification
-      new Notification(notification.title, options);
-    }
+      new Notification(notification.title, options)
+  }
   }
 
   /**
@@ -276,7 +276,7 @@ class AstralCoreNotificationService {
         { action: 'call-988', title: 'Call 988' },
         { action: 'safety-plan', title: 'Safety Plan' },
       ],
-    });
+    })
   }
 
   /**
@@ -303,7 +303,7 @@ class AstralCoreNotificationService {
         { action: `open-${type}`, title: 'Open' },
         { action: 'snooze', title: 'Snooze' },
       ],
-    });
+    })
   }
 
   /**
@@ -325,7 +325,7 @@ class AstralCoreNotificationService {
         { action: 'reply', title: 'Reply' },
         { action: 'view', title: 'View' },
       ],
-    });
+    })
   }
 
   /**
@@ -346,7 +346,7 @@ class AstralCoreNotificationService {
       actions: data.actions,
     };
 
-    await this.show(notification);
+    await this.show(notification)
   }
 
   /**
@@ -379,8 +379,8 @@ class AstralCoreNotificationService {
       default:
         // Open app if no specific action
         if (data?.url) {
-          window.location.href = data.url;
-        }
+          window.location.href = data.url
+  }
     }
   }
 
@@ -397,7 +397,7 @@ class AstralCoreNotificationService {
     this.savePreferences();
 
     // Update on server
-    await apiClient.put('/notifications/preferences', this.preferences);
+    await apiClient.put('/notifications/preferences', this.preferences)
   }
 
   /**
@@ -408,11 +408,11 @@ class AstralCoreNotificationService {
       const notifications = await apiClient.get<Notification[]>('/notifications/history', {
         limit,
       });
-      return notifications;
-    } catch (error) {
+      return notifications
+  } catch (error) {
       console.error('Astral Core: Failed to get notification history:', error);
-      return [];
-    }
+      return []
+  }
   }
 
   /**
@@ -420,10 +420,10 @@ class AstralCoreNotificationService {
    */
   async markAsRead(notificationId: string): Promise<void> {
     try {
-      await apiClient.patch(`/notifications/${notificationId}/read`);
-    } catch (error) {
-      console.error('Astral Core: Failed to mark notification as read:', error);
-    }
+      await apiClient.patch(`/notifications/${notificationId}/read`)
+  } catch (error) {
+      console.error('Astral Core: Failed to mark notification as read:', error)
+  }
   }
 
   /**
@@ -436,11 +436,11 @@ class AstralCoreNotificationService {
       // Clear from service worker
       if (this.swRegistration) {
         const notifications = await this.swRegistration.getNotifications();
-        notifications.forEach(n => n.close());
-      }
+        notifications.forEach(n => n.close())
+  }
     } catch (error) {
-      console.error('Astral Core: Failed to clear notifications:', error);
-    }
+      console.error('Astral Core: Failed to clear notifications:', error)
+  }
   }
 
   /**
@@ -449,13 +449,13 @@ class AstralCoreNotificationService {
   private shouldShowNotification(notification: Partial<Notification>): boolean {
     // Check if notifications are enabled
     if (!this.preferences.enabled) {
-      return false;
-    }
+      return false
+  }
 
     // Always show crisis notifications
     if (notification.priority === NotificationPriority.CRISIS) {
-      return true;
-    }
+      return true
+  }
 
     // Check quiet hours
     if (this.preferences.quietHours.enabled) {
@@ -465,17 +465,17 @@ class AstralCoreNotificationService {
       
       if (start <= end) {
         if (currentTime >= start && currentTime <= end) {
-          return false;
-        };
+          return false
+  }
   } else if (currentTime >= start || currentTime <= end) {
-        return false;
-      }
+        return false
+  }
     }
 
     // Check blocked types
     if (notification.type && this.preferences.blockedTypes.includes(notification.type)) {
-      return false;
-    }
+      return false
+  }
 
     // Check specific preferences
     switch (notification.type) {
@@ -487,9 +487,8 @@ class AstralCoreNotificationService {
         return this.preferences.wellnessReminders;
       case NotificationType.COMMUNITY_UPDATE:
         return this.preferences.communityUpdates;
-      default:
-        return true;
-    }
+      default: return true
+  }
   }
 
   /**
@@ -499,8 +498,8 @@ class AstralCoreNotificationService {
     while (this.notificationQueue.length > 0) {
       const notification = this.notificationQueue.shift();
       if (notification) {
-        await this.displayNotification(notification);
-      }
+        await this.displayNotification(notification)
+  }
     }
   }
 
@@ -515,9 +514,9 @@ class AstralCoreNotificationService {
         this.show({
           ...notificationData,
           title: `[Snoozed] ${notificationData.title || 'Notification'}`,
-        });
-      }, 15 * 60 * 1000);
-    }
+        })
+  }, 15 * 60 * 1000)
+  }
   }
 
   /**
@@ -525,10 +524,10 @@ class AstralCoreNotificationService {
    */
   private async storeNotification(notification: Notification): Promise<void> {
     try {
-      await apiClient.post('/notifications/history', notification);
-    } catch (error) {
-      console.error('Astral Core: Failed to store notification:', error);
-    }
+      await apiClient.post('/notifications/history', notification)
+  } catch (error) {
+      console.error('Astral Core: Failed to store notification:', error)
+  }
   }
 
   /**
@@ -541,8 +540,8 @@ class AstralCoreNotificationService {
       windowWithGtag.gtag('event', 'notification_shown', {
         notification_type: notification.type,
         notification_priority: notification.priority,
-      });
-    }
+      })
+  }
   }
 
   /**
@@ -555,7 +554,7 @@ class AstralCoreNotificationService {
       title: 'Welcome to Astral Core',
       body: 'Notifications are now enabled. We\'ll keep you updated on important events.',
       icon: '/icon-192.png',
-    });
+    })
   }
 
   /**
@@ -564,8 +563,8 @@ class AstralCoreNotificationService {
   private loadPreferences(): NotificationPreferences {
     const stored = localStorage.getItem('astralcore_notification_preferences');
     if (stored) {
-      return JSON.parse(stored);
-    }
+      return JSON.parse(stored)
+  }
 
     return {
       enabled: true,
@@ -587,14 +586,14 @@ class AstralCoreNotificationService {
    * Save preferences to storage
    */
   private savePreferences(): void {
-    localStorage.setItem('astralcore_notification_preferences', JSON.stringify(this.preferences));
+    localStorage.setItem('astralcore_notification_preferences', JSON.stringify(this.preferences))
   }
 
   /**
    * Generate unique ID
    */
   private generateId(): string {
-    return `notif_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+    return `notif_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`
   }
 
   /**
@@ -602,7 +601,7 @@ class AstralCoreNotificationService {
    */
   private urlBase64ToUint8Array(base64String: string): Uint8Array {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding);
+    const base64 = (base64String + padding);;
       .replace(/-/g, '+')
       .replace(/_/g, '/');
 
@@ -610,30 +609,30 @@ class AstralCoreNotificationService {
     const outputArray = new Uint8Array(rawData.length);
 
     for (let i = 0; i < rawData.length; ++i) {
-      outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
+      outputArray[i] = rawData.charCodeAt(i)
+  }
+    return outputArray
   }
 
   /**
    * Get permission status
    */
   getPermissionStatus(): NotificationPermission {
-    return this.permission;
+    return this.permission
   }
 
   /**
    * Check if notifications are supported
    */
   isSupported(): boolean {
-    return 'Notification' in window && 'serviceWorker' in navigator;
+    return 'Notification' in window && 'serviceWorker' in navigator
   }
 
   /**
    * Get current preferences
    */
   getPreferences(): NotificationPreferences {
-    return this.preferences;
+    return this.preferences
   }
 }
 

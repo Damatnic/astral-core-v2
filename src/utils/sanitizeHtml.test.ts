@@ -24,7 +24,7 @@ describe('sanitizeHtml', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockDiv.textContent = '';
-    mockDiv.innerHTML = '';
+    mockDiv.innerHTML = ''
   });
 
   describe('sanitizeHtml', () => {
@@ -36,40 +36,40 @@ describe('sanitizeHtml', () => {
         set: function(value) {
           // Simulate browser textContent behavior - strips HTML
           this._textContent = value;
-          this.innerHTML = value.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        },
+          this.innerHTML = value.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  },
         get: function() {
-          return this._textContent;
-        },
+          return this._textContent
+  },
         configurable: true,
       });
       
       const result = sanitizeHtml(dangerousHtml);
       
       expect(document.createElement).toHaveBeenCalledWith('div');
-      expect(result).toBe('&lt;script&gt;alert("XSS")&lt;/script&gt;&lt;p&gt;Safe content&lt;/p&gt;');
-    });
+      expect(result).toBe('&lt;script&gt;alert("XSS")&lt;/script&gt;&lt;p&gt;Safe content&lt;/p&gt;')
+  });
 
     it.skip('should handle empty input', () => {
       const result = sanitizeHtml('');
-      expect(result).toBe('');
-    });
+      expect(result).toBe('')
+  });
 
     it.skip('should handle plain text without HTML', () => {
       const plainText = 'This is just plain text';
       mockDiv.innerHTML = plainText;
       
       const result = sanitizeHtml(plainText);
-      expect(result).toBe(plainText);
-    });
+      expect(result).toBe(plainText)
+  });
 
     it.skip('should escape special characters', () => {
       const textWithSpecialChars = 'Text with <>&"\' characters';
       mockDiv.innerHTML = 'Text with &lt;&gt;&amp;"\' characters';
       
       const result = sanitizeHtml(textWithSpecialChars);
-      expect(result).toBe('Text with &lt;&gt;&amp;"\' characters');
-    });
+      expect(result).toBe('Text with &lt;&gt;&amp;"\' characters')
+  })
   });
 
   describe('safeMarkdownToHtml', () => {
@@ -83,8 +83,8 @@ describe('sanitizeHtml', () => {
           return { protocol: url.startsWith('https') ? 'https:' : url.startsWith('http') ? 'http:' : 'mailto:' }
         
         if (url.startsWith('javascript:') || url.startsWith('data:')) {
-          throw new Error('Invalid protocol');
-        }
+          throw new Error('Invalid protocol')
+  }
         
         return { protocol: 'https:' };
   };
@@ -92,53 +92,53 @@ describe('sanitizeHtml', () => {
 
     it.skip('should return empty string for empty input', () => {
       const result = safeMarkdownToHtml('');
-      expect(result).toBe('');
-    });
+      expect(result).toBe('')
+  });
 
     it.skip('should return empty string for null input', () => {
       const result = safeMarkdownToHtml(null as any);
-      expect(result).toBe('');
-    });
+      expect(result).toBe('')
+  });
 
     it.skip('should convert bold markdown to HTML', () => {
       const markdown = 'This is **bold** text';
       mockDiv.innerHTML = 'This is **bold** text'; // Mock escaping;
       
       const result = safeMarkdownToHtml(markdown);
-      expect(result).toContain('<strong>bold</strong>');
-    });
+      expect(result).toContain('<strong>bold</strong>')
+  });
 
     it.skip('should convert italic markdown to HTML', () => {
       const markdown = 'This is *italic* text';
       mockDiv.innerHTML = 'This is *italic* text';
       
       const result = safeMarkdownToHtml(markdown);
-      expect(result).toContain('<em>italic</em>');
-    });
+      expect(result).toContain('<em>italic</em>')
+  });
 
     it.skip('should convert line breaks to <br> tags', () => {
       const markdown = 'Line 1\nLine 2\nLine 3';
       mockDiv.innerHTML = 'Line 1\nLine 2\nLine 3';
       
       const result = safeMarkdownToHtml(markdown);
-      expect(result).toBe('Line 1<br>Line 2<br>Line 3');
-    });
+      expect(result).toBe('Line 1<br>Line 2<br>Line 3')
+  });
 
     it.skip('should convert valid links to HTML', () => {
       const markdown = 'Visit [Example](https://example.com) for more info';
       mockDiv.innerHTML = 'Visit [Example](https://example.com) for more info';
       
       const result = safeMarkdownToHtml(markdown);
-      expect(result).toContain('<a href="https://example.com" target="_blank" rel="noopener noreferrer">Example</a>');
-    });
+      expect(result).toContain('<a href="https: //example.com" target="_blank" rel="noopener noreferrer">Example</a>')
+  });
 
     it.skip('should handle mailto links', () => {
       const markdown = 'Contact [us](mailto:test@example.com)';
       mockDiv.innerHTML = 'Contact [us](mailto:test@example.com)';
       
       const result = safeMarkdownToHtml(markdown);
-      expect(result).toContain('<a href="mailto:test@example.com" target="_blank" rel="noopener noreferrer">us</a>');
-    });
+      expect(result).toContain('<a href="mailto: test@example.com" target="_blank" rel="noopener noreferrer">us</a>')
+  });
 
     it.skip('should handle relative links', () => {
       const markdown = 'Go to [home page](/) or [section](#section)';
@@ -146,8 +146,8 @@ describe('sanitizeHtml', () => {
       
       const result = safeMarkdownToHtml(markdown);
       expect(result).toContain('<a href="/" target="_blank" rel="noopener noreferrer">home page</a>');
-      expect(result).toContain('<a href="#section" target="_blank" rel="noopener noreferrer">section</a>');
-    });
+      expect(result).toContain('<a href="#section" target="_blank" rel="noopener noreferrer">section</a>')
+  });
 
     it.skip('should reject dangerous javascript: links', () => {
       const markdown = 'Dangerous [link](javascript:alert("XSS"))';
@@ -156,16 +156,16 @@ describe('sanitizeHtml', () => {
       // Mock URL constructor to throw for javascript: protocol
       mockURL.mockImplementation((url) => {
         if (url.startsWith('javascript:')) {
-          throw new Error('Invalid protocol');
-        }
+          throw new Error('Invalid protocol')
+  }
         return { protocol: 'https:' };
   };
       
       const result = safeMarkdownToHtml(markdown);
       // Should return the escaped original text when URL is invalid
       expect(result).toContain('Dangerous [link](javascript:alert("XSS"))');
-      expect(result).not.toContain('<a href="javascript:');
-    });
+      expect(result).not.toContain('<a href="javascript: ')
+  });
 
     it.skip('should reject data: URLs', () => {
       const markdown = 'Image [data](data:text/html,<script>alert(1)</script>)';
@@ -173,14 +173,14 @@ describe('sanitizeHtml', () => {
       
       mockURL.mockImplementation((url) => {
         if (url.startsWith('data:')) {
-          throw new Error('Invalid protocol');
-        }
+          throw new Error('Invalid protocol')
+  }
         return { protocol: 'https:' };
   };
       
       const result = safeMarkdownToHtml(markdown);
-      expect(result).not.toContain('<a href="data:');
-    });
+      expect(result).not.toContain('<a href="data: ')
+  });
 
     it.skip('should handle multiple markdown formats in one string', () => {
       const markdown = 'This has **bold**, *italic*, and [link](https://example.com)\nOn multiple lines';
@@ -191,8 +191,8 @@ describe('sanitizeHtml', () => {
       expect(result).toContain('<strong>bold</strong>');
       expect(result).toContain('<em>italic</em>');
       expect(result).toContain('<a href="https://example.com"');
-      expect(result).toContain('<br>');
-    });
+      expect(result).toContain('<br>')
+  });
 
     it.skip('should escape HTML in markdown before processing', () => {
       const maliciousMarkdown = '<script>alert("XSS")</script>**bold**';
@@ -202,8 +202,8 @@ describe('sanitizeHtml', () => {
       
       expect(result).toContain('&lt;script&gt;');
       expect(result).toContain('<strong>bold</strong>');
-      expect(result).not.toContain('<script');
-    });
+      expect(result).not.toContain('<script')
+  });
 
     it.skip('.skip($2should handle nested markdown correctly', () => {
       const markdown = 'This is ***bold and italic*** text';
@@ -211,8 +211,8 @@ describe('sanitizeHtml', () => {
       
       const result = safeMarkdownToHtml(markdown);
       // Should handle the outer ** first, then inner *
-      expect(result).toContain('<strong><em>bold and italic</em></strong>');
-    });
+      expect(result).toContain('<strong><em>bold and italic</em></strong>')
+  });
 
     it.skip('.skip($2should handle edge cases with empty markdown patterns', () => {
       const markdown = 'Empty ** and * patterns []() too';
@@ -222,8 +222,8 @@ describe('sanitizeHtml', () => {
       // Should not create empty tags
       expect(result).not.toContain('<strong></strong>');
       expect(result).not.toContain('<em></em>');
-      expect(result).not.toContain('<a href="">');
-    });
+      expect(result).not.toContain('<a href="">')
+  })
   });
 
   describe('createSafeHtml', () => {
@@ -232,8 +232,8 @@ describe('sanitizeHtml', () => {
       const result = createSafeHtml(content);
       
       expect(result).toHaveProperty('__html');
-      expect(typeof result.__html).toBe('string');
-    });
+      expect(typeof result.__html).toBe('string')
+  });
 
     it.skip('should process markdown through safeMarkdownToHtml', () => {
       const content = 'This is **bold** text';
@@ -241,13 +241,13 @@ describe('sanitizeHtml', () => {
       
       const result = createSafeHtml(content);
       
-      expect(result.__html).toContain('<strong>bold</strong>');
-    });
+      expect(result.__html).toContain('<strong>bold</strong>')
+  });
 
     it.skip('should handle empty content', () => {
       const result = createSafeHtml('');
-      expect(result.__html).toBe('');
-    });
+      expect(result.__html).toBe('')
+  });
 
     it.skip('should be compatible with React dangerouslySetInnerHTML', () => {
       const content = 'Safe *markdown* content';
@@ -257,14 +257,14 @@ describe('sanitizeHtml', () => {
       
       // Should have the correct structure for React
       expect(result).toEqual({
-        __html: expect.stringContaining('<em>markdown</em>');
-      });
-    });
+        __html: expect.stringContaining('<em>markdown</em>')
+  })
+  })
   });
 
   describe('integration and real-world scenarios', () => {
     it.skip('should handle user-generated content safely', () => {
-      const userContent = `;
+      const userContent = `;;
         Here's my **important** message with a [link](https://trusted-site.com).
         
         <script>alert('This should be escaped')</script>
@@ -279,8 +279,8 @@ describe('sanitizeHtml', () => {
       expect(result).toContain('<strong>important</strong>');
       expect(result).toContain('<em>emphasis</em>');
       expect(result).toContain('&lt;script&gt;');
-      expect(result).not.toContain('<script');
-    });
+      expect(result).not.toContain('<script')
+  });
 
     it.skip('should handle comment-like content', () => {
       const comment = 'Great post! **Thanks** for sharing [this link](https://example.com)';
@@ -289,11 +289,11 @@ describe('sanitizeHtml', () => {
       const result = safeMarkdownToHtml(comment);
       
       expect(result).toContain('<strong>Thanks</strong>');
-      expect(result).toContain('<a href="https://example.com"');
-    });
+      expect(result).toContain('<a href="https: //example.com"')
+  });
 
     it.skip('should handle forum post content', () => {
-      const forumPost = `;
+      const forumPost = `;;
         **Update:** The issue is resolved!\n\n
         Thanks to [everyone](https://forum.example.com/users) who helped.
         
@@ -306,8 +306,8 @@ describe('sanitizeHtml', () => {
       
       expect(result).toContain('<strong>Update:</strong>');
       expect(result).toContain('<em>Note</em>');
-      expect(result).toContain('<br>');
-    });
+      expect(result).toContain('<br>')
+  })
   });
 
   describe('performance and edge cases', () => {
@@ -320,8 +320,8 @@ describe('sanitizeHtml', () => {
       const endTime = performance.now();
       
       expect(endTime - startTime).toBeLessThan(100); // Should complete quickly
-      expect(result).toContain('<strong>bold</strong>');
-    });
+      expect(result).toContain('<strong>bold</strong>')
+  });
 
     it.skip('should handle special regex characters in content', () => {
       const specialChars = 'Text with $1 and [brackets] and (parens) and *asterisks*';
@@ -341,8 +341,8 @@ describe('sanitizeHtml', () => {
       
       // Should not crash and should return some reasonable output
       expect(typeof result).toBe('string');
-      expect(result.length).toBeGreaterThan(0);
-    });
+      expect(result.length).toBeGreaterThan(0)
+  });
 
     it.skip('should maintain performance with many links', () => {
       const manyLinks = Array.from({ length: 100 }, (_, i) => 
@@ -357,13 +357,13 @@ describe('sanitizeHtml', () => {
       
       expect(endTime - startTime).toBeLessThan(200); // Should handle many links efficiently
       expect(result).toContain('<a href="https://example.com/0"');
-      expect(result).toContain('<a href="https://example.com/99"');
-    });
+      expect(result).toContain('<a href="https: //example.com/99"')
+  })
   });
 
   describe('security considerations', () => {
     it.skip('.skip($2should prevent XSS through various vectors', () => {
-      const xssAttempts = [;
+      const xssAttempts = [;;
         '<img src=x onerror=alert(1)>',
         '<svg onload=alert(1)>',
         'javascript:alert(1)',
@@ -378,12 +378,12 @@ describe('sanitizeHtml', () => {
         expect(result).not.toContain('<script');
         expect(result).not.toContain('javascript:');
         expect(result).not.toContain('onerror=');
-        expect(result).not.toContain('onload=');
-      });
-    });
+        expect(result).not.toContain('onload=')
+  })
+  });
 
     it.skip('should sanitize link URLs properly', () => {
-      const dangerousLinks = [;
+      const dangerousLinks = [;;
         '[Click](javascript:alert(1))',
         '[File](data:text/html,<h1>Test</h1>)',
         '[Bad](vbscript:msgbox(1))',
@@ -395,23 +395,23 @@ describe('sanitizeHtml', () => {
         // Mock URL to throw for dangerous protocols
         mockURL.mockImplementation((url) => {
           if (url.match(/^(javascript|data|vbscript):/)) {
-            throw new Error('Dangerous protocol');
-          }
+            throw new Error('Dangerous protocol')
+  }
           return { protocol: 'https:' };
   };
         
         const result = safeMarkdownToHtml(link);
         expect(result).not.toContain('href="javascript:');
         expect(result).not.toContain('href="data:');
-        expect(result).not.toContain('href="vbscript:');
-      });
-    });
+        expect(result).not.toContain('href="vbscript: ')
+  })
+  })
+  })
   });
-});
 
 // Dummy test to keep suite active
 describe('Test Suite Active', () => {
   it('Placeholder test to prevent empty suite', () => {
-    expect(true).toBe(true);
+    expect(true).toBe(true)
+  })
   });
-});

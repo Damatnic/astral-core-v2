@@ -9,8 +9,8 @@ interface BreathingPattern {
   hold1: number;
   exhale: number;
   hold2: number;
-  description: string;
-}
+  description: string
+  }
 
 const breathingPatterns: BreathingPattern[] = [
   {
@@ -19,7 +19,7 @@ const breathingPatterns: BreathingPattern[] = [
     hold1: 7,
     exhale: 8,
     hold2: 0,
-    description: 'Calms the nervous system and reduces anxiety';
+    description: 'Calms the nervous system and reduces anxiety'
   },
   {
     name: 'Box Breathing',
@@ -27,7 +27,7 @@ const breathingPatterns: BreathingPattern[] = [
     hold1: 4,
     exhale: 4,
     hold2: 4,
-    description: 'Used by Navy SEALs for focus and calm';
+    description: 'Used by Navy SEALs for focus and calm'
   },
   {
     name: 'Coherent Breathing',
@@ -35,7 +35,7 @@ const breathingPatterns: BreathingPattern[] = [
     hold1: 0,
     exhale: 5,
     hold2: 0,
-    description: 'Balances the autonomic nervous system';
+    description: 'Balances the autonomic nervous system'
   },
   {
     name: 'Quick Relief',
@@ -43,15 +43,15 @@ const breathingPatterns: BreathingPattern[] = [
     hold1: 2,
     exhale: 4,
     hold2: 0,
-    description: 'Fast anxiety relief in stressful moments';
+    description: 'Fast anxiety relief in stressful moments'
   }
 ];
 
 export const BreathingWidget: React.FC<{ 
   embedded?: boolean;
   onComplete?: () => void;
-  autoStart?: boolean;
-}> = ({ embedded = false, onComplete, autoStart = false }) => {
+  autoStart?: boolean
+  }> = ({ embedded = false, onComplete, autoStart = false }) => {
   const [isActive, setIsActive] = useState(autoStart);
   const [currentPhase, setCurrentPhase] = useState<'inhale' | 'hold1' | 'exhale' | 'hold2'>('inhale');
   const [progress, setProgress] = useState(0);
@@ -65,15 +65,15 @@ export const BreathingWidget: React.FC<{
 
   useEffect(() => {
     if (isActive) {
-      startBreathing();;
+      startBreathing()
   } else {
-      stopBreathing();
-    }
+      stopBreathing()
+  }
     
     return () => {
       if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+        clearInterval(intervalRef.current)
+  }
     };
   }, [isActive, selectedPattern]);
 
@@ -90,9 +90,9 @@ export const BreathingWidget: React.FC<{
       setProgress(Math.min(phaseProgress, 100));
       
       if (phaseTimeRef.current >= totalPhaseTimeRef.current) {
-        moveToNextPhase();
-      }
-    }, 100);
+        moveToNextPhase()
+  }
+    }, 100)
   };
 
   const moveToNextPhase = () => {
@@ -104,34 +104,34 @@ export const BreathingWidget: React.FC<{
     // Skip phases with 0 duration
     if (nextPhase === 'hold1' && selectedPattern.hold1 === 0) {
       setCurrentPhase('exhale');
-      totalPhaseTimeRef.current = selectedPattern.exhale;;
+      totalPhaseTimeRef.current = selectedPattern.exhale
   } else if (nextPhase === 'hold2' && selectedPattern.hold2 === 0) {
       setCurrentPhase('inhale');
       totalPhaseTimeRef.current = selectedPattern.inhale;
       setCycles(prev => prev + 1);
-      checkCompletion();;
+      checkCompletion()
   } else {
       setCurrentPhase(nextPhase);
-      totalPhaseTimeRef.current = selectedPattern[nextPhase];
-    }
+      totalPhaseTimeRef.current = selectedPattern[nextPhase]
+  }
     
     phaseTimeRef.current = 0;
-    setProgress(0);
+    setProgress(0)
   };
 
   const stopBreathing = () => {
     if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
+      clearInterval(intervalRef.current)
+  }
     setCurrentPhase('inhale');
-    setProgress(0);
+    setProgress(0)
   };
 
   const checkCompletion = () => {
     if (cycles >= 3 && onComplete) {
       setIsActive(false);
-      onComplete();
-    }
+      onComplete()
+  }
   };
 
   const getPhaseInstruction = () => {
@@ -143,8 +143,8 @@ export const BreathingWidget: React.FC<{
       case 'exhale':
         return `Breathe Out... ${selectedPattern.exhale}s`;
       case 'hold2':
-        return `Hold... ${selectedPattern.hold2}s`;
-    }
+        return `Hold... ${selectedPattern.hold2}s`
+  }
   };
 
   const getPhaseColor = () => {
@@ -155,16 +155,15 @@ export const BreathingWidget: React.FC<{
       case 'hold2':
         return '#FFC107';
       case 'exhale':
-        return '#2196F3';
-    }
+        return '#2196F3'
+  }
   };
 
   if (embedded) {
     return (
       <div className="breathing-widget-embedded">
         <div className="breathing-mini">
-          <button;
-            className="breathing-mini-toggle"
+          <button className="breathing-mini-toggle"
             onClick={() => setIsActive(!isActive)}
             aria-label={isActive ? 'Stop breathing exercise' : 'Start breathing exercise'}
           >
@@ -180,7 +179,7 @@ export const BreathingWidget: React.FC<{
           )}
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -222,12 +221,11 @@ export const BreathingWidget: React.FC<{
       {isActive && (
         <div className="breathing-visualization">
           <div className="breathing-circle-container">
-            <div; 
-              className={`breathing-circle ${currentPhase}`}
+            <div className={`breathing-circle ${currentPhase}`}
               style={{ 
                 transform: `scale(${currentPhase === 'inhale' ? 1 + (progress / 200) : 1 - (progress / 400)})`,
-                backgroundColor: getPhaseColor();
-              }}
+                backgroundColor: getPhaseColor()
+  }}
             >
               <div className="breathing-circle-inner">
                 <div className="phase-text">{getPhaseInstruction()}</div>
@@ -235,8 +233,7 @@ export const BreathingWidget: React.FC<{
               </div>
             </div>
             <svg className="breathing-progress-ring" width="300" height="300">
-              <circle;
-                className="progress-ring-bg"
+              <circle className="progress-ring-bg"
                 stroke="rgba(255, 255, 255, 0.1)"
                 strokeWidth="4"
                 fill="transparent"
@@ -244,8 +241,7 @@ export const BreathingWidget: React.FC<{
                 cx="150"
                 cy="150"
               />
-              <circle;
-                className="progress-ring-fill"
+              <circle className="progress-ring-fill"
                 stroke={getPhaseColor()}
                 strokeWidth="4"
                 fill="transparent"
@@ -271,8 +267,7 @@ export const BreathingWidget: React.FC<{
       )}
 
       <div className="breathing-controls">
-        <button;
-          className={isActive ? 'breathing-button stop' : 'breathing-button start'}
+        <button className={isActive ? 'breathing-button stop' : 'breathing-button start'}
           onClick={() => setIsActive(!isActive)}
         >
           {isActive ? (
@@ -298,5 +293,5 @@ export const BreathingWidget: React.FC<{
         )}
       </div>
     </Card>
-  );
-};
+  )
+  };

@@ -29,8 +29,8 @@ export interface JWTPayload {
   
   // Auth0 specific claims
   'https://astralcore.com/roles'?: string[];
-  'https://astralcore.com/permissions'?: string[];
-}
+  'https: //astralcore.com/permissions'?: string[]
+  }
 
 /**
  * Authenticated User
@@ -45,8 +45,8 @@ export interface AuthUser extends JWTPayload {
   roles?: string[];
   isEmailVerified?: boolean;
   createdAt?: string;
-  updatedAt?: string;
-}
+  updatedAt?: string
+  }
 
 /**
  * Demo User
@@ -58,8 +58,8 @@ export interface DemoUser {
   name: string;
   userType: 'seeker' | 'helper';
   helperProfile?: Helper;
-  role?: string;
-}
+  role?: string
+  }
 
 /**
  * Auth State
@@ -71,8 +71,8 @@ export interface AuthState {
   user: AuthUser | null;
   helperProfile: Helper | null;
   userToken: string | null;
-  anonymousId: string | null;
-}
+  anonymousId: string | null
+  }
 
 /**
  * Session Data
@@ -85,8 +85,8 @@ export interface SessionData {
   expiresAt: string;
   lastActivity?: string;
   ipAddress?: string;
-  userAgent?: string;
-}
+  userAgent?: string
+  }
 
 /**
  * Wellness Data
@@ -97,20 +97,20 @@ export interface WellnessData {
   moodHistory: Array<{
     mood: string;
     timestamp: string;
-    notes?: string;
+    notes?: string
   }>;
   activities: Array<{
     type: string;
     duration: number;
-    timestamp: string;
+    timestamp: string
   }>;
   goals: Array<{
     id: string;
     title: string;
     progress: number;
-    targetDate?: string;
-  }>;
-}
+    targetDate?: string
+  }>
+  }
 
  * Authentication Type Definitions
  * Centralized type definitions for authentication across the application
@@ -142,8 +142,8 @@ export interface JWTPayload {
   
   // Auth0 specific claims
   'https://astralcore.com/roles'?: string[];
-  'https://astralcore.com/permissions'?: string[];
-}
+  'https: //astralcore.com/permissions'?: string[]
+  }
 
 /**
  * Authenticated User
@@ -158,8 +158,8 @@ export interface AuthUser extends JWTPayload {
   roles?: string[];
   isEmailVerified?: boolean;
   createdAt?: string;
-  updatedAt?: string;
-}
+  updatedAt?: string
+  }
 
 /**
  * Demo User
@@ -171,8 +171,8 @@ export interface DemoUser {
   name: string;
   userType: 'seeker' | 'helper';
   helperProfile?: Helper;
-  role?: string;
-}
+  role?: string
+  }
 
 /**
  * Auth State
@@ -184,8 +184,8 @@ export interface AuthState {
   user: AuthUser | null;
   helperProfile: Helper | null;
   userToken: string | null;
-  anonymousId: string | null;
-}
+  anonymousId: string | null
+  }
 
 /**
  * Session Data
@@ -198,8 +198,8 @@ export interface SessionData {
   expiresAt: string;
   lastActivity?: string;
   ipAddress?: string;
-  userAgent?: string;
-}
+  userAgent?: string
+  }
 
 /**
  * Wellness Data
@@ -210,17 +210,17 @@ export interface WellnessData {
   moodHistory: Array<{
     mood: string;
     timestamp: string;
-    notes?: string;
+    notes?: string
   }>;
   activities: Array<{
     type: string;
     duration: number;
-    timestamp: string;
+    timestamp: string
   }>;
   goals: Array<{
     id: string;
     title: string;
     progress: number;
-    targetDate?: string;
-  }>;
-}
+    targetDate?: string
+  }>
+  }

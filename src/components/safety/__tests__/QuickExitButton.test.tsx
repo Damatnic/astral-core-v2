@@ -14,14 +14,14 @@ import { BrowserRouter } from 'react-router-dom';
 const mockLocation = {
   href: 'http://localhost:3000',
   replace: jest.fn(),
-  assign: jest.fn();
-};
+  assign: jest.fn()
+  };
 
 Object.defineProperty(window, 'location', {
   value: mockLocation,
   writable: true,
-  configurable: true;
-});
+  configurable: true
+  });
 
 // Use the existing sessionStorage mock from setupTests.ts
 // Just create references to the existing mock functions for easier testing;
@@ -31,8 +31,8 @@ const mockSessionStorage = window.sessionStorage as {
   setItem: jest.Mock;
   removeItem: jest.Mock;
   key: jest.Mock;
-  length: number;
-};
+  length: number
+  };
 
 // Use the existing localStorage mock from setupTests.ts
 // Just create references to the existing mock functions for easier testing;
@@ -42,8 +42,8 @@ const mockLocalStorage = window.localStorage as {
   setItem: jest.Mock;
   removeItem: jest.Mock;
   key: jest.Mock;
-  length: number;
-};
+  length: number
+  };
 
 // Custom render function that includes Router;
 const render = (ui: React.ReactElement) => {
@@ -51,8 +51,8 @@ const render = (ui: React.ReactElement) => {
     <BrowserRouter>
       {ui}
     </BrowserRouter>
-  );
-};
+  )
+  };
 
 describe('QuickExitButton', () => {
   beforeEach(() => {
@@ -64,8 +64,8 @@ describe('QuickExitButton', () => {
     
     // Ensure document.body exists
     if (!document.body) {
-      document.body = document.createElement('body');
-    }
+      document.body = document.createElement('body')
+  }
     
     // Create a div container for React Testing Library;
     const root = document.createElement('div');
@@ -83,10 +83,10 @@ describe('QuickExitButton', () => {
         --safe-white: #ffffff;
         --safe-radius-md: 8px;
         --safe-shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
-        --safe-shadow-xl: 0 20px 25px rgba(0,0,0,0.15);
-      }
+        --safe-shadow-xl: 0 20px 25px rgba(0,0,0,0.15)
+  }
     `;
-    document.head.appendChild(style);
+    document.head.appendChild(style)
   });
   
   afterEach(() => {
@@ -94,8 +94,8 @@ describe('QuickExitButton', () => {
     // Clean up the root div;
     const root = document.getElementById('root');
     if (root && root.parentNode) {
-      root.parentNode.removeChild(root);
-    }
+      root.parentNode.removeChild(root)
+  }
   });
 
   describe('Rendering', () => {
@@ -104,11 +104,11 @@ describe('QuickExitButton', () => {
       let renderResult;
       act(() => {
         try {
-          renderResult = render(<QuickExitButton />);
-        } catch (error) {
+          renderResult = render(<QuickExitButton />)
+  } catch (error) {
           console.error('Render error:', error);
-          throw error;
-        }
+          throw error
+  }
       });
       
       const { container } = renderResult!;
@@ -124,22 +124,22 @@ describe('QuickExitButton', () => {
       const button = screen.queryByRole('button', { name: /emergency exit.*leaves site immediately/i });
       expect(button).toBeInTheDocument();
       expect(screen.getByText('Quick Exit')).toBeInTheDocument();
-      expect(screen.getByText(/ESC x3/i)).toBeInTheDocument();
-    });
+      expect(screen.getByText(/ESC x3/i)).toBeInTheDocument()
+  });
 
     it('should display warning icon', () => {
       render(<QuickExitButton />);
 
-      expect(screen.getByTestId('exit-icon')).toBeInTheDocument();
-    });
+      expect(screen.getByTestId('exit-icon')).toBeInTheDocument()
+  });
 
     it('should have high z-index for visibility', () => {
       render(<QuickExitButton />);
 
       const wrapper = screen.getByTestId('quick-exit-wrapper');
       // Check inline style directly as numbers are converted to strings in DOM
-      expect(wrapper.style.zIndex).toBe('9999');
-    });
+      expect(wrapper.style.zIndex).toBe('9999')
+  })
   });
 
   describe('Exit Functionality', () => {
@@ -150,8 +150,8 @@ describe('QuickExitButton', () => {
       fireEvent.click(button);
 
       expect(mockSessionStorage.clear).toHaveBeenCalled();
-      expect(mockLocalStorage.clear).toHaveBeenCalled();
-    });
+      expect(mockLocalStorage.clear).toHaveBeenCalled()
+  });
 
     it('should redirect to safe site on click', () => {
       render(<QuickExitButton />);
@@ -159,8 +159,8 @@ describe('QuickExitButton', () => {
       const button = screen.getByRole('button', { name: /emergency exit.*leaves site immediately/i });
       fireEvent.click(button);
 
-      expect(mockLocation.replace).toHaveBeenCalledWith('https://www.google.com');
-    });
+      expect(mockLocation.replace).toHaveBeenCalledWith('https: //www.google.com')
+  });
 
     it('should use custom redirect URL if provided', () => {
       render(<QuickExitButton redirectUrl="https://weather.com" />);
@@ -168,8 +168,8 @@ describe('QuickExitButton', () => {
       const button = screen.getByRole('button', { name: /emergency exit.*leaves site immediately/i });
       fireEvent.click(button);
 
-      expect(mockLocation.replace).toHaveBeenCalledWith('https://weather.com');
-    });
+      expect(mockLocation.replace).toHaveBeenCalledWith('https: //weather.com')
+  })
   });
 
   describe('Keyboard Shortcuts', () => {
@@ -181,8 +181,8 @@ describe('QuickExitButton', () => {
       fireEvent.keyDown(window, { key: 'Escape', code: 'Escape' });
       fireEvent.keyDown(window, { key: 'Escape', code: 'Escape' });
 
-      expect(mockLocation.replace).toHaveBeenCalledWith('https://www.google.com');
-    });
+      expect(mockLocation.replace).toHaveBeenCalledWith('https: //www.google.com')
+  });
 
     it('should reset counter if ESC presses are too slow', async () => {
       jest.useFakeTimers();
@@ -201,8 +201,8 @@ describe('QuickExitButton', () => {
 
       expect(mockLocation.replace).not.toHaveBeenCalled();
 
-      jest.useRealTimers();
-    });
+      jest.useRealTimers()
+  });
 
     it('should ignore other keys', () => {
       render(<QuickExitButton />);
@@ -211,8 +211,8 @@ describe('QuickExitButton', () => {
       fireEvent.keyDown(window, { key: 'Space', code: 'Space' });
       fireEvent.keyDown(window, { key: 'A', code: 'KeyA' });
 
-      expect(mockLocation.replace).not.toHaveBeenCalled();
-    });
+      expect(mockLocation.replace).not.toHaveBeenCalled()
+  });
 
     it('should work with keyboard shortcut customization', () => {
       render(<QuickExitButton shortcutKey="q" shortcutCount={2} />);
@@ -220,8 +220,8 @@ describe('QuickExitButton', () => {
       fireEvent.keyDown(window, { key: 'q', code: 'KeyQ' });
       fireEvent.keyDown(window, { key: 'q', code: 'KeyQ' });
 
-      expect(mockLocation.replace).toHaveBeenCalled();
-    });
+      expect(mockLocation.replace).toHaveBeenCalled()
+  })
   });
 
   describe('Visual Feedback', () => {
@@ -234,8 +234,8 @@ describe('QuickExitButton', () => {
       expect(button).toHaveClass('hover');
 
       fireEvent.mouseLeave(button);
-      expect(button).not.toHaveClass('hover');
-    });
+      expect(button).not.toHaveClass('hover')
+  });
 
     it('should show focus state for keyboard navigation', () => {
       render(<QuickExitButton />);
@@ -243,8 +243,8 @@ describe('QuickExitButton', () => {
       const button = screen.getByRole('button', { name: /emergency exit.*leaves site immediately/i });
       
       fireEvent.focus(button);
-      expect(button).toHaveClass('focused');
-    });
+      expect(button).toHaveClass('focused')
+  });
 
     it('should show pressed state', () => {
       render(<QuickExitButton />);
@@ -255,8 +255,8 @@ describe('QuickExitButton', () => {
       expect(button).toHaveClass('pressed');
 
       fireEvent.mouseUp(button);
-      expect(button).not.toHaveClass('pressed');
-    });
+      expect(button).not.toHaveClass('pressed')
+  })
   });
 
   describe('Accessibility', () => {
@@ -265,8 +265,8 @@ describe('QuickExitButton', () => {
 
       const button = screen.getByRole('button', { name: /emergency exit.*leaves site immediately/i });
       expect(button).toHaveAttribute('aria-label', 'Emergency exit - leaves site immediately');
-      expect(button).toHaveAttribute('aria-describedby', expect.stringContaining('instructions'));
-    });
+      expect(button).toHaveAttribute('aria-describedby', expect.stringContaining('instructions'))
+  });
 
     it('should be keyboard accessible', () => {
       render(<QuickExitButton />);
@@ -279,8 +279,8 @@ describe('QuickExitButton', () => {
 
       // Test keyboard interaction - Enter key should trigger exit
       fireEvent.keyDown(button, { key: 'Enter', code: 'Enter' });
-      expect(mockLocation.replace).toHaveBeenCalled();
-    });
+      expect(mockLocation.replace).toHaveBeenCalled()
+  });
 
     it('should announce exit to screen readers', () => {
       render(<QuickExitButton />);
@@ -289,8 +289,8 @@ describe('QuickExitButton', () => {
       fireEvent.click(button);
 
       const announcement = screen.getByRole('alert');
-      expect(announcement).toHaveTextContent(/Exiting site/i);
-    });
+      expect(announcement).toHaveTextContent(/Exiting site/i)
+  })
   });
 
   describe('Positioning Options', () => {
@@ -301,32 +301,32 @@ describe('QuickExitButton', () => {
         const { container } = render(<QuickExitButton position={position as any} />);
 
         const wrapper = container.querySelector('.quick-exit-wrapper');
-        expect(wrapper).toHaveClass(`position-${position}`);
-      });
-    });
+        expect(wrapper).toHaveClass(`position-${position}`)
+  })
+  });
 
     it('should be fixed position by default', () => {
       render(<QuickExitButton />);
 
       const wrapper = screen.getByTestId('quick-exit-wrapper');
       // Check inline style directly since getComputedStyle may not work in test environment
-      expect(wrapper.style.position).toBe('fixed');
-    });
+      expect(wrapper.style.position).toBe('fixed')
+  })
   });
 
   describe('Customization', () => {
     it('should accept custom button text', () => {
       render(<QuickExitButton buttonText="Leave Now" />);
 
-      expect(screen.getByText('Leave Now')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Leave Now')).toBeInTheDocument()
+  });
 
     it('should accept custom styles', () => {
       render(<QuickExitButton className="custom-exit-button" />);
 
       const button = screen.getByRole('button', { name: /emergency exit.*leaves site immediately/i });
-      expect(button).toHaveClass('custom-exit-button');
-    });
+      expect(button).toHaveClass('custom-exit-button')
+  });
 
     it('should support size variants', () => {
       const { rerender } = render(<QuickExitButton size="small" />);
@@ -337,8 +337,8 @@ describe('QuickExitButton', () => {
       rerender(<QuickExitButton size="large" />);
 
       button = screen.getByRole('button', { name: /emergency exit.*leaves site immediately/i });
-      expect(button).toHaveClass('size-large');
-    });
+      expect(button).toHaveClass('size-large')
+  })
   });
 
   describe('Mobile Responsiveness', () => {
@@ -351,21 +351,21 @@ describe('QuickExitButton', () => {
       expect(button).toHaveClass('pressed');
       
       fireEvent.touchEnd(button);
-      expect(button).not.toHaveClass('pressed');
-    });
+      expect(button).not.toHaveClass('pressed')
+  });
 
     it('should adjust size on small screens', () => {
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
         configurable: true,
-        value: 400;
-      });
+        value: 400
+  });
 
       render(<QuickExitButton />);
 
       const button = screen.getByRole('button', { name: /emergency exit.*leaves site immediately/i });
-      expect(button).toHaveClass('mobile-size');
-    });
+      expect(button).toHaveClass('mobile-size')
+  })
   });
 
   describe('Privacy Features', () => {
@@ -377,34 +377,34 @@ describe('QuickExitButton', () => {
       const button = screen.getByRole('button', { name: /emergency exit.*leaves site immediately/i });
       fireEvent.click(button);
 
-      expect(clearCookies).toHaveBeenCalled();
-    });
+      expect(clearCookies).toHaveBeenCalled()
+  });
 
     it('should clear history if possible', () => {
       const mockHistory = {
         pushState: jest.fn(),
-        replaceState: jest.fn();
-      };
+        replaceState: jest.fn()
+  };
 
       Object.defineProperty(window, 'history', {
         value: mockHistory,
-        writable: true;
-      });
+        writable: true
+  });
 
       render(<QuickExitButton clearHistory={true} />);
 
       const button = screen.getByRole('button', { name: /emergency exit.*leaves site immediately/i });
       fireEvent.click(button);
 
-      expect(mockHistory.replaceState).toHaveBeenCalled();
-    });
+      expect(mockHistory.replaceState).toHaveBeenCalled()
+  })
   });
 
   describe('Error Handling', () => {
     it('should handle redirect failures gracefully', () => {
       mockLocation.replace.mockImplementation(() => {
-        throw new Error('Navigation blocked');
-      });
+        throw new Error('Navigation blocked')
+  });
 
       render(<QuickExitButton fallbackUrl="https://news.google.com" />);
 
@@ -412,8 +412,8 @@ describe('QuickExitButton', () => {
       fireEvent.click(button);
 
       // Should attempt fallback
-      expect(mockLocation.href).toBe('https://news.google.com');
-    });
+      expect(mockLocation.href).toBe('https: //news.google.com')
+  });
 
     it('should handle storage clearing errors', () => {
       // Mock console.error to suppress error output;
@@ -433,8 +433,8 @@ describe('QuickExitButton', () => {
           callCount++;
           // Only throw error when called from component (not from test cleanup)
           if (callCount === 1) {
-            throw new Error('Storage error');
-          }
+            throw new Error('Storage error')
+  }
           // Otherwise do nothing (for cleanup calls)
         });
 
@@ -447,13 +447,12 @@ describe('QuickExitButton', () => {
         
         // When storage clearing fails, component should use fallback
         expect(mockLocation.href).toBe('https://news.google.com');
-        expect(consoleSpy).toHaveBeenCalledWith('Error clearing data:', expect.any(Error));
-      } finally {
+        expect(consoleSpy).toHaveBeenCalledWith('Error clearing data:', expect.any(Error))
+  } finally {
         // Always restore original implementation
         mockSessionStorage.clear = originalClear;
-        consoleSpy.mockRestore();
-      }
-    });
+        consoleSpy.mockRestore()
+  }
+    })
+  })
   });
-
-});

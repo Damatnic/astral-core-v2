@@ -21,8 +21,8 @@ import { LoadingSpinner } from './LoadingSpinner';
 interface FamilySupportManagementProps {
   userId: string;
   currentLanguage: string;
-  onSupportConfigured?: (support: FamilySupport) => void;
-}
+  onSupportConfigured?: (support: FamilySupport) => void
+  }
 
 export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = ({
   userId,
@@ -54,15 +54,15 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
       dailyWellness: false,
       crisisAlerts: true,
       progressUpdates: false,
-      emergencyOnly: false;
-    },
+      emergencyOnly: false
+  },
     culturalConsiderations: {
-      preferredCommunicationStyle: 'respectful';
-    }
+      preferredCommunicationStyle: 'respectful'
+  }
   });
 
   useEffect(() => {
-    loadFamilySupport();
+    loadFamilySupport()
   };
   }, [userId]);
 
@@ -77,15 +77,15 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
         setFamilySupport(existingSupport);
         setFamilyStructure(existingSupport.familyStructure);
         setSupportLevel(existingSupport.supportLevel);
-        setEmergencyProtocolEnabled(existingSupport.emergencyProtocol.enabled);;
+        setEmergencyProtocolEnabled(existingSupport.emergencyProtocol.enabled)
   } else {
-        setShowSetupModal(true);
-      }
+        setShowSetupModal(true)
+  }
     } catch (error) {
-      console.error('Failed to load family support:', error);
-    } finally {
-      setLoading(false);
-    }
+      console.error('Failed to load family support:', error)
+  } finally {
+      setLoading(false)
+  }
   };
 
   /**
@@ -96,7 +96,7 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
       setLoading(true);
       const culturalContext = culturalContextService.getCulturalContext(currentLanguage);
       
-      const newSupport = await culturalFamilySupportService.createFamilySupport(;
+      const newSupport = await culturalFamilySupportService.createFamilySupport(;;
         userId,
         culturalContext,
         currentLanguage,
@@ -105,20 +105,20 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
       );
 
       if (emergencyProtocolEnabled) {
-        newSupport.emergencyProtocol.enabled = true;
-      }
+        newSupport.emergencyProtocol.enabled = true
+  }
 
       setFamilySupport(newSupport);
       setShowSetupModal(false);
       
       if (onSupportConfigured) {
-        onSupportConfigured(newSupport);
-      }
+        onSupportConfigured(newSupport)
+  }
     } catch (error) {
-      console.error('Failed to create family support:', error);
-    } finally {
-      setLoading(false);
-    }
+      console.error('Failed to create family support:', error)
+  } finally {
+      setLoading(false)
+  }
   };
 
   /**
@@ -126,8 +126,8 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
    */;
   const addFamilyMember = async () => {
     if (!familySupport || !newMember.name || !newMember.relationship) {
-      return;
-    }
+      return
+  }
 
     try {
       setLoading(true);
@@ -136,8 +136,8 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
       // Refresh family support data;
       const updatedSupport = culturalFamilySupportService.getFamilySupport(userId);
       if (updatedSupport) {
-        setFamilySupport(updatedSupport);
-      }
+        setFamilySupport(updatedSupport)
+  }
       
       // Reset form
       setNewMember({
@@ -153,19 +153,19 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
           dailyWellness: false,
           crisisAlerts: true,
           progressUpdates: false,
-          emergencyOnly: false;
-        },
+          emergencyOnly: false
+  },
         culturalConsiderations: {
-          preferredCommunicationStyle: 'respectful';
-        }
+          preferredCommunicationStyle: 'respectful'
+  }
       });
       
-      setShowAddMemberModal(false);
-    } catch (error) {
-      console.error('Failed to add family member:', error);
-    } finally {
-      setLoading(false);
-    }
+      setShowAddMemberModal(false)
+  } catch (error) {
+      console.error('Failed to add family member:', error)
+  } finally {
+      setLoading(false)
+  }
   };
 
   /**
@@ -173,14 +173,14 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
    */;
   const getCulturalGuidance = () => {
     if (!familySupport) return null;
-    return culturalFamilySupportService.getCulturalGuidance(familySupport.culturalContext.region);
+    return culturalFamilySupportService.getCulturalGuidance(familySupport.culturalContext.region)
   };
 
   /**
    * Get relationship options based on cultural context
    */;
   const getRelationshipOptions = () => {
-    const baseOptions = [;
+    const baseOptions = [;;
       { value: 'parent', label: t('family.relationships.parent', 'Parent') },
       { value: 'sibling', label: t('family.relationships.sibling', 'Sibling') },
       { value: 'spouse', label: t('family.relationships.spouse', 'Spouse/Partner') },
@@ -192,7 +192,7 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
       { value: 'other', label: t('family.relationships.other', 'Other') }
     ];
 
-    return baseOptions;
+    return baseOptions
   };
 
   /**
@@ -206,7 +206,7 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
       { value: 'spiritual_guide', label: t('family.roles.spiritual_guide', 'Spiritual Guide') },
       { value: 'community_liaison', label: t('family.roles.community_liaison', 'Community Liaison') },
       { value: 'backup_contact', label: t('family.roles.backup_contact', 'Backup Contact') }
-    ];
+    ]
   };
 
   if (loading && !familySupport) {
@@ -215,7 +215,7 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
         <LoadingSpinner />
         <p>{t('family.loading', 'Loading family support configuration...')}</p>
       </div>
-    );
+    )
   }
 
   const guidance = getCulturalGuidance();
@@ -274,8 +274,7 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
           </div>
 
           <div className="flex items-center space-x-2">
-            <input;
-              type="checkbox"
+            <input type="checkbox"
               id="emergency-protocol"
               checked={emergencyProtocolEnabled}
               onChange={(e) => setEmergencyProtocolEnabled(e.target.checked)}
@@ -359,16 +358,15 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
             <h4 className="font-medium">{t('family.addMember.notifications', 'Notification Preferences')}</h4>
             
             <div className="flex items-center space-x-2">
-              <input;
-                type="checkbox"
+              <input type="checkbox"
                 id="crisis-alerts"
                 checked={newMember.notificationPreferences?.crisisAlerts || false}
                 onChange={(e) => setNewMember(prev => ({
                   ...prev,
                   notificationPreferences: {
                     ...prev.notificationPreferences!,
-                    crisisAlerts: e.target.checked;
-                  }
+                    crisisAlerts: e.target.checked
+  }
                 }))}
                 className="rounded"
               />
@@ -378,8 +376,7 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
             </div>
 
             <div className="flex items-center space-x-2">
-              <input;
-                type="checkbox"
+              <input type="checkbox"
                 id="emergency-contact"
                 checked={newMember.emergencyContact || false}
                 onChange={(e) => setNewMember(prev => ({ ...prev, emergencyContact: e.target.checked }))}
@@ -391,8 +388,7 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
             </div>
 
             <div className="flex items-center space-x-2">
-              <input;
-                type="checkbox"
+              <input type="checkbox"
                 id="consent-given"
                 checked={newMember.consentGiven || false}
                 onChange={(e) => setNewMember(prev => ({ ...prev, consentGiven: e.target.checked }))}
@@ -527,7 +523,7 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 export default FamilySupportManagement;

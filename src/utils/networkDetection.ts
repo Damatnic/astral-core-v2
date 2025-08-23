@@ -20,8 +20,8 @@ export interface AdaptiveLoadingConfig {
   shouldPreloadImages: boolean;
   shouldPreloadVideos: boolean;
   recommendedImageQuality: 'low' | 'medium' | 'high';
-  chunkLoadingStrategy: 'aggressive' | 'conservative' | 'minimal';
-}
+  chunkLoadingStrategy: 'aggressive' | 'conservative' | 'minimal'
+  }
 
 /**
  * Detects network connection type from navigator.connection
@@ -32,12 +32,12 @@ export const getConnectionType = (): ConnectionType => {
       effectiveType?: string;
       downlink?: number;
       rtt?: number;
-      saveData?: boolean;
-    }
+      saveData?: boolean
+  }
   };
   const connection = navigatorWithConnection.connection;
   if (!connection) {
-    return 'unknown';
+    return 'unknown'
   }
 
   const effectiveType = connection.effectiveType;
@@ -52,7 +52,7 @@ export const getConnectionType = (): ConnectionType => {
       return '4g';
     default:
       // Assume 4g for better performance if unknown
-      return '4g';
+      return '4g'
   }
 };
 
@@ -63,8 +63,8 @@ export const getNetworkQuality = (): NetworkQuality => {
   const navigatorWithConnection = navigator as any & {
     connection?: {
       downlink?: number;
-      rtt?: number;
-    }
+      rtt?: number
+  }
   };
   const connection = navigatorWithConnection.connection;
   if (!connection) {
@@ -75,17 +75,17 @@ export const getNetworkQuality = (): NetworkQuality => {
   
   // Poor: Slow speeds or high latency
   if (downlink < 0.5 || rtt > 500) {
-    return 'poor';
+    return 'poor'
   }
   
   // Excellent: Fast speeds and low latency
   if (downlink > 2 && rtt < 150) {
-    return 'excellent';
+    return 'excellent'
   }
   
   // Good: Moderate speeds
-  return 'good';
-};
+  return 'good'
+  };
 
 /**
  * Gets comprehensive adaptive loading configuration
@@ -99,8 +99,8 @@ export const getAdaptiveLoadingConfig = (): AdaptiveLoadingConfig => {
       rtt?: number;
       saveData?: boolean;
       addEventListener?: (event: string, handler: () => void) => void;
-      removeEventListener?: (event: string, handler: () => void) => void;
-    }
+      removeEventListener?: (event: string, handler: () => void) => void
+  }
   };
   const connection = navigatorWithConnection.connection;
   const downlink = connection?.downlink || 1;
@@ -126,13 +126,13 @@ export const getAdaptiveLoadingConfig = (): AdaptiveLoadingConfig => {
       break;
     default:
       // Keep defaults for 'good'
-      break;
+      break
   }
 
   // Override for data saver mode
   if (saveData) {
     recommendedImageQuality = 'low';
-    chunkLoadingStrategy = 'minimal';
+    chunkLoadingStrategy = 'minimal'
   }
 
   return {
@@ -158,26 +158,26 @@ export const useAdaptiveLoading = () => {
   React.useEffect(() => {
     // Update config when connection changes;
     const updateConfig = () => {
-      setConfig(getAdaptiveLoadingConfig());
-    };
+      setConfig(getAdaptiveLoadingConfig())
+  };
 
     const navigatorWithConnection = navigator as any & {
       connection?: {
         addEventListener?: (event: string, handler: () => void) => void;
-        removeEventListener?: (event: string, handler: () => void) => void;
-      }
+        removeEventListener?: (event: string, handler: () => void) => void
+  }
     };
     const connection = navigatorWithConnection.connection;
     if (connection && connection.addEventListener && connection.removeEventListener) {
       connection.addEventListener('change', updateConfig);
       return () => {
-        connection.removeEventListener('change', updateConfig);
-      }
+        connection.removeEventListener('change', updateConfig)
+  }
   };
   }, []);
 
-  return config;
-};
+  return config
+  };
 
 /**
  * Utility to determine if feature should be enabled based on network
@@ -201,8 +201,7 @@ export const shouldEnableFeature = (
     case 'background-sync':
       return networkConfig.quality !== 'poor';
     
-    default:
-      return false;
+    default: return false
   }
 };
 
@@ -220,8 +219,8 @@ export const logNetworkInfo = (): void => {
   console.log('Data Saver Mode:', config.saveData);
   console.log('Image Quality:', config.recommendedImageQuality);
   console.log('Loading Strategy:', config.chunkLoadingStrategy);
-  console.groupEnd();
-};
+  console.groupEnd()
+  };
 
 // Export React import for the hook;
 import React from 'react';

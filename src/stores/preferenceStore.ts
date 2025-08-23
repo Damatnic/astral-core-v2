@@ -3,8 +3,8 @@ import { create } from 'zustand';
 interface PreferenceState {
   contentFilters: string[];
   setFilters: (filters: string[]) => void;
-  loadFilters: () => void;
-}
+  loadFilters: () => void
+  }
 
 export const usePreferenceStore = create<PreferenceState>((set) => ({
   contentFilters: [],
@@ -13,16 +13,16 @@ export const usePreferenceStore = create<PreferenceState>((set) => ({
         const savedFilters = localStorage.getItem('contentFilters');
         // Check for null, undefined, or empty string
         if (savedFilters && savedFilters.trim() !== '') {
-          set({ contentFilters: JSON.parse(savedFilters) });
-        }
+          set({ contentFilters: JSON.parse(savedFilters) })
+  }
     } catch (e) {
         console.error("Failed to parse content filters from localStorage", e);
-        localStorage.removeItem('contentFilters');
-    }
+        localStorage.removeItem('contentFilters')
+  }
   },
   setFilters: (filters) => {
     set({ contentFilters: filters });
-    localStorage.setItem('contentFilters', JSON.stringify(filters));
+    localStorage.setItem('contentFilters', JSON.stringify(filters))
   },
 }));
 

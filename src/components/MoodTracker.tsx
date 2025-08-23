@@ -11,8 +11,8 @@ interface MoodOption {
   label: string;
   value: number;
   color: string;
-  description: string;
-}
+  description: string
+  }
 
 const moodOptions: MoodOption[] = [
   {
@@ -21,7 +21,7 @@ const moodOptions: MoodOption[] = [
     label: 'Terrible',
     value: 1,
     color: '#ef4444',
-    description: 'Feeling really down today';
+    description: 'Feeling really down today'
   },
   {
     id: 'bad',
@@ -29,7 +29,7 @@ const moodOptions: MoodOption[] = [
     label: 'Bad',
     value: 2,
     color: '#f97316',
-    description: 'Not having a good day';
+    description: 'Not having a good day'
   },
   {
     id: 'okay',
@@ -37,7 +37,7 @@ const moodOptions: MoodOption[] = [
     label: 'Okay',
     value: 3,
     color: '#eab308',
-    description: 'Feeling neutral';
+    description: 'Feeling neutral'
   },
   {
     id: 'good',
@@ -45,7 +45,7 @@ const moodOptions: MoodOption[] = [
     label: 'Good',
     value: 4,
     color: '#22c55e',
-    description: 'Having a good day';
+    description: 'Having a good day'
   },
   {
     id: 'great',
@@ -53,11 +53,11 @@ const moodOptions: MoodOption[] = [
     label: 'Great',
     value: 5,
     color: '#10b981',
-    description: 'Feeling amazing!';
+    description: 'Feeling amazing!'
   }
 ];
 
-const moodTags = [;
+const moodTags = [;;
   'Grateful', 'Anxious', 'Tired', 'Hopeful', 'Stressed', 
   'Calm', 'Lonely', 'Productive', 'Excited', 'Peaceful',
   'Overwhelmed', 'Confident', 'Sad', 'Energetic', 'Worried',
@@ -65,8 +65,8 @@ const moodTags = [;
 ];
 
 interface MoodTrackerProps {
-  onMoodSubmit?: (mood: { value: number; tags: string[]; note: string }) => void;
-}
+  onMoodSubmit?: (mood: { value: number; tags: string[]; note: string }) => void
+  }
 
 export const MoodTracker: React.FC<MoodTrackerProps> = ({ onMoodSubmit }) => {
   const [selectedMood, setSelectedMood] = useState<MoodOption | null>(null);
@@ -79,7 +79,7 @@ export const MoodTracker: React.FC<MoodTrackerProps> = ({ onMoodSubmit }) => {
 
   const handleMoodSelect = (mood: MoodOption) => {
     setSelectedMood(mood);
-    setIsSubmitted(false);
+    setIsSubmitted(false)
   };
 
   const handleTagToggle = (tag: string) => {
@@ -87,35 +87,35 @@ export const MoodTracker: React.FC<MoodTrackerProps> = ({ onMoodSubmit }) => {
       prev.includes(tag) 
         ? prev.filter(t => t !== tag)
         : [...prev, tag]
-    );
+    )
   };
 
   const handleSubmit = async () => {
     if (!selectedMood) {
       addToast('Please select your mood first', 'error');
-      return;
-    }
+      return
+  }
 
     // Check for potential crisis indicators based on mood selection and content;
     const hasLowMood = selectedMood.value <= 2;
-    const hasConcerningTags = selectedTags.some(tag => ;
+    const hasConcerningTags = selectedTags.some(tag => ;;
       ['hopeless', 'overwhelmed', 'trapped', 'worthless', 'alone'].includes(tag.toLowerCase())
     );
-    const hasConcerningNote = note.toLowerCase().includes('suicide') || ;
+    const hasConcerningNote = note.toLowerCase().includes('suicide') || ;;
                               note.toLowerCase().includes('hurt myself') ||
                               note.toLowerCase().includes('end it all');
 
     if (hasLowMood || hasConcerningTags || hasConcerningNote) {
       setShowCrisisAlert(true);
       // Don't proceed with mood submission until crisis alert is addressed
-      return;
-    }
+      return
+  }
 
     const moodData = {
       value: selectedMood.value,
       tags: selectedTags,
-      note: note.trim();
-    };
+      note: note.trim()
+  };
 
     onMoodSubmit?.(moodData);
     setIsSubmitted(true);
@@ -123,8 +123,8 @@ export const MoodTracker: React.FC<MoodTrackerProps> = ({ onMoodSubmit }) => {
     
     // Reset after a delay
     setTimeout(() => {
-      setIsSubmitted(false);
-    }, 3000);
+      setIsSubmitted(false)
+  }, 3000)
   };
 
   const handleReset = () => {
@@ -132,12 +132,12 @@ export const MoodTracker: React.FC<MoodTrackerProps> = ({ onMoodSubmit }) => {
     setSelectedTags([]);
     setNote('');
     setIsSubmitted(false);
-    setShowCrisisAlert(false);
+    setShowCrisisAlert(false)
   };
 
   const handleCrisisDismiss = () => {
     setShowCrisisAlert(false);
-    dismissCulturalAlert();
+    dismissCulturalAlert()
   };
 
   if (isSubmitted && selectedMood) {
@@ -171,7 +171,7 @@ export const MoodTracker: React.FC<MoodTrackerProps> = ({ onMoodSubmit }) => {
           </AppButton>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -204,8 +204,8 @@ export const MoodTracker: React.FC<MoodTrackerProps> = ({ onMoodSubmit }) => {
               onClick={() => handleMoodSelect(mood)}
               style={{ 
                 '--mood-color': mood.color,
-                borderColor: selectedMood?.id === mood.id ? mood.color : 'transparent';
-              } as React.CSSProperties}
+                borderColor: selectedMood?.id === mood.id ? mood.color : 'transparent'
+  } as React.CSSProperties}
             >
               <div className="mood-emoji">{mood.emoji}</div>
               <div className="mood-label">{mood.label}</div>
@@ -275,7 +275,7 @@ export const MoodTracker: React.FC<MoodTrackerProps> = ({ onMoodSubmit }) => {
         </>
       )}
     </div>
-  );
-};
+  )
+  };
 
 export default MoodTracker;

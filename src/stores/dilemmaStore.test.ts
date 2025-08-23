@@ -22,7 +22,7 @@ describe('dilemmaStore', () => {
     // Reset the store to its initial state before each test
     useDilemmaStore.setState(initialState);
     // Clear all mock implementations and call counts
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   });
 
   test('fetchDilemmas should update state on successful API call', async () => {
@@ -30,26 +30,26 @@ describe('dilemmaStore', () => {
     mockedApiClient.dilemmas.getDilemmas.mockResolvedValue(mockDilemmas as any);
 
     await act(async () => {
-      await useDilemmaStore.getState().fetchDilemmas();
-    });
+      await useDilemmaStore.getState().fetchDilemmas()
+  });
 
     expect(useDilemmaStore.getState().isLoading).toBe(false);
     expect(useDilemmaStore.getState().allDilemmas).toEqual(mockDilemmas);
-    expect(mockedApiClient.dilemmas.getDilemmas).toHaveBeenCalledTimes(1);
+    expect(mockedApiClient.dilemmas.getDilemmas).toHaveBeenCalledTimes(1)
   });
 
   test('fetchDilemmas should handle API errors', async () => {
     mockedApiClient.dilemmas.getDilemmas.mockRejectedValue(new Error('API Error'));
 
     await act(async () => {
-      await useDilemmaStore.getState().fetchDilemmas();
-    });
+      await useDilemmaStore.getState().fetchDilemmas()
+  });
 
     expect(useDilemmaStore.getState().isLoading).toBe(false);
     // When API fails, sample community posts are provided;
     const dilemmas = useDilemmaStore.getState().allDilemmas;
     expect(dilemmas.length).toBeGreaterThan(0);
-    expect(dilemmas[0].id).toContain('community-');
+    expect(dilemmas[0].id).toContain('community-')
   });
 
   test('postDilemma should call the API and refresh dilemmas', async () => {
@@ -60,8 +60,8 @@ describe('dilemmaStore', () => {
     mockedApiClient.dilemmas.getDilemmas.mockResolvedValue([]);
 
     await act(async () => {
-      await useDilemmaStore.getState().postDilemma(newDilemmaData as any, userToken);
-    });
+      await useDilemmaStore.getState().postDilemma(newDilemmaData as any, userToken)
+  });
 
     expect(mockedApiClient.dilemmas.postDilemma).toHaveBeenCalledWith(newDilemmaData, userToken);
     expect(mockedApiClient.dilemmas.getDilemmas).toHaveBeenCalledTimes(1); // fetchDilemmas is called after posting
@@ -75,12 +75,12 @@ describe('dilemmaStore', () => {
     mockedApiClient.dilemmas.toggleSupport.mockResolvedValue(updatedDilemmaFromApi as any);
 
     await act(async () => {
-      await useDilemmaStore.getState().toggleSupport('1');
-    });
+      await useDilemmaStore.getState().toggleSupport('1')
+  });
 
     expect(mockedApiClient.dilemmas.toggleSupport).toHaveBeenCalledWith('1');
     // Check final state
     expect(useDilemmaStore.getState().allDilemmas[0].isSupported).toBe(true);
-    expect(useDilemmaStore.getState().allDilemmas[0].supportCount).toBe(1);
+    expect(useDilemmaStore.getState().allDilemmas[0].supportCount).toBe(1)
+  })
   });
-});

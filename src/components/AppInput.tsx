@@ -9,8 +9,8 @@ interface AppInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   helpText?: string;
   mobileOptimized?: boolean;
   variant?: 'glass' | 'neumorph' | 'default';
-  animate?: boolean;
-}
+  animate?: boolean
+  }
 
 export const AppInput: React.FC<AppInputProps> = ({
   label,
@@ -39,8 +39,8 @@ export const AppInput: React.FC<AppInputProps> = ({
       case 'glass':
       default:
         inputClass = 'form-control-enhanced glass-input';
-        break;
-    }
+        break
+  }
   }
   
   const containerClass = enhanced && floatingLabel ? 'form-floating-enhanced' : '';
@@ -64,36 +64,36 @@ export const AppInput: React.FC<AppInputProps> = ({
         target.scrollIntoView({ 
           behavior: 'smooth', 
           block: 'center',
-          inline: 'nearest';
-        });
-      }, 100);
-    }
+          inline: 'nearest'
+  })
+  }, 100)
+  }
   };
   }, [mobileOptimized]);
 
   const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
     if (mobileOptimized) {
       // Add mobile-focused class for enhanced styling
-      e.currentTarget.classList.add('mobile-focused');
-    }
+      e.currentTarget.classList.add('mobile-focused')
+  }
     
     // Call original onFocus if provided
     if (rest.onFocus) {
-      rest.onFocus(e);
-    }
+      rest.onFocus(e)
+  }
   };
   }, [mobileOptimized, rest.onFocus]);
 
   const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
     if (mobileOptimized) {
       // Remove mobile-focused class
-      e.currentTarget.classList.remove('mobile-focused');
-    }
+      e.currentTarget.classList.remove('mobile-focused')
+  }
     
     // Call original onBlur if provided
     if (rest.onBlur) {
-      rest.onBlur(e);
-    }
+      rest.onBlur(e)
+  }
   };
   }, [mobileOptimized, rest.onBlur]);
 
@@ -124,8 +124,8 @@ export const AppInput: React.FC<AppInputProps> = ({
       autoComplete: rest.autoComplete || 'off',
       autoCorrect: 'off',
       autoCapitalize: rest.autoCapitalize || 'none',
-      spellCheck: rest.spellCheck !== undefined ? rest.spellCheck : false;
-    })
+      spellCheck: rest.spellCheck !== undefined ? rest.spellCheck : false
+  })
   };
   return (
     <div className={`${formGroupClass} ${containerClass}`} style={containerStyle}>
@@ -143,8 +143,8 @@ export const AppInput: React.FC<AppInputProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 interface AppTextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
     label?: string;
@@ -155,8 +155,8 @@ interface AppTextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElem
     helpText?: string;
     mobileOptimized?: boolean;
     variant?: 'glass' | 'neumorph' | 'default';
-    animate?: boolean;
-}
+    animate?: boolean
+  }
 
 export const AppTextArea: React.FC<AppTextAreaProps> = ({
     label,
@@ -185,8 +185,8 @@ export const AppTextArea: React.FC<AppTextAreaProps> = ({
         case 'glass':
         default:
           textareaClass = 'form-control-enhanced glass-input';
-          break;
-      }
+          break
+  }
     }
     
     const animationClass = animate && enhanced ? 'smooth-transition' : '';
@@ -206,32 +206,32 @@ export const AppTextArea: React.FC<AppTextAreaProps> = ({
           target.scrollIntoView({ 
             behavior: 'smooth', 
             block: 'center',
-            inline: 'nearest';
-          });
-        }, 100);
-      }
+            inline: 'nearest'
+  })
+  }, 100)
+  }
     };
   }, [mobileOptimized]);
 
     const handleFocus = useCallback((e: React.FocusEvent<HTMLTextAreaElement>) => {
       if (mobileOptimized) {
-        e.currentTarget.classList.add('mobile-focused');
-      }
+        e.currentTarget.classList.add('mobile-focused')
+  }
       
       if (rest.onFocus) {
-        rest.onFocus(e);
-      }
+        rest.onFocus(e)
+  }
     };
   }, [mobileOptimized, rest.onFocus]);
 
     const handleBlur = useCallback((e: React.FocusEvent<HTMLTextAreaElement>) => {
       if (mobileOptimized) {
-        e.currentTarget.classList.remove('mobile-focused');
-      }
+        e.currentTarget.classList.remove('mobile-focused')
+  }
       
       if (rest.onBlur) {
-        rest.onBlur(e);
-      }
+        rest.onBlur(e)
+  }
     };
   }, [mobileOptimized, rest.onBlur]);
 
@@ -259,8 +259,8 @@ export const AppTextArea: React.FC<AppTextAreaProps> = ({
           ...rest.style
         },
         autoCorrect: 'off',
-        spellCheck: rest.spellCheck !== undefined ? rest.spellCheck : true;
-      })
+        spellCheck: rest.spellCheck !== undefined ? rest.spellCheck : true
+  })
     };
     
     return (
@@ -279,5 +279,5 @@ export const AppTextArea: React.FC<AppTextAreaProps> = ({
             )}
             {footer && <div className="form-group-footer">{footer}</div>}
         </div>
-    );
-};
+    )
+  };

@@ -74,12 +74,12 @@ describe('Toast', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.clearAllTimers();
-    jest.useFakeTimers();
+    jest.useFakeTimers()
   });
 
   afterEach(() => {
     jest.runOnlyPendingTimers();
-    jest.useRealTimers();
+    jest.useRealTimers()
   });
 
   describe('Toast Component', () => {
@@ -87,16 +87,16 @@ describe('Toast', () => {
       const toast = createMockToast();
       render(<Toast toast={toast} onDismiss={mockOnDismiss} />);
       
-      expect(screen.getByText('Test toast message')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Test toast message')).toBeInTheDocument()
+  });
 
     it('should apply correct type class', () => {
       const toast = createMockToast({ type: 'success' });
       const { container } = render(<Toast toast={toast} onDismiss={mockOnDismiss} />);
       
       const toastElement = container.querySelector('.toast');
-      expect(toastElement).toHaveClass('toast-success');
-    });
+      expect(toastElement).toHaveClass('toast-success')
+  });
 
     it('should have correct DOM structure', () => {
       const toast = createMockToast();
@@ -108,30 +108,30 @@ describe('Toast', () => {
       
       expect(toastElement).toBeInTheDocument();
       expect(messageElement).toBeInTheDocument();
-      expect(progressElement).toBeInTheDocument();
-    });
+      expect(progressElement).toBeInTheDocument()
+  });
 
     it('should auto-dismiss after 5 seconds', () => {
       const toast = createMockToast();
       render(<Toast toast={toast} onDismiss={mockOnDismiss} />);
       
       act(() => {
-        jest.advanceTimersByTime(5000);
-      });
+        jest.advanceTimersByTime(5000)
+  });
       
-      expect(mockOnDismiss).toHaveBeenCalledWith(toast.id);
-    });
+      expect(mockOnDismiss).toHaveBeenCalledWith(toast.id)
+  });
 
     it('should not dismiss before timeout', () => {
       const toast = createMockToast();
       render(<Toast toast={toast} onDismiss={mockOnDismiss} />);
       
       act(() => {
-        jest.advanceTimersByTime(4999);
-      });
+        jest.advanceTimersByTime(4999)
+  });
       
-      expect(mockOnDismiss).not.toHaveBeenCalled();
-    });
+      expect(mockOnDismiss).not.toHaveBeenCalled()
+  });
 
     it('should clear timeout when component unmounts', () => {
       const toast = createMockToast();
@@ -140,11 +140,11 @@ describe('Toast', () => {
       unmount();
       
       act(() => {
-        jest.advanceTimersByTime(5000);
-      });
+        jest.advanceTimersByTime(5000)
+  });
       
-      expect(mockOnDismiss).not.toHaveBeenCalled();
-    });
+      expect(mockOnDismiss).not.toHaveBeenCalled()
+  });
 
     it('should create new timer when toast changes', () => {
       const toast1 = createMockToast({ id: 'toast-1' });
@@ -153,23 +153,23 @@ describe('Toast', () => {
       const { rerender } = render(<Toast toast={toast1} onDismiss={mockOnDismiss} />);
       
       act(() => {
-        jest.advanceTimersByTime(3000);
-      });
+        jest.advanceTimersByTime(3000)
+  });
       
       rerender(<Toast toast={toast2} onDismiss={mockOnDismiss} />);
       
       act(() => {
-        jest.advanceTimersByTime(2000);
-      });
+        jest.advanceTimersByTime(2000)
+  });
       
       expect(mockOnDismiss).not.toHaveBeenCalled();
       
       act(() => {
-        jest.advanceTimersByTime(3000);
-      });
+        jest.advanceTimersByTime(3000)
+  });
       
-      expect(mockOnDismiss).toHaveBeenCalledWith(toast2.id);
-    });
+      expect(mockOnDismiss).toHaveBeenCalledWith(toast2.id)
+  });
 
     it('should handle different toast types', () => {
       const types: Array<ToastType['type']> = ['success', 'error', 'warning', 'info'];
@@ -179,9 +179,9 @@ describe('Toast', () => {
         const { container } = render(<Toast toast={toast} onDismiss={mockOnDismiss} />);
         
         const toastElement = container.querySelector('.toast');
-        expect(toastElement).toHaveClass(`toast-${type}`);
-      });
-    });
+        expect(toastElement).toHaveClass(`toast-${type}`)
+  })
+  });
 
     describe('Glass Morphism Styling', () => {
       it('should apply glass-card class', () => {
@@ -189,33 +189,33 @@ describe('Toast', () => {
         const { container } = render(<Toast toast={toast} onDismiss={mockOnDismiss} />);
         
         const toastElement = container.querySelector('.toast');
-        expect(toastElement).toHaveClass('glass-card');
-      });
+        expect(toastElement).toHaveClass('glass-card')
+  });
 
       it('should apply smooth-transition class', () => {
         const toast = createMockToast();
         const { container } = render(<Toast toast={toast} onDismiss={mockOnDismiss} />);
         
         const toastElement = container.querySelector('.toast');
-        expect(toastElement).toHaveClass('smooth-transition');
-      });
+        expect(toastElement).toHaveClass('smooth-transition')
+  });
 
       it('should apply animate-float class', () => {
         const toast = createMockToast();
         const { container } = render(<Toast toast={toast} onDismiss={mockOnDismiss} />);
         
         const toastElement = container.querySelector('.toast');
-        expect(toastElement).toHaveClass('animate-float');
-      });
+        expect(toastElement).toHaveClass('animate-float')
+  });
 
       it('should apply animate-gradient to progress bar', () => {
         const toast = createMockToast();
         const { container } = render(<Toast toast={toast} onDismiss={mockOnDismiss} />);
         
         const progressElement = container.querySelector('.toast-progress');
-        expect(progressElement).toHaveClass('animate-gradient');
-      });
-    });
+        expect(progressElement).toHaveClass('animate-gradient')
+  })
+  })
   });
 
   describe.skip('ToastContainer Component - Skipped due to mock limitations', () => {
@@ -228,8 +228,8 @@ describe('Toast', () => {
       
       const toastContainer = container.querySelector('.toast-container');
       expect(toastContainer).toBeInTheDocument();
-      expect(toastContainer?.children).toHaveLength(0);
-    });
+      expect(toastContainer?.children).toHaveLength(0)
+  });
 
     it('should render single toast', () => {
       const toast = createMockToast();
@@ -240,8 +240,8 @@ describe('Toast', () => {
         </NotificationProvider>
       );
       
-      expect(screen.getByText(toast.message)).toBeInTheDocument();
-    });
+      expect(screen.getByText(toast.message)).toBeInTheDocument()
+  });
 
     it('should render multiple toasts', () => {
       const toast1 = createMockToast({ id: 'toast-1', message: 'First toast' });
@@ -256,8 +256,8 @@ describe('Toast', () => {
       
       expect(screen.getByText('First toast')).toBeInTheDocument();
       expect(screen.getByText('Second toast')).toBeInTheDocument();
-      expect(screen.getByText('Third toast')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Third toast')).toBeInTheDocument()
+  });
 
     it('should pass correct props to Toast components', () => {
       const toast1 = createMockToast({ id: 'toast-1', type: 'success' });
@@ -272,8 +272,8 @@ describe('Toast', () => {
       const toasts = container.querySelectorAll('.toast');
       expect(toasts).toHaveLength(2);
       expect(toasts[0]).toHaveClass('toast-success');
-      expect(toasts[1]).toHaveClass('toast-error');
-    });
+      expect(toasts[1]).toHaveClass('toast-error')
+  });
 
     it('should call removeToast when toast is dismissed', async () => {
       const toast = createMockToast();
@@ -286,11 +286,11 @@ describe('Toast', () => {
       
       // Fast-forward to trigger auto-dismiss
       act(() => {
-        jest.advanceTimersByTime(5000);
-      });
+        jest.advanceTimersByTime(5000)
+  });
       
-      expect(mockRemoveToast).toHaveBeenCalledWith(toast.id);
-    });
+      expect(mockRemoveToast).toHaveBeenCalledWith(toast.id)
+  });
 
     it('should handle toasts with same message but different IDs', () => {
       const toast1 = createMockToast({ id: 'toast-1', message: 'Same message' });
@@ -306,8 +306,8 @@ describe('Toast', () => {
       expect(toasts).toHaveLength(2);
       
       const messages = screen.getAllByText('Same message');
-      expect(messages).toHaveLength(2);
-    });
+      expect(messages).toHaveLength(2)
+  });
 
     it('should maintain correct order of toasts', () => {
       const toast1 = createMockToast({ id: 'toast-1', message: 'First' });
@@ -323,8 +323,8 @@ describe('Toast', () => {
       const toastElements = container.querySelectorAll('.toast-message');
       expect(toastElements[0]).toHaveTextContent('First');
       expect(toastElements[1]).toHaveTextContent('Second');
-      expect(toastElements[2]).toHaveTextContent('Third');
-    });
+      expect(toastElements[2]).toHaveTextContent('Third')
+  })
   });
 
   describe('Integration Tests', () => {
@@ -355,8 +355,8 @@ describe('Toast', () => {
       
       // Verify only second toast is shown
       expect(screen.queryByText('First toast')).not.toBeInTheDocument();
-      expect(screen.getByText('Second toast')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Second toast')).toBeInTheDocument()
+  });
 
     it('should handle edge case of empty toast message', () => {
       const toast = createMockToast({ message: '' });
@@ -364,24 +364,24 @@ describe('Toast', () => {
       
       const messageElement = document.querySelector('.toast-message');
       expect(messageElement).toBeInTheDocument();
-      expect(messageElement).toHaveTextContent('');
-    });
+      expect(messageElement).toHaveTextContent('')
+  });
 
     it('should handle very long toast messages', () => {
       const longMessage = 'A'.repeat(500);
       const toast = createMockToast({ message: longMessage });
       render(<Toast toast={toast} onDismiss={mockOnDismiss} />);
       
-      expect(screen.getByText(longMessage)).toBeInTheDocument();
-    });
+      expect(screen.getByText(longMessage)).toBeInTheDocument()
+  });
 
     it('should handle special characters in toast messages', () => {
       const specialMessage = '!@#$%^&*()_+-=[]{}|;\':",./<>?`~';
       const toast = createMockToast({ message: specialMessage });
       render(<Toast toast={toast} onDismiss={mockOnDismiss} />);
       
-      expect(screen.getByText(specialMessage)).toBeInTheDocument();
-    });
+      expect(screen.getByText(specialMessage)).toBeInTheDocument()
+  });
 
     it('should handle toast with HTML-like content safely', () => {
       const htmlMessage = '<script>alert("XSS")</script><b>Bold</b>';
@@ -390,8 +390,8 @@ describe('Toast', () => {
       
       const messageElement = screen.getByText(htmlMessage);
       expect(messageElement.innerHTML).not.toContain('<script>');
-      expect(messageElement.textContent).toBe(htmlMessage);
-    });
+      expect(messageElement.textContent).toBe(htmlMessage)
+  })
   });
 
   describe('Error Handling', () => {
@@ -404,17 +404,17 @@ describe('Toast', () => {
       
       // Timer should not cause error
       act(() => {
-        jest.advanceTimersByTime(5000);
-      });
-    });
+        jest.advanceTimersByTime(5000)
+  })
+  });
 
     it('should handle malformed toast object', () => {
       const malformedToast = { id: 'test' } as ToastType;
       const { container } = render(<Toast toast={malformedToast} onDismiss={mockOnDismiss} />);
       
       const toastElement = container.querySelector('.toast');
-      expect(toastElement).toBeInTheDocument();
-    });
+      expect(toastElement).toBeInTheDocument()
+  });
 
     it('should handle timer cleanup on multiple re-renders', () => {
       const toast1 = createMockToast({ id: 'toast-1' });
@@ -424,23 +424,23 @@ describe('Toast', () => {
       const { rerender } = render(<Toast toast={toast1} onDismiss={mockOnDismiss} />);
       
       act(() => {
-        jest.advanceTimersByTime(1000);
-      });
+        jest.advanceTimersByTime(1000)
+  });
       
       rerender(<Toast toast={toast2} onDismiss={mockOnDismiss} />);
       
       act(() => {
-        jest.advanceTimersByTime(1000);
-      });
+        jest.advanceTimersByTime(1000)
+  });
       
       rerender(<Toast toast={toast3} onDismiss={mockOnDismiss} />);
       
       act(() => {
-        jest.advanceTimersByTime(5000);
-      });
+        jest.advanceTimersByTime(5000)
+  });
       
       expect(mockOnDismiss).toHaveBeenCalledTimes(1);
-      expect(mockOnDismiss).toHaveBeenCalledWith(toast3.id);
-    });
+      expect(mockOnDismiss).toHaveBeenCalledWith(toast3.id)
+  })
+  })
   });
-});

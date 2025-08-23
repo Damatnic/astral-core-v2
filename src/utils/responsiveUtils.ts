@@ -28,16 +28,16 @@ export const getCurrentBreakpoint = (): keyof typeof breakpoints => {
   if (width < breakpoints.lg) return 'md';
   if (width < breakpoints.xl) return 'lg';
   if (width < breakpoints.xxl) return 'xl';
-  return 'xxl';
-};
+  return 'xxl'
+  };
 
 /**
  * Check if current viewport is mobile
  */;
 export const isMobileViewport = (): boolean => {
   if (typeof window === 'undefined') return false;
-  return window.innerWidth < breakpoints.md;
-};
+  return window.innerWidth < breakpoints.md
+  };
 
 /**
  * Check if current viewport is tablet
@@ -45,16 +45,16 @@ export const isMobileViewport = (): boolean => {
 export const isTabletViewport = (): boolean => {
   if (typeof window === 'undefined') return false;
   const width = window.innerWidth;
-  return width >= breakpoints.md && width < breakpoints.lg;
-};
+  return width >= breakpoints.md && width < breakpoints.lg
+  };
 
 /**
  * Check if current viewport is desktop
  */;
 export const isDesktopViewport = (): boolean => {
   if (typeof window === 'undefined') return true;
-  return window.innerWidth >= breakpoints.lg;
-};
+  return window.innerWidth >= breakpoints.lg
+  };
 
 /**
  * Get responsive value based on current breakpoint
@@ -66,11 +66,11 @@ export const getResponsiveValue = <T>(values: {
   lg?: T;
   xl?: T;
   xxl?: T;
-  default: T;
-}): T => {
+  default: T
+  }): T => {
   const breakpoint = getCurrentBreakpoint();
-  return values[breakpoint] ?? values.default;
-};
+  return values[breakpoint] ?? values.default
+  };
 
 /**
  * Calculate responsive font size
@@ -87,8 +87,8 @@ export const getResponsiveFontSize = (baseSize: number): string => {
   
   const breakpoint = getCurrentBreakpoint();
   const multiplier = multipliers[breakpoint];
-  return `${baseSize * multiplier}rem`;
-};
+  return `${baseSize * multiplier}rem`
+  };
 
 /**
  * Calculate responsive spacing
@@ -105,8 +105,8 @@ export const getResponsiveSpacing = (baseSpacing: number): string => {
   
   const breakpoint = getCurrentBreakpoint();
   const multiplier = multipliers[breakpoint];
-  return `${baseSpacing * multiplier}rem`;
-};
+  return `${baseSpacing * multiplier}rem`
+  };
 
 /**
  * Get number of columns for responsive grid
@@ -120,16 +120,16 @@ export const getResponsiveColumns = (): number => {
     xl: 5,
     xxl: 6,
     default: 3,
-  });
-};
+  })
+  };
 
 /**
  * Touch-optimized sizing for interactive elements
  */;
 export const getTouchTargetSize = (): number => {
   // Minimum 44px for touch targets (WCAG guideline)
-  return isMobileViewport() ? 44 : 36;
-};
+  return isMobileViewport() ? 44 : 36
+  };
 
 /**
  * Get container max width for current breakpoint
@@ -143,8 +143,8 @@ export const getContainerMaxWidth = (): string => {
     xl: '1140px',
     xxl: '1320px',
     default: '1140px',
-  });
-};
+  })
+  };
 
 /**
  * Viewport utilities
@@ -152,26 +152,26 @@ export const getContainerMaxWidth = (): string => {
 export const viewport = {
   width: (): number => {
     if (typeof window === 'undefined') return 0;
-    return window.innerWidth || document.documentElement.clientWidth;
+    return window.innerWidth || document.documentElement.clientWidth
   },
   
   height: (): number => {
     if (typeof window === 'undefined') return 0;
-    return window.innerHeight || document.documentElement.clientHeight;
+    return window.innerHeight || document.documentElement.clientHeight
   },
   
   aspectRatio: (): number => {
     const width = viewport.width();
     const height = viewport.height();
-    return height > 0 ? width / height : 1;
+    return height > 0 ? width / height : 1
   },
   
   isPortrait: (): boolean => {
-    return viewport.aspectRatio() < 1;
+    return viewport.aspectRatio() < 1
   },
   
   isLandscape: (): boolean => {
-    return viewport.aspectRatio() >= 1;
+    return viewport.aspectRatio() >= 1
   },
 };
 
@@ -186,25 +186,25 @@ export const device = {
       'ontouchstart' in window ||
       navigator.maxTouchPoints > 0 ||
       (navigatorWithMsTouch.msMaxTouchPoints || 0) > 0
-    );
+    )
   },
   
   isIOS: (): boolean => {
     if (typeof navigator === 'undefined') return false;
     const windowWithMSStream = window as any & { MSStream?: any };
-    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !windowWithMSStream.MSStream;
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !windowWithMSStream.MSStream
   },
   
   isAndroid: (): boolean => {
     if (typeof navigator === 'undefined') return false;
-    return /Android/.test(navigator.userAgent);
+    return /Android/.test(navigator.userAgent)
   },
   
   isMobile: (): boolean => {
     if (typeof navigator === 'undefined') return false;
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
-    );
+    )
   },
   
   isStandalone: (): boolean => {
@@ -214,7 +214,7 @@ export const device = {
       (window.matchMedia('(display-mode: standalone)').matches) ||
       (navigatorWithStandalone.standalone || false) ||
       document.referrer.includes('android-app://')
-    );
+    )
   },
 };
 
@@ -243,7 +243,7 @@ export const getResponsiveClasses = (
     md?: string;
     lg?: string;
     xl?: string;
-    xxl?: string;
+    xxl?: string
   }
 ): string => {
   const classes = [baseClass];
@@ -252,22 +252,22 @@ export const getResponsiveClasses = (
     const breakpoint = getCurrentBreakpoint();
     const modifier = modifiers[breakpoint];
     if (modifier) {
-      classes.push(`${baseClass}--${modifier}`);
-    }
+      classes.push(`${baseClass}--${modifier}`)
+  }
   }
   
   classes.push(`${baseClass}--${getCurrentBreakpoint()}`);
   
   if (isMobileViewport()) {
-    classes.push(`${baseClass}--mobile`);;
+    classes.push(`${baseClass}--mobile`)
   } else if (isTabletViewport()) {
-    classes.push(`${baseClass}--tablet`);;
+    classes.push(`${baseClass}--tablet`)
   } else {
-    classes.push(`${baseClass}--desktop`);
+    classes.push(`${baseClass}--desktop`)
   }
   
-  return classes.join(' ');
-};
+  return classes.join(' ')
+  };
 
 /**
  * Debounced resize handler for performance
@@ -287,9 +287,9 @@ export const onResponsiveResize = (
       const currentBreakpoint = getCurrentBreakpoint();
       if (currentBreakpoint !== lastBreakpoint) {
         lastBreakpoint = currentBreakpoint;
-        callback(currentBreakpoint);
-      }
-    }, delay);
+        callback(currentBreakpoint)
+  }
+    }, delay)
   };
   
   window.addEventListener('resize', handleResize);
@@ -299,7 +299,7 @@ export const onResponsiveResize = (
   return () => {
     clearTimeout(timeoutId);
     window.removeEventListener('resize', handleResize);
-    window.removeEventListener('orientationchange', handleResize);
+    window.removeEventListener('orientationchange', handleResize)
   };
 
 /**
@@ -307,15 +307,15 @@ export const onResponsiveResize = (
  */;
 export const mediaQuery = {
   up: (breakpoint: keyof typeof breakpoints): string => {
-    return `(min-width: ${breakpoints[breakpoint]}px)`;
+    return `(min-width: ${breakpoints[breakpoint]}px)`
   },
   
   down: (breakpoint: keyof typeof breakpoints): string => {
-    return `(max-width: ${breakpoints[breakpoint] - 1}px)`;
+    return `(max-width: ${breakpoints[breakpoint] - 1}px)`
   },
   
   between: (min: keyof typeof breakpoints, max: keyof typeof breakpoints): string => {
-    return `(min-width: ${breakpoints[min]}px) and (max-width: ${breakpoints[max] - 1}px)`;
+    return `(min-width: ${breakpoints[min]}px) and (max-width: ${breakpoints[max] - 1}px)`
   },
   
   only: (breakpoint: keyof typeof breakpoints): string => {
@@ -323,14 +323,14 @@ export const mediaQuery = {
     const index = keys.indexOf(breakpoint);
     
     if (index === 0) {
-      return mediaQuery.down(keys[1]);
-    }
+      return mediaQuery.down(keys[1])
+  }
     
     if (index === keys.length - 1) {
-      return mediaQuery.up(breakpoint);
-    }
+      return mediaQuery.up(breakpoint)
+  }
     
-    return mediaQuery.between(breakpoint, keys[index + 1]);
+    return mediaQuery.between(breakpoint, keys[index + 1])
   },
 };
 

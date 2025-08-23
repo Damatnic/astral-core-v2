@@ -10,7 +10,7 @@ const HelperProfileRoute: React.FC = () => {
 
   const handleProfileUpdated = () => {
     // Handle profile update - could show toast, refresh data, etc.
-    console.log('Helper profile updated');
+    console.log('Helper profile updated')
   };
 
   const handleSetActiveView = (view: any) => {
@@ -25,7 +25,7 @@ const HelperProfileRoute: React.FC = () => {
     };
     
     const route = routeMap[view] || '/helper/profile';
-    navigate(route);
+    navigate(route)
   };
 
   return (
@@ -33,7 +33,7 @@ const HelperProfileRoute: React.FC = () => {
       onProfileUpdated={handleProfileUpdated}
       setActiveView={handleSetActiveView}
     />
-  );
-};
+  )
+  };
 
 export default HelperProfileRoute;

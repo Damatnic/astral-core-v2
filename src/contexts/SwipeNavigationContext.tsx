@@ -9,24 +9,24 @@ interface SwipeNavigationContextType {
   canSwipeBack: boolean;
   onSwipeBack: () => void;
   registerSwipeArea: (element: HTMLElement) => void;
-  unregisterSwipeArea: (element: HTMLElement) => void;
-}
+  unregisterSwipeArea: (element: HTMLElement) => void
+  }
 
 const SwipeNavigationContext = createContext<SwipeNavigationContextType | null>(null);
 
 export const useSwipeNavigation = () => {
   const context = useContext(SwipeNavigationContext);
   if (!context) {
-    throw new Error('useSwipeNavigation must be used within SwipeNavigationProvider');
+    throw new Error('useSwipeNavigation must be used within SwipeNavigationProvider')
   }
-  return context;
-};
+  return context
+  };
 
 interface SwipeNavigationProviderProps {
   children: React.ReactNode;
   onNavigateBack?: () => void;
-  currentPath?: string;
-}
+  currentPath?: string
+  }
 
 export const SwipeNavigationProvider: React.FC<SwipeNavigationProviderProps> = ({
   children,
@@ -53,27 +53,27 @@ export const SwipeNavigationProvider: React.FC<SwipeNavigationProviderProps> = (
 
   const toggleSidebar = useCallback(() => {
     if (isSidebarOpen) {
-      closeSidebar();;
+      closeSidebar()
   } else {
-      openSidebar();
-    }
+      openSidebar()
+  }
   };
   }, [isSidebarOpen, openSidebar, closeSidebar]);
 
   const onSwipeBack = useCallback(() => {
     if (canSwipeBack && onNavigateBack) {
-      onNavigateBack();
-    }
+      onNavigateBack()
+  }
   };
   }, [canSwipeBack, onNavigateBack]);
 
   const registerSwipeArea = useCallback((element: HTMLElement) => {
-    swipeAreasRef.current.add(element);
+    swipeAreasRef.current.add(element)
   };
   }, []);
 
   const unregisterSwipeArea = useCallback((element: HTMLElement) => {
-    swipeAreasRef.current.delete(element);
+    swipeAreasRef.current.delete(element)
   };
   }, []);
 
@@ -85,15 +85,15 @@ export const SwipeNavigationProvider: React.FC<SwipeNavigationProviderProps> = (
       // Only open sidebar if swipe starts from left edge (< 50px from edge);
       const startX = gesture.distance > 0 ? 0 : 50; // Approximate edge detection
       if (startX < 50 && !isSidebarOpen) {
-        openSidebar();
-      }
+        openSidebar()
+  }
     },
     onSwipeLeft: () => {
       if (isSidebarOpen) {
-        closeSidebar();;
+        closeSidebar()
   } else if (canSwipeBack) {
-        onSwipeBack();
-      }
+        onSwipeBack()
+  }
     },
   });
 
@@ -101,12 +101,12 @@ export const SwipeNavigationProvider: React.FC<SwipeNavigationProviderProps> = (
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isSidebarOpen) {
-        closeSidebar();
-      }
+        closeSidebar()
+  }
     };
 
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown)
   };
   }, [isSidebarOpen, closeSidebar]);
 
@@ -125,14 +125,14 @@ export const SwipeNavigationProvider: React.FC<SwipeNavigationProviderProps> = (
           !sidebar.contains(target) && 
           trigger && 
           !trigger.contains(target)) {
-        closeSidebar();
-      }
+        closeSidebar()
+  }
     };
 
     if (isSidebarOpen) {
       document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+  }
   };
   }, [isSidebarOpen, closeSidebar]);
 
@@ -163,8 +163,8 @@ export const SwipeNavigationProvider: React.FC<SwipeNavigationProviderProps> = (
   // Handler function for keydown;
   const handleOverlayKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      closeSidebar();
-    }
+      closeSidebar()
+  }
   };
 
   return (
@@ -172,8 +172,7 @@ export const SwipeNavigationProvider: React.FC<SwipeNavigationProviderProps> = (
       <div ref={globalSwipeRef} className="swipe-navigation-container">
         {children}
         
-        <button; 
-          className={overlayClassName}
+        <button className={overlayClassName}
           onClick={closeSidebar}
           onKeyDown={handleOverlayKeyDown}
           aria-hidden={!isSidebarOpen}
@@ -181,15 +180,13 @@ export const SwipeNavigationProvider: React.FC<SwipeNavigationProviderProps> = (
           style={overlayButtonStyle}
         />
         
-        <nav; 
-          className={panelClassName}
+        <nav className={panelClassName}
           aria-label="Navigation menu"
           aria-hidden={!isSidebarOpen}
         >
           <div className="sidebar-header">
             <h2>Navigation</h2>
-            <button; 
-              className="sidebar-close-btn touch-optimized"
+            <button className="sidebar-close-btn touch-optimized"
               onClick={closeSidebar}
               aria-label="Close navigation menu"
             >
@@ -200,8 +197,8 @@ export const SwipeNavigationProvider: React.FC<SwipeNavigationProviderProps> = (
         </nav>
       </div>
     </SwipeNavigationContext.Provider>
-  );
-};
+  )
+  };
 
 // Hook for components that need to add swipe gesture support;
 export const useSwipeGestures = (
@@ -211,7 +208,7 @@ export const useSwipeGestures = (
     onSwipeRight?: () => void;
     onSwipeUp?: () => void;
     onSwipeDown?: () => void;
-    disabled?: boolean;
+    disabled?: boolean
   } = {}
 ) => {
   const { registerSwipeArea, unregisterSwipeArea } = useSwipeNavigation();
@@ -229,8 +226,9 @@ export const useSwipeGestures = (
   useEffect(() => {
     if (element && !disabled) {
       registerSwipeArea(element);
-      return () => unregisterSwipeArea(element);
-    }
+      return () => unregisterSwipeArea(element)
+  }
+  };
   };
   };
   }, [element, disabled, registerSwipeArea, unregisterSwipeArea]);
@@ -246,5 +244,5 @@ export const withSwipeNavigation = <P extends object>(
     <SwipeNavigationProvider>
       <Component {...props} />
     </SwipeNavigationProvider>
-  );
-};
+  )
+  };

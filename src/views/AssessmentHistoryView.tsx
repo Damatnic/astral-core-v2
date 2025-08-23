@@ -9,13 +9,13 @@ import { formatTimeAgo } from '../utils/formatTimeAgo';
 
 
 export const AssessmentHistoryView: React.FC<{
-    setActiveView: (view: ActiveView) => void;
-}> = ({ setActiveView }) => {
+    setActiveView: (view: ActiveView) => void
+  }> = ({ setActiveView }) => {
     const { history, isLoading, fetchHistory } = useAssessmentStore();
 
     useEffect(() => {
-        fetchHistory();
-    };
+        fetchHistory()
+  };
   }, [fetchHistory]);
     
     const getResultDetails = (assessment: typeof history[0]) => {
@@ -50,8 +50,8 @@ export const AssessmentHistoryView: React.FC<{
                                         </div>
                                     </div>
                                 </li>
-                            );
-                        })}
+                            )
+  })}
                     </ul>
                 ) : (
                     <div className="empty-state">
@@ -62,7 +62,7 @@ export const AssessmentHistoryView: React.FC<{
                 )}
             </Card>
         </>
-    );
-};
+    )
+  };
 
 export default AssessmentHistoryView;

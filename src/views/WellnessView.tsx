@@ -21,8 +21,7 @@ const MOOD_TAGS = ['Grateful', 'Anxious', 'Tired', 'Hopeful', 'Stressed', 'Calm'
 const RangeSlider: React.FC<{ label: string; value: number; onChange: (value: number) => void }> = ({ label, value, onChange }) => (
     <div className="form-group">
         <label>{label}</label>
-        <input;
-            type="range"
+        <input type="range"
             min="1"
             max="5"
             value={value}
@@ -54,22 +53,23 @@ const CheckInTab: React.FC = () => {
                 console.log('Loaded mood history from backend:', data);
                 // In production, you would update the store with this data
             } catch (error) {
-                console.error('Failed to load mood history:', error);
-            }
+                console.error('Failed to load mood history:', error)
+  }
         };
-        loadMoodHistory();
-    };
+        loadMoodHistory()
+  };
   }, []);
 
     const chartData = useMemo(() => {
         const days = chartPeriod === '7days' ? 7 : chartPeriod === '30days' ? 30 : 90;
-        return groupCheckInsByDay(history, days);
-    };
+        return groupCheckInsByDay(history, days)
+  };
   }, [history, chartPeriod]);
     
     // Calculate insights data;
     const insightsData = useMemo(() => {
         const moodAvg = history.length > 0 ;
+;
             ? history.reduce((acc, h) => acc + h.moodScore, 0) / history.length 
             : 0;
         
@@ -81,20 +81,21 @@ const CheckInTab: React.FC = () => {
             date.setDate(date.getDate() - i);
             const dateStr = date.toISOString().split('T')[0];
             if (history.some(h => new Date(h.timestamp).toISOString().split('T')[0] === dateStr)) {
-                streak++;;
+                streak++
   } else if (i > 0) {
-                break;
-            }
+                break
+  }
         }
         
         // Get most common mood;
         const moodCounts = history.reduce((acc, h) => {
             const emoji = MOOD_EMOJIS[Math.min(Math.floor(h.moodScore) - 1, 4)];
             acc[emoji] = (acc[emoji] || 0) + 1;
-            return acc;
-        }, {} as Record<string, number>);
+            return acc
+  }, {} as Record<string, number>);
         
         const topMood = Object.keys(moodCounts).reduce((a, b) => ;
+;
             moodCounts[a] > moodCounts[b] ? a : b, '😊'
         );
         
@@ -108,8 +109,8 @@ const CheckInTab: React.FC = () => {
   }, [history]);
 
     const handleTagClick = (tag: string) => {
-        setTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
-    };
+        setTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag])
+  };
 
     const resetForm = () => {
         setMoodScore(3);
@@ -117,8 +118,8 @@ const CheckInTab: React.FC = () => {
         setSleepQuality(3);
         setEnergyLevel(3);
         setTags([]);
-        setNotes('');
-    };
+        setNotes('')
+  };
 
     const handleSubmit = async () => {
         setIsSubmitting(true);
@@ -146,28 +147,28 @@ const CheckInTab: React.FC = () => {
                     activities: tags.filter(t => ['Grateful', 'Hopeful', 'Calm', 'Productive'].includes(t))
                 };
   };
-                console.log('Mood saved to backend successfully');
-            } catch (error) {
+                console.log('Mood saved to backend successfully')
+  } catch (error) {
                 console.error('Failed to save to backend (will retry later):', backendError);
                 // Don't show error to user - local save was successful
             }
   }
 
   addToast('Your wellness check-in has been saved!', 'success');
-            resetForm();
-        } catch (error) {
+            resetForm()
+  } catch (error) {
             const errorMessage = isError(error) ? error.message : 'Failed to save check-in.';
-            addToast(errorMessage, 'error');
-        } finally {
-            setIsSubmitting(false);
-        }
+            addToast(errorMessage, 'error')
+  } finally {
+            setIsSubmitting(false)
+  }
     };
     
     const hasCheckedInToday = useMemo(() => {
         if (!history || history.length === 0) return false;
         const today = new Date().toISOString().split('T')[0];
-        return history.some(c => new Date(c.timestamp).toISOString().split('T')[0] === today);
-    };
+        return history.some(c => new Date(c.timestamp).toISOString().split('T')[0] === today)
+  };
   }, [history]);
 
     return (
@@ -226,21 +227,21 @@ const CheckInTab: React.FC = () => {
         
         <EnhancedMoodChart data={chartData} period={chartPeriod} />
     </>
-    );
-};
+    )
+  };
 
 const HabitsTab: React.FC = () => {
     const { predefinedHabits, trackedHabits, isLoadingHabits, trackHabit, logCompletion } = useWellnessStore();
 
     const discoverableHabits = useMemo(() => {
         const trackedIds = new Set(trackedHabits.map(h => h.habitId));
-        return predefinedHabits.filter(h => !trackedIds.has(h.id));
-    };
+        return predefinedHabits.filter(h => !trackedIds.has(h.id))
+  };
   }, [predefinedHabits, trackedHabits]);
 
     if (isLoadingHabits) {
-        return <div className="loading-spinner" style={{ margin: '3rem auto' }}></div>;
-    }
+        return <div className="loading-spinner" style={{ margin: '3rem auto' }}></div>
+  }
     
     return (
         <>
@@ -258,8 +259,7 @@ const HabitsTab: React.FC = () => {
                                     <span>🔥</span>
                                     <span>{habit.currentStreak}</span>
                                 </div>
-                                <AppButton;
-                                    variant={habit.isCompletedToday ? 'success' : 'primary'}
+                                <AppButton variant={habit.isCompletedToday ? 'success' : 'primary'}
                                     onClick={() => logCompletion(habit.habitId)}
                                     disabled={habit.isCompletedToday}
                                 >
@@ -293,8 +293,8 @@ const HabitsTab: React.FC = () => {
                 )}
             </Card>
         </>
-    );
-};
+    )
+  };
 
 const JournalTab: React.FC = () => {
     const { journalEntries, postJournalEntry } = useWellnessStore();
@@ -309,13 +309,13 @@ const JournalTab: React.FC = () => {
         try {
             await postJournalEntry(newEntry);
             setNewEntry('');
-            addToast('Journal entry saved.', 'success');
-        } catch (error) {
+            addToast('Journal entry saved.', 'success')
+  } catch (error) {
             const errorMessage = isError(error) ? error.message : 'Failed to save journal entry.';
-            addToast(errorMessage, 'error');
-        } finally {
-            setIsSubmitting(false);
-        }
+            addToast(errorMessage, 'error')
+  } finally {
+            setIsSubmitting(false)
+  }
     };
 
     return (
@@ -345,8 +345,8 @@ const JournalTab: React.FC = () => {
                         <Card enhanced variant="interactive" key={entry.id} className="journal-entry-card">
                             <p className="journal-entry-timestamp">
                                 {new Date(entry.timestamp).toLocaleDateString(undefined, {
-                                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric';
-                                })}
+                                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  })}
                             </p>
                             <p className="journal-entry-content">{entry.content}</p>
                         </Card>
@@ -358,8 +358,8 @@ const JournalTab: React.FC = () => {
                 )}
             </div>
         </>
-    );
-};
+    )
+  };
 
 export const WellnessView: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'mood' | 'checkin' | 'habits' | 'journal'>('mood');
@@ -370,8 +370,8 @@ export const WellnessView: React.FC = () => {
     React.useEffect(() => {
         fetchHistory();
         fetchHabits();
-        fetchJournalEntries();
-    };
+        fetchJournalEntries()
+  };
   }, []); // Empty deps array - only run once on mount;
 
     const handleMoodSubmit = (_moodData: { value: number; tags: string[]; note: string }) => {
@@ -421,8 +421,8 @@ export const WellnessView: React.FC = () => {
                         cursor: 'pointer',
                         fontSize: '0.9rem',
                         fontWeight: '500',
-                        transition: 'all 0.3s ease';
-                    }}
+                        transition: 'all 0.3s ease'
+  }}
                 >
                     {showBreathing ? '✨ Hide Breathing Exercise' : '🧘 Take a Mindful Moment'}
                 </button>
@@ -444,7 +444,7 @@ export const WellnessView: React.FC = () => {
             {activeTab === 'habits' && <HabitsTab />}
             {activeTab === 'journal' && <JournalTab />}
         </>
-    );
-};
+    )
+  };
 
 export default WellnessView;

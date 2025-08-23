@@ -25,8 +25,8 @@ export const mockPerformanceAPI = () => {
     clearMeasures: performanceClearMeasures,
     navigation: {
       type: 0,
-      redirectCount: 0;
-    },
+      redirectCount: 0
+  },
     timing: {
       navigationStart: Date.now() - 1000,
       fetchStart: Date.now() - 900,
@@ -43,19 +43,19 @@ export const mockPerformanceAPI = () => {
       domContentLoadedEventEnd: Date.now() - 40,
       domComplete: Date.now() - 30,
       loadEventStart: Date.now() - 20,
-      loadEventEnd: Date.now() - 10;
-    },
+      loadEventEnd: Date.now() - 10
+  },
     memory: {
       jsHeapSizeLimit: 2147483648,
       totalJSHeapSize: 10485760,
-      usedJSHeapSize: 5242880;
-    }
+      usedJSHeapSize: 5242880
+  }
   };
 
   Object.defineProperty(window, 'performance', {
     value: mockPerformance,
     configurable: true,
-    writable: true;
+    writable: true
   });
 
   return {
@@ -75,19 +75,19 @@ export class MockPerformanceObserver {
   entryTypes: string[] = [];
   
   constructor(callback: PerformanceObserverCallback) {
-    this.callback = callback;
+    this.callback = callback
   }
   
   observe(options: { entryTypes: string[] }) {
-    this.entryTypes = options.entryTypes;
+    this.entryTypes = options.entryTypes
   }
   
   disconnect() {
-    this.entryTypes = [];
+    this.entryTypes = []
   }
   
   takeRecords() {
-    return [];
+    return []
   }
   
   // Helper to trigger observations in tests
@@ -95,9 +95,9 @@ export class MockPerformanceObserver {
     const list = {
       getEntries: () => entries,
       getEntriesByType: (type: string) => entries.filter(e => e.entryType === type),
-      getEntriesByName: (name: string) => entries.filter(e => e.name === name);
-    };
-    this.callback(list as PerformanceObserverEntryList, this);
+      getEntriesByName: (name: string) => entries.filter(e => e.name === name)
+  };
+    this.callback(list as PerformanceObserverEntryList, this)
   }
 }
 
@@ -118,18 +118,18 @@ export const mockRequestAnimationFrame = () => {
       if (index !== -1) {
         const cb = rafCallbacks[index];
         rafCallbacks.splice(index, 1);
-        cb.callback(cb.timestamp);
-      }
+        cb.callback(cb.timestamp)
+  }
     }, 16);
     
-    return id;
+    return id
   });
 
   const cancelAnimationFrame = jest.fn((id: number) => {
     const index = rafCallbacks.findIndex(c => c.id === id);
     if (index !== -1) {
-      rafCallbacks.splice(index, 1);
-    }
+      rafCallbacks.splice(index, 1)
+  }
   });
 
   // Helper to flush all pending animation frames;
@@ -137,8 +137,8 @@ export const mockRequestAnimationFrame = () => {
     const callbacks = [...rafCallbacks];
     rafCallbacks = [];
     callbacks.forEach(({ callback, timestamp }) => {
-      callback(timestamp);
-    });
+      callback(timestamp)
+  })
   };
 
   global.requestAnimationFrame = requestAnimationFrame;
@@ -158,23 +158,23 @@ export class MockIntersectionObserver {
   
   constructor(callback: IntersectionObserverCallback, options: IntersectionObserverInit = {}) {
     this.callback = callback;
-    this.options = options;
+    this.options = options
   }
   
   observe(element: Element) {
-    this.elements.add(element);
+    this.elements.add(element)
   }
   
   unobserve(element: Element) {
-    this.elements.delete(element);
+    this.elements.delete(element)
   }
   
   disconnect() {
-    this.elements.clear();
+    this.elements.clear()
   }
   
   takeRecords(): IntersectionObserverEntry[] {
-    return [];
+    return []
   }
   
   // Helper to trigger intersection changes in tests
@@ -186,11 +186,11 @@ export class MockIntersectionObserver {
       isIntersecting: entry.isIntersecting || false,
       rootBounds: entry.rootBounds || null,
       target: entry.target || document.createElement('div'),
-      time: entry.time || performance.now();
-    };
+      time: entry.time || performance.now()
+  };
   }) as IntersectionObserverEntry[];
     
-    this.callback(fullEntries, this);
+    this.callback(fullEntries, this)
   }
 }
 
@@ -200,19 +200,19 @@ export class MockResizeObserver {
   elements: Set<Element> = new Set();
   
   constructor(callback: ResizeObserverCallback) {
-    this.callback = callback;
+    this.callback = callback
   }
   
   observe(element: Element) {
-    this.elements.add(element);
+    this.elements.add(element)
   }
   
   unobserve(element: Element) {
-    this.elements.delete(element);
+    this.elements.delete(element)
   }
   
   disconnect() {
-    this.elements.clear();
+    this.elements.clear()
   }
   
   // Helper to trigger resize events in tests
@@ -222,10 +222,10 @@ export class MockResizeObserver {
       contentBoxSize: entry.contentBoxSize || [{ blockSize: 0, inlineSize: 0 }],
       contentRect: entry.contentRect || {} as DOMRectReadOnly,
       devicePixelContentBoxSize: entry.devicePixelContentBoxSize || [],
-      target: entry.target || document.createElement('div');
-    })) as ResizeObserverEntry[];
+      target: entry.target || document.createElement('div')
+  })) as ResizeObserverEntry[];
     
-    this.callback(fullEntries, this);
+    this.callback(fullEntries, this)
   }
 }
 
@@ -252,27 +252,27 @@ export const setupPerformanceMocks = () => {
 export const cleanupPerformanceMocks = () => {
   // Restore original values if needed
   if ('performance' in window) {
-    delete (window as any).performance;
+    delete (window as any).performance
   }
   
   if ('requestAnimationFrame' in global) {
-    delete (global as any).requestAnimationFrame;
+    delete (global as any).requestAnimationFrame
   }
   
   if ('cancelAnimationFrame' in global) {
-    delete (global as any).cancelAnimationFrame;
+    delete (global as any).cancelAnimationFrame
   }
   
   if ('PerformanceObserver' in global) {
-    delete (global as any).PerformanceObserver;
+    delete (global as any).PerformanceObserver
   }
   
   if ('IntersectionObserver' in global) {
-    delete (global as any).IntersectionObserver;
+    delete (global as any).IntersectionObserver
   }
   
   if ('ResizeObserver' in global) {
-    delete (global as any).ResizeObserver;
+    delete (global as any).ResizeObserver
   }
 };
 
@@ -286,14 +286,14 @@ export const setupFakeTimersWithPromises = () => {
     // Flush microtasks
     await Promise.resolve();
     // Flush any pending promises
-    await new Promise(resolve => setImmediate(resolve));
+    await new Promise(resolve => setImmediate(resolve))
   };
   
   // Helper to run all timers and flush promises;
   const runAllTimersAndFlushPromises = async () => {
     jest.runAllTimers();
     await Promise.resolve();
-    await new Promise(resolve => setImmediate(resolve));
+    await new Promise(resolve => setImmediate(resolve))
   };
   
   return {
@@ -308,11 +308,11 @@ export const mockMemoryMeasurement = () => {
       value: {
         jsHeapSizeLimit: 2147483648,
         totalJSHeapSize: 10485760,
-        usedJSHeapSize: 5242880;
-      },
+        usedJSHeapSize: 5242880
+  },
       configurable: true,
-      writable: true;
-    };
+      writable: true
+  };
   };
   }
   
@@ -320,8 +320,8 @@ export const mockMemoryMeasurement = () => {
     updateMemory: (used: number, total: number, limit: number) => {
       window.performance.memory.usedJSHeapSize = used;
       window.performance.memory.totalJSHeapSize = total;
-      window.performance.memory.jsHeapSizeLimit = limit;
-    }
+      window.performance.memory.jsHeapSizeLimit = limit
+  }
   };
 
 // Debounce/Throttle test helper;
@@ -339,12 +339,12 @@ export const createTimingTestHelper = () => {
     toExecute.forEach(cb => {
       cb.fn();
       const index = callbacks.indexOf(cb);
-      if (index > -1) callbacks.splice(index, 1);
-    });
+      if (index > -1) callbacks.splice(index, 1)
+  })
   };
   
   return {
     scheduleCallback,
     flushScheduledCallbacks,
-    clearCallbacks: () => callbacks.length = 0;
+    clearCallbacks: () => callbacks.length = 0
   };

@@ -19,8 +19,8 @@ import { LoadingSpinner } from './LoadingSpinner';
 interface OfflineFallbackUIProps {
   showFullScreen?: boolean;
   onRetry?: () => void;
-  className?: string;
-}
+  className?: string
+  }
 
 export const OfflineFallbackUI: React.FC<OfflineFallbackUIProps> = ({
   showFullScreen = true,
@@ -32,10 +32,10 @@ export const OfflineFallbackUI: React.FC<OfflineFallbackUIProps> = ({
   const [syncStatus, setSyncStatus] = useState<{
     size: number;
     isSyncing: boolean;
-    lastSyncTime?: number;
+    lastSyncTime?: number
   }>({
     size: 0,
-    isSyncing: false;
+    isSyncing: false
   });
   const [showCrisisResources, setShowCrisisResources] = useState(false);
   const [isRetrying, setIsRetrying] = useState(false);
@@ -47,17 +47,17 @@ export const OfflineFallbackUI: React.FC<OfflineFallbackUIProps> = ({
       setSyncStatus({
         size: status.size,
         isSyncing: status.isSyncing,
-        lastSyncTime: Date.now();
-      });
-    };
+        lastSyncTime: Date.now()
+  })
+  };
 
     // Initial status
     updateSyncStatus();
 
     // Listen for sync updates;
     const handleSyncResult = () => {
-      updateSyncStatus();
-    };
+      updateSyncStatus()
+  };
 
     backgroundSyncService.addSyncListener(handleSyncResult);
 
@@ -66,8 +66,8 @@ export const OfflineFallbackUI: React.FC<OfflineFallbackUIProps> = ({
 
     return () => {
       backgroundSyncService.removeSyncListener(handleSyncResult);
-      clearInterval(interval);
-    };
+      clearInterval(interval)
+  };
   };
   }, []);
 
@@ -79,26 +79,26 @@ export const OfflineFallbackUI: React.FC<OfflineFallbackUIProps> = ({
       
       // Call custom retry handler if provided
       if (onRetry) {
-        await onRetry();
-      }
+        await onRetry()
+  }
       
       // Reload if now online
       if (navigator.onLine) {
-        window.location.reload();
-      }
+        window.location.reload()
+  }
     } catch (error) {
-      console.error('Retry failed:', error);
-    } finally {
-      setIsRetrying(false);
-    }
+      console.error('Retry failed:', error)
+  } finally {
+      setIsRetrying(false)
+  }
   };
 
   const handleUpdateResources = async () => {
     try {
-      await updateOfflineResources();
-    } catch (error) {
-      console.error('Failed to update offline resources:', error);
-    }
+      await updateOfflineResources()
+  } catch (error) {
+      console.error('Failed to update offline resources:', error)
+  }
   };
 
   if (isOnline && !syncStatus.size) {
@@ -160,8 +160,7 @@ export const OfflineFallbackUI: React.FC<OfflineFallbackUIProps> = ({
             </div>
             
             {!showCrisisResources ? (
-              <AppButton;
-                variant="primary"
+              <AppButton variant="primary"
                 onClick={() => setShowCrisisResources(true)}
                 className="crisis-show-button"
               >
@@ -199,8 +198,7 @@ export const OfflineFallbackUI: React.FC<OfflineFallbackUIProps> = ({
 
           {/* Actions */}
           <div className="offline-actions">
-            <AppButton;
-              variant="primary"
+            <AppButton variant="primary"
               onClick={handleRetry}
               disabled={isRetrying}
               className="retry-button"
@@ -215,8 +213,7 @@ export const OfflineFallbackUI: React.FC<OfflineFallbackUIProps> = ({
               )}
             </AppButton>
             
-            <AppButton;
-              variant="secondary"
+            <AppButton variant="secondary"
               onClick={handleUpdateResources}
               disabled={!isOnline}
               className="update-button"
@@ -236,7 +233,7 @@ export const OfflineFallbackUI: React.FC<OfflineFallbackUIProps> = ({
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   // Compact offline indicator
@@ -250,11 +247,11 @@ export const OfflineFallbackUI: React.FC<OfflineFallbackUIProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+  };
 
 // Styles;
-const styles = `;
+const styles = `;;
   .offline-fallback-fullscreen {
     position: fixed;
     top: 0;
@@ -266,7 +263,7 @@ const styles = `;
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    overflow-y: auto;
+    overflow-y: auto
   }
 
   .offline-container {
@@ -276,30 +273,30 @@ const styles = `;
     padding: 40px;
     background: white;
     border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3)
   }
 
   .offline-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 40px
   }
 
   .offline-icon {
     color: #9ca3af;
-    margin-bottom: 20px;
+    margin-bottom: 20px
   }
 
   .offline-title {
     font-size: 32px;
     font-weight: 700;
     color: #1f2937;
-    margin: 0 0 10px 0;
+    margin: 0 0 10px 0
   }
 
   .offline-subtitle {
     font-size: 16px;
     color: #6b7280;
-    margin: 0;
+    margin: 0
   }
 
   .sync-status-card {
@@ -307,44 +304,44 @@ const styles = `;
     border: 1px solid #fde68a;
     border-radius: 12px;
     padding: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 30px
   }
 
   .sync-status-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 10px
   }
 
   .sync-status-header h3 {
     margin: 0;
     font-size: 18px;
-    color: #92400e;
+    color: #92400e
   }
 
   .sync-status-text {
     font-size: 24px;
     font-weight: 600;
     color: #b45309;
-    margin: 10px 0;
+    margin: 10px 0
   }
 
   .sync-status-note {
     font-size: 14px;
     color: #92400e;
-    margin: 0;
+    margin: 0
   }
 
   .offline-features {
-    margin-bottom: 30px;
+    margin-bottom: 30px
   }
 
   .offline-features h2 {
     font-size: 20px;
     font-weight: 600;
     color: #1f2937;
-    margin-bottom: 15px;
+    margin-bottom: 15px
   }
 
   .crisis-resources-section {
@@ -352,20 +349,20 @@ const styles = `;
     border: 1px solid #fecaca;
     border-radius: 12px;
     padding: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 30px
   }
 
   .crisis-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 20px
   }
 
   .crisis-header h2 {
     margin: 0;
     font-size: 20px;
-    color: #991b1b;
+    color: #991b1b
   }
 
   .crisis-badge {
@@ -374,7 +371,7 @@ const styles = `;
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 600
   }
 
   .crisis-show-button {
@@ -387,63 +384,63 @@ const styles = `;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.2s
   }
 
   .crisis-show-button:hover {
-    background: #b91c1c;
+    background: #b91c1c
   }
 
   .crisis-resources-content {
     display: grid;
-    gap: 20px;
+    gap: 20px
   }
 
   .crisis-card {
     background: white;
     border-radius: 8px;
-    padding: 20px;
+    padding: 20px
   }
 
   .crisis-card h3 {
     margin: 0 0 15px 0;
     font-size: 18px;
-    color: #991b1b;
+    color: #991b1b
   }
 
   .crisis-list {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 0
   }
 
   .crisis-list li {
     margin-bottom: 15px;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 5px
   }
 
   .crisis-link {
     color: #dc2626;
     font-size: 20px;
     font-weight: 600;
-    text-decoration: none;
+    text-decoration: none
   }
 
   .crisis-link:hover {
-    text-decoration: underline;
+    text-decoration: underline
   }
 
   .crisis-note {
     font-size: 12px;
-    color: #6b7280;
+    color: #6b7280
   }
 
   .coping-list {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 0
   }
 
   .coping-list li {
@@ -452,13 +449,13 @@ const styles = `;
     background: #fef2f2;
     border-left: 3px solid #dc2626;
     border-radius: 4px;
-    color: #991b1b;
+    color: #991b1b
   }
 
   .offline-actions {
     display: flex;
     gap: 15px;
-    margin-bottom: 30px;
+    margin-bottom: 30px
   }
 
   .retry-button,
@@ -475,53 +472,53 @@ const styles = `;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 8px
   }
 
   .retry-button {
     background: #3b82f6;
-    color: white;
+    color: white
   }
 
   .retry-button:hover:not(:disabled) {
-    background: #2563eb;
+    background: #2563eb
   }
 
   .retry-button:disabled {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: not-allowed
   }
 
   .update-button {
     background: white;
     color: #3b82f6;
-    border: 2px solid #3b82f6;
+    border: 2px solid #3b82f6
   }
 
   .update-button:hover:not(:disabled) {
-    background: #eff6ff;
+    background: #eff6ff
   }
 
   .update-button:disabled {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: not-allowed
   }
 
   .offline-help {
     background: #f3f4f6;
     border-radius: 8px;
     padding: 20px;
-    text-align: center;
+    text-align: center
   }
 
   .offline-help p {
     margin: 0 0 10px 0;
     font-size: 14px;
-    color: #4b5563;
+    color: #4b5563
   }
 
   .offline-help p:last-child {
-    margin-bottom: 0;
+    margin-bottom: 0
   }
 
   /* Compact version */
@@ -532,7 +529,7 @@ const styles = `;
     display: flex;
     align-items: center;
     gap: 10px;
-    z-index: 1000;
+    z-index: 1000
   }
 
   .sync-badge {
@@ -545,7 +542,7 @@ const styles = `;
     gap: 6px;
     font-size: 12px;
     font-weight: 600;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1)
   }
 
   .sync-count {
@@ -554,116 +551,116 @@ const styles = `;
     padding: 2px 6px;
     border-radius: 10px;
     min-width: 20px;
-    text-align: center;
+    text-align: center
   }
 
   /* Responsive design */
   @media (max-width: 640px) {
     .offline-container {
       padding: 20px;
-      margin: 10px;
-    }
+      margin: 10px
+  }
 
     .offline-title {
-      font-size: 24px;
-    }
+      font-size: 24px
+  }
 
     .offline-actions {
-      flex-direction: column;
-    }
+      flex-direction: column
+  }
 
     .crisis-header {
       flex-direction: column;
       align-items: flex-start;
-      gap: 10px;
-    }
+      gap: 10px
+  }
   }
 
   /* Dark mode support */
   @media (prefers-color-scheme: dark) {
     .offline-container {
       background: #1f2937;
-      color: #f3f4f6;
-    }
+      color: #f3f4f6
+  }
 
     .offline-title {
-      color: #f3f4f6;
-    }
+      color: #f3f4f6
+  }
 
     .offline-subtitle {
-      color: #9ca3af;
-    }
+      color: #9ca3af
+  }
 
     .sync-status-card {
       background: #451a03;
-      border-color: #78350f;
-    }
+      border-color: #78350f
+  }
 
     .sync-status-header h3 {
-      color: #fbbf24;
-    }
+      color: #fbbf24
+  }
 
     .sync-status-text {
-      color: #fde68a;
-    }
+      color: #fde68a
+  }
 
     .crisis-resources-section {
       background: #450a0a;
-      border-color: #991b1b;
-    }
+      border-color: #991b1b
+  }
 
     .crisis-card {
-      background: #1f2937;
-    }
+      background: #1f2937
+  }
 
     .offline-help {
-      background: #111827;
-    }
+      background: #111827
+  }
 
     .offline-help p {
-      color: #9ca3af;
-    }
+      color: #9ca3af
+  }
   }
 
   /* Animation */
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(10px);
-    }
+      transform: translateY(10px)
+  }
     to {
       opacity: 1;
-      transform: translateY(0);
-    }
+      transform: translateY(0)
+  }
   }
 
   .offline-fallback-fullscreen {
-    animation: fadeIn 0.3s ease-out;
+    animation: fadeIn 0.3s ease-out
   }
 
   /* High contrast mode */
   @media (prefers-contrast: high) {
     .offline-container {
-      border: 2px solid currentColor;
-    }
+      border: 2px solid currentColor
+  }
 
     .crisis-resources-section,
     .sync-status-card {
-      border-width: 2px;
-    }
+      border-width: 2px
+  }
   }
 
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     .offline-fallback-fullscreen {
-      animation: none;
-    }
+      animation: none
+  }
 
     .retry-button,
     .update-button,
     .crisis-show-button {
-      transition: none;
-    }
+      transition: none
+  }
   }
 `;
 
@@ -672,7 +669,7 @@ if (typeof document !== 'undefined' && !document.getElementById('offline-fallbac
   const styleElement = document.createElement('style');
   styleElement.id = 'offline-fallback-styles';
   styleElement.textContent = styles;
-  document.head.appendChild(styleElement);
-}
+  document.head.appendChild(styleElement)
+  }
 
 export default OfflineFallbackUI;

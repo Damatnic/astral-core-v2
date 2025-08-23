@@ -13,8 +13,8 @@ export interface CacheStrategy {
   handler: CacheHandler;
   options: CacheOptions;
   priority: CachePriority;
-  resourceType: ResourceType;
-}
+  resourceType: ResourceType
+  }
 
 export interface CacheOptions {
   cacheName: string;
@@ -22,15 +22,15 @@ export interface CacheOptions {
   maxAgeSeconds?: number;
   purgeOnQuotaError?: boolean;
   networkTimeoutSeconds?: number;
-  plugins?: CachePlugin[];
-}
+  plugins?: CachePlugin[]
+  }
 
 export interface CachePlugin {
   cacheKeyWillBeUsed?: (params: { request: Request }) => Promise<string>;
   cacheWillUpdate?: (params: { request: Request; response: Response }) => Promise<boolean>;
   requestWillFetch?: (params: { request: Request }) => Promise<Request>;
-  fetchDidFail?: (params: { originalRequest: Request; error: Error }) => Promise<void>;
-}
+  fetchDidFail?: (params: { originalRequest: Request; error: Error }) => Promise<void>
+  }
 
 export enum CacheHandler {
   NETWORK_FIRST = 'NetworkFirst',
@@ -45,7 +45,7 @@ export class CacheStrategyCoordinator {
   private initialized = false;
 
   constructor() {
-    this.initializeDefaultStrategies();
+    this.initializeDefaultStrategies()
   }
 
   /**
@@ -76,8 +76,8 @@ export class CacheStrategyCoordinator {
                   'X-Crisis-Resource': 'true',
                   'X-Cache-Priority': 'critical'
                 }
-              });
-            }
+              })
+  }
           }
         ]
       }
@@ -103,12 +103,12 @@ export class CacheStrategyCoordinator {
               url.searchParams.delete('auth');
               url.searchParams.delete('token');
               url.searchParams.delete('session');
-              return url.href;
-            },
+              return url.href
+  },
             cacheWillUpdate: async ({ response }) => {
               // Only cache successful responses
-              return response.status === 200 && response.type !== 'opaque';
-            },
+              return response.status === 200 && response.type !== 'opaque'
+  },
             fetchDidFail: async ({ originalRequest, error }) => {
               // Log API failures for analytics
               console.warn('[CacheCoordinator] API fetch failed:', originalRequest.url, error);
@@ -137,10 +137,10 @@ export class CacheStrategyCoordinator {
               // Don't cache user data if response indicates privacy concerns;
               const privacyHeader = response.headers.get('X-Privacy-Level');
               if (privacyHeader === 'sensitive') {
-                return false;
-              }
-              return response.status === 200;
-            },
+                return false
+  }
+              return response.status === 200
+  },
             requestWillFetch: async ({ request }) => {
               // Add user context for server-side handling
               return new Request(request.url, {
@@ -150,8 +150,8 @@ export class CacheStrategyCoordinator {
                   'X-Cache-Strategy': 'user-data',
                   'X-Offline-Safe': 'true'
                 }
-              });
-            }
+              })
+  }
           }
         ]
       }
@@ -176,10 +176,10 @@ export class CacheStrategyCoordinator {
               const contentLength = response.headers.get('content-length');
               if (contentLength && parseInt(contentLength) > 100 * 1024) {
                 console.warn('[CacheCoordinator] Chat response too large for cache:', contentLength);
-                return false;
-              }
-              return response.status === 200;
-            }
+                return false
+  }
+              return response.status === 200
+  }
           }
         ]
       }
@@ -206,8 +206,8 @@ export class CacheStrategyCoordinator {
               // Remove pagination params for better cache efficiency
               url.searchParams.delete('offset');
               url.searchParams.delete('cursor');
-              return url.href;
-            }
+              return url.href
+  }
           }
         ]
       }
@@ -240,11 +240,11 @@ export class CacheStrategyCoordinator {
                     ...request.headers,
                     'X-Skip-Cache': 'true'
                   }
-                });
-              }
+                })
+  }
               
-              return request;
-            }
+              return request
+  }
           }
         ]
       }
@@ -271,25 +271,25 @@ export class CacheStrategyCoordinator {
               
               // Don't cache videos if storage is over 70%
               if (usagePercentage > 0.7) {
-                return false;
-              }
+                return false
+  }
               
               // Check connection quality (if available)
               if ('connection' in navigator) {
                 const conn = (navigator as any).connection;
                 if (conn && ((conn as any).effectiveType === 'slow-2g' || (conn as any).effectiveType === '2g')) {
-                  return false;
-                }
+                  return false
+  }
               }
               
-              return response.status === 200;
-            }
+              return response.status === 200
+  }
           }
         ]
       }
     });
 
-    console.log('[CacheCoordinator] Default strategies initialized');
+    console.log('[CacheCoordinator] Default strategies initialized')
   }
 
   /**
@@ -297,7 +297,7 @@ export class CacheStrategyCoordinator {
    */
   public addStrategy(strategy: CacheStrategy): void {
     this.strategies.set(strategy.name, strategy);
-    console.log(`[CacheCoordinator] Added strategy: ${strategy.name}`);
+    console.log(`[CacheCoordinator] Added strategy: ${strategy.name}`)
   }
 
   /**
@@ -309,16 +309,16 @@ export class CacheStrategyCoordinator {
       
       if (pattern instanceof RegExp) {
         if (pattern.test(url)) {
-          return strategy;
-        };
+          return strategy
+  }
   } else if (typeof pattern === 'string') {
         if (url.includes(pattern)) {
-          return strategy;
-        }
+          return strategy
+  }
       }
     }
     
-    return null;
+    return null
   }
 
   /**
@@ -338,17 +338,17 @@ export class CacheStrategyCoordinator {
       
       for (const [_name, strategy] of this.strategies) {
         if (strategy.priority === CachePriority.CRITICAL) {
-          warmingPromises.push(this.warmStrategy(strategy));
-        }
+          warmingPromises.push(this.warmStrategy(strategy))
+  }
       }
       
       await Promise.allSettled(warmingPromises);
       
       this.initialized = true;
-      console.log('[CacheCoordinator] Cache warming completed');
-    } catch (error) {
-      console.error('[CacheCoordinator] Cache warming failed:', error);
-    }
+      console.log('[CacheCoordinator] Cache warming completed')
+  } catch (error) {
+      console.error('[CacheCoordinator] Cache warming failed:', error)
+  }
   }
 
   /**
@@ -367,18 +367,18 @@ export class CacheStrategyCoordinator {
           await this.warmCriticalApiEndpoints(cache);
           break;
         default:
-          console.log(`[CacheCoordinator] No specific warming for ${strategy.name}`);
-      }
+          console.log(`[CacheCoordinator] No specific warming for ${strategy.name}`)
+  }
     } catch (error) {
-      console.error(`[CacheCoordinator] Failed to warm ${strategy.name}:`, error);
-    }
+      console.error(`[CacheCoordinator] Failed to warm ${strategy.name}:`, error)
+  }
   }
 
   /**
    * Warm crisis resources cache
    */
   private async warmCrisisResources(cache: Cache): Promise<void> {
-    const crisisUrls = [;
+    const crisisUrls = [;;
       '/crisis-resources.json',
       '/emergency-contacts.json',
       '/988-crisis-protocol.json',
@@ -392,14 +392,14 @@ export class CacheStrategyCoordinator {
         const response = await fetch(url);
         if (response.ok) {
           await cache.put(url, response.clone());
-          console.log(`[CacheCoordinator] Warmed crisis resource: ${url}`);
-        }
+          console.log(`[CacheCoordinator] Warmed crisis resource: ${url}`)
+  }
       } catch (error) {
-        console.warn(`[CacheCoordinator] Failed to warm crisis resource ${url}:`, error);
-      }
+        console.warn(`[CacheCoordinator] Failed to warm crisis resource ${url}:`, error)
+  }
     });
 
-    await Promise.allSettled(warmingPromises);
+    await Promise.allSettled(warmingPromises)
   }
 
   /**
@@ -407,7 +407,7 @@ export class CacheStrategyCoordinator {
    */
   private async warmCriticalApiEndpoints(cache: Cache): Promise<void> {
     // These would be endpoints that should be immediately available;
-    const criticalEndpoints = [;
+    const criticalEndpoints = [;;
       '/.netlify/functions/crisis',
       '/.netlify/functions/emergency-contacts',
       '/.netlify/functions/wellness' // For immediate mood check access
@@ -424,14 +424,14 @@ export class CacheStrategyCoordinator {
         
         if (response.ok) {
           await cache.put(endpoint, response.clone());
-          console.log(`[CacheCoordinator] Warmed API endpoint: ${endpoint}`);
-        }
+          console.log(`[CacheCoordinator] Warmed API endpoint: ${endpoint}`)
+  }
       } catch (error) {
-        console.warn(`[CacheCoordinator] Failed to warm API endpoint ${endpoint}:`, error);
-      }
+        console.warn(`[CacheCoordinator] Failed to warm API endpoint ${endpoint}:`, error)
+  }
     });
 
-    await Promise.allSettled(warmingPromises);
+    await Promise.allSettled(warmingPromises)
   }
 
   /**
@@ -446,16 +446,16 @@ export class CacheStrategyCoordinator {
       
       // Perform strategy-specific cleanup
       for (const [_name, strategy] of this.strategies) {
-        await this.cleanupStrategy(strategy);
-      }
+        await this.cleanupStrategy(strategy)
+  }
       
       // Perform intelligent eviction if needed
       await intelligentCache.performIntelligentEviction();
       
-      console.log(`[CacheCoordinator] Cache cleanup completed. Removed ${expiredCount} expired entries`);
-    } catch (error) {
-      console.error('[CacheCoordinator] Cache cleanup failed:', error);
-    }
+      console.log(`[CacheCoordinator] Cache cleanup completed. Removed ${expiredCount} expired entries`)
+  } catch (error) {
+      console.error('[CacheCoordinator] Cache cleanup failed:', error)
+  }
   }
 
   /**
@@ -472,14 +472,14 @@ export class CacheStrategyCoordinator {
         
         // Remove oldest entries (this is a simplified approach)
         for (let i = 0; i < excessCount; i++) {
-          await cache.delete(keys[i]);
-        }
+          await cache.delete(keys[i])
+  }
         
-        console.log(`[CacheCoordinator] Cleaned ${excessCount} excess entries from ${strategy.name}`);
-      }
+        console.log(`[CacheCoordinator] Cleaned ${excessCount} excess entries from ${strategy.name}`)
+  }
     } catch (error) {
-      console.error(`[CacheCoordinator] Failed to cleanup ${strategy.name}:`, error);
-    }
+      console.error(`[CacheCoordinator] Failed to cleanup ${strategy.name}:`, error)
+  }
   }
 
   /**
@@ -490,17 +490,17 @@ export class CacheStrategyCoordinator {
       name: string;
       entryCount: number;
       priority: CachePriority;
-      resourceType: ResourceType;
-    }>;
+      resourceType: ResourceType
+  }>;
     totalEntries: number;
-    storageInfo: any;
+    storageInfo: any
   }> {
     const strategyStats: Array<{
       name: string;
       entryCount: number;
       priority: CachePriority;
-      resourceType: ResourceType;
-    }> = [];
+      resourceType: ResourceType
+  }> = [];
     let totalEntries = 0;
 
     for (const [name, strategy] of this.strategies) {
@@ -513,13 +513,13 @@ export class CacheStrategyCoordinator {
           name,
           entryCount,
           priority: strategy.priority,
-          resourceType: strategy.resourceType;
-        });
+          resourceType: strategy.resourceType
+  });
         
-        totalEntries += entryCount;
-      } catch (error) {
-        console.error(`[CacheCoordinator] Failed to get stats for ${name}:`, error);
-      }
+        totalEntries += entryCount
+  } catch (error) {
+        console.error(`[CacheCoordinator] Failed to get stats for ${name}:`, error)
+  }
     }
 
     const storageInfo = await intelligentCache.getStorageInfo();
@@ -541,8 +541,8 @@ export class CacheStrategyCoordinator {
 
     try {
       // Apply the appropriate cache strategy
-      return await this.applyStrategy(strategy, request);
-    } catch (error) {
+      return await this.applyStrategy(strategy, request)
+  } catch (error) {
       console.error(`[CacheCoordinator] Strategy ${strategy.name} failed:`, error);
       return null; // Fallback to network
     }
@@ -576,8 +576,8 @@ export class CacheStrategyCoordinator {
         return this.staleWhileRevalidateStrategy(cache, processedRequest, strategy.options);
         
       default:
-        throw new Error(`Unknown cache handler: ${strategy.handler}`);
-    }
+        throw new Error(`Unknown cache handler: ${strategy.handler}`)
+  }
   }
 
   /**
@@ -587,16 +587,16 @@ export class CacheStrategyCoordinator {
     const cachedResponse = await cache.match(request);
     
     if (cachedResponse) {
-      return cachedResponse;
-    }
+      return cachedResponse
+  }
     
     const networkResponse = await fetch(request);
     
     if (networkResponse.ok) {
-      await cache.put(request, networkResponse.clone());
-    }
+      await cache.put(request, networkResponse.clone())
+  }
     
-    return networkResponse;
+    return networkResponse
   }
 
   /**
@@ -605,25 +605,25 @@ export class CacheStrategyCoordinator {
   private async networkFirstStrategy(cache: Cache, request: Request, options: CacheOptions): Promise<Response> {
     try {
       const networkResponse = await fetch(request, {
-        signal: AbortSignal.timeout(options.networkTimeoutSeconds ? options.networkTimeoutSeconds * 1000 : 10000);
-      });
+        signal: AbortSignal.timeout(options.networkTimeoutSeconds ? options.networkTimeoutSeconds * 1000 : 10000)
+  });
       
       if (networkResponse.ok) {
-        await cache.put(request, networkResponse.clone());
-      }
+        await cache.put(request, networkResponse.clone())
+  }
       
-      return networkResponse;
-    } catch (error) {
+      return networkResponse
+  } catch (error) {
       console.warn('[CacheCoordinator] Network failed, trying cache:', error);
       
       const cachedResponse = await cache.match(request);
       if (cachedResponse) {
-        return cachedResponse;
-      }
+        return cachedResponse
+  }
   }
 
-  throw error;
-    }
+  throw error
+  }
   }
 
   /**
@@ -635,13 +635,13 @@ export class CacheStrategyCoordinator {
     // Start network request in background;
     const networkResponsePromise = fetch(request).then(async (response) => {
       if (response.ok) {
-        await cache.put(request, response.clone());
-      }
-      return response;
-    }).catch((error) => {
+        await cache.put(request, response.clone())
+  }
+      return response
+  }).catch((error) => {
       console.warn('[CacheCoordinator] Background revalidation failed:', error);
-      return null;
-    });
+      return null
+  });
 
     // Return cached response immediately if available
     if (cachedResponse) {
@@ -649,16 +649,16 @@ export class CacheStrategyCoordinator {
       networkResponsePromise.catch(() => {
         // Ignore background update failures
       });
-      return cachedResponse;
-    }
+      return cachedResponse
+  }
     
     // If no cache, wait for network;
     const networkResponse = await networkResponsePromise;
     if (networkResponse) {
-      return networkResponse;
-    }
+      return networkResponse
+  }
     
-    throw new Error('No cached response and network request failed');
+    throw new Error('No cached response and network request failed')
   }
 }
 

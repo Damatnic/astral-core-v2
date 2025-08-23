@@ -7,29 +7,29 @@ describe('LoadingSkeleton', () => {
       render(<LoadingSkeleton />);
       
       expect(screen.getByLabelText('Loading post')).toBeInTheDocument();
-      expect(screen.getByText('Loading post content...')).toBeInTheDocument();
-    });
+      expect(screen.getByText('Loading post content...')).toBeInTheDocument()
+  });
 
     it('should render single skeleton by default', () => {
       const { container } = render(<LoadingSkeleton />);
       
       const skeletons = container.querySelectorAll('.loading-skeleton');
-      expect(skeletons).toHaveLength(1);
-    });
+      expect(skeletons).toHaveLength(1)
+  });
 
     it('should render multiple skeletons when count is specified', () => {
       const { container } = render(<LoadingSkeleton count={3} />);
       
       const skeletons = container.querySelectorAll('.loading-skeleton');
-      expect(skeletons).toHaveLength(3);
-    });
+      expect(skeletons).toHaveLength(3)
+  });
 
     it('should apply custom className', () => {
       const { container } = render(<LoadingSkeleton className="custom-skeleton" />);
       
       const skeleton = container.querySelector('.loading-skeleton');
-      expect(skeleton).toHaveClass('custom-skeleton');
-    });
+      expect(skeleton).toHaveClass('custom-skeleton')
+  })
   });
 
   describe('Variant: Post', () => {
@@ -37,8 +37,8 @@ describe('LoadingSkeleton', () => {
       const { container } = render(<LoadingSkeleton variant="post" />);
       
       expect(screen.getByLabelText('Loading post')).toBeInTheDocument();
-      expect(container.querySelector('.post-skeleton')).toBeInTheDocument();
-    });
+      expect(container.querySelector('.post-skeleton')).toBeInTheDocument()
+  });
 
     it('should render post skeleton structure', () => {
       const { container } = render(<LoadingSkeleton variant="post" />);
@@ -59,15 +59,15 @@ describe('LoadingSkeleton', () => {
       
       // Action elements
       expect(container.querySelector('.skeleton-actions')).toBeInTheDocument();
-      expect(container.querySelectorAll('.skeleton-action-btn')).toHaveLength(3);
-    });
+      expect(container.querySelectorAll('.skeleton-action-btn')).toHaveLength(3)
+  });
 
     it('should have screen reader text for post', () => {
       render(<LoadingSkeleton variant="post" />);
       
       expect(screen.getByText('Loading post content...')).toBeInTheDocument();
-      expect(screen.getByText('Loading post content...')).toHaveClass('sr-only');
-    });
+      expect(screen.getByText('Loading post content...')).toHaveClass('sr-only')
+  })
   });
 
   describe('Variant: Comment', () => {
@@ -75,8 +75,8 @@ describe('LoadingSkeleton', () => {
       const { container } = render(<LoadingSkeleton variant="comment" />);
       
       expect(screen.getByLabelText('Loading comment')).toBeInTheDocument();
-      expect(container.querySelector('.comment-skeleton')).toBeInTheDocument();
-    });
+      expect(container.querySelector('.comment-skeleton')).toBeInTheDocument()
+  });
 
     it('should render comment skeleton structure', () => {
       const { container } = render(<LoadingSkeleton variant="comment" />);
@@ -89,15 +89,15 @@ describe('LoadingSkeleton', () => {
       
       // Content elements
       expect(container.querySelector('.skeleton-content')).toBeInTheDocument();
-      expect(container.querySelectorAll('.skeleton-text-line')).toHaveLength(2);
-    });
+      expect(container.querySelectorAll('.skeleton-text-line')).toHaveLength(2)
+  });
 
     it('should have screen reader text for comment', () => {
       render(<LoadingSkeleton variant="comment" />);
       
       expect(screen.getByText('Loading comment...')).toBeInTheDocument();
-      expect(screen.getByText('Loading comment...')).toHaveClass('sr-only');
-    });
+      expect(screen.getByText('Loading comment...')).toHaveClass('sr-only')
+  })
   });
 
   describe('Variant: Profile', () => {
@@ -105,8 +105,8 @@ describe('LoadingSkeleton', () => {
       const { container } = render(<LoadingSkeleton variant="profile" />);
       
       expect(screen.getByLabelText('Loading profile')).toBeInTheDocument();
-      expect(container.querySelector('.profile-skeleton')).toBeInTheDocument();
-    });
+      expect(container.querySelector('.profile-skeleton')).toBeInTheDocument()
+  });
 
     it('should render profile skeleton structure', () => {
       const { container } = render(<LoadingSkeleton variant="profile" />);
@@ -121,15 +121,15 @@ describe('LoadingSkeleton', () => {
       
       // Stats
       expect(container.querySelector('.skeleton-stats')).toBeInTheDocument();
-      expect(container.querySelectorAll('.skeleton-stat')).toHaveLength(3);
-    });
+      expect(container.querySelectorAll('.skeleton-stat')).toHaveLength(3)
+  });
 
     it('should have screen reader text for profile', () => {
       render(<LoadingSkeleton variant="profile" />);
       
       expect(screen.getByText('Loading profile information...')).toBeInTheDocument();
-      expect(screen.getByText('Loading profile information...')).toHaveClass('sr-only');
-    });
+      expect(screen.getByText('Loading profile information...')).toHaveClass('sr-only')
+  })
   });
 
   describe('Variant: Chat', () => {
@@ -137,8 +137,8 @@ describe('LoadingSkeleton', () => {
       const { container } = render(<LoadingSkeleton variant="chat" />);
       
       expect(screen.getByLabelText('Loading chat message')).toBeInTheDocument();
-      expect(container.querySelector('.chat-skeleton')).toBeInTheDocument();
-    });
+      expect(container.querySelector('.chat-skeleton')).toBeInTheDocument()
+  });
 
     it('should render chat skeleton structure', () => {
       const { container } = render(<LoadingSkeleton variant="chat" />);
@@ -148,15 +148,15 @@ describe('LoadingSkeleton', () => {
       expect(container.querySelector('.skeleton-message-content')).toBeInTheDocument();
       expect(container.querySelector('.skeleton-message-bubble')).toBeInTheDocument();
       expect(container.querySelectorAll('.skeleton-text-line')).toHaveLength(2);
-      expect(container.querySelector('.skeleton-timestamp-small')).toBeInTheDocument();
-    });
+      expect(container.querySelector('.skeleton-timestamp-small')).toBeInTheDocument()
+  });
 
     it('should have screen reader text for chat', () => {
       render(<LoadingSkeleton variant="chat" />);
       
       expect(screen.getByText('Loading chat message...')).toBeInTheDocument();
-      expect(screen.getByText('Loading chat message...')).toHaveClass('sr-only');
-    });
+      expect(screen.getByText('Loading chat message...')).toHaveClass('sr-only')
+  })
   });
 
   describe('Multiple Skeletons', () => {
@@ -169,9 +169,9 @@ describe('LoadingSkeleton', () => {
         const skeletons = container.querySelectorAll('.loading-skeleton');
         expect(skeletons).toHaveLength(count);
         
-        unmount();
-      });
-    });
+        unmount()
+  })
+  });
 
     it('should render multiple skeletons with different variants', () => {
       const variants = ['post', 'comment', 'profile', 'chat'] as const;
@@ -185,20 +185,20 @@ describe('LoadingSkeleton', () => {
         expect(skeletons).toHaveLength(3);
         
         skeletons.forEach((skeleton: Element) => {
-          expect(skeleton).toHaveClass(`${variant}-skeleton`);
-        });
+          expect(skeleton).toHaveClass(`${variant}-skeleton`)
+  });
         
-        unmount();
-      });
-    });
+        unmount()
+  })
+  });
 
     it('should generate unique keys for multiple skeletons', () => {
       const { container } = render(<LoadingSkeleton count={3} />);
       
       // Each skeleton should be wrapped in a div with a unique key;
       const wrapperDivs = container.querySelectorAll('div > .loading-skeleton');
-      expect(wrapperDivs).toHaveLength(3);
-    });
+      expect(wrapperDivs).toHaveLength(3)
+  })
   });
 
   describe('Accessibility', () => {
@@ -207,33 +207,33 @@ describe('LoadingSkeleton', () => {
       
       const output = screen.getByRole('status');
       expect(output.tagName.toLowerCase()).toBe('output');
-      expect(output).toHaveAttribute('aria-label', 'Loading post');
-    });
+      expect(output).toHaveAttribute('aria-label', 'Loading post')
+  });
 
     it('should have appropriate aria-labels for each variant', () => {
       const variantLabels = {
         post: 'Loading post',
         comment: 'Loading comment',
         profile: 'Loading profile',
-        chat: 'Loading chat message';
-      };
+        chat: 'Loading chat message'
+  };
       
       Object.entries(variantLabels).forEach(([variant, label]) => {
         const { unmount } = render(<LoadingSkeleton variant={variant as 'post' | 'comment' | 'profile' | 'chat'} />);
         
         expect(screen.getByLabelText(label)).toBeInTheDocument();
         
-        unmount();
-      });
-    });
+        unmount()
+  })
+  });
 
     it('should have screen reader text for each variant', () => {
       const screenReaderTexts = {
         post: 'Loading post content...',
         comment: 'Loading comment...',
         profile: 'Loading profile information...',
-        chat: 'Loading chat message...';
-      };
+        chat: 'Loading chat message...'
+  };
       
       Object.entries(screenReaderTexts).forEach(([variant, text]) => {
         const { unmount } = render(<LoadingSkeleton variant={variant as 'post' | 'comment' | 'profile' | 'chat'} />);
@@ -241,9 +241,9 @@ describe('LoadingSkeleton', () => {
         expect(screen.getByText(text)).toBeInTheDocument();
         expect(screen.getByText(text)).toHaveClass('sr-only');
         
-        unmount();
-      });
-    });
+        unmount()
+  })
+  });
 
     it('should maintain accessibility with multiple skeletons', () => {
       render(<LoadingSkeleton variant="comment" count={3} />);
@@ -252,12 +252,12 @@ describe('LoadingSkeleton', () => {
       expect(outputs).toHaveLength(3);
       
       outputs.forEach((output: HTMLElement) => {
-        expect(output).toHaveAttribute('aria-label', 'Loading comment');
-      });
+        expect(output).toHaveAttribute('aria-label', 'Loading comment')
+  });
       
       const screenReaderTexts = screen.getAllByText('Loading comment...');
-      expect(screenReaderTexts).toHaveLength(3);
-    });
+      expect(screenReaderTexts).toHaveLength(3)
+  })
   });
 
   describe('CSS Classes', () => {
@@ -265,8 +265,8 @@ describe('LoadingSkeleton', () => {
       const { container } = render(<LoadingSkeleton />);
       
       const skeleton = container.querySelector('.loading-skeleton');
-      expect(skeleton).toHaveClass('loading-skeleton', 'post-skeleton');
-    });
+      expect(skeleton).toHaveClass('loading-skeleton', 'post-skeleton')
+  });
 
     it('should combine base classes with custom className', () => {
       const { container } = render(
@@ -274,56 +274,55 @@ describe('LoadingSkeleton', () => {
       );
       
       const skeleton = container.querySelector('.loading-skeleton');
-      expect(skeleton).toHaveClass('loading-skeleton', 'comment-skeleton', 'custom-class');
-    });
+      expect(skeleton).toHaveClass('loading-skeleton', 'comment-skeleton', 'custom-class')
+  });
 
     it('should handle empty className', () => {
       const { container } = render(<LoadingSkeleton className="" />);
       
       const skeleton = container.querySelector('.loading-skeleton');
-      expect(skeleton).toHaveClass('loading-skeleton', 'post-skeleton');
-    });
+      expect(skeleton).toHaveClass('loading-skeleton', 'post-skeleton')
+  })
   });
 
   describe('Edge Cases', () => {
     it('should handle count of 0', () => {
       const { container } = render(<LoadingSkeleton count={0} />);
       
-      expect(container.children).toHaveLength(0);
-    });
+      expect(container.children).toHaveLength(0)
+  });
 
     it('should handle negative count', () => {
       const { container } = render(<LoadingSkeleton count={-1} />);
       
-      expect(container.children).toHaveLength(0);
-    });
+      expect(container.children).toHaveLength(0)
+  });
 
     it('should handle large count numbers', () => {
       const { container } = render(<LoadingSkeleton count={100} />);
       
       const skeletons = container.querySelectorAll('.loading-skeleton');
-      expect(skeletons).toHaveLength(100);
-    });
+      expect(skeletons).toHaveLength(100)
+  });
 
     it('should handle invalid variant and default to post', () => {
       const { container } = render(<LoadingSkeleton variant={'invalid' as 'post' | 'comment' | 'profile' | 'chat'} />);
       
       expect(container.querySelector('.post-skeleton')).toBeInTheDocument();
-      expect(screen.getByLabelText('Loading post')).toBeInTheDocument();
-    });
+      expect(screen.getByLabelText('Loading post')).toBeInTheDocument()
+  });
 
     it('should handle undefined props gracefully', () => {
       const { container } = render(
-        <LoadingSkeleton; 
-          variant={undefined as 'post' | 'comment' | 'profile' | 'chat' | undefined} 
+        <LoadingSkeleton variant={undefined as 'post' | 'comment' | 'profile' | 'chat' | undefined} 
           count={undefined as number | undefined} 
           className={undefined as string | undefined}
         />
       );
       
       expect(container.querySelector('.post-skeleton')).toBeInTheDocument();
-      expect(container.querySelectorAll('.loading-skeleton')).toHaveLength(1);
-    });
+      expect(container.querySelectorAll('.loading-skeleton')).toHaveLength(1)
+  })
   });
 
   describe('Component Structure', () => {
@@ -337,9 +336,9 @@ describe('LoadingSkeleton', () => {
         expect(wrapper.tagName.toLowerCase()).toBe('div');
         // Keys are not directly accessible, but structure should be correct
         expect(wrapper.children).toHaveLength(1);
-        expect(wrapper.firstChild).toHaveClass('loading-skeleton');
-      });
-    });
+        expect(wrapper.firstChild).toHaveClass('loading-skeleton')
+  })
+  });
 
     it('should maintain consistent structure across variants', () => {
       const variants = ['post', 'comment', 'profile', 'chat'] as const;
@@ -358,15 +357,15 @@ describe('LoadingSkeleton', () => {
         const srText = container.querySelector('.sr-only');
         expect(srText).toBeInTheDocument();
         
-        unmount();
-      });
-    });
+        unmount()
+  })
+  })
   });
 
   describe('Default Export', () => {
     it('should export LoadingSkeleton as default', () => {
       // Already testing with default import at the top
-      expect(LoadingSkeleton).toBeDefined();
-    });
+      expect(LoadingSkeleton).toBeDefined()
+  })
+  })
   });
-});

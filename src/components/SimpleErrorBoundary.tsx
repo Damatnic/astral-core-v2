@@ -11,13 +11,13 @@ export interface ErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode;
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
-  resetKeys?: Array<string | number | boolean | null | undefined>;
-}
+  resetKeys?: Array<string | number | boolean | null | undefined>
+  }
 
 export interface ErrorBoundaryState {
   hasError: boolean;
-  error?: Error;
-}
+  error?: Error
+  }
 
 export class SimpleErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   private resetTimeoutId: number | null = null;
@@ -33,8 +33,8 @@ export class SimpleErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoun
     console.error('ErrorBoundary caught an error:', error, errorInfo);
     
     if (this.props.onError) {
-      this.props.onError(error, errorInfo);
-    }
+      this.props.onError(error, errorInfo)
+  }
   }
 
   componentDidUpdate(prevProps: ErrorBoundaryProps) {
@@ -43,33 +43,33 @@ export class SimpleErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoun
     
     if (hasError && prevProps.resetKeys !== resetKeys) {
       if (resetKeys && resetKeys.some((key, i) => prevProps.resetKeys?.[i] !== key)) {
-        this.resetErrorBoundary();
-      }
+        this.resetErrorBoundary()
+  }
     }
   }
 
   resetErrorBoundary = () => {
     if (this.resetTimeoutId) {
-      clearTimeout(this.resetTimeoutId);
-    }
+      clearTimeout(this.resetTimeoutId)
+  }
     
     this.resetTimeoutId = window.setTimeout(() => {
       this.setState({ hasError: false, error: undefined };
   };
-    }, 100);
+    }, 100)
   };
 
   componentWillUnmount() {
     if (this.resetTimeoutId) {
-      clearTimeout(this.resetTimeoutId);
-    }
+      clearTimeout(this.resetTimeoutId)
+  }
   }
 
   render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
-        return this.props.fallback;
-      }
+        return this.props.fallback
+  }
       
       return (
         <div className="error-boundary-fallback">
@@ -84,10 +84,10 @@ export class SimpleErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoun
             </button>
           </div>
         </div>
-      );
-    }
+      )
+  }
 
-    return this.props.children;
+    return this.props.children
   }
 }
 
