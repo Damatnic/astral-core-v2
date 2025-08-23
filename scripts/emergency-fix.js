@@ -1,4 +1,25 @@
-import React from 'react';
+#!/usr/bin/env node
+
+/**
+ * Emergency fix script for critical syntax errors preventing Netlify deployment
+ */
+
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const rootDir = path.join(__dirname, '..');
+
+// List of critically corrupted files that need to be replaced with minimal versions
+const criticalFiles = [
+  'src/views/LandingView.tsx',
+  'netlify/functions/analytics.ts'
+];
+
+// Simple working LandingView component
+const workingLandingView = `import React from 'react';
 import { Link } from 'react-router-dom';
 
 const LandingView: React.FC = () => {
@@ -48,3 +69,29 @@ const LandingView: React.FC = () => {
 };
 
 export default LandingView;
+`;
+
+console.log('🚨 Running emergency fixes for Netlify deployment...\n');
+
+// Fix LandingView.tsx
+const landingViewPath = path.join(rootDir, 'src/views/LandingView.tsx');
+try {
+  fs.writeFileSync(landingViewPath, workingLandingView);
+  console.log('✅ Fixed src/views/LandingView.tsx');
+} catch (error) {
+  console.error('❌ Failed to fix LandingView.tsx:', error.message);
+}
+
+// Check if analytics.ts exists and remove it (we already have analytics.js)
+const analyticsPath = path.join(rootDir, 'netlify/functions/analytics.ts');
+if (fs.existsSync(analyticsPath)) {
+  try {
+    fs.unlinkSync(analyticsPath);
+    console.log('✅ Removed corrupted netlify/functions/analytics.ts');
+  } catch (error) {
+    console.error('❌ Failed to remove analytics.ts:', error.message);
+  }
+}
+
+console.log('\n✅ Emergency fixes applied!');
+console.log('📦 Ready to push to GitHub for Netlify deployment.');
