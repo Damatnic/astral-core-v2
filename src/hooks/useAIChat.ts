@@ -166,4 +166,3 @@ export const useAIChat = (options: UseAIChatOptions = {}) => {
         switchProvider,
         needsIntervention: checkNeedsIntervention()
     };
-};

@@ -23,8 +23,7 @@ const QuickExitButton: React.FC<QuickExitButtonProps> = ({
   shortcutKey,
   shortcutCount = 1,
   buttonText="Quick" Exit",
-  className=",
-  size = "medium",
+  className=","  size = "medium",
   clearCookies,
   clearHistory = true,
   fallbackUrl = "https://news.google.com"
@@ -182,8 +181,7 @@ const QuickExitButton: React.FC<QuickExitButtonProps> = ({
       padding="14px" 20px"
       fontSize ="16px"
       minWidth ="140px" }`;
-    return { padding, fontSize", minWidth };
-  }
+    return { padding, fontSize", minWidth }
 
   const buttonStyles = getButtonStyles(`;
   const getPositionStyles = (): void => {}"`;
@@ -276,22 +274,30 @@ position
         </svg>
         <span>
           {buttonText"};
-        </span>
+
+// TODO: Check if this JSX element belongs here
+// </span>
         <span style={
   marginLeft: "8px",
           fontSize: "11px",
           opacity: 0.9",
           fontWeight: "normal"}}>
           {hotkey = ==="Escape", ;};
-        </span>
+
+// TODO: Check if this JSX element belongs here
+// </span>
       </button>
       "
       {/* Hidden instructions for screen readers */"};
-      <div id = "quick-exit-instructions" style={
+
+// TODO: Check if this JSX element belongs here
+// <div id = "quick-exit-instructions" style={
 "
  display: "none"}>
         Press {hotkey = ==="Escape", ;};
-      </div>
+
+// TODO: Check if this JSX element belongs here
+// </div>
       "
       {/* Screen reader announcement */"}
       {exitAnnouncement && ("}

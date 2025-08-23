@@ -79,8 +79,7 @@ export interface CrisisRiskAssessment {
     intensity: number;
     stability: number;
     crisisAlignment: number;
-  };
-}
+  }
 
 export interface EnhancedCrisisDetectionResult {
   hasCrisisIndicators: boolean;
@@ -97,8 +96,7 @@ export interface EnhancedCrisisDetectionResult {
     confidence: number;
     processingTime: number;
     flaggedConcerns: string[];
-  };
-}
+  }
 
 export interface InterventionRecommendation {
   type: 'immediate' | 'urgent' | 'supportive' | 'monitoring' | 'resources';
@@ -432,9 +430,7 @@ class EnhancedCrisisKeywordDetectionService {
           processingTime: Math.max(1, Date.now() - startTime), // Ensure processing time is always > 0
           flaggedConcerns: this.extractFlaggedConcerns(keywordMatches, contextualPatterns)
         }
-      };
-      
-    } catch (error) {
+      } catch (error) {
       console.error('[Enhanced Crisis Keyword Detection] Analysis failed:', error);
       return this.createFailsafeResult(text, startTime);
     }
@@ -606,8 +602,7 @@ class EnhancedCrisisKeywordDetectionService {
       triggerIndicators: keywordMatches.map(match => match.keyword),
       timelineAnalysis,
       emotionalProfile
-    };
-  }
+    }
 
   /**
    * Analyze emotional crisis patterns with linguistic markers
@@ -844,8 +839,7 @@ class EnhancedCrisisKeywordDetectionService {
       }
     }
 
-    return { hasTemporalUrgency, timeframe, urgencyModifiers };
-  }
+    return { hasTemporalUrgency, timeframe, urgencyModifiers }
 
   private analyzeEmotionalIntensity(text: string): { primaryEmotion: string; intensity: number; stability: number; crisisAlignment: number } {
     // Simplified emotional analysis - in production, this would use more sophisticated NLP
@@ -882,8 +876,7 @@ class EnhancedCrisisKeywordDetectionService {
     else if (maxEmotion === 'fear') crisisAlignment = 0.6;
     else if (maxEmotion === 'numbness') crisisAlignment = 0.8;
 
-    return { primaryEmotion: maxEmotion, intensity, stability, crisisAlignment };
-  }
+    return { primaryEmotion: maxEmotion, intensity, stability, crisisAlignment }
 
   private calculateOverallSeverity(
     keywordMatches: CrisisKeywordMatch[],
@@ -1025,8 +1018,7 @@ class EnhancedCrisisKeywordDetectionService {
         processingTime: Date.now() - startTime,
         flaggedConcerns: ['Analysis failed - using failsafe mode']
       }
-    };
-  }
+    }
 }
 
 // Singleton instance

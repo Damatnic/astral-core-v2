@@ -42,8 +42,7 @@ export interface CrisisTestResult {
   timestamp: number;
   impactAssessment: {
     safetyImpact: 'none' | 'low' | 'moderate' | 'severe' | 'life-threatening';
-  };
-}
+  }
 
 export interface EmergencyFailoverTest {
   id: string;

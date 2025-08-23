@@ -120,8 +120,7 @@ export function withMobileResponsive<P extends object>(
       return () => {
         cleanup();
         window.removeEventListener('orientationchange', updateResponsiveState);
-      };
-    }, []);
+      }, []);
 
     return <Component {...props} {...responsiveState} />;
   };
@@ -194,8 +193,7 @@ export const useResponsive = (): ResponsiveProps => {
     return () => {
       cleanup();
       window.removeEventListener('orientationchange', updateResponsiveState);
-    };
-  }, []);
+    }, []);
 
   return responsiveState;
 };

@@ -24,12 +24,10 @@ export class SimpleErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoun
 
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false };
-  }
+    this.state = { hasError: false }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };
-  }
+    return { hasError: true, error }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo);

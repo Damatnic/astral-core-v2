@@ -25,8 +25,7 @@ export const AccessibilityButton: React.FC = () => {
     
     return () => {
       window.removeEventListener('accessibility-settings-changed', handleSettingsChange);
-    };
-  }, []);
+    }, []);
 
   const handleQuickActions = (action: string) => {
     switch (action) {

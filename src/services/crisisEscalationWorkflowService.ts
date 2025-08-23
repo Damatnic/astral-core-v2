@@ -58,7 +58,6 @@ export interface CrisisEscalationRequest {
       region?: string;
       hasGeolocation: boolean;
     };
-  };
   sessionData: {
     conversationId: string;
     messagesSent: number;
@@ -71,8 +70,7 @@ export interface CrisisEscalationRequest {
     confidenceScore: number;
     automaticTrigger: boolean;
     reviewRequired: boolean;
-  };
-}
+  }
 
 export interface EscalationTierConfig {
   tier: EscalationTier;
@@ -364,8 +362,7 @@ class CrisisEscalationWorkflowService {
    * Get escalation metrics and analytics
    */
   public getEscalationMetrics(): EscalationMetrics {
-    return { ...this.metrics };
-  }
+    return { ...this.metrics }
 
   // Private implementation methods
 
@@ -435,8 +432,7 @@ class CrisisEscalationWorkflowService {
         automaticTrigger: !manualOverride,
         reviewRequired: urgencyLevel === 'emergency' && triggerReason === 'manual-escalation'
       }
-    };
-  }
+    }
 
   private async selectEscalationTier(request: CrisisEscalationRequest): Promise<EscalationTierConfig> {
     // Select the most appropriate tier based on risk level and emergency requirements
@@ -809,8 +805,7 @@ class CrisisEscalationWorkflowService {
       safetyAchieved: completedActions.some(a => a.actionId.includes('emergency') || a.actionId.includes('safety')) || tier.tier === 'emergency-services',
       requiresFollowup: tier.tier !== 'peer-support' || failedActions.length > 0,
       nextSteps: this.generateNextSteps(actions, tier)
-    };
-  }
+    }
 
   private calculateActionEffectiveness(_action: EscalationAction, result: string): number {
     // Simple effectiveness calculation based on success indicators
@@ -1115,14 +1110,12 @@ class CrisisEscalationWorkflowService {
       },
       peakHours: [],
       commonTriggers: []
-    };
-  }
+    }
 
   private generateInterventionPlan(analysis: ComprehensiveCrisisAnalysisResult, tier: EscalationTierConfig): { description: string } {
     return {
       description: `${tier.name} intervention for ${analysis.overallSeverity} risk situation`
-    };
-  }
+    }
 
   private getMonitoringFrequency(urgencyLevel: string): string {
     switch (urgencyLevel) {
@@ -1153,8 +1146,7 @@ class CrisisEscalationWorkflowService {
   private generateFollowupSchedule(_analysis: ComprehensiveCrisisAnalysisResult, tier: EscalationTierConfig): { description: string } {
     return {
       description: `Follow-up protocol for ${tier.name} intervention within 24-48 hours`
-    };
-  }
+    }
 
   private trackActiveEscalation(response: EscalationResponse): void {
     this.activeEscalations.set(response.escalationId, response);
@@ -1191,8 +1183,7 @@ class CrisisEscalationWorkflowService {
         nextSteps: ['Manual emergency intervention required']
       },
       notes: `Emergency fallback activated due to ${analysis ? 'escalation system failure' : 'missing crisis analysis'}`
-    };
-  }
+    }
 }
 
 // Singleton instance

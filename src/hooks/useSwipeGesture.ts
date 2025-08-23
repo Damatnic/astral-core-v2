@@ -61,7 +61,6 @@ export const useSwipeGesture = (options: UseSwipeGestureOptions = {}) => {
     
     const touch = e.touches[0];
     touchEndRef.current = { x: touch.clientX, y: touch.clientY };
-  };
 
   const handleTouchEnd = () => {
     if (!touchStartRef.current || !trackingRef.current) {
@@ -149,7 +148,6 @@ export const useSwipeGesture = (options: UseSwipeGestureOptions = {}) => {
     detachListeners,
     isTracking,
   };
-};
 
 // React ref-based hook for easier integration
 export const useSwipeRef = <T extends HTMLElement>(
@@ -166,14 +164,12 @@ export const useSwipeRef = <T extends HTMLElement>(
 
     return () => {
       detachListeners(element);
-    };
-  }, [attachListeners, detachListeners]);
+    }, [attachListeners, detachListeners]);
 
   return {
     ref: elementRef,
     isTracking,
   };
-};
 
 // Hook for handling pull-to-refresh gesture
 export const usePullToRefresh = (
@@ -212,8 +208,7 @@ export const usePullToRefresh = (
           x: touch.clientX, 
           y: touch.clientY,
           scrollTop 
-        };
-      }
+        }
     };
 
     const handleTouchMove = (e: TouchEvent) => {
@@ -278,8 +273,7 @@ export const usePullToRefresh = (
       element.removeEventListener('touchmove', handleTouchMove);
       element.removeEventListener('touchend', handleTouchEnd);
       element.removeEventListener('touchcancel', resetPull);
-    };
-  }, [enabled, threshold, resistance, onRefresh]);
+    }, [enabled, threshold, resistance, onRefresh]);
 
   return {
     ref: elementRef,
@@ -288,4 +282,3 @@ export const usePullToRefresh = (
     isRefreshing,
     pullProgress: Math.min(pullDistance / threshold, 1),
   };
-};

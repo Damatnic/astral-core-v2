@@ -13,8 +13,7 @@ export interface ExportOptions {
   dateRange?: {
     start: Date;
     end: Date;
-  };
-}
+  }
 
 export interface UserDataExport {
   metadata: {
@@ -171,8 +170,7 @@ class DataExportService {
         start: Math.min(...moodData.map(d => (d as any).timestamp)),
         end: Math.max(...moodData.map(d => (d as any).timestamp))
       }
-    };
-  }
+    }
 
   private calculateMoodTrends(moodData: unknown[]): any {
     if (moodData.length < 2) return null;
@@ -189,8 +187,7 @@ class DataExportService {
       previousAverageIntensity: olderData.length ? getAverageIntensity(olderData) : null,
       trendDirection: this.calculateTrendDirection(sortedData),
       volatility: this.calculateVolatility(sortedData)
-    };
-  }
+    }
 
   private calculateTrendDirection(data: unknown[]): 'improving' | 'declining' | 'stable' {
     if (data.length < 4) return 'stable';
@@ -437,8 +434,7 @@ class DataExportService {
           size: JSON.stringify(data).length,
           lastModified: data.lastModified || 'Unknown',
           recordCount: Array.isArray(data) ? data.length : 1
-        };
-      }
+        }
     });
 
     return inventory;
@@ -454,8 +450,7 @@ class DataExportService {
       'userReflections': '2 years or until user deletion',
       'analytics_events': '1 year or until user deletion',
       'security_logs': '2 years for security purposes'
-    };
-  }
+    }
 }
 
 // React hooks
@@ -469,11 +464,9 @@ export const useDataExport = () => {
       const blob = await service.exportUserData(options);
       const filename = service.generateFilename(options.format, localStorage.getItem('userId') || undefined);
       service.downloadExport(blob, filename);
-      return { success: true, filename };
-    } catch (error) {
+      return { success: true, filename } catch (error) {
       console.error('Export failed:', error);
-      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
-    } finally {
+      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' } finally {
       setIsExporting(false);
     }
   }, [service]);
@@ -498,7 +491,6 @@ export const useDataExport = () => {
     getDataRetentionInfo: service.getDataRetentionInfo.bind(service),
     isExporting
   };
-};
 
 // Singleton instance
 let dataExportServiceInstance: DataExportService | null = null;

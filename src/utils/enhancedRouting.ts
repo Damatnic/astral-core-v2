@@ -417,8 +417,7 @@ export class EnhancedRouteManager {
       currentRoute: this.currentRoute,
       preloadedRoutes: Array.from(this.preloadCache),
       registeredRoutes: Array.from(this.routes.keys()),
-    };
-  }
+    }
 
   // Get route performance metrics
   static getRouteMetrics(routePath: string) {
@@ -428,8 +427,7 @@ export class EnhancedRouteManager {
       preloaded: this.preloadCache.has(routePath),
       priority: config?.priority,
       mobileOptimized: config?.mobileOptimized,
-    };
-  }
+    }
 }
 
 // Hook for using enhanced routing
@@ -443,7 +441,6 @@ export const useEnhancedRouting = () => {
     getNavigationStats: EnhancedRouteManager.getNavigationStats,
     getRouteMetrics: EnhancedRouteManager.getRouteMetrics,
   };
-};
 
 // HOC for route performance tracking
 export const withRouteTracking = <P extends object>(
@@ -461,8 +458,7 @@ export const withRouteTracking = <P extends object>(
         if (process.env.NODE_ENV === 'development') {
           console.log(`📊 Route ${routePath} render time: ${renderTime.toFixed(2)}ms`);
         }
-      };
-    }, []);
+      }, []);
 
     return React.createElement(Component, props);
   };

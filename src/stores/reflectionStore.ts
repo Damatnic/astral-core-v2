@@ -35,8 +35,7 @@ export const useReflectionStore = create<ReflectionState>((set) => ({
                     ...r,
                     reactions: updatedReactions,
                     myReaction: userReaction || r.myReaction
-                };
-            }
+                }
             return r;
         })
     })),

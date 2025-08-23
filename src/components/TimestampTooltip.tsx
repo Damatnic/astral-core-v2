@@ -40,8 +40,7 @@ export interface TimestampTooltipProps {
     months: string;
     year: string;
     years: string;
-  };
-}
+  }
 
 const DEFAULT_RELATIVE_LABELS = {
   now: 'just now',
@@ -330,8 +329,7 @@ export const TimestampTooltip: React.FC<TimestampTooltipProps> = ({
       if (touchTimeoutRef.current) {
         clearTimeout(touchTimeoutRef.current);
       }
-    };
-  }, [updateRelativeTime]);
+    }, [updateRelativeTime]);
 
   /**
    * Handle click outside to close tooltip on mobile
@@ -357,8 +355,7 @@ export const TimestampTooltip: React.FC<TimestampTooltipProps> = ({
     return () => {
       document.removeEventListener('mousedown', handleOutsideInteraction);
       document.removeEventListener('touchstart', handleOutsideInteraction);
-    };
-  }, [isVisible, hideTooltip]);
+    }, [isVisible, hideTooltip]);
 
   const displayText = relativeTime || getTooltipContent();
   const truncatedText = maxLength && displayText.length > maxLength 

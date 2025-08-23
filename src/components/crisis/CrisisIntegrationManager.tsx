@@ -60,8 +60,7 @@ export interface CrisisEvent {
   resolved: boolean,
   metadata?: {
     [key: string]: any;
-  };
-}
+  }
 
 // Crisis response interface
 export interface CrisisResponse {

@@ -140,7 +140,6 @@ export const useFakeTimers = () => {
     runAll: () => advanceTimersWithAct(),
     flush: () => flushPromises()
   };
-};
 
 /**
  * Helper to mock console methods for cleaner test output
@@ -181,7 +180,6 @@ export const mockConsole = () => {
       }
     }
   };
-};
 
 /**
  * Helper to create a test wrapper with providers
@@ -195,7 +193,6 @@ export const createTestWrapper = (
       <>{children}</>
     );
   };
-};
 
 /**
  * Helper to wait for loading state to complete

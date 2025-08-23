@@ -274,4 +274,3 @@ export const usePeerSupport = (userToken: string, language: string): UsePeerSupp
     refreshMatches,
     refreshStatistics
   };
-};

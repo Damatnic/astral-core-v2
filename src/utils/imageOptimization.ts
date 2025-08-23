@@ -35,7 +35,6 @@ export interface ImageOptimizationConfig {
     small: { width: 480, height: 270 };
     medium: { width: 720, height: 405 };
     large: { width: 1280, height: 720 };
-  };
   
   // Quality settings
   quality: {
@@ -55,8 +54,7 @@ export interface ImageOptimizationConfig {
     slow: number; // < 1 Mbps
     medium: number; // < 5 Mbps
     fast: number; // >= 5 Mbps
-  };
-}
+  }
 
 export const defaultImageConfig: ImageOptimizationConfig = {
   breakpoints: {

@@ -223,8 +223,7 @@ export class BundleAnalyzer {
 
   // Get current metrics
   static getMetrics(): BundleMetrics {
-    return { ...this.metrics };
-  }
+    return { ...this.metrics }
   
   // Reset metrics (useful for testing)
   static resetMetrics(): void {
@@ -408,8 +407,7 @@ export class ChunkLoadingOptimizer {
       queueLength: this.priorityQueue.length,
       loadingCount: this.loadingChunks.size,
       maxConcurrent: this.maxConcurrentLoads,
-    };
-  }
+    }
 }
 
 // Memory optimizer for mobile devices
@@ -500,8 +498,7 @@ export class MobileMemoryOptimizer {
       currentUsage: this.getCurrentMemoryUsage(),
       threshold: this.memoryThreshold,
       monitoring: this.cleanupInterval !== null,
-    };
-  }
+    }
 }
 
 // Initialize optimizers

@@ -187,8 +187,7 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener('resize', resizeCanvas);
-    };
-  }, [theme, intensity]);
+    }, [theme, intensity]);
   
   return (
     <div className="calming-background-container">

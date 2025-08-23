@@ -62,15 +62,13 @@ const sanitizeErrorData = (error: Error, context?: any) => {
     try {
       sanitizedContext = JSON.parse(sanitizedStr);
     } catch {
-      sanitizedContext = { error: 'Failed to sanitize context' };
-    }
+      sanitizedContext = { error: 'Failed to sanitize context' }
   }
 
   return {
     message: sanitizedMessage,
     context: sanitizedContext
   };
-};
 
 // Get environment name helper
 const getEnvironmentName = (): string => {
@@ -135,8 +133,7 @@ export const initializeSentry = (dsn?: string) => {
       if (event.user) {
         event.user = {
           id: event.user.id ? '[USER_ID]' : undefined,
-        };
-      }
+        }
       return event;
     },
 

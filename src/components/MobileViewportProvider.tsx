@@ -72,8 +72,7 @@ export const MobileViewportProvider: React.FC<MobileViewportProviderProps> = ({
 
     return () => {
       document.removeEventListener('keydown', handleKeyboardShortcuts);
-    };
-  }, [enableHapticFeedback, preventZoom, optimizeInputs]);
+    }, [enableHapticFeedback, preventZoom, optimizeInputs]);
 
   // Handle viewport changes
   useEffect(() => {
@@ -191,8 +190,7 @@ export const MobileForm: React.FC<MobileFormProps> = ({
         // Cleanup
         return () => {
           input.removeEventListener('focus', handleFocus);
-        };
-      });
+        });
     }
   }, [autoAdjustViewport, viewport]);
 
@@ -304,8 +302,7 @@ export const MobileModal: React.FC<MobileModalProps> = ({
 
     return () => {
       document.body.style.overflow = '';
-    };
-  }, [isOpen]);
+    }, [isOpen]);
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -416,7 +413,6 @@ export const useMobileInteractions = () => {
     isPortrait: viewport.orientation === 'portrait',
     isLandscape: viewport.orientation === 'landscape',
   };
-};
 
 export default {
   MobileViewportProvider,

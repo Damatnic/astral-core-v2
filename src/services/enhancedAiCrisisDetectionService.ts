@@ -92,16 +92,14 @@ class EnhancedAICrisisDetectionService {
         dominance: -crisisLevel * 0.5,
         timestamp: Date.now()
       }
-    };
-  }
+    }
 
   async detectCrisis(text: string): Promise<{ isCrisis: boolean; severity: number }> {
     const analysis = await this.analyzeCrisisWithML(text);
     return {
       isCrisis: analysis.crisisLevel > 0.3,
       severity: analysis.crisisLevel
-    };
-  }
+    }
 }
 
 export const enhancedAICrisisDetectionService = new EnhancedAICrisisDetectionService();

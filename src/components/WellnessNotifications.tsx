@@ -12,8 +12,7 @@ interface Notification {
   action?: {
     label: string;
     handler: () => void;
-  };
-}
+  }
 
 const wellnessMessages = [
   "Time for a mindfulness check-in! How are you feeling?",
@@ -134,8 +133,7 @@ export const WellnessNotifications: React.FC = () => {
         setShowPanel(true);
         markAsRead(notification.id);
         if (action) action.handler();
-      };
-    }
+      }
   }, [permission]);
   
   const requestPermission = async () => {

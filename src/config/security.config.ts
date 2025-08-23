@@ -33,8 +33,7 @@ export interface HIPAASecurityConfig {
     auditControls: boolean;
     integrity: boolean;
     transmission: boolean;
-  };
-}
+  }
 
 export interface CrisisSecurityConfig {
   emergencyOverrides: {
@@ -49,8 +48,7 @@ export interface CrisisSecurityConfig {
     encryptCrisisNotes: boolean;
     anonymizeAfterResolution: number; // hours
     auditAllAccess: boolean;
-  };
-}
+  }
 
 export interface ZeroTrustConfig {
   verifyExplicitly: {
@@ -72,8 +70,7 @@ export interface ZeroTrustConfig {
     networkSegmentation: boolean;
     encryptEverything: boolean;
     minimizeBlastRadius: boolean;
-  };
-}
+  }
 
 export interface EncryptionConfig {
   atRest: {
@@ -95,8 +92,7 @@ export interface EncryptionConfig {
     keyExchangeAlgorithm: string;
     messageEncryption: string;
     fileEncryption: boolean;
-  };
-}
+  }
 
 export interface CSPConfig {
   directives: {
@@ -158,8 +154,7 @@ export interface SecurityHeadersConfig {
   permissionsPolicy: {
     enabled: boolean;
     directives: Record<string, string[]>;
-  };
-}
+  }
 
 export interface SessionConfig {
   jwt: {
@@ -186,8 +181,7 @@ export interface SessionConfig {
     deviceRemembering: boolean;
     concurrentSessionLimit: number;
     sessionTimeout: number;
-  };
-}
+  }
 
 export interface APISecurityConfig {
   authentication: {
@@ -215,8 +209,7 @@ export interface APISecurityConfig {
     errorLogging: boolean;
     securityEventLogging: boolean;
     performanceLogging: boolean;
-  };
-}
+  }
 
 export interface SecurityConfig {
   // Environment
@@ -296,8 +289,7 @@ export interface SecurityConfig {
     bruteForceProtection: boolean;
     anomalyDetection: boolean;
     geoBlocking: string[];
-  };
-}
+  }
 
 // Default Security Configuration
 export const defaultSecurityConfig: SecurityConfig = {
@@ -658,6 +650,5 @@ export const validateSecurityConfig = (config: SecurityConfig): { valid: boolean
     valid: errors.length === 0,
     errors,
   };
-};
 
 export default defaultSecurityConfig;

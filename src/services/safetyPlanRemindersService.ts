@@ -58,8 +58,7 @@ export interface SafetyPlanReminder {
     missedCount: number;
     escalationLevel: number;
     automaticTrigger: boolean;
-  };
-}
+  }
 
 export interface ReminderScheduleConfig {
   riskLevel: RiskLevel;
@@ -80,8 +79,7 @@ export interface ReminderScheduleConfig {
     safetyPlanPrompts: string[];
     copingStrategyReminders: string[];
     supportContactPrompts: string[];
-  };
-}
+  }
 
 export interface ReminderResponse {
   reminderId: string;
@@ -476,8 +474,7 @@ class SafetyPlanRemindersService {
         escalationLevel: 0,
         automaticTrigger: false
       }
-    };
-  }
+    }
 
   /**
    * Record user interaction with safety plan
@@ -498,8 +495,7 @@ class SafetyPlanRemindersService {
       averageResponseTime: 300, // 5 minutes
       effectivenessScore: 0.82,
       lastInteraction: new Date(Date.now() - 2 * 60 * 60 * 1000) // 2 hours ago
-    };
-  }
+    }
 
   /**
    * Create quick access reminder
@@ -533,8 +529,7 @@ class SafetyPlanRemindersService {
         escalationLevel: 0,
         automaticTrigger: false
       }
-    };
-  }
+    }
 
   /**
    * Record safety plan usage
@@ -564,8 +559,7 @@ class SafetyPlanRemindersService {
         'User responds well to morning check-ins',
         'Breathing exercises are most effective coping strategy'
       ]
-    };
-  }
+    }
 
   /**
    * Record pattern data for analysis
@@ -602,8 +596,7 @@ class SafetyPlanRemindersService {
         'Focus on stress management techniques',
         'Increase mindfulness practice reminders'
       ]
-    };
-  }
+    }
 
   /**
    * Create personalized safety plan
@@ -655,8 +648,7 @@ class SafetyPlanRemindersService {
       baseAnalysis: analysis,
       expectedImprovement: 0.15,
       implementedAt: new Date()
-    };
-  }
+    }
 
   /**
    * Send a reminder
@@ -713,8 +705,7 @@ class SafetyPlanRemindersService {
       accessLevel: shareOptions.accessLevel || 'view',
       expiresAt: shareOptions.expiresAt || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
       createdAt: new Date()
-    };
-  }
+    }
 
   /**
    * Update safety plan
@@ -726,8 +717,7 @@ class SafetyPlanRemindersService {
       version: 2,
       updatedAt: new Date(),
       changelog: Object.keys(updates)
-    };
-  }
+    }
 
   /**
    * Get sync status of plan
@@ -739,8 +729,7 @@ class SafetyPlanRemindersService {
       syncStatus: 'up_to_date',
       pendingChanges: 0,
       conflicts: []
-    };
-  }
+    }
 
   /**
    * Check review status of plan
@@ -752,8 +741,7 @@ class SafetyPlanRemindersService {
       lastReviewed: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000), // 14 days ago
       nextReviewDue: new Date(Date.now() + 16 * 24 * 60 * 60 * 1000), // 16 days from now
       reviewRequired: false
-    };
-  }
+    }
 
   /**
    * Get version history of plan
@@ -785,8 +773,7 @@ class SafetyPlanRemindersService {
       schedulingAdaptations: patterns.timePreferences || {},
       contentAdaptations: patterns.preferredStrategies || [],
       communicationAdaptations: patterns.communicationStyle || 'standard'
-    };
-  }
+    }
 
   /**
    * Initialize safety plan reminders for a user based on their risk level
@@ -917,8 +904,7 @@ class SafetyPlanRemindersService {
         followUpNeeded: fullResponse.followUpNeeded,
         escalationTriggered: fullResponse.escalationTriggered,
         nextActions: analysis.recommendedActions
-      };
-    } catch (error) {
+      } catch (error) {
       console.error('Failed to process reminder response:', error);
       throw error;
     }
@@ -983,8 +969,7 @@ class SafetyPlanRemindersService {
     consecutiveLowMoods: number;
   } {
     if (moodData.length === 0) {
-      return { trend: 'stable', averageIntensity: 0.5, volatility: 0, consecutiveLowMoods: 0 };
-    }
+      return { trend: 'stable', averageIntensity: 0.5, volatility: 0, consecutiveLowMoods: 0 }
 
     // Calculate trend, intensity, volatility, and consecutive low moods
     const intensities = moodData.map(m => m.intensity);
@@ -1006,8 +991,7 @@ class SafetyPlanRemindersService {
     const volatility = this.calculateVolatility(intensities);
     const consecutiveLowMoods = this.countConsecutiveLowMoods(moodData);
 
-    return { trend, averageIntensity, volatility, consecutiveLowMoods };
-  }
+    return { trend, averageIntensity, volatility, consecutiveLowMoods }
 
   private calculateVolatility(intensities: number[]): number {
     if (intensities.length < 2) return 0;
@@ -1056,8 +1040,7 @@ class SafetyPlanRemindersService {
       recommendations.push('Focus on mood stabilization techniques');
     }
 
-    return { riskLevel, factors, recommendations };
-  }
+    return { riskLevel, factors, recommendations }
 
   private shouldTriggerMoodCheckReminder(moodTrend: any, config: ReminderScheduleConfig): boolean {
     return (
@@ -1113,8 +1096,7 @@ class SafetyPlanRemindersService {
         escalationLevel: 0,
         automaticTrigger: true
       }
-    };
-  }
+    }
 
   private async createSafetyPlanReviewReminder(userId: string, moodTrend: any, riskFactors: any, userContext: any): Promise<SafetyPlanReminder> {
     const config = this.userSchedules.get(userId)!;
@@ -1152,8 +1134,7 @@ class SafetyPlanRemindersService {
         escalationLevel: 0,
         automaticTrigger: true
       }
-    };
-  }
+    }
 
   private async createCopingStrategyReminder(userId: string, moodTrend: any, riskFactors: any, userContext: any): Promise<SafetyPlanReminder> {
     const config = this.userSchedules.get(userId)!;
@@ -1191,8 +1172,7 @@ class SafetyPlanRemindersService {
         escalationLevel: 0,
         automaticTrigger: true
       }
-    };
-  }
+    }
 
   private async deliverReminder(reminder: SafetyPlanReminder): Promise<void> {
     try {
@@ -1257,8 +1237,7 @@ class SafetyPlanRemindersService {
       recommendedActions.push('Review safety plan');
     }
 
-    return { escalationNeeded, followUpNeeded, recommendedActions };
-  }
+    return { escalationNeeded, followUpNeeded, recommendedActions }
 
   private async triggerEscalationForResponse(reminder: SafetyPlanReminder, response: ReminderResponse): Promise<void> {
     try {

@@ -191,7 +191,6 @@ export const useAuth = () => {
     hasAnyRole,
     hasAllRoles,
   };
-};
 
 /**
  * HOC for protecting components

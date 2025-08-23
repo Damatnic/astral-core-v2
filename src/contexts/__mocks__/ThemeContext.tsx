@@ -26,8 +26,7 @@ interface AppTheme {
     sm: string;
     md: string;
     lg: string;
-  };
-}
+  }
 
 interface ThemeContextType {
   theme: Theme;

@@ -102,8 +102,7 @@ const Toast: React.FC<{
       return () => {
         clearInterval(interval);
         clearTimeout(timer);
-      };
-    }
+      }
   }, [feedback, onDismiss, announce]);
 
   const typeClasses = {

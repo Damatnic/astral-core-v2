@@ -46,7 +46,6 @@ export const useAccessibilityAudit = (wcagLevel: WCAGLevel = WCAGLevel.AA) => {
     error,
     runAudit
   };
-};
 
 // Hook for real-time accessibility monitoring
 export const useAccessibilityMonitoring = (
@@ -149,8 +148,7 @@ export const useAccessibilityMonitoring = (
 
     return () => {
       stopMonitoring();
-    };
-  }, [isOldSignature, enabled, autoRefresh, startMonitoring, stopMonitoring]);
+    }, [isOldSignature, enabled, autoRefresh, startMonitoring, stopMonitoring]);
 
   return {
     auditResult,
@@ -160,7 +158,6 @@ export const useAccessibilityMonitoring = (
     startMonitoring,
     stopMonitoring
   };
-};
 
 // Hook for crisis-specific accessibility monitoring
 export const useCrisisAccessibilityMonitoring = () => {
@@ -190,8 +187,7 @@ export const useCrisisAccessibilityMonitoring = () => {
         issues: crisisRelatedIssues,
         isCompliant: crisisRelatedIssues.length === 0,
         criticalCount: criticalCrisisIssues.length
-      };
-    } catch (err) {
+      } catch (err) {
       console.error('Crisis accessibility check failed:', err);
       throw err;
     }
@@ -211,7 +207,6 @@ export const useCrisisAccessibilityMonitoring = () => {
     lastCrisisCheck,
     checkCrisisAccessibility
   };
-};
 
 // Hook for accessibility issue filtering and management
 export const useAccessibilityIssueManager = (auditResult: AccessibilityAuditResult | null) => {
@@ -299,7 +294,6 @@ export const useAccessibilityIssueManager = (auditResult: AccessibilityAuditResu
     clearFilters,
     getIssueStats
   };
-};
 
 // Hook for accessibility alerts and notifications
 export const useAccessibilityAlerts = (threshold?: number, enabled: boolean = true) => {
@@ -324,8 +318,7 @@ export const useAccessibilityAlerts = (threshold?: number, enabled: boolean = tr
       if (threshold) {
         accessibilityAuditSystem.teardownAlerts();
       }
-    };
-  }, [threshold, enabled]);
+    }, [threshold, enabled]);
 
   const addAlert = useCallback((
     type: 'critical' | 'warning' | 'info',
@@ -393,7 +386,6 @@ export const useAccessibilityAlerts = (threshold?: number, enabled: boolean = tr
     clearAllAlerts,
     monitorCriticalIssues
   };
-};
 
 // Hook for keyboard navigation testing
 export const useKeyboardNavigationTest = () => {
@@ -424,7 +416,6 @@ export const useKeyboardNavigationTest = () => {
     keyboardIssues,
     testKeyboardNavigation
   };
-};
 
 // Hook for screen reader compatibility testing
 export const useScreenReaderTest = () => {
@@ -455,7 +446,6 @@ export const useScreenReaderTest = () => {
     screenReaderIssues,
     testScreenReaderCompatibility
   };
-};
 
 // Hook for keyboard support accessibility features
 export const useAccessibilityKeyboardSupport = (enabled: boolean = true) => {
@@ -475,8 +465,7 @@ export const useAccessibilityKeyboardSupport = (enabled: boolean = true) => {
 
     return () => {
       accessibilityAuditSystem.teardownKeyboardSupport();
-    };
-  }, [enabled]);
+    }, [enabled]);
 
   const enableKeyboardNavigation = useCallback(() => {
     setKeyboardNavigationEnabled(true);
@@ -510,7 +499,6 @@ export const useAccessibilityKeyboardSupport = (enabled: boolean = true) => {
     disableKeyboardNavigation,
     updateTabOrder
   };
-};
 
 export default {
   useAccessibilityAudit,

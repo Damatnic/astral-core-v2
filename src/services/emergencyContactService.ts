@@ -23,8 +23,7 @@ export interface EmergencyContact {
     sms: boolean;
     email: boolean;
     call: boolean;
-  };
-}
+  }
 
 export interface CrisisLine {
   id: string;
@@ -423,8 +422,7 @@ class EmergencyContactService {
     return {
       primaryContact,
       localCrisisLine
-    };
-  }
+    }
 }
 
 export const emergencyContactService = new EmergencyContactService();
@@ -453,8 +451,7 @@ export interface EmergencyContact {
     sms: boolean;
     email: boolean;
     call: boolean;
-  };
-}
+  }
 
 export interface CrisisLine {
   id: string;
@@ -853,8 +850,7 @@ class EmergencyContactService {
     return {
       primaryContact,
       localCrisisLine
-    };
-  }
+    }
 }
 
 export const emergencyContactService = new EmergencyContactService();

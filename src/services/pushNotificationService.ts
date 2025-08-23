@@ -15,8 +15,7 @@ interface PushSubscription {
   keys: {
     p256dh: string;
     auth: string;
-  };
-}
+  }
 
 interface NotificationPayload {
   title: string;
@@ -52,16 +51,13 @@ class PushNotificationService {
   public async initialize(): Promise<{ supported: boolean }> {
     this.checkSupport();
     if (!this.isSupported) {
-      return { supported: false };
-    }
+      return { supported: false }
 
     try {
       await navigator.serviceWorker.ready;
-      return { supported: true };
-    } catch (error) {
+      return { supported: true } catch (error) {
       console.error('[Push] Failed to initialize:', error);
-      return { supported: false };
-    }
+      return { supported: false }
   }
 
   /**
@@ -91,8 +87,7 @@ class PushNotificationService {
       return {
         subscribed: false,
         alertTypes: []
-      };
-    }
+      }
 
     // Store crisis alert subscription
     const alertTypes = ['crisis_immediate', 'crisis_warning', 'crisis_support'];
@@ -101,8 +96,7 @@ class PushNotificationService {
     return {
       subscribed: true,
       alertTypes
-    };
-  }
+    }
 
   /**
    * Send crisis notification to user
@@ -206,8 +200,7 @@ class PushNotificationService {
       }
     }
 
-    return preferences || {};
-  }
+    return preferences || {}
 
   /**
    * Check if notification should be sent based on preferences
@@ -697,8 +690,7 @@ class PushNotificationService {
       hasPermission: this.permissionStatus === 'granted',
       isSubscribed: !!this.subscription,
       subscription: this.subscription
-    };
-  }
+    }
 
   /**
    * Utility: Convert URL-safe base64 to Uint8Array

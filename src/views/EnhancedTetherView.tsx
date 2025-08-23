@@ -108,8 +108,7 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ sessionId, isEnabled }) =
 
     return () => {
       wsRef.current?.close();
-    };
-  }, [sessionId, isEnabled]);
+    }, [sessionId, isEnabled]);
 
   const handleDraw = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     if (!isDrawing || !canvasRef.current || !isEnabled) return;

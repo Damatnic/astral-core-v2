@@ -49,8 +49,7 @@ export const AstralTetherDemo: React.FC = () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
-    };
-  }, [isActive]);
+    }, [isActive]);
 
   const startTetherSession = () => {
     setIsActive(true);

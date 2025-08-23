@@ -127,8 +127,7 @@ function customRender(
       }
       return acc;
     }, {} as any),
-  };
-}
+  }
 
 // Re-export render from RTL for compatibility
 import { render as rtlRender } from '@testing-library/react';
@@ -146,8 +145,7 @@ const customRenderHook = <TProps = unknown, TResult = unknown>(
   const TestComponent: React.FC<{ props?: TProps }> = ({ props }) => {
     try {
       const hookResult = hook(props);
-      result = { current: hookResult };
-    } catch (e) {
+      result = { current: hookResult } catch (e) {
       error = e as Error;
     }
     return null;
@@ -250,7 +248,6 @@ const customRenderHook = <TProps = unknown, TResult = unknown>(
       throw new Error('waitFor timeout');
     }
   };
-};
 
 // Alternative render function that doesn't use providers at all
 function renderWithoutProviders(

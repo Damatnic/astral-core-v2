@@ -192,8 +192,7 @@ export const MobileFormInput: React.FC<MobileFormInputProps> = ({
     return {
       isValid: errors.length === 0,
       errors,
-    };
-  }, [validation, label, inputType, securityService]);
+    }, [validation, label, inputType, securityService]);
 
   // Debounced validation
   useEffect(() => {
@@ -461,8 +460,7 @@ export const MobileFormTextArea: React.FC<MobileFormTextAreaProps> = ({
     return {
       isValid: errors.length === 0,
       errors,
-    };
-  }, [validation, label, securityService]);
+    }, [validation, label, securityService]);
 
   // Debounced validation
   useEffect(() => {
@@ -645,8 +643,7 @@ export const MobileFormSelect: React.FC<MobileFormSelectProps> = ({
     return {
       isValid: errors.length === 0,
       errors,
-    };
-  }, [validation, label]);
+    }, [validation, label]);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onChange?.(e);

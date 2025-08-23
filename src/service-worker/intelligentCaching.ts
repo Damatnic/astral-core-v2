@@ -37,8 +37,7 @@ export interface UserBehaviorMetrics {
     memory: number;
     connection: string;
     isLowEnd: boolean;
-  };
-}
+  }
 
 export class IntelligentCachingManager {
   private userMetrics: UserBehaviorMetrics;
@@ -236,8 +235,7 @@ export class IntelligentCachingManager {
         // Always cache crisis resources, even with errors
         return response.status < 500 ? response : null;
       }
-    };
-  }
+    }
 
   /**
    * Performance monitoring plugin
@@ -258,8 +256,7 @@ export class IntelligentCachingManager {
         }
         return response;
       }
-    };
-  }
+    }
 
   /**
    * API-specific caching plugin with intelligent strategies
@@ -292,8 +289,7 @@ export class IntelligentCachingManager {
         }
         return null;
       }
-    };
-  }
+    }
 
   /**
    * User data plugin with privacy considerations
@@ -314,8 +310,7 @@ export class IntelligentCachingManager {
         this.saveUserMetrics();
         return request;
       }
-    };
-  }
+    }
 
   /**
    * Asset optimization plugin
@@ -333,8 +328,7 @@ export class IntelligentCachingManager {
         
         return response.status === 200 ? response : null;
       }
-    };
-  }
+    }
 
   /**
    * Image optimization plugin with format preference
@@ -369,8 +363,7 @@ export class IntelligentCachingManager {
         
         return request;
       }
-    };
-  }
+    }
 
   /**
    * Intelligent prefetching based on user behavior
@@ -624,8 +617,7 @@ export class IntelligentCachingManager {
    * Get user metrics for analytics
    */
   public getUserMetrics(): UserBehaviorMetrics {
-    return { ...this.userMetrics };
-  }
+    return { ...this.userMetrics }
 
   /**
    * Clean up old caches and optimize storage

@@ -306,8 +306,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     window.addEventListener('auth-error', handleAuthError);
     return () => {
         window.removeEventListener('auth-error', handleAuthError);
-    };
-  }, [logout, addToast]);
+    }, [logout, addToast]);
 
 
   const reloadProfile = useCallback(async () => {
@@ -434,8 +433,7 @@ export const useLegalConsents = () => {
                 title: `Helper Agreement (v${version})`,
                 text: 'To continue as a Helper, please review and accept the Helper Agreement, which outlines your role, responsibilities, and our code of conduct.'
             };
-            default: return { title: 'Community Agreement', text: 'Please review our community agreements to continue.'};
-        }
+            default: return { title: 'Community Agreement', text: 'Please review our community agreements to continue.'}
     }
 
     return {
@@ -444,10 +442,8 @@ export const useLegalConsents = () => {
         acceptConsent,
         getConsentContent,
     };
-};
             };
-            default: return { title: 'Community Agreement', text: 'Please review our community agreements to continue.'};
-        }
+            default: return { title: 'Community Agreement', text: 'Please review our community agreements to continue.'}
     }
 
     return {
@@ -456,4 +452,3 @@ export const useLegalConsents = () => {
         acceptConsent,
         getConsentContent,
     };
-};

@@ -610,8 +610,7 @@ const HelpTutorialSystem: React.FC<HelpTutorialSystemProps> = ({
       document.removeEventListener('focus', handleTooltips, true);
       document.removeEventListener('mouseleave', hideTooltips, true);
       document.removeEventListener('blur', hideTooltips, true);
-    };
-  }, [config.enableTooltips]);
+    }, [config.enableTooltips]);
 
   // Keyboard shortcuts
   useEffect(() => {

@@ -13,8 +13,7 @@ interface AuthResponse {
     name?: string;
     locale?: string;
     timezone?: string;
-  };
-}
+  }
 
 interface MoodEntry {
   id: string;
@@ -323,8 +322,7 @@ class NetlifyApiService {
   // Get auth headers for external requests
   getAuthHeaders(): HeadersInit {
     const token = this.getToken();
-    return token ? { 'Authorization': `Bearer ${token}` } : {};
-  }
+    return token ? { 'Authorization': `Bearer ${token}` } : {}
 }
 
 // Export singleton instance

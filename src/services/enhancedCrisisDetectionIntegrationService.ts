@@ -73,8 +73,7 @@ export interface ComprehensiveCrisisAnalysisResult {
     };
     flaggedConcerns: string[];
     analysisVersion: string;
-  };
-}
+  }
 
 export interface ConsolidatedInterventionRecommendation {
   type: 'immediate' | 'urgent' | 'supportive' | 'monitoring' | 'resources' | 'cultural';
@@ -304,8 +303,7 @@ class EnhancedCrisisDetectionIntegrationService {
         flaggedConcerns,
         analysisVersion: this.analysisVersion
       }
-    };
-  }
+    }
 
   /**
    * Calculate consolidated risk scores from multiple analysis methods
@@ -359,8 +357,7 @@ class EnhancedCrisisDetectionIntegrationService {
       shortTermRisk,
       longTermRisk,
       interventionUrgency
-    };
-  }
+    }
 
   /**
    * Get analysis weights based on prioritization method
@@ -377,8 +374,7 @@ class EnhancedCrisisDetectionIntegrationService {
         return { keyword: 0.3, ai: 0.6, cultural: 0.1 };
       case 'balanced':
       default:
-        return { keyword: 0.4, ai: 0.4, cultural: 0.2 };
-    }
+        return { keyword: 0.4, ai: 0.4, cultural: 0.2 }
   }
 
   /**
@@ -434,8 +430,7 @@ class EnhancedCrisisDetectionIntegrationService {
       ai: safeAiConfidence,
       cultural: culturalAnalysis ? culturalConfidence : undefined,
       overall
-    };
-  }
+    }
 
   /**
    * Consolidate intervention recommendations from all methods
@@ -545,8 +540,7 @@ class EnhancedCrisisDetectionIntegrationService {
         // Calculate crisis alignment from AI emotion data
         this.calculateCrisisAlignmentFromAI(aiEmotion)
       )
-    };
-  }
+    }
 
   /**
    * Calculate crisis alignment from AI emotional state
@@ -778,8 +772,7 @@ class EnhancedCrisisDetectionIntegrationService {
         flaggedConcerns: ['Analysis failed - using failsafe mode'],
         analysisVersion: this.analysisVersion
       }
-    };
-  }
+    }
 
   /**
    * Handle crisis escalation workflow based on analysis results
@@ -884,15 +877,13 @@ class EnhancedCrisisDetectionIntegrationService {
           recommendedTier,
           triggerReason,
           escalationInitiated: escalationResponse.status === 'initiated'
-        };
-      } else {
+        } else {
         // Return escalation recommendation without initiating
         return {
           recommendedTier,
           triggerReason,
           escalationInitiated: false
-        };
-      }
+        }
 
     } catch (error) {
       console.error('[Crisis Escalation Integration] Escalation failed:', error);
@@ -901,8 +892,7 @@ class EnhancedCrisisDetectionIntegrationService {
         triggerReason: 'high-risk-threshold',
         escalationInitiated: false,
         escalationError: error instanceof Error ? error.message : 'Unknown escalation error'
-      };
-    }
+      }
   }
 
   /**

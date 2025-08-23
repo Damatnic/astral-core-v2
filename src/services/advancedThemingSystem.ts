@@ -93,8 +93,7 @@ export interface TherapeuticThemeConfig {
     allowsIntensityAdjustment: boolean;
     allowsColorOverrides: boolean;
     allowsAnimationControl: boolean;
-  };
-}
+  }
 
 export interface UserThemePreferences {
   therapeuticTheme: TherapeuticTheme;
@@ -706,6 +705,5 @@ export const useTheme = (): void => {
   return context;
 };
 
-// Export default theme for initial load
-export const DEFAULT_THEME = THERAPEUTIC_THEMES['calm-sanctuary'];
-export const DEFAULT_THEME = THERAPEUTIC_THEMES['calm-sanctuary'];
+  // Export default theme for initial load
+  export const DEFAULT_THEME = THERAPEUTIC_THEMES['calm-sanctuary'];

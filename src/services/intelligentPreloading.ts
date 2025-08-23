@@ -23,8 +23,7 @@ export interface UserJourney {
     dayOfWeek: string;
     sessionDuration: number;
     averageTimePerPage: number;
-  };
-}
+  }
 
 export interface PredictionModel {
   name: string;
@@ -74,8 +73,7 @@ export class IntelligentPreloadingEngine {
       timeSpentOnCrisisResources: 0,
       repeatVisitsToSameContent: 0,
       urgentLanguageDetected: false
-    };
-  }
+    }
 
   /**
    * Initialize machine learning prediction models
@@ -814,8 +812,7 @@ export class IntelligentPreloadingEngine {
         '/crisis': 0.3,
         '/': 0.3
       }
-    };
-  }
+    }
 
   private getTimeBasedWeights(): Record<string, Record<string, number>> {
     return {
@@ -839,8 +836,7 @@ export class IntelligentPreloadingEngine {
         '/emergency-contacts': 1.4,
         '/sleep-support': 1.3
       }
-    };
-  }
+    }
 
   private getEmotionalWeights(): Record<string, Record<string, number>> {
     return {
@@ -864,8 +860,7 @@ export class IntelligentPreloadingEngine {
         '/crisis': 2.0,
         '/hotlines': 1.8
       }
-    };
-  }
+    }
 
   // Additional helper methods...
   private generateSessionId(): string {
@@ -925,20 +920,19 @@ export class IntelligentPreloadingEngine {
       '/breathing-exercises': { confidence: 0.7, resources: ['/breathing-audio.mp4', '/breathing-instructions.json'] },
       '/crisis-resources': { confidence: 0.9, resources: ['/crisis-contacts.json', '/emergency-help.json'] },
       '/mood-tracker': { confidence: 0.5, resources: ['/mood-data.json', '/mood-insights.json'] }
-    }; 
-  }
-  private getContextualFactors(): Record<string, any> { return { timeOfDay: 1.0, userMood: 1.0 }; }
+    }
+  private getContextualFactors(): Record<string, any> { return { timeOfDay: 1.0, userMood: 1.0 }
   private getTimeDecayFunction(): (resource: string) => number { return () => 1; }
   private getCrisisIndicators(): string[] { return ['crisis', 'emergency', 'help', 'urgent']; }
   private getBehaviorSignals(): string[] { return ['rapid_navigation', 'repeat_visits', 'long_session']; }
-  private getUrgencyThresholds(): Record<string, number> { return { crisis: 0.7, help: 0.5, normal: 0.3 }; }
+  private getUrgencyThresholds(): Record<string, number> { return { crisis: 0.7, help: 0.5, normal: 0.3 }
   private getEmotionalStates(): string[] { return ['seeking-help', 'distressed', 'crisis', 'maintenance', 'neutral']; }
-  private getEmotionalTransitions(): Record<string, any> { return { 'seeking-help': ['distressed', 'crisis'], 'maintenance': ['neutral'] }; }
-  private getRecoveryPatterns(): Record<string, any> { return { 'crisis': 'seeking-help', 'distressed': 'maintenance' }; }
+  private getEmotionalTransitions(): Record<string, any> { return { 'seeking-help': ['distressed', 'crisis'], 'maintenance': ['neutral'] }
+  private getRecoveryPatterns(): Record<string, any> { return { 'crisis': 'seeking-help', 'distressed': 'maintenance' }
   private loadUserBehaviorHistory(): void { /* Load from localStorage */ }
   private updateBehaviorPatterns(_route: string, _timeSpent: number, _emotionalContext?: string): void { /* Update patterns */ }
   private performInitialPredictions(): void { /* Initial predictions */ }
-  private getCurrentContext(): Record<string, any> { return { route: this.getCurrentRoute(), time: this.getTimeOfDay() }; }
+  private getCurrentContext(): Record<string, any> { return { route: this.getCurrentRoute(), time: this.getTimeOfDay() }
   private calculateContextMatch(_context: any, _pattern: any): number { return 0.5; }
   private calculateTimeDecay(_resource: string): number { return 1; }
   private estimateLoadTime(resource: string): number { return resource.includes('.mp4') ? 2000 : 500; }

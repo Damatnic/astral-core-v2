@@ -40,8 +40,7 @@ const createIcon = (path: string, displayName: string) => {
 const createLazyIcon = (importFn: () => Promise<{ default: string }>, displayName: string) => {
   const LazyIcon = lazy(async () => {
     const { default: path } = await importFn();
-    return { default: (props: IconProps) => <Icon path={path} {...props} /> };
-  });
+    return { default: (props: IconProps) => <Icon path={path} {...props} /> });
   
   const WrappedIcon = memo((props: IconProps) => (
     <Suspense fallback={<div style={{ width: props.size || 24, height: props.size || 24 }} />}>

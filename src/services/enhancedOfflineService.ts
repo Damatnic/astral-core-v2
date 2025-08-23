@@ -34,8 +34,7 @@ interface OfflineResource {
     phone: string;
     text: string;
     chat?: string;
-  };
-}
+  }
 
 interface OfflineCapabilities {
   hasStorage: boolean;
@@ -51,8 +50,7 @@ interface OfflineCapabilities {
     translations: boolean;
     culturalContent: boolean;
     aiModels: boolean;
-  };
-}
+  }
 
 interface SyncQueueItem {
   id: string;
@@ -220,8 +218,7 @@ class EnhancedOfflineService {
           const userStore = db.createObjectStore('userData', { keyPath: 'id' });
           userStore.createIndex('type', 'type', { unique: false });
         }
-      };
-    });
+      });
   }
 
   /**
@@ -505,8 +502,7 @@ class EnhancedOfflineService {
         keywords: [], // ML analysis doesn't provide specific trigger words
         recommendations: recommendations.slice(0, 3),
         confidence: analysis.confidence
-      };
-    } catch (error) {
+      } catch (error) {
       console.warn('[Enhanced Offline] ML crisis detection failed, using fallback:', error);
       return this.fallbackCrisisDetection(text, language, culturalContext);
     }
@@ -659,8 +655,7 @@ class EnhancedOfflineService {
       keywords: foundKeywords,
       recommendations: this.getFallbackCrisisResources(language, culturalContext),
       confidence: foundKeywords.length > 0 ? 0.8 : 0.2
-    };
-  }
+    }
 
   private async processSyncQueue(): Promise<void> {
     // Process sync queue when online
@@ -692,8 +687,7 @@ class EnhancedOfflineService {
       request.onsuccess = () => {
         this.syncQueue = request.result;
         console.log(`[Enhanced Offline] Loaded ${this.syncQueue.length} queued items`);
-      };
-    }
+      }
   }
 
   private setupEmergencyProtocols(): void {
@@ -719,8 +713,7 @@ class EnhancedOfflineService {
     return () => {
       const index = this.statusListeners.indexOf(callback);
       if (index > -1) this.statusListeners.splice(index, 1);
-    };
-  }
+    }
 
   async clearOfflineData(): Promise<void> {
     if (this.db) {

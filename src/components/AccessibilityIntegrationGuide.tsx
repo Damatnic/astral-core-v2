@@ -230,8 +230,7 @@ function AccessibleModal({ isOpen, onClose, title, children }) {
         removeFocusTrap();
         document.body.style.overflow = '';
         announceToScreenReader('Dialog closed', 'assertive');
-      };
-    }
+      }
   }, [isOpen, title, setFocusTrap, removeFocusTrap, announceToScreenReader]);
   
   // Handle escape key

@@ -48,8 +48,7 @@ export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
         icon: <CheckIcon />,
         text: 'Available',
         color: 'green'
-      };
-    }
+      }
 
     if (available) {
       return {
@@ -57,8 +56,7 @@ export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
         icon: <CheckIcon />,
         text: 'Available offline',
         color: 'blue'
-      };
-    }
+      }
 
     return {
       status: 'offline-unavailable',
@@ -66,7 +64,6 @@ export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
       text: capability?.fallbackAction || 'Not available offline',
       color: 'amber'
     };
-  };
 
   const handleFeatureToggle = (feature: string) => {
     if (expandedFeature === feature) {

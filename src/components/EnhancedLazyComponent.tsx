@@ -160,8 +160,7 @@ export function createEnhancedLazyComponent<T extends ComponentType<any>>(
           if (placeholder.parentNode) {
             placeholder.parentNode.removeChild(placeholder);
           }
-        };
-      }
+        }
     }, [strategy, shouldLoad, rootMargin, preloadDelay]);
 
     // Interaction-based loading
@@ -178,8 +177,7 @@ export function createEnhancedLazyComponent<T extends ComponentType<any>>(
           events.forEach(event => {
             document.removeEventListener(event, handleInteraction);
           });
-        };
-      }
+        }
     }, [strategy, shouldLoad]);
 
     // Preloading logic

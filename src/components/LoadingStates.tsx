@@ -328,8 +328,7 @@ export const InfiniteScrollLoader: React.FC<{
       if (loaderRef) {
         observer.unobserve(loaderRef);
       }
-    };
-  }, [loaderRef, hasMore, loading, onLoadMore, threshold]);
+    }, [loaderRef, hasMore, loading, onLoadMore, threshold]);
 
   return (
     <>
@@ -370,7 +369,6 @@ export const useAsyncData = <T,>(
   }, [execute]);
 
   return { data, loading, error, retry: execute };
-};
 
 // Loading Dots Component
 export const LoadingDots: React.FC<{

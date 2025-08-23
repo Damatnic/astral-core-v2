@@ -118,7 +118,6 @@ export const detectCrisis = (text: string): CrisisDetectionResult => {
     keywords: detectedKeywords,
     isPastTense
   };
-};
 
 /**
  * Get appropriate crisis resources based on location

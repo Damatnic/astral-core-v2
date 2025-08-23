@@ -39,8 +39,7 @@ describe.skip('Logger - Skipped due to module caching issues in test environment
     // Mock window.Sentry
     (global as any).window = {
       Sentry: mockSentry,
-    };
-  });
+    });
 
   afterEach(() => {
     // Restore console methods

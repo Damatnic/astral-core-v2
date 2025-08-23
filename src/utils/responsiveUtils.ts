@@ -231,7 +231,6 @@ export const getSafeAreaInsets = () => {
     left: parseInt(computedStyle.getPropertyValue('--safe-area-inset-left') || '0'),
     right: parseInt(computedStyle.getPropertyValue('--safe-area-inset-right') || '0'),
   };
-};
 
 /**
  * Generate responsive CSS classes
@@ -302,7 +301,6 @@ export const onResponsiveResize = (
     window.removeEventListener('resize', handleResize);
     window.removeEventListener('orientationchange', handleResize);
   };
-};
 
 /**
  * Media query string generator

@@ -47,16 +47,14 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
         errors: [],
         isTouched: false,
         isValidating: false,
-      };
-    });
+      });
 
     return {
       fields,
       isValid: true,
       isSubmitting: false,
       submitCount: 0,
-    };
-  });
+    });
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -100,8 +98,7 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
         ...prev,
         fields: newFields,
         isValid: allValid,
-      };
-    });
+      });
   }, []);
 
   // Mark field as touched
@@ -154,8 +151,7 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
       onValidationChange: (isValid: boolean, errors: string[]) => {
         setFieldValidation(fieldName, isValid, errors);
       },
-    };
-  }, [formState.fields, setFieldValue, setFieldTouched, setFieldValidation]);
+    }, [formState.fields, setFieldValue, setFieldTouched, setFieldValidation]);
 
   // Reset form
   const resetForm = useCallback(() => {
@@ -167,8 +163,7 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
         errors: [],
         isTouched: false,
         isValidating: false,
-      };
-    });
+      });
 
     setFormState({
       fields,
@@ -185,8 +180,7 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
     // Mark all fields as touched to show validation errors
     const touchedFields = { ...formState.fields };
     Object.keys(touchedFields).forEach(key => {
-      touchedFields[key] = { ...touchedFields[key], isTouched: true };
-    });
+      touchedFields[key] = { ...touchedFields[key], isTouched: true });
 
     setFormState(prev => ({
       ...prev,
@@ -286,7 +280,6 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
     // Form ref
     formRef,
   };
-};
 
 // Validation helpers
 export const createMobileFormValidator = (rules: Record<string, any>) => {
@@ -331,7 +324,6 @@ export const createMobileFormValidator = (rules: Record<string, any>) => {
       isValid: errors.length === 0,
       errors,
     };
-  };
 };
 
 // Common validation patterns

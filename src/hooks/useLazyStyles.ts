@@ -347,7 +347,6 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
     isStyleLoaded: cssManager.isLoaded.bind(cssManager),
     cssManager
   };
-};
 
 /**
  * Higher-order component for components that need specific styles
@@ -367,7 +366,6 @@ export const withLazyStyles = (styleConfigs: LazyStyleConfig[]) => {
     WithLazyStylesComponent.displayName = `withLazyStyles(${Component.displayName || Component.name})`;
     return WithLazyStylesComponent;
   };
-};
 
 /**
  * CSS optimization utilities
@@ -412,8 +410,7 @@ export const cssOptimization = {
       avgCSSLoadTime: cssEntries.length > 0 
         ? cssEntries.reduce((sum, entry) => sum + entry.duration, 0) / cssEntries.length 
         : 0
-    };
-  }
+    }
 };
 
 export default useLazyStyles;

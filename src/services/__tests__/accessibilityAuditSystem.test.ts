@@ -378,8 +378,7 @@ describe('AccessibilityAuditSystem', () => {
             outline: 'none',
             boxShadow: 'none',
             getPropertyValue
-          };
-        }
+          }
         return {
           display: 'block',
           visibility: 'visible',
@@ -389,8 +388,7 @@ describe('AccessibilityAuditSystem', () => {
           outline: 'none',
           boxShadow: 'none',
           getPropertyValue
-        };
-      });
+        });
 
       const result = await auditSystem.runAccessibilityAudit();
       

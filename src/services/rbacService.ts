@@ -423,8 +423,7 @@ class RBACService {
     return {
       valid: errors.length === 0,
       errors,
-    };
-  }
+    }
 }
 
 // Export singleton instance

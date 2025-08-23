@@ -52,7 +52,6 @@ export const cspMiddleware = () => {
     
     next();
   };
-};
 
 /**
  * OWASP Security Headers Middleware

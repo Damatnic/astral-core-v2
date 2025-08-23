@@ -342,8 +342,7 @@ export const NetworkErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ 
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
+    }, []);
 
   const config: ErrorBoundaryConfig = {
     reportErrors: isOnline,

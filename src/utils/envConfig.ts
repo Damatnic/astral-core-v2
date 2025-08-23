@@ -76,12 +76,10 @@ if (typeof window !== 'undefined' && !window.__VITE_ENV__) {
       // @ts-ignore - This will only work in Vite environment
       window.__VITE_ENV__ = importMeta.env;
     } else {
-      window.__VITE_ENV__ = {};
-    }
+      window.__VITE_ENV__ = {}
   } catch {
     // Not in Vite environment (Jest, Node, etc.)
-    window.__VITE_ENV__ = {};
-  }
+    window.__VITE_ENV__ = {}
 }
 
 /**

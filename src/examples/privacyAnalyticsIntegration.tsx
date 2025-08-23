@@ -370,4 +370,3 @@ export const useManualInterventionRecording = () => {
   };
   
   return { recordManualIntervention };
-};

@@ -14,8 +14,7 @@ describe('sessionStore', () => {
     useSessionStore.setState(initialState);
     jest.clearAllMocks();
     // Mock authenticated user
-    authState.user = { sub: 'user123' };
-  });
+    authState.user = { sub: 'user123' });
 
   afterEach(() => {
     authState.user = null;

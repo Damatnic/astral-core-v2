@@ -106,20 +106,17 @@ class AIModerationService {
    */
   public moderateMessage(message: string): ModerationResult {
     if (!message || typeof message !== 'string') {
-      return { safe: false, reason: 'Invalid message format' };
-    }
+      return { safe: false, reason: 'Invalid message format' }
     
     const normalizedMessage = message.toLowerCase().trim();
     
     // Check for empty or very short messages
     if (normalizedMessage.length < 2) {
-      return { safe: false, reason: 'Message too short', category: 'spam' };
-    }
+      return { safe: false, reason: 'Message too short', category: 'spam' }
     
     // Check for excessive length (potential spam)
     if (normalizedMessage.length > 5000) {
-      return { safe: false, reason: 'Message too long', category: 'spam' };
-    }
+      return { safe: false, reason: 'Message too long', category: 'spam' }
     
     // Check against safety filters
     for (const filter of this.safetyFilters) {
@@ -140,8 +137,7 @@ class AIModerationService {
           category: filter.category,
           suggestedResponse: filter.response,
           escalate: shouldEscalate
-        };
-      }
+        }
     }
     
     // Check for repetitive spam
@@ -156,12 +152,10 @@ class AIModerationService {
           reason: 'Message appears to be spam',
           category: 'spam',
           suggestedResponse: 'Could you please share what\'s on your mind in your own words?'
-        };
-      }
+        }
     }
     
-    return { safe: true };
-  }
+    return { safe: true }
   
   /**
    * Generate a safe response for filtered content

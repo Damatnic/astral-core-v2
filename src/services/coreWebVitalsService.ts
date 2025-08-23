@@ -36,8 +36,7 @@ interface WebVitalsReport {
     timeToFirstCrisisResource: number;
     crisisPageLoadTime: number;
     emergencyButtonResponseTime: number;
-  };
-}
+  }
 
 interface PerformanceBudget {
   LCP: { good: number; needsImprovement: number };
@@ -45,8 +44,7 @@ interface PerformanceBudget {
   CLS: { good: number; needsImprovement: number };
   FCP: { good: number; needsImprovement: number };
   TTFB: { good: number; needsImprovement: number };
-  INP: { good: number; needsImprovement: number };
-}
+  INP: { good: number; needsImprovement: number }
 
 class CoreWebVitalsService {
   private metrics: WebVitalMetric[] = [];
@@ -416,8 +414,7 @@ class CoreWebVitalsService {
       if (this.userJourney.length > 20) {
         this.userJourney.shift();
       }
-    };
-  }
+    }
 
   /**
    * Set up periodic reporting
@@ -488,8 +485,7 @@ class CoreWebVitalsService {
       emergencyButtonResponseTime: emergencyButtonMetrics.length > 0
         ? Math.max(...emergencyButtonMetrics.map(m => m.value))
         : 0
-    };
-  }
+    }
 
   /**
    * Send report to analytics endpoint
@@ -531,8 +527,7 @@ class CoreWebVitalsService {
       deviceType: this.deviceType,
       connectionType: this.connectionType,
       sessionId: this.sessionId
-    };
-  }
+    }
 
   /**
    * Stop monitoring

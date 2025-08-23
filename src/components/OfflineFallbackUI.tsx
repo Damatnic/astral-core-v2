@@ -67,8 +67,7 @@ export const OfflineFallbackUI: React.FC<OfflineFallbackUIProps> = ({
     return () => {
       backgroundSyncService.removeSyncListener(handleSyncResult);
       clearInterval(interval);
-    };
-  }, []);
+    }, []);
 
   const handleRetry = async () => {
     setIsRetrying(true);

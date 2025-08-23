@@ -12,8 +12,7 @@ interface RealtimeConfig {
   authEndpoint: string;
   auth?: {
     headers: Record<string, string>;
-  };
-}
+  }
 
 interface NotificationData {
   id: string;
@@ -314,8 +313,7 @@ class RealtimeService {
         window.focus();
         this.emit('notification-clicked', data);
         notification.close();
-      };
-    }
+      }
 
     // Emit notification event
     this.emit('notification', data);
@@ -341,8 +339,7 @@ class RealtimeService {
         window.focus();
         this.emit('crisis-alert-clicked', data);
         notification.close();
-      };
-    }
+      }
 
     // Emit crisis event
     this.emit('crisis-alert', data);
@@ -642,11 +639,9 @@ export const useRealtime = () => {
     return () => {
       unsubscribe();
       unsubscribe2();
-    };
-  }, [service]);
+    }, [service]);
 
   return { service, isConnected };
-};
 
 export const useRealtimeChannel = (channelName: string) => {
   const { service } = useRealtime();
@@ -679,8 +674,7 @@ export const useRealtimeChannel = (channelName: string) => {
     return () => {
       unsubscribeMessage();
       unsubscribeTyping();
-    };
-  }, [channelName, service]);
+    }, [channelName, service]);
 
   const sendMessage = React.useCallback(async (message: string) => {
     await service.sendMessage(channelName, message);
@@ -696,7 +690,6 @@ export const useRealtimeChannel = (channelName: string) => {
     sendMessage,
     sendTyping
   };
-};
 
 export const usePresenceChannel = (channelName: string) => {
   const { service } = useRealtime();
@@ -730,11 +723,9 @@ export const usePresenceChannel = (channelName: string) => {
       unsubscribe();
       unsubscribeJoin();
       unsubscribeLeave();
-    };
-  }, [channelName, service]);
+    }, [channelName, service]);
 
   return { members };
-};
 
 // Add missing React import
 import * as React from 'react';

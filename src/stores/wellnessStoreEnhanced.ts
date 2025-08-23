@@ -209,8 +209,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
                   currentStreak: 0, // Will be calculated properly later
                   longestStreak: 0, // Will be calculated properly later  
                   isCompletedToday
-                };
-              });
+                });
             
             set({
               predefinedHabits: predefined,
@@ -220,8 +219,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
               syncStatus: 'synced'
             });
             
-            return { predefined, trackedHabits, completions };
-          },
+            return { predefined, trackedHabits, completions },
           get().setError,
           get().setLoading,
           3
@@ -335,8 +333,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
                     ...h,
                     currentStreak: streaks.current,
                     longestStreak: streaks.longest
-                  };
-                }
+                  }
                 return h;
               })
             }));
@@ -551,8 +548,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
             ...persistedState,
             offlineQueue: persistedState.offlineQueue || [],
             lastSyncTime: persistedState.lastSyncTime || null
-          };
-        }
+          }
         return persistedState;
       }
     }

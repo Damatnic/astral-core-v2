@@ -31,8 +31,7 @@ interface CulturalCrisisDetectionState {
     totalAnalyses: number;
     biasReductionRate: number;
     culturalAccuracy: number;
-  };
-}
+  }
 
 interface CulturalCrisisDetectionOptions {
   autoAnalyze?: boolean;
@@ -155,8 +154,7 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
             ...prev.culturalMetrics,
             totalAnalyses: prev.culturalMetrics.totalAnalyses + 1
           }
-        };
-      });
+        });
 
       // Update cultural alert
       updateCulturalAlert(analysis);
@@ -368,8 +366,7 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
       }
-    };
-  }, []);
+    }, []);
 
   // Load cultural metrics on mount
   useEffect(() => {
@@ -402,7 +399,6 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
     needsCommunitySupport: state.culturalInterventions?.communityApproach || false,
     includesReligiousSupport: state.culturalInterventions?.religiousConsideration || false,
     currentCulturalContext: state.lastAnalysis?.culturalContext || culturalContext || 'Western'
-  };
-}
+  }
 
 export default useCulturalCrisisDetection;

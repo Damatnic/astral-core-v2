@@ -107,31 +107,26 @@ export const useKeyboardNavigation = (
       case 'ArrowDown':
         if (orientation === 'vertical' || orientation === 'both') {
           event.preventDefault();
-          return { handled: true, newIndex: currentIndex + 1 };
-        }
+          return { handled: true, newIndex: currentIndex + 1 }
         break;
       case 'ArrowUp':
         if (orientation === 'vertical' || orientation === 'both') {
           event.preventDefault();
-          return { handled: true, newIndex: currentIndex - 1 };
-        }
+          return { handled: true, newIndex: currentIndex - 1 }
         break;
       case 'ArrowRight':
         if (orientation === 'horizontal' || orientation === 'both') {
           event.preventDefault();
-          return { handled: true, newIndex: currentIndex + 1 };
-        }
+          return { handled: true, newIndex: currentIndex + 1 }
         break;
       case 'ArrowLeft':
         if (orientation === 'horizontal' || orientation === 'both') {
           event.preventDefault();
-          return { handled: true, newIndex: currentIndex - 1 };
-        }
+          return { handled: true, newIndex: currentIndex - 1 }
         break;
     }
     
-    return { handled: false, newIndex: currentIndex };
-  }, [enableArrowKeys, orientation]);
+    return { handled: false, newIndex: currentIndex }, [enableArrowKeys, orientation]);
 
   const handleHomeEndKeys = useCallback((event: KeyboardEvent, currentIndex: number, elementsLength: number): { handled: boolean; newIndex: number } => {
     if (!enableHomeEnd) return { handled: false, newIndex: currentIndex };
@@ -142,11 +137,9 @@ export const useKeyboardNavigation = (
         return { handled: true, newIndex: 0 };
       case 'End':
         event.preventDefault();
-        return { handled: true, newIndex: elementsLength - 1 };
-    }
+        return { handled: true, newIndex: elementsLength - 1 }
     
-    return { handled: false, newIndex: currentIndex };
-  }, [enableHomeEnd]);
+    return { handled: false, newIndex: currentIndex }, [enableHomeEnd]);
 
   const handleActivationKeys = useCallback((event: KeyboardEvent, currentIndex: number, currentElement: HTMLElement, elements: HTMLElement[]): boolean => {
     if (!enableEnterSpace) return false;
@@ -234,7 +227,6 @@ export const useKeyboardNavigation = (
       focusTrapEnabled.current = enabled;
     }
   };
-};
 
 // Hook for managing focus traps (modal dialogs, etc.)
 export const useFocusTrap = (
@@ -320,8 +312,7 @@ export const useFocusTrap = (
         if (restoreFocus && lastFocusedElement.current) {
           lastFocusedElement.current.focus();
         }
-      };
-    }
+      }
   }, [isActive, autoFocus, restoreFocus, fallbackFocus, containerRef, getFocusableElements, handleTabKey]);
 
   return {
@@ -334,7 +325,6 @@ export const useFocusTrap = (
       if (elements.length > 0) elements[elements.length - 1].focus();
     }
   };
-};
 
 // Hook for skip navigation links
 export const useSkipNavigation = () => {
@@ -374,7 +364,6 @@ export const useSkipNavigation = () => {
   }, []);
 
   return { skipToMain, skipToNavigation };
-};
 
 // Hook for roving tabindex pattern (for toolbars, menus, etc.)
 export const useRovingTabindex = (
@@ -454,7 +443,6 @@ export const useRovingTabindex = (
     setActiveIndex,
     getCurrentIndex: () => currentIndexRef.current
   };
-};
 
 // Utility for announcing keyboard shortcuts
 export const announceKeyboardShortcut = (shortcut: string, action: string) => {

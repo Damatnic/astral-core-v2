@@ -24,8 +24,7 @@ export const useAuth = () => {
         helperProfile: null,
         userToken: null
       }
-    };
-  }
+    }
   
   return context;
 };

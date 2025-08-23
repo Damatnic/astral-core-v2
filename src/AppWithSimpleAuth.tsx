@@ -130,8 +130,7 @@ const AppWithSimpleAuth: React.FC = () => {
 
     return () => {
       document.body.classList.remove('astral-core-app', 'platform-mac', 'platform-windows', 'platform-linux', 'is-mobile');
-    };
-  }, []);
+    }, []);
 
   return (
     <ErrorBoundary>

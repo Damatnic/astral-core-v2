@@ -48,7 +48,6 @@ export const setupFakeTimers = (): TimerHelpers => {
     flushPromises,
     tickAsync
   };
-};
 
 /**
  * Setup debounce/throttle test helpers
@@ -91,7 +90,6 @@ export const setupDebounceTest = () => {
     testDebounce,
     testThrottle
   };
-};
 
 /**
  * Clean up timers after test
@@ -165,4 +163,3 @@ export const mockTimersWithTracking = () => {
       nextId = 1;
     }
   };
-};

@@ -284,8 +284,7 @@ class PeerSupportNetworkService {
       safetyScore,
       matchReason,
       estimatedWaitTime
-    };
-  }
+    }
 
   /**
    * Calculate experience area match score
@@ -612,8 +611,7 @@ class PeerSupportNetworkService {
       averageSessionDuration: totalDuration / Math.max(completedSessions, 1),
       languageDistribution,
       culturalDistribution
-    };
-  }
+    }
 }
 
 // Export singleton instance

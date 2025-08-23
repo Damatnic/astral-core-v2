@@ -22,11 +22,9 @@ export const useScrollAnimation = (threshold = 0.1) => {
 
     return () => {
       observer.unobserve(element);
-    };
-  }, [threshold]);
+    }, [threshold]);
 
   return { elementRef, isVisible };
-};
 
 /**
  * Hook for managing element animations with delays
@@ -49,7 +47,6 @@ export const useStaggeredAnimation = (itemCount: number, baseDelay = 100) => {
   }, [animatedItems]);
 
   return { triggerAnimation, isItemAnimated };
-};
 
 /**
  * Hook for managing ripple effects on button clicks
@@ -75,7 +72,6 @@ export const useRippleEffect = () => {
   }, [removeRipple]);
 
   return { ripples, createRipple };
-};
 
 /**
  * Hook for managing hover states with delays
@@ -109,11 +105,9 @@ export const useDelayedHover = (enterDelay = 0, leaveDelay = 300) => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
-    };
-  }, []);
+    }, []);
 
   return { isHovered, handleMouseEnter, handleMouseLeave };
-};
 
 /**
  * Hook for managing loading states with minimum duration
@@ -145,7 +139,6 @@ export const useLoadingState = (minDuration = 500) => {
   }, [minDuration]);
 
   return { isLoading, showLoading, startLoading, stopLoading };
-};
 
 /**
  * Hook for managing animation sequences
@@ -183,7 +176,6 @@ export const useAnimationSequence = () => {
   }, []);
 
   return { currentStep, isPlaying, playSequence, resetSequence };
-};
 
 /**
  * Hook for managing form animations and feedback
@@ -234,7 +226,6 @@ export const useFormAnimations = () => {
     showFieldSuccess,
     clearFieldState
   };
-};
 
 /**
  * Hook for managing page transition animations
@@ -260,7 +251,6 @@ export const usePageTransition = () => {
   }, []);
 
   return { isTransitioning, transitionStage, startTransition };
-};
 
 /**
  * Hook for managing reduced motion preferences
@@ -280,8 +270,7 @@ export const useReducedMotion = () => {
     
     return () => {
       mediaQuery.removeEventListener('change', handleChange);
-    };
-  }, []);
+    }, []);
 
   return prefersReducedMotion;
 };

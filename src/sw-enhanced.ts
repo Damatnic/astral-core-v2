@@ -398,8 +398,7 @@ async function openSyncQueue(): Promise<unknown> {
         });
         store.createIndex('timestamp', 'timestamp');
       }
-    };
-  });
+    });
 }
 
 /**

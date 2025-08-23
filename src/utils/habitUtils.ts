@@ -41,8 +41,7 @@ export const calculateStreaks = (
                 currentStreak: 0,
                 longestStreak: 0,
                 isCompletedToday: false,
-            };
-        }
+            }
 
         const isCompletedToday = isSameDay(uniqueDates[0], today);
         
@@ -96,6 +95,5 @@ export const calculateStreaks = (
             currentStreak,
             longestStreak,
             isCompletedToday,
-        };
-    });
+        });
 };

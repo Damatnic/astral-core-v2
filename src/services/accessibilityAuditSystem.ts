@@ -89,8 +89,7 @@ export interface AccessibilityAuditResult {
     keyboardNavigation: boolean;
     voiceControl: boolean;
     eyeTracking: boolean;
-  };
-}
+  }
 
 // Mental health-specific accessibility requirements
 export interface MentalHealthAccessibilityRequirements {
@@ -967,8 +966,7 @@ export class AccessibilityAuditSystem {
       mentalHealthCompliance,
       recommendations,
       assistiveTechSupport
-    };
-  }
+    }
 
   // Audit color contrast
   private auditColorContrast(): AccessibilityIssue[] {
@@ -1060,8 +1058,7 @@ export class AccessibilityAuditSystem {
       robust: Math.max(0, robust),
       mentalHealthOptimized: Math.max(0, mentalHealthOptimized),
       crisisAccessibility: Math.max(0, crisisAccessibility)
-    };
-  }
+    }
 
   // Check WCAG compliance
   private checkWCAGCompliance(issues: AccessibilityIssue[], level: WCAGLevel): boolean {
@@ -1142,8 +1139,7 @@ export class AccessibilityAuditSystem {
       emojiAltText: !issues.some(i => i.id.includes('emoji')),
       messageReadability: !communicationIssues.some(i => i.severity === 'high'),
       supportiveLanguage: !issues.some(i => i.id.includes('complex-language'))
-    };
-  }
+    }
 
   // Check assistive technology support
   private checkAssistiveTechSupport(issues: AccessibilityIssue[]): { screenReader: boolean; keyboardNavigation: boolean; voiceControl: boolean; eyeTracking: boolean } {
@@ -1156,8 +1152,7 @@ export class AccessibilityAuditSystem {
       keyboardNavigation: keyboardIssues.filter(i => i.severity === 'critical' || i.severity === 'high').length === 0,
       voiceControl: voiceControlIssues.filter(i => i.severity === 'critical' || i.severity === 'high').length === 0,
       eyeTracking: issues.filter(i => i.guideline.includes('2.4')).length < 2 // Focus management is key for eye tracking
-    };
-  }
+    }
 
   // Count total possible tests
   private countTotalTests(): number {

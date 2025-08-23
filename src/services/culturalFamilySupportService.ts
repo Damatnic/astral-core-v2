@@ -32,8 +32,7 @@ export interface FamilyMember {
     preferredCommunicationStyle: 'formal' | 'informal' | 'respectful' | 'casual';
     religiousConsiderations?: string[];
     genderConsiderations?: 'same_gender_only' | 'no_restrictions' | 'elder_mediated';
-  };
-}
+  }
 
 export interface FamilySupport {
   id: string;
@@ -327,8 +326,7 @@ class CulturalFamilySupportService {
           }
         }
       }
-    };
-  }
+    }
 
   /**
    * Create family support configuration
@@ -457,8 +455,7 @@ class CulturalFamilySupportService {
         break;
     }
 
-    return { contactsToNotify, escalationOrder, culturalProtocols };
-  }
+    return { contactsToNotify, escalationOrder, culturalProtocols }
 
   /**
    * Send crisis notification to family
@@ -564,8 +561,7 @@ class CulturalFamilySupportService {
         body: `We are reaching out regarding [name] who may need family support during this time.`,
         tone: 'caring' as const,
         culturalElements: []
-      };
-    }
+      }
 
     // Customize message based on cultural considerations
     let message = template.body;
@@ -621,8 +617,7 @@ class CulturalFamilySupportService {
         familyResponseRate: 0,
         crisisResolutionTime: 0,
         culturalProtocolsUsed: []
-      };
-    }
+      }
 
     const consentingMembers = familySupport.familyMembers.filter(m => m.consentGiven).length;
     const totalMembers = familySupport.familyMembers.length;
@@ -658,8 +653,7 @@ class CulturalFamilySupportService {
       familyResponseRate,
       crisisResolutionTime,
       culturalProtocolsUsed
-    };
-  }
+    }
 
   /**
    * Get default escalation levels based on cultural context
@@ -721,8 +715,7 @@ class CulturalFamilySupportService {
       familyMeetingFormat,
       crisisDisclosureProtocol,
       decisionMakingProcess
-    };
-  }
+    }
 
   /**
    * Send notification to family member
@@ -908,8 +901,7 @@ class CulturalFamilySupportService {
         familyResponseRate: 0,
         crisisResolutionTime: 0,
         culturalProtocolsUsed: []
-      };
-    }
+      }
 
     const totalNotifications = notifications.reduce((sum, n) => sum + n.notificationsSent.length, 0);
     const responsiveNotifications = notifications.reduce((sum, n) => 
@@ -921,8 +913,7 @@ class CulturalFamilySupportService {
       familyResponseRate: totalNotifications > 0 ? responsiveNotifications / totalNotifications : 0,
       crisisResolutionTime: notifications.length > 0 ? this.calculateAverageResolutionTime(notifications) : 0,
       culturalProtocolsUsed: [...new Set(notifications.flatMap(n => n.culturalProtocolsActivated))]
-    };
-  }
+    }
 
   /**
    * Calculate average crisis resolution time

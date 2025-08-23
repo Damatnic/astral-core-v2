@@ -43,15 +43,13 @@ export const useMediaQuery = (query: string): boolean => {
       mediaQueryList.addEventListener('change', handleChange);
       return () => {
         mediaQueryList.removeEventListener('change', handleChange);
-      };
-    } 
+      } 
     // Legacy browsers
     else if (mediaQueryList.addListener) {
       mediaQueryList.addListener(handleChange);
       return () => {
         mediaQueryList.removeListener(handleChange);
-      };
-    }
+      }
   }, [query]);
 
   return matches;
@@ -109,8 +107,7 @@ export const useIsTouchDevice = () => {
     
     return () => {
       window.removeEventListener('resize', checkTouch);
-    };
-  }, []);
+    }, []);
 
   return isTouch;
 };

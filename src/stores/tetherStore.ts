@@ -46,8 +46,7 @@ export interface TetherSession {
     peakIntensity: number;
     averageStrength: number;
     disconnections: number;
-  };
-}
+  }
 
 interface TetherState {
   // State

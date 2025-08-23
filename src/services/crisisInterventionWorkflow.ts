@@ -950,8 +950,7 @@ class CrisisInterventionWorkflowService {
           status: 'scheduled'
         }
       ]
-    };
-  }
+    }
 
   private getCriticalTimeline(): InterventionTimeline {
     return {
@@ -987,8 +986,7 @@ class CrisisInterventionWorkflowService {
           status: 'scheduled'
         }
       ]
-    };
-  }
+    }
 
   private getHighRiskTimeline(): InterventionTimeline {
     return {
@@ -1024,8 +1022,7 @@ class CrisisInterventionWorkflowService {
           status: 'scheduled'
         }
       ]
-    };
-  }
+    }
 
   private getMediumRiskTimeline(): InterventionTimeline {
     return {
@@ -1054,8 +1051,7 @@ class CrisisInterventionWorkflowService {
           status: 'scheduled'
         }
       ]
-    };
-  }
+    }
 }
 
 // Export singleton instance

@@ -28,8 +28,7 @@ interface CrisisAnalysisResult {
     sentimentScore: number;
     contextualFactors: string[];
     urgencyLevel: number;
-  };
-}
+  }
 
 interface CrisisEscalationAction {
   type: 'immediate' | 'urgent' | 'monitor' | 'support';
@@ -149,8 +148,7 @@ class EnhancedCrisisDetectionService {
           contextualFactors: [],
           urgencyLevel: 0
         }
-      };
-    }
+      }
 
     const normalizedText = text.toLowerCase().trim();
     const triggeredKeywords: CrisisIndicator[] = [];
@@ -221,8 +219,7 @@ class EnhancedCrisisDetectionService {
             contextualFactors,
             urgencyLevel: 0
           }
-        };
-      }
+        }
     }
     
     // Apply protective factors to reduce severity (if not emergency)
@@ -284,8 +281,7 @@ class EnhancedCrisisDetectionService {
         contextualFactors,
         urgencyLevel
       }
-    };
-  }
+    }
 
   /**
    * Check if text matches a crisis indicator with context awareness
@@ -735,8 +731,7 @@ class EnhancedCrisisDetectionService {
           'Crisis intervention activated',
           'Professional follow-up scheduled'
         ]
-      };
-    }
+      }
 
     if (analysisResult.escalationRequired) {
       return {
@@ -761,8 +756,7 @@ class EnhancedCrisisDetectionService {
           'Regular check-ins scheduled',
           'Professional referral provided'
         ]
-      };
-    }
+      }
 
     // Medium/High severity response
     return {
@@ -787,8 +781,7 @@ class EnhancedCrisisDetectionService {
         'Connect with ongoing support',
         'Monitor mood and symptoms'
       ]
-    };
-  }
+    }
 }
 
 // Create singleton instance

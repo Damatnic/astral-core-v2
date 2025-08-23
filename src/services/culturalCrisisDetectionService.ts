@@ -67,8 +67,7 @@ export interface CulturalCrisisAnalysisResult extends MLCrisisAnalysisResult {
     religiousConsideration: boolean;
     culturalResources: string[];
     languageSpecificResources: string[];
-  };
-}
+  }
 
 class CulturalCrisisDetectionService {
   private readonly CULTURAL_BIAS_REDUCTION_FACTOR = 0.20; // 20% bias reduction
@@ -589,8 +588,7 @@ class CulturalCrisisDetectionService {
       adjustedRisk: Math.round(adjustedRisk),
       culturalConfidence: Math.max(this.MIN_CULTURAL_CONFIDENCE, culturalConfidence),
       adjustmentFactors
-    };
-  }
+    }
 
   /**
    * Generate culturally-appropriate interventions
@@ -641,8 +639,7 @@ class CulturalCrisisDetectionService {
       religiousConsideration,
       culturalResources,
       languageSpecificResources
-    };
-  }
+    }
 
   /**
    * Get cultural resources for specific region
@@ -773,8 +770,7 @@ class CulturalCrisisDetectionService {
           insights: effectiveness.culturalInsights.length,
           recommendations: effectiveness.recommendations.length
         }
-      };
-    } catch (error) {
+      } catch (error) {
       console.error('[Cultural Crisis Detection] Failed to get metrics:', error);
       return {
         totalAnalyses: 0,
@@ -782,8 +778,7 @@ class CulturalCrisisDetectionService {
         biasReductionRate: this.CULTURAL_BIAS_REDUCTION_FACTOR,
         culturalAccuracy: 0.0,
         regionSpecificMetrics: {}
-      };
-    }
+      }
   }
 
   /**

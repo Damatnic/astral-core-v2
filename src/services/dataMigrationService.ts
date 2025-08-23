@@ -41,8 +41,7 @@ class DataMigrationService {
       encryptionStats: {},
       complianceCheck: {},
       migrationTime: 0
-    };
-  }
+    }
 
   /**
    * Process all keys for migration
@@ -295,8 +294,7 @@ class DataMigrationService {
       isValid: issues.length === 0,
       issues,
       recommendations
-    };
-  }
+    }
 
   /**
    * Get migration status and recommendations
@@ -340,8 +338,7 @@ class DataMigrationService {
         : 'All sensitive data is properly encrypted',
       urgency,
       sensitiveKeysFound: sensitiveKeys
-    };
-  }
+    }
 
   /**
    * Set up automatic data protection for new data
@@ -382,8 +379,7 @@ class DataMigrationService {
         } else {
           originalRemoveItem.call(localStorage, key);
         }
-      };
-    }
+      }
   }
 }
 
@@ -412,6 +408,5 @@ export const useDataMigration = () => {
     getMigrationStatus: () => service.getMigrationStatus(),
     setupDataProtection: () => service.setupDataProtection()
   };
-};
 
 export default DataMigrationService;

@@ -306,7 +306,6 @@ class PerformanceMonitoringService {
           totalJSHeapSize: number;
           jsHeapSizeLimit: number;
         };
-      };
       
       const memory = performanceWithMemory.memory;
       if (memory) {
@@ -343,7 +342,6 @@ class PerformanceMonitoringService {
         saveData: boolean;
         addEventListener: (event: string, handler: () => void) => void;
       };
-    };
     
     const connection = navigatorWithConnection.connection;
     if (connection) {
@@ -369,8 +367,7 @@ class PerformanceMonitoringService {
           downlink: connection.downlink,
           rtt: connection.rtt,
           saveData: connection.saveData
-        };
-      });
+        });
     }
   }
 
@@ -530,8 +527,7 @@ class PerformanceMonitoringService {
       }
     }
     
-    return { score, recommendations };
-  }
+    return { score, recommendations }
 
   /**
    * Get interaction and layout recommendations
@@ -559,8 +555,7 @@ class PerformanceMonitoringService {
       }
     }
     
-    return { scoreReduction, recommendations };
-  }
+    return { scoreReduction, recommendations }
 
   /**
    * Get system-level recommendations
@@ -604,8 +599,7 @@ class PerformanceMonitoringService {
       webVitals: this.report.webVitals,
       score: totalScore,
       recommendations: allRecommendations
-    };
-  }
+    }
 
   /**
    * Helper methods
@@ -617,8 +611,7 @@ class PerformanceMonitoringService {
       value,
       rating: this.getWebVitalRating(name, value),
       timestamp: Date.now()
-    };
-  }
+    }
   
   private getWebVitalRating(name: string, value: number): 'good' | 'needs-improvement' | 'poor' {
     const threshold = this.thresholds[name as keyof typeof this.thresholds];
@@ -684,8 +677,7 @@ class PerformanceMonitoringService {
       resources: [],
       interactions: [],
       errors: []
-    };
-  }
+    }
   
   private logMetric(name: string, value: number): void {
     if (process.env.NODE_ENV === 'development') {

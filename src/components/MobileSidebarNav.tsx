@@ -68,8 +68,7 @@ export const MobileSidebarNav: React.FC<MobileSidebarNavProps> = React.memo(({
       document.body.style.overflow = '';
       document.body.style.position = '';
       document.body.style.width = '';
-    };
-  }, [isSidebarOpen]);
+    }, [isSidebarOpen]);
 
   const handleSidebarNavigation = () => {
     closeSidebar();

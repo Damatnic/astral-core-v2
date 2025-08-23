@@ -55,8 +55,7 @@ const originalCreateElement = document.createElement;
 Object.defineProperty(document, 'createElement', {
   value: jest.fn((tagName: string) => {
     if (tagName === 'video') {
-      return { ...mockVideoElement };
-    }
+      return { ...mockVideoElement }
     if (tagName === 'canvas') {
       // Return the mockCanvas directly so we can track property changes
       return mockCanvas;

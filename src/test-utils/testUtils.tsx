@@ -350,7 +350,6 @@ export const mockPerformance = () => {
     addEntry: (entry: any) => entries.push(entry),
     clearEntries: () => entries.length = 0
   };
-};
 
 // Accessibility test helpers
 export const expectToBeAccessible = (element: HTMLElement) => {
@@ -421,7 +420,6 @@ export const mockConsole = () => {
     getWarnings: () => (console.warn as jest.Mock).mock.calls,
     getErrors: () => (console.error as jest.Mock).mock.calls
   };
-};
 
 // Additional mock helpers for component tests
 export const createMockButtonProps = (overrides = {}) => ({

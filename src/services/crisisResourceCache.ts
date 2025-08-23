@@ -266,8 +266,7 @@ class CrisisResourceCacheService {
         if (!db.objectStoreNames.contains('metadata')) {
           db.createObjectStore('metadata', { keyPath: 'key' });
         }
-      };
-    });
+      });
   }
 
   /**
@@ -324,8 +323,7 @@ class CrisisResourceCacheService {
       request.onerror = () => {
         console.error('Failed to cache resource:', request.error);
         reject(request.error);
-      };
-    });
+      });
   }
 
   /**
@@ -351,8 +349,7 @@ class CrisisResourceCacheService {
       request.onerror = () => {
         console.error('Failed to cache guide:', request.error);
         reject(request.error);
-      };
-    });
+      });
   }
 
   /**
@@ -381,8 +378,7 @@ class CrisisResourceCacheService {
         
         request.onerror = () => {
           reject(request.error);
-        };
-      });
+        });
     }
     
     // Fall back to localStorage
@@ -409,8 +405,7 @@ class CrisisResourceCacheService {
       
       request.onerror = () => {
         reject(request.error);
-      };
-    });
+      });
   }
 
   /**
@@ -433,8 +428,7 @@ class CrisisResourceCacheService {
       
       request.onerror = () => {
         reject(request.error);
-      };
-    });
+      });
   }
 
   /**
@@ -463,8 +457,7 @@ class CrisisResourceCacheService {
         
         request.onerror = () => {
           reject(request.error);
-        };
-      });
+        });
     }
     
     // Fall back to localStorage
@@ -724,8 +717,7 @@ class CrisisResourceCacheService {
       memorySize: this.memoryCache.size,
       lastUpdate: this.memoryCache.get('lastUpdate') || 0,
       isOnline: this.isOnline
-    };
-  }
+    }
 
   /**
    * Cleanup on destroy

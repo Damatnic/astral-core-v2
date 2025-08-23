@@ -581,8 +581,7 @@ class AstralCoreNotificationService {
         end: '08:00',
       },
       blockedTypes: [],
-    };
-  }
+    }
 
   /**
    * Save preferences to storage

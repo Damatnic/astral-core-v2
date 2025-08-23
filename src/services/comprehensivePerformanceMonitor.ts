@@ -91,8 +91,7 @@ export interface PerformanceBudget {
   
   // Resource Budgets
   memoryUsage: { target: number; warning: number; critical: number };
-  totalResourceSize: { target: number; warning: number; critical: number };
-}
+  totalResourceSize: { target: number; warning: number; critical: number }
 
 // Performance alert interface
 export interface PerformanceAlert {
@@ -225,8 +224,7 @@ class ComprehensivePerformanceMonitor {
         warning: isMobile ? 1500000 : 2000000,
         critical: isMobile ? 2000000 : 3000000
       }
-    };
-  }
+    }
 
   /**
    * Initialize performance monitoring system
@@ -821,8 +819,7 @@ class ComprehensivePerformanceMonitor {
       if (index > -1) {
         this.alertCallbacks.splice(index, 1);
       }
-    };
-  }
+    }
 
   /**
    * Get current performance metrics

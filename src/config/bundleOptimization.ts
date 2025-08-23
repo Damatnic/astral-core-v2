@@ -202,7 +202,6 @@ export const codeSplittingPlugin = (): Plugin => {
       }
     }
   };
-};
 
 // Dynamic import optimization
 export const dynamicImportConfig = {

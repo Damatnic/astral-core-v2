@@ -136,10 +136,8 @@ const _callApi = async (endpoint: string, options: RequestInit = {}) => {
                 errorData = { 
                     message: 'API endpoint not available in development mode. Using demo data fallback.',
                     isDevelopmentError: true 
-                };
-            } else {
-                errorData = { message: 'Server returned an unexpected response format.' };
-            }
+                } else {
+                errorData = { message: 'Server returned an unexpected response format.' }
         } else {
             errorData = await response.json().catch(() => ({ message: 'An unknown API error occurred.' }));
         }
@@ -501,8 +499,7 @@ export const ApiClient = {
                 return {
                     response: "I'm having trouble connecting right now. Please try again in a moment.",
                     metadata: { error: true }
-                };
-            }
+                }
         },
         sendMessageToAI: async (messages: AIChatMessage[]): Promise<string> => {
             // Legacy compatibility - convert to new format
@@ -539,8 +536,7 @@ export const ApiClient = {
                 return await _callApi('/api-ai/providers');
             } catch (error) {
                 console.error('Failed to get AI providers:', error);
-                return { providers: [], default: null };
-            }
+                return { providers: [], default: null }
         },
         draftPostFromChat: async (messages: AIChatMessage[]): Promise<{ postContent: string, category: string }> => {
             return _callApi('/ai/draft-post', { method: 'POST', body: JSON.stringify({ messages }) });

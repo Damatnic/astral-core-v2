@@ -206,8 +206,7 @@ export const analyzePostForCrisis = async (
       recommendations: analysis.realTimeRisk?.recommendedInterventions || [],
       culturallyAdapted: (analysis.biasAdjustments?.length || 0) > 0,
       confidence: analysis.mlConfidence
-    };
-  } catch (error) {
+    } catch (error) {
     console.error('Crisis analysis failed:', error);
     return {
       hasCrisis: false,
@@ -217,8 +216,7 @@ export const analyzePostForCrisis = async (
       recommendations: [],
       culturallyAdapted: false,
       confidence: 0
-    };
-  }
+    }
 };
 
 // Example: Helper function for crisis intervention workflow
@@ -280,8 +278,7 @@ export const triggerCrisisIntervention = async (
         message: 'No immediate intervention required',
         contacts: [],
         nextSteps: ['Continue monitoring']
-      };
-  }
+      }
 };
 
 export default {

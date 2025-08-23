@@ -80,15 +80,13 @@ describe('sanitizeHtml', () => {
         const relativeUrls = ['/path', '#anchor'];
         
         if (validUrls.includes(url) || relativeUrls.includes(url)) {
-          return { protocol: url.startsWith('https') ? 'https:' : url.startsWith('http') ? 'http:' : 'mailto:' };
-        }
+          return { protocol: url.startsWith('https') ? 'https:' : url.startsWith('http') ? 'http:' : 'mailto:' }
         
         if (url.startsWith('javascript:') || url.startsWith('data:')) {
           throw new Error('Invalid protocol');
         }
         
-        return { protocol: 'https:' };
-      });
+        return { protocol: 'https:' });
     });
 
     it.skip('should return empty string for empty input', () => {
@@ -159,8 +157,7 @@ describe('sanitizeHtml', () => {
         if (url.startsWith('javascript:')) {
           throw new Error('Invalid protocol');
         }
-        return { protocol: 'https:' };
-      });
+        return { protocol: 'https:' });
       
       const result = safeMarkdownToHtml(markdown);
       // Should return the escaped original text when URL is invalid
@@ -176,8 +173,7 @@ describe('sanitizeHtml', () => {
         if (url.startsWith('data:')) {
           throw new Error('Invalid protocol');
         }
-        return { protocol: 'https:' };
-      });
+        return { protocol: 'https:' });
       
       const result = safeMarkdownToHtml(markdown);
       expect(result).not.toContain('<a href="data:');
@@ -398,8 +394,7 @@ describe('sanitizeHtml', () => {
           if (url.match(/^(javascript|data|vbscript):/)) {
             throw new Error('Dangerous protocol');
           }
-          return { protocol: 'https:' };
-        });
+          return { protocol: 'https:' });
         
         const result = safeMarkdownToHtml(link);
         expect(result).not.toContain('href="javascript:');

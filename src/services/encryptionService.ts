@@ -273,8 +273,7 @@ class EncryptionService {
       category: 'personal',
       retention: 90,
       hipaaCompliant: false
-    };
-  }
+    }
 
   /**
    * Determine if data should be encrypted based on classification
@@ -665,8 +664,7 @@ class EncryptionService {
       totalKeys: localStorage.length,
       classifications,
       hipaaCompliantKeys
-    };
-  }
+    }
 
   /**
    * Log security events for audit trail
@@ -782,8 +780,7 @@ class EncryptionService {
       compliant,
       violations,
       recommendations
-    };
-  }
+    }
 }
 
 // Singleton instance
@@ -836,6 +833,5 @@ export const useEncryption = () => {
     getStats: () => service.getEncryptionStats(),
     checkHIPAACompliance: () => service.performHIPAAComplianceCheck()
   };
-};
 
 export default EncryptionService;

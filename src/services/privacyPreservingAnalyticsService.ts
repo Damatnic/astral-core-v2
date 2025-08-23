@@ -60,8 +60,7 @@ export interface AnalyticsInsights {
     totalBudgetConsumed: number;
     averageNoiseLevel: number;
     dataRetentionCompliance: boolean;
-  };
-}
+  }
 
 class PrivacyPreservingAnalyticsService {
   private readonly EPSILON = 1.0; // Differential privacy parameter
@@ -314,8 +313,7 @@ class PrivacyPreservingAnalyticsService {
         Math.min(100, successRate + margin)
       ],
       privacyNoise: this.EPSILON
-    };
-  }
+    }
 
   /**
    * Generate global metrics with privacy preservation
@@ -358,8 +356,7 @@ class PrivacyPreservingAnalyticsService {
       averageEffectiveness: globalEffectiveness,
       languageDistribution,
       culturalDistribution
-    };
-  }
+    }
 
   /**
    * Generate cultural comparisons
@@ -461,8 +458,7 @@ class PrivacyPreservingAnalyticsService {
           averageNoiseLevel: this.EPSILON,
           dataRetentionCompliance: true
         }
-      };
-    } catch (error) {
+      } catch (error) {
       console.error('[Privacy Analytics] Failed to generate insights:', error);
       throw error;
     }
@@ -479,8 +475,7 @@ class PrivacyPreservingAnalyticsService {
       dataAnonymized: boolean;
       retentionCompliant: boolean;
       minimumCohortSizeEnforced: boolean;
-    };
-  }> {
+    }> {
     try {
       const insights = await this.generateAnalyticsInsights();
       
@@ -493,8 +488,7 @@ class PrivacyPreservingAnalyticsService {
           retentionCompliant: true,
           minimumCohortSizeEnforced: true
         }
-      };
-    } catch (error) {
+      } catch (error) {
       console.error('[Privacy Analytics] Failed to export anonymized data:', error);
       throw error;
     }
@@ -551,8 +545,7 @@ class PrivacyPreservingAnalyticsService {
         culturalInsights,
         recommendations,
         limitations
-      };
-    } catch (error) {
+      } catch (error) {
       console.error('[Privacy Analytics] Failed to generate effectiveness report:', error);
       throw error;
     }
@@ -572,8 +565,7 @@ class PrivacyPreservingAnalyticsService {
       budgetRemaining: Math.max(0, 10.0 - this.privacyBudgetUsed),
       dataPoints: this.analyticsData.length,
       retentionCompliance: true
-    };
-  }
+    }
 
   /**
    * Reset privacy budget (should be done periodically)

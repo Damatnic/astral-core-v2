@@ -42,7 +42,6 @@ export const initMobileViewport = () => {
     }
     window.removeEventListener('orientationchange', setViewportHeight);
   };
-};
 
 /**
  * Enhanced focus handling for mobile inputs

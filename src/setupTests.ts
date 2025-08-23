@@ -428,8 +428,7 @@ jest.mock('./services/crisisDetectionService', () => {
     crisisDetectionService: mockService,
     astralCoreCrisisDetection: mockService,
     default: mockService
-  };
-});
+  });
 
 jest.mock('./services/aiModerationService', () => ({
   aiModerationService: {
@@ -600,8 +599,7 @@ HTMLCanvasElement.prototype.getContext = jest.fn((contextType) => {
       drawImage: jest.fn(),
       getLineDash: jest.fn(() => []),
       setLineDash: jest.fn()
-    };
-  }
+    }
   return null;
 }) as any;
 
@@ -761,8 +759,7 @@ const localStorageMock = (() => {
       delete store[key];
     }),
     clear: jest.fn(() => {
-      store = {};
-    }),
+      store = {}),
     get length() {
       return Object.keys(store).length;
     },
@@ -770,8 +767,7 @@ const localStorageMock = (() => {
       const keys = Object.keys(store);
       return keys[index] || null;
     })
-  };
-})();
+  })();
 
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
@@ -790,8 +786,7 @@ const sessionStorageMock = (() => {
       delete store[key];
     }),
     clear: jest.fn(() => {
-      store = {};
-    }),
+      store = {}),
     get length() {
       return Object.keys(store).length;
     },
@@ -799,8 +794,7 @@ const sessionStorageMock = (() => {
       const keys = Object.keys(store);
       return keys[index] || null;
     })
-  };
-})();
+  })();
 
 Object.defineProperty(window, 'sessionStorage', {
   value: sessionStorageMock,
@@ -877,8 +871,7 @@ if (typeof window !== 'undefined') {
 
 // Mock performance API
 if (!window.performance) {
-  (window as any).performance = {};
-}
+  (window as any).performance = {}
 window.performance = {
   ...window.performance,
   now: jest.fn(() => Date.now()),
@@ -1002,8 +995,7 @@ global.fetch = jest.fn(() =>
 
 // Mock crypto
 if (!global.crypto) {
-  (global as any).crypto = {};
-}
+  (global as any).crypto = {}
 global.crypto.randomUUID = () => {
   const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     const r = Math.random() * 16 | 0;
@@ -1152,7 +1144,6 @@ const createMockComputedStyle = () => {
     overflowX: 'visible',
     overflowY: 'visible'
   };
-};
 
 window.getComputedStyle = jest.fn((element: Element, pseudoElt?: string | null) => {
   return createMockComputedStyle() as any;

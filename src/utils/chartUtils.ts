@@ -21,8 +21,7 @@ export const groupCheckInsByDay = (checkIns: MoodCheckIn[], days: number): Chart
     for (const checkIn of relevantCheckIns) {
         const dateKey = new Date(checkIn.timestamp).toISOString().split('T')[0];
         if (!dataByDay[dateKey]) {
-            dataByDay[dateKey] = { total: 0, count: 0 };
-        }
+            dataByDay[dateKey] = { total: 0, count: 0 }
         dataByDay[dateKey].total += checkIn.moodScore;
         dataByDay[dateKey].count++;
     }

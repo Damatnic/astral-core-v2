@@ -129,8 +129,7 @@ class MobileNetworkService {
         downlink: 0,
         rtt: Infinity,
         saveData: true
-      };
-    } else if (this.connection) {
+      } else if (this.connection) {
       // Use Network Information API
       this.currentConnection = {
         type: this.mapConnectionType(this.connection.type || 'unknown'),
@@ -140,8 +139,7 @@ class MobileNetworkService {
         downlink: this.connection.downlink || 0,
         rtt: this.connection.rtt || 0,
         saveData: this.connection.saveData || false
-      };
-    } else {
+      } else {
       // Fallback estimation
       this.currentConnection = {
         type: 'unknown',
@@ -151,8 +149,7 @@ class MobileNetworkService {
         downlink: 1,
         rtt: 100,
         saveData: false
-      };
-    }
+      }
 
     this.updateAdaptiveStrategy();
   }
@@ -203,8 +200,7 @@ class MobileNetworkService {
         maxConcurrentRequests: 2,
         enableVideoAutoplay: false,
         compressionLevel: 'high'
-      };
-    } else if (quality === 'excellent' || speed === 'fast') {
+      } else if (quality === 'excellent' || speed === 'fast') {
       this.strategy = {
         imageQuality: 'high',
         preloadLevel: 'aggressive',
@@ -213,8 +209,7 @@ class MobileNetworkService {
         maxConcurrentRequests: 6,
         enableVideoAutoplay: true,
         compressionLevel: 'low'
-      };
-    } else {
+      } else {
       // Good quality - balanced approach
       this.strategy = {
         imageQuality: 'medium',
@@ -224,8 +219,7 @@ class MobileNetworkService {
         maxConcurrentRequests: 4,
         enableVideoAutoplay: effectiveType === '4g',
         compressionLevel: 'medium'
-      };
-    }
+      }
   }
 
   private notifyListeners(): void {
@@ -249,8 +243,7 @@ class MobileNetworkService {
     // Return unsubscribe function
     return () => {
       this.listeners = this.listeners.filter(listener => listener !== callback);
-    };
-  }
+    }
 
   public shouldLoadResource(resourceType: 'image' | 'video' | 'script' | 'css'): boolean {
     if (!this.currentConnection || !this.strategy) return true;
@@ -312,8 +305,7 @@ class MobileNetworkService {
       case 'high':
         return { width: 1200, quality: 90 };
       default:
-        return { width: 800, quality: 80 };
-    }
+        return { width: 800, quality: 80 }
   }
 
   public getRequestConcurrency(): number {
@@ -364,7 +356,6 @@ export const useMobileNetwork = () => {
     shouldAutoplayVideo: mobileNetworkService.shouldAutoplayVideo.bind(mobileNetworkService),
     getLazyLoadThreshold: mobileNetworkService.getLazyLoadThreshold.bind(mobileNetworkService)
   };
-};
 
 // Type declaration for Navigator interface extension
 declare global {

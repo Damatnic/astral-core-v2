@@ -244,8 +244,7 @@ class WebSocketService {
       } catch (error) {
         console.error('Failed to parse WebSocket message:', error);
       }
-    };
-  }
+    }
 
   private handleMessage(message: WebSocketMessage) {
     // Handle auth responses
@@ -522,8 +521,7 @@ class WebSocketService {
     // Return unsubscribe function
     return () => {
       this.off(event, handler);
-    };
-  }
+    }
 
   off(event: WebSocketEvent, handler: (data: unknown) => void): void {
     const handlers = this.eventHandlers.get(event);
@@ -569,8 +567,7 @@ class WebSocketService {
           this.listeners.delete(messageType);
         }
       }
-    };
-  }
+    }
 
   onConnectionChange(callback: (connected: boolean) => void) {
     this.connectionListeners.add(callback);
@@ -581,8 +578,7 @@ class WebSocketService {
     // Return unsubscribe function
     return () => {
       this.connectionListeners.delete(callback);
-    };
-  }
+    }
 
   isConnected(): boolean {
     // In demo mode, always report as connected
@@ -701,11 +697,9 @@ export const useWebSocket = (url: string) => {
     return () => {
       unsubscribe();
       service.disconnect();
-    };
-  }, [service]);
+    }, [service]);
 
   return { service, isConnected };
-};
 
 export const useChatRoom = (roomId: string, wsService: WebSocketService) => {
   const [messages, setMessages] = React.useState<ChatMessage[]>([]);
@@ -734,8 +728,7 @@ export const useChatRoom = (roomId: string, wsService: WebSocketService) => {
       wsService.leaveChatRoom(roomId);
       unsubscribeMessages();
       unsubscribeTyping();
-    };
-  }, [roomId, wsService]);
+    }, [roomId, wsService]);
 
   const sendMessage = React.useCallback((message: string) => {
     wsService.sendChatMessage(roomId, message);
@@ -756,7 +749,6 @@ export const useChatRoom = (roomId: string, wsService: WebSocketService) => {
     startTyping,
     stopTyping
   };
-};
 
 // Singleton instance
 let wsServiceInstance: WebSocketService | null = null;

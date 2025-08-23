@@ -65,7 +65,6 @@ const sanitizeErrorData = (error: Error, context?: any) => {
     message: sanitizedMessage,
     context: sanitizedContext
   };
-};
 
 // Get environment name helper
 const getEnvironmentName = (): string => {
@@ -136,8 +135,7 @@ export const initializeSentry = () => {
         event.user = {
           id: event.user.id ? '[USER_ID]' : undefined,
           // Don't include email, username, or other PII
-        };
-      }
+        }
       return event;
     },
 
@@ -381,8 +379,7 @@ export class ErrorTrackingService {
       finish: () => {},
       setTag: () => {},
       setContext: () => {}
-    };
-  }
+    }
 }
 
 // React Error Boundary integration
@@ -404,6 +401,5 @@ export const useSentryPerformance = (name: string, operation: string = 'react') 
     setTag: (_key: string, _value: string) => {},
     setContext: (_key: string, _context: Record<string, any>) => {},
   };
-};
 
 export default ErrorTrackingService;

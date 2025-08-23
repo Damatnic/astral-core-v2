@@ -63,11 +63,9 @@ interface CacheDB extends DBSchema {
       'by-timestamp': number;
       'by-access': number;
     };
-  };
   cache_analytics: {
     key: string;
     value: CacheAnalytics & { id: string };
-  };
   storage_quota: {
     key: string;
     value: {
@@ -77,7 +75,6 @@ interface CacheDB extends DBSchema {
       timestamp: number;
       warningThreshold: number;
     };
-  };
 }
 
 export class IntelligentCachingService {
@@ -542,16 +539,14 @@ export class IntelligentCachingService {
         quota,
         usagePercentage,
         cacheEntries
-      };
-    } catch (error) {
+      } catch (error) {
       console.error('[IntelligentCache] Failed to get storage info:', error);
       return {
         usage: 0,
         quota: 0,
         usagePercentage: 0,
         cacheEntries: 0
-      };
-    }
+      }
   }
 
   /**

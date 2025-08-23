@@ -125,8 +125,7 @@ export const useEnhancedOffline = (): UseEnhancedOfflineReturn => {
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
+    }, []);
 
   /**
    * Update storage usage information
@@ -188,8 +187,7 @@ export const useEnhancedOffline = (): UseEnhancedOfflineReturn => {
         keywords: [],
         recommendations: [],
         confidence: 0
-      };
-    }
+      }
   }, [i18n.language, culturalContext]);
 
   /**
@@ -284,4 +282,3 @@ export const useEnhancedOffline = (): UseEnhancedOfflineReturn => {
     isSyncing: false, // Not currently used but part of interface
     error
   };
-};

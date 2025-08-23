@@ -40,8 +40,7 @@ export interface CulturalAssessmentResult extends AssessmentResult {
     culturallyAdjusted: boolean;
     culturalConfidenceScore: number;
     biasReductionApplied: boolean;
-  };
-}
+  }
 
 /**
  * Get culturally-adapted PHQ-9 questions
@@ -128,8 +127,7 @@ export async function getCulturalPhq9Result(
       culturalFactors: result.culturalFactors,
       recommendations: result.recommendations,
       privacyMetadata: result.privacyMetadata
-    };
-  } catch (error) {
+    } catch (error) {
     console.error('[Assessment Utils] Failed to get cultural PHQ-9 result:', error);
     // Fallback to standard calculation
     return {
@@ -146,8 +144,7 @@ export async function getCulturalPhq9Result(
         cultural: [],
         resources: ['Crisis Text Line: Text HOME to 741741', 'National Suicide Prevention Lifeline: 988']
       }
-    };
-  }
+    }
 }
 
 /**
@@ -177,8 +174,7 @@ export async function getCulturalGad7Result(
       culturalFactors: result.culturalFactors,
       recommendations: result.recommendations,
       privacyMetadata: result.privacyMetadata
-    };
-  } catch (error) {
+    } catch (error) {
     console.error('[Assessment Utils] Failed to get cultural GAD-7 result:', error);
     // Fallback to standard calculation
     return {
@@ -195,8 +191,7 @@ export async function getCulturalGad7Result(
         cultural: [],
         resources: ['Crisis Text Line: Text HOME to 741741', 'National Suicide Prevention Lifeline: 988']
       }
-    };
-  }
+    }
 }
 
 /**
@@ -407,36 +402,31 @@ function getStandardPhq9Result(scores: number[]): AssessmentResult {
       severity: 'minimal',
       recommendation: 'Your symptoms suggest minimal depression. Continue with self-care and stress management techniques.',
       color: '#10b981' // green
-    };
-  } else if (totalScore <= 9) {
+    } else if (totalScore <= 9) {
     return {
       score: totalScore,
       severity: 'mild',
       recommendation: 'Your symptoms suggest mild depression. Consider self-care practices and monitor your symptoms.',
       color: '#f59e0b' // yellow
-    };
-  } else if (totalScore <= 14) {
+    } else if (totalScore <= 14) {
     return {
       score: totalScore,
       severity: 'moderate',
       recommendation: 'Your symptoms suggest moderate depression. Consider speaking with a mental health professional.',
       color: '#f97316' // orange
-    };
-  } else if (totalScore <= 19) {
+    } else if (totalScore <= 19) {
     return {
       score: totalScore,
       severity: 'moderately-severe',
       recommendation: 'Your symptoms suggest moderately severe depression. Please consider seeking professional help soon.',
       color: '#dc2626' // red
-    };
-  } else {
+    } else {
     return {
       score: totalScore,
       severity: 'severe',
       recommendation: 'Your symptoms suggest severe depression. We strongly recommend seeking immediate professional help.',
       color: '#991b1b' // dark red
-    };
-  }
+    }
 }
 
 function getStandardGad7Result(scores: number[]): AssessmentResult {
@@ -448,29 +438,25 @@ function getStandardGad7Result(scores: number[]): AssessmentResult {
       severity: 'minimal',
       recommendation: 'Your symptoms suggest minimal anxiety. Continue with self-care and stress management techniques.',
       color: '#10b981' // green
-    };
-  } else if (totalScore <= 9) {
+    } else if (totalScore <= 9) {
     return {
       score: totalScore,
       severity: 'mild',
       recommendation: 'Your symptoms suggest mild anxiety. Consider relaxation techniques and stress management.',
       color: '#f59e0b' // yellow
-    };
-  } else if (totalScore <= 14) {
+    } else if (totalScore <= 14) {
     return {
       score: totalScore,
       severity: 'moderate',
       recommendation: 'Your symptoms suggest moderate anxiety. Consider speaking with a mental health professional.',
       color: '#f97316' // orange
-    };
-  } else {
+    } else {
     return {
       score: totalScore,
       severity: 'severe',
       recommendation: 'Your symptoms suggest severe anxiety. We recommend seeking professional help.',
       color: '#dc2626' // red
-    };
-  }
+    }
 }
 
 function getSeverityColor(severity: string): string {

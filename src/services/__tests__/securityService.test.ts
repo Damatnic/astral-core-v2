@@ -21,15 +21,13 @@ beforeAll(() => {
     value: {
       createElement: jest.fn((tagName: string) => {
         if (tagName === 'meta') {
-          return { httpEquiv: '', content: '' };
-        }
+          return { httpEquiv: '', content: '' }
         if (tagName === 'form') {
           return {
             appendChild: jest.fn(),
             querySelectorAll: jest.fn(() => []),
             querySelector: jest.fn()
-          };
-        }
+          }
         if (tagName === 'input') {
           return {
             type: '',
@@ -37,10 +35,8 @@ beforeAll(() => {
             value: '',
             addEventListener: jest.fn(),
             setCustomValidity: jest.fn()
-          };
-        }
-        return {};
-      }),
+          }
+        return {}),
       head: {
         appendChild: jest.fn()
       },
@@ -619,8 +615,7 @@ describe('SecurityService', () => {
         if (tagName === 'input') {
           return mockInput;
         }
-        return {};
-      });
+        return {});
       
       global.document.createElement = mockCreateElement as any;
       

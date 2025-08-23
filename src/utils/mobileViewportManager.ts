@@ -30,8 +30,7 @@ class MobileViewportManager {
       isKeyboardOpen: false,
       keyboardHeight: 0,
       orientation: window.innerWidth > window.innerHeight ? 'landscape' : 'portrait',
-    };
-  }
+    }
 
   private init() {
     this.setupViewportListener();
@@ -94,8 +93,7 @@ class MobileViewportManager {
   }
 
   public getState(): ViewportState {
-    return { ...this.currentState };
-  }
+    return { ...this.currentState }
 
   public onViewportChange(listener: ViewportChangeListener): () => void {
     this.listeners.push(listener);
@@ -105,8 +103,7 @@ class MobileViewportManager {
       if (index > -1) {
         this.listeners.splice(index, 1);
       }
-    };
-  }
+    }
 
   public isKeyboardVisible(): boolean {
     return this.currentState.isKeyboardOpen;

@@ -223,8 +223,7 @@ class AstralCoreErrorService {
       recoverable: this.isRecoverable(code, type),
       retryable: this.isRetryable(code, type),
       context: this.getErrorContext(),
-    };
-  }
+    }
 
   /**
    * Handle network error
@@ -412,8 +411,7 @@ class AstralCoreErrorService {
       recoverable: this.isRecoverable(code, type),
       retryable: this.isRetryable(code, type),
       context: this.getErrorContext(),
-    };
-  }
+    }
 
   /**
    * Check if error is AstralCoreError
@@ -548,8 +546,7 @@ class AstralCoreErrorService {
         },
         online: navigator.onLine,
       },
-    };
-  }
+    }
 
   /**
    * Check if crisis error

@@ -138,8 +138,7 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
       simpleLanguage: false,
       readingGuide: false,
       focusMode: false,
-    };
-  });
+    });
 
   // Save preferences to localStorage
   useEffect(() => {
@@ -210,8 +209,7 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('mousedown', handleMouseDown);
-    };
-  }, [state.keyboardNavigationEnabled]);
+    }, [state.keyboardNavigationEnabled]);
 
   // Announce to screen readers
   const announce = useCallback((message: string, priority: 'polite' | 'assertive' = 'polite') => {
@@ -238,8 +236,7 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     setState(prev => {
       const enabled = !prev.screenReaderEnabled;
       announce(enabled ? 'Screen reader mode enabled' : 'Screen reader mode disabled');
-      return { ...prev, screenReaderEnabled: enabled };
-    });
+      return { ...prev, screenReaderEnabled: enabled });
   }, [announce]);
 
   const toggleKeyboardNavigation = useCallback(() => {
@@ -250,8 +247,7 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     setState(prev => {
       const enabled = !prev.highContrastMode;
       announce(enabled ? 'High contrast mode enabled' : 'High contrast mode disabled');
-      return { ...prev, highContrastMode: enabled };
-    });
+      return { ...prev, highContrastMode: enabled });
   }, [announce]);
 
   const toggleReducedMotion = useCallback(() => {
@@ -296,8 +292,7 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
       'role': 'status',
       'aria-live': priority,
       'aria-atomic': 'true',
-    };
-  }, []);
+    }, []);
 
   const value: AccessibilityContextValue = {
     ...state,

@@ -86,8 +86,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
         document.body.style.width = '';
         document.body.style.overflow = '';
         window.scrollTo(0, scrollY);
-      };
-    }
+      }
   }, [isMobile, isSidebarOpen]);
 
   const handleSidebarNavigation = (view: ActiveView) => {

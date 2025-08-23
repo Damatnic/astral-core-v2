@@ -91,7 +91,6 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
             visibleDilemmas: paginatedDilemmas,
             hasMore,
         };
-    };
 
   return {
     allDilemmas: [],
@@ -350,20 +349,16 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
     
     setFilter: (filter) => set(state => {
         const newState = { ...state, filter, currentPage: 1 };
-        return { ...newState, ...calculateDerivedState(newState) };
-    }),
+        return { ...newState, ...calculateDerivedState(newState) }),
     setSort: (sort) => set(state => {
         const newState = { ...state, sort };
-        return { ...newState, ...calculateDerivedState(newState) };
-    }),
+        return { ...newState, ...calculateDerivedState(newState) }),
     setSearchTerm: (term) => set(state => {
         const newState = { ...state, searchTerm: term, currentPage: 1 };
-        return { ...newState, ...calculateDerivedState(newState) };
-    }),
+        return { ...newState, ...calculateDerivedState(newState) }),
     loadMore: () => set(state => {
         const newState = { ...state, currentPage: state.currentPage + 1 };
-        return { ...newState, ...calculateDerivedState(newState) };
-    }),
+        return { ...newState, ...calculateDerivedState(newState) }),
     
     openReportModal: (dilemmaId) => set({ reportingDilemmaId: dilemmaId, isReportModalOpen: true }),
     closeReportModal: () => set({ reportingDilemmaId: null, isReportModalOpen: false }),
@@ -385,8 +380,7 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
         set(state => {
             const newAllDilemmas = state.allDilemmas.map(d => d.id === updated.id ? updated : d);
             const newState = { ...state, allDilemmas: newAllDilemmas };
-            return { ...newState, ...calculateDerivedState(newState) };
-        });
+            return { ...newState, ...calculateDerivedState(newState) });
     },
     
     reportDilemma: async (reason) => {
@@ -396,8 +390,7 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
         set(state => {
             const newAllDilemmas = state.allDilemmas.map(d => d.id === updated.id ? updated : d);
             const newState = { ...state, allDilemmas: newAllDilemmas, reportingDilemmaId: null };
-            return { ...newState, ...calculateDerivedState(newState) };
-        });
+            return { ...newState, ...calculateDerivedState(newState) });
     },
     
     acceptDilemma: async (dilemmaId) => {
@@ -409,8 +402,7 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
         set(state => {
             const newAllDilemmas = state.allDilemmas.map(d => d.id === result.dilemma.id ? result.dilemma : d);
             const newState = { ...state, allDilemmas: newAllDilemmas };
-            return { ...newState, ...calculateDerivedState(newState) };
-        });
+            return { ...newState, ...calculateDerivedState(newState) });
         
         if (result.updatedHelper) {
             authService.updateHelperProfile(result.updatedHelper);
@@ -433,8 +425,7 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
         set(state => {
             const newAllDilemmas = state.allDilemmas.map(d => d.id === updatedDilemma.id ? updatedDilemma : d);
             const newState = { ...state, allDilemmas: newAllDilemmas };
-            return { ...newState, ...calculateDerivedState(newState) };
-        });
+            return { ...newState, ...calculateDerivedState(newState) });
     },
 
     resolveDilemma: async (dilemmaId, userToken) => {
@@ -442,8 +433,7 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
         set(state => {
             const newAllDilemmas = state.allDilemmas.map(d => d.id === updated.id ? updated : d);
             const newState = { ...state, allDilemmas: newAllDilemmas };
-            return { ...newState, ...calculateDerivedState(newState) };
-        });
+            return { ...newState, ...calculateDerivedState(newState) });
     },
 
     summarizeDilemma: async (dilemmaId) => {

@@ -62,7 +62,6 @@ export interface ResourceAvailability {
   always: boolean;
   hours?: {
     [day: string]: { open: string; close: string };
-  };
   holidays?: boolean;
   notes?: string;
 }
@@ -176,8 +175,7 @@ class AstralCoreCrisisResourceCache {
           store.createIndex('priority', 'priority', { unique: false });
           store.createIndex('lastUpdated', 'lastUpdated', { unique: false });
         }
-      };
-    });
+      });
   }
 
   /**
@@ -204,8 +202,7 @@ class AstralCoreCrisisResourceCache {
 
       request.onerror = () => {
         reject(new Error('Failed to load resources from IndexedDB'));
-      };
-    });
+      });
   }
 
   /**
@@ -595,8 +592,7 @@ class AstralCoreCrisisResourceCache {
    * Get cache statistics
    */
   getStats(): CacheStats {
-    return { ...this.stats };
-  }
+    return { ...this.stats }
 
   /**
    * Clear all cached resources

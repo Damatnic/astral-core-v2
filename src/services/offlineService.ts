@@ -107,8 +107,7 @@ class OfflineService {
       safetyPlan: null,
       recentMoodEntries: [],
       lastSyncTime: new Date()
-    };
-  }
+    }
 
   getOnlineStatus(): boolean {
     return this.isOnline;
@@ -192,8 +191,7 @@ class OfflineService {
     return {
       itemsInQueue: this.syncQueue.length,
       isOnline: this.isOnline
-    };
-  }
+    }
 }
 
 export const offlineService = new OfflineService();
@@ -306,8 +304,7 @@ class OfflineService {
       safetyPlan: null,
       recentMoodEntries: [],
       lastSyncTime: new Date()
-    };
-  }
+    }
 
   getOnlineStatus(): boolean {
     return this.isOnline;
@@ -391,8 +388,7 @@ class OfflineService {
     return {
       itemsInQueue: this.syncQueue.length,
       isOnline: this.isOnline
-    };
-  }
+    }
 }
 
 export const offlineService = new OfflineService();

@@ -35,8 +35,7 @@ interface EnhancedCrisisDetectionState {
     accuracy: number;
     confidence: number;
     totalAnalyses: number;
-  };
-}
+  }
 
 interface EnhancedCrisisDetectionOptions {
   autoAnalyze?: boolean;
@@ -159,8 +158,7 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
             confidence: result.mlConfidence || 0.5,
             totalAnalyses: analysisCountRef.current
           }
-        };
-      });
+        });
 
       // Handle crisis detection callbacks
       if (result.hasCrisisIndicators && onCrisisDetected) {
@@ -227,8 +225,7 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
     return () => {
       inputElement.removeEventListener('input', handleInput);
       inputElement.removeEventListener('paste', handleInput);
-    };
-  }, [autoAnalyze, analyzeTextDebounced]);
+    }, [autoAnalyze, analyzeTextDebounced]);
 
   /**
    * Update crisis alert based on analysis results
@@ -287,8 +284,7 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
   const getEmotionalTrend = useCallback(() => {
     const recentEmotions = state.emotionalHistory.slice(-10);
     if (recentEmotions.length < 3) {
-      return { trend: 'insufficient_data', confidence: 0 };
-    }
+      return { trend: 'insufficient_data', confidence: 0 }
 
     const valenceValues = recentEmotions.map(e => e.valence);
     const arousalValues = recentEmotions.map(e => e.arousal);
@@ -307,16 +303,14 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
 
     const confidence = Math.min(1, recentEmotions.length / 10);
 
-    return { trend, confidence, valenceSlope, arousalSlope };
-  }, [state.emotionalHistory]);
+    return { trend, confidence, valenceSlope, arousalSlope }, [state.emotionalHistory]);
 
   /**
    * Get risk prediction for next 24 hours
    */
   const getRiskPrediction = useCallback(() => {
     if (state.riskTrend.length < 3) {
-      return { predictedRisk: 0, confidence: 0, trend: 'unknown' as const, currentRisk: 0, riskChange: 0 };
-    }
+      return { predictedRisk: 0, confidence: 0, trend: 'unknown' as const, currentRisk: 0, riskChange: 0 }
 
     const recentRisks = state.riskTrend.slice(-5);
     const currentRisk = recentRisks[recentRisks.length - 1];
@@ -341,8 +335,7 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
       trend, 
       currentRisk, 
       riskChange: currentRisk - previousRisk 
-    };
-  }, [state.riskTrend]);
+    }, [state.riskTrend]);
 
   /**
    * Get personalized intervention recommendations
@@ -390,8 +383,7 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
           culturalConsiderations: culturalContext === 'default' ? 
             ['Standard intervention approach'] : 
             [`Culturally adapted for ${culturalContext}`]
-        };
-      })
+        })
       .sort((a, b) => b.priority - a.priority)
       .slice(0, 5); // Top 5 recommendations
   }, [state.lastAnalysis]);
@@ -417,8 +409,7 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
       }
-    };
-  }, []);
+    }, []);
 
   return {
     // State
@@ -451,7 +442,6 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
     isEmergency: crisisAlert.emergencyMode,
     mlConfidence: state.lastAnalysis?.mlConfidence || 0,
     analysisCount: analysisCountRef.current
-  };
-}
+  }
 
 export default useEnhancedCrisisDetection;

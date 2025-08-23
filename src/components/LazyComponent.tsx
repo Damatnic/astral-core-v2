@@ -286,7 +286,6 @@ export const getBundleInfo = () => {
     vendorBundle: jsResources.find(entry => entry.name.includes('vendor')),
     componentsBundle: jsResources.find(entry => entry.name.includes('components'))
   };
-};
 
 // Performance monitoring hook
 export const usePerformanceMonitoring = () => {
@@ -309,8 +308,7 @@ export const usePerformanceMonitoring = () => {
 
     return () => {
       observer.disconnect();
-    };
-  }, []);
+    }, []);
 
   return metrics;
 };

@@ -144,6 +144,5 @@ export const useMarkdownLoader = (content: string, autoLoad = false) => {
     loadMarkdown,
     content
   };
-};
 
 export default LazyMarkdown;

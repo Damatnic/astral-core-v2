@@ -123,7 +123,6 @@ export const createMobileOptimizedRoutes = () => {
         createOptimizedRoute(importFn, name, 'low'),
     }
   };
-};
 
 // Performance monitoring component
 export const PerformanceMonitor: React.FC<{ enabled?: boolean }> = ({ 
@@ -164,8 +163,7 @@ export const PerformanceMonitor: React.FC<{ enabled?: boolean }> = ({
     return () => {
       clearInterval(interval);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [enabled]);
+    }, [enabled]);
 
   return null;
 };
@@ -214,7 +212,6 @@ export const usePerformanceIntegration = (config: Partial<PerformanceConfig> = {
     getNavigationStats: EnhancedRouteManager.getNavigationStats,
     getRouteMetrics: EnhancedRouteManager.getRouteMetrics,
   };
-};
 
 // Utility to wrap existing App component
 export const enhanceAppWithMobilePerformance = (

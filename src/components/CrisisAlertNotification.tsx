@@ -73,7 +73,6 @@ export const CrisisAlertNotification: React.FC = () => {
       window.removeEventListener('crisis-detected', handleCrisisDetected);
       window.removeEventListener('crisis-trigger', handleManualCrisis);
     };
-  };
 
   const handleCrisisDetected = (event: Event) => {
     const { severity, confidence, indicators } = (event as CustomEvent).detail || {};

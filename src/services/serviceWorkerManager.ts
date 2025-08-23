@@ -24,17 +24,14 @@ class ServiceWorkerManager {
 
   async initialize(): Promise<{ supported: boolean; registered?: boolean }> {
     if (!('serviceWorker' in navigator)) {
-      return { supported: false };
-    }
+      return { supported: false }
 
     try {
       const registration = await navigator.serviceWorker.register('/sw.js');
       console.log('[ServiceWorker] Registered:', registration);
-      return { supported: true, registered: true };
-    } catch (error) {
+      return { supported: true, registered: true } catch (error) {
       console.error('[ServiceWorker] Registration failed:', error);
-      return { supported: true, registered: false };
-    }
+      return { supported: true, registered: false }
   }
 
   hasMessageChannel(): boolean {
@@ -84,8 +81,7 @@ class ServiceWorkerManager {
       swRegistered: 'serviceWorker' in navigator,
       cacheVersion: '1.0.0',
       updateAvailable: false
-    };
-  }
+    }
 
   async skipWaiting(): Promise<void> {
     // Stub implementation
@@ -155,13 +151,11 @@ class ServiceWorkerManager {
       connection?: {
         effectiveType?: string;
       };
-    };
     
     return {
       isOnline: navigator.onLine,
       type: navigatorWithConnection.connection?.effectiveType || 'unknown'
-    };
-  }
+    }
 }
 
 const serviceWorkerManager = new ServiceWorkerManager();

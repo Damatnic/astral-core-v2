@@ -24,8 +24,7 @@ interface ScheduledNotification {
     therapistName?: string;
     sessionType?: string;
     [key: string]: any;
-  };
-}
+  }
 
 interface NotificationAction {
   action: string;

@@ -918,15 +918,13 @@ class ScreenReaderService {
    * Set crisis context
    */
   public setCrisisContext(context: Partial<typeof this.crisisContext>): void {
-    this.crisisContext = { ...this.crisisContext, ...context };
-  }
+    this.crisisContext = { ...this.crisisContext, ...context }
 
   /**
    * Get crisis context
    */
   public getCrisisContext(): typeof this.crisisContext {
-    return { ...this.crisisContext };
-  }
+    return { ...this.crisisContext }
 
   /**
    * Announce form validation errors

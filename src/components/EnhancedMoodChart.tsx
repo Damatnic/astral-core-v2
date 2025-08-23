@@ -56,8 +56,7 @@ export const EnhancedMoodChart: React.FC<EnhancedMoodChartProps> = ({ data, peri
       case 'declining':
         return { text: 'Your mood needs attention 💙', color: '#FF9800' };
       default:
-        return { text: 'Your mood is stable', color: '#2196F3' };
-    }
+        return { text: 'Your mood is stable', color: '#2196F3' }
   };
   
   const trendMessage = getTrendMessage();

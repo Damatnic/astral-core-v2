@@ -68,7 +68,6 @@ export const mockPerformanceAPI = () => {
     performanceClearMeasures,
     mockPerformance
   };
-};
 
 // PerformanceObserver Mock
 export class MockPerformanceObserver {
@@ -149,7 +148,6 @@ export const mockRequestAnimationFrame = () => {
     cancelAnimationFrame,
     flushAnimationFrames
   };
-};
 
 // Intersection Observer Mock
 export class MockIntersectionObserver {
@@ -247,7 +245,6 @@ export const setupPerformanceMocks = () => {
     ...performanceMocks,
     ...rafMocks
   };
-};
 
 // Cleanup all performance mocks
 export const cleanupPerformanceMocks = () => {
@@ -301,7 +298,6 @@ export const setupFakeTimersWithPromises = () => {
     advanceTimersAndFlushPromises,
     runAllTimersAndFlushPromises
   };
-};
 
 // Memory measurement mock
 export const mockMemoryMeasurement = () => {
@@ -324,7 +320,6 @@ export const mockMemoryMeasurement = () => {
       window.performance.memory.jsHeapSizeLimit = limit;
     }
   };
-};
 
 // Debounce/Throttle test helper
 export const createTimingTestHelper = () => {
@@ -349,4 +344,3 @@ export const createTimingTestHelper = () => {
     flushScheduledCallbacks,
     clearCallbacks: () => callbacks.length = 0
   };
-};

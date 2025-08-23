@@ -239,8 +239,7 @@ class AccessibilityService {
       readingAssistance: false,
       contextualHelp: true,
       errorSummaryEnabled: true
-    };
-  }
+    }
 
   /**
    * Detect system accessibility preferences
@@ -573,8 +572,7 @@ class AccessibilityService {
           if (event.error === 'not-allowed') {
             this.settings.voiceNavigationEnabled = false;
           }
-        };
-      }
+        }
       
       console.log('[Accessibility] Speech recognition initialized');
     } catch (error) {
@@ -1054,8 +1052,7 @@ class AccessibilityService {
       const stored = localStorage.getItem('accessibility-settings');
       if (stored) {
         const settings = JSON.parse(stored);
-        this.settings = { ...this.settings, ...settings };
-      }
+        this.settings = { ...this.settings, ...settings }
     } catch (error) {
       console.warn('[Accessibility] Failed to load settings:', error);
     }
@@ -1091,8 +1088,7 @@ class AccessibilityService {
    * Get current settings
    */
   public getSettings(): AccessibilitySettings {
-    return { ...this.settings };
-  }
+    return { ...this.settings }
 
   /**
    * Get available keyboard shortcuts

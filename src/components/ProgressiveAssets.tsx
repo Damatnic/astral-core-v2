@@ -367,8 +367,7 @@ export class AssetPreloader {
       preloadedImages: this.preloadedImages.size,
       preloadedVideos: this.preloadedVideos.size,
       queueLength: this.preloadQueue.length
-    };
-  }
+    }
 }
 
 // Critical asset preloading
@@ -417,8 +416,7 @@ export const assetUtils = {
     const width = Math.min(originalWidth, maxWidth);
     const height = width * aspectRatio;
     
-    return { width: Math.round(width), height: Math.round(height) };
-  }
+    return { width: Math.round(width), height: Math.round(height) }
 };
 
 // Initialize asset preloading

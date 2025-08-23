@@ -369,8 +369,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       "motivated": { primary: currentColors.growth, secondary: currentColors.hope }
     };
 
-    return moodColorMap[mood.toLowerCase()] || {};
-  }, [currentColors]);
+    return moodColorMap[mood.toLowerCase()] || {}, [currentColors]);
 
   const getCrisisSafeColors = useCallback((): ThemeColors => {
     return THERAPEUTIC_THEMES["crisis-safe"].colors[currentColorMode];

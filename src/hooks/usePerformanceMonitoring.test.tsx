@@ -201,8 +201,7 @@ describe('usePerformanceAlerts Hook', () => {
     let alertHandler: (alert: any) => void;
     (comprehensivePerformanceMonitor.onAlert as jest.Mock).mockImplementation((handler) => {
       alertHandler = handler;
-      return () => {};
-    });
+      return () => {});
 
     const { result } = renderHook(() => usePerformanceAlerts());
 
@@ -232,8 +231,7 @@ describe('usePerformanceAlerts Hook', () => {
     let alertHandler: (alert: any) => void;
     (comprehensivePerformanceMonitor.onAlert as jest.Mock).mockImplementation((handler) => {
       alertHandler = handler;
-      return () => {};
-    });
+      return () => {});
 
     const { result } = renderHook(() => usePerformanceAlerts());
 

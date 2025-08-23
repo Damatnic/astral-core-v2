@@ -293,8 +293,7 @@ export const useCrisisStressTesting = (
       avgResponseTime: Math.round(avgResponseTime),
       avgAvailability: Math.round(avgAvailability * 100),
       safetyScore
-    };
-  }, [state.testResults]);
+    }, [state.testResults]);
 
   const actions: CrisisStressTestingActions = {
     runStressTests,
@@ -314,6 +313,5 @@ export const useCrisisStressTesting = (
     isEmergency: state.emergencyStatus.active,
     hasResults: state.testResults.length > 0 || state.failoverResults.length > 0
   };
-};
 
 export default useCrisisStressTesting;

@@ -40,8 +40,7 @@ const analyzeTextMock = (text: string): CrisisDetectionResult => {
       confidence: 0.95,
       escalationRequired: true,
       emergencyServices: true
-    };
-  }
+    }
   
   // Self-harm indicators
   if (lowerText.includes('cutting') || 
@@ -55,8 +54,7 @@ const analyzeTextMock = (text: string): CrisisDetectionResult => {
       recommendedActions: ['Provide crisis resources', 'Connect with counselor', 'Share coping strategies'],
       immediateActionRequired: false,
       confidence: 0.85
-    };
-  }
+    }
   
   // Substance abuse
   if (lowerText.includes('overdose') || 
@@ -70,8 +68,7 @@ const analyzeTextMock = (text: string): CrisisDetectionResult => {
       recommendedActions: ['Substance abuse resources', 'Medical attention', 'Support groups'],
       immediateActionRequired: false,
       confidence: 0.8
-    };
-  }
+    }
   
   // Protective factors - family responsibilities
   if ((lowerText.includes('ending it') || lowerText.includes('end it all')) &&
@@ -86,8 +83,7 @@ const analyzeTextMock = (text: string): CrisisDetectionResult => {
       recommendedActions: ['Provide suicide prevention resources', 'Share safety planning tools', 'Connect with crisis hotline', 'Schedule follow-up check-in'],
       immediateActionRequired: false,
       confidence: 0.85
-    };
-  }
+    }
   
   // Help-seeking behavior
   if (lowerText.includes('suicidal thoughts') && 
@@ -102,8 +98,7 @@ const analyzeTextMock = (text: string): CrisisDetectionResult => {
       recommendedActions: ['Provide suicide prevention resources', 'Share safety planning tools', 'Connect with crisis hotline', 'Schedule follow-up check-in', 'Provide comprehensive resource list', 'Connect with peer support', 'Facilitate connection to requested support resources'],
       immediateActionRequired: false,
       confidence: 0.85
-    };
-  }
+    }
   
   // Depression/anxiety with protective factors
   if ((lowerText.includes('depressed') || lowerText.includes('anxious')) &&
@@ -122,8 +117,7 @@ const analyzeTextMock = (text: string): CrisisDetectionResult => {
         ['professional_support', 'Continue therapy', 'Monitor mood'] :
         ['Connect with support', 'Share coping strategies', 'Monitor wellbeing'],
       confidence: 0.75
-    };
-  }
+    }
   
   // High-risk but not immediate - thoughts about dying
   if (lowerText.includes('hopeless') || 
@@ -139,8 +133,7 @@ const analyzeTextMock = (text: string): CrisisDetectionResult => {
       recommendedActions: ['professional_support', 'crisis_hotline', 'Safety planning'],
       immediateActionRequired: false,
       confidence: 0.8
-    };
-  }
+    }
   
   // Special characters and emojis with crisis content - including 'want to die'
   if ((lowerText.includes('😢') || lowerText.includes('💔') || lowerText.includes('⚰️')) ||
@@ -152,8 +145,7 @@ const analyzeTextMock = (text: string): CrisisDetectionResult => {
       riskFactors: ['emotional_distress'],
       recommendedActions: ['Emotional support', 'Check in regularly', 'Share resources'],
       confidence: 0.7
-    };
-  }
+    }
   
   // Past tense recovery - no crisis
   if (lowerText.includes('used to') || 

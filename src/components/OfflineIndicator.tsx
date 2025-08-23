@@ -43,8 +43,7 @@ export const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
         description: crisisResourcesAvailable 
           ? 'Offline - Crisis resources available' 
           : 'Offline - Limited functionality'
-      };
-    }
+      }
 
     if (connectionQuality === 'poor') {
       return {
@@ -53,8 +52,7 @@ export const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
         icon: <AlertIcon />,
         color: 'amber',
         description: 'Slow connection - Some features may be limited'
-      };
-    }
+      }
 
     return {
       status: 'online',
@@ -63,7 +61,6 @@ export const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
       color: 'green',
       description: 'Connected - All features available'
     };
-  };
 
   const statusInfo = getStatusInfo();
 

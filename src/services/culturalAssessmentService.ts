@@ -31,7 +31,6 @@ export interface CulturalAssessmentQuestion extends AssessmentQuestion {
       expressionPatterns: string[];
       alternatives?: string[];
     };
-  };
   sensitivityLevel: 'low' | 'medium' | 'high' | 'very-high';
   stigmaConsiderations: string[];
 }
@@ -54,8 +53,7 @@ export interface CulturalAssessmentResult extends AssessmentResult {
     culturallyAdjusted: boolean;
     biasReductionApplied: boolean;
     culturalConfidenceScore: number;
-  };
-}
+  }
 
 export interface CulturalAssessment extends Assessment {
   culturalContext: string;
@@ -84,8 +82,7 @@ interface CulturalExpressionPatterns {
     indirect: string[];
     metaphorical: string[];
     traditional: string[];
-  };
-}
+  }
 
 class CulturalAssessmentService {
   private readonly CULTURAL_BIAS_ADJUSTMENT_FACTOR = 0.15; // Reduce cultural bias by 15%
@@ -261,8 +258,7 @@ class CulturalAssessmentService {
           biasReductionApplied: true,
           culturalConfidenceScore: culturalAdjustments.confidenceScore
         }
-      };
-    } catch (error) {
+      } catch (error) {
       console.error('[Cultural Assessment] Failed to calculate result:', error);
       throw error;
     }
@@ -344,8 +340,7 @@ class CulturalAssessmentService {
         culturalInsights,
         recommendations: effectivenessReport.recommendations,
         privacyCompliant: true
-      };
-    } catch (error) {
+      } catch (error) {
       console.error('[Cultural Assessment] Failed to get analytics:', error);
       throw error;
     }
@@ -539,16 +534,14 @@ class CulturalAssessmentService {
         culturalContext: `Adapted for ${culturalContext} cultural context`,
         expressionPatterns: this.getRelevantExpressionPatterns(question.text, expressions),
         alternatives: this.generateAlternativePhrasings(question.text, expressions, languageCode)
-      };
-    }
+      }
     
     return {
       ...question,
       culturalAdaptations,
       sensitivityLevel: this.determineSensitivityLevel(question.text),
       stigmaConsiderations: this.getStigmaConsiderations(question.text, culturalContext)
-    };
-  }
+    }
 
   private adaptQuestionText(text: string, _expressions: CulturalExpressionPatterns, _languageCode: string): string {
     // For now, return original text - in production, this would include translations
@@ -642,8 +635,7 @@ class CulturalAssessmentService {
       expressivenessAdjustment,
       stigmaAdjustment,
       confidenceScore: 0.85 // High confidence in cultural adjustments
-    };
-  }
+    }
 
   private calculateSomaticBias(_answers: string[], culturalContext: string): number {
     // Some cultures express mental health through physical symptoms
@@ -781,8 +773,7 @@ class CulturalAssessmentService {
       cultural: culturalRecommendations,
       resources,
       familyGuidance
-    };
-  }
+    }
 
   private getBaseRecommendations(severity: string, assessmentType: 'phq-9' | 'gad-7'): string {
     const condition = assessmentType === 'phq-9' ? 'depression' : 'anxiety';
@@ -879,16 +870,14 @@ class CulturalAssessmentService {
       stigmaLevel: contextInfo.mentalHealthStigma || 0.5,
       familyInvolvement: contextInfo.familyInvolvement || 'individual',
       helpSeekingStyle: contextInfo.helpSeekingPreference || 'professional'
-    };
-  }
+    }
 
   private analyzeExpressionPatterns(_answers: string[], _culturalContext: string): {
     style: 'direct' | 'indirect' | 'somatic' | 'metaphorical';
   } {
     // Analyze how user expresses mental health concerns
     // For now, default to direct - in production, this would analyze actual responses
-    return { style: 'direct' };
-  }
+    return { style: 'direct' }
 
   private async recordCulturalAnalytics(
     assessment: CulturalAssessment,

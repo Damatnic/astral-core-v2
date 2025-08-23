@@ -146,7 +146,6 @@ export const getAdaptiveLoadingConfig = (): AdaptiveLoadingConfig => {
     recommendedImageQuality,
     chunkLoadingStrategy
   };
-};
 
 /**
  * React hook for adaptive loading configuration
@@ -173,8 +172,7 @@ export const useAdaptiveLoading = () => {
       connection.addEventListener('change', updateConfig);
       return () => {
         connection.removeEventListener('change', updateConfig);
-      };
-    }
+      }
   }, []);
 
   return config;

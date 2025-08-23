@@ -64,8 +64,7 @@ function renderComponent(component: React.ReactElement) {
     root.render(component);
   });
   
-  return { container, root };
-}
+  return { container, root }
 
 describe('QuickExitButton - Working Tests', () => {
   let container: HTMLDivElement;

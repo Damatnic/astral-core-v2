@@ -82,8 +82,7 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
         oscillatorRef.current.stop();
         oscillatorRef.current.disconnect();
       }
-    };
-  }, []);
+    }, []);
 
   // Play sound feedback
   const playSound = (frequency: number, duration: number) => {
@@ -198,8 +197,7 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
-    };
-  }, [isActive, isPaused, phase, selectedPattern, targetCycles, onComplete]);
+    }, [isActive, isPaused, phase, selectedPattern, targetCycles, onComplete]);
 
   const handleStart = () => {
     setCycles(0);

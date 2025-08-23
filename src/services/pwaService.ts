@@ -184,8 +184,7 @@ this.handleAppBlur()
       isOffline: this.isOffline,
       isStandalone: this.isStandalone(),
       supportsPWA: this.supportsPWA()
-    };
-  }
+    }
 
   /**
    * Check if app is running in standalone mode
@@ -242,8 +241,7 @@ this.handleAppBlur()
       if(index > -1) {
         this.statusCallbacks.splice(index, 1);
       }
-    };
-  }
+    }
 
   /**
    * Notify all subscribers of status change

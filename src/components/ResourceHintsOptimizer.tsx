@@ -194,7 +194,6 @@ const ResourceHintsOptimizer: React.FC = () => {
         addedHintsRef.current.delete(key);
       }
     };
-  };
 
   /**
    * Remove resource hint from document head
@@ -389,8 +388,7 @@ const ResourceHintsOptimizer: React.FC = () => {
       cleanupFunctions.forEach(cleanup => cleanup());
       clearTimeout(behaviorTimeout);
       if (monitorCleanup) monitorCleanup();
-    };
-  }, [location.pathname]);
+    }, [location.pathname]);
 
   // Monitor crisis state changes
   useEffect(() => {
@@ -410,8 +408,7 @@ const ResourceHintsOptimizer: React.FC = () => {
     return () => {
       window.removeEventListener('crisis_detected', handleCrisisStateChange);
       window.removeEventListener('storage', handleCrisisStateChange);
-    };
-  }, []);
+    }, []);
 
   // This component doesn't render anything - it only manages resource hints
   return null;

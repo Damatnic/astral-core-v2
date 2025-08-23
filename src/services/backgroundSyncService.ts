@@ -28,8 +28,7 @@ interface SyncRequest {
     type: 'crisis-event' | 'safety-plan' | 'session-data' | 'analytics' | 'user-data';
     userId?: string;
     sessionId?: string;
-  };
-}
+  }
 
 interface SyncResult {
   success: boolean;
@@ -142,8 +141,7 @@ class BackgroundSyncService {
           const store = db.createObjectStore('syncResults', { keyPath: 'requestId' });
           store.createIndex('timestamp', 'timestamp', { unique: false });
         }
-      };
-    });
+      });
   }
 
   /**
@@ -170,8 +168,7 @@ class BackgroundSyncService {
         request.onerror = () => {
           console.error('[BackgroundSync] Failed to load queue');
           reject(request.error);
-        };
-      });
+        });
     } catch (error) {
       console.error('[BackgroundSync] Error loading queue:', error);
     }
@@ -641,8 +638,7 @@ class BackgroundSyncService {
         retryCount: r.retryCount,
         timestamp: r.timestamp
       }))
-    };
-  }
+    }
 
   /**
    * Clear the sync queue
@@ -712,8 +708,7 @@ class BackgroundSyncService {
         request.onerror = () => {
           console.error('[BackgroundSync] Failed to get history');
           reject(request.error);
-        };
-      });
+        });
     } catch (error) {
       console.error('[BackgroundSync] Error getting history:', error);
       return [];
@@ -747,8 +742,7 @@ class BackgroundSyncService {
         } else {
           console.log(`[BackgroundSync] Cleaned up ${deletedCount} old results`);
         }
-      };
-    } catch (error) {
+      } catch (error) {
       console.error('[BackgroundSync] Cleanup failed:', error);
     }
   }

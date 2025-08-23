@@ -32,44 +32,33 @@ export interface FormInputProps {
 // Validation helper functions
 const validateRequired = (value: string, required: boolean): { isValid: boolean; message: string } => {
   if (required && !value.trim()) {
-    return { isValid: false, message: 'This field is required' };
-  }
+    return { isValid: false, message: 'This field is required' }
   return { isValid: true, message: '' };
-};
 
 const validateLength = (value: string, minLength?: number, maxLength?: number): { isValid: boolean; message: string } => {
   if (minLength && value.length < minLength && value.length > 0) {
-    return { isValid: false, message: `Minimum ${minLength} characters required` };
-  }
+    return { isValid: false, message: `Minimum ${minLength} characters required` }
   if (maxLength && value.length > maxLength) {
-    return { isValid: false, message: `Maximum ${maxLength} characters allowed` };
-  }
+    return { isValid: false, message: `Maximum ${maxLength} characters allowed` }
   return { isValid: true, message: '' };
-};
 
 const validatePattern = (value: string, pattern?: string): { isValid: boolean; message: string } => {
   if (pattern && value && !new RegExp(pattern).test(value)) {
-    return { isValid: false, message: 'Please enter a valid format' };
-  }
+    return { isValid: false, message: 'Please enter a valid format' }
   return { isValid: true, message: '' };
-};
 
 const validateEmail = (value: string): { isValid: boolean; message: string } => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (value && !emailRegex.test(value)) {
-    return { isValid: false, message: 'Please enter a valid email address' };
-  }
+    return { isValid: false, message: 'Please enter a valid email address' }
   return { isValid: true, message: '' };
-};
 
 const validateCustomRules = (value: string, rules: ValidationRule[]): { isValid: boolean; message: string } => {
   for (const rule of rules) {
     if (value && !rule.test(value)) {
-      return { isValid: false, message: rule.message };
-    }
+      return { isValid: false, message: rule.message }
   }
   return { isValid: true, message: '' };
-};
 
 export const FormInput: React.FC<FormInputProps> = ({
   id,
@@ -105,44 +94,36 @@ export const FormInput: React.FC<FormInputProps> = ({
   // Validate input with reduced complexity
   const validateInput = (inputValue: string): { isValid: boolean; message: string; state: typeof validationState } => {
     if (!shouldShowValidation) {
-      return { isValid: true, message: '', state: 'idle' };
-    }
+      return { isValid: true, message: '', state: 'idle' }
 
     // Run all validations
     const requiredResult = validateRequired(inputValue, required);
     if (!requiredResult.isValid) {
-      return { ...requiredResult, state: 'error' };
-    }
+      return { ...requiredResult, state: 'error' }
 
     const lengthResult = validateLength(inputValue, minLength, maxLength);
     if (!lengthResult.isValid) {
-      return { ...lengthResult, state: 'error' };
-    }
+      return { ...lengthResult, state: 'error' }
 
     const patternResult = validatePattern(inputValue, pattern);
     if (!patternResult.isValid) {
-      return { ...patternResult, state: 'error' };
-    }
+      return { ...patternResult, state: 'error' }
 
     if (type === 'email') {
       const emailResult = validateEmail(inputValue);
       if (!emailResult.isValid) {
-        return { ...emailResult, state: 'error' };
-      }
+        return { ...emailResult, state: 'error' }
     }
 
     const customRulesResult = validateCustomRules(inputValue, validationRules);
     if (!customRulesResult.isValid) {
-      return { ...customRulesResult, state: 'error' };
-    }
+      return { ...customRulesResult, state: 'error' }
 
     // Success state
     if (inputValue && (required || validationRules.length > 0)) {
-      return { isValid: true, message: 'Looks good!', state: 'success' };
-    }
+      return { isValid: true, message: 'Looks good!', state: 'success' }
 
     return { isValid: true, message: '', state: 'idle' };
-  };
 
   // Update validation on value change
   useEffect(() => {

@@ -77,8 +77,7 @@ export class AccessibilityUtils {
       case 'AA':
         return { maxCritical: 0, maxHigh: 2 };
       default: // A
-        return { maxCritical: 0, maxHigh: 5 };
-    }
+        return { maxCritical: 0, maxHigh: 5 }
   }
 
   // Find complex text (simple heuristic)

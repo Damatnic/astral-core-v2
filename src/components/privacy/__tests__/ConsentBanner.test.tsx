@@ -18,8 +18,7 @@ jest.mock('../../AppButton', () => {
         {children}
       </button>
     )
-  };
-});
+  });
 
 jest.mock('../../Modal', () => {
   return {
@@ -31,8 +30,7 @@ jest.mock('../../Modal', () => {
           {children}
         </div>
       ) : null
-  };
-});
+  });
 
 describe('ConsentBanner', () => {
   let mockAnalyticsServiceInstance: {

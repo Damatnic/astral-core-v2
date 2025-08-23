@@ -201,7 +201,6 @@ export const createPersistOptions = <T extends EnhancedState>(
       }
     }
   };
-};
 
 /**
  * Retry logic wrapper for async actions
@@ -379,8 +378,7 @@ export class StorePerformanceMonitor {
       min: Math.min(...measurements),
       max: Math.max(...measurements),
       count: measurements.length
-    };
-  }
+    }
   
   clearMetrics(): void {
     this.metrics.clear();

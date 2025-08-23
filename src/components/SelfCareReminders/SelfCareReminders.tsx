@@ -137,8 +137,7 @@ export const SelfCareReminders: React.FC = () => {
           ...activity,
           lastCompleted: new Date().toISOString(),
           streak: isConsecutive ? (activity.streak || 0) + 1 : 1
-        };
-      }
+        }
       return activity;
     });
     

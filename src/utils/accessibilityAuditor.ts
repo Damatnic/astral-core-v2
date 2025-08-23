@@ -52,8 +52,7 @@ interface ColorContrastResult {
     aaa: boolean;
     aaLarge: boolean;
     aaaLarge: boolean;
-  };
-}
+  }
 
 export class MobileAccessibilityAuditor {
   private readonly config: AccessibilityAuditConfig;
@@ -67,8 +66,7 @@ export class MobileAccessibilityAuditor {
       skipElementsWithAriaHidden: true,
       customRules: [],
       ...config
-    };
-  }
+    }
 
   // Main audit function
   public auditPage(): AccessibilityAuditResult {
@@ -321,8 +319,7 @@ export class MobileAccessibilityAuditor {
         aaLarge: ratio >= 3,
         aaaLarge: ratio >= 4.5
       }
-    };
-  }
+    }
 
   // Get relative luminance of a color
   private getLuminance(color: string): number {
@@ -853,8 +850,7 @@ export class MobileAccessibilityAuditor {
       issues: this.issues,
       suggestions,
       compliantAreas
-    };
-  }
+    }
 
   // Static method to run quick audit
   static quickAudit(mobileOptimized: boolean = true): AccessibilityAuditResult {

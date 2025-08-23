@@ -45,8 +45,7 @@ jest.mock('../services/accessibilityAuditSystem', () => {
       SEMANTIC_HTML: 'SEMANTIC_HTML',
       FORM_LABELS: 'FORM_LABELS'
     }
-  };
-});
+  });
 
 
 describe('useAccessibilityAudit Hook', () => {

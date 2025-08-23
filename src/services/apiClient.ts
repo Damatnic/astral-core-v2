@@ -135,8 +135,7 @@ class ApiClient {
         status: response.status,
         statusText: response.statusText,
         headers: response.headers,
-      };
-    } catch (error) {
+      } catch (error) {
       clearTimeout(timeoutId);
       this.abortControllers.delete(requestId);
       throw this.handleError(error);

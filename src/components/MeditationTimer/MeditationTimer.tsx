@@ -80,8 +80,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
     return () => {
       stopAmbientSound();
-    };
-  }, []);
+    }, []);
 
   // Play bell sound
   const playBell = () => {
@@ -202,8 +201,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
-    };
-  }, [isActive, isPaused, bellInterval, customDuration, selectedPreset, isCustom, sessionCount, totalMinutes, onComplete]);
+    }, [isActive, isPaused, bellInterval, customDuration, selectedPreset, isCustom, sessionCount, totalMinutes, onComplete]);
 
   const handleStart = () => {
     const duration = isCustom ? customDuration : selectedPreset.duration;

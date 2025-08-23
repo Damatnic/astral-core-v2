@@ -265,8 +265,7 @@ export const useConnectionStatus = (): string => {
     initializeServiceWorker();
     return () => {
       navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage);
-    };
-  }, [handleServiceWorkerMessage]);
+    }, [handleServiceWorkerMessage]);
 
   // Monitor online/offline status
   useEffect(() => {
@@ -298,8 +297,7 @@ export const useConnectionStatus = (): string => {
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
-    };
-  }, [updateConnectionQuality]);
+    }, [updateConnectionQuality]);
 
   // Monitor connection quality changes
   useEffect(() => {
@@ -316,8 +314,7 @@ export const useConnectionStatus = (): string => {
       connection.addEventListener('change', handleConnectionChange);
       return () => {
         connection.removeEventListener('change', handleConnectionChange);
-      };
-    }
+      }
   }, [updateConnectionQuality]);
 
   // Initial crisis resources check
@@ -371,10 +368,6 @@ export const useConnectionStatus = (): string => {
     updateCrisisResources,
     forceCacheUpdate,
     sendMessageToServiceWorker
-  };
-}
-
-export default useConnectionStatus
-
+  }
 
 export default useConnectionStatus

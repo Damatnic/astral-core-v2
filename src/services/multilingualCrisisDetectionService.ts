@@ -375,8 +375,7 @@ class MultilingualCrisisDetectionService {
       detectedKeywords,
       culturalContext: [...new Set(culturalContexts)],
       recommendedResponse
-    };
-  }
+    }
 
   private getRecommendedResponse(
     riskLevel: 'low' | 'moderate' | 'high' | 'urgent',
@@ -451,8 +450,7 @@ class MultilingualCrisisDetectionService {
       culturalRecommendations: [result.recommendedResponse],
       detectedLanguage,
       languageConfidence: 0.9 // Simplified for now
-    };
-  }
+    }
 
   /**
    * Simple language detection (mock implementation)

@@ -20,7 +20,6 @@ export function useInterval(callback: () => void, delay: number | null) {
         if (typeof clearInterval !== 'undefined') {
           clearInterval(id);
         }
-      };
-    }
+      }
   }, [delay]);
 }

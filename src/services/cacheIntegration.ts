@@ -27,8 +27,7 @@ export class CacheIntegration {
       enableAnalytics: true,
       maintenanceInterval: 30, // 30 minutes
       ...config
-    };
-  }
+    }
 
   /**
    * Initialize intelligent caching integration
@@ -207,8 +206,7 @@ export class CacheIntegration {
       lastRun: number;
       intervalMinutes: number;
       isEnabled: boolean;
-    };
-  }> {
+    }> {
     if (!this.initialized) {
       throw new Error('Cache integration not initialized');
     }
@@ -228,8 +226,7 @@ export class CacheIntegration {
         intervalMinutes: this.config.maintenanceInterval,
         isEnabled: this.maintenanceTimer !== null
       }
-    };
-  }
+    }
 
   /**
    * Invalidate specific cache entries
@@ -314,14 +311,12 @@ export class CacheIntegration {
       return {
         totalSize,
         cacheBreakdown
-      };
-    } catch (error) {
+      } catch (error) {
       console.error('[CacheIntegration] Cache size calculation failed:', error);
       return {
         totalSize: 0,
         cacheBreakdown: []
-      };
-    }
+      }
   }
 
   /**

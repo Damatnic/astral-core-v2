@@ -20,8 +20,7 @@ describe('ShareView user flow', () => {
     (mockedApiClient as any).ai = {
       chat: jest.fn(),
       draftPostFromChat: jest.fn()
-    };
-  });
+    });
 
   test.skip('user can chat with AI, draft a post, and submit it', async () => {
     // Mock AI responses - the chat function returns an object with response property

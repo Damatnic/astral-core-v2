@@ -352,25 +352,3 @@ export const useOptionalAuth = (): OptionalAuthContextType => {
   }
   return context;
 }
-  }), [user, isAnonymous, helperProfile, isNewUser, isLoading, login, logout, register, reloadProfile, updateHelperProfile, userToken, anonymousId])
-
-  // Sync with global state object
-  useEffect(() => {
-    authState.isAuthenticated = value.isAuthenticated;
-    authState.isAnonymous = value.isAnonymous;
-    authState.user = value.user;
-    authState.helperProfile = value.helperProfile;
-    authState.userToken = value.userToken;
-    authState.anonymousId = value.anonymousId;
-  }, [value])
-
-  return <OptionalAuthContext.Provider value={value}>{children}</OptionalAuthContext.Provider>;
-}
-
-export const useOptionalAuth = (): OptionalAuthContextType => {
-  const context = useContext(OptionalAuthContext);
-  if(context === undefined) {
-    throw new Error("useOptionalAuth must be used within an OptionalAuthProvider");
-  }
-  return context;
-}

@@ -45,7 +45,6 @@ export const usePerformanceMetrics = (refreshInterval = 10000) => {
   }, [refreshInterval]);
 
   return { metrics, isLoading, error };
-};
 
 // Hook for performance alerts
 export const usePerformanceAlerts = () => {
@@ -98,7 +97,6 @@ export const usePerformanceAlerts = () => {
     clearNewAlerts,
     dismissAlert
   };
-};
 
 // Hook for optimization recommendations
 export const useOptimizationRecommendations = (maxRecommendations = 10) => {
@@ -128,7 +126,6 @@ export const useOptimizationRecommendations = (maxRecommendations = 10) => {
   }, [maxRecommendations]);
 
   return { recommendations, isLoading };
-};
 
 // Hook for performance grade calculation
 export const usePerformanceGrade = () => {
@@ -172,7 +169,6 @@ export const usePerformanceGrade = () => {
   }, []);
 
   return { grade, gradeColor };
-};
 
 // Hook for crisis performance monitoring
 export const useCrisisPerformanceMonitoring = () => {
@@ -275,8 +271,7 @@ export const exportPerformanceData = (hours = 24) => {
       alerts,
       recommendations,
       summary: generatePerformanceSummary()
-    };
-  } catch (error) {
+    } catch (error) {
     console.error('Failed to export performance data:', error);
     return null;
   }

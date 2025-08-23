@@ -101,8 +101,7 @@ const CheckInTab: React.FC = () => {
             streakDays: streak,
             totalCheckIns: history.length,
             topMood
-        };
-    }, [history]);
+        }, [history]);
 
     const handleTagClick = (tag: string) => {
         setTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);

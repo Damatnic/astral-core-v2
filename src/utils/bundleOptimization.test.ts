@@ -120,8 +120,7 @@ describe('bundleOptimization', () => {
         largestChunks: [],
         unusedCode: 0,
         memoryImpact: 0,
-      };
-    });
+      });
     describe('analyzeBundlePerformance', () => {
       test('should return metrics without analysis in production', async () => {
         process.env.NODE_ENV = 'production';

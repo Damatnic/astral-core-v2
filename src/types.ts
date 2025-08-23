@@ -380,8 +380,7 @@ export interface AdminProfile {
         email: string;
         phone: string;
         emergencyContact: string;
-    };
-}
+    }
 
 export interface HelperApplication {
     id: string;
@@ -444,8 +443,7 @@ export interface PlatformAnalytics {
         dataBackupStatus: string;
         securityIncidents: number;
         performanceScore: number;
-    };
-}
+    }
 
 export interface CommunityHealthMetrics {
     totalPosts: number;

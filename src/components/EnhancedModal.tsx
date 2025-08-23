@@ -196,8 +196,7 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
         announcement.textContent = 'Modal closed';
         document.body.appendChild(announcement);
         setTimeout(() => document.body.removeChild(announcement), 1000);
-      };
-    }
+      }
   }, [isOpen, autoFocus, trapFocus, openAnnouncement, getFocusableElements, trapFocusInContainer, handleKeyDown]);
 
   // Don't render if not open

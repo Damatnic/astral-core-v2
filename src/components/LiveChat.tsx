@@ -169,8 +169,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({
       if (isTyping) {
         sendTyping(false);
       }
-    };
-  }, [isTyping, sendTyping]);
+    }, [isTyping, sendTyping]);
 
   return (
     <div className="live-chat-container" style={{ height }}>

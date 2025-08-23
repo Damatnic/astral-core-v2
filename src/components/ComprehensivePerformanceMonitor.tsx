@@ -91,8 +91,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
     return () => {
       clearInterval(interval);
       unsubscribeAlert?.();
-    };
-  }, [updatePerformanceData, enableRealTimeAlerts, handleAlertUpdate]);
+    }, [updatePerformanceData, enableRealTimeAlerts, handleAlertUpdate]);
 
   // Format metric values for display
   const formatMetric = (value: number, unit: string, precision = 0): string => {

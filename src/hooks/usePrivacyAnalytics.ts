@@ -214,4 +214,3 @@ export const usePrivacyAnalytics = (): UsePrivacyAnalyticsReturn => {
     refreshInsights,
     resetPrivacyBudget
   };
-};

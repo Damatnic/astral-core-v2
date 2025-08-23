@@ -310,8 +310,7 @@ class SecureStorageService {
     encryptedKeys: number;
     totalSize: number;
     byClassification: Record<string, number>;
-    byEncryption: { encrypted: number; plaintext: number };
-  } {
+    byEncryption: { encrypted: number; plaintext: number } {
     const stats = {
       totalKeys: 0,
       encryptedKeys: 0,
@@ -548,7 +547,6 @@ export const useSecureStorage = () => {
     exportData: (includeMetadata?: boolean) => storage.exportData(includeMetadata),
     importData: (backup: any) => storage.importData(backup)
   };
-};
 
 export { SecureStorageService };
 export default SecureStorageService;

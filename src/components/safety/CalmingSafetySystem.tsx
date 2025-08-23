@@ -112,8 +112,7 @@ export const CalmingSafetySystem: React.FC<CalmingSafetySystemProps> = ({
     
     return () => {
       clearInterval(interval);
-    };
-  }, 10000) // Change every 10 seconds
+    }, 10000) // Change every 10 seconds
 
     return () => clearInterval(interval)
   }, [showHopeMessages, messages.length])
@@ -228,8 +227,7 @@ export const CalmingSafetySystem: React.FC<CalmingSafetySystemProps> = ({
 
   // Emergency call handler
   const handleEmergencyCall = (number: string): void => {
-    window.location.href = `tel:${number};
-  }
+    window.location.href = `tel:${number}
 
   return (
     <div className=calming-safety-system" data-testid=", calming-safety-system">;

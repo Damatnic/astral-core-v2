@@ -27,7 +27,6 @@ export interface CrisisAnalysisOptions {
       region?: string;
       hasGeolocation: boolean;
     };
-  };
 }
 
 export interface CrisisAnalysisResult {
@@ -87,8 +86,7 @@ export class CrisisDetectionIntegrationService {
         riskAssessment: result.riskAssessment,
         enhanced: result.enhanced,
         error: result.error
-      };
-    } catch (error) {
+      } catch (error) {
       console.error('Crisis detection analysis failed:', error);
       return {
         isCrisis: false,
@@ -99,8 +97,7 @@ export class CrisisDetectionIntegrationService {
         emergencyServicesRequired: false,
         enhanced: false,
         error: error instanceof Error ? error.message : String(error)
-      };
-    }
+      }
   }
 
   /**
@@ -183,8 +180,7 @@ export class CrisisDetectionIntegrationService {
       highestSeverity,
       escalationTriggered,
       recommendedActions
-    };
-  }
+    }
 
   /**
    * Process emergency escalation for safety plan events

@@ -123,8 +123,7 @@ class SimpleAuthService {
       return { 
         success: false, 
         error: error instanceof Error ? error.message : 'Login failed' 
-      };
-    }
+      }
   }
 
   /**
@@ -155,8 +154,7 @@ class SimpleAuthService {
       return { 
         success: false, 
         error: error instanceof Error ? error.message : 'Registration failed' 
-      };
-    }
+      }
   }
 
   /**
@@ -270,16 +268,14 @@ class SimpleAuthService {
         return { 
           success: false, 
           error: 'User not authenticated' 
-        };
-      }
+        }
 
       // Validate updates
       if (updates.email && !this.isValidEmail(updates.email)) {
         return {
           success: false,
           error: 'Invalid email format'
-        };
-      }
+        }
 
       // Update local user data
       this.user = {
@@ -309,14 +305,12 @@ class SimpleAuthService {
       return {
         success: true,
         user: this.user
-      };
-    } catch (error) {
+      } catch (error) {
       logger.error('Profile update failed:', error, 'SimpleAuthService');
       return {
         success: false,
         error: 'Failed to update profile'
-      };
-    }
+      }
   }
 
   /**
@@ -337,8 +331,7 @@ class SimpleAuthService {
         return {
           success: false,
           error: 'Please provide a valid email address'
-        };
-      }
+        }
 
       // In production, this would send a reset email via API
       // const response = await fetch('/api/auth/reset-password', {
@@ -366,14 +359,12 @@ class SimpleAuthService {
       return {
         success: true,
         message: 'Password reset instructions have been sent to your email'
-      };
-    } catch (error) {
+      } catch (error) {
       logger.error('Password reset request failed:', error, 'SimpleAuthService');
       return {
         success: false,
         error: 'Failed to process password reset request'
-      };
-    }
+      }
   }
 
   /**
@@ -386,16 +377,14 @@ class SimpleAuthService {
         return {
           success: false,
           error: 'Missing required information'
-        };
-      }
+        }
 
       // Check password strength
       if (newPassword.length < 8) {
         return {
           success: false,
           error: 'Password must be at least 8 characters long'
-        };
-      }
+        }
 
       // Verify reset token
       const resetDataStr = localStorage.getItem('password_reset_' + email);
@@ -403,16 +392,14 @@ class SimpleAuthService {
         return {
           success: false,
           error: 'Invalid or expired reset token'
-        };
-      }
+        }
 
       const resetData = JSON.parse(resetDataStr);
       if (resetData.token !== token || resetData.expiry < Date.now()) {
         return {
           success: false,
           error: 'Invalid or expired reset token'
-        };
-      }
+        }
 
       // In production, this would update the password via API
       // const response = await fetch('/api/auth/reset-password/confirm', {
@@ -429,14 +416,12 @@ class SimpleAuthService {
       return {
         success: true,
         message: 'Password has been reset successfully'
-      };
-    } catch (error) {
+      } catch (error) {
       logger.error('Password reset failed:', error, 'SimpleAuthService');
       return {
         success: false,
         error: 'Failed to reset password'
-      };
-    }
+      }
   }
 
   /**
@@ -456,8 +441,7 @@ class SimpleAuthService {
       window.removeEventListener('auth:login', handleLogin as EventListener);
       window.removeEventListener('auth:logout', handleLogout);
       window.removeEventListener('auth:register', handleRegister as EventListener);
-    };
-  }
+    }
 }
 
 // Export singleton instance
@@ -465,14 +449,12 @@ export const simpleAuthService = new SimpleAuthService();
 
 // Export for convenience
 export default simpleAuthService;
-      };
-    } catch (error) {
+      } catch (error) {
       logger.error('Profile update failed:', error, 'SimpleAuthService');
       return {
         success: false,
         error: 'Failed to update profile'
-      };
-    }
+      }
   }
 
   /**
@@ -493,8 +475,7 @@ export default simpleAuthService;
         return {
           success: false,
           error: 'Please provide a valid email address'
-        };
-      }
+        }
 
       // In production, this would send a reset email via API
       // const response = await fetch('/api/auth/reset-password', {
@@ -522,14 +503,12 @@ export default simpleAuthService;
       return {
         success: true,
         message: 'Password reset instructions have been sent to your email'
-      };
-    } catch (error) {
+      } catch (error) {
       logger.error('Password reset request failed:', error, 'SimpleAuthService');
       return {
         success: false,
         error: 'Failed to process password reset request'
-      };
-    }
+      }
   }
 
   /**
@@ -542,16 +521,14 @@ export default simpleAuthService;
         return {
           success: false,
           error: 'Missing required information'
-        };
-      }
+        }
 
       // Check password strength
       if (newPassword.length < 8) {
         return {
           success: false,
           error: 'Password must be at least 8 characters long'
-        };
-      }
+        }
 
       // Verify reset token
       const resetDataStr = localStorage.getItem('password_reset_' + email);
@@ -559,16 +536,14 @@ export default simpleAuthService;
         return {
           success: false,
           error: 'Invalid or expired reset token'
-        };
-      }
+        }
 
       const resetData = JSON.parse(resetDataStr);
       if (resetData.token !== token || resetData.expiry < Date.now()) {
         return {
           success: false,
           error: 'Invalid or expired reset token'
-        };
-      }
+        }
 
       // In production, this would update the password via API
       // const response = await fetch('/api/auth/reset-password/confirm', {
@@ -585,14 +560,12 @@ export default simpleAuthService;
       return {
         success: true,
         message: 'Password has been reset successfully'
-      };
-    } catch (error) {
+      } catch (error) {
       logger.error('Password reset failed:', error, 'SimpleAuthService');
       return {
         success: false,
         error: 'Failed to reset password'
-      };
-    }
+      }
   }
 
   /**
@@ -612,8 +585,7 @@ export default simpleAuthService;
       window.removeEventListener('auth:login', handleLogin as EventListener);
       window.removeEventListener('auth:logout', handleLogout);
       window.removeEventListener('auth:register', handleRegister as EventListener);
-    };
-  }
+    }
 }
 
 // Export singleton instance

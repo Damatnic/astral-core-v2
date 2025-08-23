@@ -179,8 +179,7 @@ class LocalStorageService {
         notifications: false,
         language: 'en',
       },
-    };
-  }
+    }
 
   /**
    * Clear all anonymous user data
@@ -287,11 +286,9 @@ class LocalStorageService {
       return {
         used: totalSize,
         available: this.isStorageAvailable(),
-      };
-    } catch (error) {
+      } catch (error) {
       console.error('Failed to get storage info:', error);
-      return { used: 0, available: false };
-    }
+      return { used: 0, available: false }
   }
 }
 

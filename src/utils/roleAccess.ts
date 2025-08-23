@@ -14,8 +14,7 @@ export interface RolePermissions {
     canViewAnalytics: boolean;
     canCreateContent: boolean;
     canParticipateInCommunity: boolean;
-  };
-}
+  }
 
 // Define comprehensive role permissions
 export const ROLE_PERMISSIONS: Record<UserRole, RolePermissions> = {
@@ -198,7 +197,6 @@ export const getRolePermissions = (role: UserRole): RolePermissions => {
     deniedViews: [...permissions.deniedViews],
     features: { ...permissions.features }
   };
-};
 
 export const canAccessView = (userRole: UserRole | undefined, view: View): boolean => {
   if (!userRole) {
@@ -261,8 +259,7 @@ export const validateViewAccess = (
   requestedView: View
 ): { allowed: boolean; redirectTo?: View; reason?: string } => {
   if (canAccessView(userRole, requestedView)) {
-    return { allowed: true };
-  }
+    return { allowed: true }
   
   const fallbackView = userRole ? getDefaultViewForRole(userRole) : 'feed';
   
@@ -273,4 +270,3 @@ export const validateViewAccess = (
       Object.values(ROLE_PERMISSIONS).find(p => p.allowedViews.includes(requestedView))?.role || 'unknown'
     }`
   };
-};

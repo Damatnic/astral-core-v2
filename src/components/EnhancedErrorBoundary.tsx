@@ -56,8 +56,7 @@ class EnhancedErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryS
       canRecover: true,
       retryCount: 0,
       timestamp: null
-    };
-  }
+    }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
     const errorId = `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)};
@@ -75,8 +74,7 @@ class EnhancedErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryS
       category,
       canRecover: true,
       timestamp
-    };
-  }
+    }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Update state with error info

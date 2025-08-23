@@ -149,8 +149,7 @@ export const CrisisStressTestingDashboard: React.FC<CrisisStressTestingDashboard
       critical,
       avgResponseTime: Math.round(avgResponseTime),
       avgAvailability: Math.round(avgAvailability * 100)
-    };
-  }, [testResults]);
+    }, [testResults]);
 
   const stats = getTestStats();
 

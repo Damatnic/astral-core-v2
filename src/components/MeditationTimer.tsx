@@ -62,8 +62,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
-    };
-  }, [isRunning, timeRemaining, onComplete]);
+    }, [isRunning, timeRemaining, onComplete]);
   
   useEffect(() => {
     // Initialize audio context for ambient sounds
@@ -73,8 +72,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
     
     return () => {
       stopAmbientSound();
-    };
-  }, []);
+    }, []);
   
   useEffect(() => {
     if (isRunning && selectedSound !== 'none') {

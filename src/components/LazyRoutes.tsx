@@ -348,7 +348,6 @@ export const getRoutePerformance = (routePath: string) => {
     firstContentfulPaint: performance.getEntriesByName('first-contentful-paint')[0]?.startTime,
     largestContentfulPaint: performance.getEntriesByName('largest-contentful-paint')[0]?.startTime
   };
-};
 
 export default {
   CrisisView,

@@ -209,7 +209,6 @@ export const calculateLazyLoadingSavings = () => {
     componentCount: lazyComponents.length,
     estimatedSavings
   };
-};
 
 // Initialize preloading when the module loads
 if (typeof window !== 'undefined') {

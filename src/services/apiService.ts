@@ -76,8 +76,7 @@ class ApiService {
           config.headers = {
             ...config.headers,
             'Authorization': `Bearer ${token}`
-          };
-        }
+          }
       }
       return config;
     });
@@ -135,8 +134,7 @@ class ApiService {
     if (finalConfig.method === 'GET' || !finalConfig.method) {
       const cached = this.getFromCache(cacheKey);
       if (cached) {
-        return { data: cached, status: 200, headers: new Headers(), ok: true };
-      }
+        return { data: cached, status: 200, headers: new Headers(), ok: true }
 
       // Check for pending request to prevent duplicate calls
       const pending = this.pendingRequests.get(cacheKey);
@@ -238,33 +236,27 @@ class ApiService {
           status: response.status,
           headers: response.headers,
           ok: response.ok
-        };
-
-      } catch (error) {
+        } catch (error) {
         // Handle network errors with proper type guards
         if (error instanceof Error) {
           if (error.name === 'AbortError') {
             lastError = {
               message: 'Request timeout',
               code: 'TIMEOUT'
-            };
-          } else if (error instanceof TypeError && error.message === 'Failed to fetch') {
+            } else if (error instanceof TypeError && error.message === 'Failed to fetch') {
             lastError = {
               message: 'Network error',
               code: 'NETWORK_ERROR'
-            };
-          } else {
+            } else {
             lastError = {
               message: error.message,
               code: 'UNKNOWN_ERROR'
-            };
-          }
+            }
         } else {
           lastError = {
             message: typeof error === 'string' ? error : 'Unknown error occurred',
             code: 'UNKNOWN_ERROR'
-          };
-        }
+          }
 
         // Retry on network errors
         if (attempt < retries) {

@@ -502,8 +502,7 @@ export const NotificationPreferences: React.FC = () => {
                             const days = s.days.includes(day)
                               ? s.days.filter(d => d !== day)
                               : [...s.days, day];
-                            return { ...s, days };
-                          }
+                            return { ...s, days }
                           return s;
                         }));
                       }}

@@ -173,8 +173,7 @@ export class DemoDataService {
             applicationStatus: 'approved',
             trainingCompleted: true,
             quizScore: 95
-        };
-    }
+        }
 
     getAllDilemmasForHelper(): Dilemma[] {
         return [
@@ -392,8 +391,7 @@ export class DemoDataService {
             avgTimeToFirstSupport: "8m 32s",
             totalHelpers: 23,
             mostCommonCategory: "anxiety"
-        };
-    }
+        }
 
     // Comprehensive Astral Admin Profile & Dashboard Data
     getAstralAdminProfile(): any {
@@ -603,8 +601,7 @@ export class DemoDataService {
                     status: 'monitoring'
                 }
             ]
-        };
-    }
+        }
 
     // Community Content for All Users
     getCommunityReflections(): Reflection[] {
@@ -689,8 +686,7 @@ export class DemoDataService {
                     timestamp: new Date(Date.now() - 7 * 60 * 1000).toISOString()
                 }
             ]
-        };
-    }
+        }
 
     // Crisis Escalation Demo Data
     getCrisisScenarioData() {
@@ -723,8 +719,7 @@ export class DemoDataService {
                     timestamp: new Date(Date.now() - 20 * 60 * 1000).toISOString()
                 }
             ]
-        };
-    }
+        }
 
     // Interconnected Workflow: User → Helper → Admin
     getInterconnectedWorkflowData(): any {
@@ -856,8 +851,7 @@ export class DemoDataService {
                 },
                 longTermOutcome: 'user_engaging_ongoing_support'
             }
-        };
-    }
+        }
 
     // Additional Interconnected Scenarios
     getMultipleWorkflowScenarios(): any {
@@ -1018,8 +1012,7 @@ export class DemoDataService {
                     outcomeForPlatform: 'evidence_based_feature_enhancement'
                 }
             }
-        };
-    }
+        }
 
     // Initialize demo data based on user type
     initializeDemoData(userType: 'user' | 'helper' | 'admin', userToken: string) {
@@ -1073,8 +1066,7 @@ export class DemoDataService {
                     medicalSupport: crisisScenarios.substanceAbuseCrisis.helperResponse.medicalGuidance,
                     outcome: crisisScenarios.substanceAbuseCrisis.resolutionTracking
                 }
-            };
-        } else if (userType === 'helper') {
+            } else if (userType === 'helper') {
             data.profile = this.getConstellationGuideProfile();
             data.chatSessions = this.getHelperChatSessions();
             data.helpSessions = this.getHelperSessions();
@@ -1120,8 +1112,7 @@ export class DemoDataService {
                     adminBackup: crisisScenarios.substanceAbuseCrisis.adminEscalation,
                     outcome: crisisScenarios.substanceAbuseCrisis.resolutionTracking
                 }
-            };
-        } else if (userType === 'admin') {
+            } else if (userType === 'admin') {
             data.profile = this.getAstralAdminProfile();
             data.helperApplications = this.getAdminHelperApplications();
             data.moderationActions = this.getAdminModerationActions();
@@ -1168,8 +1159,7 @@ export class DemoDataService {
                     myEscalation: crisisScenarios.substanceAbuseCrisis.adminEscalation,
                     systemMetrics: crisisScenarios.substanceAbuseCrisis.resolutionTracking
                 }
-            };
-        }
+            }
 
         // Common data for all user types
         data.communityReflections = this.getCommunityReflections();
@@ -1535,8 +1525,7 @@ export class DemoDataService {
                     ]
                 }
             }
-        };
-    }
+        }
 
     // ===== COMMUNITY CONTENT METHODS =====
 

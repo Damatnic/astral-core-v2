@@ -24,8 +24,7 @@ export interface AutoSaveIndicatorProps {
     error: string;
     idle: string;
     nextSave: string;
-  };
-}
+  }
 
 const DEFAULT_LABELS = {
   saving: 'Saving...',

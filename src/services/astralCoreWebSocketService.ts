@@ -407,8 +407,7 @@ class AstralCoreWebSocketService {
    * Get connection state
    */
   getConnectionState(): WSConnectionState {
-    return { ...this.connectionState };
-  }
+    return { ...this.connectionState }
 
   /**
    * Check if connected

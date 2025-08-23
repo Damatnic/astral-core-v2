@@ -34,8 +34,7 @@ const ScreenReaderAnnouncement: React.FC<ScreenReaderAnnouncementProps> = ({
       if (clearOnUnmount && announcementRef.current) {
         announcementRef.current.textContent = '';
       }
-    };
-  }, [clearOnUnmount]);
+    }, [clearOnUnmount]);
 
   return (
     <output
@@ -74,7 +73,6 @@ export const useScreenReaderAnnouncement = () => {
   };
 
   return { announce };
-};
 
 // Context for global announcements
 export const AnnouncementContext = React.createContext<{

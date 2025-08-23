@@ -66,8 +66,7 @@ export interface EmergencyFailoverTest {
     fallbackWorked: boolean;
     userExperience: string;
     dataIntegrity: boolean;
-  };
-}
+  }
 
 // Crisis component identifiers for testing
 export const CRISIS_COMPONENTS = {
@@ -348,8 +347,7 @@ export class CrisisStressTestingSystem {
         },
         recommendations: ['Immediate system review required', 'Contact emergency response team'],
         emergencyProcedures: ['Activate manual crisis support protocols', 'Notify system administrators']
-      };
-    }
+      }
   }
 
   // Test emergency button under high load
@@ -889,8 +887,7 @@ export class CrisisStressTestingSystem {
       fallbackWorked,
       userExperience,
       dataIntegrity
-    };
-  }
+    }
 
   /**
    * Test if the fallback mechanism activates correctly
@@ -1020,8 +1017,7 @@ export class CrisisStressTestingSystem {
           fallbackWorked: false,
           userExperience: 'Critical failure - no failover occurred',
           dataIntegrity: false
-        };
-      }
+        }
     }
   }
 
@@ -1034,8 +1030,7 @@ export class CrisisStressTestingSystem {
     
     // Simulate 99.9% success rate under normal conditions
     if (Math.random() < 0.999) {
-      return { success: true, alertId: `alert-${Date.now()}` };
-    } else {
+      return { success: true, alertId: `alert-${Date.now()}` } else {
       throw new Error('Simulated API failure');
     }
   }
@@ -1090,8 +1085,7 @@ export class CrisisStressTestingSystem {
         id: `msg-${i}`,
         content,
         hasCrisisKeywords: isCrisis
-      };
-    });
+      });
   }
 
   private async submitForCrisisAnalysis(message: any): Promise<unknown> {
@@ -1105,8 +1099,7 @@ export class CrisisStressTestingSystem {
       messageId: message.id,
       isCrisis: detectedAsCrisis,
       confidence: Math.random() * 0.4 + 0.6 // 60-100% confidence
-    };
-  }
+    }
 
   private evaluateCrisisDetectionAccuracy(messages: unknown[], results: PromiseSettledResult<any>[]): number {
     let correct = 0;
@@ -1146,8 +1139,7 @@ export class CrisisStressTestingSystem {
     
     // Simulate 99.5% success rate
     if (Math.random() < 0.995) {
-      return { resourceId, content: 'Crisis resource content' };
-    } else {
+      return { resourceId, content: 'Crisis resource content' } else {
       throw new Error('Resource temporarily unavailable');
     }
   }
@@ -1215,8 +1207,7 @@ export class CrisisStressTestingSystem {
         userImpact: 'none',
         businessImpact: 'none',
         safetyImpact: 'none'
-      };
-    }
+      }
 
     // Assess impact based on failure severity
     let userImpact: string;
@@ -1235,8 +1226,7 @@ export class CrisisStressTestingSystem {
       userImpact,
       businessImpact: userImpact,
       safetyImpact
-    };
-  }
+    }
 
   private generateRecommendations(scenario: CrisisTestScenario, metrics: any, success: boolean): string[] {
     const recommendations: string[] = [];

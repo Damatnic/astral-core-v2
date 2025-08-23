@@ -100,14 +100,12 @@ export const useMobileViewport = () => {
         window.removeEventListener('resize', updateViewportHeight);
         window.removeEventListener('resize', detectKeyboard);
         window.visualViewport?.removeEventListener('resize', handleVisualViewportChange);
-      };
-    }
+      }
 
     return () => {
       window.removeEventListener('resize', updateViewportHeight);
       window.removeEventListener('resize', detectKeyboard);
-    };
-  }, []);
+    }, []);
 
   const scrollIntoView = useCallback((element: HTMLElement, options: ScrollIntoViewOptions = {}) => {
     if (!isMobile) return;
@@ -128,7 +126,6 @@ export const useMobileViewport = () => {
     keyboardHeight,
     scrollIntoView
   };
-};
 
 // Enhanced mobile input component with proper focus handling
 interface MobileAppInputProps {
@@ -392,8 +389,7 @@ export const MobileKeyboardProvider: React.FC<MobileKeyboardProviderProps> = ({ 
 
     return () => {
       document.head.removeChild(style);
-    };
-  }, []);
+    }, []);
 
   return <>{children}</>;
 };

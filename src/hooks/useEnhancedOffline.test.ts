@@ -559,8 +559,7 @@ describe('useEnhancedOffline Hook', () => {
     let statusCallback: (status: any) => void;
     (enhancedOfflineService.onStatusChange as jest.Mock).mockImplementation((callback) => {
       statusCallback = callback;
-      return () => {};
-    });
+      return () => {});
 
     const { result } = renderHook(() => useEnhancedOffline());
 

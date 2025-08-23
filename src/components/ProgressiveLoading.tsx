@@ -419,8 +419,7 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
       default:
         return {
           borderRadius: '4px',
-        };
-    }
+        }
   };
 
   const getAnimationStyles = (): React.CSSProperties => {
@@ -435,8 +434,7 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
           backgroundImage: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
         };
       default:
-        return {};
-    }
+        return {}
   };
 
   const skeletonStyles = {

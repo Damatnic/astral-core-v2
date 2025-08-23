@@ -83,8 +83,7 @@ class SecurityService {
   // Input validation
   validateInput(value: any, rules: ValidationRule): { isValid: boolean; errors: string[] } {
     if (!this.config.enableInputValidation) {
-      return { isValid: true, errors: [] };
-    }
+      return { isValid: true, errors: [] }
 
     const errors: string[] = [];
 
@@ -127,8 +126,7 @@ class SecurityService {
     return {
       isValid: errors.length === 0,
       errors
-    };
-  }
+    }
 
   // XSS Protection
   sanitizeInput(input: string): string {
@@ -165,13 +163,11 @@ class SecurityService {
   // Rate Limiting
   checkRateLimit(key: string, identifier: string): { allowed: boolean; resetTime?: number; remaining?: number } {
     if (!this.config.enableRateLimit) {
-      return { allowed: true };
-    }
+      return { allowed: true }
 
     const config = this.config.rateLimits[key];
     if (!config) {
-      return { allowed: true };
-    }
+      return { allowed: true }
 
     const now = Date.now();
     const rateLimitKey = `${key}:${identifier}`;
@@ -187,24 +183,21 @@ class SecurityService {
         allowed: true, 
         resetTime: now + config.windowMs,
         remaining: config.maxRequests - 1
-      };
-    }
+      }
 
     if (existing.count >= config.maxRequests) {
       return { 
         allowed: false, 
         resetTime: existing.resetTime,
         remaining: 0
-      };
-    }
+      }
 
     existing.count++;
     return { 
       allowed: true, 
       resetTime: existing.resetTime,
       remaining: config.maxRequests - existing.count
-    };
-  }
+    }
 
   // IP blocking
   blockIP(ip: string, duration?: number) {
@@ -261,8 +254,7 @@ class SecurityService {
       isValid: score >= 3,
       score,
       feedback
-    };
-  }
+    }
 
   hashPassword(password: string): Promise<string> {
     // In a real app, use bcrypt or similar
@@ -427,7 +419,6 @@ export const useSecurity = () => {
     logSecurityEvent: service.logSecurityEvent.bind(service),
     addFormProtection: service.addFormProtection.bind(service)
   };
-};
 
 // Validation rules presets
 export const ValidationRules = {

@@ -54,8 +54,7 @@ export interface ScheduledNotification {
     type: 'daily' | 'weekly' | 'monthly';
     daysOfWeek?: number[]; // 0-6 for weekly
     dayOfMonth?: number; // 1-31 for monthly
-  };
-}
+  }
 
 class NotificationService {
   private serviceWorkerRegistration: ServiceWorkerRegistration | null = null;
@@ -149,8 +148,7 @@ class NotificationService {
   private loadPreferences() {
     const stored = localStorage.getItem('notification_preferences');
     if (stored) {
-      this.preferences = { ...this.preferences, ...JSON.parse(stored) };
-    }
+      this.preferences = { ...this.preferences, ...JSON.parse(stored) }
   }
 
   /**
@@ -612,8 +610,7 @@ class NotificationService {
    * Get notification preferences
    */
   getPreferences(): NotificationPreferences {
-    return { ...this.preferences };
-  }
+    return { ...this.preferences }
 
   /**
    * Show crisis notification

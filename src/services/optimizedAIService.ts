@@ -60,8 +60,7 @@ export const createLazyAIService = () => {
                   isCrisis: basicResult.score < -3 || basicResult.comparative < -0.5,
                   severity: 'low',
                   enhanced: false
-                };
-              } else {
+                } else {
                 // Fallback when sentiment analysis is unavailable
                 return {
                   score: 0,
@@ -69,8 +68,7 @@ export const createLazyAIService = () => {
                   isCrisis: false,
                   severity: 'low',
                   enhanced: false
-                };
-              }
+                }
             }
 
             // Trigger crisis escalation workflow for severe cases
@@ -97,8 +95,7 @@ export const createLazyAIService = () => {
               emergencyServicesRequired: enhancedResult.emergencyServicesRequired,
               escalationResponse: escalationResponse,
               enhanced: true
-            };
-          } catch (error) {
+            } catch (error) {
             console.error('Enhanced crisis detection failed, falling back to basic:', error);
             // Fallback to basic sentiment analysis
             const [sentiment] = await Promise.all([
@@ -114,8 +111,7 @@ export const createLazyAIService = () => {
                 severity: 'low',
                 enhanced: false,
                 error: error instanceof Error ? error.message : 'Unknown error'
-              };
-            } else {
+              } else {
               return {
                 score: 0,
                 comparative: 0,
@@ -123,12 +119,10 @@ export const createLazyAIService = () => {
                 severity: 'low',
                 enhanced: false,
                 error: 'Sentiment analysis unavailable'
-              };
-            }
+              }
           }
         }
-      };
-    },
+      },
 
     // Helper method to trigger crisis escalation workflow
     async triggerCrisisEscalation(crisisAnalysis: any, userContext: any, _originalText: string) {
@@ -184,10 +178,8 @@ export const createLazyAIService = () => {
           normalized.dispose();
           return Array.from(result);
         }
-      };
-    }
+      }
   };
-};
 
 // Service worker optimization for AI caching
 export const aiCacheStrategy = {
@@ -258,10 +250,8 @@ export const progressiveAIEnhancement = {
           comparative: foundKeywords.length * -0.8,
           isCrisis: foundKeywords.length > 0,
           method: 'keyword-based'
-        };
-      }
-    };
-  }
+        }
+    }
 };
 
 // AI Service Manager with smart loading

@@ -234,6 +234,5 @@ export const useLoadingState = (initialLoading = false) => {
     setLoadingError,
     clearError
   };
-};
 
 export default LoadingSpinner;

@@ -26,8 +26,7 @@ export interface Achievement {
   progress?: {
     current: number;
     target: number;
-  };
-}
+  }
 
 export interface UserStats {
   totalPoints: number;
@@ -48,8 +47,7 @@ export interface UserStats {
     daysActive: number;
     aiChatSessions: number;
     reflectionsWritten: number;
-  };
-}
+  }
 
 export interface LevelInfo {
   level: number;
@@ -222,8 +220,7 @@ class GamificationService {
         aiChatSessions: 0,
         reflectionsWritten: 0
       }
-    };
-  }
+    }
 
   private saveUserStats() {
     localStorage.setItem('userStats', JSON.stringify(this.userStats));
@@ -258,12 +255,10 @@ class GamificationService {
         currentLevelPoints = points - levelInfo.pointsRequired;
       } else {
         const nextLevelPoints = levelInfo.pointsRequired - points;
-        return { level, currentLevelPoints, nextLevelPoints };
-      }
+        return { level, currentLevelPoints, nextLevelPoints }
     }
     
-    return { level, currentLevelPoints, nextLevelPoints: 0 };
-  }
+    return { level, currentLevelPoints, nextLevelPoints: 0 }
 
   private checkAchievements() {
     const newlyUnlocked: Achievement[] = [];
@@ -414,8 +409,7 @@ class GamificationService {
 
   // Getters
   getUserStats(): UserStats {
-    return { ...this.userStats };
-  }
+    return { ...this.userStats }
 
   getAchievements(): Achievement[] {
     return [...this.achievements];
@@ -441,8 +435,7 @@ class GamificationService {
     // Return unsubscribe function
     return () => {
       this.listeners.delete(callback);
-    };
-  }
+    }
 
   // Reset for testing
   reset() {
@@ -476,7 +469,6 @@ export const useGamification = () => {
     getLevelInfo: service.getLevelInfo.bind(service),
     getProgressToNextLevel: service.getProgressToNextLevel.bind(service)
   };
-};
 
 // Singleton instance
 let gamificationServiceInstance: GamificationService | null = null;

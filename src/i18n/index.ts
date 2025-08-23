@@ -104,8 +104,7 @@ const loadTranslations = async (language: string, namespace: string) => {
     return module.default;
   } catch (error) {
 
-    return {};
-  }
+    return {}
 }
 
 // Language detection configuration

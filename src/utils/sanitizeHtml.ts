@@ -67,5 +67,4 @@ export function safeMarkdownToHtml(text: string): string {
 
 // React-safe rendering helper
 export function createSafeHtml(content: string): { __html: string } {
-  return { __html: safeMarkdownToHtml(content) };
-}
+  return { __html: safeMarkdownToHtml(content) }

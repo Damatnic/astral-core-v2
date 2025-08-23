@@ -115,8 +115,7 @@ class PerformanceUtils {
       downlink: connection?.downlink || 10,
       saveData: connection?.saveData || false,
       rtt: connection?.rtt || 50,
-    };
-  }
+    }
 
   // Get device capabilities
   static getDeviceInfo(): DeviceInfo {
@@ -138,8 +137,7 @@ class PerformanceUtils {
       isLowEnd,
       supportsSW: 'serviceWorker' in navigator,
       supportsWASM: typeof WebAssembly !== 'undefined',
-    };
-  }
+    }
 
   // Measure First Contentful Paint
   static measureFCP(): Promise<number> {
@@ -294,8 +292,7 @@ export const useComponentRenderTracker = (componentName: string) => {
       const endTime = performance.now();
       const duration = endTime - startTime;
       trackComponentRender(componentName, duration);
-    };
-  }, [componentName, trackComponentRender]);
+    }, [componentName, trackComponentRender]);
 };
 
 // Network-aware loading hook
@@ -320,7 +317,6 @@ export const useNetworkAwareLoading = () => {
     networkInfo,
     deviceInfo,
   };
-};
 
 // Performance monitoring hook
 export const usePerformanceMonitoring = () => {
@@ -386,8 +382,7 @@ export const MobilePerformanceProvider: React.FC<MobilePerformanceProviderProps>
       connection.addEventListener('change', handleConnectionChange);
       return () => {
         connection.removeEventListener('change', handleConnectionChange);
-      };
-    }
+      }
   }, []);
 
   // Initialize performance monitoring

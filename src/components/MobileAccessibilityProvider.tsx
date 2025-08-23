@@ -150,8 +150,7 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     
     return () => {
       cleanupAccessibilityObservers();
-    };
-  }, []);
+    }, []);
 
   // Detect user accessibility preferences
   const detectAccessibilityPreferences = useCallback(() => {
@@ -258,8 +257,7 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     return () => {
       focusObserver.disconnect();
       contentObserver.disconnect();
-    };
-  }, [screenReader.enabled, screenReader.announceChanges]);
+    }, [screenReader.enabled, screenReader.announceChanges]);
 
   // Cleanup observers
   const cleanupAccessibilityObservers = useCallback(() => {
@@ -472,8 +470,7 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [preferences.highContrast]);
+    }, [preferences.highContrast]);
 
   // Handle tab navigation
   const handleTabNavigation = useCallback((event: KeyboardEvent) => {
@@ -606,8 +603,7 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
         return {
           ...prev,
           trapStack: newStack
-        };
-      });
+        });
       
       focusTrapRef.current = null;
       announceToScreenReader('Focus trap removed', 'assertive');
@@ -774,8 +770,7 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
       issues,
       suggestions,
       compliantAreas
-    };
-  }, [touchAccessibility.targetSize]);
+    }, [touchAccessibility.targetSize]);
 
   // Adapt for color blindness
   const adaptForColorBlindness = useCallback((element: HTMLElement) => {

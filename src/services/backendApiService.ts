@@ -193,8 +193,7 @@ class BackendApiService {
             ],
             message: 'We\'re concerned about you. Please reach out for help.'
           }
-        };
-      }
+        }
       
       return {
         success: true,
@@ -202,8 +201,7 @@ class BackendApiService {
           crisisDetected: false,
           severity: 'none'
         }
-      };
-    },
+      },
     
     analyzeMood: async (moodData: {
       score: number;
@@ -223,8 +221,7 @@ class BackendApiService {
             ['Consider reaching out to a crisis helpline', 'Talk to someone you trust', 'Use emergency coping strategies'] :
             ['Practice self-care', 'Try breathing exercises', 'Connect with support network']
         }
-      };
-    }
+      }
   };
 
   // Data Sync Service
@@ -247,14 +244,12 @@ class BackendApiService {
         return {
           success: true,
           message: 'Data synced successfully'
-        };
-      } catch (error) {
+        } catch (error) {
         console.error('Sync failed:', error);
         return {
           success: false,
           error: 'Sync failed'
-        };
-      }
+        }
     },
     
     backup: async () => {
@@ -279,17 +274,14 @@ class BackendApiService {
         return {
           success: true,
           message: 'Backup created successfully'
-        };
-      } catch (error) {
+        } catch (error) {
         console.error('Backup failed:', error);
         return {
           success: false,
           error: 'Backup failed'
-        };
-      }
+        }
     }
-  };
-}
+  }
 
 export const backendApiService = new BackendApiService();
 export default backendApiService;

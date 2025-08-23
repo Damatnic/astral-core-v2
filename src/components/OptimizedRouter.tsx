@@ -316,15 +316,13 @@ export const OptimizedRouter: React.FC = () => {
     
     return () => {
       performanceTracker.current.trackRouteComplete(location.pathname);
-    };
-  }, [location]);
+    }, [location]);
   
   // Cleanup on unmount
   useEffect(() => {
     return () => {
       preloadManager.current.cleanup();
-    };
-  }, []);
+    }, []);
   
   // Preload adjacent routes based on navigation type
   useEffect(() => {
@@ -387,8 +385,7 @@ export const OptimizedLink: React.FC<{
       if (linkRef.current) {
         preloadManager.current.unobserveLink(linkRef.current);
       }
-    };
-  }, [preload]);
+    }, [preload]);
   
   const handleMouseEnter = useCallback(() => {
     if (preload) {

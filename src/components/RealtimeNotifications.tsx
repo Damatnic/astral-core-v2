@@ -58,8 +58,7 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
     return () => {
       unsubscribe();
       unsubscribeCrisis();
-    };
-  }, [userId]);
+    }, [userId]);
 
   const handleNewNotification = (notification: Notification) => {
     setNotifications(prev => {

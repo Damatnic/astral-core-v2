@@ -83,8 +83,7 @@ export const VideoChatView: React.FC<{
       if (peerConnectionRef.current) {
         peerConnectionRef.current.close();
       }
-    };
-  }, [onClose]);
+    }, [onClose]);
 
   const toggleMic = () => {
     if (localStreamRef.current) {

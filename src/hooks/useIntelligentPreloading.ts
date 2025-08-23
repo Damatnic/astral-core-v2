@@ -149,7 +149,6 @@ export const useIntelligentPreloading = (
     // Engine access (for advanced usage)
     engine: engineRef.current
   };
-};
 
 // Higher-order component for automatic interaction tracking
 export const withIntelligentPreloading = <P extends object>(
@@ -175,6 +174,5 @@ export const withIntelligentPreloading = <P extends object>(
 
     return React.createElement(Component, enhancedProps);
   };
-};
 
 export default useIntelligentPreloading;

@@ -207,8 +207,7 @@ class MoodAnalysisService {
         keywords: [],
         suggestions: ['Consider sharing more about how you\'re feeling'],
         timestamp: Date.now()
-      };
-    }
+      }
 
     const [primaryMood, primaryScore] = sortedMoods[0];
     const secondaryMood = sortedMoods.length > 1 ? sortedMoods[1][0] : undefined;
@@ -226,8 +225,7 @@ class MoodAnalysisService {
       keywords: detectedKeywords,
       suggestions: this.moodSuggestions[primaryMood as MoodType] || [],
       timestamp: Date.now()
-    };
-  }
+    }
 
   public analyzePattern(analyses: MoodAnalysis[]): MoodPattern {
     if (analyses.length === 0) {
@@ -237,8 +235,7 @@ class MoodAnalysisService {
         trends: { improving: true, stability: 0.5, volatility: 0.5 },
         triggers: [],
         recommendations: []
-      };
-    }
+      }
 
     // Count mood frequencies
     const moodCounts: Record<string, number> = {};
@@ -285,8 +282,7 @@ class MoodAnalysisService {
       trends: { improving, stability, volatility },
       triggers: this.identifyTriggers(analyses),
       recommendations: this.generateRecommendations(dominant_moods, { improving, stability, volatility })
-    };
-  }
+    }
 
   public generatePersonalizedRecommendations(
     moodPattern: MoodPattern,
@@ -510,7 +506,6 @@ export const useMoodAnalysis = () => {
       setMoodHistory([]);
     }
   };
-};
 
 // Singleton instance
 let moodAnalysisServiceInstance: MoodAnalysisService | null = null;

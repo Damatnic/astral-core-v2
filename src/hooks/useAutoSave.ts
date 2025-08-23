@@ -520,8 +520,7 @@ export const useAutoSave = (
       if (saveTimerRef.current) {
         clearInterval(saveTimerRef.current);
       }
-    };
-  }, [state.isEnabled, opts.saveInterval, opts.debounceDelay, currentDraft.isDirty, saveDraft]);
+    }, [state.isEnabled, opts.saveInterval, opts.debounceDelay, currentDraft.isDirty, saveDraft]);
   
   /**
    * Set up countdown timer for next save indicator
@@ -546,8 +545,7 @@ export const useAutoSave = (
       if (countdownTimerRef.current) {
         clearInterval(countdownTimerRef.current);
       }
-    };
-  }, [state.isEnabled, opts.showSaveIndicators]);
+    }, [state.isEnabled, opts.showSaveIndicators]);
   
   /**
    * Load initial draft on mount
@@ -570,8 +568,7 @@ export const useAutoSave = (
       if (countdownTimerRef.current) {
         clearInterval(countdownTimerRef.current);
       }
-    };
-  }, []);
+    }, []);
   
   return {
     state,
@@ -586,4 +583,3 @@ export const useAutoSave = (
     createNewDraft,
     getCurrentDraft
   };
-};

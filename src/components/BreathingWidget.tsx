@@ -74,8 +74,7 @@ export const BreathingWidget: React.FC<{
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
-    };
-  }, [isActive, selectedPattern]);
+    }, [isActive, selectedPattern]);
 
   const startBreathing = () => {
     setShowInstructions(false);

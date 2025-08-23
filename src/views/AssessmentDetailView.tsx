@@ -25,16 +25,14 @@ export const AssessmentDetailView: React.FC<AssessmentDetailViewProps> = ({ type
                 getResult: getPhq9Result,
                 submit: submitPhq9Result,
                 maxScore: 27,
-            };
-        } else {
+            } else {
              return {
                 title: 'GAD-7 Anxiety Assessment',
                 questions: gad7Questions,
                 getResult: getGad7Result,
                 submit: submitGad7Result,
                 maxScore: 21,
-            };
-        }
+            }
     }, [type, submitPhq9Result, submitGad7Result]);
     
     const [answers, setAnswers] = useState<(number | null)[]>(Array(assessmentDetails.questions.length).fill(null));

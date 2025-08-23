@@ -17,7 +17,6 @@ type ExtendedNavigator = Navigator & {
     downlink: number;
     rtt: number;
   };
-};
 
 interface CacheStatus {
   caches: Array<{
@@ -99,15 +98,13 @@ export const useIntelligentCaching = () => {
   const getNetworkCapabilities = useCallback(() => {
     const nav = navigator as ExtendedNavigator;
     if (!nav.connection) {
-      return { isSlowNetwork: false, effectiveType: '4g' };
-    }
+      return { isSlowNetwork: false, effectiveType: '4g' }
 
     const effectiveType = nav.connection.effectiveType;
     return {
       isSlowNetwork: effectiveType === 'slow-2g' || effectiveType === '2g',
       effectiveType
-    };
-  }, []);
+    }, []);
 
   // Manual prefetch function
   const prefetchResource = useCallback(async (
@@ -265,7 +262,6 @@ export const useIntelligentCaching = () => {
     sendMessage,
     getNetworkCapabilities
   };
-};
 
 /**
  * React component for cache status monitoring
@@ -370,7 +366,6 @@ export const withIntelligentPrefetch = <P extends object>(
 
     return <WrappedComponent {...props} />;
   };
-};
 
 /**
  * Hook for crisis scenario optimization
@@ -403,7 +398,6 @@ export const useCrisisOptimization = () => {
   }, [reportCrisisDetection, prefetchResource]);
 
   return { triggerCrisisMode };
-};
 
 /**
  * Utility function to register service worker with intelligent features

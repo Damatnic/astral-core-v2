@@ -333,8 +333,7 @@ describe('networkDetection', () => {
         shouldPreloadVideos: false,
         recommendedImageQuality: 'medium',
         chunkLoadingStrategy: 'conservative',
-      };
-    });
+      });
 
     describe('auto-play feature', () => {
       it('should enable auto-play for good quality without data saver', () => {

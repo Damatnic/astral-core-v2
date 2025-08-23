@@ -528,8 +528,7 @@ export class CacheStrategyCoordinator {
       strategies: strategyStats,
       totalEntries,
       storageInfo
-    };
-  }
+    }
 
   /**
    * Handle fetch requests with intelligent strategy selection

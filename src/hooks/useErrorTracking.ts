@@ -178,7 +178,6 @@ export function useErrorTracking(options: UseErrorTrackingOptions = {}) {
     trackPerformance,
     addBreadcrumb,
     trackMessage
-  };
-}
+  }
 
 export default useErrorTracking;

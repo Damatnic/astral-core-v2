@@ -143,8 +143,7 @@ export const MobileCrisisButton: React.FC<MobileCrisisButtonProps> = ({
     
     return () => {
       clearTimeout(timer);
-    };
-  }, 10000) // Hide after 10 seconds of inactivity
+    }, 10000) // Hide after 10 seconds of inactivity
 
     return () => clearTimeout(timer)
   }, [isExpanded])

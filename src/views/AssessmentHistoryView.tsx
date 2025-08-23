@@ -19,13 +19,10 @@ export const AssessmentHistoryView: React.FC<{
     
     const getResultDetails = (assessment: typeof history[0]) => {
         if (assessment.type === 'phq-9') {
-            return { name: 'PHQ-9 (Depression)', result: getPhq9Result(assessment.score) };
-        }
+            return { name: 'PHQ-9 (Depression)', result: getPhq9Result(assessment.score) }
         if (assessment.type === 'gad-7') {
-            return { name: 'GAD-7 (Anxiety)', result: getGad7Result(assessment.score) };
-        }
+            return { name: 'GAD-7 (Anxiety)', result: getGad7Result(assessment.score) }
         return { name: 'Unknown Assessment', result: { severity: 'N/A' } };
-    };
 
     return (
         <>

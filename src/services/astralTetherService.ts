@@ -303,8 +303,7 @@ class AstralTetherService {
       return {
         lat: position.coords.latitude,
         lng: position.coords.longitude
-      };
-    } catch (error) {
+      } catch (error) {
       console.error('Failed to get location:', error);
       return undefined;
     }
@@ -375,8 +374,7 @@ class AstralTetherService {
       professionalHandoffEnabled: true,
       privacyLevel: 'friends',
       autoAcceptFromCircle: false
-    };
-  }
+    }
 
   private async saveUserSettings() {
     try {

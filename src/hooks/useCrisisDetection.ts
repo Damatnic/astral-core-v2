@@ -85,8 +85,7 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
           contextualFactors: [],
           urgencyLevel: 0
         }
-      };
-    }
+      }
 
     setState(prev => ({ ...prev, isAnalyzing: true }));
 
@@ -207,8 +206,7 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
       analysisCount: analysisCountRef.current,
       recentAnalyses: recentAnalyses.length,
       escalationRequired: state.escalationActions.length > 0
-    };
-  }, [state.analysisHistory, state.escalationActions]);
+    }, [state.analysisHistory, state.escalationActions]);
 
   /**
    * Clear analysis history
@@ -236,8 +234,7 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
         ],
         resources: [],
         emergencyServices: false
-      };
-    }
+      }
 
     const hotlines = [
       { name: '988 Suicide & Crisis Lifeline', contact: '988', available: '24/7' },
@@ -275,8 +272,7 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
       hotlines,
       resources,
       emergencyServices: analysis.emergencyServices
-    };
-  }, [state.lastAnalysis]);
+    }, [state.lastAnalysis]);
 
   // Cleanup debounce on unmount
   useEffect(() => {
@@ -284,8 +280,7 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
       }
-    };
-  }, []);
+    }, []);
 
   return {
     // State
@@ -312,7 +307,6 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
     isEmergency: state.lastAnalysis?.emergencyServices || false,
     currentSeverity: state.lastAnalysis?.severityLevel || 'none',
     analysisCount: analysisCountRef.current
-  };
-}
+  }
 
 export default useCrisisDetection;

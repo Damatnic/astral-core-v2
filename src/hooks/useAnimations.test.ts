@@ -70,8 +70,7 @@ describe('useScrollAnimation Hook', () => {
     let callback: (entries: unknown[]) => void;
     mockIntersectionObserver.mockImplementation((cb) => {
       callback = cb;
-      return { observe: mockObserve, unobserve: mockUnobserve };
-    });
+      return { observe: mockObserve, unobserve: mockUnobserve });
 
     const { result } = renderHook(() => useScrollAnimation());
     

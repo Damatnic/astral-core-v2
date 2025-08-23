@@ -163,8 +163,7 @@ class Auth0Service {
       isEmailVerified: auth0User.email_verified,
       createdAt: auth0User.created_at,
       updatedAt: auth0User.updated_at,
-    };
-  }
+    }
 
   /**
    * Extract user roles from Auth0 user
@@ -457,8 +456,7 @@ class Auth0Service {
       window.removeEventListener('auth:authenticated', handleAuth as EventListener);
       window.removeEventListener('auth:profileUpdated', handleAuth as EventListener);
       window.removeEventListener('auth:logout', handleLogout);
-    };
-  }
+    }
 
   /**
    * Get Auth0 management API token (admin only)

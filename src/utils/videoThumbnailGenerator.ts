@@ -196,8 +196,7 @@ export class VideoThumbnailGenerator {
         placeholder,
         aspectRatio,
         duration: videoElement.duration
-      };
-    } catch (error) {
+      } catch (error) {
       console.error('Error generating thumbnail from element:', error);
       return null;
     }

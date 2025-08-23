@@ -101,8 +101,7 @@ class ErrorHandlingService {
       event.user = {
         id: event.user.id || 'anonymous',
         // Remove email, username, and other PII
-      };
-    }
+      }
 
     // Sanitize request data
     if (event.request) {
@@ -655,8 +654,7 @@ class ErrorHandlingService {
     // Return unsubscribe function
     return () => {
       this.errorListeners.delete(listener);
-    };
-  }
+    }
 
   /**
    * Get error report by ID
@@ -675,8 +673,7 @@ class ErrorHandlingService {
       bySeverity: Object.fromEntries(this.errorStats.bySeverity),
       queuedErrors: this.errorQueue.length,
       activeRetries: this.retryHandlers.size
-    };
-  }
+    }
 
   /**
    * Clear error history
@@ -799,6 +796,5 @@ export const useErrorHandler = () => {
       errorHandlingService.onError(listener),
     getErrorStats: () => errorHandlingService.getErrorStats()
   };
-};
 
 export default errorHandlingService;

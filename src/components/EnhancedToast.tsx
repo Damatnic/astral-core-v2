@@ -196,4 +196,3 @@ export const useToast = () => {
     showWarning,
     showInfo,
   };
-};

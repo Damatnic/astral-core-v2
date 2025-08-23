@@ -298,7 +298,6 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
       default:
         return '#4A90E2'
     };
-  };
 
   const startExercise = useCallback(() => {
     setIsActive(true);
@@ -336,8 +335,7 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
     
     return () => {
       clearTimeout(timer);
-    };
-  }, 1000);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, [seconds, isActive]);

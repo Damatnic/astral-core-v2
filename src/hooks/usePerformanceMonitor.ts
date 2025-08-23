@@ -274,8 +274,7 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
         recommendations: newRecommendations,
         crisisOptimized,
         mobileOptimized
-      };
-    });
+      });
   }, [calculatePerformanceScore, generateRecommendations, isCrisisRoute, isMobileDevice, enableRealTimeAlerts]);
 
   /**
@@ -359,8 +358,7 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
       if (reportingIntervalRef.current) {
         clearInterval(reportingIntervalRef.current);
       }
-    };
-  }, [enableAutomaticReporting, reportingInterval]);
+    }, [enableAutomaticReporting, reportingInterval]);
 
   /**
    * Initialize performance monitoring
@@ -394,8 +392,7 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
       if (reportingIntervalRef.current) {
         clearInterval(reportingIntervalRef.current);
       }
-    };
-  }, [monitorEmergencyButtons, startAutomaticReporting]);
+    }, [monitorEmergencyButtons, startAutomaticReporting]);
 
   /**
    * Reset metrics on route change
@@ -430,8 +427,7 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
         if (document.head.contains(link)) {
           document.head.removeChild(link);
         }
-      };
-    }
+      }
   }, [enableCrisisOptimization, isCrisisRoute]);
 
   /**
@@ -443,8 +439,7 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
       webVitalsSummary: coreWebVitalsService.getPerformanceSummary(),
       isCrisisRoute: isCrisisRoute(),
       isMobileDevice: isMobileDevice()
-    };
-  }, [performanceState, isCrisisRoute, isMobileDevice]);
+    }, [performanceState, isCrisisRoute, isMobileDevice]);
 
   /**
    * Force generate performance report
@@ -480,4 +475,3 @@ export const usePerformanceMonitor = (options: UsePerformanceMonitorOptions = {}
     isCrisisRoute: isCrisisRoute(),
     isMobileDevice: isMobileDevice()
   };
-};
