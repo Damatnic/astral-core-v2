@@ -96,3 +96,8 @@ debug/
 test-es-modules.js
 simple-test.js
 vite.config.simple.js
+
+# Private API keys - NEVER commit these
+PRIVATE_API_KEY.txt
+.env.local.backup
+api-keys.txt
