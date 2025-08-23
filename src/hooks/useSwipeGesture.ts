@@ -171,6 +171,7 @@ export const useSwipeRef = <T extends HTMLElement>(
     ref: elementRef,
     isTracking,
   };
+};
 
 // Hook for handling pull-to-refresh gesture
 export const usePullToRefresh = (
@@ -274,7 +275,8 @@ export const usePullToRefresh = (
       element.removeEventListener('touchmove', handleTouchMove);
       element.removeEventListener('touchend', handleTouchEnd);
       element.removeEventListener('touchcancel', resetPull);
-    }, [enabled, threshold, resistance, onRefresh]);
+    };
+  }, [enabled, threshold, resistance, onRefresh]);
 
   return {
     ref: elementRef,
@@ -283,3 +285,4 @@ export const usePullToRefresh = (
     isRefreshing,
     pullProgress: Math.min(pullDistance / threshold, 1),
   };
+};

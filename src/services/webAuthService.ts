@@ -56,12 +56,14 @@ export const WebAuthSession={
           type: "error" as const,
           params: urlParams,
           error: { message: urlParams.error_description || urlParams.error }
-        } else if(urlParams.access_token) {
+        };
+      } else if(urlParams.access_token) {
         response = {
           type: "success" as const,
           params: urlParams,
           error: null
-        }
+        };
+      }
     }
     
     const request = { url: buildAuthUrl() };
@@ -71,5 +73,6 @@ export const WebAuthSession={
 
   exchangeCodeAsync: async (_config: Record<string, unknown>) => {
     // Implement token exchange
-    return { accessToken: process.env.REACT_APP_TOKEN || "default-token" }
+    return { accessToken: process.env.REACT_APP_TOKEN || "default-token" };
+  }
 };
