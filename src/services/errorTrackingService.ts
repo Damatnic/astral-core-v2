@@ -381,7 +381,8 @@ export class ErrorTrackingService {
       finish: () => {},
       setTag: () => {},
       setContext: () => {}
-    }
+    };
+  }
 }
 
 // React Error Boundary integration
@@ -403,5 +404,6 @@ export const useSentryPerformance = (name: string, operation: string = 'react') 
     setTag: (_key: string, _value: string) => {},
     setContext: (_key: string, _context: Record<string, any>) => {},
   };
+};
 
 export default ErrorTrackingService;
