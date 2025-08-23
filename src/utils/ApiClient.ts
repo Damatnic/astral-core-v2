@@ -136,8 +136,10 @@ const _callApi = async (endpoint: string, options: RequestInit = {}) => {
                 errorData = { 
                     message: 'API endpoint not available in development mode. Using demo data fallback.',
                     isDevelopmentError: true 
-                } else {
-                errorData = { message: 'Server returned an unexpected response format.' }
+                };
+            } else {
+                errorData = { message: 'Server returned an unexpected response format.' };
+            }
         } else {
             errorData = await response.json().catch(() => ({ message: 'An unknown API error occurred.' }));
         }

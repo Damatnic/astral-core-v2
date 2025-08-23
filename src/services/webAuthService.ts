@@ -11,14 +11,15 @@ export const WebAuthSession={
     return window.location.origin + "/auth/callback";
   },
   
-  useAutoDiscovery: (domain: string) => {
+    useAutoDiscovery: (domain: string) => {
     return {
       authorizationEndpoint: `${domain}/authorize`,
       tokenEndpoint: `${domain}/oauth/token`,
       revocationEndpoint: `${domain}/oauth/revoke`,
       userInfoEndpoint: `${domain}/userinfo`,
       endSessionEndpoint: `${domain}/v2/logout`
-    },
+    };
+  },
 
   ResponseType: {
     Token: process.env.REACT_APP_TOKEN || "token",

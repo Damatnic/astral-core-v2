@@ -189,14 +189,15 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                 console.error("Failed to save reaction:", err);
                 // Rollback UI on failure
                  setReflections(prev => prev.map(r => {
-                    if (r.id === reflectionId) {
-                        return {
-                            ...r,
-                            reactions: { ...r.reactions, [reactionType]: r.reactions[reactionType] - 1 },
-                            myReaction: undefined,
-                        }
-                    return r;
-                }));
+                                    if (r.id === reflectionId) {
+                    return {
+                        ...r,
+                        reactions: { ...r.reactions, [reactionType]: r.reactions[reactionType] - 1 },
+                        myReaction: undefined,
+                    };
+                }
+                return r;
+            }));
             });
     }
 
