@@ -54,7 +54,8 @@ export const NetworkBanner: React.FC<NetworkBannerProps> = ({
           : 'Some features may not be available.',
         actionText: crisisResourcesAvailable ? 'View Crisis Resources' : 'Try Again',
         severity: crisisResourcesAvailable ? 'warning' : 'error'
-      }
+      };
+    }
 
     if (connectionQuality === 'poor') {
       return {
@@ -64,7 +65,8 @@ export const NetworkBanner: React.FC<NetworkBannerProps> = ({
         message: 'Some features may load slowly. Crisis resources are prioritized.',
         actionText: 'Optimize Connection',
         severity: 'warning'
-      }
+      };
+    }
 
     // Only show when explicitly requested for online state
     return {
@@ -75,6 +77,7 @@ export const NetworkBanner: React.FC<NetworkBannerProps> = ({
       actionText: 'Continue',
       severity: 'success'
     };
+  };
 
   const bannerContent = getBannerContent();
 

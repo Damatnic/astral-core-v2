@@ -103,9 +103,10 @@ const loadTranslations = async (language: string, namespace: string) => {
     const module = await import(`./locales/${language}/${namespace}.json`);
     return module.default;
   } catch (error) {
-
-    return {}
-}
+    console.warn(`Failed to load ${language}/${namespace} translations:`, error);
+    return {};
+  }
+};
 
 // Language detection configuration
 const detectionOptions = {

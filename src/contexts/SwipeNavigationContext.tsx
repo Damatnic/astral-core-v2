@@ -226,6 +226,7 @@ export const useSwipeGestures = (
   }, [element, disabled, registerSwipeArea, unregisterSwipeArea]);
 
   return { ref };
+}
 
 // Higher-order component for adding swipe navigation to any component
 export const withSwipeNavigation = <P extends object>(

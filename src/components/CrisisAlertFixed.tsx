@@ -337,4 +337,3 @@ export function CrisisAlert({
   );
 }
 
-export default CrisisAlert;

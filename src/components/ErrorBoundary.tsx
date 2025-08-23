@@ -165,7 +165,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       severity: 'low',
       category: 'unknown',
       timestamp: new Date()
-    }
+    };
+  }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
     const errorId = `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -179,7 +180,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       severity,
       category,
       timestamp: new Date()
-    }
+    };
+  }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({ errorInfo });
@@ -314,7 +316,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
           online: navigator.onLine
         } : undefined
       }
-    }
+    };
+  }
 
   // Report error to monitoring service
   private async reportError(error: Error, errorInfo?: ErrorInfo) {
@@ -480,7 +483,8 @@ const CrisisFallbackUI: React.FC<{
   onRetry?: () => void;
   retryCount: number;
   maxRetries: number;
-  crisisContactInfo?: { phone: string; text: string; chat: string }> = ({ error, onRetry, retryCount, maxRetries, crisisContactInfo }) => (
+  crisisContactInfo?: { phone: string; text: string; chat: string };
+}> = ({ error, onRetry, retryCount, maxRetries, crisisContactInfo }) => (
   <div className="crisis-error-fallback" role="alert" aria-live="assertive">
     <div className="crisis-error-container">
       <div className="crisis-error-header">
