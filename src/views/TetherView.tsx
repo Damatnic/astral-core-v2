@@ -111,8 +111,9 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
-      }
-      tetherService.current.removeAllListeners();
+              }
+        tetherService.current.removeAllListeners();
+      };
     }, []);
 
   const loadTetherCircle = async () => {

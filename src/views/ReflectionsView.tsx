@@ -179,7 +179,8 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                     ...r,
                     reactions: { ...r.reactions, [reactionType]: (r.reactions[reactionType] || 0) + 1 },
                     myReaction: reactionType,
-                }
+                };
+            }
             return r;
         }));
 

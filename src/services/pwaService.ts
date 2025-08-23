@@ -183,7 +183,8 @@ this.handleAppBlur()
       isOffline: this.isOffline,
       isStandalone: this.isStandalone(),
       supportsPWA: this.supportsPWA()
-     }
+     };
+   }
 
   /**
    * Check if app is running in standalone mode
@@ -236,11 +237,12 @@ this.handleAppBlur()
     
     // Return unsubscribe function
     return () => {
-              const index = this.statusCallbacks.indexOf(callback);
+      const index = this.statusCallbacks.indexOf(callback);
       if(index > -1) {
         this.statusCallbacks.splice(index, 1);
       }
-    }
+    };
+  }
 
   /**
    * Notify all subscribers of status change

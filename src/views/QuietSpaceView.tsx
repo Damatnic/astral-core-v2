@@ -133,7 +133,8 @@ export const QuietSpaceView: React.FC = () => {
             if (phaseTimeoutRef.current) {
                 clearTimeout(phaseTimeoutRef.current);
             }
-        }, []);
+        };
+    }, []);
 
     const toggleBreathing = () => {
         if (isPlaying) {

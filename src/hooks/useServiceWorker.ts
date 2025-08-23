@@ -149,7 +149,8 @@ export const useServiceWorker = (): UseServiceWorkerReturn => {
       serviceWorkerManager.removeOnlineListener(handleOnline);
       serviceWorkerManager.removeOfflineListener(handleOffline);
       serviceWorkerManager.removeUpdateListener(handleUpdateAvailable);
-    }, [handleOnline, handleOffline, handleUpdateAvailable, updateCacheStatus, checkOfflineReadiness]);
+    };
+  }, [handleOnline, handleOffline, handleUpdateAvailable, updateCacheStatus, checkOfflineReadiness]);
 
   // Update online status from service worker manager
   useEffect(() => {
@@ -171,6 +172,7 @@ export const useServiceWorker = (): UseServiceWorkerReturn => {
     precacheCrisisResources,
     forceReload
   };
+}
 
 /**
  * Offline Status Hook
@@ -189,9 +191,11 @@ export const useOfflineStatus = () => {
     return () => {
       serviceWorkerManager.removeOnlineListener(handleOnline);
       serviceWorkerManager.removeOfflineListener(handleOffline);
-    }, []);
+    };
+  }, []);
 
   return { isOnline, isOffline: !isOnline };
+};
 
 /**
  * Cache Management Hook
@@ -256,5 +260,6 @@ export const useCacheManager = () => {
     cacheCrisisResource,
     updateCacheStatus
   };
+};
 
 export default useServiceWorker;

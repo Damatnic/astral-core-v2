@@ -148,6 +148,7 @@ export const useSwipeGesture = (options: UseSwipeGestureOptions = {}) => {
     detachListeners,
     isTracking,
   };
+}
 
 // React ref-based hook for easier integration
 export const useSwipeRef = <T extends HTMLElement>(

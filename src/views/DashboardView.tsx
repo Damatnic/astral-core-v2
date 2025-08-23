@@ -11,7 +11,8 @@ interface DashboardCard {
   stats?: {
     label: string;
     value: string;
-  }
+  };
+}
 
 const DashboardView: React.FC = () => {
   const [userName, setUserName] = useState('');

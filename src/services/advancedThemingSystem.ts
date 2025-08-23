@@ -93,7 +93,8 @@ export interface TherapeuticThemeConfig {
     allowsIntensityAdjustment: boolean;
     allowsColorOverrides: boolean;
     allowsAnimationControl: boolean;
-  }
+  };
+}
 
 export interface UserThemePreferences {
   therapeuticTheme: TherapeuticTheme;

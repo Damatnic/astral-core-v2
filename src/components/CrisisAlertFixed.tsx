@@ -165,7 +165,8 @@ export function CrisisAlert({
           color: '#6b7280',
           pulse: false,
           title: 'Support Available'
-        }
+        };
+    }
   };
 
   const getContactClassName = (contactType: string) => {
