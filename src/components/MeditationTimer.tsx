@@ -6,7 +6,7 @@ interface MeditationTimerProps {
   onComplete?: () => void;
 }
 
-const PRESET_TIMES = [
+const PRESET_TIMES = [;
   { minutes: 3, label: '3 min', description: 'Quick reset' },
   { minutes: 5, label: '5 min', description: 'Brief meditation' },
   { minutes: 10, label: '10 min', description: 'Standard session' },
@@ -15,7 +15,7 @@ const PRESET_TIMES = [
   { minutes: 30, label: '30 min', description: 'Full session' }
 ];
 
-const AMBIENT_SOUNDS = [
+const AMBIENT_SOUNDS = [;
   { id: 'none', name: 'Silence', emoji: '🔇' },
   { id: 'rain', name: 'Rain', emoji: '🌧️' },
   { id: 'ocean', name: 'Ocean Waves', emoji: '🌊' },
@@ -25,8 +25,8 @@ const AMBIENT_SOUNDS = [
 ];
 
 export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) => {
-  const [selectedTime, setSelectedTime] = useState(10); // minutes
-  const [timeRemaining, setTimeRemaining] = useState(10 * 60); // seconds
+  const [selectedTime, setSelectedTime] = useState(10); // minutes;
+  const [timeRemaining, setTimeRemaining] = useState(10 * 60); // seconds;
   const [isRunning, setIsRunning] = useState(false);
   const [selectedSound, setSelectedSound] = useState('none');
   const [showGuidance, setShowGuidance] = useState(true);
@@ -37,6 +37,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
   
   useEffect(() => {
     setTimeRemaining(selectedTime * 60);
+  };
   }, [selectedTime]);
   
   useEffect(() => {
@@ -51,8 +52,8 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
           }
           return prev - 1;
         });
-      }, 1000);
-    } else {
+      }, 1000);;
+  } else {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
@@ -62,7 +63,8 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
-    }, [isRunning, timeRemaining, onComplete]);
+    };
+  }, [isRunning, timeRemaining, onComplete]);
   
   useEffect(() => {
     // Initialize audio context for ambient sounds
@@ -72,14 +74,17 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
     
     return () => {
       stopAmbientSound();
-    }, []);
+    };
+  };
+  }, []);
   
   useEffect(() => {
     if (isRunning && selectedSound !== 'none') {
-      playAmbientSound();
-    } else {
+      playAmbientSound();;
+  } else {
       stopAmbientSound();
     }
+  };
   }, [isRunning, selectedSound]);
   
   const playAmbientSound = () => {
@@ -123,7 +128,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
         gainNodeRef.current.gain.value = 0.02;
         break;
       case 'white':
-        // White noise - using a different approach
+        // White noise - using a different approach;
         const bufferSize = 2 * ctx.sampleRate;
         const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const output = noiseBuffer.getChannelData(0);
@@ -228,7 +233,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
       <div className="timer-display-container">
         <div className="timer-circle">
           <svg className="timer-svg" viewBox="0 0 200 200">
-            <circle
+            <circle;
               className="timer-circle-bg"
               cx="100"
               cy="100"
@@ -237,7 +242,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
               stroke="rgba(102, 126, 234, 0.1)"
               strokeWidth="8"
             />
-            <circle
+            <circle;
               className="timer-circle-progress"
               cx="100"
               cy="100"
@@ -288,7 +293,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
       
       {/* Controls */}
       <div className="timer-controls">
-        <button
+        <button;
           className="timer-btn primary"
           onClick={toggleTimer}
         >
@@ -296,7 +301,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
           <span>{isRunning ? 'Pause' : 'Start'}</span>
         </button>
         
-        <button
+        <button;
           className="timer-btn secondary"
           onClick={resetTimer}
         >
@@ -308,7 +313,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({ onComplete }) 
       {/* Settings */}
       <div className="timer-settings">
         <label className="setting-toggle">
-          <input
+          <input;
             type="checkbox"
             checked={showGuidance}
             onChange={(e) => setShowGuidance(e.target.checked)}

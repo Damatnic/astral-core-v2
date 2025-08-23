@@ -1,4 +1,4 @@
-// Gamification service for achievements and progress tracking
+// Gamification service for achievements and progress tracking;
 import React from 'react';
 
 // Extend Window interface to include custom showToast function
@@ -47,8 +47,8 @@ export interface UserStats {
     daysActive: number;
     aiChatSessions: number;
     reflectionsWritten: number;
-  }
-
+  };
+}
 export interface LevelInfo {
   level: number;
   title: string;
@@ -79,7 +79,7 @@ const DEFAULT_ACHIEVEMENTS: Omit<Achievement, 'unlocked' | 'unlockedAt'>[] = [
     icon: '✨',
     category: 'milestone',
     points: 50,
-    rarity: 'common'
+    rarity: 'common';
   },
   {
     id: 'welcome_aboard',
@@ -88,7 +88,7 @@ const DEFAULT_ACHIEVEMENTS: Omit<Achievement, 'unlocked' | 'unlockedAt'>[] = [
     icon: '🎉',
     category: 'milestone',
     points: 25,
-    rarity: 'common'
+    rarity: 'common';
   },
   
   // Community achievements
@@ -99,7 +99,7 @@ const DEFAULT_ACHIEVEMENTS: Omit<Achievement, 'unlocked' | 'unlockedAt'>[] = [
     icon: '🤝',
     category: 'community',
     points: 30,
-    rarity: 'common'
+    rarity: 'common';
   },
   {
     id: 'support_streak_7',
@@ -130,7 +130,7 @@ const DEFAULT_ACHIEVEMENTS: Omit<Achievement, 'unlocked' | 'unlockedAt'>[] = [
     icon: '📝',
     category: 'wellness',
     points: 40,
-    rarity: 'common'
+    rarity: 'common';
   },
   {
     id: 'meditation_master',
@@ -161,7 +161,7 @@ const DEFAULT_ACHIEVEMENTS: Omit<Achievement, 'unlocked' | 'unlockedAt'>[] = [
     icon: '⭐',
     category: 'progress',
     points: 200,
-    rarity: 'rare'
+    rarity: 'rare';
   },
   {
     id: 'point_collector',
@@ -180,7 +180,7 @@ const DEFAULT_ACHIEVEMENTS: Omit<Achievement, 'unlocked' | 'unlockedAt'>[] = [
     icon: '👑',
     category: 'progress',
     points: 1000,
-    rarity: 'legendary'
+    rarity: 'legendary';
   }
 ];
 
@@ -208,7 +208,7 @@ class GamificationService {
       streak: {
         current: 0,
         longest: 0,
-        type: 'daily_checkin'
+        type: 'daily_checkin';
       },
       achievements: [],
       badges: [],
@@ -218,7 +218,7 @@ class GamificationService {
         wellnessActivities: 0,
         daysActive: 0,
         aiChatSessions: 0,
-        reflectionsWritten: 0
+        reflectionsWritten: 0;
       }
     }
 
@@ -231,8 +231,9 @@ class GamificationService {
     return DEFAULT_ACHIEVEMENTS.map(achievement => ({
       ...achievement,
       unlocked: false,
-      unlockedAt: undefined
-    }));
+      unlockedAt: undefined;
+    };
+  });
   }
 
   private notifyListeners() {
@@ -252,8 +253,8 @@ class GamificationService {
     for (const levelInfo of LEVEL_TITLES) {
       if (points >= levelInfo.pointsRequired) {
         level = levelInfo.level;
-        currentLevelPoints = points - levelInfo.pointsRequired;
-      } else {
+        currentLevelPoints = points - levelInfo.pointsRequired;;
+  } else {
         const nextLevelPoints = levelInfo.pointsRequired - points;
         return { level, currentLevelPoints, nextLevelPoints }
     }
@@ -307,7 +308,8 @@ class GamificationService {
         newlyUnlocked.push(achievement);
         this.awardPoints(achievement.points, `Achievement: ${achievement.title}`);
       }
-    });
+    };
+  };
     
     return newlyUnlocked;
   }
@@ -328,7 +330,7 @@ class GamificationService {
       this.onLevelUp(levelInfo.level);
     }
     
-    // Check achievements after awarding points
+    // Check achievements after awarding points;
     const newAchievements = this.checkAchievements();
     
     this.saveUserStats();
@@ -358,7 +360,7 @@ class GamificationService {
         type: 'success',
         title: 'Achievement Unlocked!',
         message: `${achievement.icon} ${achievement.title}`,
-        duration: 5000
+        duration: 5000;
       });
     }
   }
@@ -371,7 +373,7 @@ class GamificationService {
         type: 'success',
         title: 'Level Up!',
         message: `You're now ${levelInfo.title}!`,
-        duration: 5000
+        duration: 5000;
       });
     }
   }
@@ -446,7 +448,7 @@ class GamificationService {
   }
 }
 
-// React hooks
+// React hooks;
 export const useGamification = () => {
   const [service] = React.useState(() => new GamificationService());
   const [stats, setStats] = React.useState<UserStats>(service.getUserStats());
@@ -454,6 +456,8 @@ export const useGamification = () => {
   React.useEffect(() => {
     const unsubscribe = service.subscribe(setStats);
     return unsubscribe;
+  };
+  };
   }, [service]);
 
   return {
@@ -467,10 +471,10 @@ export const useGamification = () => {
     trackDailyLogin: service.trackDailyLogin.bind(service),
     getAchievements: service.getAchievements.bind(service),
     getLevelInfo: service.getLevelInfo.bind(service),
-    getProgressToNextLevel: service.getProgressToNextLevel.bind(service)
+    getProgressToNextLevel: service.getProgressToNextLevel.bind(service);
   };
 
-// Singleton instance
+// Singleton instance;
 let gamificationServiceInstance: GamificationService | null = null;
 
 export const getGamificationService = () => {

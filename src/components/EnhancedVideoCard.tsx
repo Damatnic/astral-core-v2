@@ -27,7 +27,7 @@ interface EnhancedVideoCardProps {
  * - Progressive loading with blur placeholders
  * - Mobile-optimized touch targets
  * - Accessibility improvements
- */
+ */;
 export const EnhancedVideoCard: React.FC<EnhancedVideoCardProps> = ({
   video,
   isActive,
@@ -53,7 +53,7 @@ export const EnhancedVideoCard: React.FC<EnhancedVideoCardProps> = ({
       setIsGeneratingThumbnail(true);
       
       try {
-        // Check cache first
+        // Check cache first;
         const cachedThumbnails = videoThumbnailGenerator.loadThumbnailsFromCache();
         const cachedThumbnail = cachedThumbnails.find(t => t.original === video.videoUrl);
         
@@ -63,19 +63,19 @@ export const EnhancedVideoCard: React.FC<EnhancedVideoCardProps> = ({
           return;
         }
 
-        // Generate new thumbnail
-        const generatedThumbnail = await videoThumbnailGenerator.generateThumbnails(
+        // Generate new thumbnail;
+        const generatedThumbnail = await videoThumbnailGenerator.generateThumbnails(;
           video.videoUrl,
           {
             frameTime: 2, // Extract frame at 2 seconds
             quality: 85,
-            generatePlaceholder: true
+            generatePlaceholder: true;
           }
         );
 
         setThumbnail(generatedThumbnail);
         
-        // Save to cache
+        // Save to cache;
         const updatedCache = [...cachedThumbnails, generatedThumbnail];
         videoThumbnailGenerator.saveThumbnailsToCache(updatedCache);
         
@@ -88,33 +88,38 @@ export const EnhancedVideoCard: React.FC<EnhancedVideoCardProps> = ({
     };
 
     generateThumbnail();
+  };
   }, [video.videoUrl, thumbnail, thumbnailError]);
 
-  // Handle like action
+  // Handle like action;
   const handleLike = useCallback(() => {
     onToggleLike(video.id);
+  };
   }, [onToggleLike, video.id]);
 
-  // Handle save action
+  // Handle save action;
   const handleSave = useCallback(() => {
     onToggleSave(video.id);
+  };
   }, [onToggleSave, video.id]);
 
-  // Handle share action
+  // Handle share action;
   const handleShare = useCallback(() => {
     onShare(video);
+  };
   }, [onShare, video]);
 
-  // Handle video error
+  // Handle video error;
   const handleVideoError = useCallback((e: React.SyntheticEvent<HTMLVideoElement>) => {
     const videoEl = e.currentTarget;
     const fallbackUrl = `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`;
     if (videoEl.src !== fallbackUrl) {
       videoEl.src = fallbackUrl;
     }
+  };
   }, []);
 
-  // Get thumbnail URL or fallback
+  // Get thumbnail URL or fallback;
   const getThumbnailSrc = (): string => {
     if (thumbnail) {
       return videoThumbnailGenerator.getThumbnailUrl(thumbnail, 'medium');
@@ -128,7 +133,7 @@ export const EnhancedVideoCard: React.FC<EnhancedVideoCardProps> = ({
     );
   };
 
-  // Get thumbnail alt text
+  // Get thumbnail alt text;
   const getThumbnailAlt = (): string => {
     return `Thumbnail for ${video.description || 'wellness video'}`;
   };
@@ -179,7 +184,7 @@ export const EnhancedVideoCard: React.FC<EnhancedVideoCardProps> = ({
       <div className="enhanced-video-overlay">
         {/* Play/Pause Indicator */}
         {isActive && (
-          <button
+          <button;
             className="enhanced-play-indicator"
             onClick={onTogglePlay}
             aria-label={isPlaying ? "Pause video" : "Play video"}
@@ -206,7 +211,7 @@ export const EnhancedVideoCard: React.FC<EnhancedVideoCardProps> = ({
         
         {/* Action Buttons */}
         <div className="enhanced-video-actions">
-          <button
+          <button;
             className={`enhanced-action-btn like-btn ${isLiked ? 'liked' : ''}`}
             onClick={handleLike}
             aria-label={isLiked ? "Unlike video" : "Like video"}
@@ -215,7 +220,7 @@ export const EnhancedVideoCard: React.FC<EnhancedVideoCardProps> = ({
             <span className="action-count">{video.likes?.toLocaleString() || 0}</span>
           </button>
 
-          <button
+          <button;
             className={`enhanced-action-btn save-btn ${isSaved ? 'saved' : ''}`}
             onClick={handleSave}
             aria-label={isSaved ? "Remove from saved" : "Save video"}
@@ -224,7 +229,7 @@ export const EnhancedVideoCard: React.FC<EnhancedVideoCardProps> = ({
             <span className="action-label">Save</span>
           </button>
 
-          <button
+          <button;
             className="enhanced-action-btn share-btn"
             onClick={handleShare}
             aria-label="Share video"
@@ -245,7 +250,7 @@ export const EnhancedVideoCard: React.FC<EnhancedVideoCardProps> = ({
 
 /**
  * Video Grid Component for multiple enhanced video cards
- */
+ */;
 interface VideoGridProps {
   videos: WellnessVideo[];
   likedVideos: Set<string>;
@@ -282,7 +287,7 @@ export const EnhancedVideoGrid: React.FC<VideoGridProps> = ({
           isLiked={likedVideos.has(video.id)}
           isSaved={savedVideos.has(video.id)}
           videoRef={{ 
-            current: videoRefs.current[index] 
+            current: videoRefs.current[index] ;
           } as React.RefObject<HTMLVideoElement>}
           onTogglePlay={onTogglePlay}
           onToggleLike={onToggleLike}

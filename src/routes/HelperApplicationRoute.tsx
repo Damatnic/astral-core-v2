@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom';
 
 /**
  * Route wrapper for HelperApplicationView that provides required props
- */
+ */;
 const HelperApplicationRoute: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSetActiveView = (view: any) => {
-    // In a routing context, we navigate to the appropriate route
+    // In a routing context, we navigate to the appropriate route;
     const routeMap: Record<string, string> = {
       'dashboard': '/helper/dashboard',
       'profile': '/helper/profile', 

@@ -1,4 +1,4 @@
-// AI-powered mood detection and analysis service
+// AI-powered mood detection and analysis service;
 
 import React from 'react';
 
@@ -193,8 +193,8 @@ class MoodAnalysisService {
       });
     });
 
-    // Find primary and secondary moods
-    const sortedMoods = Object.entries(moodScores)
+    // Find primary and secondary moods;
+    const sortedMoods = Object.entries(moodScores);
       .sort(([, a], [, b]) => b - a)
       .filter(([, score]) => score > 0);
 
@@ -206,13 +206,13 @@ class MoodAnalysisService {
         confidence: 0.2,
         keywords: [],
         suggestions: ['Consider sharing more about how you\'re feeling'],
-        timestamp: Date.now()
+        timestamp: Date.now();
       }
 
     const [primaryMood, primaryScore] = sortedMoods[0];
     const secondaryMood = sortedMoods.length > 1 ? sortedMoods[1][0] : undefined;
     
-    // Calculate intensity and confidence
+    // Calculate intensity and confidence;
     const totalScore = Object.values(moodScores).reduce((sum, score) => sum + score, 0);
     const intensity = Math.min(primaryScore / words.length, 1);
     const confidence = primaryScore / totalScore;
@@ -224,7 +224,7 @@ class MoodAnalysisService {
       confidence,
       keywords: detectedKeywords,
       suggestions: this.moodSuggestions[primaryMood as MoodType] || [],
-      timestamp: Date.now()
+      timestamp: Date.now();
     }
 
   public analyzePattern(analyses: MoodAnalysis[]): MoodPattern {
@@ -234,28 +234,29 @@ class MoodAnalysisService {
         dominant_moods: [],
         trends: { improving: true, stability: 0.5, volatility: 0.5 },
         triggers: [],
-        recommendations: []
+        recommendations: [];
       }
 
-    // Count mood frequencies
+    // Count mood frequencies;
     const moodCounts: Record<string, number> = {};
     analyses.forEach(analysis => {
       moodCounts[analysis.primary] = (moodCounts[analysis.primary] || 0) + 1;
       if (analysis.secondary) {
         moodCounts[analysis.secondary] = (moodCounts[analysis.secondary] || 0) + 0.5;
       }
-    });
+    };
+  };
 
-    const dominant_moods = Object.entries(moodCounts)
+    const dominant_moods = Object.entries(moodCounts);
       .map(([mood, count]) => ({ mood: mood as MoodType, frequency: count / analyses.length }))
       .sort((a, b) => b.frequency - a.frequency)
       .slice(0, 3);
 
-    // Analyze trends
-    const recentAnalyses = analyses.slice(-7); // Last 7 entries
-    const olderAnalyses = analyses.slice(-14, -7); // Previous 7 entries
+    // Analyze trends;
+    const recentAnalyses = analyses.slice(-7); // Last 7 entries;
+    const olderAnalyses = analyses.slice(-14, -7); // Previous 7 entries;
     
-    const getAverageIntensity = (items: MoodAnalysis[]) => 
+    const getAverageIntensity = (items: MoodAnalysis[]) => ;
       items.reduce((sum, item) => sum + item.intensity, 0) / items.length;
 
     const recentIntensity = getAverageIntensity(recentAnalyses);
@@ -263,11 +264,11 @@ class MoodAnalysisService {
     
     const improving = recentIntensity >= olderIntensity;
     
-    // Calculate stability (consistency of mood)
+    // Calculate stability (consistency of mood);
     const intensityVariance = this.calculateVariance(analyses.map(a => a.intensity));
     const stability = Math.max(0, 1 - intensityVariance);
     
-    // Calculate volatility (frequency of mood changes)
+    // Calculate volatility (frequency of mood changes);
     let moodChanges = 0;
     for (let i = 1; i < analyses.length; i++) {
       if (analyses[i].primary !== analyses[i - 1].primary) {
@@ -304,7 +305,8 @@ class MoodAnalysisService {
               priority: 'high',
               category: 'daily',
               reasoning: `You've been experiencing ${mood} feelings frequently. Mindfulness can help manage anxiety.`
-            });
+            };
+  };
             break;
             
           case 'sad':
@@ -315,7 +317,7 @@ class MoodAnalysisService {
               description: 'Reach out to a friend or join a community activity',
               priority: 'medium',
               category: 'weekly',
-              reasoning: `Your mood patterns suggest you might benefit from more social connection.`
+              reasoning: `Your mood patterns suggest you might benefit from more social connection.`;
             });
             break;
             
@@ -342,7 +344,7 @@ class MoodAnalysisService {
         description: 'Keep a detailed mood journal to identify patterns and triggers',
         priority: 'medium',
         category: 'daily',
-        reasoning: 'Your mood patterns show high volatility. Tracking can help identify triggers.'
+        reasoning: 'Your mood patterns show high volatility. Tracking can help identify triggers.';
       });
     }
 
@@ -353,7 +355,7 @@ class MoodAnalysisService {
         description: 'Consider speaking with a mental health professional',
         priority: 'high',
         category: 'immediate',
-        reasoning: 'Your mood patterns suggest you might benefit from professional guidance.'
+        reasoning: 'Your mood patterns suggest you might benefit from professional guidance.';
       });
     }
 
@@ -376,7 +378,7 @@ class MoodAnalysisService {
   private identifyTriggers(analyses: MoodAnalysis[]): string[] {
     // This would analyze keywords that commonly appear before negative moods
     
-    // Simple implementation - look for common keywords in negative mood entries
+    // Simple implementation - look for common keywords in negative mood entries;
     const negativeMoods = ['sad', 'anxious', 'angry', 'frustrated', 'overwhelmed', 'stressed'];
     const negativeEntries = analyses.filter(a => negativeMoods.includes(a.primary));
     
@@ -457,7 +459,7 @@ class MoodAnalysisService {
   }
 }
 
-// React hooks
+// React hooks;
 export const useMoodAnalysis = () => {
   const [service] = React.useState(() => new MoodAnalysisService());
   const [moodHistory, setMoodHistory] = React.useState<MoodAnalysis[]>([]);
@@ -466,6 +468,7 @@ export const useMoodAnalysis = () => {
 
   React.useEffect(() => {
     service.getMoodHistory().then(setMoodHistory);
+  };
   }, [service]);
 
   const analyzeMood = React.useCallback(async (text: string) => {
@@ -483,15 +486,19 @@ export const useMoodAnalysis = () => {
     } finally {
       setIsAnalyzing(false);
     }
+  };
   }, [service]);
 
   const getMoodPattern = React.useCallback(() => {
     return service.analyzePattern(moodHistory);
+  };
   }, [service, moodHistory]);
 
   const getRecommendations = React.useCallback(() => {
     const pattern = getMoodPattern();
     return service.generatePersonalizedRecommendations(pattern);
+  };
+  };
   }, [service, getMoodPattern]);
 
   return {
@@ -507,7 +514,7 @@ export const useMoodAnalysis = () => {
     }
   };
 
-// Singleton instance
+// Singleton instance;
 let moodAnalysisServiceInstance: MoodAnalysisService | null = null;
 
 export const getMoodAnalysisService = () => {

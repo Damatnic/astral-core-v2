@@ -1,6 +1,6 @@
 /**
  * Mock for Peer Support Service
- */
+ */;
 
 export const peerSupportService = {
   connectToPeer: jest.fn().mockResolvedValue({ peerId: 'mock-peer-123', status: 'connected' }),

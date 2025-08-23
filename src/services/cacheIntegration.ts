@@ -3,7 +3,7 @@
  * 
  * Integrates intelligent caching strategies with the existing enhanced service worker
  * Provides a bridge between our new caching services and the Workbox foundation
- */
+ */;
 
 import { intelligentCache, CachePriority, ResourceType } from './intelligentCachingService';
 import { cacheCoordinator } from './cacheStrategyCoordinator';
@@ -124,8 +124,8 @@ export class CacheIntegration {
         const storageInfo = await intelligentCache.getStorageInfo();
         
         if (storageInfo.usagePercentage > 0.9) {
-          this.handleStorageWarning('critical', storageInfo.usagePercentage);
-        } else if (storageInfo.usagePercentage > 0.8) {
+          this.handleStorageWarning('critical', storageInfo.usagePercentage);;
+  } else if (storageInfo.usagePercentage > 0.8) {
           this.handleStorageWarning('warning', storageInfo.usagePercentage);
         }
       } catch (error) {
@@ -224,7 +224,7 @@ export class CacheIntegration {
       maintenance: {
         lastRun: Date.now(), // This would be tracked in a real implementation
         intervalMinutes: this.config.maintenanceInterval,
-        isEnabled: this.maintenanceTimer !== null
+        isEnabled: this.maintenanceTimer !== null;
       }
     }
 
@@ -257,7 +257,8 @@ export class CacheIntegration {
             'X-Preload': 'true',
             'X-Cache-Priority': CachePriority.CRITICAL
           }
-        });
+        };
+  };
         
         if (response.ok) {
           console.log(`[CacheIntegration] Preloaded: ${url}`);
@@ -315,7 +316,7 @@ export class CacheIntegration {
       console.error('[CacheIntegration] Cache size calculation failed:', error);
       return {
         totalSize: 0,
-        cacheBreakdown: []
+        cacheBreakdown: [];
       }
   }
 
@@ -341,8 +342,9 @@ export class CacheIntegration {
       breakdown.push({
         name: cacheName,
         size,
-        entryCount: keys.length
-      });
+        entryCount: keys.length;
+      };
+  };
     }
 
     return breakdown;
@@ -402,10 +404,10 @@ export class CacheIntegration {
   }
 }
 
-// Export singleton instance for use throughout the application
+// Export singleton instance for use throughout the application;
 export const cacheIntegration = new CacheIntegration();
 
-// Export types and utilities
+// Export types and utilities;
 export {
   CachePriority,
   ResourceType,

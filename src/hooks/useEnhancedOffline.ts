@@ -5,7 +5,7 @@
  * and PWA capabilities optimized for low-connectivity environments.
  * 
  * @license Apache-2.0
- */
+ */;
 
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -50,7 +50,7 @@ export interface UseEnhancedOfflineReturn {
 
 export const useEnhancedOffline = (): UseEnhancedOfflineReturn => {
   const { i18n } = useTranslation();
-  const culturalContext = 'western'; // Default cultural context - could be enhanced with proper context detection
+  const culturalContext = 'western'; // Default cultural context - could be enhanced with proper context detection;
   
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [capabilities, setCapabilities] = useState<OfflineCapabilities | null>(null);
@@ -74,7 +74,7 @@ export const useEnhancedOffline = (): UseEnhancedOfflineReturn => {
         // Initialize the enhanced offline service
         await enhancedOfflineService.initialize();
         
-        // Get initial capabilities
+        // Get initial capabilities;
         const caps = await enhancedOfflineService.getOfflineCapabilities();
         setCapabilities(caps);
         setIsOnline(caps?.isOnline || navigator.onLine);
@@ -92,6 +92,7 @@ export const useEnhancedOffline = (): UseEnhancedOfflineReturn => {
     };
 
     initializeOfflineService();
+  };
   }, []);
 
   /**
@@ -104,6 +105,7 @@ export const useEnhancedOffline = (): UseEnhancedOfflineReturn => {
     });
 
     return unsubscribe;
+  };
   }, []);
 
   /**
@@ -125,11 +127,13 @@ export const useEnhancedOffline = (): UseEnhancedOfflineReturn => {
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
-    }, []);
+    };
+  };
+  }, []);
 
   /**
    * Update storage usage information
-   */
+   */;
   const updateStorageUsage = useCallback(async () => {
     try {
       if ('storage' in navigator && 'estimate' in navigator.storage) {
@@ -143,11 +147,12 @@ export const useEnhancedOffline = (): UseEnhancedOfflineReturn => {
     } catch (err) {
       console.warn('[Enhanced Offline Hook] Could not estimate storage:', err);
     }
+  };
   }, []);
 
   /**
    * Get crisis resources for current language and cultural context
-   */
+   */;
   const getCrisisResources = useCallback(async (type?: string): Promise<OfflineResource[]> => {
     try {
       setError(null);
@@ -162,11 +167,12 @@ export const useEnhancedOffline = (): UseEnhancedOfflineReturn => {
       console.error('[Enhanced Offline Hook] Failed to get crisis resources:', err);
       return [];
     }
+  };
   }, [i18n.language, culturalContext]);
 
   /**
    * Perform offline crisis detection
-   */
+   */;
   const detectCrisisOffline = useCallback(async (text: string) => {
     try {
       setError(null);
@@ -186,13 +192,14 @@ export const useEnhancedOffline = (): UseEnhancedOfflineReturn => {
         severity: 'low' as const,
         keywords: [],
         recommendations: [],
-        confidence: 0
+        confidence: 0;
       }
+  };
   }, [i18n.language, culturalContext]);
 
   /**
    * Add item to sync queue
-   */
+   */;
   const addToSyncQueue = useCallback(async (item: Omit<SyncQueueItem, 'id' | 'timestamp' | 'retryCount'>) => {
     try {
       setError(null);
@@ -200,18 +207,20 @@ export const useEnhancedOffline = (): UseEnhancedOfflineReturn => {
         ...item,
         language: i18n.language,
         culturalContext
-      });
+      };
+  };
       setSyncQueueSize(prev => prev + 1);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to add to sync queue';
       setError(errorMessage);
       console.error('[Enhanced Offline Hook] Failed to add to sync queue:', err);
     }
+  };
   }, [i18n.language, culturalContext]);
 
   /**
    * Clear all offline data
-   */
+   */;
   const clearOfflineData = useCallback(async () => {
     try {
       setError(null);
@@ -224,11 +233,12 @@ export const useEnhancedOffline = (): UseEnhancedOfflineReturn => {
       setError(errorMessage);
       console.error('[Enhanced Offline Hook] Failed to clear offline data:', err);
     }
+  };
   }, [updateStorageUsage]);
 
   /**
    * Update offline resources
-   */
+   */;
   const updateOfflineResources = useCallback(async () => {
     try {
       setIsUpdatingResources(true);
@@ -245,6 +255,7 @@ export const useEnhancedOffline = (): UseEnhancedOfflineReturn => {
     } finally {
       setIsUpdatingResources(false);
     }
+  };
   }, [updateStorageUsage]);
 
   /**
@@ -256,12 +267,13 @@ export const useEnhancedOffline = (): UseEnhancedOfflineReturn => {
     }, 30000); // Update every 30 seconds
 
     return () => clearInterval(interval);
+  };
   }, [updateStorageUsage]);
 
   /**
    * Determine if offline support is available
-   */
-  const hasOfflineSupport = Boolean(
+   */;
+  const hasOfflineSupport = Boolean(;
     capabilities?.hasIndexedDB || capabilities?.hasStorage
   );
 

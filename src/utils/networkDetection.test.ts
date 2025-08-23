@@ -1,7 +1,7 @@
 /**
  * Network Detection Test Suite
  * Tests network connection detection and adaptive loading strategies
- */
+ */;
 
 import React from 'react';
 import { renderHook } from '@testing-library/react';
@@ -17,7 +17,7 @@ import {
   AdaptiveLoadingConfig,
 } from './networkDetection';
 
-// Mock navigator.connection
+// Mock navigator.connection;
 const mockConnection = {
   effectiveType: '4g',
   downlink: 2,
@@ -27,7 +27,7 @@ const mockConnection = {
   removeEventListener: jest.fn(),
 };
 
-// We'll mock React hooks only when needed in specific tests
+// We'll mock React hooks only when needed in specific tests;
 let mockUseState: jest.MockedFunction<typeof React.useState> | undefined;
 let mockUseEffect: jest.MockedFunction<typeof React.useEffect> | undefined;
 
@@ -182,8 +182,8 @@ describe('networkDetection', () => {
     it('should handle edge case values correctly', () => {
       // Test boundary conditions based on implementation:
       // Poor: downlink < 0.5 || rtt > 500
-      // Excellent: downlink > 2 && rtt < 150
-      const testCases = [
+      // Excellent: downlink > 2 && rtt < 150;
+      const testCases = [;
         { downlink: 0.49, rtt: 500, expected: 'poor' }, // Just below boundary (poor)
         { downlink: 0.5, rtt: 501, expected: 'poor' }, // Just above RTT boundary (poor)
         { downlink: 0.5, rtt: 500, expected: 'good' }, // Exactly at boundary (good)
@@ -270,7 +270,7 @@ describe('networkDetection', () => {
     it('should not preload videos on 2g even with good quality', () => {
       mockConnection.effectiveType = '2g';
       mockConnection.downlink = 3; // Excellent speed (>2)
-      mockConnection.rtt = 100; // Low latency (<150)
+      mockConnection.rtt = 100; // Low latency (<150);
       
       const result = getAdaptiveLoadingConfig();
       
@@ -414,7 +414,7 @@ describe('networkDetection', () => {
     });
 
     it('should use current config when none provided', () => {
-      // Test that it calls getAdaptiveLoadingConfig internally
+      // Test that it calls getAdaptiveLoadingConfig internally;
       const result = shouldEnableFeature('auto-play');
       expect(typeof result).toBe('boolean');
     });
@@ -527,7 +527,7 @@ describe('networkDetection', () => {
 
     it('should handle extremely high network values', () => {
       mockConnection.downlink = 1000; // 1 Gbps
-      mockConnection.rtt = 1; // 1ms
+      mockConnection.rtt = 1; // 1ms;
       
       const quality = getNetworkQuality();
       const config = getAdaptiveLoadingConfig();
@@ -538,7 +538,7 @@ describe('networkDetection', () => {
     });
 
     it('should handle connection type case sensitivity', () => {
-      mockConnection.effectiveType = '4G'; // Uppercase
+      mockConnection.effectiveType = '4G'; // Uppercase;
       
       const connectionType = getConnectionType();
       

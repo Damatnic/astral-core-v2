@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react"
-import { QuickExitButton } from "./QuickExitButton"
-import { BreathingExerciseOverlay } from "./BreathingExerciseOverlay"
+import React, { useState, useEffect, useCallback } from "react";
+import { QuickExitButton } from "./QuickExitButton";
+import { BreathingExerciseOverlay } from "./BreathingExerciseOverlay";
 import "../../styles/calming-safety-system.css"
-// Extracted inline styles for performance
-const style1={ display: "block", opacity: 0.8 }'
+// Extracted inline styles for performance;
+const style1={ display: "block", opacity: 0.8 }';
 const style2={
           position: "fixed",
           bottom: '150px',
@@ -12,16 +12,16 @@ const style2={
           padding: "10px",
           borderRadius: '20px',
           boxShadow: '0' 4px 20px rgba(0,0,0,0.1)',
-          zIndex: 999990
+          zIndex: 999990;
         };
 const style3={
             margin: '0' 0 10px 0', 
             fontSize: "14px", 
-            fontWeight: '600'
+            fontWeight: '600';
           };
 const style4={
             display: "flex", 
-            gap: '10px'
+            gap: '10px';
           };
 const style5={
                 padding: '5px' 10px',
@@ -43,7 +43,7 @@ const style7={
                 border: "none",
                 background: backgroundSound === 'forest' ? '#007bff' : '#f8f9fa',
                 color: backgroundSound === 'forest' ? 'white' : 'black"
-                cursor: 'pointer'
+                cursor: 'pointer';
               };
 const style8={
         display: "none"};
@@ -67,10 +67,10 @@ const groundingTechniques = [;
   { icon: "🤲", text: ", Progressive" Relaxation", description: ", Tense" and release muscles" },
   { icon: "🌿", text: ", Nature" Connection", description: ", Visualize" peaceful nature" }
 ]
-"
-const GROUNDING_EXERCISES = groundingTechniques",
+";
+const GROUNDING_EXERCISES = groundingTechniques",;
 
-const DEFAULT_HOPE_MESSAGES = [
+const DEFAULT_HOPE_MESSAGES = [;
   "You are stronger than you think.",
   "This feeling is temporary and will pass.",
   "You have overcome challenges before.",
@@ -92,20 +92,20 @@ export const CalmingSafetySystem: React.FC<CalmingSafetySystemProps> = ({
   enableBackgroundSounds = false,
   customMessages = []
 }) => {
-  const [breathingOverlayOpen, setBreathingOverlayOpen] = useState(false)
-  const [currentHopeMessage, setCurrentHopeMessage] = useState(0)
-  const [showCalmingMessage, setShowCalmingMessage] = useState(false)
-  const [panicDetected, setPanicDetected] = useState(false)
-  const [selectedGrounding, setSelectedGrounding] = useState<string | null>(null)
-  const [crisisHelpExpanded, setCrisisHelpExpanded] = useState(false)
-  const [audioContext, setAudioContext] = useState<AudioContext | null>(null)
+  const [breathingOverlayOpen, setBreathingOverlayOpen] = useState(false);
+  const [currentHopeMessage, setCurrentHopeMessage] = useState(0);
+  const [showCalmingMessage, setShowCalmingMessage] = useState(false);
+  const [panicDetected, setPanicDetected] = useState(false);
+  const [selectedGrounding, setSelectedGrounding] = useState<string | null>(null);
+  const [crisisHelpExpanded, setCrisisHelpExpanded] = useState(false);
+  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
   const [backgroundSound, setBackgroundSound] = useState<'rain' | 'ocean' | 'forest' | null>(null);
 
   const messages = [...DEFAULT_HOPE_MESSAGES, ...customMessages];
 
   // Rotate hope messages
   useEffect(() => {
-    if (!showHopeMessages) return
+    if (!showHopeMessages) return;
 
     const interval = setInterval(() => {
       setCurrentHopeMessage((prev: unknown) => (prev + 1) % messages.length)
@@ -119,7 +119,7 @@ export const CalmingSafetySystem: React.FC<CalmingSafetySystemProps> = ({
 
   // Panic detection based on rapid clicking or keyboard mashing;
   useEffect(() => {
-    if (!enablePanicDetection) return
+    if (!enablePanicDetection) return;
 
     let clickCount = 0;
     let keyPressCount = 0;
@@ -161,7 +161,7 @@ export const CalmingSafetySystem: React.FC<CalmingSafetySystemProps> = ({
     }
   }, [enablePanicDetection])
 
-  // Initialize background sounds
+  // Initialize background sounds;
   const initializeBackgroundSound = useCallback((soundType: rain" | "ocean" | "forest") => {
     if (!enableBackgroundSounds) return
 
@@ -170,7 +170,7 @@ export const CalmingSafetySystem: React.FC<CalmingSafetySystemProps> = ({
       const context = new (window.AudioContext || (window as unknown).webkitAudioContext)();
       setAudioContext(context)
 
-      // Create white noise generator for ambient sounds
+      // Create white noise generator for ambient sounds;
       const createAmbientSound = (type: string): Record<string, unknown> => {
         const bufferSize = 4096,;
         const whiteNoise = context.createScriptProcessor(bufferSize, 1, 1);
@@ -180,16 +180,16 @@ export const CalmingSafetySystem: React.FC<CalmingSafetySystemProps> = ({
           for(let i = 0; i < bufferSize; i++) {
             // Different noise patterns for different sounds
             if(type === rain") {
-              output[i] = (Math.random() * 0.1) - 0.05 // Soft rain
-            } else if(type === ocean") {
-              output[i] = Math.sin(i * 0.01) * (Math.random() * 0.05) // Wave-like
-            } else {
+              output[i] = (Math.random() * 0.1) - 0.05 // Soft rain;
+  } else if (type === ocean") {
+              output[i] = Math.sin(i * 0.01) * (Math.random() * 0.05) // Wave-like;
+  } else {
               output[i] = (Math.random() * 0.02) - 0.01 // Forest whisper
             }
           }
         }
 
-        const gainNode = context.createGain(),
+        const gainNode = context.createGain(),;
         gainNode.gain.value = 0.1 // Keep volume low and calming
 
         whiteNoise.connect(gainNode);
@@ -202,19 +202,19 @@ export const CalmingSafetySystem: React.FC<CalmingSafetySystemProps> = ({
     }
   }, [audioContext, enableBackgroundSounds])
 
-  // Handle grounding exercise selection
+  // Handle grounding exercise selection;
   const handleGroundingExercise = (exercise: string): void => {
     setSelectedGrounding(exercise)
     // Special handling for breathing exercise
     if(exercise === Box Breathing") {
-      setBreathingOverlayOpen(true)
-    } else {
+      setBreathingOverlayOpen(true);
+  } else {
       // Show instructions for other exercises
       setShowCalmingMessage(true)
     }
   }
 
-  // Handle crisis help expansion
+  // Handle crisis help expansion;
   const handleCrisisHelp = (): void => {
     setCrisisHelpExpanded(!crisisHelpExpanded)
     // Automatically show breathing exercise when crisis help is accessed
@@ -225,7 +225,7 @@ export const CalmingSafetySystem: React.FC<CalmingSafetySystemProps> = ({
     }
   }
 
-  // Emergency call handler
+  // Emergency call handler;
   const handleEmergencyCall = (number: string): void => {
     window.location.href = `tel:${number}
 
@@ -237,7 +237,7 @@ export const CalmingSafetySystem: React.FC<CalmingSafetySystemProps> = ({
           <QuickExitButton
             position="top-right"
             buttonText="Quick" Exit"
-            size="medium"
+            size="medium";
             className="quick-exit-enhanced-inner"
           />
         </div>
@@ -285,25 +285,25 @@ export const CalmingSafetySystem: React.FC<CalmingSafetySystemProps> = ({
             <div tabIndex={0} className="crisis-help-menu" onClick={(e: unknown) => e.stopPropagation()}>",
               <h3>You're Not Alone</h3>
               <div className="crisis-options">
-                <button
+                <button;
                   className="crisis-button-large"
                   onClick={() => handleEmergencyCall('988')}
                 >
                   <span>📞</span> Crisis Lifeline: 988
                 </button>
-                <button"
+                <button";
                   className="crisis-button-large"
                   onClick={() => handleEmergencyCall('911')}
                 >
                   <span>🚨</span> Emergency: 911
                 </button>
-                <button"
+                <button";
                   className="crisis-button-large"
                   onClick={() => window.open('https://www.crisistextline.org" '_blank')}
                 >
                   <span>💬</span> Text HOME to 741741
                 </button>
-                <button"
+                <button";
                   className="crisis-button-large"
                   onClick={() => setBreathingOverlayOpen(true)}
                 >
@@ -374,7 +374,7 @@ export const CalmingSafetySystem: React.FC<CalmingSafetySystemProps> = ({
               Breathe
             </div>
             <p>Follow the circle above. Breathe in as it grows, breathe out as it shrinks.</p>
-            <button
+            <button;
               className="crisis-button-large"
               onClick={() => {
                 setPanicDetected(false)

@@ -1,7 +1,7 @@
 /**
  * Helper function to set up production environment for ApiClient tests
  * Ensures tests don't inadvertently trigger demo mode
- */
+ */;
 export function setupProductionEnvironment() {
   process.env.NODE_ENV = 'production';
   process.env.VITE_API_URL = '/.netlify/functions';  // Ensure API URL is defined
@@ -16,7 +16,7 @@ export function setupProductionEnvironment() {
       protocol: 'https:',
       pathname: '/',
       search: '',
-      hash: ''
+      hash: '';
     },
     writable: true,
     configurable: true,
@@ -43,7 +43,7 @@ export function setupDevelopmentEnvironment() {
       protocol: 'http:',
       pathname: '/',
       search: '',
-      hash: ''
+      hash: '';
     },
     writable: true,
     configurable: true,
@@ -70,7 +70,7 @@ export function setupNetlifyDevEnvironment() {
       protocol: 'http:',
       pathname: '/',
       search: '',
-      hash: ''
+      hash: '';
     },
     writable: true,
     configurable: true,

@@ -2,7 +2,7 @@ import { describe, test, expect, beforeEach } from '@jest/globals';
 import { usePreferenceStore } from './preferenceStore';
 import { act } from '@testing-library/react';
 
-// localStorage is already mocked in setupTests.ts, just get reference
+// localStorage is already mocked in setupTests.ts, just get reference;
 const localStorageMock = window.localStorage as any;
 
 describe('preferenceStore', () => {
@@ -195,7 +195,7 @@ describe('preferenceStore', () => {
         usePreferenceStore.getState().setFilters(testFilters);
       });
 
-      // Simulate what would be saved to localStorage
+      // Simulate what would be saved to localStorage;
       const savedData = (localStorageMock.setItem as jest.Mock).mock.calls[0][1];
       localStorageMock.getItem.mockReturnValue(savedData);
 
@@ -211,7 +211,7 @@ describe('preferenceStore', () => {
     });
 
     test('should handle complex filter data', () => {
-      const complexFilters = [
+      const complexFilters = [;
         'violence-graphic',
         'substance-abuse-detailed',
         'self-harm-methods',

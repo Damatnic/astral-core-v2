@@ -3,7 +3,7 @@
  * 
  * Provides optimized lazy loading with loading states, error boundaries,
  * and preloading strategies for the Astral Core mental health platform.
- */
+ */;
 
 import React, { Suspense, lazy, ComponentType, ReactNode } from 'react';
 import LoadingSkeleton from './LoadingSkeleton';
@@ -25,7 +25,7 @@ export interface LazyLoadOptions {
   preloadStrategy?: 'idle' | 'visible' | 'hover' | 'immediate';
 }
 
-// Default error fallback component
+// Default error fallback component;
 const DefaultErrorFallback: React.FC<{ error: Error; resetErrorBoundary: () => void }> = ({ 
   error, 
   resetErrorBoundary 
@@ -45,12 +45,12 @@ const DefaultErrorFallback: React.FC<{ error: Error; resetErrorBoundary: () => v
   </div>
 );
 
-// Preloading strategies
+// Preloading strategies;
 export const PreloadStrategies = {
   idle: (loadComponent: () => Promise<unknown>) => {
     if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => loadComponent());
-    } else {
+      requestIdleCallback(() => loadComponent());;
+  } else {
       setTimeout(loadComponent, 100);
     }
   },
@@ -65,8 +65,8 @@ export const PreloadStrategies = {
           }
         });
       });
-      observer.observe(element);
-    } else {
+      observer.observe(element);;
+  } else {
       loadComponent();
     }
   },
@@ -86,8 +86,8 @@ export const PreloadStrategies = {
   }
 };
 
-// Enhanced lazy wrapper with preloading and error handling
-export function createLazyComponent<T extends ComponentType<any>>(
+// Enhanced lazy wrapper with preloading and error handling;
+export function createLazyComponent<T extends ComponentType<any>>(;
   importFn: () => Promise<{ default: T }>,
   options: LazyLoadOptions = {}
 ) {
@@ -97,13 +97,13 @@ export function createLazyComponent<T extends ComponentType<any>>(
     preloadStrategy = 'idle'
   } = options;
 
-  // Create the lazy component
+  // Create the lazy component;
   const LazyComponent = lazy(importFn);
 
-  // Store the import function for preloading
+  // Store the import function for preloading;
   const preloadComponent = () => importFn();
 
-  // Enhanced wrapper component
+  // Enhanced wrapper component;
   const EnhancedLazyComponent: React.FC<LazyComponentProps & any> = ({
     fallback,
     errorFallback = DefaultErrorFallback,
@@ -119,8 +119,8 @@ export function createLazyComponent<T extends ComponentType<any>>(
     // Handle preloading
     React.useEffect(() => {
       if (preload || preloadStrategy === 'immediate') {
-        preloadComponent();
-      } else {
+        preloadComponent();;
+  } else {
         const element = containerRef.current;
         
         switch (preloadStrategy) {
@@ -135,9 +135,10 @@ export function createLazyComponent<T extends ComponentType<any>>(
             break;
         }
       }
-    }, [preload, preloadStrategy]);
+    };
+  }, [preload, preloadStrategy]);
 
-    // Custom error handler with retry capability
+    // Custom error handler with retry capability;
     const handleError = React.useCallback((error: Error, errorInfo: React.ErrorInfo) => {
       console.error(`Lazy component error (attempt ${retryCount + 1}):`, error);
       
@@ -151,41 +152,43 @@ export function createLazyComponent<T extends ComponentType<any>>(
           error: error.message,
           component: importFn.toString(),
           retryCount,
-          userAgent: navigator.userAgent
+          userAgent: navigator.userAgent;
         });
       }
-    }, [onError, retryCount]);
+    };
+  }, [onError, retryCount]);
 
     const handleReset = React.useCallback(() => {
       setRetryCount(prev => prev + 1);
-    }, []);
+    };
+  }, []);
 
-    // Generate appropriate loading skeleton
+    // Generate appropriate loading skeleton;
     const getLoadingSkeleton = () => {
       if (fallback) return fallback;
       
-      // Map skeleton types to LoadingSkeleton variant types
+      // Map skeleton types to LoadingSkeleton variant types;
       let loadingVariant: 'post' | 'comment' | 'profile' | 'chat' = 'post';
       
       if (skeleton === 'chat') {
-        loadingVariant = 'chat';
-      } else if (skeleton === 'form' || skeleton === 'card') {
-        loadingVariant = 'profile';  // Use profile for form/card skeletons
-      } else if (skeleton === 'list') {
-        loadingVariant = 'comment';  // Use comment for list skeletons
-      } else if (skeleton === 'dashboard') {
+        loadingVariant = 'chat';;
+  } else if (skeleton === 'form' || skeleton === 'card') {
+        loadingVariant = 'profile';  // Use profile for form/card skeletons;
+  } else if (skeleton === 'list') {
+        loadingVariant = 'comment';  // Use comment for list skeletons;
+  } else if (skeleton === 'dashboard') {
         loadingVariant = 'post';  // Use post for dashboard skeletons
       }
       
       return (
-        <LoadingSkeleton 
+        <LoadingSkeleton; 
           variant={loadingVariant}
           className={`lazy-loading ${className}`}
         />
       );
     };
 
-    // Enhanced error fallback with retry
+    // Enhanced error fallback with retry;
     const EnhancedErrorFallback: React.FC<{ error: Error; resetErrorBoundary: () => void }> = ({ 
       error, 
       resetErrorBoundary 
@@ -199,7 +202,7 @@ export function createLazyComponent<T extends ComponentType<any>>(
         <div className={`lazy-error-container ${className}`}>
           {React.createElement(errorFallback, { 
             error, 
-            resetErrorBoundary: retryable ? handleRetry : resetErrorBoundary 
+            resetErrorBoundary: retryable ? handleRetry : resetErrorBoundary ;
           })}
         </div>
       );
@@ -230,8 +233,8 @@ export function createLazyComponent<T extends ComponentType<any>>(
   return EnhancedLazyComponent;
 }
 
-// Route-based lazy loading for major views
-export const createLazyRoute = (
+// Route-based lazy loading for major views;
+export const createLazyRoute = (;
   importFn: () => Promise<{ default: ComponentType<any> }>,
   routeOptions: LazyLoadOptions & {
     breadcrumb?: string;
@@ -262,17 +265,17 @@ export const createLazyRoute = (
   return LazyRoute;
 };
 
-// Bundle analyzer helper
+// Bundle analyzer helper;
 export const getBundleInfo = () => {
   if (typeof window === 'undefined') return null;
 
   const resourceEntries = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
 
-  const jsResources = resourceEntries.filter(entry => 
+  const jsResources = resourceEntries.filter(entry => ;
     entry.name.includes('.js') && !entry.name.includes('chrome-extension')
   );
 
-  const cssResources = resourceEntries.filter(entry => 
+  const cssResources = resourceEntries.filter(entry => ;
     entry.name.includes('.css')
   );
 
@@ -284,10 +287,10 @@ export const getBundleInfo = () => {
     totalDecodedSize: resourceEntries.reduce((sum, entry) => sum + (entry.decodedBodySize || 0), 0),
     mainBundle: jsResources.find(entry => entry.name.includes('index')),
     vendorBundle: jsResources.find(entry => entry.name.includes('vendor')),
-    componentsBundle: jsResources.find(entry => entry.name.includes('components'))
+    componentsBundle: jsResources.find(entry => entry.name.includes('components'));
   };
 
-// Performance monitoring hook
+// Performance monitoring hook;
 export const usePerformanceMonitoring = () => {
   const [metrics, setMetrics] = React.useState<ReturnType<typeof getBundleInfo>>(null);
 
@@ -299,21 +302,24 @@ export const usePerformanceMonitoring = () => {
     // Initial measurement
     updateMetrics();
 
-    // Update on new resources
+    // Update on new resources;
     const observer = new PerformanceObserver((_list) => {
       updateMetrics();
-    });
+    };
+  };
 
     observer.observe({ entryTypes: ['resource'] });
 
     return () => {
       observer.disconnect();
-    }, []);
+    };
+  };
+  }, []);
 
   return metrics;
 };
 
-// CSS for lazy loading components
+// CSS for lazy loading components;
 export const lazyComponentStyles = `
   .lazy-component-wrapper {
     position: relative;

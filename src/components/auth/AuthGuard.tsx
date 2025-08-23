@@ -1,7 +1,7 @@
 /**
  * Authentication Guard Component
  * Protects routes and components based on authentication status and roles
- */
+ */;
 
 import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
@@ -36,27 +36,28 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
   useEffect(() => {
     checkAuth();
     
-    // Subscribe to auth changes
+    // Subscribe to auth changes;
     const unsubscribe = auth0Service.onAuthStateChange((user) => {
       setIsAuthenticated(!!user);
       checkAccess(user);
     });
 
     return unsubscribe;
+  };
   }, [requireAuth, requireRoles, requireAllRoles]);
 
   const checkAuth = async () => {
     try {
       setIsLoading(true);
       
-      // Check authentication
+      // Check authentication;
       const authenticated = await auth0Service.isAuthenticated();
       setIsAuthenticated(authenticated);
       
       if (authenticated) {
         const currentUser = await auth0Service.getCurrentUser();
-        await checkAccess(currentUser);
-      } else {
+        await checkAccess(currentUser);;
+  } else {
         setHasAccess(!requireAuth);
       }
     } catch (error) {
@@ -86,11 +87,11 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
       return;
     }
 
-    // Check role requirements
+    // Check role requirements;
     let roleAccess = false;
     if (requireAllRoles) {
-      roleAccess = await auth0Service.hasAllRoles(requireRoles);
-    } else {
+      roleAccess = await auth0Service.hasAllRoles(requireRoles);;
+  } else {
       roleAccess = await auth0Service.hasAnyRole(requireRoles);
     }
 
@@ -127,7 +128,7 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
 
 /**
  * Hook for checking authentication and authorization
- */
+ */;
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -152,13 +153,14 @@ export const useAuth = () => {
 
     checkAuth();
 
-    // Subscribe to auth changes
+    // Subscribe to auth changes;
     const unsubscribe = auth0Service.onAuthStateChange((user) => {
       setUser(user);
       setIsAuthenticated(!!user);
     });
 
     return unsubscribe;
+  };
   }, []);
 
   const login = async (options?: any) => {
@@ -194,7 +196,7 @@ export const useAuth = () => {
 
 /**
  * HOC for protecting components
- */
+ */;
 export function withAuth<P extends object>(
   Component: React.ComponentType<P>,
   options?: Omit<AuthGuardProps, 'children'>
@@ -208,7 +210,7 @@ export function withAuth<P extends object>(
 
 /**
  * Role-based component visibility
- */
+ */;
 export const CanAccess: React.FC<{
   roles?: UserRole[];
   requireAll?: boolean;
@@ -224,7 +226,7 @@ export const CanAccess: React.FC<{
         return;
       }
 
-      const access = requireAll
+      const access = requireAll;
         ? await auth0Service.hasAllRoles(roles)
         : await auth0Service.hasAnyRole(roles);
       
@@ -232,12 +234,13 @@ export const CanAccess: React.FC<{
     };
 
     checkAccess();
+  };
   }, [roles, requireAll]);
 
   return <>{hasAccess ? children : fallback}</>;
 };
 
-// Unauthorized page component
+// Unauthorized page component;
 const UnauthorizedPage: React.FC = () => (
   <div className="flex flex-col items-center justify-center min-h-screen">
     <h1 className="text-4xl font-bold text-gray-800 mb-4">403 - Unauthorized</h1>

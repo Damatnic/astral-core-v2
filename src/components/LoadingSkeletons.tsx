@@ -10,14 +10,14 @@
  * - Dark mode support
  * - Accessibility compliance
  * - Performance optimized
- */
+ */;
 
 import React from 'react';
 import './loading-skeletons.css';
 
 /* =================================
    BASE SKELETON COMPONENTS
-   ================================= */
+   ================================= */;
 
 interface SkeletonProps {
   className?: string;
@@ -43,7 +43,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
     borderRadius,
   };
 
-  const classes = [
+  const classes = [;
     'skeleton',
     `skeleton-${variant}`,
     `skeleton-${animation}`,
@@ -55,7 +55,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 
 /* =================================
    TEXT SKELETON COMPONENTS
-   ================================= */
+   ================================= */;
 
 interface TextSkeletonProps {
   lines?: number;
@@ -101,34 +101,34 @@ export const TextSkeleton: React.FC<TextSkeletonProps> = ({
 
 /* =================================
    POST CARD SKELETON
-   ================================= */
+   ================================= */;
 
 export const PostCardSkeleton: React.FC<{ className?: string }> = ({ className = '' }) => {
   return (
     <div className={`post-card-skeleton skeleton-container ${className}`}>
       {/* Header with avatar and user info */}
       <div className="post-card-skeleton-header">
-        <Skeleton
+        <Skeleton;
           variant="circular"
           width={40}
           height={40}
           className="post-card-skeleton-avatar"
         />
         <div className="post-card-skeleton-user-info">
-          <Skeleton
+          <Skeleton;
             variant="text"
             width="120px"
-            height="1.2em"
+            height="1.2em";
             className="post-card-skeleton-username"
           />
-          <Skeleton
+          <Skeleton;
             variant="text"
             width="80px"
-            height="1em"
+            height="1em";
             className="post-card-skeleton-timestamp"
           />
         </div>
-        <Skeleton
+        <Skeleton;
           variant="rectangular"
           width={24}
           height={24}
@@ -142,27 +142,27 @@ export const PostCardSkeleton: React.FC<{ className?: string }> = ({ className =
       </div>
 
       {/* Optional image placeholder */}
-      <Skeleton
+      <Skeleton;
         variant="rectangular"
-        height="200px"
+        height="200px";
         className="post-card-skeleton-image"
       />
 
       {/* Actions bar */}
       <div className="post-card-skeleton-actions">
-        <Skeleton
+        <Skeleton;
           variant="rectangular"
           width={60}
           height={32}
           className="post-card-skeleton-action"
         />
-        <Skeleton
+        <Skeleton;
           variant="rectangular"
           width={60}
           height={32}
           className="post-card-skeleton-action"
         />
-        <Skeleton
+        <Skeleton;
           variant="rectangular"
           width={80}
           height={32}
@@ -175,7 +175,7 @@ export const PostCardSkeleton: React.FC<{ className?: string }> = ({ className =
 
 /* =================================
    CHAT MESSAGE SKELETON
-   ================================= */
+   ================================= */;
 
 interface ChatMessageSkeletonProps {
   isOwn?: boolean;
@@ -191,7 +191,7 @@ export const ChatMessageSkeleton: React.FC<ChatMessageSkeletonProps> = ({
   return (
     <div className={`chat-message-skeleton ${isOwn ? 'chat-message-skeleton-own' : ''} ${className}`}>
       {!isOwn && hasAvatar && (
-        <Skeleton
+        <Skeleton;
           variant="circular"
           width={32}
           height={32}
@@ -202,10 +202,10 @@ export const ChatMessageSkeleton: React.FC<ChatMessageSkeletonProps> = ({
         <div className="chat-message-skeleton-bubble">
           <TextSkeleton lines={Math.floor(Math.random() * 3) + 1} variant="body" />
         </div>
-        <Skeleton
+        <Skeleton;
           variant="text"
           width="60px"
-          height="0.8em"
+          height="0.8em";
           className="chat-message-skeleton-timestamp"
         />
       </div>
@@ -215,36 +215,36 @@ export const ChatMessageSkeleton: React.FC<ChatMessageSkeletonProps> = ({
 
 /* =================================
    PROFILE CARD SKELETON
-   ================================= */
+   ================================= */;
 
 export const ProfileCardSkeleton: React.FC<{ className?: string }> = ({ className = '' }) => {
   return (
     <div className={`profile-card-skeleton skeleton-container ${className}`}>
       {/* Profile header */}
       <div className="profile-card-skeleton-header">
-        <Skeleton
+        <Skeleton;
           variant="circular"
           width={80}
           height={80}
           className="profile-card-skeleton-avatar"
         />
         <div className="profile-card-skeleton-info">
-          <Skeleton
+          <Skeleton;
             variant="text"
             width="150px"
-            height="1.5em"
+            height="1.5em";
             className="profile-card-skeleton-name"
           />
-          <Skeleton
+          <Skeleton;
             variant="text"
             width="100px"
-            height="1em"
+            height="1em";
             className="profile-card-skeleton-role"
           />
-          <Skeleton
+          <Skeleton;
             variant="text"
             width="80px"
-            height="1em"
+            height="1em";
             className="profile-card-skeleton-status"
           />
         </div>
@@ -273,14 +273,14 @@ export const ProfileCardSkeleton: React.FC<{ className?: string }> = ({ classNam
 
       {/* Actions */}
       <div className="profile-card-skeleton-actions">
-        <Skeleton
+        <Skeleton;
           variant="rectangular"
-          height="40px"
+          height="40px";
           className="profile-card-skeleton-action-primary"
         />
-        <Skeleton
+        <Skeleton;
           variant="rectangular"
-          height="40px"
+          height="40px";
           className="profile-card-skeleton-action-secondary"
         />
       </div>
@@ -290,23 +290,23 @@ export const ProfileCardSkeleton: React.FC<{ className?: string }> = ({ classNam
 
 /* =================================
    NAVIGATION SKELETON
-   ================================= */
+   ================================= */;
 
 export const NavigationSkeleton: React.FC<{ className?: string }> = ({ className = '' }) => {
   const navigationItems: React.ReactElement[] = [];
   for (let i = 0; i < 6; i++) {
     navigationItems.push(
       <div key={`nav-item-${i}`} className="navigation-skeleton-item">
-        <Skeleton
+        <Skeleton;
           variant="rectangular"
           width={24}
           height={24}
           className="navigation-skeleton-icon"
         />
-        <Skeleton
+        <Skeleton;
           variant="text"
           width="80px"
-          height="1.2em"
+          height="1.2em";
           className="navigation-skeleton-label"
         />
       </div>
@@ -322,20 +322,20 @@ export const NavigationSkeleton: React.FC<{ className?: string }> = ({ className
 
 /* =================================
    DASHBOARD WIDGET SKELETON
-   ================================= */
+   ================================= */;
 
 export const DashboardWidgetSkeleton: React.FC<{ className?: string }> = ({ className = '' }) => {
   return (
     <div className={`dashboard-widget-skeleton skeleton-container ${className}`}>
       {/* Widget header */}
       <div className="dashboard-widget-skeleton-header">
-        <Skeleton
+        <Skeleton;
           variant="text"
           width="120px"
-          height="1.5em"
+          height="1.5em";
           className="dashboard-widget-skeleton-title"
         />
-        <Skeleton
+        <Skeleton;
           variant="rectangular"
           width={20}
           height={20}
@@ -345,24 +345,24 @@ export const DashboardWidgetSkeleton: React.FC<{ className?: string }> = ({ clas
 
       {/* Widget content */}
       <div className="dashboard-widget-skeleton-content">
-        <Skeleton
+        <Skeleton;
           variant="text"
           width="60px"
-          height="2.5em"
+          height="2.5em";
           className="dashboard-widget-skeleton-value"
         />
-        <Skeleton
+        <Skeleton;
           variant="text"
           width="100px"
-          height="1em"
+          height="1em";
           className="dashboard-widget-skeleton-label"
         />
       </div>
 
       {/* Optional chart area */}
-      <Skeleton
+      <Skeleton;
         variant="rectangular"
-        height="80px"
+        height="80px";
         className="dashboard-widget-skeleton-chart"
       />
     </div>
@@ -371,7 +371,7 @@ export const DashboardWidgetSkeleton: React.FC<{ className?: string }> = ({ clas
 
 /* =================================
    FEED SKELETON
-   ================================= */
+   ================================= */;
 
 interface FeedSkeletonProps {
   itemCount?: number;
@@ -398,31 +398,31 @@ export const FeedSkeleton: React.FC<FeedSkeletonProps> = ({
 
 /* =================================
    SEARCH RESULTS SKELETON
-   ================================= */
+   ================================= */;
 
 export const SearchResultsSkeleton: React.FC<{ className?: string }> = ({ className = '' }) => {
   const searchResults: React.ReactElement[] = [];
   for (let i = 0; i < 4; i++) {
     searchResults.push(
       <div key={`search-result-${i}`} className="search-result-skeleton-item">
-        <Skeleton
+        <Skeleton;
           variant="rectangular"
           width={48}
           height={48}
           className="search-result-skeleton-thumbnail"
         />
         <div className="search-result-skeleton-content">
-          <Skeleton
+          <Skeleton;
             variant="text"
             width="200px"
-            height="1.3em"
+            height="1.3em";
             className="search-result-skeleton-title"
           />
           <TextSkeleton lines={2} variant="body" />
-          <Skeleton
+          <Skeleton;
             variant="text"
             width="120px"
-            height="1em"
+            height="1em";
             className="search-result-skeleton-meta"
           />
         </div>
@@ -439,7 +439,7 @@ export const SearchResultsSkeleton: React.FC<{ className?: string }> = ({ classN
 
 /* =================================
    TABLE SKELETON
-   ================================= */
+   ================================= */;
 
 interface TableSkeletonProps {
   rows?: number;
@@ -461,7 +461,7 @@ export const TableSkeleton: React.FC<TableSkeletonProps> = ({
         <Skeleton
           key={`header-cell-${i}`}
           variant="text"
-          height="1.5em"
+          height="1.5em";
           className="table-skeleton-header-cell"
         />
       );
@@ -476,7 +476,7 @@ export const TableSkeleton: React.FC<TableSkeletonProps> = ({
         <Skeleton
           key={`row-${i}-cell-${j}`}
           variant="text"
-          height="1.2em"
+          height="1.2em";
           className="table-skeleton-cell"
         />
       );
@@ -504,22 +504,22 @@ export const TableSkeleton: React.FC<TableSkeletonProps> = ({
 
 /* =================================
    FORM SKELETON
-   ================================= */
+   ================================= */;
 
 export const FormSkeleton: React.FC<{ className?: string }> = ({ className = '' }) => {
   const formFields: React.ReactElement[] = [];
   for (let i = 0; i < 4; i++) {
     formFields.push(
       <div key={`form-field-${i}`} className="form-skeleton-field">
-        <Skeleton
+        <Skeleton;
           variant="text"
           width="100px"
-          height="1.2em"
+          height="1.2em";
           className="form-skeleton-label"
         />
-        <Skeleton
+        <Skeleton;
           variant="rectangular"
-          height="48px"
+          height="48px";
           className="form-skeleton-input"
         />
       </div>
@@ -529,10 +529,10 @@ export const FormSkeleton: React.FC<{ className?: string }> = ({ className = '' 
   return (
     <div className={`form-skeleton ${className}`}>
       {/* Form title */}
-      <Skeleton
+      <Skeleton;
         variant="text"
         width="200px"
-        height="2em"
+        height="2em";
         className="form-skeleton-title"
       />
 
@@ -541,16 +541,16 @@ export const FormSkeleton: React.FC<{ className?: string }> = ({ className = '' 
 
       {/* Form actions */}
       <div className="form-skeleton-actions">
-        <Skeleton
+        <Skeleton;
           variant="rectangular"
           width="100px"
-          height="44px"
+          height="44px";
           className="form-skeleton-button"
         />
-        <Skeleton
+        <Skeleton;
           variant="rectangular"
           width="80px"
-          height="44px"
+          height="44px";
           className="form-skeleton-button"
         />
       </div>
@@ -560,7 +560,7 @@ export const FormSkeleton: React.FC<{ className?: string }> = ({ className = '' 
 
 /* =================================
    LOADING STATE WRAPPER
-   ================================= */
+   ================================= */;
 
 interface LoadingWrapperProps {
   loading: boolean;
@@ -584,7 +584,7 @@ export const LoadingWrapper: React.FC<LoadingWrapperProps> = ({
 
 /* =================================
    SKELETON LIST
-   ================================= */
+   ================================= */;
 
 interface SkeletonListProps {
   count: number;
@@ -613,5 +613,5 @@ export const SkeletonList: React.FC<SkeletonListProps> = ({
   );
 };
 
-// Export the base Skeleton component as default for lazy loading
+// Export the base Skeleton component as default for lazy loading;
 export default Skeleton;

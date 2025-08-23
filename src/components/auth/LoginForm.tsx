@@ -33,11 +33,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         
         // Call success callback or navigate
         if (onSuccess) {
-          onSuccess();
-        } else {
+          onSuccess();;
+  } else {
           navigate('/dashboard');
-        }
-      } else {
+        };
+  } else {
         setError(response.error || 'Login failed');
       }
     } catch (err) {
@@ -58,11 +58,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       
       if (response.success) {
         if (onSuccess) {
-          onSuccess();
-        } else {
+          onSuccess();;
+  } else {
           navigate('/dashboard');
-        }
-      } else {
+        };
+  } else {
         setError('Demo login failed. Please try again.');
       }
     } catch (err) {
@@ -88,9 +88,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           <label htmlFor="email" className="form-label">
             Email Address
           </label>
-          <input
+          <input;
             type="email"
-            id="email"
+            id="email";
             className="form-input glass-input smooth-transition"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -105,9 +105,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           <label htmlFor="password" className="form-label">
             Password
           </label>
-          <input
+          <input;
             type="password"
-            id="password"
+            id="password";
             className="form-input glass-input smooth-transition"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -120,8 +120,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         </div>
 
         <div className="form-actions">
-          <button
-            type="submit"
+          <button;
+            type="submit";
             className="glass-button btn-primary-therapeutic smooth-transition ripple-button animate-glow"
             disabled={isLoading}
           >
@@ -134,7 +134,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             ) : 'Sign In'}
           </button>
 
-          <button
+          <button;
             type="button"
             onClick={handleDemoLogin}
             className="glass-button btn-secondary-therapeutic smooth-transition ripple-button"
@@ -147,8 +147,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         <div className="auth-form-footer">
           <p>
             Don't have an account?{' '}
-            <button
-              type="button"
+            <button;
+              type="button";
               className="link-button smooth-transition gradient-text"
               onClick={onSwitchToRegister}
               disabled={isLoading}

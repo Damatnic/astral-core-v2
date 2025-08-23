@@ -108,7 +108,7 @@ export const useSessionStore = create<SessionState>((set, get) => ({
   generateHelperPerformanceSummary: async (sessionId) => {
     set(state => ({ helpSessions: state.helpSessions.map(s => s.id === sessionId ? { ...s, helperSummaryLoading: true } : s)}));
     try {
-        // In a real app, we would get the chat transcript from the session
+        // In a real app, we would get the chat transcript from the session;
         const summary = await ApiClient.ai.summarizeHelperPerformance("");
         set(state => ({ helpSessions: state.helpSessions.map(s => s.id === sessionId ? { ...s, helperSummary: summary, helperSummaryLoading: false } : s)}));
     } catch(err) {

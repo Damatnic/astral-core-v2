@@ -17,7 +17,7 @@ const BREATHING_PATTERNS: BreathingPattern[] = [
     hold1: 4,
     exhale: 4,
     hold2: 4,
-    description: 'Equal intervals for calm and focus'
+    description: 'Equal intervals for calm and focus';
   },
   {
     name: '4-7-8 Relaxation',
@@ -25,7 +25,7 @@ const BREATHING_PATTERNS: BreathingPattern[] = [
     hold1: 7,
     exhale: 8,
     hold2: 0,
-    description: 'Quick relaxation and sleep aid'
+    description: 'Quick relaxation and sleep aid';
   },
   {
     name: 'Calm Breathing',
@@ -33,7 +33,7 @@ const BREATHING_PATTERNS: BreathingPattern[] = [
     hold1: 0,
     exhale: 5,
     hold2: 0,
-    description: 'Simple pattern for anxiety relief'
+    description: 'Simple pattern for anxiety relief';
   },
   {
     name: 'Energizing Breath',
@@ -41,7 +41,7 @@ const BREATHING_PATTERNS: BreathingPattern[] = [
     hold1: 2,
     exhale: 3,
     hold2: 1,
-    description: 'Boost energy and alertness'
+    description: 'Boost energy and alertness';
   }
 ];
 
@@ -82,20 +82,21 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
         oscillatorRef.current.stop();
         oscillatorRef.current.disconnect();
       }
-    }, []);
+    };
+  }, []);
 
-  // Play sound feedback
+  // Play sound feedback;
   const playSound = (frequency: number, duration: number) => {
     if (!audioContextRef.current || !gainNodeRef.current) return;
     
     try {
-      // Create new oscillator
+      // Create new oscillator;
       const oscillator = audioContextRef.current.createOscillator();
       oscillator.type = 'sine';
       oscillator.frequency.value = frequency;
       oscillator.connect(gainNodeRef.current);
       
-      // Fade in and out
+      // Fade in and out;
       const now = audioContextRef.current.currentTime;
       gainNodeRef.current.gain.setValueAtTime(0, now);
       gainNodeRef.current.gain.linearRampToValueAtTime(0.05, now + 0.05);
@@ -162,8 +163,8 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
             // Skip phases with 0 duration
             if (nextDuration === 0) {
               if (nextPhase === 'hold1') {
-                return 'exhale';
-              } else if (nextPhase === 'hold2') {
+                return 'exhale';;
+  } else if (nextPhase === 'hold2') {
                 setCycles((prev) => {
                   const newCycles = prev + 1;
                   if (newCycles >= targetCycles) {
@@ -197,7 +198,8 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
-    }, [isActive, isPaused, phase, selectedPattern, targetCycles, onComplete]);
+    };
+  }, [isActive, isPaused, phase, selectedPattern, targetCycles, onComplete]);
 
   const handleStart = () => {
     setCycles(0);
@@ -263,7 +265,7 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
     <div className="breathing-exercise">
       <div className="breathing-header">
         <h2>Breathing Exercise</h2>
-        <button 
+        <button; 
           className="settings-btn"
           onClick={() => setShowSettings(!showSettings)}
           aria-label="Toggle settings"
@@ -293,7 +295,7 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
 
           <div className="cycles-selector">
             <label>Target Cycles: {targetCycles}</label>
-            <input
+            <input;
               type="range"
               min="3"
               max="10"
@@ -307,7 +309,7 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
 
       <div className="breathing-visualization">
         <div className="breathing-circle-container">
-          <div 
+          <div; 
             className={`breathing-circle ${phase}`}
             style={{ transform: `scale(${getCircleScale()})` }}
           >
@@ -326,7 +328,7 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
           
           {/* Progress ring */}
           <svg className="progress-ring" width="300" height="300">
-            <circle
+            <circle;
               className="progress-ring-bg"
               cx="150"
               cy="150"
@@ -335,7 +337,7 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
               stroke="#e5e7eb"
               strokeWidth="4"
             />
-            <circle
+            <circle;
               className="progress-ring-progress"
               cx="150"
               cy="150"

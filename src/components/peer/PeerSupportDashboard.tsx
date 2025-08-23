@@ -5,7 +5,7 @@
  * including finding matches, managing sessions, and accessing community features.
  * 
  * @license Apache-2.0
- */
+ */;
 
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +20,7 @@ import { AppButton } from '../AppButton';
 
 export const PeerSupportDashboard: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const token = 'mock-token'; // Temporary for demo
+  const token = 'mock-token'; // Temporary for demo;
   
   const {
     findPeerSupport,
@@ -48,12 +48,12 @@ export const PeerSupportDashboard: React.FC = () => {
 
   /**
    * Handle support request submission
-   */
+   */;
   const handleSupportRequest = async () => {
     let maxWaitTime = 60; // default for low urgency
     if (urgencyLevel === 'high') {
-      maxWaitTime = 10;
-    } else if (urgencyLevel === 'medium') {
+      maxWaitTime = 10;;
+  } else if (urgencyLevel === 'medium') {
       maxWaitTime = 30;
     }
 
@@ -76,9 +76,9 @@ export const PeerSupportDashboard: React.FC = () => {
 
   /**
    * Handle creating a session with a matched peer
-   */
+   */;
   const handleCreateSession = async (match: PeerMatch) => {
-    const sessionId = await createSupportSession(
+    const sessionId = await createSupportSession(;
       Date.now().toString(),
       match.peerId
     );
@@ -111,7 +111,7 @@ export const PeerSupportDashboard: React.FC = () => {
       <div className="quick-actions grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         <AppButton
           onClick={() => setShowSupportRequestModal(true)}
-          variant="primary"
+          variant="primary";
           className="p-6 h-auto flex flex-col items-center"
           disabled={isLoading}
         >
@@ -126,7 +126,7 @@ export const PeerSupportDashboard: React.FC = () => {
 
         <AppButton
           onClick={() => {}}
-          variant="secondary"
+          variant="secondary";
           className="p-6 h-auto flex flex-col items-center"
         >
           <div className="text-2xl mb-2">👥</div>
@@ -225,7 +225,7 @@ export const PeerSupportDashboard: React.FC = () => {
                 <AppButton
                   onClick={() => handleCreateSession(match)}
                   variant="primary"
-                  size="sm"
+                  size="sm";
                   className="w-full"
                   disabled={isLoading}
                 >
@@ -291,13 +291,13 @@ export const PeerSupportDashboard: React.FC = () => {
             <div className="grid grid-cols-2 gap-2">
               {experienceAreas.map((area) => (
                 <label key={area} className="flex items-center">
-                  <input
+                  <input;
                     type="checkbox"
                     checked={selectedExperiences.includes(area)}
                     onChange={(e) => {
                       if (e.target.checked) {
-                        setSelectedExperiences([...selectedExperiences, area]);
-                      } else {
+                        setSelectedExperiences([...selectedExperiences, area]);;
+  } else {
                         setSelectedExperiences(selectedExperiences.filter(exp => exp !== area));
                       }
                     }}

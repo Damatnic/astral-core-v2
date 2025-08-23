@@ -1,15 +1,15 @@
 /**
  * Mobile Crisis Button - Thumb-Reachable Emergency Access
  * CRITICAL: Always accessible, optimized for crisis situations
- */
+ */;
 
-import React, { useState, useEffect, useRef } from "react"
-import { useResponsive, useResponsiveStyles } from "./MobileResponsiveSystem"
-import { ShieldIcon, PhoneIcon, HeartIcon, UserIcon } from "./icons.dynamic"
+import React, { useState, useEffect, useRef } from "react";
+import { useResponsive, useResponsiveStyles } from "./MobileResponsiveSystem";
+import { ShieldIcon, PhoneIcon, HeartIcon, UserIcon } from "./icons.dynamic";
 interface CrisisAction {
   id: string;
 
-// Extracted inline styles for performance
+// Extracted inline styles for performance;
 const style1={
               width: touchTargetSize,
               height: touchTargetSize,
@@ -24,7 +24,7 @@ const style1={
               fontSize: "20px",
               transform: isExpanded ? 'scale(1)' : 'scale(0)',
               transition: "all 0.2s ease",
-              outline: 'none'
+              outline: 'none';
             };
   label: string;
   icon: React.FC<unknown>;
@@ -58,7 +58,7 @@ export const MobileCrisisButton: React.FC<MobileCrisisButtonProps> = ({
   const [isPressed, setIsPressed] = useState(false),;
   const [showPulse, setShowPulse] = useState(true);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const expandedRef = useRef<HTMLDivElement>(null),
+  const expandedRef = useRef<HTMLDivElement>(null),;
 
   // Crisis actions available in mobile menu;
   const crisisActions: CrisisAction[] = [;
@@ -71,7 +71,7 @@ export const MobileCrisisButton: React.FC<MobileCrisisButtonProps> = ({
         onEmergencyCall?.() || window.location.assign(`tel:${emergencyNumber})
       },
       color: `var(--error-500),
-      urgent: true
+      urgent: true;
     },
     {
       id: "crisis-chat",
@@ -108,27 +108,27 @@ export const MobileCrisisButton: React.FC<MobileCrisisButtonProps> = ({
     "}
   ]
 
-  // Haptic feedback patterns
+  // Haptic feedback patterns;
   const triggerHapticFeedback = (type: "emergency" | "notification" | "selection"): void => {
-    if (!navigator.vibrate || !touchSupport) return
+    if (!navigator.vibrate || !touchSupport) return;
     const patterns={
       emergency: [200, 100, 200, 100, 200], // Urgent pattern
       notification: [100, 50, 100],          // Standard pattern
-      selection: [50]                        // Light tap
+      selection: [50]                        // Light tap;
     }
 
     navigator.vibrate(patterns[type])
   }
 
-  // Handle main button press
+  // Handle main button press;
   const handleMainButtonPress = (): void => {
     triggerHapticFeedback(selection")
     setIsPressed(true)
     setTimeout(() => setIsPressed(false), 150)
 
     if(isExpanded) {
-      setIsExpanded(false)
-    } else {
+      setIsExpanded(false);
+  } else {
       setIsExpanded(true)
       setShowPulse(false)
     }
@@ -136,7 +136,7 @@ export const MobileCrisisButton: React.FC<MobileCrisisButtonProps> = ({
 
   // Auto-hide after inactivity
   useEffect(() => {
-    if (!isExpanded) return
+    if (!isExpanded) return;
 
     const timer = setTimeout(() => {
       setIsExpanded(false)
@@ -154,10 +154,10 @@ export const MobileCrisisButton: React.FC<MobileCrisisButtonProps> = ({
     onEmergencyCall?.() || window.location.assign(`tel:${emergencyNumber})
   }
 
-  const touchTargetSize = getTouchTargetSize()
-  const safeAreaPadding = getSafeAreaPadding()
+  const touchTargetSize = getTouchTargetSize();
+  const safeAreaPadding = getSafeAreaPadding();
 
-  const buttonSize = Math.max(touchTargetSize, 56)
+  const buttonSize = Math.max(touchTargetSize, 56);
   const expandedSize = buttonSize * 4;
 ;
   const buttonStyles: React.CSSProperties={
@@ -181,7 +181,7 @@ export const MobileCrisisButton: React.FC<MobileCrisisButtonProps> = ({
     transition: 'all' 0.2s ease',
     outline: "none",
     ...(showPulse && {
-      animation: 'crisis-pulse' 2s infinite'
+      animation: 'crisis-pulse' 2s infinite';
     })
   }
 
@@ -201,7 +201,7 @@ export const MobileCrisisButton: React.FC<MobileCrisisButtonProps> = ({
     alignItems: "center",
     justifyContent: 'center',
     gap: '12px"
-    padding: isExpanded ? '20px' : '0'
+    padding: isExpanded ? '20px' : '0';
   }
 
   return (

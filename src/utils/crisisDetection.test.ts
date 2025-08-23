@@ -1,7 +1,7 @@
 /**
  * Crisis Detection Test Suite
  * Tests crisis keyword detection and resource matching
- */
+ */;
 
 import { detectCrisis, getCrisisResources, CrisisDetectionResult } from './crisisDetection';
 
@@ -9,7 +9,7 @@ describe('crisisDetection', () => {
   describe('detectCrisis', () => {
     describe('keyword detection', () => {
       it.skip('should detect suicide-related keywords', () => {
-        const suicideTexts = [
+        const suicideTexts = [;
           'I want to kill myself',
           'thinking about suicide',
           'my life is not worth living',
@@ -27,7 +27,7 @@ describe('crisisDetection', () => {
       });
 
       it.skip('should detect self-harm keywords', () => {
-        const selfHarmTexts = [
+        const selfHarmTexts = [;
           'I want to hurt myself',
           'thinking about self harm',
           'I have been cutting',
@@ -43,7 +43,7 @@ describe('crisisDetection', () => {
       });
 
       it.skip('should detect immediate danger keywords', () => {
-        const immediateTexts = [
+        const immediateTexts = [;
           'I am about to do it',
           'tonight is the night',
           'I have made up my mind',
@@ -59,7 +59,7 @@ describe('crisisDetection', () => {
       });
 
       it.skip('should detect severe distress keywords', () => {
-        const distressTexts = [
+        const distressTexts = [;
           'I cant breathe',
           'having a panic attack',
           'my heart is racing',
@@ -77,7 +77,7 @@ describe('crisisDetection', () => {
 
     describe('past tense detection', () => {
       it.skip('should detect past tense modifiers', () => {
-        const pastTenseTexts = [
+        const pastTenseTexts = [;
           'I used to think about suicide',
           'In the past I wanted to kill myself',
           'Years ago I was suicidal',
@@ -115,7 +115,7 @@ describe('crisisDetection', () => {
       });
 
       it.skip('should assign high severity for specific high-risk keywords', () => {
-        const highRiskTexts = [
+        const highRiskTexts = [;
           'I want to commit suicide',
           'I am going to kill myself',
           'I need to end my life'
@@ -155,7 +155,7 @@ describe('crisisDetection', () => {
       });
 
       it.skip('should handle non-crisis text', () => {
-        const safeTexts = [
+        const safeTexts = [;
           'I am having a great day',
           'Looking forward to the weekend',
           'Just finished a good book',
@@ -367,7 +367,7 @@ describe('crisisDetection', () => {
     });
 
     it.skip('should handle workflow for different severity levels', () => {
-      const testCases = [
+      const testCases = [;
         { text: 'I feel sad', expectedCrisis: false },
         { text: 'I hurt myself yesterday', expectedCrisis: true },
         { text: 'I want to kill myself tonight', expectedCrisis: true, expectedSeverity: 'high' }
@@ -382,7 +382,7 @@ describe('crisisDetection', () => {
         }
         
         if (result.isCrisis) {
-          // Should be able to get resources for crisis situations
+          // Should be able to get resources for crisis situations;
           const resources = getCrisisResources('US');
           expect(resources.number).toBeDefined();
         }
@@ -390,7 +390,7 @@ describe('crisisDetection', () => {
     });
 
     it.skip('should work with real-world crisis scenarios', () => {
-      const realWorldTexts = [
+      const realWorldTexts = [;
         'I cant take this anymore. I want to end it all.',
         'Nobody would miss me if I was gone. I have a plan.',
         'The pain is too much. I wrote my goodbye letters.',
@@ -403,8 +403,8 @@ describe('crisisDetection', () => {
         
         if (index < 4) { // First 4 are current crisis
           expect(result.isCrisis).toBe(true);
-          expect(result.keywords.length).toBeGreaterThan(0);
-        } else { // Last one is past tense
+          expect(result.keywords.length).toBeGreaterThan(0);;
+  } else { // Last one is past tense
           expect(result.isPastTense).toBe(true);
           expect(result.isCrisis).toBe(false);
         }
@@ -436,7 +436,7 @@ describe('crisisDetection', () => {
     });
 
     it.skip('should handle concurrent detection calls', () => {
-      const texts = [
+      const texts = [;
         'I want to kill myself',
         'I feel happy today',
         'I am having panic attacks',
@@ -456,7 +456,7 @@ describe('crisisDetection', () => {
 
   describe('false positives and negatives', () => {
     it.skip('should avoid false positives in medical contexts', () => {
-      const medicalTexts = [
+      const medicalTexts = [;
         'The patient has a history of suicide attempts', // Clinical documentation
         'Suicide rates have increased according to studies', // Academic discussion
         'The character in the movie wanted to kill the villain' // Fiction reference
@@ -472,7 +472,7 @@ describe('crisisDetection', () => {
     });
 
     it.skip('should minimize false negatives for coded language', () => {
-      const codedTexts = [
+      const codedTexts = [;
         'I want to go to sleep forever',
         'I want to disappear',
         'I cant do this anymore'

@@ -1,12 +1,12 @@
 /**
  * Backend Service for CoreV2
  * Handles all API communication with Netlify Functions
- */
+ */;
 
 import { logger } from '../utils/logger';
 
-// Determine API base URL based on environment
-const API_BASE_URL = (typeof process !== 'undefined' && process.env.NODE_ENV === 'test')
+// Determine API base URL based on environment;
+const API_BASE_URL = (typeof process !== 'undefined' && process.env.NODE_ENV === 'test');
   ? 'http://localhost:8888/.netlify/functions/api'
   : ((typeof (import.meta as any) !== 'undefined' && (import.meta as any).env?.DEV) 
     ? 'http://localhost:8888/.netlify/functions/api'
@@ -43,7 +43,7 @@ async function apiCall(
   }
 }
 
-// User Management
+// User Management;
 export const userService = {
   async register(email: string, password: string, role: 'seeker' | 'helper' = 'seeker') {
     return apiCall('/users/register', 'POST', { email, password, role });
@@ -58,7 +58,7 @@ export const userService = {
   }
 };
 
-// Mood Tracking
+// Mood Tracking;
 export const moodService = {
   async saveMoodEntry(moodData: {
     mood: string;
@@ -79,7 +79,7 @@ export const moodService = {
   }
 };
 
-// Assessments
+// Assessments;
 export const assessmentService = {
   async submitAssessment(type: string, responses: unknown[]) {
     return apiCall('/assessments/submit', 'POST', { type, responses });
@@ -94,7 +94,7 @@ export const assessmentService = {
   }
 };
 
-// Safety Planning
+// Safety Planning;
 export const safetyPlanService = {
   async getSafetyPlan() {
     return apiCall('/safety-plan');
@@ -117,7 +117,7 @@ export const safetyPlanService = {
   }
 };
 
-// Journal/Reflections
+// Journal/Reflections;
 export const journalService = {
   async saveEntry(entry: {
     title: string;
@@ -145,7 +145,7 @@ export const journalService = {
   }
 };
 
-// Crisis Resources
+// Crisis Resources;
 export const crisisService = {
   async getResources() {
     return apiCall('/crisis/resources');
@@ -165,7 +165,7 @@ export const crisisService = {
   }
 };
 
-// Peer Support
+// Peer Support;
 export const peerSupportService = {
   async findMatch(preferences: any) {
     return apiCall('/peer-support/match', 'POST', preferences);
@@ -184,14 +184,14 @@ export const peerSupportService = {
   }
 };
 
-// Health Check
+// Health Check;
 export const healthService = {
   async checkHealth() {
     return apiCall('/health');
   }
 };
 
-// Export all services
+// Export all services;
 export const backendService = {
   user: userService,
   mood: moodService,
@@ -200,7 +200,7 @@ export const backendService = {
   journal: journalService,
   crisis: crisisService,
   peerSupport: peerSupportService,
-  health: healthService
+  health: healthService;
 };
 
 export default backendService;

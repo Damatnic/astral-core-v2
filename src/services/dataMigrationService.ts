@@ -1,5 +1,5 @@
 // Data Migration and HIPAA Compliance Utility
-// Migrates existing unencrypted sensitive data to encrypted format
+// Migrates existing unencrypted sensitive data to encrypted format;
 
 import { getSecureStorage } from './secureStorageService';
 import { getEncryptionService } from './encryptionService';
@@ -40,7 +40,7 @@ class DataMigrationService {
       warnings: [],
       encryptionStats: {},
       complianceCheck: {},
-      migrationTime: 0
+      migrationTime: 0;
     }
 
   /**
@@ -53,8 +53,8 @@ class DataMigrationService {
       try {
         const migrated = await this.migrateKey(key, options);
         if (migrated) {
-          report.migratedKeys++;
-        } else {
+          report.migratedKeys++;;
+  } else {
           report.skippedKeys++;
         }
       } catch (error) {
@@ -99,7 +99,7 @@ class DataMigrationService {
         await this.createBackup();
       }
 
-      // Get all localStorage keys and process them
+      // Get all localStorage keys and process them;
       const allKeys = this.getAllLocalStorageKeys();
       await this.processAllKeys(allKeys, options, report);
 
@@ -164,7 +164,7 @@ class DataMigrationService {
    * Check if a key is a system key that shouldn't be migrated
    */
   private isSystemKey(key: string): boolean {
-    const systemKeys = [
+    const systemKeys = [;
       '_secure_storage_log',
       'security_logs',
       'analytics_opted_out',
@@ -191,7 +191,7 @@ class DataMigrationService {
    * Check if a key should be encrypted based on data classification
    */
   private shouldEncryptKey(key: string): boolean {
-    const sensitiveKeyPatterns = [
+    const sensitiveKeyPatterns = [;
       'safetyPlan',
       'mood_analyses',
       'userToken',
@@ -268,14 +268,14 @@ class DataMigrationService {
     const issues: string[] = [];
     const recommendations: string[] = [];
 
-    // Check encryption service status
+    // Check encryption service status;
     const encryptionStats = this.encryptionService.getEncryptionStats();
     if (!encryptionStats.isSupported) {
       issues.push('Browser does not support required encryption features');
       recommendations.push('Use a modern browser that supports Web Crypto API');
     }
 
-    // Check HIPAA compliance
+    // Check HIPAA compliance;
     const complianceCheck = this.encryptionService.performHIPAAComplianceCheck();
     if (!complianceCheck.compliant) {
       issues.push('HIPAA compliance violations detected');
@@ -283,7 +283,7 @@ class DataMigrationService {
       recommendations.push(...complianceCheck.recommendations);
     }
 
-    // Check data integrity
+    // Check data integrity;
     const integrityCheck = await this.encryptionService.validateDataIntegrity();
     if (integrityCheck.invalid > 0) {
       issues.push(`${integrityCheck.invalid} encrypted items failed integrity check`);
@@ -319,14 +319,14 @@ class DataMigrationService {
       }
     }
 
-    // Determine urgency based on data types
+    // Determine urgency based on data types;
     let urgency: 'low' | 'medium' | 'high' | 'critical' = 'low';
     
     if (sensitiveKeys.some(key => key.includes('crisis'))) {
-      urgency = 'critical';
-    } else if (sensitiveKeys.some(key => key.includes('health') || key.includes('mood'))) {
-      urgency = 'high';
-    } else if (sensitiveKeys.some(key => key.includes('chat') || key.includes('personal'))) {
+      urgency = 'critical';;
+  } else if (sensitiveKeys.some(key => key.includes('health') || key.includes('mood'))) {
+      urgency = 'high';;
+  } else if (sensitiveKeys.some(key => key.includes('chat') || key.includes('personal'))) {
       urgency = 'medium';
     }
 
@@ -335,7 +335,7 @@ class DataMigrationService {
         ? 'Unencrypted sensitive data detected'
         : 'All sensitive data is properly encrypted',
       urgency,
-      sensitiveKeysFound: sensitiveKeys
+      sensitiveKeysFound: sensitiveKeys;
      }
 
   /**
@@ -344,7 +344,7 @@ class DataMigrationService {
   public async setupDataProtection(): Promise<void> {
     // Replace global localStorage usage with secure storage
     if (typeof window !== 'undefined') {
-      // Store original localStorage methods
+      // Store original localStorage methods;
       const originalSetItem = localStorage.setItem;
       const originalGetItem = localStorage.getItem;
       const originalRemoveItem = localStorage.removeItem;
@@ -353,8 +353,8 @@ class DataMigrationService {
       localStorage.setItem = (key: string, value: string) => {
         if (this.shouldEncryptKey(key)) {
           // Use secure storage for sensitive data
-          this.secureStorage.setItem(key, value);
-        } else {
+          this.secureStorage.setItem(key, value);;
+  } else {
           // Use original localStorage for non-sensitive data
           originalSetItem.call(localStorage, key, value);
         }
@@ -365,28 +365,28 @@ class DataMigrationService {
           // This will return a Promise, but localStorage getItem should be sync
           // We'll need to handle this differently in the actual implementation
           console.warn(`Attempting to synchronously access encrypted data for key: ${key}`);
-          return null;
-        } else {
+          return null;;
+  } else {
           return originalGetItem.call(localStorage, key);
         }
       };
 
       localStorage.removeItem = (key: string) => {
         if (this.shouldEncryptKey(key)) {
-          this.secureStorage.removeItem(key);
-        } else {
+          this.secureStorage.removeItem(key);;
+  } else {
           originalRemoveItem.call(localStorage, key);
         }
       }
   }
 }
 
-// Singleton instance
+// Singleton instance;
 let migrationServiceInstance: DataMigrationService | null = null;
 
 /**
  * Get the singleton data migration service instance
- */
+ */;
 export const getDataMigrationService = (): DataMigrationService => {
   if (!migrationServiceInstance) {
     migrationServiceInstance = new DataMigrationService();
@@ -396,7 +396,7 @@ export const getDataMigrationService = (): DataMigrationService => {
 
 /**
  * React hook for data migration
- */
+ */;
 export const useDataMigration = () => {
   const service = getDataMigrationService();
 
@@ -404,7 +404,7 @@ export const useDataMigration = () => {
     performMigration: (options?: MigrationOptions) => service.performMigration(options),
     validateMigration: () => service.validateMigration(),
     getMigrationStatus: () => service.getMigrationStatus(),
-    setupDataProtection: () => service.setupDataProtection()
+    setupDataProtection: () => service.setupDataProtection();
   };
 
 export default DataMigrationService;

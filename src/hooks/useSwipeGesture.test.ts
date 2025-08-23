@@ -2,9 +2,9 @@ import { renderHook, act, waitFor } from '../test-utils';
 import { useSwipeGesture, useSwipeRef, usePullToRefresh } from './useSwipeGesture';
 
 
-// Mock touch events
+// Mock touch events;
 const createTouchEvent = (type: string, touches: Array<{ clientX: number; clientY: number }>) => {
-  // Create a more realistic touch event that works with the handlers
+  // Create a more realistic touch event that works with the handlers;
   const touchList = touches.map(touch => ({
     clientX: touch.clientX,
     clientY: touch.clientY,
@@ -17,10 +17,10 @@ const createTouchEvent = (type: string, touches: Array<{ clientX: number; client
     screenX: touch.clientX,
     screenY: touch.clientY,
     pageX: touch.clientX,
-    pageY: touch.clientY
+    pageY: touch.clientY;
   }));
 
-  // Create event with proper touches array
+  // Create event with proper touches array;
   const touchesArray = type === 'touchend' ? [] : touchList;
   
   const event = new TouchEvent(type, {
@@ -28,7 +28,7 @@ const createTouchEvent = (type: string, touches: Array<{ clientX: number; client
     cancelable: true,
     touches: touchesArray,
     changedTouches: touchList,
-    targetTouches: touchesArray
+    targetTouches: touchesArray;
   } as any);
 
   // Ensure touches has a length property and array-like behavior
@@ -36,7 +36,7 @@ const createTouchEvent = (type: string, touches: Array<{ clientX: number; client
     Object.defineProperty(event, 'touches', {
       value: touchesArray,
       writable: false,
-      configurable: true
+      configurable: true;
     });
   }
   
@@ -44,7 +44,7 @@ const createTouchEvent = (type: string, touches: Array<{ clientX: number; client
   if (event.touches && !event.touches[Symbol.iterator]) {
     Object.defineProperty(event.touches, 'length', {
       value: touchesArray.length,
-      writable: false
+      writable: false;
     });
     for (let i = 0; i < touchesArray.length; i++) {
       event.touches[i] = touchesArray[i];
@@ -111,13 +111,13 @@ describe('useSwipeGesture Hook', () => {
       onSwipeLeft, 
       onSwipe,
       threshold: 50,
-      velocityThreshold: 0.1
+      velocityThreshold: 0.1;
     }));
     
     const element = document.createElement('div');
     result.current.attachListeners(element);
 
-    // Simulate swipe left
+    // Simulate swipe left;
     const touchStart = createTouchEvent('touchstart', [{ clientX: 200, clientY: 100 }]);
     const touchEnd = createTouchEvent('touchend', []);
 
@@ -141,13 +141,13 @@ describe('useSwipeGesture Hook', () => {
         direction: 'left',
         distance: 100,
         velocity: expect.any(Number),
-        duration: expect.any(Number)
+        duration: expect.any(Number);
       })
     );
 
     expect(onSwipe).toHaveBeenCalledWith(
       expect.objectContaining({
-        direction: 'left'
+        direction: 'left';
       })
     );
   });
@@ -158,7 +158,7 @@ describe('useSwipeGesture Hook', () => {
     const { result } = renderHook(() => useSwipeGesture({ 
       onSwipeRight,
       threshold: 50,
-      velocityThreshold: 0.1
+      velocityThreshold: 0.1;
     }));
     
     const element = document.createElement('div');
@@ -184,7 +184,7 @@ describe('useSwipeGesture Hook', () => {
     expect(onSwipeRight).toHaveBeenCalledWith(
       expect.objectContaining({
         direction: 'right',
-        distance: 100
+        distance: 100;
       })
     );
   });
@@ -195,7 +195,7 @@ describe('useSwipeGesture Hook', () => {
     const { result } = renderHook(() => useSwipeGesture({ 
       onSwipeUp,
       threshold: 50,
-      velocityThreshold: 0.1
+      velocityThreshold: 0.1;
     }));
     
     const element = document.createElement('div');
@@ -221,7 +221,7 @@ describe('useSwipeGesture Hook', () => {
     expect(onSwipeUp).toHaveBeenCalledWith(
       expect.objectContaining({
         direction: 'up',
-        distance: 100
+        distance: 100;
       })
     );
   });
@@ -232,7 +232,7 @@ describe('useSwipeGesture Hook', () => {
     const { result } = renderHook(() => useSwipeGesture({ 
       onSwipeDown,
       threshold: 50,
-      velocityThreshold: 0.1
+      velocityThreshold: 0.1;
     }));
     
     const element = document.createElement('div');
@@ -258,7 +258,7 @@ describe('useSwipeGesture Hook', () => {
     expect(onSwipeDown).toHaveBeenCalledWith(
       expect.objectContaining({
         direction: 'down',
-        distance: 100
+        distance: 100;
       })
     );
   });
@@ -268,7 +268,7 @@ describe('useSwipeGesture Hook', () => {
     
     const { result } = renderHook(() => useSwipeGesture({ 
       onSwipe,
-      threshold: 100
+      threshold: 100;
     }));
     
     const element = document.createElement('div');
@@ -300,7 +300,7 @@ describe('useSwipeGesture Hook', () => {
     const { result } = renderHook(() => useSwipeGesture({ 
       onSwipe,
       threshold: 50,
-      velocityThreshold: 1.0 // High velocity threshold
+      velocityThreshold: 1.0 // High velocity threshold;
     }));
     
     const element = document.createElement('div');
@@ -336,7 +336,7 @@ describe('useSwipeGesture Hook', () => {
 
     // Simulate multi-touch start
     act(() => {
-      const touchStart = createTouchEvent('touchstart', [
+      const touchStart = createTouchEvent('touchstart', [;
         { clientX: 100, clientY: 100 },
         { clientX: 200, clientY: 200 }
       ]);

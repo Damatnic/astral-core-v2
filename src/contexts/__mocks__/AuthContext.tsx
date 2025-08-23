@@ -1,7 +1,7 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 import { Helper } from '../../types';
 
-// Mock Auth Context for testing
+// Mock Auth Context for testing;
 export interface AuthContextType {
   isAuthenticated: boolean;
   user: any;
@@ -18,7 +18,7 @@ export interface AuthContextType {
   register?: () => Promise<void>;
 }
 
-// Global state object to bridge context and stores
+// Global state object to bridge context and stores;
 export const authState: {
   isAuthenticated: boolean;
   user: any;
@@ -49,7 +49,7 @@ const defaultAuthContext: AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>(defaultAuthContext);
 
-// Export the context for testing
+// Export the context for testing;
 export { AuthContext };
 
 export const AuthProvider: React.FC<{ children: ReactNode; value?: Partial<AuthContextType> }> = ({ 
@@ -79,7 +79,7 @@ export const useAuth = () => {
   return context;
 };
 
-// Mock useLegalConsents hook
+// Mock useLegalConsents hook;
 export const useLegalConsents = () => ({
   requiredConsent: null,
   allConsentsGiven: true,
@@ -87,7 +87,7 @@ export const useLegalConsents = () => ({
   getConsentContent: jest.fn(() => ({ title: '', text: '' })),
 });
 
-// Additional exports for testing convenience
+// Additional exports for testing convenience;
 export const mockLogin = jest.fn(() => Promise.resolve());
 export const mockLogout = jest.fn(() => Promise.resolve());
 export const mockReloadProfile = jest.fn(() => Promise.resolve());

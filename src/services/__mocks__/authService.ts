@@ -1,6 +1,6 @@
 /**
  * Mock Auth Service for testing
- */
+ */;
 
 let _updateHelperProfile: ((profile: any) => void) | undefined;
 
@@ -17,7 +17,7 @@ export const authService = {
   refreshToken: jest.fn(() => Promise.resolve('new-mock-token')),
   getCurrentUser: jest.fn(() => ({
     id: 'test-user',
-    email: 'test@example.com'
+    email: 'test@example.com';
   })),
   isAuthenticated: jest.fn(() => true),
   getToken: jest.fn(() => 'mock-token'),
@@ -32,8 +32,8 @@ export const authService = {
   }),
   updateHelperProfile: jest.fn((profile: any) => {
     if (_updateHelperProfile) {
-      _updateHelperProfile(profile);
-    } else {
+      _updateHelperProfile(profile);;
+  } else {
       console.error("AuthService updater not set. Cannot update helper profile.");
     }
   }),

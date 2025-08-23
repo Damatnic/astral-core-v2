@@ -67,7 +67,7 @@ export const ConstellationGuideDashboardView: React.FC<{
     const [selectedAlert, setSelectedAlert] = useState<CrisisAlertItem | null>(null);
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
-    // Sample data - in real app, this would come from API
+    // Sample data - in real app, this would come from API;
     const crisisAlerts: CrisisAlertItem[] = [
         {
             id: 'alert-001',
@@ -78,7 +78,7 @@ export const ConstellationGuideDashboardView: React.FC<{
             timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
             status: 'active',
             description: 'User expressed thoughts of self-harm in journal entry. AI detection flagged for immediate review.',
-            location: 'Personal Journal'
+            location: 'Personal Journal';
         },
         {
             id: 'alert-002',
@@ -89,7 +89,7 @@ export const ConstellationGuideDashboardView: React.FC<{
             timestamp: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
             status: 'responded',
             description: 'User reported severe panic attack and requested immediate support.',
-            location: 'Crisis Chat'
+            location: 'Crisis Chat';
         },
         {
             id: 'alert-003',
@@ -100,7 +100,7 @@ export const ConstellationGuideDashboardView: React.FC<{
             timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
             status: 'escalated',
             description: 'Session escalated due to mention of substance use with safety concerns.',
-            location: 'Support Session'
+            location: 'Support Session';
         }
     ];
 
@@ -112,7 +112,7 @@ export const ConstellationGuideDashboardView: React.FC<{
             status: 'active',
             caseType: 'ongoing-support',
             nextSession: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
-            unreadMessages: 2
+            unreadMessages: 2;
         },
         {
             id: 'case-002',
@@ -121,7 +121,7 @@ export const ConstellationGuideDashboardView: React.FC<{
             status: 'at-risk',
             caseType: 'crisis-follow-up',
             nextSession: new Date(Date.now() + 1 * 60 * 60 * 1000).toISOString(),
-            unreadMessages: 0
+            unreadMessages: 0;
         },
         {
             id: 'case-003',
@@ -129,7 +129,7 @@ export const ConstellationGuideDashboardView: React.FC<{
             lastContact: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
             status: 'needs-attention',
             caseType: 'weekly-check-in',
-            unreadMessages: 0
+            unreadMessages: 0;
         },
         {
             id: 'case-004',
@@ -138,7 +138,7 @@ export const ConstellationGuideDashboardView: React.FC<{
             status: 'stable',
             caseType: 'ongoing-support',
             nextSession: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-            unreadMessages: 1
+            unreadMessages: 1;
         }
     ];
 
@@ -152,7 +152,7 @@ export const ConstellationGuideDashboardView: React.FC<{
             timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
             priority: 'urgent',
             status: 'pending',
-            relatedContent: 'Chat Session #447'
+            relatedContent: 'Chat Session #447';
         },
         {
             id: 'mod-002',
@@ -163,7 +163,7 @@ export const ConstellationGuideDashboardView: React.FC<{
             timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
             priority: 'high',
             status: 'pending',
-            relatedContent: 'Forum Post #1247'
+            relatedContent: 'Forum Post #1247';
         },
         {
             id: 'mod-003',
@@ -174,7 +174,7 @@ export const ConstellationGuideDashboardView: React.FC<{
             timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
             priority: 'normal',
             status: 'reviewed',
-            relatedContent: 'Group Discussion #89'
+            relatedContent: 'Group Discussion #89';
         }
     ];
 
@@ -186,14 +186,14 @@ export const ConstellationGuideDashboardView: React.FC<{
             category: 'crisis-intervention',
             duration: '2 hours',
             completed: false,
-            dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+            dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
         },
         {
             id: 'res-002',
             title: 'Maintaining Professional Boundaries',
             type: 'guideline',
             category: 'boundaries',
-            completed: true
+            completed: true;
         },
         {
             id: 'res-003',
@@ -201,7 +201,7 @@ export const ConstellationGuideDashboardView: React.FC<{
             type: 'protocol',
             category: 'communication',
             duration: '45 minutes',
-            completed: false
+            completed: false;
         },
         {
             id: 'res-004',
@@ -209,7 +209,7 @@ export const ConstellationGuideDashboardView: React.FC<{
             type: 'continuing-education',
             category: 'self-care',
             duration: '1.5 hours',
-            completed: true
+            completed: true;
         }
     ];
 
@@ -329,7 +329,7 @@ export const ConstellationGuideDashboardView: React.FC<{
                                             <span className="case-type">{user.caseType.replace('-', ' ')}</span>
                                         </div>
                                         <div className="case-status">
-                                            <span 
+                                            <span; 
                                                 className="status-badge"
                                                 style={{ backgroundColor: getStatusColor(user.status) }}
                                             >
@@ -384,7 +384,7 @@ export const ConstellationGuideDashboardView: React.FC<{
                                             <span className="alert-type">{alert.type.replace('-', ' ')}</span>
                                         </div>
                                         <div className="alert-status">
-                                            <span 
+                                            <span; 
                                                 className="severity-badge"
                                                 style={{ backgroundColor: getSeverityColor(alert.severity) }}
                                             >
@@ -440,7 +440,7 @@ export const ConstellationGuideDashboardView: React.FC<{
                                             <span className="reported-by">Reported by: {caseItem.reportedBy}</span>
                                         </div>
                                         <div className="moderation-status">
-                                            <span 
+                                            <span; 
                                                 className="priority-badge"
                                                 style={{ backgroundColor: getPriorityColor(caseItem.priority) }}
                                             >
@@ -575,35 +575,35 @@ export const ConstellationGuideDashboardView: React.FC<{
             </div>
 
             <div className="dashboard-tabs constellation-tabs">
-                <AppButton 
+                <AppButton; 
                     className={activeTab === 'overview' ? 'active' : ''} 
                     onClick={() => setActiveTab('overview')}
                 >
                     <SettingsIcon />
                     Overview
                 </AppButton>
-                <AppButton 
+                <AppButton; 
                     className={activeTab === 'active-cases' ? 'active' : ''} 
                     onClick={() => setActiveTab('active-cases')}
                 >
                     <UsersIcon />
                     Active Cases ({assignedUsers.filter(u => u.status !== 'stable').length})
                 </AppButton>
-                <AppButton 
+                <AppButton; 
                     className={activeTab === 'crisis-alerts' ? 'active' : ''} 
                     onClick={() => setActiveTab('crisis-alerts')}
                 >
                     <AlertTriangle />
                     Crisis Alerts ({crisisAlerts.filter(a => a.status === 'active').length})
                 </AppButton>
-                <AppButton 
+                <AppButton; 
                     className={activeTab === 'moderation' ? 'active' : ''} 
                     onClick={() => setActiveTab('moderation')}
                 >
                     <ShieldIcon />
                     Moderation ({moderationCases.filter(m => m.status === 'pending').length})
                 </AppButton>
-                <AppButton 
+                <AppButton; 
                     className={activeTab === 'resources' ? 'active' : ''} 
                     onClick={() => setActiveTab('resources')}
                 >

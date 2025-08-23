@@ -41,7 +41,7 @@ describe('useCrisisStressTesting Hook', () => {
   });
 
   it.skip('should run crisis stress tests successfully', async () => {
-    const mockResults = [
+    const mockResults = [;
       {
         id: 'test-1',
         scenarioId: 'scenario-1',
@@ -50,7 +50,7 @@ describe('useCrisisStressTesting Hook', () => {
         availability: 0.99,
         timestamp: Date.now(),
         impactAssessment: {
-          safetyImpact: 'low' as const
+          safetyImpact: 'low' as const;
         }
       }
     ];
@@ -67,7 +67,7 @@ describe('useCrisisStressTesting Hook', () => {
       expect.objectContaining({
         scenarios: expect.any(Array),
         maxConcurrentUsers: 1000,
-        testDuration: 300
+        testDuration: 300;
       })
     );
     
@@ -95,7 +95,7 @@ describe('useCrisisStressTesting Hook', () => {
   });
 
   it.skip('should detect critical safety failures and trigger emergency', async () => {
-    const criticalResults = [
+    const criticalResults = [;
       {
         id: 'critical-test',
         scenarioId: 'scenario-1',
@@ -104,7 +104,7 @@ describe('useCrisisStressTesting Hook', () => {
         availability: 0.30,
         timestamp: Date.now(),
         impactAssessment: {
-          safetyImpact: 'life-threatening' as const
+          safetyImpact: 'life-threatening' as const;
         }
       }
     ];
@@ -126,13 +126,13 @@ describe('useCrisisStressTesting Hook', () => {
   });
 
   it.skip('should run failover tests successfully', async () => {
-    const mockFailoverResults = [
+    const mockFailoverResults = [;
       {
         id: 'failover-1',
         systemComponent: 'crisis-detection',
         success: true,
         failoverTime: 200,
-        timestamp: Date.now()
+        timestamp: Date.now();
       }
     ];
 
@@ -203,7 +203,7 @@ describe('useCrisisStressTesting Hook', () => {
 
     const newConfig = {
       maxConcurrentUsers: 2000,
-      testDuration: 600
+      testDuration: 600;
     };
 
     act(() => {
@@ -238,7 +238,7 @@ describe('useCrisisStressTesting Hook', () => {
   });
 
   it.skip('should clear results', async () => {
-    const mockResults = [
+    const mockResults = [;
       {
         id: 'test-1',
         scenarioId: 'scenario-1',
@@ -247,7 +247,7 @@ describe('useCrisisStressTesting Hook', () => {
         availability: 0.99,
         timestamp: Date.now(),
         impactAssessment: {
-          safetyImpact: 'low' as const
+          safetyImpact: 'low' as const;
         }
       }
     ];
@@ -290,7 +290,7 @@ describe('useCrisisStressTesting Hook', () => {
   });
 
   it.skip('should calculate test statistics correctly', async () => {
-    const mockResults = [
+    const mockResults = [;
       {
         id: 'test-1',
         scenarioId: 'scenario-1',
@@ -299,7 +299,7 @@ describe('useCrisisStressTesting Hook', () => {
         availability: 0.99,
         timestamp: Date.now(),
         impactAssessment: {
-          safetyImpact: 'low' as const
+          safetyImpact: 'low' as const;
         }
       },
       {
@@ -310,7 +310,7 @@ describe('useCrisisStressTesting Hook', () => {
         availability: 0.85,
         timestamp: Date.now(),
         impactAssessment: {
-          safetyImpact: 'life-threatening' as const
+          safetyImpact: 'life-threatening' as const;
         }
       }
     ];
@@ -341,7 +341,7 @@ describe('useCrisisStressTesting Hook', () => {
 
     const { result } = renderHook(() => useCrisisStressTesting());
 
-    // Start first test
+    // Start first test;
     const firstTest = act(async () => {
       await result.current.actions.runStressTests();
     });
@@ -361,7 +361,7 @@ describe('useCrisisStressTesting Hook', () => {
   });
 
   it.skip('should call onTestComplete callback when tests finish', async () => {
-    const mockResults = [
+    const mockResults = [;
       {
         id: 'test-1',
         scenarioId: 'scenario-1',
@@ -370,7 +370,7 @@ describe('useCrisisStressTesting Hook', () => {
         availability: 0.99,
         timestamp: Date.now(),
         impactAssessment: {
-          safetyImpact: 'low' as const
+          safetyImpact: 'low' as const;
         }
       }
     ];
@@ -410,7 +410,7 @@ describe('useCrisisStressTesting Hook', () => {
       })
     );
 
-    // Verify scenario-2 was filtered out
+    // Verify scenario-2 was filtered out;
     const calledConfig = (crisisStressTestingSystem.runCrisisStressTests as jest.Mock).mock.calls[0][0];
     expect(calledConfig.scenarios.find((s: any) => s.id === 'scenario-2')).toBeUndefined();
   });

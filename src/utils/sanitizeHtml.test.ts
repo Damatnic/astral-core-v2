@@ -1,11 +1,11 @@
 /**
  * Sanitize HTML Test Suite
  * Tests HTML sanitization and safe markdown conversion
- */
+ */;
 
 import { sanitizeHtml, safeMarkdownToHtml, createSafeHtml } from './sanitizeHtml';
 
-// Mock DOM methods
+// Mock DOM methods;
 const mockDiv = {
   textContent: '',
   innerHTML: '',
@@ -16,7 +16,7 @@ Object.defineProperty(document, 'createElement', {
   writable: true,
 });
 
-// Mock URL constructor for link validation
+// Mock URL constructor for link validation;
 const mockURL = jest.fn();
 global.URL = mockURL as any;
 
@@ -86,7 +86,8 @@ describe('sanitizeHtml', () => {
           throw new Error('Invalid protocol');
         }
         
-        return { protocol: 'https:' });
+        return { protocol: 'https:' };
+  };
     });
 
     it.skip('should return empty string for empty input', () => {
@@ -101,7 +102,7 @@ describe('sanitizeHtml', () => {
 
     it.skip('should convert bold markdown to HTML', () => {
       const markdown = 'This is **bold** text';
-      mockDiv.innerHTML = 'This is **bold** text'; // Mock escaping
+      mockDiv.innerHTML = 'This is **bold** text'; // Mock escaping;
       
       const result = safeMarkdownToHtml(markdown);
       expect(result).toContain('<strong>bold</strong>');
@@ -157,7 +158,8 @@ describe('sanitizeHtml', () => {
         if (url.startsWith('javascript:')) {
           throw new Error('Invalid protocol');
         }
-        return { protocol: 'https:' });
+        return { protocol: 'https:' };
+  };
       
       const result = safeMarkdownToHtml(markdown);
       // Should return the escaped original text when URL is invalid
@@ -173,7 +175,8 @@ describe('sanitizeHtml', () => {
         if (url.startsWith('data:')) {
           throw new Error('Invalid protocol');
         }
-        return { protocol: 'https:' });
+        return { protocol: 'https:' };
+  };
       
       const result = safeMarkdownToHtml(markdown);
       expect(result).not.toContain('<a href="data:');
@@ -254,14 +257,14 @@ describe('sanitizeHtml', () => {
       
       // Should have the correct structure for React
       expect(result).toEqual({
-        __html: expect.stringContaining('<em>markdown</em>')
+        __html: expect.stringContaining('<em>markdown</em>');
       });
     });
   });
 
   describe('integration and real-world scenarios', () => {
     it.skip('should handle user-generated content safely', () => {
-      const userContent = `
+      const userContent = `;
         Here's my **important** message with a [link](https://trusted-site.com).
         
         <script>alert('This should be escaped')</script>
@@ -290,7 +293,7 @@ describe('sanitizeHtml', () => {
     });
 
     it.skip('should handle forum post content', () => {
-      const forumPost = `
+      const forumPost = `;
         **Update:** The issue is resolved!\n\n
         Thanks to [everyone](https://forum.example.com/users) who helped.
         
@@ -360,7 +363,7 @@ describe('sanitizeHtml', () => {
 
   describe('security considerations', () => {
     it.skip('.skip($2should prevent XSS through various vectors', () => {
-      const xssAttempts = [
+      const xssAttempts = [;
         '<img src=x onerror=alert(1)>',
         '<svg onload=alert(1)>',
         'javascript:alert(1)',
@@ -380,7 +383,7 @@ describe('sanitizeHtml', () => {
     });
 
     it.skip('should sanitize link URLs properly', () => {
-      const dangerousLinks = [
+      const dangerousLinks = [;
         '[Click](javascript:alert(1))',
         '[File](data:text/html,<h1>Test</h1>)',
         '[Bad](vbscript:msgbox(1))',
@@ -394,7 +397,8 @@ describe('sanitizeHtml', () => {
           if (url.match(/^(javascript|data|vbscript):/)) {
             throw new Error('Dangerous protocol');
           }
-          return { protocol: 'https:' });
+          return { protocol: 'https:' };
+  };
         
         const result = safeMarkdownToHtml(link);
         expect(result).not.toContain('href="javascript:');

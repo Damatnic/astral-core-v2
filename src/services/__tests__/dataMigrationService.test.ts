@@ -49,7 +49,7 @@ describe('DataMigrationService', () => {
     // Reset localStorage mock - use defineProperty to control length
     Object.defineProperty(localStorage, 'length', {
       get: jest.fn(() => 0),
-      configurable: true
+      configurable: true;
     });
     // Default key mock - will be overridden in individual tests
   });
@@ -58,7 +58,7 @@ describe('DataMigrationService', () => {
     it.skip('should perform complete migration successfully', async () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 5),
-        configurable: true
+        configurable: true;
       });
       (localStorage.key as jest.Mock).mockImplementation((index) => {
         const keys = ['userProfile', 'mood_analyses', 'safetyPlan', 'systemKey', '_private'];
@@ -90,7 +90,7 @@ describe('DataMigrationService', () => {
     it.skip('should handle dry run without making changes', async () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 5),
-        configurable: true
+        configurable: true;
       });
       (localStorage.key as jest.Mock).mockImplementation((index) => {
         const keys = ['userProfile', 'mood_analyses', 'safetyPlan', 'systemKey', '_private'];
@@ -114,7 +114,7 @@ describe('DataMigrationService', () => {
     it.skip('should handle migration errors gracefully', async () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 1),
-        configurable: true
+        configurable: true;
       });
       (localStorage.key as jest.Mock).mockImplementation((index) => {
         return index === 0 ? 'safetyPlan' : null; // Use a key that needs migration
@@ -132,7 +132,7 @@ describe('DataMigrationService', () => {
     it.skip('should skip system keys during migration', async () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 2),
-        configurable: true
+        configurable: true;
       });
       (localStorage.key as jest.Mock).mockImplementation((index) => {
         const keys = ['_secure_storage_log', 'analytics_events'];
@@ -149,7 +149,7 @@ describe('DataMigrationService', () => {
     it.skip('should skip already encrypted data', async () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 1),
-        configurable: true
+        configurable: true;
       });
       (localStorage.key as jest.Mock).mockImplementation(() => 'mood_analyses');
       (localStorage.getItem as jest.Mock).mockReturnValue(JSON.stringify({ encrypted: true, data: 'encrypted' }));
@@ -163,7 +163,7 @@ describe('DataMigrationService', () => {
     it.skip('should add compliance warnings when violations are detected', async () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 1),
-        configurable: true
+        configurable: true;
       });
       (localStorage.key as jest.Mock).mockImplementation(() => 'mood_analyses');
       (localStorage.getItem as jest.Mock).mockReturnValue(JSON.stringify({ mood: 'happy' }));
@@ -252,7 +252,7 @@ describe('DataMigrationService', () => {
     it.skip('should detect no migration needed when all data is encrypted', () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 2),
-        configurable: true
+        configurable: true;
       });
       (localStorage.key as jest.Mock).mockImplementation((index) => {
         const keys = ['mood_analyses', 'safetyPlan'];
@@ -270,7 +270,7 @@ describe('DataMigrationService', () => {
     it.skip('should detect migration needed with critical urgency for crisis data', () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 1),
-        configurable: true
+        configurable: true;
       });
       (localStorage.key as jest.Mock).mockImplementation(() => 'crisis_intervention_data');
       (localStorage.getItem as jest.Mock).mockReturnValue(JSON.stringify({ data: 'unencrypted' }));
@@ -285,7 +285,7 @@ describe('DataMigrationService', () => {
     it.skip('should detect migration needed with high urgency for health data', () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 1),
-        configurable: true
+        configurable: true;
       });
       (localStorage.key as jest.Mock).mockImplementation(() => 'health_records');
       (localStorage.getItem as jest.Mock).mockReturnValue(JSON.stringify({ data: 'unencrypted' }));
@@ -299,7 +299,7 @@ describe('DataMigrationService', () => {
     it.skip('should detect migration needed with medium urgency for chat data', () => {
       Object.defineProperty(localStorage, 'length', {
         get: jest.fn(() => 1),
-        configurable: true
+        configurable: true;
       });
       (localStorage.key as jest.Mock).mockImplementation(() => 'chat_history');
       (localStorage.getItem as jest.Mock).mockReturnValue(JSON.stringify({ data: 'unencrypted' }));
@@ -395,7 +395,7 @@ describe('DataMigrationService', () => {
       it.skip('should retrieve all localStorage keys', () => {
         Object.defineProperty(localStorage, 'length', {
           get: jest.fn(() => 3),
-          configurable: true
+          configurable: true;
         });
         (localStorage.key as jest.Mock).mockImplementation((index) => {
           const keys = ['key1', 'key2', 'key3'];
@@ -410,7 +410,7 @@ describe('DataMigrationService', () => {
       it.skip('should handle empty localStorage', () => {
         Object.defineProperty(localStorage, 'length', {
           get: jest.fn(() => 0),
-          configurable: true
+          configurable: true;
         });
 
         const keys = (service as any).getAllLocalStorageKeys();
@@ -495,7 +495,7 @@ describe('useDataMigration hook', () => {
 
     Object.defineProperty(localStorage, 'length', {
       get: jest.fn(() => 1),
-      configurable: true
+      configurable: true;
     });
     (localStorage.key as jest.Mock).mockReturnValue('test_key');
 
@@ -526,7 +526,7 @@ describe('useDataMigration hook', () => {
 
     Object.defineProperty(localStorage, 'length', {
       get: jest.fn(() => 0),
-      configurable: true
+      configurable: true;
     });
 
     const status = result.current.getMigrationStatus();

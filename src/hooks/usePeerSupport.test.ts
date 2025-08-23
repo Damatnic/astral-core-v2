@@ -1,7 +1,7 @@
 jest.mock('../services/peerSupportNetworkService');
 /**
  * Tests for Peer Support Hook
- */
+ */;
 
 import { renderHook, act, waitFor } from '../test-utils';
 import { usePeerSupport } from './usePeerSupport';
@@ -15,11 +15,11 @@ jest.mock('../services/peerSupportNetworkService', () => ({
     createPeerSupportSession: jest.fn(),
     completePeerSupportSession: jest.fn(),
     getCommunityGroups: jest.fn(),
-    getPeerSupportStatistics: jest.fn()
+    getPeerSupportStatistics: jest.fn();
   }
 }));
 
-const mockPeerMatches = [
+const mockPeerMatches = [;
   {
     id: 'peer-1',
     supporterId: 'supporter-123',
@@ -28,7 +28,7 @@ const mockPeerMatches = [
       languageMatch: 1.0,
       culturalMatch: 0.9,
       availabilityMatch: 0.8,
-      overallScore: 0.87
+      overallScore: 0.87;
     },
     peerProfile: {
       id: 'supporter-123',
@@ -40,10 +40,10 @@ const mockPeerMatches = [
       safetyRating: 4.8,
       totalSupportSessions: 156,
       averageRating: 4.7,
-      lastActive: Date.now() - 3600000
+      lastActive: Date.now() - 3600000;
     },
     estimatedWaitTime: 300, // 5 minutes
-    matchReason: 'High experience overlap in anxiety support'
+    matchReason: 'High experience overlap in anxiety support';
   },
   {
     id: 'peer-2',
@@ -53,7 +53,7 @@ const mockPeerMatches = [
       languageMatch: 1.0,
       culturalMatch: 0.95,
       availabilityMatch: 0.9,
-      overallScore: 0.79
+      overallScore: 0.79;
     },
     peerProfile: {
       id: 'supporter-456',
@@ -65,14 +65,14 @@ const mockPeerMatches = [
       safetyRating: 4.9,
       totalSupportSessions: 89,
       averageRating: 4.8,
-      lastActive: Date.now() - 1800000
+      lastActive: Date.now() - 1800000;
     },
     estimatedWaitTime: 180,
-    matchReason: 'Strong cultural compatibility and availability'
+    matchReason: 'Strong cultural compatibility and availability';
   }
 ];
 
-const mockCommunityGroups = [
+const mockCommunityGroups = [;
   {
     id: 'group-1',
     name: 'Anxiety Support Circle',
@@ -84,7 +84,7 @@ const mockCommunityGroups = [
     moderationLevel: 'high' as const,
     focusAreas: ['anxiety', 'coping-strategies'],
     meetingSchedule: 'Weekly on Wednesdays',
-    isPublic: true
+    isPublic: true;
   },
   {
     id: 'group-2',
@@ -97,7 +97,7 @@ const mockCommunityGroups = [
     moderationLevel: 'high' as const,
     focusAreas: ['depression', 'recovery'],
     meetingSchedule: 'Bi-weekly on Sundays',
-    isPublic: true
+    isPublic: true;
   }
 ];
 
@@ -205,7 +205,7 @@ describe('usePeerSupport Hook', () => {
       culturalContexts: ['western'],
       availability: 'available' as const,
       bio: 'Experienced in anxiety and depression support',
-      qualifications: ['Peer Counseling Certificate']
+      qualifications: ['Peer Counseling Certificate'];
     };
 
     let peerId: string | null;
@@ -215,7 +215,7 @@ describe('usePeerSupport Hook', () => {
 
     expect(peerSupportNetworkService.registerPeerSupporter).toHaveBeenCalledWith({
       ...peerData,
-      userToken: 'user-token-123'
+      userToken: 'user-token-123';
     });
     expect(peerId!).toBe('peer-id-123');
     expect(result.current.isRegistering).toBe(false);
@@ -242,7 +242,7 @@ describe('usePeerSupport Hook', () => {
       supportAreas: ['anxiety'],
       languages: ['en'],
       culturalContexts: ['western'],
-      availability: 'available' as const
+      availability: 'available' as const;
     };
 
     let peerId: string | null;
@@ -268,7 +268,7 @@ describe('usePeerSupport Hook', () => {
       sessionType: 'text-chat' as const,
       description: 'Need support with anxiety management',
       timestamp: Date.now(),
-      maxWaitTime: 30
+      maxWaitTime: 30;
     };
 
     let matches: unknown[];
@@ -299,7 +299,7 @@ describe('usePeerSupport Hook', () => {
       sessionType: 'video-call' as const,
       description: 'Need specialized support',
       timestamp: Date.now(),
-      maxWaitTime: 10
+      maxWaitTime: 10;
     };
 
     let matches: unknown[];
@@ -324,7 +324,7 @@ describe('usePeerSupport Hook', () => {
       expect.objectContaining({
         id: 'request-789',
         seekerToken: 'user-token-123',
-        language: 'en'
+        language: 'en';
       }),
       'supporter-123'
     );
@@ -356,7 +356,7 @@ describe('usePeerSupport Hook', () => {
       seekerRating: 5,
       supporterRating: 4,
       finalRiskLevel: 2,
-      followUpNeeded: false
+      followUpNeeded: false;
     };
 
     await act(async () => {
@@ -378,7 +378,7 @@ describe('usePeerSupport Hook', () => {
 
     const feedback = {
       finalRiskLevel: 3,
-      followUpNeeded: true
+      followUpNeeded: true;
     };
 
     await act(async () => {
@@ -577,10 +577,10 @@ describe('usePeerSupport Hook', () => {
       sessionType: 'text-chat' as const,
       description: 'Test request',
       timestamp: Date.now(),
-      maxWaitTime: 30
+      maxWaitTime: 30;
     };
 
-    // Start multiple operations simultaneously
+    // Start multiple operations simultaneously;
     const operations = await act(async () => {
       return Promise.all([
         result.current.findPeerSupport(supportRequest),

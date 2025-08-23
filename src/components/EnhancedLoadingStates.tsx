@@ -1,14 +1,14 @@
 import React from 'react';
 import '../styles/modern-therapeutic-design.css';
 
-// Beautiful Loading Spinner
+// Beautiful Loading Spinner;
 export const TherapeuticSpinner: React.FC<{ size?: 'small' | 'medium' | 'large' }> = ({ 
   size = 'medium' 
 }) => {
   const sizeClasses = {
     small: 'w-8 h-8',
     medium: 'w-12 h-12',
-    large: 'w-16 h-16'
+    large: 'w-16 h-16';
   };
 
   return (
@@ -21,13 +21,13 @@ export const TherapeuticSpinner: React.FC<{ size?: 'small' | 'medium' | 'large' 
   );
 };
 
-// Pulsing Dots Loader
+// Pulsing Dots Loader;
 export const PulsingDots: React.FC<{ color?: string }> = ({ color = 'blue' }) => {
   const colorClasses = {
     blue: 'bg-blue-500',
     purple: 'bg-purple-500',
     green: 'bg-green-500',
-    pink: 'bg-pink-500'
+    pink: 'bg-pink-500';
   };
 
   return (
@@ -42,7 +42,7 @@ export const PulsingDots: React.FC<{ color?: string }> = ({ color = 'blue' }) =>
   );
 };
 
-// Skeleton Card Loader
+// Skeleton Card Loader;
 export const SkeletonCard: React.FC<{ showAvatar?: boolean }> = ({ showAvatar = true }) => {
   return (
     <div className="glass-card p-6 animate-pulse">
@@ -60,7 +60,7 @@ export const SkeletonCard: React.FC<{ showAvatar?: boolean }> = ({ showAvatar = 
   );
 };
 
-// Skeleton Text Lines
+// Skeleton Text Lines;
 export const SkeletonText: React.FC<{ lines?: number }> = ({ lines = 3 }) => {
   return (
     <div className="space-y-3">
@@ -75,7 +75,7 @@ export const SkeletonText: React.FC<{ lines?: number }> = ({ lines = 3 }) => {
   );
 };
 
-// Skeleton Dashboard Stats
+// Skeleton Dashboard Stats;
 export const SkeletonStats: React.FC = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -95,7 +95,7 @@ export const SkeletonStats: React.FC = () => {
   );
 };
 
-// Beautiful Page Loader
+// Beautiful Page Loader;
 export const PageLoader: React.FC<{ message?: string }> = ({ 
   message = "Loading your wellness sanctuary..." 
 }) => {
@@ -126,7 +126,7 @@ export const PageLoader: React.FC<{ message?: string }> = ({
   );
 };
 
-// Content Placeholder
+// Content Placeholder;
 export const ContentPlaceholder: React.FC<{ type?: 'post' | 'chat' | 'form' }> = ({ 
   type = 'post' 
 }) => {
@@ -210,7 +210,7 @@ export const ContentPlaceholder: React.FC<{ type?: 'post' | 'chat' | 'form' }> =
   return null;
 };
 
-// Breathing Animation Loader
+// Breathing Animation Loader;
 export const BreathingLoader: React.FC<{ text?: string }> = ({ 
   text = "Take a deep breath..." 
 }) => {
@@ -230,7 +230,7 @@ export const BreathingLoader: React.FC<{ text?: string }> = ({
   );
 };
 
-// Loading Button
+// Loading Button;
 export const LoadingButton: React.FC<{
   loading?: boolean;
   children: React.ReactNode;
@@ -247,7 +247,7 @@ export const LoadingButton: React.FC<{
   const variantClasses = {
     primary: 'bg-gradient-to-r from-blue-500 to-purple-500 text-white',
     secondary: 'bg-gray-200 text-gray-800',
-    danger: 'bg-gradient-to-r from-red-500 to-pink-500 text-white'
+    danger: 'bg-gradient-to-r from-red-500 to-pink-500 text-white';
   };
 
   return (
@@ -270,7 +270,7 @@ export const LoadingButton: React.FC<{
   );
 };
 
-// Progress Bar Loader
+// Progress Bar Loader;
 export const ProgressLoader: React.FC<{ 
   progress: number; 
   label?: string;
@@ -289,11 +289,11 @@ export const ProgressLoader: React.FC<{
         </div>
       )}
       <div className="wellness-progress">
-        <div 
+        <div; 
           className="wellness-progress-bar"
           style={{ 
             width: `${Math.min(100, Math.max(0, progress))}%`,
-            background: 'var(--gradient-calm)'
+            background: 'var(--gradient-calm)';
           }}
         />
       </div>
@@ -301,7 +301,7 @@ export const ProgressLoader: React.FC<{
   );
 };
 
-// Shimmer Effect Component
+// Shimmer Effect Component;
 export const ShimmerEffect: React.FC<{ className?: string }> = ({ className = '' }) => {
   return (
     <div className={`relative overflow-hidden ${className}`}>
@@ -310,7 +310,7 @@ export const ShimmerEffect: React.FC<{ className?: string }> = ({ className = ''
   );
 };
 
-// Export all components
+// Export all components;
 export default {
   TherapeuticSpinner,
   PulsingDots,

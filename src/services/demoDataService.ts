@@ -3,7 +3,7 @@
  * 
  * Provides realistic sample data for all user types during demo presentations.
  * Creates interconnected scenarios showing the complete support ecosystem.
- */
+ */;
 
 import { 
     Dilemma, 
@@ -37,19 +37,19 @@ export class DemoDataService {
                 id: 'journal-001',
                 userToken,
                 timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
-                content: "Been feeling really overwhelmed with work lately. The deadlines keep piling up and I feel like I'm drowning. Sometimes I wonder if I'm good enough for this job. Maybe talking to someone would help..."
+                content: "Been feeling really overwhelmed with work lately. The deadlines keep piling up and I feel like I'm drowning. Sometimes I wonder if I'm good enough for this job. Maybe talking to someone would help...";
             },
             {
                 id: 'journal-002',
                 userToken,
                 timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-                content: "Had a breakthrough moment today during my session with Luna. She helped me realize that my anxiety spirals usually start with comparison to others. Going to try the breathing exercises she suggested."
+                content: "Had a breakthrough moment today during my session with Luna. She helped me realize that my anxiety spirals usually start with comparison to others. Going to try the breathing exercises she suggested.";
             },
             {
                 id: 'journal-003',
                 userToken,
                 timestamp: new Date().toISOString(), // Today
-                content: "Practicing gratitude like my guide suggested. Three things I'm grateful for: 1) The supportive community here 2) Having a safe space to share my thoughts 3) Small progress feels significant. The tether feature really helped when I was panicking yesterday."
+                content: "Practicing gratitude like my guide suggested. Three things I'm grateful for: 1) The supportive community here 2) Having a safe space to share my thoughts 3) Small progress feels significant. The tether feature really helped when I was panicking yesterday.";
             }
         ];
     }
@@ -65,7 +65,7 @@ export class DemoDataService {
                 sleepQuality: 2,
                 energyLevel: 2,
                 tags: ['overwhelmed', 'stressed', 'isolated'],
-                notes: 'Work pressure getting to me. Barely sleeping.'
+                notes: 'Work pressure getting to me. Barely sleeping.';
             },
             {
                 id: 'mood-002',
@@ -76,7 +76,7 @@ export class DemoDataService {
                 sleepQuality: 3,
                 energyLevel: 3,
                 tags: ['hopeful', 'supported'],
-                notes: 'Had a really good session with my guide. Feeling more hopeful.'
+                notes: 'Had a really good session with my guide. Feeling more hopeful.';
             },
             {
                 id: 'mood-003',
@@ -87,7 +87,7 @@ export class DemoDataService {
                 sleepQuality: 4,
                 energyLevel: 4,
                 tags: ['grateful', 'motivated', 'calm'],
-                notes: 'Breathing exercises are working! Slept better last night.'
+                notes: 'Breathing exercises are working! Slept better last night.';
             }
         ];
     }
@@ -107,7 +107,7 @@ export class DemoDataService {
                 assignedHelperId: 'helper-luna',
                 helperDisplayName: 'Luna ✨',
                 resolved_by_seeker: true,
-                summary: "Connected with Luna who provided excellent breathing techniques and workplace boundary strategies. Panic attacks have reduced significantly."
+                summary: "Connected with Luna who provided excellent breathing techniques and workplace boundary strategies. Panic attacks have reduced significantly.";
             },
             {
                 id: 'dilemma-002',
@@ -119,7 +119,7 @@ export class DemoDataService {
                 isSupported: false,
                 isReported: false,
                 status: 'active',
-                aiMatchReason: "Relationship anxiety and fear of abandonment - would benefit from perspective on communication strategies"
+                aiMatchReason: "Relationship anxiety and fear of abandonment - would benefit from perspective on communication strategies";
             }
         ];
     }
@@ -172,7 +172,7 @@ export class DemoDataService {
             nextLevelXp: 2500,
             applicationStatus: 'approved',
             trainingCompleted: true,
-            quizScore: 95
+            quizScore: 95;
         }
 
     getAllDilemmasForHelper(): Dilemma[] {
@@ -188,7 +188,7 @@ export class DemoDataService {
                 isSupported: false,
                 isReported: false,
                 status: 'active',
-                aiMatchReason: "Anxiety specialist match - Luna's expertise in breathing techniques could help with bedtime racing thoughts"
+                aiMatchReason: "Anxiety specialist match - Luna's expertise in breathing techniques could help with bedtime racing thoughts";
             },
             {
                 id: 'dilemma-available-002',
@@ -200,7 +200,7 @@ export class DemoDataService {
                 isSupported: false,
                 isReported: false,
                 status: 'active',
-                aiMatchReason: "Workplace boundary issues - Luna's background in workplace stress management could provide professional guidance"
+                aiMatchReason: "Workplace boundary issues - Luna's background in workplace stress management could provide professional guidance";
             },
             // Direct request for Luna
             {
@@ -213,7 +213,7 @@ export class DemoDataService {
                 isSupported: false,
                 isReported: false,
                 status: 'direct_request',
-                requestedHelperId: 'helper-luna'
+                requestedHelperId: 'helper-luna';
             },
             // Luna's active case
             {
@@ -229,7 +229,7 @@ export class DemoDataService {
                 assignedHelperId: 'helper-luna',
                 helperDisplayName: 'Luna ✨',
                 resolved_by_seeker: true,
-                summary: "Connected with Luna who provided excellent breathing techniques and workplace boundary strategies. Panic attacks have reduced significantly."
+                summary: "Connected with Luna who provided excellent breathing techniques and workplace boundary strategies. Panic attacks have reduced significantly.";
             },
             // Community content from other users
             ...this.getStarkeeperDilemmas('demo-user-001')
@@ -245,30 +245,30 @@ export class DemoDataService {
                         id: 'msg-001',
                         sender: 'user',
                         text: "Thank you for reaching out. I really need someone to talk to about these panic attacks.",
-                        timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+                        timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
                     },
                     {
                         id: 'msg-002',
                         sender: 'poster',
                         text: "I'm here to listen and support you. Panic attacks can feel overwhelming, but there are effective techniques we can explore together. Can you tell me what triggers them most at work?",
-                        timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000 + 5 * 60 * 1000).toISOString()
+                        timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000 + 5 * 60 * 1000).toISOString();
                     },
                     {
                         id: 'msg-003',
                         sender: 'user',
                         text: "Usually when my boss assigns multiple urgent deadlines at once. My chest gets tight and I can't breathe properly.",
-                        timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000 + 10 * 60 * 1000).toISOString()
+                        timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000 + 10 * 60 * 1000).toISOString();
                     },
                     {
                         id: 'msg-004',
                         sender: 'poster',
                         text: "That physical response is very common with anxiety. Let's try a grounding technique: 5-4-3-2-1. Name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste. This helps bring you back to the present moment.",
-                        timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000 + 15 * 60 * 1000).toISOString()
+                        timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000 + 15 * 60 * 1000).toISOString();
                     }
                 ],
                 unread: false,
                 perspective: 'helper',
-                helpSessionId: 'session-001'
+                helpSessionId: 'session-001';
             }
         ];
     }
@@ -297,7 +297,7 @@ export class DemoDataService {
                 startedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
                 isFavorited: false,
                 kudosGiven: false,
-                summary: "Ongoing session - relationship anxiety support"
+                summary: "Ongoing session - relationship anxiety support";
             }
         ];
     }
@@ -322,7 +322,7 @@ export class DemoDataService {
                 applicationStatus: 'pending',
                 applicationNotes: 'Strong background in psychology. Completed crisis intervention training. References pending verification.',
                 trainingCompleted: true,
-                quizScore: 88
+                quizScore: 88;
             },
             {
                 id: 'helper-rejected-001',
@@ -341,7 +341,7 @@ export class DemoDataService {
                 applicationStatus: 'rejected',
                 applicationNotes: 'Insufficient training completion. Bio lacks professionalism. Quiz score below threshold.',
                 trainingCompleted: false,
-                quizScore: 45
+                quizScore: 45;
             }
         ];
     }
@@ -358,7 +358,7 @@ export class DemoDataService {
                 reason: 'Inappropriate content - sharing personal contact information',
                 timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
                 status: 'completed',
-                relatedContentId: 'dilemma-removed-001'
+                relatedContentId: 'dilemma-removed-001';
             },
             {
                 id: 'mod-002',
@@ -369,7 +369,7 @@ export class DemoDataService {
                 action: 'Warning Issued',
                 reason: 'Multiple reports for aggressive language in chat sessions',
                 timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
-                status: 'completed'
+                status: 'completed';
             },
             {
                 id: 'mod-003',
@@ -380,7 +380,7 @@ export class DemoDataService {
                 action: 'Helper Suspended',
                 reason: 'Violation of helper guidelines - providing medical advice beyond scope',
                 timestamp: new Date(Date.now() - 18 * 60 * 60 * 1000).toISOString(),
-                status: 'active'
+                status: 'active';
             }
         ];
     }
@@ -390,7 +390,7 @@ export class DemoDataService {
             activeDilemmas: 47,
             avgTimeToFirstSupport: "8m 32s",
             totalHelpers: 23,
-            mostCommonCategory: "anxiety"
+            mostCommonCategory: "anxiety";
         }
 
     // Comprehensive Astral Admin Profile & Dashboard Data
@@ -407,7 +407,7 @@ export class DemoDataService {
             contactInfo: {
                 email: 'm.torres@astralcore.org',
                 phone: '+1-555-0123',
-                emergencyContact: '+1-555-0199'
+                emergencyContact: '+1-555-0199';
             },
             
             // Helper Applications to Review
@@ -424,7 +424,7 @@ export class DemoDataService {
                     backgroundCheckStatus: 'completed',
                     referencesVerified: true,
                     reviewNotes: 'Strong credentials, excellent references. Recommend approval.',
-                    riskAssessment: 'low'
+                    riskAssessment: 'low';
                 },
                 {
                     id: 'app-002',
@@ -438,7 +438,7 @@ export class DemoDataService {
                     backgroundCheckStatus: 'in_progress',
                     referencesVerified: false,
                     reviewNotes: 'Awaiting final reference verification.',
-                    riskAssessment: 'low'
+                    riskAssessment: 'low';
                 },
                 {
                     id: 'app-003',
@@ -452,7 +452,7 @@ export class DemoDataService {
                     backgroundCheckStatus: 'flagged',
                     referencesVerified: true,
                     reviewNotes: 'Background check revealed undisclosed prior incident. Requires executive review.',
-                    riskAssessment: 'high'
+                    riskAssessment: 'high';
                 }
             ],
             
@@ -468,7 +468,7 @@ export class DemoDataService {
                     userInvolved: 'user-crisis-003',
                     actionsTaken: ['Immediate crisis intervention', 'Emergency contact notified', 'Professional referral initiated'],
                     outcome: 'pending',
-                    followUpRequired: true
+                    followUpRequired: true;
                 },
                 {
                     id: 'esc-002',
@@ -480,7 +480,7 @@ export class DemoDataService {
                     helperInvolved: 'guide-003',
                     actionsTaken: ['Temporary suspension', 'Investigation initiated', 'User safety verified'],
                     outcome: 'investigation_ongoing',
-                    followUpRequired: true
+                    followUpRequired: true;
                 },
                 {
                     id: 'esc-003',
@@ -491,7 +491,7 @@ export class DemoDataService {
                     status: 'resolved',
                     actionsTaken: ['IP blocked', 'Security protocols updated', 'Access logs reviewed'],
                     outcome: 'threat_neutralized',
-                    followUpRequired: false
+                    followUpRequired: false;
                 }
             ],
             
@@ -503,7 +503,7 @@ export class DemoDataService {
                     dailyActiveUsers: 3892,
                     weeklyActiveUsers: 8456,
                     userRetentionRate: 78.3,
-                    averageSessionDuration: 23.5
+                    averageSessionDuration: 23.5;
                 },
                 helperMetrics: {
                     totalActiveHelpers: 324,
@@ -511,7 +511,7 @@ export class DemoDataService {
                     helpersOnline: 89,
                     totalSessionsToday: 156,
                     helperSatisfactionRating: 4.7,
-                    helperUtilizationRate: 67.8
+                    helperUtilizationRate: 67.8;
                 },
                 crisisMetrics: {
                     crisisAlertsToday: 12,
@@ -519,7 +519,7 @@ export class DemoDataService {
                     crisisResolutionRate: 94.2,
                     escalationRate: 8.7,
                     emergencyContactsActivated: 3,
-                    preventionSuccessRate: 91.5
+                    preventionSuccessRate: 91.5;
                 },
                 platformHealth: {
                     systemUptime: 99.97,
@@ -527,7 +527,7 @@ export class DemoDataService {
                     errorRate: 0.03,
                     dataBackupStatus: 'current',
                     securityIncidents: 0,
-                    performanceScore: 96.8
+                    performanceScore: 96.8;
                 }
             },
             
@@ -539,7 +539,7 @@ export class DemoDataService {
                 positiveSentimentRate: 73.4,
                 engagementRate: 45.2,
                 reportedIncidents: 8,
-                communityGuidanceInterventions: 34
+                communityGuidanceInterventions: 34;
             },
             
             // Quality Assurance Metrics
@@ -551,10 +551,10 @@ export class DemoDataService {
                     peerSupport: 67.8,
                     crisisSupport: 23.4,
                     resourceLibrary: 56.7,
-                    moodTracking: 78.9
+                    moodTracking: 78.9;
                 },
                 completedAudits: 4,
-                pendingAudits: 2
+                pendingAudits: 2;
             },
             
             // Administrative Actions Log
@@ -564,21 +564,21 @@ export class DemoDataService {
                     type: 'helper_approval',
                     description: 'Approved new helper application for Dr. Amanda Rodriguez',
                     timestamp: new Date('2024-01-15T10:30:00'),
-                    adminUser: 'admin-001'
+                    adminUser: 'admin-001';
                 },
                 {
                     id: 'action-002',
                     type: 'policy_update',
                     description: 'Updated crisis intervention protocols per new guidelines',
                     timestamp: new Date('2024-01-14T15:45:00'),
-                    adminUser: 'admin-001'
+                    adminUser: 'admin-001';
                 },
                 {
                     id: 'action-003',
                     type: 'security_enhancement',
                     description: 'Implemented additional 2FA requirements for helpers',
                     timestamp: new Date('2024-01-13T09:20:00'),
-                    adminUser: 'admin-001'
+                    adminUser: 'admin-001';
                 }
             ],
             
@@ -590,7 +590,7 @@ export class DemoDataService {
                     severity: 'medium',
                     message: 'Database query response time above threshold in crisis support module',
                     timestamp: new Date('2024-01-15T14:20:00'),
-                    status: 'acknowledged'
+                    status: 'acknowledged';
                 },
                 {
                     id: 'alert-002',
@@ -598,7 +598,7 @@ export class DemoDataService {
                     severity: 'low',
                     message: 'Multiple failed login attempts from IP range 192.168.1.x',
                     timestamp: new Date('2024-01-15T11:35:00'),
-                    status: 'monitoring'
+                    status: 'monitoring';
                 }
             ]
         }
@@ -612,7 +612,7 @@ export class DemoDataService {
                 content: "Today I realized that healing isn't linear. Some days are harder than others, and that's okay. Progress isn't always visible from the inside. 🌱",
                 timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
                 reactions: { light: 15, heart: 8, strength: 12 },
-                myReaction: 'light'
+                myReaction: 'light';
             },
             {
                 id: 'reflection-002',
@@ -640,7 +640,7 @@ export class DemoDataService {
                 authorName: 'Luna ✨',
                 timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
                 postCount: 12,
-                lastReply: new Date(Date.now() - 30 * 60 * 1000).toISOString()
+                lastReply: new Date(Date.now() - 30 * 60 * 1000).toISOString();
             },
             {
                 id: 'thread-002',
@@ -649,7 +649,7 @@ export class DemoDataService {
                 authorName: 'Demo Astral Admin',
                 timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
                 postCount: 8,
-                lastReply: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+                lastReply: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
             }
         ];
     }
@@ -665,25 +665,25 @@ export class DemoDataService {
                     id: 'ai-msg-001',
                     sender: 'user',
                     text: "I'm feeling really anxious about a job interview tomorrow. My mind keeps racing with all the things that could go wrong.",
-                    timestamp: new Date(Date.now() - 10 * 60 * 1000).toISOString()
+                    timestamp: new Date(Date.now() - 10 * 60 * 1000).toISOString();
                 },
                 {
                     id: 'ai-msg-002',
                     sender: 'ai',
                     text: "It's completely natural to feel anxious before an important interview. This shows the opportunity matters to you. Let's work through some techniques to help you feel more prepared and calm. Can you tell me what specific concerns are weighing on your mind?",
-                    timestamp: new Date(Date.now() - 9 * 60 * 1000).toISOString()
+                    timestamp: new Date(Date.now() - 9 * 60 * 1000).toISOString();
                 },
                 {
                     id: 'ai-msg-003',
                     sender: 'user',
                     text: "I'm worried I'll blank out when they ask me questions, or that I'll say something wrong and embarrass myself.",
-                    timestamp: new Date(Date.now() - 8 * 60 * 1000).toISOString()
+                    timestamp: new Date(Date.now() - 8 * 60 * 1000).toISOString();
                 },
                 {
                     id: 'ai-msg-004',
                     sender: 'ai',
                     text: "Those are very common interview worries. Here are some strategies that can help:\n\n1. **Practice the STAR method** (Situation, Task, Action, Result) for answering behavioral questions\n2. **Prepare 3-5 key stories** about your experiences that showcase your skills\n3. **Use box breathing**: Inhale for 4, hold for 4, exhale for 4, hold for 4\n\nWould you like to practice one of these techniques right now?",
-                    timestamp: new Date(Date.now() - 7 * 60 * 1000).toISOString()
+                    timestamp: new Date(Date.now() - 7 * 60 * 1000).toISOString();
                 }
             ]
         }
@@ -703,20 +703,20 @@ export class DemoDataService {
                 reportReason: 'Crisis - immediate intervention needed',
                 status: 'in_progress',
                 assignedHelperId: 'helper-crisis-specialist',
-                helperDisplayName: 'Crisis Support Team'
+                helperDisplayName: 'Crisis Support Team';
             },
             chatMessages: [
                 {
                     id: 'crisis-msg-001',
                     sender: 'poster' as const,
                     text: "I see you're going through an incredibly difficult time right now, and I want you to know that reaching out here took courage. You matter, and there are people who want to help. Can you tell me if you're in a safe place right now?",
-                    timestamp: new Date(Date.now() - 25 * 60 * 1000).toISOString()
+                    timestamp: new Date(Date.now() - 25 * 60 * 1000).toISOString();
                 },
                 {
                     id: 'crisis-msg-002',
                     sender: 'poster' as const,
                     text: "I'm connecting you with our crisis specialists and providing immediate resources. The National Suicide Prevention Lifeline is available 24/7 at 988. You don't have to go through this alone.",
-                    timestamp: new Date(Date.now() - 20 * 60 * 1000).toISOString()
+                    timestamp: new Date(Date.now() - 20 * 60 * 1000).toISOString();
                 }
             ]
         }
@@ -739,7 +739,7 @@ export class DemoDataService {
                 aiConcernLevel: 'high',
                 aiFlags: ['suicidal_ideation', 'hopelessness', 'social_withdrawal'],
                 triggerKeywords: ['dark thoughts', 'pointless', 'better off without me', 'not be here'],
-                riskAssessment: 'immediate_intervention_required'
+                riskAssessment: 'immediate_intervention_required';
             },
 
             // STEP 2: AI Detection and Automatic Helper Assignment
@@ -755,7 +755,7 @@ export class DemoDataService {
                     'Admin alerted for potential escalation'
                 ],
                 assignedHelperId: 'helper-crisis-001',
-                helperDisplayName: 'Dr. Sarah Chen - Crisis Specialist'
+                helperDisplayName: 'Dr. Sarah Chen - Crisis Specialist';
             },
 
             // STEP 3: Helper Response and Intervention
@@ -792,7 +792,7 @@ export class DemoDataService {
                         'Platform Crisis Support: Available 24/7'
                     ]
                 },
-                outcomeAssessment: 'user_stabilized_accepting_help'
+                outcomeAssessment: 'user_stabilized_accepting_help';
             },
 
             // STEP 4: Admin Review and Oversight
@@ -806,7 +806,7 @@ export class DemoDataService {
                     timeToResponse: 'within_acceptable_range',
                     interventionQuality: 'comprehensive_effective',
                     safetyMeasures: 'all_protocols_followed',
-                    userOutcome: 'positive_engagement_achieved'
+                    userOutcome: 'positive_engagement_achieved';
                 },
                 adminActions: [
                     'Helper performance commended',
@@ -822,7 +822,7 @@ export class DemoDataService {
                 ],
                 escalationDecision: 'no_further_escalation_needed',
                 followUpRequired: true,
-                followUpScheduled: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours from now
+                followUpScheduled: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours from now;
             },
 
             // STEP 5: Positive Resolution Tracking
@@ -840,16 +840,16 @@ export class DemoDataService {
                     rating: 5,
                     comment: "Dr. Chen saved my life. I felt heard and supported when I had nowhere else to turn. The safety plan helped me get through the worst moments, and knowing help is available 24/7 gives me hope.",
                     wouldRecommend: true,
-                    followUpAccepted: true
+                    followUpAccepted: true;
                 },
                 platformMetrics: {
                     crisisResolutionSuccess: true,
                     emergencyContactActivated: false,
                     professionalReferralCompleted: true,
                     userRetainedOnPlatform: true,
-                    helperKudosReceived: true
+                    helperKudosReceived: true;
                 },
-                longTermOutcome: 'user_engaging_ongoing_support'
+                longTermOutcome: 'user_engaging_ongoing_support';
             }
         }
 
@@ -869,7 +869,7 @@ export class DemoDataService {
                         'Chat logs showing personal contact sharing',
                         'Screenshot of meeting suggestion message'
                     ],
-                    reportStatus: 'under_investigation'
+                    reportStatus: 'under_investigation';
                 },
                 helperPerspective: {
                     helperId: 'helper-boundary-violation',
@@ -878,7 +878,7 @@ export class DemoDataService {
                     violationType: 'professional_boundary_crossed',
                     priorViolations: 0,
                     accountStatus: 'temporarily_suspended',
-                    remedialAction: 'mandatory_retraining_required'
+                    remedialAction: 'mandatory_retraining_required';
                 },
                 adminResponse: {
                     investigatingAdmin: 'admin-001',
@@ -897,7 +897,7 @@ export class DemoDataService {
                         'Monitoring increased for this helper'
                     ],
                     resolutionTime: '4 hours 30 minutes',
-                    outcome: 'violation_confirmed_training_required'
+                    outcome: 'violation_confirmed_training_required';
                 }
             },
 
@@ -925,7 +925,7 @@ export class DemoDataService {
                         'Case escalated to admin team',
                         'Similar content scan initiated'
                     ],
-                    riskAssessment: 'high_community_safety_risk'
+                    riskAssessment: 'high_community_safety_risk';
                 },
                 adminPolicyResponse: {
                     reviewingAdmin: 'admin-001',
@@ -946,7 +946,7 @@ export class DemoDataService {
                         'Educational resources about medication safety added',
                         'Community awareness campaign launched'
                     ],
-                    outcome: 'policy_strengthened_prevention_improved'
+                    outcome: 'policy_strengthened_prevention_improved';
                 }
             },
 
@@ -971,7 +971,7 @@ export class DemoDataService {
                         depressionImprovement: '65%',
                         socialConnection: '300% increase',
                         selfEfficacy: '80% improvement',
-                        qualityOfLife: '85% improvement'
+                        qualityOfLife: '85% improvement';
                     }
                 },
                 helperRecognition: {
@@ -986,7 +986,7 @@ export class DemoDataService {
                         'Peer recognition from helper community',
                         'Client testimonial featured'
                     ],
-                    platformImpact: 'demonstrates_platform_effectiveness'
+                    platformImpact: 'demonstrates_platform_effectiveness';
                 },
                 adminAnalysis: {
                     analysisType: 'success_case_study',
@@ -1009,7 +1009,7 @@ export class DemoDataService {
                         'Crisis support protocols refined',
                         'Success milestone tracking added'
                     ],
-                    outcomeForPlatform: 'evidence_based_feature_enhancement'
+                    outcomeForPlatform: 'evidence_based_feature_enhancement';
                 }
             }
         }
@@ -1018,7 +1018,7 @@ export class DemoDataService {
     initializeDemoData(userType: 'user' | 'helper' | 'admin', userToken: string) {
         const data: any = {};
 
-        // Add interconnected workflow data for all user types
+        // Add interconnected workflow data for all user types;
         const workflowData = this.getInterconnectedWorkflowData();
         const multipleScenarios = this.getMultipleWorkflowScenarios();
         const crisisScenarios = this.getCrisisEscalationScenarios();
@@ -1035,7 +1035,7 @@ export class DemoDataService {
                 helperSupport: workflowData.helperIntervention,
                 safetyPlan: workflowData.helperIntervention.safetyPlan,
                 myFeedback: workflowData.resolutionTracking.userFeedback,
-                ongoingSupport: workflowData.resolutionTracking
+                ongoingSupport: workflowData.resolutionTracking;
             };
             
             // Add additional scenarios from user perspective
@@ -1043,7 +1043,7 @@ export class DemoDataService {
                 crisisSupport: workflowData,
                 boundaryProtection: multipleScenarios.scenario1.userReport,
                 communityGuidelines: multipleScenarios.scenario2.communityPost,
-                successStory: multipleScenarios.scenario3.successStory
+                successStory: multipleScenarios.scenario3.successStory;
             };
 
             // Add crisis escalation scenarios from user perspective
@@ -1052,21 +1052,21 @@ export class DemoDataService {
                     myPost: crisisScenarios.immediateRisk.userPost,
                     helpReceived: crisisScenarios.immediateRisk.helperResponse,
                     safetyPlan: crisisScenarios.immediateRisk.helperResponse.safetyInterventions,
-                    outcome: crisisScenarios.immediateRisk.resolutionTracking
+                    outcome: crisisScenarios.immediateRisk.resolutionTracking;
                 },
                 domesticViolenceCrisis: {
                     myPost: crisisScenarios.domesticViolence.userPost,
                     helpReceived: crisisScenarios.domesticViolence.helperResponse,
                     safetyPlan: crisisScenarios.domesticViolence.helperResponse.safetyActions,
-                    outcome: crisisScenarios.domesticViolence.resolutionTracking
+                    outcome: crisisScenarios.domesticViolence.resolutionTracking;
                 },
                 substanceCrisis: {
                     myPost: crisisScenarios.substanceAbuseCrisis.userPost,
                     helpReceived: crisisScenarios.substanceAbuseCrisis.helperResponse,
                     medicalSupport: crisisScenarios.substanceAbuseCrisis.helperResponse.medicalGuidance,
-                    outcome: crisisScenarios.substanceAbuseCrisis.resolutionTracking
-                }
-            } else if (userType === 'helper') {
+                    outcome: crisisScenarios.substanceAbuseCrisis.resolutionTracking;
+                };
+  } else if (userType === 'helper') {
             data.profile = this.getConstellationGuideProfile();
             data.chatSessions = this.getHelperChatSessions();
             data.helpSessions = this.getHelperSessions();
@@ -1078,7 +1078,7 @@ export class DemoDataService {
                 aiDetection: workflowData.aiDetectionResponse,
                 myIntervention: workflowData.helperIntervention,
                 adminReview: workflowData.adminReview,
-                outcome: workflowData.resolutionTracking
+                outcome: workflowData.resolutionTracking;
             };
             
             // Add additional scenarios from helper perspective
@@ -1086,7 +1086,7 @@ export class DemoDataService {
                 crisisIntervention: workflowData.helperIntervention,
                 boundaryTraining: multipleScenarios.scenario1.helperPerspective,
                 contentModeration: multipleScenarios.scenario2.helperModeration,
-                successRecognition: multipleScenarios.scenario3.helperRecognition
+                successRecognition: multipleScenarios.scenario3.helperRecognition;
             };
 
             // Add crisis escalation scenarios from helper perspective
@@ -1096,23 +1096,23 @@ export class DemoDataService {
                     aiAssessment: crisisScenarios.immediateRisk.aiDetection,
                     myResponse: crisisScenarios.immediateRisk.helperResponse,
                     adminBackup: crisisScenarios.immediateRisk.adminEscalation,
-                    outcome: crisisScenarios.immediateRisk.resolutionTracking
+                    outcome: crisisScenarios.immediateRisk.resolutionTracking;
                 },
                 domesticViolenceIntervention: {
                     crisisAlert: crisisScenarios.domesticViolence.userPost,
                     aiAssessment: crisisScenarios.domesticViolence.aiDetection,
                     myResponse: crisisScenarios.domesticViolence.helperResponse,
                     adminBackup: crisisScenarios.domesticViolence.adminEscalation,
-                    outcome: crisisScenarios.domesticViolence.resolutionTracking
+                    outcome: crisisScenarios.domesticViolence.resolutionTracking;
                 },
                 medicalEmergencyIntervention: {
                     crisisAlert: crisisScenarios.substanceAbuseCrisis.userPost,
                     aiAssessment: crisisScenarios.substanceAbuseCrisis.aiDetection,
                     myResponse: crisisScenarios.substanceAbuseCrisis.helperResponse,
                     adminBackup: crisisScenarios.substanceAbuseCrisis.adminEscalation,
-                    outcome: crisisScenarios.substanceAbuseCrisis.resolutionTracking
-                }
-            } else if (userType === 'admin') {
+                    outcome: crisisScenarios.substanceAbuseCrisis.resolutionTracking;
+                };
+  } else if (userType === 'admin') {
             data.profile = this.getAstralAdminProfile();
             data.helperApplications = this.getAdminHelperApplications();
             data.moderationActions = this.getAdminModerationActions();
@@ -1125,7 +1125,7 @@ export class DemoDataService {
                 helperResponse: workflowData.helperIntervention,
                 myReview: workflowData.adminReview,
                 systemMetrics: workflowData.resolutionTracking.platformMetrics,
-                qualityAssurance: workflowData.adminReview.findings
+                qualityAssurance: workflowData.adminReview.findings;
             };
             
             // Add comprehensive admin oversight scenarios
@@ -1133,7 +1133,7 @@ export class DemoDataService {
                 crisisManagement: workflowData.adminReview,
                 boundaryEnforcement: multipleScenarios.scenario1.adminResponse,
                 policyDevelopment: multipleScenarios.scenario2.adminPolicyResponse,
-                successAnalysis: multipleScenarios.scenario3.adminAnalysis
+                successAnalysis: multipleScenarios.scenario3.adminAnalysis;
             };
 
             // Add crisis escalation scenarios from admin perspective
@@ -1143,21 +1143,21 @@ export class DemoDataService {
                     aiSystem: crisisScenarios.immediateRisk.aiDetection,
                     helperResponse: crisisScenarios.immediateRisk.helperResponse,
                     myEscalation: crisisScenarios.immediateRisk.adminEscalation,
-                    systemMetrics: crisisScenarios.immediateRisk.resolutionTracking
+                    systemMetrics: crisisScenarios.immediateRisk.resolutionTracking;
                 },
                 domesticViolenceCrisisOversight: {
                     incident: crisisScenarios.domesticViolence.userPost,
                     aiSystem: crisisScenarios.domesticViolence.aiDetection,
                     helperResponse: crisisScenarios.domesticViolence.helperResponse,
                     myEscalation: crisisScenarios.domesticViolence.adminEscalation,
-                    systemMetrics: crisisScenarios.domesticViolence.resolutionTracking
+                    systemMetrics: crisisScenarios.domesticViolence.resolutionTracking;
                 },
                 medicalEmergencyCrisisOversight: {
                     incident: crisisScenarios.substanceAbuseCrisis.userPost,
                     aiSystem: crisisScenarios.substanceAbuseCrisis.aiDetection,
                     helperResponse: crisisScenarios.substanceAbuseCrisis.helperResponse,
                     myEscalation: crisisScenarios.substanceAbuseCrisis.adminEscalation,
-                    systemMetrics: crisisScenarios.substanceAbuseCrisis.resolutionTracking
+                    systemMetrics: crisisScenarios.substanceAbuseCrisis.resolutionTracking;
                 }
             }
 
@@ -1190,7 +1190,7 @@ export class DemoDataService {
             console.warn('localStorage error, generating fresh demo data');
         }
         
-        // Initialize if not found or on error
+        // Initialize if not found or on error;
         let userToken = 'demo-token-' + Date.now();
         try {
             const demoUser = localStorage.getItem('demo_user');
@@ -1200,11 +1200,12 @@ export class DemoDataService {
                     userToken = parsed.sub;
                 }
             }
-        } catch (e) {
+        } catch (error) {
             // Use default token if parsing fails
         }
-            
-        return this.initializeDemoData(userType, userToken);
+  }
+
+  return this.initializeDemoData(userType, userToken);
     }
 
     // Clear demo data (for reset/logout)
@@ -1233,7 +1234,7 @@ export class DemoDataService {
                     status: 'critical_crisis_detected',
                     aiFlags: ['suicide_plan', 'means_available', 'imminent_danger', 'goodbye_message'],
                     riskLevel: 'critical',
-                    urgencyScore: 10
+                    urgencyScore: 10;
                 },
 
                 // Step 2: AI Detection Response (< 30 seconds)
@@ -1255,7 +1256,7 @@ export class DemoDataService {
                         'User IP geo-location for emergency services',
                         'Admin escalation triggered automatically'
                     ],
-                    estimatedTimeToAct: '15-30 minutes based on post language'
+                    estimatedTimeToAct: '15-30 minutes based on post language';
                 },
 
                 // Step 3: Helper Crisis Response (within 2 minutes)
@@ -1340,7 +1341,7 @@ export class DemoDataService {
                     status: 'safety_crisis_detected',
                     aiFlags: ['domestic_violence', 'immediate_danger', 'children_involved', 'isolation_tactics'],
                     riskLevel: 'high',
-                    urgencyScore: 9
+                    urgencyScore: 9;
                 },
 
                 aiDetection: {
@@ -1440,7 +1441,7 @@ export class DemoDataService {
                     status: 'medical_crisis_detected',
                     aiFlags: ['overdose_symptoms', 'medical_emergency', 'fear_of_consequences', 'immediate_danger'],
                     riskLevel: 'critical',
-                    urgencyScore: 10
+                    urgencyScore: 10;
                 },
 
                 aiDetection: {
@@ -1548,7 +1549,7 @@ export class DemoDataService {
                         joinedDate: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(),
                         currentStreak: 12,
                         totalDaysCompleted: 12,
-                        isActive: true
+                        isActive: true;
                     },
                     {
                         userId: 'user-mindful-002',
@@ -1556,7 +1557,7 @@ export class DemoDataService {
                         joinedDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
                         currentStreak: 8,
                         totalDaysCompleted: 10,
-                        isActive: true
+                        isActive: true;
                     },
                     {
                         userId: 'user-mindful-003',
@@ -1564,7 +1565,7 @@ export class DemoDataService {
                         joinedDate: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
                         currentStreak: 6,
                         totalDaysCompleted: 8,
-                        isActive: true
+                        isActive: true;
                     }
                 ],
                 dailyPrompts: [
@@ -1573,21 +1574,21 @@ export class DemoDataService {
                         title: 'Breath Awareness',
                         description: 'Spend 5 minutes focusing solely on your natural breath. Notice the sensation of air entering and leaving your body.',
                         type: 'mindfulness',
-                        estimatedTime: '5 minutes'
+                        estimatedTime: '5 minutes';
                     },
                     {
                         day: 2,
                         title: 'Body Scan Meditation',
                         description: 'Slowly scan your body from head to toe, noticing any sensations without judgment.',
                         type: 'mindfulness',
-                        estimatedTime: '7 minutes'
+                        estimatedTime: '7 minutes';
                     },
                     {
                         day: 3,
                         title: 'Mindful Walking',
                         description: 'Take a slow, deliberate walk, focusing on each step and the feeling of your feet touching the ground.',
                         type: 'action',
-                        estimatedTime: '10 minutes'
+                        estimatedTime: '10 minutes';
                     }
                 ],
                 status: 'active',
@@ -1611,7 +1612,7 @@ export class DemoDataService {
                         joinedDate: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
                         currentStreak: 6,
                         totalDaysCompleted: 6,
-                        isActive: true
+                        isActive: true;
                     },
                     {
                         userId: 'user-grateful-002',
@@ -1619,7 +1620,7 @@ export class DemoDataService {
                         joinedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
                         currentStreak: 5,
                         totalDaysCompleted: 5,
-                        isActive: true
+                        isActive: true;
                     }
                 ],
                 dailyPrompts: [
@@ -1628,21 +1629,21 @@ export class DemoDataService {
                         title: 'Simple Joys',
                         description: 'Identify three simple things that brought you joy today. They can be as small as a warm cup of coffee or a smile from a stranger.',
                         type: 'gratitude',
-                        estimatedTime: '5 minutes'
+                        estimatedTime: '5 minutes';
                     },
                     {
                         day: 2,
                         title: 'People in Your Life',
                         description: 'Think of three people you\'re grateful for and why. Consider sending one of them a message of appreciation.',
                         type: 'reflection',
-                        estimatedTime: '8 minutes'
+                        estimatedTime: '8 minutes';
                     },
                     {
                         day: 3,
                         title: 'Personal Strengths',
                         description: 'Reflect on three personal qualities or strengths you\'re grateful to possess. How have they helped you recently?',
                         type: 'reflection',
-                        estimatedTime: '10 minutes'
+                        estimatedTime: '10 minutes';
                     }
                 ],
                 status: 'active',
@@ -1666,7 +1667,7 @@ export class DemoDataService {
                         joinedDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
                         currentStreak: 0,
                         totalDaysCompleted: 0,
-                        isActive: true
+                        isActive: true;
                     }
                 ],
                 dailyPrompts: [
@@ -1675,14 +1676,14 @@ export class DemoDataService {
                         title: 'Emotion Doodling',
                         description: 'Draw or doodle how you\'re feeling right now. Don\'t worry about it looking "good" - just let your emotions flow onto paper.',
                         type: 'creative',
-                        estimatedTime: '15 minutes'
+                        estimatedTime: '15 minutes';
                     },
                     {
                         day: 2,
                         title: 'Poetry of the Moment',
                         description: 'Write a short poem (even just 4 lines) about something you noticed today. Focus on imagery and feeling rather than perfect rhymes.',
                         type: 'creative',
-                        estimatedTime: '10 minutes'
+                        estimatedTime: '10 minutes';
                     }
                 ],
                 status: 'upcoming',
@@ -1709,7 +1710,7 @@ export class DemoDataService {
                         userType: 'starkeeper',
                         joinedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
                         isActive: true,
-                        lastSeen: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+                        lastSeen: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
                     },
                     {
                         userId: 'user-anxiety-002',
@@ -1717,7 +1718,7 @@ export class DemoDataService {
                         userType: 'starkeeper',
                         joinedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
                         isActive: true,
-                        lastSeen: new Date(Date.now() - 30 * 60 * 1000).toISOString()
+                        lastSeen: new Date(Date.now() - 30 * 60 * 1000).toISOString();
                     },
                     {
                         userId: 'helper-peer-001',
@@ -1725,7 +1726,7 @@ export class DemoDataService {
                         userType: 'helper',
                         joinedDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
                         isActive: true,
-                        lastSeen: new Date(Date.now() - 10 * 60 * 1000).toISOString()
+                        lastSeen: new Date(Date.now() - 10 * 60 * 1000).toISOString();
                     }
                 ],
                 messages: [
@@ -1740,7 +1741,7 @@ export class DemoDataService {
                             { type: 'heart', count: 5, users: ['user-anxiety-001', 'user-anxiety-002', 'helper-peer-001'] }
                         ],
                         isSupported: true,
-                        supportCount: 5
+                        supportCount: 5;
                     },
                     {
                         id: 'msg-anxiety-002',
@@ -1754,7 +1755,7 @@ export class DemoDataService {
                             { type: 'strength', count: 2, users: ['helper-anxiety-001', 'helper-peer-001'] }
                         ],
                         isSupported: true,
-                        supportCount: 8
+                        supportCount: 8;
                     },
                     {
                         id: 'msg-anxiety-003',
@@ -1767,7 +1768,7 @@ export class DemoDataService {
                             { type: 'heart', count: 4, users: ['user-anxiety-001', 'user-anxiety-002', 'helper-anxiety-001'] }
                         ],
                         isSupported: true,
-                        supportCount: 6
+                        supportCount: 6;
                     },
                     {
                         id: 'msg-anxiety-004',
@@ -1780,7 +1781,7 @@ export class DemoDataService {
                             { type: 'hug', count: 6, users: ['helper-anxiety-001', 'user-anxiety-001', 'helper-peer-001'] }
                         ],
                         isSupported: true,
-                        supportCount: 6
+                        supportCount: 6;
                     }
                 ],
                 scheduledDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
@@ -1807,7 +1808,7 @@ export class DemoDataService {
                         userType: 'starkeeper',
                         joinedDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
                         isActive: true,
-                        lastSeen: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString()
+                        lastSeen: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString();
                     },
                     {
                         userId: 'user-recovery-002',
@@ -1815,7 +1816,7 @@ export class DemoDataService {
                         userType: 'starkeeper',
                         joinedDate: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
                         isActive: true,
-                        lastSeen: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString()
+                        lastSeen: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString();
                     }
                 ],
                 messages: [
@@ -1831,7 +1832,7 @@ export class DemoDataService {
                             { type: 'star', count: 5, users: ['helper-recovery-001', 'user-recovery-002'] }
                         ],
                         isSupported: true,
-                        supportCount: 15
+                        supportCount: 15;
                     },
                     {
                         id: 'msg-recovery-002',
@@ -1844,7 +1845,7 @@ export class DemoDataService {
                             { type: 'heart', count: 3, users: ['user-recovery-001', 'user-recovery-002'] }
                         ],
                         isSupported: true,
-                        supportCount: 4
+                        supportCount: 4;
                     }
                 ],
                 scheduledDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
@@ -1871,7 +1872,7 @@ export class DemoDataService {
                         userType: 'starkeeper',
                         joinedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
                         isActive: true,
-                        lastSeen: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
+                        lastSeen: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString();
                     }
                 ],
                 messages: [
@@ -1886,7 +1887,7 @@ export class DemoDataService {
                             { type: 'light', count: 2, users: ['user-social-001'] }
                         ],
                         isSupported: true,
-                        supportCount: 3
+                        supportCount: 3;
                     }
                 ],
                 scheduledDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
@@ -1927,7 +1928,7 @@ export class DemoDataService {
                         content: 'The 5-4-3-2-1 grounding technique has been a game-changer for me: 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste. It brings me back to the present moment when my thoughts spiral.',
                         timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
                         supportCount: 6,
-                        isSupported: true
+                        isSupported: true;
                     },
                     {
                         id: 'reply-anxiety-002',
@@ -1937,7 +1938,7 @@ export class DemoDataService {
                         content: 'I keep a \'worry time\' - 15 minutes each day where I allow myself to worry about everything, then I close that mental door. It helps me not carry anxiety all day long.',
                         timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
                         supportCount: 4,
-                        isSupported: true
+                        isSupported: true;
                     },
                     {
                         id: 'reply-anxiety-003',
@@ -1947,7 +1948,7 @@ export class DemoDataService {
                         content: 'These are wonderful strategies! I\'d also add that progressive muscle relaxation can be very effective. Start with your toes and work your way up, tensing and then relaxing each muscle group. It helps release physical tension that often accompanies anxiety.',
                         timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
                         supportCount: 5,
-                        isSupported: true
+                        isSupported: true;
                     }
                 ]
             },
@@ -1975,7 +1976,7 @@ export class DemoDataService {
                         content: 'I went to a social event last night and didn\'t feel the urge to drink! Instead, I enjoyed meaningful conversations and woke up clear-headed this morning. Feels amazing.',
                         timestamp: new Date(Date.now() - 10 * 60 * 60 * 1000).toISOString(),
                         supportCount: 8,
-                        isSupported: true
+                        isSupported: true;
                     },
                     {
                         id: 'reply-recovery-002',
@@ -1985,7 +1986,7 @@ export class DemoDataService {
                         content: 'That\'s incredible @NewBeginnings! Those first social events can be challenging. You should be so proud of yourself for staying true to your recovery and still having a good time.',
                         timestamp: new Date(Date.now() - 9 * 60 * 60 * 1000).toISOString(),
                         supportCount: 6,
-                        isSupported: true
+                        isSupported: true;
                     },
                     {
                         id: 'reply-recovery-003',
@@ -1995,7 +1996,7 @@ export class DemoDataService {
                         content: 'I called my sponsor when I was feeling triggered instead of isolating. It was hard to reach out, but I\'m so glad I did. Connection is healing.',
                         timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
                         supportCount: 9,
-                        isSupported: true
+                        isSupported: true;
                     }
                 ]
             },
@@ -2023,7 +2024,7 @@ export class DemoDataService {
                         content: 'Feeling cautiously optimistic today. Had a rough patch last week, but I\'m taking things one moment at a time and focusing on self-compassion.',
                         timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
                         supportCount: 7,
-                        isSupported: true
+                        isSupported: true;
                     },
                     {
                         id: 'reply-checkin-002',
@@ -2033,7 +2034,7 @@ export class DemoDataService {
                         content: 'Struggling with some old thought patterns today, but I\'m grateful for this community. Just knowing others understand makes a difference.',
                         timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
                         supportCount: 12,
-                        isSupported: true
+                        isSupported: true;
                     },
                     {
                         id: 'reply-checkin-003',
@@ -2043,7 +2044,7 @@ export class DemoDataService {
                         content: '@QuietStrength - sending you strength today. Those old patterns are tough, but recognizing them is such an important step. You\'re not alone in this. 💙',
                         timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
                         supportCount: 8,
-                        isSupported: true
+                        isSupported: true;
                     }
                 ]
             },
@@ -2071,7 +2072,7 @@ export class DemoDataService {
                         content: 'Boundary guilt is so common! Remember that saying no to one thing means saying yes to something else - often your own well-being. You can\'t pour from an empty cup.',
                         timestamp: new Date(Date.now() - 16 * 60 * 60 * 1000).toISOString(),
                         supportCount: 9,
-                        isSupported: true
+                        isSupported: true;
                     },
                     {
                         id: 'reply-boundaries-002',
@@ -2081,7 +2082,7 @@ export class DemoDataService {
                         content: 'I started with small nos first - like declining optional social events when I was exhausted. It helped me practice the skill before bigger situations came up.',
                         timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
                         supportCount: 6,
-                        isSupported: true
+                        isSupported: true;
                     }
                 ]
             },
@@ -2109,7 +2110,7 @@ export class DemoDataService {
                         content: 'I started with just 2 minutes of deep breathing every morning before I even get out of bed. It\'s grown into a fuller meditation practice, but starting tiny was key.',
                         timestamp: new Date(Date.now() - 20 * 60 * 60 * 1000).toISOString(),
                         supportCount: 8,
-                        isSupported: true
+                        isSupported: true;
                     },
                     {
                         id: 'reply-wellness-002',
@@ -2119,7 +2120,7 @@ export class DemoDataService {
                         content: 'The \'two-minute rule\' is powerful! Any habit can be started in 2 minutes or less. Read one page, write one sentence in a journal, do one sun salutation. Small consistency beats large inconsistency every time.',
                         timestamp: new Date(Date.now() - 15 * 60 * 60 * 1000).toISOString(),
                         supportCount: 11,
-                        isSupported: true
+                        isSupported: true;
                     }
                 ]
             }
@@ -2144,19 +2145,19 @@ export class DemoDataService {
                         userId: 'user-mindful-event-001',
                         username: 'SeekingPeace',
                         registeredDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-                        attended: false
+                        attended: false;
                     },
                     {
                         userId: 'user-mindful-event-002',
                         username: 'CalmSeeker99',
                         registeredDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-                        attended: false
+                        attended: false;
                     },
                     {
                         userId: 'user-mindful-event-003',
                         username: 'AnxiousNoMore',
                         registeredDate: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
-                        attended: false
+                        attended: false;
                     }
                 ],
                 isVirtual: true,
@@ -2167,14 +2168,14 @@ export class DemoDataService {
                         title: 'Beginner\'s Guide to Breathing Exercises',
                         type: 'document',
                         url: '/resources/breathing-guide.pdf',
-                        description: 'Simple breathing techniques you can use anywhere'
+                        description: 'Simple breathing techniques you can use anywhere';
                     },
                     {
                         id: 'resource-mindful-002',
                         title: 'Guided Body Scan Meditation',
                         type: 'audio',
                         url: '/resources/body-scan-meditation.mp3',
-                        description: '15-minute guided meditation for relaxation'
+                        description: '15-minute guided meditation for relaxation';
                     }
                 ],
                 status: 'upcoming',
@@ -2198,7 +2199,7 @@ export class DemoDataService {
                         registeredDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
                         attended: true,
                         feedback: 'Really appreciate the safe space to share. Feeling less alone.',
-                        rating: 5
+                        rating: 5;
                     },
                     {
                         userId: 'user-young-002',
@@ -2206,7 +2207,7 @@ export class DemoDataService {
                         registeredDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
                         attended: true,
                         feedback: 'Great group dynamic. Looking forward to next week.',
-                        rating: 4
+                        rating: 4;
                     }
                 ],
                 isVirtual: true,
@@ -2216,7 +2217,7 @@ export class DemoDataService {
                         id: 'resource-support-001',
                         title: 'Young Adult Life Transition Guide',
                         type: 'document',
-                        url: '/resources/life-transition-guide.pdf'
+                        url: '/resources/life-transition-guide.pdf';
                     }
                 ],
                 status: 'upcoming',
@@ -2238,7 +2239,7 @@ export class DemoDataService {
                         userId: 'user-art-001',
                         username: 'CreativeHealing',
                         registeredDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-                        attended: false
+                        attended: false;
                     }
                 ],
                 isVirtual: false,
@@ -2248,13 +2249,13 @@ export class DemoDataService {
                         title: 'Art Therapy Supply List',
                         type: 'document',
                         url: '/resources/art-supplies.pdf',
-                        description: 'Basic supplies needed for the session'
+                        description: 'Basic supplies needed for the session';
                     },
                     {
                         id: 'resource-art-002',
                         title: 'Art for Emotional Expression Guide',
                         type: 'worksheet',
-                        url: '/resources/art-expression-worksheet.pdf'
+                        url: '/resources/art-expression-worksheet.pdf';
                     }
                 ],
                 status: 'upcoming',
@@ -2280,7 +2281,7 @@ export class DemoDataService {
                 ],
                 status: 'active',
                 interactionCount: 28,
-                isMatched: true
+                isMatched: true;
             },
             {
                 id: 'connection-mentor-001',
@@ -2297,7 +2298,7 @@ export class DemoDataService {
                 ],
                 status: 'active',
                 interactionCount: 45,
-                isMatched: true
+                isMatched: true;
             },
             {
                 id: 'connection-study-001',
@@ -2314,7 +2315,7 @@ export class DemoDataService {
                 ],
                 status: 'active',
                 interactionCount: 12,
-                isMatched: true
+                isMatched: true;
             }
         ];
     }
@@ -2335,7 +2336,7 @@ export class DemoDataService {
                         description: 'Provided meaningful support to 10+ community members',
                         icon: '💙',
                         earnedDate: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
-                        category: 'helping'
+                        category: 'helping';
                     },
                     {
                         id: 'badge-participation-001',
@@ -2343,10 +2344,10 @@ export class DemoDataService {
                         description: 'Engaged in community for 30+ consecutive days',
                         icon: '⭐',
                         earnedDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-                        category: 'participation'
+                        category: 'participation';
                     }
                 ],
-                isOnline: true
+                isOnline: true;
             },
             {
                 id: 'helper-community-001',
@@ -2362,7 +2363,7 @@ export class DemoDataService {
                         description: 'Outstanding leadership and guidance in the community',
                         icon: '🌟',
                         earnedDate: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
-                        category: 'leadership'
+                        category: 'leadership';
                     },
                     {
                         id: 'badge-mentor-001',
@@ -2370,10 +2371,10 @@ export class DemoDataService {
                         description: 'Mentored 25+ community members',
                         icon: '🤝',
                         earnedDate: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
-                        category: 'helping'
+                        category: 'helping';
                     }
                 ],
-                isOnline: true
+                isOnline: true;
             },
             {
                 id: 'user-community-002',
@@ -2389,10 +2390,10 @@ export class DemoDataService {
                         description: 'Completed first week in the community',
                         icon: '👣',
                         earnedDate: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
-                        category: 'milestone'
+                        category: 'milestone';
                     }
                 ],
-                isOnline: false
+                isOnline: false;
             }
         ];
     }

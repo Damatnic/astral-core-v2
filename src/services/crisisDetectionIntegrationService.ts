@@ -3,7 +3,7 @@
  * 
  * Provides a unified interface for components to perform crisis detection
  * with automatic escalation workflow integration for severe cases.
- */
+ */;
 
 import { aiServiceManager } from './optimizedAIService';
 
@@ -51,10 +51,10 @@ export class CrisisDetectionIntegrationService {
     options: CrisisAnalysisOptions = {}
   ): Promise<CrisisAnalysisResult> {
     try {
-      // Get crisis detection service
+      // Get crisis detection service;
       const crisisService = await aiServiceManager.getCrisisDetectionService();
       
-      // Prepare user context for analysis and potential escalation
+      // Prepare user context for analysis and potential escalation;
       const userContext = {
         userId: options.userId || 'anonymous',
         conversationId: options.conversationId || `chat-${Date.now()}`,
@@ -67,10 +67,10 @@ export class CrisisDetectionIntegrationService {
         accessibilityNeeds: options.userContext?.accessibilityNeeds || [],
         preferredContactMethod: options.userContext?.preferredContactMethod || 'chat',
         timeZone: options.userContext?.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone,
-        location: options.userContext?.location
+        location: options.userContext?.location;
       };
 
-      // Perform crisis analysis with escalation integration
+      // Perform crisis analysis with escalation integration;
       const result = await crisisService.analyze(text, userContext);
       
       return {
@@ -84,7 +84,7 @@ export class CrisisDetectionIntegrationService {
         escalationResponse: result.escalationResponse,
         riskAssessment: result.riskAssessment,
         enhanced: result.enhanced,
-        error: result.error
+        error: result.error;
       } catch (error) {
       console.error('Crisis detection analysis failed:', error);
       return {
@@ -95,7 +95,7 @@ export class CrisisDetectionIntegrationService {
         escalationRequired: false,
         emergencyServicesRequired: false,
         enhanced: false,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error);
       }
   }
 
@@ -112,13 +112,14 @@ export class CrisisDetectionIntegrationService {
       const sessionData = {
         ...options.sessionData,
         messagesSent: i + 1,
-        sessionDuration: options.sessionData?.sessionDuration || (i * 30000) // Estimate 30s per message
+        sessionDuration: options.sessionData?.sessionDuration || (i * 30000) // Estimate 30s per message;
       };
       
       const result = await this.analyzeTextForCrisis(messages[i], {
         ...options,
         sessionData
-      });
+      };
+  };
       
       results.push(result);
       
@@ -153,7 +154,7 @@ export class CrisisDetectionIntegrationService {
     const crisisResults = results.filter(r => r.isCrisis);
     const escalationTriggered = results.some(r => r.escalationRequired && r.escalationResponse);
     
-    // Determine highest severity
+    // Determine highest severity;
     const severityLevels = ['none', 'low', 'medium', 'high', 'critical'];
     const highestSeverity = crisisResults.reduce((highest, result) => {
       const currentIndex = severityLevels.indexOf(result.severity);
@@ -161,8 +162,8 @@ export class CrisisDetectionIntegrationService {
       return currentIndex > highestIndex ? result.severity : highest;
     }, 'none');
     
-    // Collect recommended actions
-    const recommendedActions = crisisResults
+    // Collect recommended actions;
+    const recommendedActions = crisisResults;
       .flatMap(r => r.interventionRecommendations || [])
       .map(rec => {
         // Type guard for recommendation object
@@ -190,7 +191,7 @@ export class CrisisDetectionIntegrationService {
     context: { source: string; [key: string]: any }
   ): Promise<void> {
     try {
-      // Create emergency escalation event
+      // Create emergency escalation event;
       const escalationData = {
         userId,
         severity,
@@ -218,6 +219,6 @@ export class CrisisDetectionIntegrationService {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const crisisDetectionIntegrationService = new CrisisDetectionIntegrationService();
 export default crisisDetectionIntegrationService;

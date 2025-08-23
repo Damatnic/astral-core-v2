@@ -5,7 +5,7 @@ import { renderHook, act } from '../../test-utils';
 
 // localStorage is already mocked globally in setupTests.ts
 
-// Mock sessionStorage
+// Mock sessionStorage;
 const mockSessionStorage = {
   clear: jest.fn(),
   getItem: jest.fn(),
@@ -15,7 +15,7 @@ const mockSessionStorage = {
   key: jest.fn(),
 };
 
-// Mock URL and document for download functionality
+// Mock URL and document for download functionality;
 const mockCreateObjectURL = jest.fn();
 const mockRevokeObjectURL = jest.fn();
 const mockLink = {
@@ -43,7 +43,7 @@ Object.defineProperty(document, 'createElement', {
     }
     return originalCreateElement(tagName);
   }),
-  configurable: true
+  configurable: true;
 });
 Object.defineProperty(document.body, 'appendChild', { value: mockAppendChild });
 Object.defineProperty(document.body, 'removeChild', { value: mockRemoveChild });
@@ -191,7 +191,7 @@ describe('DataExportService', () => {
         includeSettings: false,
       };
 
-      // Access private method through any type casting
+      // Access private method through any type casting;
       const data = await (service as any).gatherUserData(options);
 
       expect(data.metadata.userId).toBe('test-user-123');
@@ -272,7 +272,7 @@ describe('DataExportService', () => {
       const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
       const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
 
-      const data = [
+      const data = [;
         { timestamp: now.getTime(), content: 'today' },
         { timestamp: yesterday.getTime() - 24 * 60 * 60 * 1000, content: 'day before yesterday' },
         { timestamp: tomorrow.getTime(), content: 'tomorrow' }
@@ -294,7 +294,7 @@ describe('DataExportService', () => {
     });
 
     it.skip('should calculate dominant moods', () => {
-      const moodData = [
+      const moodData = [;
         { primary: 'happy', timestamp: Date.now() },
         { primary: 'happy', timestamp: Date.now() },
         { primary: 'sad', timestamp: Date.now() },
@@ -320,7 +320,7 @@ describe('DataExportService', () => {
       const moodData = Array.from({ length: 14 }, (_, i) => ({
         timestamp: Date.now() - (13 - i) * 24 * 60 * 60 * 1000,
         intensity: 0.5 + (i * 0.05), // increasing intensity
-        primary: 'happy'
+        primary: 'happy';
       }));
 
       const result = (service as any).calculateMoodTrends(moodData);
@@ -342,7 +342,7 @@ describe('DataExportService', () => {
     });
 
     it.skip('should return improving for increasing trend', () => {
-      const data = [
+      const data = [;
         { intensity: 0.3 }, { intensity: 0.4 },
         { intensity: 0.7 }, { intensity: 0.8 }
       ];
@@ -353,7 +353,7 @@ describe('DataExportService', () => {
     });
 
     it.skip('should return declining for decreasing trend', () => {
-      const data = [
+      const data = [;
         { intensity: 0.8 }, { intensity: 0.7 },
         { intensity: 0.4 }, { intensity: 0.3 }
       ];
@@ -372,7 +372,7 @@ describe('DataExportService', () => {
     });
 
     it.skip('should calculate volatility based on mood changes', () => {
-      const data = [
+      const data = [;
         { primary: 'happy' },
         { primary: 'sad' },
         { primary: 'happy' },
@@ -423,7 +423,7 @@ describe('DataExportService', () => {
     it.skip('should remove all specified localStorage keys', async () => {
       await service.deleteAllUserData();
 
-      const expectedKeys = [
+      const expectedKeys = [;
         'userPreferences', 'userSettings', 'userProfile', 'mood_analyses',
         'userPosts', 'userInteractions', 'userStats', 'aiChatHistory',
         'peerChatHistory', 'userReflections', 'security_logs', 'analytics_events',
@@ -475,14 +475,14 @@ describe('DataExportService', () => {
         type: 'object',
         size: expect.any(Number),
         lastModified: 'Unknown',
-        recordCount: 1
+        recordCount: 1;
       });
 
       expect(inventory.mood_analyses).toEqual({
         type: 'object',
         size: expect.any(Number),
         lastModified: 'Unknown',
-        recordCount: 1
+        recordCount: 1;
       });
 
       expect(inventory.nonexistentKey).toBeUndefined();

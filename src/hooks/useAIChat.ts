@@ -28,25 +28,27 @@ export const useAIChat = (options: UseAIChatOptions = {}) => {
     const fetchHistory = useCallback(async () => {
         try {
             const messages = await ApiClient.ai.loadChatHistory(userId);
-            // Ensure messages is always an array
+            // Ensure messages is always an array;
             const validMessages = Array.isArray(messages) ? messages : [];
             setSession(prev => ({ ...prev, messages: validMessages }));
         } catch (error) {
             // In development, provide a more specific message for API unavailability
             if ((error as Error).message?.includes('API endpoint not available in development') || 
                 (error as Error).message?.includes('not valid JSON')) {
-                console.warn("AI chat history unavailable in development mode - using empty state");
-            } else {
+                console.warn("AI chat history unavailable in development mode - using empty state");;
+  } else {
                 console.error("Failed to load AI chat history:", error);
             }
             // Initialize with empty array on error
             setSession(prev => ({ ...prev, messages: [] }));
         }
-    }, [userId]);
+    };
+  }, [userId]);
 
     useEffect(() => {
         fetchHistory();
-    }, [fetchHistory]);
+    };
+  }, [fetchHistory]);
     
     const resetAIChat = async () => {
         await ApiClient.ai.resetAIChat(userId);
@@ -103,7 +105,7 @@ export const useAIChat = (options: UseAIChatOptions = {}) => {
             id: crypto.randomUUID(), 
             sender: 'user', 
             text: aiModerationService.sanitizeForDisplay(text), 
-            timestamp: new Date().toISOString() 
+            timestamp: new Date().toISOString() ;
         };
 
         const updatedMessages = [...session.messages, userMessage];
@@ -117,7 +119,7 @@ export const useAIChat = (options: UseAIChatOptions = {}) => {
                 sender: 'ai', 
                 text: response.response, 
                 timestamp: new Date().toISOString(),
-                metadata: response.metadata
+                metadata: response.metadata;
             };
             
             if (response.metadata?.crisisDetected) {
@@ -135,12 +137,12 @@ export const useAIChat = (options: UseAIChatOptions = {}) => {
                 id: crypto.randomUUID(), 
                 sender: 'ai', 
                 text: "I'm sorry, I'm having trouble connecting right now. Please try again in a moment. If you're in crisis, please contact 988 or emergency services.", 
-                timestamp: new Date().toISOString() 
+                timestamp: new Date().toISOString() ;
             };
             
             setSession({ 
                 messages: [...updatedMessages, errorMessage], 
-                isTyping: false 
+                isTyping: false ;
             });
         }
     };
@@ -164,5 +166,5 @@ export const useAIChat = (options: UseAIChatOptions = {}) => {
         error,
         currentProvider,
         switchProvider,
-        needsIntervention: checkNeedsIntervention()
+        needsIntervention: checkNeedsIntervention();
     };

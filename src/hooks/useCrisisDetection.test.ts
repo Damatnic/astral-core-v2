@@ -7,7 +7,7 @@ jest.mock('../services/crisisDetectionService', () => ({
   crisisDetectionService: {
     analyzeCrisisContent: jest.fn(),
     getEscalationActions: jest.fn(),
-    generateCrisisResponse: jest.fn()
+    generateCrisisResponse: jest.fn();
   }
 }));
 
@@ -36,11 +36,11 @@ describe('useCrisisDetection Hook', () => {
       triggeredKeywords: ['hurt myself', 'no point'],
       sentimentScore: -0.8,
       contextualFactors: ['recent_loss'],
-      urgencyLevel: 8
+      urgencyLevel: 8;
     }
   };
 
-  const mockEscalationActions = [
+  const mockEscalationActions = [;
     { type: 'immediate_response', description: 'Provide immediate support' },
     { type: 'resource_sharing', description: 'Share crisis resources' }
   ];
@@ -278,7 +278,7 @@ describe('useCrisisDetection Hook', () => {
     const safeResult = { 
       ...mockAnalysisResult, 
       hasCrisisIndicators: false, 
-      severityLevel: 'none' as const 
+      severityLevel: 'none' as const ;
     };
     
     (crisisDetectionService.analyzeCrisisContent as jest.Mock)
@@ -328,7 +328,7 @@ describe('useCrisisDetection Hook', () => {
     const suicidalResult = {
       ...mockAnalysisResult,
       detectedCategories: ['suicidal'],
-      emergencyServices: true
+      emergencyServices: true;
     };
     
     (crisisDetectionService.analyzeCrisisContent as jest.Mock).mockReturnValue(suicidalResult);
@@ -364,7 +364,7 @@ describe('useCrisisDetection Hook', () => {
     const selfHarmResult = {
       ...mockAnalysisResult,
       detectedCategories: ['self-harm'],
-      emergencyServices: false
+      emergencyServices: false;
     };
     
     (crisisDetectionService.analyzeCrisisContent as jest.Mock).mockReturnValue(selfHarmResult);
@@ -387,7 +387,7 @@ describe('useCrisisDetection Hook', () => {
     const substanceResult = {
       ...mockAnalysisResult,
       detectedCategories: ['substance-abuse'],
-      emergencyServices: false
+      emergencyServices: false;
     };
     
     (crisisDetectionService.analyzeCrisisContent as jest.Mock).mockReturnValue(substanceResult);
@@ -416,7 +416,7 @@ describe('useCrisisDetection Hook', () => {
   it.skip('should handle emergency mode in crisis alert', async () => {
     const emergencyResult = {
       ...mockAnalysisResult,
-      emergencyServices: true
+      emergencyServices: true;
     };
     
     (crisisDetectionService.analyzeCrisisContent as jest.Mock).mockReturnValue(emergencyResult);

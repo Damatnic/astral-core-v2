@@ -3,7 +3,7 @@
  * 
  * Provides basic service worker functionality interface
  * for compatibility with existing hooks.
- */
+ */;
 
 export interface CacheStatus {
   staticResources: boolean;
@@ -80,7 +80,7 @@ class ServiceWorkerManager {
       aiModels: false,
       swRegistered: 'serviceWorker' in navigator,
       cacheVersion: '1.0.0',
-      updateAvailable: false
+      updateAvailable: false;
     }
 
   async skipWaiting(): Promise<void> {
@@ -146,7 +146,7 @@ class ServiceWorkerManager {
   }
 
   getNetworkStatus(): { isOnline: boolean; type?: string } {
-    // Type-safe access to network connection API
+    // Type-safe access to network connection API;
     const navigatorWithConnection = navigator as Navigator & {
       connection?: {
         effectiveType?: string;
@@ -154,7 +154,7 @@ class ServiceWorkerManager {
     
     return {
       isOnline: navigator.onLine,
-      type: navigatorWithConnection.connection?.effectiveType || 'unknown'
+      type: navigatorWithConnection.connection?.effectiveType || 'unknown';
     }
 }
 

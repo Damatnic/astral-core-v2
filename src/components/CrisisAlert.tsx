@@ -3,7 +3,7 @@
  * 
  * Displays crisis detection alerts with appropriate urgency levels,
  * emergency actions, and resource connections.
- */
+ */;
 
 import { useState, useEffect } from 'react';
 import { ShieldIcon,
@@ -27,7 +27,7 @@ export interface CrisisAlertProps {
   onEmergencyCall?: () => void;
   onCrisisChat?: () => void;
   userType?: 'seeker' | 'helper';
-  onClose?: () => void; // Added for backward compatibility
+  onClose?: () => void; // Added for backward compatibility;
   variant?: string; // Added for backward compatibility
 }
 
@@ -45,21 +45,21 @@ const emergencyContacts: EmergencyContact[] = [
     number: '988',
     description: 'Free, confidential crisis counseling',
     available: '24/7',
-    type: 'call'
+    type: 'call';
   },
   {
     name: 'Crisis Text Line',
     number: '741741',
     description: 'Text HOME for immediate support',
     available: '24/7',
-    type: 'text'
+    type: 'text';
   },
   {
     name: 'Emergency Services',
     number: '911',
     description: 'Immediate emergency assistance',
     available: '24/7',
-    type: 'call'
+    type: 'call';
   }
 ];
 
@@ -85,15 +85,16 @@ export function CrisisAlert({
       setIsVisible(true);
       setTimeShown(new Date());
       
-      // Auto-focus for screen readers
+      // Auto-focus for screen readers;
       const alertElement = document.getElementById('crisis-alert');
       if (alertElement) {
         alertElement.focus();
-      }
-    } else {
+      };
+  } else {
       const timer = setTimeout(() => setIsVisible(false), 300);
       return () => clearTimeout(timer);
     }
+  };
   }, [show]);
 
   const handleDismiss = () => {
@@ -111,16 +112,16 @@ export function CrisisAlert({
     
     // For web, we can try to open the phone app
     if (contact.type === 'call') {
-      window.open(`tel:${contact.number}`, '_self');
-    } else if (contact.type === 'text') {
+      window.open(`tel:${contact.number}`, '_self');;
+  } else if (contact.type === 'text') {
       window.open(`sms:${contact.number}`, '_self');
     }
   };
 
   const handleCrisisChat = () => {
     if (onCrisisChat) {
-      onCrisisChat();
-    } else {
+      onCrisisChat();;
+  } else {
       // Open crisis chat website
       window.open('https://suicidepreventionlifeline.org/chat/', '_blank');
     }
@@ -134,7 +135,7 @@ export function CrisisAlert({
           icon: AlertTriangle,
           color: '#dc2626',
           pulse: true,
-          title: 'IMMEDIATE ATTENTION NEEDED'
+          title: 'IMMEDIATE ATTENTION NEEDED';
         };
       case 'high':
         return {
@@ -142,7 +143,7 @@ export function CrisisAlert({
           icon: AlertTriangle,
           color: '#ea580c',
           pulse: true,
-          title: 'Crisis Support Needed'
+          title: 'Crisis Support Needed';
         };
       case 'medium':
         return {
@@ -150,7 +151,7 @@ export function CrisisAlert({
           icon: ShieldIcon,
           color: '#d97706',
           pulse: false,
-          title: 'Support Recommended'
+          title: 'Support Recommended';
         };
       case 'low':
         return {
@@ -158,7 +159,7 @@ export function CrisisAlert({
           icon: ShieldIcon,
           color: '#059669',
           pulse: false,
-          title: 'Resources Available'
+          title: 'Resources Available';
         };
       default:
         return {
@@ -166,7 +167,7 @@ export function CrisisAlert({
           icon: ShieldIcon,
           color: '#6b7280',
           pulse: false,
-          title: 'Support Available'
+          title: 'Support Available';
         }
   };
 
@@ -176,7 +177,7 @@ export function CrisisAlert({
   if (!isVisible) return null;
 
   return (
-    <div 
+    <div; 
       className={[
         'crisis-alert',
         config.className,
@@ -194,7 +195,7 @@ export function CrisisAlert({
         {/* Header */}
         <div className="crisis-alert__header">
           <div className="crisis-alert__icon-container">
-            <IconComponent 
+            <IconComponent; 
               className={config.pulse ? 'crisis-alert__icon crisis-alert__icon--pulse' : 'crisis-alert__icon'}
               style={{ color: config.color }}
               size={24}
@@ -215,10 +216,10 @@ export function CrisisAlert({
           </div>
 
           {!emergencyMode && (
-            <button
+            <button;
               className="crisis-alert__close"
               onClick={handleDismiss}
-              aria-label="Close alert"
+              aria-label="Close alert";
               type="button"
             >
               <X size={20} />
@@ -281,7 +282,7 @@ export function CrisisAlert({
 
         {/* Crisis Chat Button */}
         <div className="crisis-alert__chat-section">
-          <button
+          <button;
             className="crisis-alert__chat-button"
             onClick={handleCrisisChat}
             type="button"
@@ -318,7 +319,7 @@ export function CrisisAlert({
         {/* Footer Actions */}
         {!emergencyMode && (
           <div className="crisis-alert__footer">
-            <button
+            <button;
               className="crisis-alert__dismiss-button"
               onClick={handleDismiss}
               onKeyDown={(e) => {

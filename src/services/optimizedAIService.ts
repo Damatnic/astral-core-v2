@@ -1,12 +1,12 @@
 // AI Services Lazy Loading Configuration
 // Optimizes heavy AI/ML dependencies for better performance
 
-// Import enhanced crisis detection service
+// Import enhanced crisis detection service;
 import { enhancedCrisisKeywordDetectionService } from './enhancedCrisisKeywordDetectionService';
-// Import crisis escalation workflow service
+// Import crisis escalation workflow service;
 import { crisisEscalationWorkflowService } from './crisisEscalationWorkflowService';
 
-// Lazy-loaded AI service modules
+// Lazy-loaded AI service modules;
 export const createLazyAIService = () => {
   let tensorflowPromise: Promise<unknown> | null = null;
 
@@ -21,7 +21,8 @@ export const createLazyAIService = () => {
       }).catch(error => {
         console.warn('Failed to load TensorFlow:', error);
         return null;
-      });
+      };
+  };
       return tensorflowPromise;
     },
 
@@ -43,7 +44,7 @@ export const createLazyAIService = () => {
       return {
         analyze: async (text: string, userContext?: any) => {
           try {
-            // Use the comprehensive enhanced crisis detection
+            // Use the comprehensive enhanced crisis detection;
             const enhancedResult = await enhancedCrisisKeywordDetectionService.analyzeEnhancedCrisisKeywords(text);
             
             // Fallback to basic sentiment analysis if enhanced service fails
@@ -59,7 +60,7 @@ export const createLazyAIService = () => {
                   comparative: basicResult.comparative,
                   isCrisis: basicResult.score < -3 || basicResult.comparative < -0.5,
                   severity: 'low',
-                  enhanced: false
+                  enhanced: false;
                 } else {
                 // Fallback when sentiment analysis is unavailable
                 return {
@@ -67,11 +68,11 @@ export const createLazyAIService = () => {
                   comparative: 0,
                   isCrisis: false,
                   severity: 'low',
-                  enhanced: false
+                  enhanced: false;
                 }
             }
 
-            // Trigger crisis escalation workflow for severe cases
+            // Trigger crisis escalation workflow for severe cases;
             let escalationResponse = null;
             if (enhancedResult.escalationRequired && userContext) {
               try {
@@ -94,10 +95,10 @@ export const createLazyAIService = () => {
               escalationRequired: enhancedResult.escalationRequired,
               emergencyServicesRequired: enhancedResult.emergencyServicesRequired,
               escalationResponse: escalationResponse,
-              enhanced: true
+              enhanced: true;
             } catch (error) {
             console.error('Enhanced crisis detection failed, falling back to basic:', error);
-            // Fallback to basic sentiment analysis
+            // Fallback to basic sentiment analysis;
             const [sentiment] = await Promise.all([
               this.loadSentimentAnalysis()
             ]);
@@ -110,7 +111,7 @@ export const createLazyAIService = () => {
                 isCrisis: basicResult.score < -3 || basicResult.comparative < -0.5,
                 severity: 'low',
                 enhanced: false,
-                error: error instanceof Error ? error.message : 'Unknown error'
+                error: error instanceof Error ? error.message : 'Unknown error';
               } else {
               return {
                 score: 0,
@@ -118,7 +119,7 @@ export const createLazyAIService = () => {
                 isCrisis: false,
                 severity: 'low',
                 enhanced: false,
-                error: 'Sentiment analysis unavailable'
+                error: 'Sentiment analysis unavailable';
               }
           }
         }
@@ -127,23 +128,23 @@ export const createLazyAIService = () => {
     // Helper method to trigger crisis escalation workflow
     async triggerCrisisEscalation(crisisAnalysis: any, userContext: any, _originalText: string) {
       try {
-        // Prepare user context for escalation
+        // Prepare user context for escalation;
         const escalationUserContext = {
           languageCode: userContext.languageCode || 'en',
           culturalContext: userContext.culturalContext,
           accessibilityNeeds: userContext.accessibilityNeeds || [],
           preferredContactMethod: userContext.preferredContactMethod || 'chat',
           timeZone: userContext.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone,
-          location: userContext.location
+          location: userContext.location;
         };
 
-        // Prepare session data for escalation
+        // Prepare session data for escalation;
         const escalationSessionData = {
           conversationId: userContext.conversationId || 'unknown',
           messagesSent: userContext.messagesSent || 1,
           sessionDuration: userContext.sessionDuration || 0,
           previousEscalations: userContext.previousEscalations || 0,
-          riskTrend: userContext.riskTrend || 'increasing'
+          riskTrend: userContext.riskTrend || 'increasing';
         };
 
         // Initiate crisis escalation with correct parameters
@@ -170,7 +171,7 @@ export const createLazyAIService = () => {
           if (!tf || typeof tf !== 'object' || !('tensor1d' in tf)) {
             throw new Error('TensorFlow not properly loaded');
           }
-          const tfTyped = tf as any; // Type assertion for TensorFlow
+          const tfTyped = tf as any; // Type assertion for TensorFlow;
           const tensor = tfTyped.tensor1d(data);
           const normalized = tfTyped.div(tensor, tfTyped.max(tensor));
           const result = await normalized.data();
@@ -181,7 +182,7 @@ export const createLazyAIService = () => {
       }
   };
 
-// Service worker optimization for AI caching
+// Service worker optimization for AI caching;
 export const aiCacheStrategy = {
   // Cache AI model results for offline use
   cacheAIResults: async (key: string, result: any) => {
@@ -213,17 +214,17 @@ export const aiCacheStrategy = {
   }
 };
 
-// Progressive enhancement for AI features
+// Progressive enhancement for AI features;
 export const progressiveAIEnhancement = {
   // Check if AI features should be enabled based on device capabilities
   shouldEnableAI: () => {
-    // Extended Navigator interface for device capabilities
+    // Extended Navigator interface for device capabilities;
     const navigatorExt = navigator as Navigator & { 
       memory?: number; 
       hardwareConcurrency?: number 
     };
     const { memory, hardwareConcurrency } = navigatorExt;
-    const hasGoodMemory = !memory || memory >= 4; // 4GB+ RAM
+    const hasGoodMemory = !memory || memory >= 4; // 4GB+ RAM;
     const hasMultipleCores = !hardwareConcurrency || hardwareConcurrency >= 2;
     const isOnline = navigator.onLine;
     
@@ -232,8 +233,8 @@ export const progressiveAIEnhancement = {
 
   // Fallback implementations for low-powered devices
   getBasicCrisisDetection: () => {
-    // Simple keyword-based detection for fallback
-    const crisisKeywords = [
+    // Simple keyword-based detection for fallback;
+    const crisisKeywords = [;
       'suicide', 'kill myself', 'end it all', 'want to die',
       'hurt myself', 'self harm', 'overdose', 'can\'t go on'
     ];
@@ -241,7 +242,7 @@ export const progressiveAIEnhancement = {
     return {
       analyze: (text: string) => {
         const lowerText = text.toLowerCase();
-        const foundKeywords = crisisKeywords.filter(keyword => 
+        const foundKeywords = crisisKeywords.filter(keyword => ;
           lowerText.includes(keyword)
         );
         
@@ -249,12 +250,12 @@ export const progressiveAIEnhancement = {
           score: foundKeywords.length > 0 ? -5 : 0,
           comparative: foundKeywords.length * -0.8,
           isCrisis: foundKeywords.length > 0,
-          method: 'keyword-based'
+          method: 'keyword-based';
         }
     }
 };
 
-// AI Service Manager with smart loading
+// AI Service Manager with smart loading;
 export class AIServiceManager {
   private readonly services: any = {};
   private readonly lazyLoader = createLazyAIService();
@@ -262,7 +263,7 @@ export class AIServiceManager {
   async getCrisisDetectionService(useAdvanced = true) {
     const cacheKey = `crisis-detection-${useAdvanced ? 'enhanced' : 'basic'}`;
     
-    // Check cache first
+    // Check cache first;
     let cached = await aiCacheStrategy.getCachedAIResult(cacheKey);
     if (cached?.timestamp && Date.now() - cached.timestamp < 3600000) { // 1 hour cache
       return cached.service;
@@ -316,7 +317,8 @@ export class AIServiceManager {
             setTimeout(() => {
               this.lazyLoader.loadSentimentAnalysis().catch(() => {
                 // Silently fail for preloading
-              });
+              };
+  };
             }, 2000);
           }
         } catch (error) {
@@ -327,7 +329,7 @@ export class AIServiceManager {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const aiServiceManager = new AIServiceManager();
 
 // Initialize preloading

@@ -18,11 +18,11 @@
  * - Integration with existing crisis detection services
  * - Cultural and accessibility considerations
  * - Comprehensive logging and audit trail for emergency situations
- */
+ */;
 
 import { ComprehensiveCrisisAnalysisResult } from './enhancedCrisisDetectionIntegrationService';
 
-// Crisis escalation interfaces
+// Crisis escalation interfaces;
 export type EscalationTier = 'peer-support' | 'crisis-counselor' | 'emergency-team' | 'emergency-services' | 'medical-emergency';
 
 export type EscalationTrigger = 
@@ -70,8 +70,8 @@ export interface CrisisEscalationRequest {
     confidenceScore: number;
     automaticTrigger: boolean;
     reviewRequired: boolean;
-  }
-
+  };
+}
 export interface EscalationTierConfig {
   tier: EscalationTier;
   name: string;
@@ -221,8 +221,8 @@ class CrisisEscalationWorkflowService {
     }
   ): Promise<EscalationResponse> {
     try {
-      // Step 1: Determine escalation requirements
-      const escalationRequest = await this.createEscalationRequest(
+      // Step 1: Determine escalation requirements;
+      const escalationRequest = await this.createEscalationRequest(;
         crisisAnalysis,
         userId,
         userContext,
@@ -230,11 +230,11 @@ class CrisisEscalationWorkflowService {
         manualOverride
       );
 
-      // Step 2: Validate escalation requirements and select tier
+      // Step 2: Validate escalation requirements and select tier;
       const selectedTier = await this.selectEscalationTier(escalationRequest);
 
-      // Step 3: Initiate escalation workflow
-      const escalationResponse = await this.executeEscalationWorkflow(
+      // Step 3: Initiate escalation workflow;
+      const escalationResponse = await this.executeEscalationWorkflow(;
         escalationRequest,
         selectedTier
       );
@@ -278,7 +278,7 @@ class CrisisEscalationWorkflowService {
         detectionMethod: 'emergency-escalation',
         confidenceScore: 1.0,
         automaticTrigger: false,
-        reviewRequired: false
+        reviewRequired: false;
       }
     };
 
@@ -308,7 +308,7 @@ class CrisisEscalationWorkflowService {
     escalation.notes = notes;
     escalation.responderId = responderId;
 
-    // Update timeline
+    // Update timeline;
     const now = new Date();
     switch (status) {
       case 'acknowledged':
@@ -351,7 +351,7 @@ class CrisisEscalationWorkflowService {
         return true;
       })
       .sort((a, b) => {
-        // Sort by success rate and response time
+        // Sort by success rate and response time;
         const aScore = (a.successRate * 0.7) + ((1 / a.averageResponseTime) * 0.3);
         const bScore = (b.successRate * 0.7) + ((1 / b.averageResponseTime) * 0.3);
         return bScore - aScore;
@@ -374,13 +374,13 @@ class CrisisEscalationWorkflowService {
     manualOverride?: { tier: EscalationTier; reason: string }
   ): Promise<CrisisEscalationRequest> {
     
-    // Determine trigger reason based on analysis or manual override
+    // Determine trigger reason based on analysis or manual override;
     const triggerReason = manualOverride ? 'manual-escalation' : this.determineTriggerReason(crisisAnalysis);
     
-    // Determine requested tier based on risk level
+    // Determine requested tier based on risk level;
     const requestedTier = manualOverride?.tier || this.determineRequestedTier(crisisAnalysis);
     
-    // Map urgency level
+    // Map urgency level;
     const urgencyLevel = this.mapUrgencyLevel(crisisAnalysis?.overallSeverity || 'emergency');
 
     return {
@@ -407,7 +407,7 @@ class CrisisEscalationWorkflowService {
           primaryEmotion: 'distress',
           intensity: 0.95,
           stability: 0.2,
-          crisisAlignment: 0.9
+          crisisAlignment: 0.9;
         },
         analysisMetadata: {
           methodsUsed: ['fallback'],
@@ -415,10 +415,10 @@ class CrisisEscalationWorkflowService {
           confidenceBreakdown: {
             keyword: 0.5,
             ai: 0.5,
-            overall: 0.5
+            overall: 0.5;
           },
           flaggedConcerns: ['analysis-failure'],
-          analysisVersion: '1.0'
+          analysisVersion: '1.0';
         }
       },
       triggerReason,
@@ -430,22 +430,22 @@ class CrisisEscalationWorkflowService {
         detectionMethod: crisisAnalysis?.analysisMetadata?.methodsUsed?.[0] || 'fallback',
         confidenceScore: crisisAnalysis?.confidenceScore || 0.5,
         automaticTrigger: !manualOverride,
-        reviewRequired: urgencyLevel === 'emergency' && triggerReason === 'manual-escalation'
+        reviewRequired: urgencyLevel === 'emergency' && triggerReason === 'manual-escalation';
       }
     }
 
   private async selectEscalationTier(request: CrisisEscalationRequest): Promise<EscalationTierConfig> {
-    // Select the most appropriate tier based on risk level and emergency requirements
+    // Select the most appropriate tier based on risk level and emergency requirements;
     let selectedTier: EscalationTierConfig | undefined;
 
     // Priority selection based on risk level and emergency requirements
     if (request.crisisAnalysis.emergencyServicesRequired || request.crisisAnalysis.immediateRisk >= 90) {
-      selectedTier = this.escalationTiers.find(t => t.tier === 'emergency-services');
-    } else if (request.crisisAnalysis.immediateRisk >= 75) {
-      selectedTier = this.escalationTiers.find(t => t.tier === 'emergency-team');
-    } else if (request.crisisAnalysis.immediateRisk >= 50) {
-      selectedTier = this.escalationTiers.find(t => t.tier === 'crisis-counselor');
-    } else if (request.crisisAnalysis.immediateRisk >= 20) {
+      selectedTier = this.escalationTiers.find(t => t.tier === 'emergency-services');;
+  } else if (request.crisisAnalysis.immediateRisk >= 75) {
+      selectedTier = this.escalationTiers.find(t => t.tier === 'emergency-team');;
+  } else if (request.crisisAnalysis.immediateRisk >= 50) {
+      selectedTier = this.escalationTiers.find(t => t.tier === 'crisis-counselor');;
+  } else if (request.crisisAnalysis.immediateRisk >= 20) {
       selectedTier = this.escalationTiers.find(t => t.tier === 'peer-support');
     }
 
@@ -474,20 +474,20 @@ class CrisisEscalationWorkflowService {
       status: 'initiated',
       responderType: this.getResponderType(tier.tier),
       timeline: {
-        initiated: new Date()
+        initiated: new Date();
       },
       actions: [],
       outcome: {
         successful: false,
         safetyAchieved: false,
         requiresFollowup: false,
-        nextSteps: []
+        nextSteps: [];
       },
       notes: `Escalation initiated for ${request.triggerReason}`
     };
 
     try {
-      // Execute tier-specific actions
+      // Execute tier-specific actions;
       const sortedActions = [...tier.availableActions].sort((a, b) => a.priority - b.priority);
       for (const action of sortedActions) {
         const actionResult = await this.executeEscalationAction(action, request, tier);
@@ -515,8 +515,8 @@ class CrisisEscalationWorkflowService {
       
       // Only change status for specific scenarios that need different handling
       if (response.actions.length > 3 && !response.outcome.successful) {
-        response.status = 'in-progress';
-      } else if (response.actions.length > 5 && response.outcome.successful) {
+        response.status = 'in-progress';;
+  } else if (response.actions.length > 5 && response.outcome.successful) {
         response.status = 'resolved';
       }
 
@@ -543,7 +543,7 @@ class CrisisEscalationWorkflowService {
       performer: 'system',
       result: '',
       effectiveness: 0,
-      notes: ''
+      notes: '';
     };
 
     try {
@@ -598,7 +598,7 @@ class CrisisEscalationWorkflowService {
       status: 'initiated',
       responderType: 'automated',
       timeline: {
-        initiated: new Date()
+        initiated: new Date();
       },
       actions: [],
       outcome: {
@@ -610,8 +610,8 @@ class CrisisEscalationWorkflowService {
       notes: `Emergency escalation: ${context.description}`
     };
 
-    // Immediate emergency actions
-    const emergencyActions = [
+    // Immediate emergency actions;
+    const emergencyActions = [;
       {
         actionId: 'emergency-notification',
         type: 'notification' as const,
@@ -622,7 +622,7 @@ class CrisisEscalationWorkflowService {
         requiresApproval: false,
         estimatedDuration: 30000,
         successCriteria: ['Emergency services contacted', 'Response acknowledged'],
-        fallbackActions: ['backup-emergency-contact']
+        fallbackActions: ['backup-emergency-contact'];
       }
     ];
 
@@ -645,7 +645,7 @@ class CrisisEscalationWorkflowService {
     _tier: EscalationTierConfig
   ): Promise<string> {
     
-    const contacts = this.getEmergencyContacts(
+    const contacts = this.getEmergencyContacts(;
       request.userContext.location?.country,
       request.userContext.languageCode,
       request.urgencyLevel
@@ -669,7 +669,7 @@ class CrisisEscalationWorkflowService {
   ): Promise<string> {
     
     const preferredMethod = request.userContext.preferredContactMethod || 'phone';
-    const availableMethods = tier.contactMethods.filter(m => 
+    const availableMethods = tier.contactMethods.filter(m => ;
       m.type.includes(preferredMethod) || m.type === 'crisis-hotline'
     );
 
@@ -689,7 +689,7 @@ class CrisisEscalationWorkflowService {
     tier: EscalationTierConfig
   ): Promise<string> {
     
-    // Generate intervention plan based on crisis analysis
+    // Generate intervention plan based on crisis analysis;
     const interventionPlan = this.generateInterventionPlan(request.crisisAnalysis, tier);
     
     return `Intervention plan activated: ${interventionPlan.description}`;
@@ -701,11 +701,11 @@ class CrisisEscalationWorkflowService {
     _tier: EscalationTierConfig
   ): Promise<string> {
     
-    // Set up monitoring protocols
+    // Set up monitoring protocols;
     const monitoringProtocol = {
       frequency: this.getMonitoringFrequency(request.urgencyLevel),
       duration: this.getMonitoringDuration(request.crisisAnalysis.longTermRisk),
-      checkpoints: this.generateMonitoringCheckpoints(request.crisisAnalysis)
+      checkpoints: this.generateMonitoringCheckpoints(request.crisisAnalysis);
     };
 
     return `Monitoring protocol established: ${monitoringProtocol.frequency} checks for ${monitoringProtocol.duration}`;
@@ -717,14 +717,14 @@ class CrisisEscalationWorkflowService {
     tier: EscalationTierConfig
   ): Promise<string> {
     
-    // Create incident documentation
+    // Create incident documentation;
     const incidentDoc = {
       incidentId: request.id,
       timestamp: request.timestamp,
       severity: request.urgencyLevel,
       trigger: request.triggerReason,
       response: tier.tier,
-      outcome: 'in-progress'
+      outcome: 'in-progress';
     };
 
     return `Incident documented: ${incidentDoc.incidentId}`;
@@ -736,7 +736,7 @@ class CrisisEscalationWorkflowService {
     tier: EscalationTierConfig
   ): Promise<string> {
     
-    // Schedule follow-up activities
+    // Schedule follow-up activities;
     const followupSchedule = this.generateFollowupSchedule(request.crisisAnalysis, tier);
     
     return `Follow-up scheduled: ${followupSchedule.description}`;
@@ -796,7 +796,7 @@ class CrisisEscalationWorkflowService {
     const failedActions = actions.filter(a => a.status === 'failed');
     
     const successRate = actions.length > 0 ? completedActions.length / actions.length : 1;
-    const averageEffectiveness = completedActions.length > 0 
+    const averageEffectiveness = completedActions.length > 0 ;
       ? completedActions.reduce((sum, a) => sum + a.effectiveness, 0) / completedActions.length 
       : 0.8; // Default to good effectiveness if no actions executed
 
@@ -851,7 +851,7 @@ class CrisisEscalationWorkflowService {
         responseTargets: {
           acknowledgmentTime: 300000, // 5 minutes
           responseTime: 1800000, // 30 minutes
-          resolutionTime: 7200000 // 2 hours
+          resolutionTime: 7200000 // 2 hours;
         },
         availableActions: [
           {
@@ -864,7 +864,7 @@ class CrisisEscalationWorkflowService {
             requiresApproval: false,
             estimatedDuration: 1800000,
             successCriteria: ['Peer contacted', 'Support provided'],
-            fallbackActions: ['crisis-resource-provision']
+            fallbackActions: ['crisis-resource-provision'];
           }
         ],
         contactMethods: [
@@ -876,7 +876,7 @@ class CrisisEscalationWorkflowService {
             supportedLanguages: ['en', 'es', 'fr'],
             specializations: ['peer-support', 'emotional-support'],
             responseTime: 300000,
-            reliability: 0.85
+            reliability: 0.85;
           }
         ],
         capabilities: ['emotional-support', 'resource-sharing', 'active-listening'],
@@ -895,7 +895,7 @@ class CrisisEscalationWorkflowService {
         responseTargets: {
           acknowledgmentTime: 180000, // 3 minutes
           responseTime: 900000, // 15 minutes
-          resolutionTime: 3600000 // 1 hour
+          resolutionTime: 3600000 // 1 hour;
         },
         availableActions: [
           {
@@ -908,7 +908,7 @@ class CrisisEscalationWorkflowService {
             requiresApproval: false,
             estimatedDuration: 3600000,
             successCriteria: ['Safety established', 'Plan created', 'Resources provided'],
-            fallbackActions: ['emergency-team-escalation']
+            fallbackActions: ['emergency-team-escalation'];
           }
         ],
         contactMethods: [
@@ -921,7 +921,7 @@ class CrisisEscalationWorkflowService {
             supportedLanguages: ['en', 'es'],
             specializations: ['suicide-prevention', 'crisis-intervention'],
             responseTime: 60000,
-            reliability: 0.95
+            reliability: 0.95;
           }
         ],
         capabilities: ['crisis-assessment', 'safety-planning', 'professional-intervention'],
@@ -940,7 +940,7 @@ class CrisisEscalationWorkflowService {
         responseTargets: {
           acknowledgmentTime: 60000, // 1 minute
           responseTime: 300000, // 5 minutes
-          resolutionTime: 1800000 // 30 minutes
+          resolutionTime: 1800000 // 30 minutes;
         },
         availableActions: [
           {
@@ -953,7 +953,7 @@ class CrisisEscalationWorkflowService {
             requiresApproval: false,
             estimatedDuration: 1800000,
             successCriteria: ['Team dispatched', 'On-scene intervention', 'Safety secured'],
-            fallbackActions: ['emergency-services-escalation']
+            fallbackActions: ['emergency-services-escalation'];
           }
         ],
         contactMethods: [
@@ -965,7 +965,7 @@ class CrisisEscalationWorkflowService {
             supportedLanguages: ['en'],
             specializations: ['mobile-crisis', 'on-site-intervention'],
             responseTime: 300000,
-            reliability: 0.9
+            reliability: 0.9;
           }
         ],
         capabilities: ['on-site-intervention', 'crisis-stabilization', 'emergency-assessment'],
@@ -984,7 +984,7 @@ class CrisisEscalationWorkflowService {
         responseTargets: {
           acknowledgmentTime: 30000, // 30 seconds
           responseTime: 180000, // 3 minutes
-          resolutionTime: 900000 // 15 minutes
+          resolutionTime: 900000 // 15 minutes;
         },
         availableActions: [
           {
@@ -997,7 +997,7 @@ class CrisisEscalationWorkflowService {
             requiresApproval: false,
             estimatedDuration: 180000,
             successCriteria: ['Emergency services contacted', 'Response dispatched', 'Medical support provided'],
-            fallbackActions: ['backup-emergency-protocol']
+            fallbackActions: ['backup-emergency-protocol'];
           }
         ],
         contactMethods: [
@@ -1010,7 +1010,7 @@ class CrisisEscalationWorkflowService {
             supportedLanguages: ['en', 'es'],
             specializations: ['emergency-medical', 'police', 'fire'],
             responseTime: 180000,
-            reliability: 0.98
+            reliability: 0.98;
           }
         ],
         capabilities: ['emergency-medical', 'life-support', 'immediate-response'],
@@ -1034,13 +1034,13 @@ class CrisisEscalationWorkflowService {
         coverage: {
           geographic: ['US', 'Canada'],
           languages: ['en', 'es'],
-          demographics: ['all']
+          demographics: ['all'];
         },
         availability: '24/7',
         averageResponseTime: 180000,
         successRate: 0.98,
         userRating: 4.8,
-        lastUpdated: new Date()
+        lastUpdated: new Date();
       },
       {
         contactId: 'suicide-prevention-988',
@@ -1055,13 +1055,13 @@ class CrisisEscalationWorkflowService {
         coverage: {
           geographic: ['US'],
           languages: ['en', 'es'],
-          demographics: ['all']
+          demographics: ['all'];
         },
         availability: '24/7',
         averageResponseTime: 60000,
         successRate: 0.95,
         userRating: 4.7,
-        lastUpdated: new Date()
+        lastUpdated: new Date();
       },
       {
         contactId: 'crisis-text-line',
@@ -1082,7 +1082,7 @@ class CrisisEscalationWorkflowService {
         averageResponseTime: 300000,
         successRate: 0.92,
         userRating: 4.6,
-        lastUpdated: new Date()
+        lastUpdated: new Date();
       }
     ];
   }
@@ -1109,7 +1109,7 @@ class CrisisEscalationWorkflowService {
         'medical-emergency': 0
       },
       peakHours: [],
-      commonTriggers: []
+      commonTriggers: [];
     }
 
   private generateInterventionPlan(analysis: ComprehensiveCrisisAnalysisResult, tier: EscalationTierConfig): { description: string } {
@@ -1173,19 +1173,19 @@ class CrisisEscalationWorkflowService {
       status: 'initiated',
       responderType: 'automated',
       timeline: {
-        initiated: new Date()
+        initiated: new Date();
       },
       actions: [],
       outcome: {
         successful: false,
         safetyAchieved: false,
         requiresFollowup: true,
-        nextSteps: ['Manual emergency intervention required']
+        nextSteps: ['Manual emergency intervention required'];
       },
       notes: `Emergency fallback activated due to ${analysis ? 'escalation system failure' : 'missing crisis analysis'}`
     }
 }
 
-// Singleton instance
+// Singleton instance;
 export const crisisEscalationWorkflowService = new CrisisEscalationWorkflowService();
 export default crisisEscalationWorkflowService;

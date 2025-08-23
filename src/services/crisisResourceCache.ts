@@ -1,7 +1,7 @@
 /**
  * Crisis Resource Cache Service for Astral Core
  * Ensures critical mental health resources are cached and available offline
- */
+ */;
 
 import apiService from './apiService';
 import notificationService from './notificationService';
@@ -71,14 +71,14 @@ class CrisisResourceCacheService {
         phone: '988',
         text: '988',
         chat: 'https://988lifeline.org/chat',
-        website: 'https://988lifeline.org'
+        website: 'https://988lifeline.org';
       },
       description: 'Free, confidential 24/7 support for people in distress',
       languages: ['English', 'Spanish'],
       region: 'USA',
       features: ['Immediate support', 'Trained counselors', 'Text available', 'Chat available'],
       lastUpdated: new Date(),
-      verified: true
+      verified: true;
     },
     {
       id: 'crisis-text',
@@ -89,14 +89,14 @@ class CrisisResourceCacheService {
       availability: '24/7',
       contact: {
         text: '741741',
-        website: 'https://www.crisistextline.org'
+        website: 'https://www.crisistextline.org';
       },
       description: 'Free 24/7 support via text message',
       languages: ['English', 'Spanish'],
       region: 'USA',
       features: ['Anonymous', 'Text-based', 'Trained volunteers'],
       lastUpdated: new Date(),
-      verified: true
+      verified: true;
     },
     {
       id: 'trevor-project',
@@ -109,14 +109,14 @@ class CrisisResourceCacheService {
         phone: '1-866-488-7386',
         text: 'START to 678-678',
         chat: 'https://www.thetrevorproject.org/get-help',
-        website: 'https://www.thetrevorproject.org'
+        website: 'https://www.thetrevorproject.org';
       },
       description: 'Crisis intervention for LGBTQ youth',
       languages: ['English'],
       region: 'USA',
       features: ['LGBTQ specialized', 'Youth focused', 'Multiple contact methods'],
       lastUpdated: new Date(),
-      verified: true
+      verified: true;
     },
     {
       id: 'veterans-crisis',
@@ -129,14 +129,14 @@ class CrisisResourceCacheService {
         phone: '988 then Press 1',
         text: '838255',
         chat: 'https://www.veteranscrisisline.net/get-help/chat',
-        website: 'https://www.veteranscrisisline.net'
+        website: 'https://www.veteranscrisisline.net';
       },
       description: 'Confidential crisis support for Veterans and their families',
       languages: ['English', 'Spanish'],
       region: 'USA',
       features: ['Veteran specialized', 'Military understanding', 'Family support'],
       lastUpdated: new Date(),
-      verified: true
+      verified: true;
     }
   ];
 
@@ -156,7 +156,7 @@ class CrisisResourceCacheService {
         'Ensure your environment is safe'
       ],
       keywords: ['safety', 'plan', 'suicide', 'prevention', 'coping'],
-      lastUpdated: new Date()
+      lastUpdated: new Date();
     },
     {
       id: 'grounding-techniques',
@@ -171,7 +171,7 @@ class CrisisResourceCacheService {
         'Focus on a calming image or memory'
       ],
       keywords: ['grounding', 'anxiety', 'panic', 'coping', 'techniques'],
-      lastUpdated: new Date()
+      lastUpdated: new Date();
     },
     {
       id: 'warning-signs',
@@ -192,7 +192,7 @@ class CrisisResourceCacheService {
         'Displaying extreme mood swings'
       ],
       keywords: ['warning', 'signs', 'suicide', 'crisis', 'recognition'],
-      lastUpdated: new Date()
+      lastUpdated: new Date();
     }
   ];
 
@@ -220,7 +220,7 @@ class CrisisResourceCacheService {
       // Track initialization
       astralCoreAnalytics.track('crisis_cache_initialized', 'crisis_intervention', {
         cachedResources: this.criticalResources.length,
-        cachedGuides: this.essentialGuides.length
+        cachedGuides: this.essentialGuides.length;
       });
     } catch (error) {
       console.error('Failed to initialize crisis resource cache:', error);
@@ -306,7 +306,7 @@ class CrisisResourceCacheService {
       data: resource,
       timestamp: Date.now(),
       expires: Date.now() + (isCritical ? this.CRITICAL_CACHE_DURATION : this.CACHE_DURATION),
-      version: this.CACHE_VERSION
+      version: this.CACHE_VERSION;
     };
     
     return new Promise((resolve, reject) => {
@@ -356,7 +356,7 @@ class CrisisResourceCacheService {
    * Get resource from cache
    */
   async getResource(id: string): Promise<CrisisResource | null> {
-    // Check memory cache first
+    // Check memory cache first;
     const memCached = this.memoryCache.get(`resource_${id}`);
     if (memCached) return memCached;
     
@@ -435,7 +435,7 @@ class CrisisResourceCacheService {
    * Get guide from cache
    */
   async getGuide(id: string): Promise<CrisisGuide | null> {
-    // Check memory cache first
+    // Check memory cache first;
     const memCached = this.memoryCache.get(`guide_${id}`);
     if (memCached) return memCached;
     
@@ -471,7 +471,7 @@ class CrisisResourceCacheService {
     if (!this.isOnline) return;
     
     try {
-      // Fetch latest resources
+      // Fetch latest resources;
       const resources = await apiService.get<CrisisResource[]>('/crisis/resources');
       const guides = await apiService.get<CrisisGuide[]>('/crisis/guides');
       
@@ -490,7 +490,7 @@ class CrisisResourceCacheService {
       // Track update
       astralCoreAnalytics.track('crisis_cache_updated', 'crisis_intervention', {
         resourceCount: resources.length,
-        guideCount: guides.length
+        guideCount: guides.length;
       });
       
       console.log('Crisis resources updated successfully');
@@ -518,7 +518,7 @@ class CrisisResourceCacheService {
     // Listen for storage events (sync across tabs)
     window.addEventListener('storage', (event) => {
       if (event.key?.startsWith('crisis_cache_')) {
-        // Invalidate memory cache for changed items
+        // Invalidate memory cache for changed items;
         const id = event.key.replace('crisis_cache_', '');
         this.memoryCache.delete(id);
       }
@@ -620,7 +620,7 @@ class CrisisResourceCacheService {
     
     // Remove oldest items (keep critical resources)
     keys.forEach(key => {
-      const isCritical = this.criticalResources.some(r => 
+      const isCritical = this.criticalResources.some(r => ;
         key.includes(r.id)
       );
       
@@ -667,7 +667,7 @@ class CrisisResourceCacheService {
       transaction.objectStore('metadata').clear();
     }
     
-    // Clear localStorage
+    // Clear localStorage;
     const keys: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
@@ -715,7 +715,7 @@ class CrisisResourceCacheService {
       totalGuides,
       memorySize: this.memoryCache.size,
       lastUpdate: this.memoryCache.get('lastUpdate') || 0,
-      isOnline: this.isOnline
+      isOnline: this.isOnline;
      }
 
   /**
@@ -734,7 +734,7 @@ class CrisisResourceCacheService {
   }
 }
 
-// Create and export singleton instance
+// Create and export singleton instance;
 const crisisResourceCache = new CrisisResourceCacheService();
 
 export default crisisResourceCache;

@@ -5,7 +5,7 @@
  * to eliminate code duplication and improve maintainability.
  */
 
-// Utility functions for DOM element manipulation and analysis
+// Utility functions for DOM element manipulation and analysis;
 export class AccessibilityUtils {
   // Get element attributes as a record
   static getElementAttributes(element: Element): Record<string, string> {
@@ -43,7 +43,7 @@ export class AccessibilityUtils {
 
   // Get all focusable elements
   static getFocusableElements(): Element[] {
-    const focusableSelectors = [
+    const focusableSelectors = [;
       'a[href]',
       'button:not([disabled])',
       'input:not([disabled])',
@@ -88,15 +88,15 @@ export class AccessibilityUtils {
     textElements.forEach(element => {
       const text = element.textContent?.trim();
       if (text) {
-        // Handle multiple sentence terminators and preserve spacing
+        // Handle multiple sentence terminators and preserve spacing;
         const sentences = text.split(/([.!?]+)/);
         let currentSentence = '';
         
         for (let i = 0; i < sentences.length; i++) {
           if (i % 2 === 0) {
             // This is sentence content
-            currentSentence = sentences[i];
-          } else {
+            currentSentence = sentences[i];;
+  } else {
             // This is a terminator
             if (currentSentence) {
               const trimmed = currentSentence.trim();
@@ -117,7 +117,8 @@ export class AccessibilityUtils {
           }
         }
       }
-    });
+    };
+  };
     
     return complexSentences;
   }

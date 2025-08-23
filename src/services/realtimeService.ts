@@ -1,7 +1,7 @@
 /**
  * Real-time Service for Netlify Serverless Architecture
  * Uses Pusher for WebSocket functionality
- */
+ */;
 
 import Pusher, { Channel, PresenceChannel } from 'pusher-js';
 import { getWebSocketService } from './webSocketService';
@@ -70,7 +70,7 @@ class RealtimeService {
 
   private async initialize() {
     try {
-      // Fetch Pusher configuration from API
+      // Fetch Pusher configuration from API;
       const response = await fetch('/.netlify/functions/api-realtime/config', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
@@ -109,7 +109,7 @@ class RealtimeService {
       forceTLS: true,
       activityTimeout: 10000,
       pongTimeout: 5000,
-      unavailableTimeout: 10000
+      unavailableTimeout: 10000;
     });
 
     // Set up connection event handlers
@@ -172,7 +172,7 @@ class RealtimeService {
     this.subscribeToChannel('mood-updates');
     this.subscribeToChannel('crisis-support-team');
     
-    // Subscribe to user-specific channel if authenticated
+    // Subscribe to user-specific channel if authenticated;
     const userId = this.getUserId();
     if (userId) {
       this.subscribeToPrivateChannel(`private-user-${userId}`);
@@ -193,7 +193,7 @@ class RealtimeService {
 
   public subscribeToChannel(channelName: string): Channel | null {
     if (this.fallbackToWebSocket) {
-      // Use WebSocket service as fallback
+      // Use WebSocket service as fallback;
       const wsService = getWebSocketService();
       wsService.joinRoom(channelName);
       return null;
@@ -306,7 +306,7 @@ class RealtimeService {
         badge: '/icon-192.png',
         tag: data.id,
         requireInteraction: data.urgency === 'high' || data.urgency === 'critical',
-        data: data
+        data: data;
       });
 
       notification.onclick = () => {
@@ -332,7 +332,7 @@ class RealtimeService {
         tag: `crisis-${data.alertId}`,
         requireInteraction: true,
         // vibrate: [200, 100, 200], // Not supported in NotificationOptions
-        data: data
+        data: data;
       });
 
       notification.onclick = () => {
@@ -359,7 +359,7 @@ class RealtimeService {
   }
 
   private playAlertSound() {
-    // Create and play an alert sound
+    // Create and play an alert sound;
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
@@ -461,8 +461,8 @@ class RealtimeService {
     if (this.fallbackToWebSocket) {
       const wsService = getWebSocketService();
       if (isTyping) {
-        wsService.startTyping(channel);
-      } else {
+        wsService.startTyping(channel);;
+  } else {
         wsService.stopTyping(channel);
       }
       return;
@@ -614,7 +614,7 @@ class RealtimeService {
   }
 }
 
-// Create singleton instance
+// Create singleton instance;
 let realtimeServiceInstance: RealtimeService | null = null;
 
 export const getRealtimeService = (): RealtimeService => {
@@ -624,7 +624,7 @@ export const getRealtimeService = (): RealtimeService => {
   return realtimeServiceInstance;
 };
 
-// React hooks
+// React hooks;
 export const useRealtime = () => {
   const [service] = React.useState(() => getRealtimeService());
   const [isConnected, setIsConnected] = React.useState(false);
@@ -639,7 +639,9 @@ export const useRealtime = () => {
     return () => {
       unsubscribe();
       unsubscribe2();
-    }, [service]);
+    };
+  };
+  }, [service]);
 
   return { service, isConnected };
 
@@ -656,15 +658,16 @@ export const useRealtimeChannel = (channelName: string) => {
       if (messageData.channel === channelName) {
         setMessages(prev => [...prev, messageData.data]);
       }
-    });
+    };
+  };
 
     const unsubscribeTyping = service.on('typing', (data: unknown) => {
       const typingData = data as { channel: string; isTyping: boolean; userId: string };
       if (typingData.channel === channelName) {
         setTypingUsers(prev => {
           if (typingData.isTyping) {
-            return prev.includes(typingData.userId) ? prev : [...prev, typingData.userId];
-          } else {
+            return prev.includes(typingData.userId) ? prev : [...prev, typingData.userId];;
+  } else {
             return prev.filter(id => id !== typingData.userId);
           }
         });
@@ -674,14 +677,19 @@ export const useRealtimeChannel = (channelName: string) => {
     return () => {
       unsubscribeMessage();
       unsubscribeTyping();
-    }, [channelName, service]);
+    };
+  };
+  }, [channelName, service]);
 
   const sendMessage = React.useCallback(async (message: string) => {
     await service.sendMessage(channelName, message);
+  };
   }, [channelName, service]);
 
   const sendTyping = React.useCallback(async (isTyping: boolean) => {
     await service.sendTypingIndicator(channelName, isTyping);
+  };
+  };
   }, [channelName, service]);
 
   return {
@@ -701,7 +709,8 @@ export const usePresenceChannel = (channelName: string) => {
     const unsubscribe = service.on('presence-subscribed', (data: unknown) => {
       const presenceData = data as { channel: string; members: { members?: Record<string, any> } };
       if (presenceData.channel === channelName) {
-        setMembers(Object.values(presenceData.members.members || {}));
+        setMembers(Object.values(presenceData.members.members || {};
+  });
       }
     });
 
@@ -723,11 +732,13 @@ export const usePresenceChannel = (channelName: string) => {
       unsubscribe();
       unsubscribeJoin();
       unsubscribeLeave();
-    }, [channelName, service]);
+    };
+  };
+  }, [channelName, service]);
 
   return { members };
 
-// Add missing React import
+// Add missing React import;
 import * as React from 'react';
 
 export default RealtimeService;

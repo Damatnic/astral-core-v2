@@ -60,11 +60,13 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
   // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
   }, [state.messages, state.isTyping]);
   
   // Load conversation history
   useEffect(() => {
     loadHistory();
+  };
   }, [userId]);
   
   const loadHistory = async () => {
@@ -76,7 +78,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
           setState(prev => ({ 
             ...prev, 
             messages: data.messages,
-            sessionId: data.metadata?.sessionId || prev.sessionId 
+            sessionId: data.metadata?.sessionId || prev.sessionId ;
           }));
           setShowWelcome(false);
         }
@@ -93,7 +95,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
       id: crypto.randomUUID(),
       sender: 'user',
       text: inputValue.trim(),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString();
     };
     
     const newMessages = [...state.messages, userMessage];
@@ -101,12 +103,12 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
       ...prev, 
       messages: newMessages, 
       isTyping: true, 
-      error: null 
+      error: null ;
     }));
     setInputValue('');
     setShowWelcome(false);
     
-    // Check for crisis indicators locally first
+    // Check for crisis indicators locally first;
     const crisisAnalysis = enhancedCrisisDetectionService.analyzeCrisisContent(userMessage.text);
     if (crisisAnalysis.hasCrisisIndicators && 
         (crisisAnalysis.severityLevel === 'high' || crisisAnalysis.severityLevel === 'critical')) {
@@ -122,7 +124,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
         body: JSON.stringify({
           messages: newMessages,
           userId,
-          provider: state.provider
+          provider: state.provider;
         })
       });
       
@@ -137,14 +139,14 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
         sender: 'ai',
         text: data.response,
         timestamp: new Date().toISOString(),
-        metadata: data.metadata
+        metadata: data.metadata;
       };
       
       setState(prev => ({ 
         ...prev, 
         messages: [...newMessages, aiMessage],
         isTyping: false,
-        crisisDetected: data.metadata?.crisisDetected || prev.crisisDetected
+        crisisDetected: data.metadata?.crisisDetected || prev.crisisDetected;
       }));
       
       // Save to history
@@ -162,7 +164,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
       setState(prev => ({ 
         ...prev, 
         isTyping: false,
-        error: 'Unable to connect to AI service. Please try again.'
+        error: 'Unable to connect to AI service. Please try again.';
       }));
     }
   };
@@ -180,7 +182,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
           ...prev,
           messages: [],
           crisisDetected: false,
-          sessionId: crypto.randomUUID()
+          sessionId: crypto.randomUUID();
         }));
         setShowWelcome(true);
       } catch (error) {
@@ -194,7 +196,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
     setShowOptions(false);
   };
   
-  const quickActions = [
+  const quickActions = [;
     "I'm feeling anxious",
     "I need someone to talk to",
     "Help me understand my emotions",
@@ -234,7 +236,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
         </div>
         
         <div className="ai-chat-header-actions">
-          <button 
+          <button; 
             className="ai-chat-action-btn"
             onClick={() => setShowOptions(!showOptions)}
             aria-label="More options"
@@ -242,7 +244,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
             <MoreIcon />
           </button>
           {onClose && (
-            <button 
+            <button; 
               className="ai-chat-action-btn"
               onClick={onClose}
               aria-label="Close chat"
@@ -257,13 +259,13 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
           <div className="ai-chat-options">
             <div className="ai-chat-option-group">
               <label>AI Provider:</label>
-              <button 
+              <button; 
                 className={state.provider === 'openai' ? 'active' : ''}
                 onClick={() => switchProvider('openai')}
               >
                 OpenAI GPT-4
               </button>
-              <button 
+              <button; 
                 className={state.provider === 'claude' ? 'active' : ''}
                 onClick={() => switchProvider('claude')}
               >
@@ -398,7 +400,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
           <AppButton
             onClick={sendMessage}
             disabled={!inputValue.trim() || state.isTyping}
-            variant="primary"
+            variant="primary";
             className="ai-chat-send-btn"
           >
             <SendIcon /> Send

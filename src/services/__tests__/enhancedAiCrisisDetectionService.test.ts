@@ -1,7 +1,7 @@
 /**
  * Test Suite for Enhanced AI Crisis Detection Service
  * Tests AI-powered crisis detection with advanced NLP and ML models
- */
+ */;
 
 import { enhancedAICrisisDetectionService } from '../enhancedAiCrisisDetectionService';
 
@@ -168,7 +168,7 @@ describe('enhancedAICrisisDetectionService', () => {
 
   describe('Pattern Recognition', () => {
     it.skip('should identify escalation patterns', async () => {
-      const messages = [
+      const messages = [;
         'Feeling a bit down today',
         'Things are getting worse',
         'I cannot handle this anymore',
@@ -184,7 +184,7 @@ describe('enhancedAICrisisDetectionService', () => {
     });
 
     it.skip('should detect de-escalation', async () => {
-      const messages = [
+      const messages = [;
         'I was in crisis earlier',
         'Talking helped a lot',
         'I am feeling calmer now',

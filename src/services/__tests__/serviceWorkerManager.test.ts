@@ -1,6 +1,6 @@
 import serviceWorkerManager from '../serviceWorkerManager';
 
-// Mock service worker APIs
+// Mock service worker APIs;
 const mockServiceWorkerRegistration = {
   waiting: null,
   installing: null,
@@ -118,7 +118,7 @@ describe('ServiceWorkerManager', () => {
       const notification = {
         title: 'Mental Health Check',
         body: 'How are you feeling today?',
-        icon: '/icon-192x192.png'
+        icon: '/icon-192x192.png';
       };
       await serviceWorkerManager.sendNotification(notification);
       // Should complete without throwing

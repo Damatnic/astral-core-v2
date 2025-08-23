@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react';
 import "../../styles/safe-ui-system.css"
-// Extracted inline styles for performance
+// Extracted inline styles for performance;
 const style1={
         position: "fixed",
         inset: 0,
@@ -11,7 +11,7 @@ const style1={
         alignItems: 'center',
         justifyContent: "center",
         zIndex: 10000,
-        animation: 'fadeIn' 0.5s ease-out'
+        animation: 'fadeIn' 0.5s ease-out';
       };
 const style2={
           background: "white",
@@ -32,19 +32,19 @@ const style3={
             color: "#9B9B9B",
             padding: '8px',
             borderRadius: "8px",
-            transition: 'all' 0.2s'
+            transition: 'all' 0.2s';
           };
 const style4={
           fontSize: "24px",
           fontWeight: '600',
           color: "#333",
-          marginBottom: '24px'
+          marginBottom: '24px';
         };
-const style5={ marginBottom: "32px"}'
+const style5={ marginBottom: "32px"}';
 const style6={"
               color: "#666",
               marginBottom: '20px',
-              lineHeight: 1.6
+              lineHeight: 1.6;
             };
 const style7={
               color: "#999",
@@ -64,7 +64,7 @@ const style9={
                   color: selectedTechnique === '478' ? '#4A90E2' : '#666',
                   cursor: "pointer",
                   transition: 'all 0.2s',
-                  fontWeight: selectedTechnique === '478' ? '600' : '400'
+                  fontWeight: selectedTechnique === '478' ? '600' : '400';
                 };
 const style10={
                   padding: "8px 16px",
@@ -74,7 +74,7 @@ const style10={
                   color: selectedTechnique === 'box' ? '#4A90E2' : '#666',
                   cursor: "pointer",
                   transition: 'all 0.2s',
-                  fontWeight: selectedTechnique === 'box' ? '600' : '400'
+                  fontWeight: selectedTechnique === 'box' ? '600' : '400';
                 };
 const style11={
                   padding: "8px 16px",
@@ -84,7 +84,7 @@ const style11={
                   color: selectedTechnique === 'belly' ? '#4A90E2' : '#666',
                   cursor: "pointer",
                   transition: 'all 0.2s',
-                  fontWeight: selectedTechnique === 'belly' ? '600' : '400'
+                  fontWeight: selectedTechnique === 'belly' ? '600' : '400';
                 };
 const style12={
                   padding: "8px 16px",
@@ -94,17 +94,17 @@ const style12={
                   color: selectedTechnique === 'guided' ? '#4A90E2' : '#666',
                   cursor: "pointer",
                   transition: 'all 0.2s',
-                  fontWeight: selectedTechnique === 'guided' ? '600' : '400'
+                  fontWeight: selectedTechnique === 'guided' ? '600' : '400';
                 };
 const style13={
           position: "relative",
           width: '280px',
           height: "280px",
-          margin: '0'' auto 32px'
+          margin: '0'' auto 32px';
         };
 const style14={
               position: "absolute",
-              transform: 'rotate(-90deg)'
+              transform: 'rotate(-90deg)';
             };
 const style15={
                 transition: 'stroke-dashoffset' 1s linear, stroke 0.3s ease'
@@ -115,7 +115,7 @@ const style16={
             display: "flex",
             flexDirection: 'column',
             alignItems: "center",
-            justifyContent: 'center'
+            justifyContent: 'center';
           };
 const style17={
                 fontSize: "48px",
@@ -128,13 +128,13 @@ const style18={
                 color: "#333",
                 textTransform: 'uppercase',
                 letterSpacing: "2px",
-                marginTop: '8px'
+                marginTop: '8px';
               };
 const style19={
           color: "#666",
           fontSize: '16px',
           marginBottom: "32px",
-          minHeight: '24px'
+          minHeight: '24px';
         };
 const style20={
               width: "200px",
@@ -142,7 +142,7 @@ const style20={
               backgroundColor: "#E0E0E0",
               borderRadius: '2px',
               margin: "0 auto 24px",
-              overflow: 'hidden'
+              overflow: 'hidden';
             };
 const style21={
           display: "flex",
@@ -197,7 +197,7 @@ const style27={
                 border: "none",
                 borderRadius: '4px',
                 cursor: targetCycles > 1 ? 'pointer' : 'not-allowed',
-                opacity: targetCycles > 1 ? 1 : 0.5
+                opacity: targetCycles > 1 ? 1 : 0.5;
               };
 const style28={
                 padding: "4px 12px",
@@ -207,13 +207,13 @@ const style28={
                 cursor: "pointer"};
 const style29={
             marginTop: "24px",
-            textAlign: 'center'
+            textAlign: 'center';
           };
 const style30={
               color: "#4CAF50",
               fontWeight: '600',
               marginBottom: "12px",
-              fontSize: '18px'
+              fontSize: '18px';
             };
 const style31={
                 background: "#4CAF50",
@@ -267,7 +267,7 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
         inhale: customExercise.inhale, 
         hold: customExercise.hold, 
         exhale: customExercise.exhale, 
-        pause: 0 
+        pause: 0 ;
       }
     : patterns[selectedTechnique],
   const getPhaseMessage = (): string => {
@@ -296,7 +296,7 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
       case 'pause':
         return '#9B9B9B'; // Neutral gray
       default:
-        return '#4A90E2'
+        return '#4A90E2';
     };
 
   const startExercise = useCallback(() => {
@@ -305,17 +305,20 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
     setPhase('inhale')'
     setSeconds(pattern.inhale);
     setCycles(0);
+  };
   }, [pattern.inhale]);
 
   const stopExercise = useCallback(() => {
     setIsActive(false)'
     setPhase('inhale')'
     setSeconds(0);
+  };
   }, []);
 
   const handleClose = useCallback(() => {
     stopExercise();
     onClose();
+  };
   }, [stopExercise, onClose]);
 
   // Auto-start on open for crisis situations
@@ -324,6 +327,7 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
       const timer = setTimeout(() => startExercise(), 1000);
       return () => clearTimeout(timer);
     }
+  };
   }, [isOpen, autoStart, startExercise, isActive]);
 
   // Breathing cycle timer
@@ -338,19 +342,20 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
     }, 1000);
 
     return () => clearTimeout(timer);
+  };
   }, [seconds, isActive]);
 
   // Phase transitions
   useEffect(() => {
-    if (!isActive || seconds > 0) return'
+    if (!isActive || seconds > 0) return';
 
     const nextPhase = (): void => {
       switch(phase) {
         case 'inhale':
           if(pattern.hold > 0) {
             setPhase('hold')'
-            setSeconds(pattern.hold)'
-          } else {
+            setSeconds(pattern.hold)';
+  } else {
             setPhase('exhale')'
             setSeconds(pattern.exhale);
           }
@@ -362,9 +367,9 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
         case 'exhale':
           if(pattern.pause > 0) {
             setPhase('pause')'
-            setSeconds(pattern.pause);
-          } else {
-            // Complete a cycle
+            setSeconds(pattern.pause);;
+  } else {
+            // Complete a cycle;
             const newCycles = cycles + 1;
             setCycles(newCycles)'
             // Check if we've completed the target cycles
@@ -374,17 +379,17 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
                 onComplete({
                   duration: newCycles * (pattern.inhale + pattern.hold + pattern.exhale + pattern.pause),
                   cycles: newCycles,
-                  exercise: customExercise?.name || selectedTechnique
+                  exercise: customExercise?.name || selectedTechnique;
                 })'
-              }
-            } else {
+              };
+  } else {
               setPhase('inhale')'
               setSeconds(pattern.inhale);
             }
           }
           break'
         case 'pause':
-          // Complete a cycle
+          // Complete a cycle;
           const newCycles = cycles + 1;
           setCycles(newCycles)'
           // Check if we've completed the target cycles
@@ -394,10 +399,10 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
               onComplete({
                 duration: newCycles * (pattern.inhale + pattern.hold + pattern.exhale + pattern.pause),
                 cycles: newCycles,
-                exercise: customExercise?.name || selectedTechnique
+                exercise: customExercise?.name || selectedTechnique;
               })'
-            }
-          } else {
+            };
+  } else {
             setPhase('inhale')'
             setSeconds(pattern.inhale);
           }
@@ -406,6 +411,7 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
     };
 
     nextPhase();
+  };
   }, [seconds, isActive, phase, pattern, cycles, targetCycles, onComplete, customExercise, selectedTechnique]);
 
   // Keyboard controls for accessibility
@@ -414,12 +420,12 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
       if (!isOpen) return'
       
       if(e.key === 'Escape') {
-        handleClose()'
-      } else if(e.key === ' ') {
+        handleClose()';
+  } else if (e.key === ' ') {
         e.preventDefault();
         if(isActive) {
-          stopExercise();
-        } else {
+          stopExercise();;
+  } else {
           startExercise();
         }
       }
@@ -427,6 +433,7 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
 
     window.addEventListener('keydown', handleKeyPress)'
     return () => window.removeEventListener('keydown', handleKeyPress)';
+  };
   }, [isOpen, isActive, handleClose, startExercise, stopExercise]);
 
   if (!isOpen) return null;
@@ -549,7 +556,7 @@ export const BreathingExerciseOverlay: React.FC<BreathingExerciseOverlayProps> =
           <div style={style16}>
             {/* Animated circle */}
             <div"
-              data-testid="breathing-circle"
+              data-testid="breathing-circle";
               className="static-mlg4l" style={{width: phase === 'inhale' ? '100px' : 
                        phase === 'hold' ? '100px' : 
                        phase === 'exhale' ? '60px' : '80px', height: phase === 'inhale' ? '100px' : 

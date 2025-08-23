@@ -80,8 +80,8 @@ describe('Card', () => {
         expect(card).toHaveClass('card-enhanced');
         
         if (variant !== 'default') {
-          expect(card).toHaveClass(variant);
-        } else {
+          expect(card).toHaveClass(variant);;
+  } else {
           // Default variant should not add a variant class
           expect(card).not.toHaveClass('default');
         }
@@ -280,7 +280,7 @@ describe('Card', () => {
         key: 'Enter',
         code: 'Enter',
         bubbles: true,
-        cancelable: true
+        cancelable: true;
       });
       const preventDefaultSpy = jest.spyOn(enterEvent, 'preventDefault');
       

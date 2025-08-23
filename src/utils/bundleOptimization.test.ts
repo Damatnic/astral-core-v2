@@ -1,6 +1,6 @@
 /**
  * @jest-environment jsdom
- */
+ */;
 
 import {
   BundleAnalyzer,
@@ -70,7 +70,7 @@ describe('bundleOptimization', () => {
       writable: true,
     });
 
-    // Mock document scripts
+    // Mock document scripts;
     const mockScript1 = { src: 'http://example.com/chunk.abc123.js' } as HTMLScriptElement;
     const mockScript2 = { src: 'http://example.com/bundle.def456.js' } as HTMLScriptElement;
     Object.defineProperty(document, 'scripts', {
@@ -161,7 +161,7 @@ describe('bundleOptimization', () => {
       test.skip('should handle analysis errors gracefully', async () => {
         // Skipped: console.error not being called as expected
         process.env.NODE_ENV = 'development';
-        // First call succeeds for start time, second call throws error
+        // First call succeeds for start time, second call throws error;
         let callCount = 0;
         mockPerformance.now.mockImplementation(() => {
           callCount++;
@@ -440,8 +440,8 @@ describe('bundleOptimization', () => {
         
         await Promise.all([promise1, promise2]);
 
-        // Should only log once (for first load attempt)
-        const loadLogs = (console.log as jest.Mock).mock.calls.filter(call =>
+        // Should only log once (for first load attempt);
+        const loadLogs = (console.log as jest.Mock).mock.calls.filter(call =>;
           call[0].includes('✅ Loaded chunk test-chunk')
         );
         expect(loadLogs.length).toBe(1);
@@ -450,7 +450,7 @@ describe('bundleOptimization', () => {
       test('should queue chunks when max concurrent limit reached', async () => {
         const loadChunk = (ChunkLoadingOptimizer as any).loadChunk.bind(ChunkLoadingOptimizer);
         
-        // Load multiple chunks to hit the limit
+        // Load multiple chunks to hit the limit;
         const promises = [];
         for (let i = 0; i < 5; i++) {
           promises.push(loadChunk(`chunk-${i}`));
@@ -528,7 +528,7 @@ describe('bundleOptimization', () => {
           return [
             {
               getBoundingClientRect: () => ({ 
-                top: -100, left: 0, bottom: -50, right: 100 
+                top: -100, left: 0, bottom: -50, right: 100 ;
               }),
               remove: jest.fn(),
             },
@@ -551,7 +551,7 @@ describe('bundleOptimization', () => {
 
       test('should not start multiple intervals', () => {
         MobileMemoryOptimizer.startMonitoring();
-        MobileMemoryOptimizer.startMonitoring(); // Second call should be ignored
+        MobileMemoryOptimizer.startMonitoring(); // Second call should be ignored;
 
         const stats = MobileMemoryOptimizer.getMemoryStats();
         expect(stats.monitoring).toBe(true);
@@ -590,7 +590,7 @@ describe('bundleOptimization', () => {
 
         MobileMemoryOptimizer.startMonitoring();
 
-        // Simulate interval trigger - bind to the class
+        // Simulate interval trigger - bind to the class;
         const checkMemoryUsage = (MobileMemoryOptimizer as any).checkMemoryUsage;
         checkMemoryUsage.call(MobileMemoryOptimizer);
 
@@ -621,7 +621,7 @@ describe('bundleOptimization', () => {
       test('should clear unused images from DOM', () => {
         const mockImage = {
           getBoundingClientRect: () => ({ 
-            top: -100, left: 0, bottom: -50, right: 100 
+            top: -100, left: 0, bottom: -50, right: 100 ;
           }),
           remove: jest.fn(),
         };
@@ -637,7 +637,7 @@ describe('bundleOptimization', () => {
       test('should keep visible images', () => {
         const mockImage = {
           getBoundingClientRect: () => ({ 
-            top: 100, left: 0, bottom: 200, right: 100 
+            top: 100, left: 0, bottom: 200, right: 100 ;
           }),
           remove: jest.fn(),
         };
@@ -863,7 +863,7 @@ describe('bundleOptimization', () => {
     test('should not impact performance with frequent memory checks', () => {
       const startTime = performance.now();
 
-      // Simulate many memory checks
+      // Simulate many memory checks;
       const getCurrentMemoryUsage = (MobileMemoryOptimizer as any).getCurrentMemoryUsage;
       for (let i = 0; i < 1000; i++) {
         getCurrentMemoryUsage();
@@ -920,7 +920,7 @@ describe('bundleOptimization', () => {
       // Fast forward to trigger memory check
       jest.advanceTimersByTime(30000);
 
-      // Should have started monitoring and performed optimization
+      // Should have started monitoring and performed optimization;
       const memoryStats = MobileMemoryOptimizer.getMemoryStats();
       expect(memoryStats.monitoring).toBe(true);
 
@@ -941,7 +941,7 @@ describe('bundleOptimization', () => {
       // Fast forward timers
       jest.advanceTimersByTime(30000);
 
-      // Both systems should be working
+      // Both systems should be working;
       const memoryStats = MobileMemoryOptimizer.getMemoryStats();
       expect(memoryStats.monitoring).toBe(true);
 

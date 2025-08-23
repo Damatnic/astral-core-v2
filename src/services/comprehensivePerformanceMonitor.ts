@@ -14,23 +14,23 @@
  * - Mental health-specific performance considerations
  * - Historical performance trending
  * - Performance anomaly detection
- */
+ */;
 
 import { getAnalyticsService } from './analyticsService';
 
-// Performance alert severity levels
+// Performance alert severity levels;
 export type AlertSeverity = 'low' | 'medium' | 'high' | 'critical';
 
-// Performance alert types
+// Performance alert types;
 export type AlertType = 'budget_violation' | 'bottleneck_detected' | 'regression' | 'anomaly' | 'critical_failure';
 
-// Performance impact levels
+// Performance impact levels;
 export type ImpactLevel = 'low' | 'medium' | 'high' | 'critical';
 
-// Priority levels
+// Priority levels;
 export type PriorityLevel = 'low' | 'medium' | 'high' | 'critical';
 
-// Difficulty levels
+// Difficulty levels;
 export type DifficultyLevel = 'easy' | 'medium' | 'hard';
 export interface EnhancedPerformanceMetrics {
   // Core Web Vitals
@@ -73,7 +73,7 @@ export interface EnhancedPerformanceMetrics {
   timestamp: number;
 }
 
-// Performance budget configuration
+// Performance budget configuration;
 export interface PerformanceBudget {
   // Core Web Vitals Budgets
   firstContentfulPaint: { target: number; warning: number; critical: number };
@@ -93,7 +93,7 @@ export interface PerformanceBudget {
   memoryUsage: { target: number; warning: number; critical: number };
   totalResourceSize: { target: number; warning: number; critical: number }
 
-// Performance alert interface
+// Performance alert interface;
 export interface PerformanceAlert {
   id: string;
   type: AlertType;
@@ -107,7 +107,7 @@ export interface PerformanceAlert {
   isCrisisRelated: boolean;
 }
 
-// Bottleneck detection result
+// Bottleneck detection result;
 export interface PerformanceBottleneck {
   component: string;
   metric: string;
@@ -117,7 +117,7 @@ export interface PerformanceBottleneck {
   estimatedImprovement: number;
 }
 
-// Optimization recommendation
+// Optimization recommendation;
 export interface OptimizationRecommendation {
   id: string;
   category: 'bundle' | 'loading' | 'runtime' | 'memory' | 'network' | 'ux' | 'accessibility';
@@ -130,7 +130,7 @@ export interface OptimizationRecommendation {
   mentalHealthImpact: string;
 }
 
-// Performance monitoring configuration
+// Performance monitoring configuration;
 export interface PerformanceMonitorConfig {
   enableRealTimeMonitoring: boolean;
   enableBudgetTracking: boolean;
@@ -177,52 +177,52 @@ class ComprehensivePerformanceMonitor {
       firstContentfulPaint: {
         target: isMobile ? 2000 : 1500,
         warning: isMobile ? 3000 : 2500,
-        critical: isMobile ? 4000 : 3500
+        critical: isMobile ? 4000 : 3500;
       },
       largestContentfulPaint: {
         target: isMobile ? 3000 : 2500,
         warning: isMobile ? 4000 : 3500,
-        critical: isMobile ? 5000 : 4500
+        critical: isMobile ? 5000 : 4500;
       },
       firstInputDelay: {
         target: 50,
         warning: 100,
-        critical: 200
+        critical: 200;
       },
       cumulativeLayoutShift: {
         target: 0.05,
         warning: 0.1,
-        critical: 0.25
+        critical: 0.25;
       },
       loadTime: {
         target: isMobile ? 3000 : 2000,
         warning: isMobile ? 5000 : 4000,
-        critical: isMobile ? 8000 : 6000
+        critical: isMobile ? 8000 : 6000;
       },
       bundleSize: {
         target: isMobile ? 500000 : 800000, // 500KB mobile, 800KB desktop
         warning: isMobile ? 750000 : 1200000,
-        critical: isMobile ? 1000000 : 1500000
+        critical: isMobile ? 1000000 : 1500000;
       },
       crisisDetectionResponseTime: {
         target: 100, // Critical for mental health platform
         warning: 300,
-        critical: 500
+        critical: 500;
       },
       chatMessageLatency: {
         target: 200,
         warning: 500,
-        critical: 1000
+        critical: 1000;
       },
       memoryUsage: {
         target: 50, // MB
         warning: 100,
-        critical: 200
+        critical: 200;
       },
       totalResourceSize: {
         target: isMobile ? 1000000 : 1500000, // 1MB mobile, 1.5MB desktop
         warning: isMobile ? 1500000 : 2000000,
-        critical: isMobile ? 2000000 : 3000000
+        critical: isMobile ? 2000000 : 3000000;
       }
     }
 
@@ -252,16 +252,17 @@ class ComprehensivePerformanceMonitor {
 
     // Core Web Vitals observers
     try {
-      // LCP Observer
+      // LCP Observer;
       const lcpObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         const lastEntry = entries[entries.length - 1];
         this.updateMetric('largestContentfulPaint', lastEntry.startTime);
-      });
+      };
+  };
       lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
       this.observers.push(lcpObserver);
 
-      // FID Observer
+      // FID Observer;
       const fidObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         entries.forEach((entry: any) => {
@@ -272,7 +273,7 @@ class ComprehensivePerformanceMonitor {
       fidObserver.observe({ entryTypes: ['first-input'] });
       this.observers.push(fidObserver);
 
-      // CLS Observer
+      // CLS Observer;
       const clsObserver = new PerformanceObserver((list) => {
         let clsValue = 0;
         list.getEntries().forEach((entry: any) => {
@@ -285,7 +286,7 @@ class ComprehensivePerformanceMonitor {
       clsObserver.observe({ entryTypes: ['layout-shift'] });
       this.observers.push(clsObserver);
 
-      // Navigation observer for load metrics
+      // Navigation observer for load metrics;
       const navObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         entries.forEach((entry) => {
@@ -338,18 +339,18 @@ class ComprehensivePerformanceMonitor {
    */
   private async collectCurrentMetrics(): Promise<EnhancedPerformanceMetrics> {
     const metrics: Partial<EnhancedPerformanceMetrics> = {
-      timestamp: Date.now()
+      timestamp: Date.now();
     };
 
     try {
-      // Core Web Vitals
+      // Core Web Vitals;
       const paintEntries = performance.getEntriesByType('paint');
       const fcpEntry = paintEntries.find(entry => entry.name === 'first-contentful-paint');
       if (fcpEntry) {
         metrics.firstContentfulPaint = fcpEntry.startTime;
       }
 
-      // Navigation timing
+      // Navigation timing;
       const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
       if (navigation) {
         metrics.loadTime = navigation.loadEventEnd - navigation.loadEventStart;
@@ -363,7 +364,7 @@ class ComprehensivePerformanceMonitor {
         metrics.memoryUsage = (memory as any).usedJSHeapSize / 1024 / 1024; // MB
       }
 
-      // Bundle size estimation
+      // Bundle size estimation;
       const resourceEntries = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
       let totalSize = 0;
       let jsResourceCount = 0;
@@ -381,7 +382,7 @@ class ComprehensivePerformanceMonitor {
       metrics.totalResourceSize = totalSize;
       metrics.chunkCount = jsResourceCount;
 
-      // Network information
+      // Network information;
       const connection = (navigator as any).connection;
       if (connection) {
         metrics.networkLatency = (connection as any).rtt || 0;
@@ -414,13 +415,13 @@ class ComprehensivePerformanceMonitor {
         this.detectBottlenecks(completeMetrics);
       }
 
-      // Track with analytics (privacy-compliant)
+      // Track with analytics (privacy-compliant);
       const analyticsService = getAnalyticsService();
       analyticsService.track('performance_monitoring', 'performance', {
         loadTime: completeMetrics.loadTime,
         bundleSize: completeMetrics.bundleSize,
         memoryUsage: completeMetrics.memoryUsage,
-        networkLatency: completeMetrics.networkLatency
+        networkLatency: completeMetrics.networkLatency;
       });
 
       return completeMetrics;
@@ -435,11 +436,11 @@ class ComprehensivePerformanceMonitor {
    * Measure crisis detection response time
    */
   private async measureCrisisDetectionTime(): Promise<number> {
-    // Simulate crisis detection performance measurement
+    // Simulate crisis detection performance measurement;
     const startTime = performance.now();
     
     try {
-      // Mock crisis keyword detection test
+      // Mock crisis keyword detection test;
       const testText = "I am feeling suicidal and need help";
       const crisisKeywords = ['suicidal', 'kill myself', 'end it all', 'not worth living'];
       
@@ -479,11 +480,11 @@ class ComprehensivePerformanceMonitor {
   private assessVideoQuality(): number {
     try {
       const videoElements = document.querySelectorAll('video');
-      if (videoElements.length === 0) return 100; // No videos, perfect score
+      if (videoElements.length === 0) return 100; // No videos, perfect score;
       
       let totalQuality = 0;
       videoElements.forEach(video => {
-        // Check for buffering, resolution, etc.
+        // Check for buffering, resolution, etc.;
         const quality = video.videoWidth >= 720 ? 100 : 75;
         totalQuality += quality;
       });
@@ -521,10 +522,10 @@ class ComprehensivePerformanceMonitor {
    */
   private calculateEngagementScore(): number {
     try {
-      // Factor in session duration, interactions, etc.
+      // Factor in session duration, interactions, etc.;
       const sessionStart = performance.timing.navigationStart;
       const sessionDuration = Date.now() - sessionStart;
-      const engagementThreshold = 60000; // 1 minute
+      const engagementThreshold = 60000; // 1 minute;
       
       const baseScore = Math.min(sessionDuration / engagementThreshold * 100, 100);
       return Math.round(baseScore);
@@ -539,10 +540,10 @@ class ComprehensivePerformanceMonitor {
    */
   private calculateUsabilityScore(): number {
     try {
-      // Check for accessibility features, responsive design, etc.
+      // Check for accessibility features, responsive design, etc.;
       const hasAriaLabels = document.querySelectorAll('[aria-label]').length > 0;
       const hasAltText = document.querySelectorAll('img[alt]').length > 0;
-      const isResponsive = window.innerWidth <= 768 ? 
+      const isResponsive = window.innerWidth <= 768 ? ;
         document.querySelector('meta[name="viewport"]') !== null : true;
       
       let score = 60; // Base score
@@ -564,7 +565,7 @@ class ComprehensivePerformanceMonitor {
     try {
       let score = 70; // Base score
       
-      // Check color contrast
+      // Check color contrast;
       const elements = document.querySelectorAll('*');
       let contrastIssues = 0;
       
@@ -583,7 +584,7 @@ class ComprehensivePerformanceMonitor {
       if (contrastIssues < 5) score += 20;
       else if (contrastIssues < 10) score += 10;
       
-      // Check for focus indicators
+      // Check for focus indicators;
       const focusableElements = document.querySelectorAll('button, a, input, select, textarea');
       const hasFocusIndicators = Array.from(focusableElements).some(el => {
         const style = window.getComputedStyle(el, ':focus');
@@ -605,7 +606,7 @@ class ComprehensivePerformanceMonitor {
   private addMetricsToHistory(metrics: EnhancedPerformanceMetrics): void {
     this.performanceHistory.push(metrics);
     
-    // Limit history size
+    // Limit history size;
     const maxHistorySize = 1000;
     if (this.performanceHistory.length > maxHistorySize) {
       this.performanceHistory = this.performanceHistory.slice(-maxHistorySize);
@@ -627,11 +628,11 @@ class ComprehensivePerformanceMonitor {
       
       if (value > budget.critical) {
         severity = 'critical';
-        description = `${metricName} (${value.toFixed(0)}) exceeds critical threshold (${budget.critical})`;
-      } else if (value > budget.warning) {
+        description = `${metricName} (${value.toFixed(0)}) exceeds critical threshold (${budget.critical})`;;
+  } else if (value > budget.warning) {
         severity = 'high';
-        description = `${metricName} (${value.toFixed(0)}) exceeds warning threshold (${budget.warning})`;
-      } else if (value > budget.target) {
+        description = `${metricName} (${value.toFixed(0)}) exceeds warning threshold (${budget.warning})`;;
+  } else if (value > budget.target) {
         severity = 'medium';
         description = `${metricName} (${value.toFixed(0)}) exceeds target (${budget.target})`;
       }
@@ -647,7 +648,7 @@ class ComprehensivePerformanceMonitor {
           description,
           recommendations: this.getRecommendationsForMetric(metricName, value),
           timestamp: Date.now(),
-          isCrisisRelated: metricName === 'crisisDetectionResponseTime'
+          isCrisisRelated: metricName === 'crisisDetectionResponseTime';
         });
       }
     });
@@ -672,7 +673,7 @@ class ComprehensivePerformanceMonitor {
           'Use dynamic imports for heavy components',
           'Enable tree shaking in build process'
         ],
-        estimatedImprovement: 30
+        estimatedImprovement: 30;
       });
     }
 
@@ -689,7 +690,7 @@ class ComprehensivePerformanceMonitor {
           'Use React.memo for heavy components',
           'Optimize image loading and caching'
         ],
-        estimatedImprovement: 25
+        estimatedImprovement: 25;
       });
     }
 
@@ -706,7 +707,7 @@ class ComprehensivePerformanceMonitor {
           'Use WebWorkers for background processing',
           'Cache common crisis patterns'
         ],
-        estimatedImprovement: 60
+        estimatedImprovement: 60;
       });
     }
 
@@ -769,8 +770,8 @@ class ComprehensivePerformanceMonitor {
    * Create and dispatch performance alert
    */
   private createAlert(alert: PerformanceAlert): void {
-    // Prevent duplicate alerts
-    const existingAlert = this.activeAlerts.find(a => 
+    // Prevent duplicate alerts;
+    const existingAlert = this.activeAlerts.find(a => ;
       a.metric === alert.metric && a.type === alert.type
     );
     
@@ -784,8 +785,8 @@ class ComprehensivePerformanceMonitor {
     
     // Prioritize crisis-related alerts
     if (alert.isCrisisRelated) {
-      console.error('🚨 CRITICAL PERFORMANCE ALERT (Crisis-Related):', alert);
-    } else {
+      console.error('🚨 CRITICAL PERFORMANCE ALERT (Crisis-Related):', alert);;
+  } else {
       console.warn('⚠️ Performance Alert:', alert);
     }
     
@@ -798,12 +799,12 @@ class ComprehensivePerformanceMonitor {
       }
     });
     
-    // Track alert in analytics
+    // Track alert in analytics;
     const analyticsService = getAnalyticsService();
     analyticsService.track('performance_alert', 'performance', {
       metric: alert.metric,
       severity: alert.severity,
-      isCrisisRelated: alert.isCrisisRelated
+      isCrisisRelated: alert.isCrisisRelated;
     });
   }
 
@@ -879,7 +880,7 @@ class ComprehensivePerformanceMonitor {
         implementation: 'Implement route-based code splitting and remove unused dependencies.',
         estimatedGain: '30-50% improvement in load time',
         difficulty: 'medium',
-        mentalHealthImpact: 'Faster loading reduces user anxiety and improves crisis intervention response'
+        mentalHealthImpact: 'Faster loading reduces user anxiety and improves crisis intervention response';
       });
     }
 
@@ -894,7 +895,7 @@ class ComprehensivePerformanceMonitor {
         implementation: 'Optimize images, implement lazy loading, and improve server response times.',
         estimatedGain: '25-40% improvement in perceived performance',
         difficulty: 'medium',
-        mentalHealthImpact: 'Faster content display improves user engagement and reduces abandonment'
+        mentalHealthImpact: 'Faster content display improves user engagement and reduces abandonment';
       });
     }
 
@@ -909,7 +910,7 @@ class ComprehensivePerformanceMonitor {
         implementation: 'Implement virtual scrolling and optimize component lifecycle management.',
         estimatedGain: '20-30% reduction in memory usage',
         difficulty: 'hard',
-        mentalHealthImpact: 'Better performance on all devices ensures platform accessibility'
+        mentalHealthImpact: 'Better performance on all devices ensures platform accessibility';
       });
     }
 
@@ -924,7 +925,7 @@ class ComprehensivePerformanceMonitor {
         implementation: 'Optimize AI model inference and implement client-side pre-filtering.',
         estimatedGain: '50-70% improvement in response time',
         difficulty: 'hard',
-        mentalHealthImpact: 'Faster crisis detection can literally save lives'
+        mentalHealthImpact: 'Faster crisis detection can literally save lives';
       });
     }
 
@@ -939,7 +940,7 @@ class ComprehensivePerformanceMonitor {
         implementation: 'Add ARIA labels, improve color contrast, and enhance keyboard navigation.',
         estimatedGain: '15-25% improvement in accessibility score',
         difficulty: 'easy',
-        mentalHealthImpact: 'Better accessibility ensures everyone can access mental health support'
+        mentalHealthImpact: 'Better accessibility ensures everyone can access mental health support';
       });
     }
 
@@ -1049,12 +1050,12 @@ ${this.getPerformanceGrade(currentMetrics)}
       maxScore += 100;
       
       if (value <= budget.target) {
-        score += 100;
-      } else if (value <= budget.warning) {
-        score += 75;
-      } else if (value <= budget.critical) {
-        score += 50;
-      } else {
+        score += 100;;
+  } else if (value <= budget.warning) {
+        score += 75;;
+  } else if (value <= budget.critical) {
+        score += 50;;
+  } else {
         score += 25;
       }
     });
@@ -1087,7 +1088,7 @@ ${this.getPerformanceGrade(currentMetrics)}
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const comprehensivePerformanceMonitor = new ComprehensivePerformanceMonitor();
 
 export default ComprehensivePerformanceMonitor;

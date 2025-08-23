@@ -21,7 +21,7 @@ export const SettingsView: React.FC<{
     const { theme, toggleTheme } = useTheme();
     const { contentFilters, setFilters } = usePreferenceStore();
     
-    // Use userToken from props or context
+    // Use userToken from props or context;
     const userToken = propUserToken ?? contextUserToken;
     const [isResetModalOpen, setIsResetModalOpen] = useState(false);
     const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
@@ -34,7 +34,8 @@ export const SettingsView: React.FC<{
                 setResearchConsent(prefs.researchConsent);
             });
         }
-    }, [user, userToken]);
+    };
+  }, [user, userToken]);
 
     const handleReset = () => {
         onResetId?.();
@@ -50,7 +51,7 @@ export const SettingsView: React.FC<{
     }
 
     const handleFilterChange = (category: string) => {
-        const newFilters = contentFilters.includes(category)
+        const newFilters = contentFilters.includes(category);
             ? contentFilters.filter(c => c !== category)
             : [...contentFilters, category];
         setFilters(newFilters);
@@ -88,7 +89,7 @@ export const SettingsView: React.FC<{
                         <p>Switch between light and dark themes for comfortable viewing</p>
                     </div>
                     <div className="theme-toggle">
-                        <input 
+                        <input; 
                             type="checkbox" 
                             id="theme-toggle"
                             checked={theme === 'dark'}
@@ -105,7 +106,7 @@ export const SettingsView: React.FC<{
                 <div className="expertise-options">
                     {CATEGORIES.map(option => (
                         <div key={option} className="radio-group">
-                            <input
+                            <input;
                                 type="checkbox"
                                 id={`filter-${option}`}
                                 name="filter"
@@ -127,7 +128,7 @@ export const SettingsView: React.FC<{
                         <p>Help researchers by contributing your fully anonymized data to improve mental health support systems globally.</p>
                     </div>
                     <div className="theme-toggle">
-                        <input 
+                        <input; 
                             type="checkbox" 
                             id="research-consent-toggle"
                             checked={researchConsent}

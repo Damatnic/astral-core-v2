@@ -42,22 +42,24 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
   
   useEffect(() => {
     loadSessions();
+  };
   }, [userId]);
   
   useEffect(() => {
     filterSessions();
+  };
   }, [sessions, searchQuery, filterTag]);
   
   const loadSessions = async () => {
     setIsLoading(true);
     try {
-      // Load from localStorage for demo (replace with API call in production)
+      // Load from localStorage for demo (replace with API call in production);
       const storedSessions = localStorage.getItem(`chat_sessions_${userId}`);
       if (storedSessions) {
         const parsed = JSON.parse(storedSessions);
-        setSessions(parsed);
-      } else {
-        // Create demo sessions
+        setSessions(parsed);;
+  } else {
+        // Create demo sessions;
         const demoSessions: ChatSession[] = [
           {
             id: 'session-1',
@@ -69,18 +71,18 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
                 id: '1',
                 sender: 'user',
                 text: "I've been feeling anxious lately",
-                timestamp: new Date(Date.now() - 86400000).toISOString()
+                timestamp: new Date(Date.now() - 86400000).toISOString();
               },
               {
                 id: '2',
                 sender: 'ai',
                 text: "I understand that anxiety can be really challenging. Would you like to talk about what's been causing these feelings?",
-                timestamp: new Date(Date.now() - 86300000).toISOString()
+                timestamp: new Date(Date.now() - 86300000).toISOString();
               }
             ],
             summary: 'Discussion about anxiety management',
             tags: ['anxiety', 'coping'],
-            crisisFlags: 0
+            crisisFlags: 0;
           },
           {
             id: 'session-2',
@@ -92,18 +94,18 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
                 id: '3',
                 sender: 'user',
                 text: "I need help with stress management",
-                timestamp: new Date(Date.now() - 172800000).toISOString()
+                timestamp: new Date(Date.now() - 172800000).toISOString();
               },
               {
                 id: '4',
                 sender: 'ai',
                 text: "I'm here to help you with stress management. Let's explore some techniques that might work for you.",
-                timestamp: new Date(Date.now() - 172700000).toISOString()
+                timestamp: new Date(Date.now() - 172700000).toISOString();
               }
             ],
             summary: 'Stress management techniques',
             tags: ['stress', 'mindfulness'],
-            crisisFlags: 0
+            crisisFlags: 0;
           }
         ];
         setSessions(demoSessions);
@@ -159,7 +161,7 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
     }
     
     try {
-      // Remove from state
+      // Remove from state;
       const updatedSessions = sessions.filter(s => s.id !== sessionId);
       setSessions(updatedSessions);
       
@@ -181,13 +183,13 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
         startTime: session.startTime,
         endTime: session.endTime,
         summary: session.summary,
-        tags: session.tags
+        tags: session.tags;
       },
-      messages: session.messages
+      messages: session.messages;
     };
     
     const blob = new Blob([JSON.stringify(content, null, 2)], { 
-      type: 'application/json' 
+      type: 'application/json' ;
     });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -226,7 +228,7 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
       <div className="history-controls">
         <div className="history-search">
           <SearchIcon />
-          <input
+          <input;
             type="text"
             placeholder="Search conversations..."
             value={searchQuery}
@@ -253,7 +255,7 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
           <HistoryIcon />
           <p>No conversations found</p>
           {searchQuery || filterTag ? (
-            <button 
+            <button; 
               className="clear-filters-btn"
               onClick={() => {
                 setSearchQuery('');
@@ -284,14 +286,14 @@ export const AIChatHistory: React.FC<AIChatHistoryProps> = ({
                   )}
                 </div>
                 <div className="session-actions">
-                  <button 
+                  <button; 
                     className="session-action-btn"
                     onClick={(e) => exportSession(session, e)}
                     aria-label="Export session"
                   >
                     <DownloadIcon />
                   </button>
-                  <button 
+                  <button; 
                     className="session-action-btn delete"
                     onClick={(e) => handleDeleteSession(session.id, e)}
                     aria-label="Delete session"

@@ -1,13 +1,13 @@
 /**
  * Error Handling Service for Astral Core
  * Centralized error management with user-friendly messaging and crisis support
- */
+ */;
 
 import { astralCoreNotificationService, NotificationType, NotificationPriority, Notification } from './astralCoreNotificationService';
 import { apiClient } from './apiClient';
 import { getEnvVar, isProd, isDev } from '../utils/envConfig';
 
-// Error Types
+// Error Types;
 export enum ErrorType {
   NETWORK = 'network',
   AUTHENTICATION = 'authentication',
@@ -73,7 +73,7 @@ export interface ErrorHandlerOptions {
   suppressConsole?: boolean;
 }
 
-// Error Messages for users
+// Error Messages for users;
 const USER_FRIENDLY_MESSAGES: Record<string, string> = {
   // Network errors
   'NETWORK_ERROR': 'Unable to connect. Please check your internet connection.',
@@ -114,8 +114,8 @@ const USER_FRIENDLY_MESSAGES: Record<string, string> = {
   'SERVER_ERROR': 'We\'re experiencing technical difficulties. Please try again later.',
 };
 
-// Crisis-related error codes that need special handling
-const CRISIS_ERROR_CODES = [
+// Crisis-related error codes that need special handling;
+const CRISIS_ERROR_CODES = [;
   'CRISIS_ALERT_FAILED',
   'SOS_FAILED',
   'EMERGENCY_CONTACT_FAILED',
@@ -125,7 +125,7 @@ const CRISIS_ERROR_CODES = [
 
 /**
  * Astral Core Error Service
- */
+ */;
 class AstralCoreErrorService {
   private errorLog: AstralCoreError[] = [];
   private readonly maxLogSize = 100;
@@ -159,7 +159,7 @@ class AstralCoreErrorService {
       suppressConsole = false,
     } = options;
 
-    // Convert to AstralCoreError
+    // Convert to AstralCoreError;
     const astralError = this.normalizeError(error);
 
     // Check if crisis error
@@ -236,7 +236,8 @@ class AstralCoreErrorService {
           await apiClient.get(endpoint);
         }
       },
-    });
+    };
+  };
   }
 
   /**
@@ -265,7 +266,7 @@ class AstralCoreErrorService {
     errors: Record<string, string[]>,
     formName?: string
   ): AstralCoreError {
-    const errorMessages = Object.entries(errors)
+    const errorMessages = Object.entries(errors);
       .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
       .join('\n');
 
@@ -491,7 +492,7 @@ class AstralCoreErrorService {
    * Check if error is recoverable
    */
   private isRecoverable(code: string, type: ErrorType): boolean {
-    const nonRecoverableCodes = [
+    const nonRecoverableCodes = [;
       'ACCOUNT_DELETED',
       'SERVICE_TERMINATED',
       'CRITICAL_FAILURE',
@@ -509,13 +510,13 @@ class AstralCoreErrorService {
    * Check if error is retryable
    */
   private isRetryable(code: string, type: ErrorType): boolean {
-    const retryableTypes = [
+    const retryableTypes = [;
       ErrorType.NETWORK,
       ErrorType.RATE_LIMIT,
       ErrorType.API,
     ];
 
-    const nonRetryableCodes = [
+    const nonRetryableCodes = [;
       'INVALID_CREDENTIALS',
       'PERMISSION_DENIED',
       'VALIDATION_ERROR',
@@ -591,10 +592,10 @@ class AstralCoreErrorService {
     if (!suppressConsole && isDev()) {
       let logMethod: keyof Console;
       if (error.severity === ErrorSeverity.CRITICAL) {
-        logMethod = 'error';
-      } else if (error.severity === ErrorSeverity.HIGH) {
-        logMethod = 'warn';
-      } else {
+        logMethod = 'error';;
+  } else if (error.severity === ErrorSeverity.HIGH) {
+        logMethod = 'warn';;
+  } else {
         logMethod = 'log';
       }
       
@@ -603,7 +604,8 @@ class AstralCoreErrorService {
         message: error.message,
         details: error.details,
         context: error.context,
-      });
+      };
+  };
     }
   }
 
@@ -621,8 +623,8 @@ class AstralCoreErrorService {
       return false;
     }
 
-    // Check if too many notifications recently
-    const recentNotifications = this.errorLog
+    // Check if too many notifications recently;
+    const recentNotifications = this.errorLog;
       .filter(e => Date.now() - e.timestamp.getTime() < 60000)
       .length;
 
@@ -663,8 +665,8 @@ class AstralCoreErrorService {
 
     if (immediate || error.severity === ErrorSeverity.CRITICAL) {
       // Send immediately
-      this.sendErrorBatch();
-    } else {
+      this.sendErrorBatch();;
+  } else {
       // Batch report
       this.scheduleBatchReport();
     }
@@ -747,7 +749,7 @@ class AstralCoreErrorService {
    * Show critical error UI
    */
   private showCriticalErrorUI(error: AstralCoreError): void {
-    // Create error overlay
+    // Create error overlay;
     const overlay = document.createElement('div');
     overlay.className = 'astral-core-critical-error';
     overlay.innerHTML = `
@@ -769,7 +771,7 @@ class AstralCoreErrorService {
       </div>
     `;
 
-    // Add styles
+    // Add styles;
     const style = document.createElement('style');
     style.textContent = `
       .astral-core-critical-error {
@@ -881,7 +883,7 @@ class AstralCoreErrorService {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const astralCoreErrorService = new AstralCoreErrorService();
 
 export default astralCoreErrorService;

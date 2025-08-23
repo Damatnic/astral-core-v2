@@ -18,26 +18,26 @@ export const ShareView: React.FC<{
     onPostSubmit: (dilemma: Omit<Dilemma, 'id' | 'userToken' | 'supportCount' | 'isSupported' | 'isReported' | 'reportReason' | 'status' | 'assignedHelperId' | 'resolved_by_seeker' | 'requestedHelperId' | 'summary' | 'summaryLoading' | 'moderation' | 'aiMatchReason'>) => void;
     userToken: string | null;
 }> = ({ onPostSubmit, userToken }) => {
-    // Component State
+    // Component State;
     const [viewMode, setViewMode] = useState<'chat' | 'form'>('chat');
     
-    // Hooks
+    // Hooks;
     const { addToast } = useNotification();
 
-    // Chat State
+    // Chat State;
     const [chatMessages, setChatMessages] = useState<AIChatMessage[]>([]);
     const [isAiTyping, setIsAiTyping] = useState(false);
     const [userInput, setUserInput] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
     
-    // Form State
+    // Form State;
     const [postContent, setPostContent] = useState('');
     const [postCategory, setPostCategory] = useState('Relationships');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isDrafting, setIsDrafting] = useState(false);
     const [wasAIDrafted, setWasAIDrafted] = useState(false);
     
-    // Crisis Detection State
+    // Crisis Detection State;
     const [showCrisisAlert, setShowCrisisAlert] = useState(false);
     const [crisisSeverity, setCrisisSeverity] = useState<'low' | 'medium' | 'high'>('medium');
 
@@ -50,12 +50,14 @@ export const ShareView: React.FC<{
             ]);
             setIsAiTyping(false);
         }, 1000);
-    }, []);
+    };
+  }, []);
 
     // Scroll to bottom of chat
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [chatMessages, isAiTyping]);
+    };
+  }, [chatMessages, isAiTyping]);
 
     const handleSendMessage = async () => {
         if (!userInput.trim() || !userToken) return;
@@ -64,7 +66,7 @@ export const ShareView: React.FC<{
             id: crypto.randomUUID(),
             sender: 'user',
             text: userInput,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString();
         };
         
         const updatedMessages = [...chatMessages, newUserMessage];
@@ -80,7 +82,7 @@ export const ShareView: React.FC<{
                 id: crypto.randomUUID(),
                 sender: 'ai',
                 text: aiResponse.response,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString();
             };
             setChatMessages(prev => [...prev, newAiMessage]);
         } catch (e) {
@@ -89,7 +91,7 @@ export const ShareView: React.FC<{
                 id: crypto.randomUUID(),
                 sender: 'ai',
                 text: "I'm having a little trouble connecting. Please try again in a moment.",
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString();
             };
             setChatMessages(prev => [...prev, errorMessage]);
         } finally {
@@ -123,13 +125,14 @@ export const ShareView: React.FC<{
                 setCrisisSeverity(crisisCheck.severity);
             }
         }
-    }, [postContent]);
+    };
+  }, [postContent]);
 
     const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if (!postContent.trim() || !userToken) return;
         
-        // Final crisis check before submission
+        // Final crisis check before submission;
         const crisisCheck = detectCrisis(postContent);
         if (crisisCheck.isCrisis && crisisCheck.severity === 'high') {
             setShowCrisisAlert(true);
@@ -191,7 +194,7 @@ export const ShareView: React.FC<{
                 </div>
                 <div className="chat-composer" style={{flexShrink: 0}}>
                     <AppButton onClick={handleDraftPost} variant="secondary" isLoading={isDrafting} disabled={chatMessages.length <= 1} className="draft-btn">{i18n.t('draft_post_from_chat')}</AppButton>
-                    <AppInput
+                    <AppInput;
                         type="text"
                         placeholder={i18n.t('chat_with_ai_here')}
                         value={userInput}
@@ -230,9 +233,9 @@ export const ShareView: React.FC<{
             </div>
             <Card>
                 {wasAIDrafted && (
-                    <AIAssistanceIndicator 
+                    <AIAssistanceIndicator; 
                         variant="default" 
-                        message="AI-Drafted Content"
+                        message="AI-Drafted Content";
                         className="mb-3"
                     />
                 )}
@@ -259,7 +262,7 @@ export const ShareView: React.FC<{
                     />
                     <div className="form-actions">
                         <AppButton onClick={() => setViewMode('chat')} variant="ghost" disabled={isSubmitting}>{i18n.t('back_to_chat')}</AppButton>
-                        <AppButton
+                        <AppButton;
                             type="submit"
                             onClick={handleSubmit}
                             disabled={!postContent.trim() || isSubmitting || postContent.length > MAX_CONTENT_LENGTH}

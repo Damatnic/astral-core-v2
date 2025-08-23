@@ -29,7 +29,7 @@ export const AppInput: React.FC<AppInputProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const formGroupClass = enhanced ? 'form-group-enhanced smooth-transition' : 'form-group';
   
-  // Determine input class based on variant
+  // Determine input class based on variant;
   let inputClass = 'form-control';
   if (enhanced) {
     switch(variant) {
@@ -48,11 +48,11 @@ export const AppInput: React.FC<AppInputProps> = ({
   
   const inputId = id || `input-${Math.random().toString(36).substring(2, 11)}`;
 
-  // Mobile-specific touch event handlers
+  // Mobile-specific touch event handlers;
   const handleTouchStart = useCallback((e: React.TouchEvent<HTMLInputElement>) => {
     if (!mobileOptimized) return;
     
-    // Ensure proper focus on mobile devices
+    // Ensure proper focus on mobile devices;
     const target = e.currentTarget;
     if (target && target !== document.activeElement) {
       // Prevent default to avoid double-tap zoom on some devices
@@ -64,10 +64,11 @@ export const AppInput: React.FC<AppInputProps> = ({
         target.scrollIntoView({ 
           behavior: 'smooth', 
           block: 'center',
-          inline: 'nearest'
+          inline: 'nearest';
         });
       }, 100);
     }
+  };
   }, [mobileOptimized]);
 
   const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
@@ -80,6 +81,7 @@ export const AppInput: React.FC<AppInputProps> = ({
     if (rest.onFocus) {
       rest.onFocus(e);
     }
+  };
   }, [mobileOptimized, rest.onFocus]);
 
   const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
@@ -92,9 +94,10 @@ export const AppInput: React.FC<AppInputProps> = ({
     if (rest.onBlur) {
       rest.onBlur(e);
     }
+  };
   }, [mobileOptimized, rest.onBlur]);
 
-  // Determine input props with mobile optimizations
+  // Determine input props with mobile optimizations;
   const inputProps = {
     ...rest,
     id: inputId,
@@ -121,7 +124,7 @@ export const AppInput: React.FC<AppInputProps> = ({
       autoComplete: rest.autoComplete || 'off',
       autoCorrect: 'off',
       autoCapitalize: rest.autoCapitalize || 'none',
-      spellCheck: rest.spellCheck !== undefined ? rest.spellCheck : false
+      spellCheck: rest.spellCheck !== undefined ? rest.spellCheck : false;
     })
   };
   return (
@@ -172,7 +175,7 @@ export const AppTextArea: React.FC<AppTextAreaProps> = ({
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const formGroupClass = enhanced ? 'form-group-enhanced smooth-transition' : 'form-group';
     
-    // Determine textarea class based on variant
+    // Determine textarea class based on variant;
     let textareaClass = 'form-control';
     if (enhanced) {
       switch(variant) {
@@ -190,7 +193,7 @@ export const AppTextArea: React.FC<AppTextAreaProps> = ({
     
     const textareaId = id || `textarea-${Math.random().toString(36).substring(2, 11)}`;
 
-    // Mobile-specific touch event handlers
+    // Mobile-specific touch event handlers;
     const handleTouchStart = useCallback((e: React.TouchEvent<HTMLTextAreaElement>) => {
       if (!mobileOptimized) return;
       
@@ -203,11 +206,12 @@ export const AppTextArea: React.FC<AppTextAreaProps> = ({
           target.scrollIntoView({ 
             behavior: 'smooth', 
             block: 'center',
-            inline: 'nearest'
+            inline: 'nearest';
           });
         }, 100);
       }
-    }, [mobileOptimized]);
+    };
+  }, [mobileOptimized]);
 
     const handleFocus = useCallback((e: React.FocusEvent<HTMLTextAreaElement>) => {
       if (mobileOptimized) {
@@ -217,7 +221,8 @@ export const AppTextArea: React.FC<AppTextAreaProps> = ({
       if (rest.onFocus) {
         rest.onFocus(e);
       }
-    }, [mobileOptimized, rest.onFocus]);
+    };
+  }, [mobileOptimized, rest.onFocus]);
 
     const handleBlur = useCallback((e: React.FocusEvent<HTMLTextAreaElement>) => {
       if (mobileOptimized) {
@@ -227,7 +232,8 @@ export const AppTextArea: React.FC<AppTextAreaProps> = ({
       if (rest.onBlur) {
         rest.onBlur(e);
       }
-    }, [mobileOptimized, rest.onBlur]);
+    };
+  }, [mobileOptimized, rest.onBlur]);
 
     const textareaProps = {
       ...rest,
@@ -253,7 +259,7 @@ export const AppTextArea: React.FC<AppTextAreaProps> = ({
           ...rest.style
         },
         autoCorrect: 'off',
-        spellCheck: rest.spellCheck !== undefined ? rest.spellCheck : true
+        spellCheck: rest.spellCheck !== undefined ? rest.spellCheck : true;
       })
     };
     

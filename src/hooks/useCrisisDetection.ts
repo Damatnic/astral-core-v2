@@ -3,7 +3,7 @@
  * 
  * React hook for integrating enhanced crisis detection with real-time analysis,
  * escalation workflows, and UI state management.
- */
+ */;
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { crisisDetectionService, CrisisAnalysisResult, CrisisEscalationAction } from '../services/crisisDetectionService';
@@ -49,7 +49,7 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
     lastAnalysis: null,
     escalationActions: [],
     alertShown: false,
-    analysisHistory: []
+    analysisHistory: [];
   });
 
   const [crisisAlert, setCrisisAlert] = useState<CrisisAlert>({
@@ -58,7 +58,7 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
     message: '',
     actions: [],
     resources: [],
-    emergencyMode: false
+    emergencyMode: false;
   });
 
   const debounceRef = useRef<NodeJS.Timeout>();
@@ -66,7 +66,7 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
 
   /**
    * Analyze text for crisis indicators
-   */
+   */;
   const analyzeText = useCallback(async (text: string, userType: 'seeker' | 'helper' = 'seeker'): Promise<CrisisAnalysisResult> => {
     if (!text || text.trim().length < minAnalysisLength) {
       return {
@@ -83,18 +83,19 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
           triggeredKeywords: [],
           sentimentScore: 0,
           contextualFactors: [],
-          urgencyLevel: 0
+          urgencyLevel: 0;
         }
       }
 
-    setState(prev => ({ ...prev, isAnalyzing: true }));
+    setState(prev => ({ ...prev, isAnalyzing: true };
+  });
 
     try {
-      // Perform crisis analysis
+      // Perform crisis analysis;
       const result = crisisDetectionService.analyzeCrisisContent(text);
       
-      // Get escalation actions if needed
-      const escalationActions = result.hasCrisisIndicators 
+      // Get escalation actions if needed;
+      const escalationActions = result.hasCrisisIndicators ;
         ? crisisDetectionService.getEscalationActions(result)
         : [];
 
@@ -130,16 +131,16 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
             message: response.message || 'Crisis detected - please seek help',
             actions: response.actions || [],
             resources: response.resources || [],
-            emergencyMode: result.emergencyServices
-          });
-        } else {
+            emergencyMode: result.emergencyServices;
+          });;
+  } else {
           setCrisisAlert({
             show: true,
             severity: result.severityLevel,
             message: 'Crisis detected - please seek help',
             actions: [],
             resources: [],
-            emergencyMode: result.emergencyServices
+            emergencyMode: result.emergencyServices;
           });
         }
       }
@@ -152,11 +153,12 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
       setState(prev => ({ ...prev, isAnalyzing: false }));
       throw error;
     }
+  };
   }, [minAnalysisLength, maxHistorySize, onCrisisDetected, onEscalationRequired]);
 
   /**
    * Analyze text with debouncing for real-time input
-   */
+   */;
   const analyzeTextDebounced = useCallback((text: string, userType: 'seeker' | 'helper' = 'seeker') => {
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
@@ -165,11 +167,12 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
     debounceRef.current = setTimeout(() => {
       analyzeText(text, userType).catch(console.error);
     }, debounceMs);
+  };
   }, [analyzeText, debounceMs]);
 
   /**
    * Monitor text input for crisis indicators (for real-time chat/input)
-   */
+   */;
   const monitorTextInput = useCallback((text: string, userType: 'seeker' | 'helper' = 'seeker') => {
     if (!autoAnalyze || !text) return;
     
@@ -177,19 +180,21 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
     if (text.length >= minAnalysisLength) {
       analyzeTextDebounced(text, userType);
     }
+  };
   }, [autoAnalyze, minAnalysisLength, analyzeTextDebounced]);
 
   /**
    * Dismiss crisis alert
-   */
+   */;
   const dismissAlert = useCallback(() => {
     setCrisisAlert(prev => ({ ...prev, show: false }));
     setState(prev => ({ ...prev, alertShown: true }));
+  };
   }, []);
 
   /**
    * Get crisis status for current session
-   */
+   */;
   const getCrisisStatus = useCallback(() => {
     const recentAnalyses = state.analysisHistory.slice(-5);
     const hasCrisisIndicators = recentAnalyses.some(analysis => analysis.hasCrisisIndicators);
@@ -205,25 +210,28 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
       maxSeverity,
       analysisCount: analysisCountRef.current,
       recentAnalyses: recentAnalyses.length,
-      escalationRequired: state.escalationActions.length > 0
-    }, [state.analysisHistory, state.escalationActions]);
+      escalationRequired: state.escalationActions.length > 0;
+    };
+  }, [state.analysisHistory, state.escalationActions]);
 
   /**
    * Clear analysis history
-   */
+   */;
   const clearHistory = useCallback(() => {
     setState(prev => ({
       ...prev,
       analysisHistory: [],
       lastAnalysis: null,
-      escalationActions: []
-    }));
+      escalationActions: [];
+    };
+  });
     analysisCountRef.current = 0;
+  };
   }, []);
 
   /**
    * Get crisis resources based on current analysis
-   */
+   */;
   const getCrisisResources = useCallback(() => {
     const analysis = state.lastAnalysis;
     if (!analysis || !analysis.hasCrisisIndicators) {
@@ -233,10 +241,10 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
           { name: 'Crisis Text Line', contact: 'Text HOME to 741741', available: '24/7' }
         ],
         resources: [],
-        emergencyServices: false
+        emergencyServices: false;
       }
 
-    const hotlines = [
+    const hotlines = [;
       { name: '988 Suicide & Crisis Lifeline', contact: '988', available: '24/7' },
       { name: 'Crisis Text Line', contact: 'Text HOME to 741741', available: '24/7' },
       { name: 'National Suicide Prevention Lifeline', contact: '1-800-273-8255', available: '24/7' }
@@ -271,8 +279,9 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
     return {
       hotlines,
       resources,
-      emergencyServices: analysis.emergencyServices
-    }, [state.lastAnalysis]);
+      emergencyServices: analysis.emergencyServices;
+    };
+  }, [state.lastAnalysis]);
 
   // Cleanup debounce on unmount
   useEffect(() => {
@@ -280,7 +289,8 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
       }
-    }, []);
+    };
+  }, []);
 
   return {
     // State
@@ -306,7 +316,7 @@ export function useCrisisDetection(options: CrisisDetectionOptions = {}) {
     requiresEscalation: state.escalationActions.length > 0,
     isEmergency: state.lastAnalysis?.emergencyServices || false,
     currentSeverity: state.lastAnalysis?.severityLevel || 'none',
-    analysisCount: analysisCountRef.current
+    analysisCount: analysisCountRef.current;
   }
 
 export default useCrisisDetection;

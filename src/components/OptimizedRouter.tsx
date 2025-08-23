@@ -1,7 +1,7 @@
 /**
  * Optimized Router Configuration
  * Implements route-based code splitting with intelligent preloading
- */
+ */;
 
 import React, { Suspense, useEffect, useRef, useCallback } from 'react';
 import { Routes, Route, useLocation, useNavigationType } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { LoadingSpinner } from './LoadingSpinner';
 import { ErrorBoundary } from './ErrorBoundary';
 import { UserRole } from '../services/auth0Service';
 
-// Performance monitoring
+// Performance monitoring;
 interface RouteConfig {
   path: string;
   component: React.ComponentType<any>;
@@ -21,93 +21,93 @@ interface RouteConfig {
   chunkName?: string;
 }
 
-// Route Components with optimized chunking
+// Route Components with optimized chunking;
 const routeComponents = {
   // Critical routes - immediate loading
-  CrisisView: React.lazy(() =>
+  CrisisView: React.lazy(() =>;
     import(/* webpackChunkName: "crisis-critical" */ '../views/CrisisView')
   ),
-  CrisisResourcesView: React.lazy(() =>
+  CrisisResourcesView: React.lazy(() =>;
     import(/* webpackChunkName: "crisis-critical" */ '../views/CrisisResourcesView')
   ),
-  SafetyPlanView: React.lazy(() =>
+  SafetyPlanView: React.lazy(() =>;
     import(/* webpackChunkName: "crisis-critical" */ '../views/SafetyPlanView')
   ),
   
   // Core routes - high priority
-  DashboardView: React.lazy(() =>
+  DashboardView: React.lazy(() =>;
     import(/* webpackChunkName: "core-app" */ '../views/DashboardView')
   ),
-  LoginView: React.lazy(() =>
+  LoginView: React.lazy(() =>;
     import(/* webpackChunkName: "auth" */ '../views/LoginView')
   ),
   
   // Community features - medium priority
-  CommunityView: React.lazy(() =>
+  CommunityView: React.lazy(() =>;
     import(/* webpackChunkName: "community" */ '../views/CommunityView')
   ),
-  FeedView: React.lazy(() =>
+  FeedView: React.lazy(() =>;
     import(/* webpackChunkName: "community" */ '../views/FeedView')
   ),
-  ChatView: React.lazy(() =>
+  ChatView: React.lazy(() =>;
     import(/* webpackChunkName: "communication" */ '../views/ChatView')
   ),
-  AIChatView: React.lazy(() =>
+  AIChatView: React.lazy(() =>;
     import(/* webpackChunkName: "communication" */ '../views/AIChatView')
   ),
-  PeerSupportView: React.lazy(() =>
+  PeerSupportView: React.lazy(() =>;
     import(/* webpackChunkName: "community" */ '../views/PeerSupportView')
   ),
   
   // Wellness features - medium priority
-  WellnessView: React.lazy(() =>
+  WellnessView: React.lazy(() =>;
     import(/* webpackChunkName: "wellness" */ '../views/WellnessView')
   ),
-  AssessmentsView: React.lazy(() =>
+  AssessmentsView: React.lazy(() =>;
     import(/* webpackChunkName: "wellness" */ '../views/AssessmentsView')
   ),
-  ReflectionsView: React.lazy(() =>
+  ReflectionsView: React.lazy(() =>;
     import(/* webpackChunkName: "wellness" */ '../views/ReflectionsView')
   ),
-  QuietSpaceView: React.lazy(() =>
+  QuietSpaceView: React.lazy(() =>;
     import(/* webpackChunkName: "wellness" */ '../views/QuietSpaceView')
   ),
   
   // User management - low priority
-  ProfileView: React.lazy(() =>
+  ProfileView: React.lazy(() =>;
     import(/* webpackChunkName: "user-management" */ '../views/ProfileView')
   ),
-  SettingsView: React.lazy(() =>
+  SettingsView: React.lazy(() =>;
     import(/* webpackChunkName: "user-management" */ '../views/SettingsView')
   ),
   
   // Helper/Admin features - low priority
-  HelperDashboardView: React.lazy(() =>
+  HelperDashboardView: React.lazy(() =>;
     import(/* webpackChunkName: "helper-admin" */ '../views/HelperDashboardView')
   ),
-  AdminDashboardView: React.lazy(() =>
+  AdminDashboardView: React.lazy(() =>;
     import(/* webpackChunkName: "helper-admin" */ '../views/AdminDashboardView')
   ),
-  ModerationDashboardView: React.lazy(() =>
+  ModerationDashboardView: React.lazy(() =>;
     import(/* webpackChunkName: "helper-admin" */ '../views/ModerationDashboardView')
   ),
   
   // Static pages - lowest priority
-  AboutView: React.lazy(() =>
+  AboutView: React.lazy(() =>;
     import(/* webpackChunkName: "static" */ '../views/AboutView')
   ),
-  HelpView: React.lazy(() =>
+  HelpView: React.lazy(() =>;
     import(/* webpackChunkName: "static" */ '../views/HelpView')
   ),
-  LegalView: React.lazy(() =>
+  LegalView: React.lazy(() =>;
     import(/* webpackChunkName: "static" */ '../views/LegalView')
   ),
-  Custom404Page: React.lazy(() =>
+  Custom404Page: React.lazy(() =>;
     import(/* webpackChunkName: "static" */ '../components/Custom404Page')
   ),
 };
 
-// Route configuration with metadata
+// Route configuration with metadata;
 const routeConfig: RouteConfig[] = [
   // Public routes
   { path: '/login', component: routeComponents.LoginView, requiresAuth: false, priority: 'high' },
@@ -141,7 +141,7 @@ const routeConfig: RouteConfig[] = [
   { path: '/moderation/*', component: routeComponents.ModerationDashboardView, requiresAuth: true, roles: ['moderator'], priority: 'low' },
 ];
 
-// Route performance tracker
+// Route performance tracker;
 class RoutePerformanceTracker {
   private readonly metrics: Map<string, any> = new Map();
   
@@ -206,7 +206,7 @@ class RoutePerformanceTracker {
   }
 }
 
-// Preload manager for intelligent route preloading
+// Preload manager for intelligent route preloading;
 class PreloadManager {
   private readonly preloadedRoutes = new Set<string>();
   private observer: IntersectionObserver | null = null;
@@ -278,7 +278,7 @@ class PreloadManager {
   }
 }
 
-// Custom loading component with route-specific loading states
+// Custom loading component with route-specific loading states;
 const RouteLoadingFallback: React.FC<{ route?: string }> = ({ route }) => {
   const [showSlowWarning, setShowSlowWarning] = React.useState(false);
   
@@ -288,6 +288,7 @@ const RouteLoadingFallback: React.FC<{ route?: string }> = ({ route }) => {
     }, 3000);
     
     return () => clearTimeout(timer);
+  };
   }, []);
   
   return (
@@ -303,7 +304,7 @@ const RouteLoadingFallback: React.FC<{ route?: string }> = ({ route }) => {
   );
 };
 
-// Optimized Router Component
+// Optimized Router Component;
 export const OptimizedRouter: React.FC = () => {
   const location = useLocation();
   const navigationType = useNavigationType();
@@ -316,18 +317,22 @@ export const OptimizedRouter: React.FC = () => {
     
     return () => {
       performanceTracker.current.trackRouteComplete(location.pathname);
-    }, [location]);
+    };
+  };
+  }, [location]);
   
   // Cleanup on unmount
   useEffect(() => {
     return () => {
       preloadManager.current.cleanup();
-    }, []);
+    };
+  };
+  }, []);
   
   // Preload adjacent routes based on navigation type
   useEffect(() => {
     if (navigationType === 'PUSH') {
-      // User is navigating forward, preload likely next routes
+      // User is navigating forward, preload likely next routes;
       const currentRouteIndex = routeConfig.findIndex(r => r.path === location.pathname);
       if (currentRouteIndex !== -1 && currentRouteIndex < routeConfig.length - 1) {
         const nextRoute = routeConfig[currentRouteIndex + 1];
@@ -336,6 +341,7 @@ export const OptimizedRouter: React.FC = () => {
         }
       }
     }
+  };
   }, [location, navigationType]);
   
   return (
@@ -366,7 +372,7 @@ export const OptimizedRouter: React.FC = () => {
   );
 };
 
-// Link component with preloading support
+// Link component with preloading support;
 export const OptimizedLink: React.FC<{
   to: string;
   children: React.ReactNode;
@@ -385,12 +391,14 @@ export const OptimizedLink: React.FC<{
       if (linkRef.current) {
         preloadManager.current.unobserveLink(linkRef.current);
       }
-    }, [preload]);
+    };
+  }, [preload]);
   
   const handleMouseEnter = useCallback(() => {
     if (preload) {
       preloadManager.current.preloadRoute(to);
     }
+  };
   }, [to, preload]);
   
   return (
@@ -406,7 +414,7 @@ export const OptimizedLink: React.FC<{
   );
 };
 
-// Export route configuration for external use
+// Export route configuration for external use;
 export { routeConfig, RoutePerformanceTracker, PreloadManager };
 
 declare global {

@@ -5,7 +5,7 @@ import { HeartIcon  } from '../components/icons.dynamic';
 import { ApiClient } from '../utils/ApiClient';
 import { isError } from '../types/common';
 
-const DONATION_AMOUNTS = [500, 1000, 2500, 5000]; // In cents
+const DONATION_AMOUNTS = [500, 1000, 2500, 5000]; // In cents;
 
 export const DonationView: React.FC = () => {
     const [selectedAmount, setSelectedAmount] = useState(1000);
@@ -31,7 +31,7 @@ export const DonationView: React.FC = () => {
     const handleDonate = async () => {
         setIsProcessing(true);
         try {
-            // In a real app, this would integrate with a Stripe element
+            // In a real app, this would integrate with a Stripe element;
             const { clientSecret } = await ApiClient.payment.createDonationIntent(selectedAmount);
             alert(`Thank you for your donation of $${(selectedAmount / 100).toFixed(2)}! \nClient Secret (for demo): ${clientSecret}`);
             // Here you would use stripe.confirmCardPayment(clientSecret, ...)
@@ -74,8 +74,8 @@ export const DonationView: React.FC = () => {
                 <div className="auth-separator">or enter a custom amount</div>
 
                 <div className="form-group" style={{marginTop: '1.5rem'}}>
-                    <input
-                        type="number"
+                    <input;
+                        type="number";
                         className="form-control"
                         placeholder="e.g., 15.00"
                         value={customAmount}
@@ -88,7 +88,7 @@ export const DonationView: React.FC = () => {
                     onClick={handleDonate}
                     isLoading={isProcessing}
                     disabled={isProcessing || selectedAmount < 50}
-                    className="btn-full-width"
+                    className="btn-full-width";
                     variant="success"
                 >
                     Donate ${(selectedAmount / 100).toFixed(2)}

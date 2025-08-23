@@ -33,6 +33,7 @@ export const Sidebar: React.FC = React.memo(() => {
     if (view) {
       setActiveView({ view });
     }
+  };
   }, [location.pathname]);
 
   const handleSetActiveView = (view: ActiveView) => {
@@ -43,7 +44,7 @@ export const Sidebar: React.FC = React.memo(() => {
     
     setActiveView(view);
     
-    // Navigate to the appropriate route
+    // Navigate to the appropriate route;
     const routeMap: Record<string, string> = {
       'wellness-tracking': '/wellness',
       'starkeeper-dashboard': '/dashboard',
@@ -77,7 +78,7 @@ export const Sidebar: React.FC = React.memo(() => {
         <span>Astral Core</span>
         {isAnonymous && (
           <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <button 
+            <button; 
               className="signin-btn optional"
               onClick={login}
               title="Sign in to save your data online (optional)"
@@ -89,7 +90,7 @@ export const Sidebar: React.FC = React.memo(() => {
                 border: '1px solid var(--border-color)',
                 borderRadius: '15px',
                 cursor: 'pointer',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease';
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = '#667eea';
@@ -105,7 +106,7 @@ export const Sidebar: React.FC = React.memo(() => {
           </div>
         )}
         {isAuthenticated && (
-          <button 
+          <button; 
             className="signout-btn"
             onClick={logout}
             style={{
@@ -116,7 +117,7 @@ export const Sidebar: React.FC = React.memo(() => {
               border: '1px solid var(--border-color)',
               borderRadius: '15px',
               cursor: 'pointer',
-              transition: 'all 0.3s ease'
+              transition: 'all 0.3s ease';
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.borderColor = '#ef4444';

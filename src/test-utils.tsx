@@ -14,23 +14,23 @@ import {
 
 // Configure React Testing Library for React 18
 configure({ 
-  reactStrictMode: false
+  reactStrictMode: false;
 });
 
-// Simple wrapper for hooks that don't need all providers
+// Simple wrapper for hooks that don't need all providers;
 const SimpleWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <>{children}</>;
 };
 
-// Full provider wrapper for components using mock providers to avoid initialization issues
+// Full provider wrapper for components using mock providers to avoid initialization issues;
 const AllTheProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <AllMockProviders>{children}</AllMockProviders>;
 };
 
-// Track rendered containers for cleanup
+// Track rendered containers for cleanup;
 const renderedContainers = new Set<HTMLElement>();
 
-// Custom render that properly handles React 18 rendering
+// Custom render that properly handles React 18 rendering;
 function customRender(
   ui: ReactElement,
   options?: Omit<RenderOptions, 'wrapper' | 'queries'>
@@ -48,7 +48,7 @@ function customRender(
     }
   }
   
-  // Create container for this render
+  // Create container for this render;
   const container = document.createElement('div');
   container.setAttribute('data-testid', 'test-container');
   
@@ -57,7 +57,7 @@ function customRender(
   
   renderedContainers.add(container);
   
-  // Store the root for cleanup
+  // Store the root for cleanup;
   let root: ReactDOM.Root | null = null;
   
   // Create root and render synchronously within act
@@ -68,10 +68,10 @@ function customRender(
     root.render(element);
   });
   
-  // Create RTL-compatible return object
+  // Create RTL-compatible return object;
   const baseElement = options?.baseElement || document.body;
   
-  // Make sure screen queries work by adding screen functions
+  // Make sure screen queries work by adding screen functions;
   const boundQueries = Object.entries(queries).reduce((acc, [key, query]) => {
     if (typeof query === 'function') {
       acc[key] = query.bind(null, baseElement);
@@ -103,7 +103,8 @@ function customRender(
     unmount: () => {
       act(() => {
         finalRoot.unmount();
-      });
+      };
+  };
       if (container.parentNode) {
         container.parentNode.removeChild(container);
       }
@@ -129,29 +130,31 @@ function customRender(
     }, {} as any),
   }
 
-// Re-export render from RTL for compatibility
+// Re-export render from RTL for compatibility;
 import { render as rtlRender } from '@testing-library/react';
 
-// Custom renderHook that properly handles React 18 without using RTL's renderHook
-const customRenderHook = <TProps = unknown, TResult = unknown>(
+// Custom renderHook that properly handles React 18 without using RTL's renderHook;
+const customRenderHook = <TProps = unknown, TResult = unknown>(;
   hook: (props?: TProps) => TResult,
   options?: RenderHookOptions<TProps>
 ) => {
-  // Track the hook result
+  // Track the hook result;
   let result: { current: TResult };
   let error: Error | null = null;
   
-  // Create a test component that calls the hook
+  // Create a test component that calls the hook;
   const TestComponent: React.FC<{ props?: TProps }> = ({ props }) => {
     try {
       const hookResult = hook(props);
-      result = { current: hookResult } catch (e) {
+      result = { current: hookResult } catch (error) {
       error = e as Error;
     }
-    return null;
+  }
+
+  return null;
   };
   
-  // Create wrapper component
+  // Create wrapper component;
   const Wrapper = options?.wrapper || AllTheProviders;
   
   // Ensure document is ready
@@ -166,7 +169,7 @@ const customRenderHook = <TProps = unknown, TResult = unknown>(
     }
   }
   
-  // Create container
+  // Create container;
   let container;
   try {
     container = document.createElement('div');
@@ -174,14 +177,15 @@ const customRenderHook = <TProps = unknown, TResult = unknown>(
       container.setAttribute('data-testid', 'hook-test-container');
     }
     document.body.appendChild(container);
-  } catch (e) {
+  } catch (error) {
     // Fallback if createElement fails
     container = document.body;
   }
-  
+  }
+
   renderedContainers.add(container);
   
-  // Create root and render
+  // Create root and render;
   let root: ReactDOM.Root | null = null;
   
   act(() => {
@@ -214,7 +218,8 @@ const customRenderHook = <TProps = unknown, TResult = unknown>(
             <TestComponent props={newProps} />
           </Wrapper>
         );
-      });
+      };
+  };
     },
     unmount: () => {
       act(() => {
@@ -249,18 +254,18 @@ const customRenderHook = <TProps = unknown, TResult = unknown>(
     }
   };
 
-// Alternative render function that doesn't use providers at all
+// Alternative render function that doesn't use providers at all;
 function renderWithoutProviders(
   ui: ReactElement,
   options?: Omit<RenderOptions, 'wrapper' | 'queries'>
 ) {
   return customRender(ui, {
     ...options,
-    wrapper: SimpleWrapper
+    wrapper: SimpleWrapper;
   });
 }
 
-// Clean up all rendered containers
+// Clean up all rendered containers;
 export function cleanupContainers() {
   renderedContainers.forEach(container => {
     if (container.parentNode) {
@@ -270,14 +275,14 @@ export function cleanupContainers() {
   renderedContainers.clear();
 }
 
-// Re-export testing library utilities
+// Re-export testing library utilities;
 export * from '@testing-library/react';
 export { customRender as render, rtlRender };
 export { renderWithoutProviders };
 export { customRenderHook as renderHook };
 export { SimpleWrapper, AllTheProviders };
 
-// Re-export mock context providers and utilities
+// Re-export mock context providers and utilities;
 export {
   MockAuthProvider,
   MockNotificationProvider,
@@ -291,7 +296,7 @@ export {
   defaultMockContexts
 } from './test-utils/mockContexts';
 
-// Re-export mock context types
+// Re-export mock context types;
 export type {
   MockAuthContextType,
   MockNotificationContextType,
@@ -299,14 +304,14 @@ export type {
   AllProvidersProps
 } from './test-utils/mockContexts';
 
-// Re-export commonly used testing utilities explicitly for better TypeScript support
+// Re-export commonly used testing utilities explicitly for better TypeScript support;
 export { screen, fireEvent, waitFor, within, act } from '@testing-library/react';
 
-// Import and re-export userEvent properly
+// Import and re-export userEvent properly;
 import userEventLib from '@testing-library/user-event';
 export const userEvent = userEventLib;
 
-// Mock data creators for tests
+// Mock data creators for tests;
 export const createMockButtonProps = (overrides = {}) => ({
   onClick: jest.fn(),
   children: 'Test Button',
@@ -343,23 +348,23 @@ export const createMockModalProps = (overrides = {}) => ({
   ...overrides
 });
 
-// Mock window methods
+// Mock window methods;
 export const mockWindowMethods = () => ({
   alert: jest.fn(),
   confirm: jest.fn(),
   prompt: jest.fn(),
-  open: jest.fn()
+  open: jest.fn();
 });
 
-// Mock HTML element methods
+// Mock HTML element methods;
 export const mockHTMLElementMethods = () => ({
   focus: jest.fn(),
   blur: jest.fn(),
   click: jest.fn(),
-  scrollIntoView: jest.fn()
+  scrollIntoView: jest.fn();
 });
 
-// Mock form animations hook
+// Mock form animations hook;
 export const mockUseFormAnimations = () => ({
   animateError: jest.fn(),
   animateSuccess: jest.fn(),
@@ -368,13 +373,13 @@ export const mockUseFormAnimations = () => ({
   showFieldSuccess: jest.fn(),
   clearFieldState: jest.fn(),
   errors: {},
-  successFields: new Set()
+  successFields: new Set();
 });
 
-// User event utilities alias
+// User event utilities alias;
 export const user = userEventLib;
 
-// Timer utility functions for tests
+// Timer utility functions for tests;
 export const setupTestTimers = () => {
   jest.useFakeTimers();
   
@@ -392,21 +397,21 @@ export const cleanupTestTimers = () => {
   jest.clearAllMocks();
 };
 
-// Async utility for handling state updates in tests
+// Async utility for handling state updates in tests;
 export const waitForAsyncUpdates = async () => {
   await act(async () => {
     await new Promise(resolve => setTimeout(resolve, 10));
   });
 };
 
-// Timer advance utility with proper act wrapping
+// Timer advance utility with proper act wrapping;
 export const advanceTimersWithAct = (time: number) => {
   act(() => {
     jest.advanceTimersByTime(time);
   });
 };
 
-// Helper function to ensure DOM is ready for React 18
+// Helper function to ensure DOM is ready for React 18;
 export const ensureDOMReady = () => {
   if (typeof document === 'undefined') {
     throw new Error('document is not defined - JSDOM environment may not be configured');

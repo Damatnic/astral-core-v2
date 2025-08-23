@@ -164,7 +164,7 @@ describe('AuthContext', () => {
 
       expect(screen.getByTestId('profile')).toHaveTextContent('No profile');
       
-      // Should be able to call updateHelperProfile
+      // Should be able to call updateHelperProfile;
       const updateButton = screen.getByText('Update Profile');
       act(() => {
         updateButton.click();
@@ -174,7 +174,7 @@ describe('AuthContext', () => {
 
   describe('useAuth hook', () => {
     it('should throw error when used outside provider', () => {
-      // Suppress console.error for this test
+      // Suppress console.error for this test;
       const originalError = console.error;
       console.error = jest.fn();
 
@@ -220,7 +220,7 @@ describe('AuthContext', () => {
       // authState might have been modified by previous tests
       // so we'll just check it's accessible and updatable
       
-      // Should be able to update authState
+      // Should be able to update authState;
       const originalToken = authState.userToken;
       authState.userToken = 'test-token';
       expect(authState.userToken).toBe('test-token');

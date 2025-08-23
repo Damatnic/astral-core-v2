@@ -1,7 +1,7 @@
-// --- Imports ---
+// --- Imports ---;
 import { UserRole } from './services/auth0Service';
 
-// --- Interfaces ---
+// --- Interfaces ---;
 
 export interface User {
   id: string;
@@ -144,7 +144,6 @@ export interface Resource {
     category: 'Crisis Support' | 'Anxiety' | 'Depression' | 'Coping Strategies' | 'Grief' | 'Emergency Help' | 'Text Support' | 'Youth & Students' | 'Veterans' | 'LGBTQ+';
     contact?: string;
 }
-
 
 export interface CrisisResource {
     title: string;
@@ -366,7 +365,7 @@ export interface JournalEntry {
   content: string;
 }
 
-// ===== ADMIN SPECIFIC INTERFACES =====
+// ===== ADMIN SPECIFIC INTERFACES =====;
 
 export interface AdminProfile {
     id: string;
@@ -380,8 +379,8 @@ export interface AdminProfile {
         email: string;
         phone: string;
         emergencyContact: string;
-    }
-
+    };
+}
 export interface HelperApplication {
     id: string;
     applicantName: string;
@@ -443,8 +442,8 @@ export interface PlatformAnalytics {
         dataBackupStatus: string;
         securityIncidents: number;
         performanceScore: number;
-    }
-
+    };
+}
 export interface CommunityHealthMetrics {
     totalPosts: number;
     flaggedContent: number;
@@ -497,7 +496,7 @@ export interface AstralAdminDashboard {
     systemAlerts: SystemAlert[];
 }
 
-// ===== COMMUNITY CONTENT INTERFACES =====
+// ===== COMMUNITY CONTENT INTERFACES =====;
 
 export interface WellnessChallenge {
     id: string;
@@ -659,7 +658,7 @@ export interface UserBadge {
     category: 'participation' | 'helping' | 'milestone' | 'leadership' | 'special';
 }
 
-// ===== END ADMIN INTERFACES =====
+// ===== END ADMIN INTERFACES =====;
 
 
 export type View = 'share' | 'feed' | 'crisis' | 'settings' | 'guidelines' | 'login' | 'legal' | 'dashboard' | 'constellation-guide-dashboard' | 'starkeeper-dashboard' | 'my-activity' | 'safety-plan' | 'quiet-space' | 'ai-chat' | 'video-chat' | 'create-profile' | 'helper-profile' | 'helper-training' | 'helper-community' | 'reflections' | 'moderation-history' | 'blocked-users' | 'public-helper-profile' | 'moderation-dashboard' | 'admin-dashboard' | 'helper-application' | 'donation' | 'wellness-videos' | 'upload-video' | 'wellness-tracking' | 'tether' | 'enhanced-tether' | 'veterans-resources' | 'peer-support' | 'assessments' | 'assessment-history' | 'assessment-detail' | 'workflow-demo' | 'ui-showcase' | 'group-session';

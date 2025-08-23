@@ -25,7 +25,7 @@ const DEFAULT_PLAN: SafetyPlanData = {
     { name: '988 Suicide & Crisis Lifeline', number: '988' },
     { name: 'Emergency Services', number: '911' }
   ],
-  lastUpdated: new Date().toISOString()
+  lastUpdated: new Date().toISOString();
 };
 
 interface SafetyPlanBuilderProps {
@@ -43,7 +43,7 @@ export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({
   const [showPrintView, setShowPrintView] = useState(false);
 
   useEffect(() => {
-    // Load saved plan from localStorage
+    // Load saved plan from localStorage;
     const savedPlan = localStorage.getItem('safetyPlan');
     if (savedPlan && !initialPlan) {
       try {
@@ -53,9 +53,10 @@ export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({
         console.error('Error loading saved plan:', error);
       }
     }
+  };
   }, [initialPlan]);
 
-  const steps = [
+  const steps = [;
     {
       title: 'Warning Signals',
       key: 'warningSignals',
@@ -103,7 +104,7 @@ export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({
         'Add their contact information',
         'Consider their availability'
       ],
-      isComplex: true
+      isComplex: true;
     },
     {
       title: 'Professional Contacts',
@@ -116,7 +117,7 @@ export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({
         'Add crisis hotline numbers',
         'Include after-hours contacts'
       ],
-      isComplex: true
+      isComplex: true;
     },
     {
       title: 'Safe Environment',
@@ -330,7 +331,7 @@ export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({
         )}
 
         <div className="navigation">
-          <button
+          <button;
             className="nav-btn prev"
             onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
             disabled={currentStep === 0}
@@ -343,7 +344,7 @@ export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({
               💾 Save Plan
             </button>
           ) : (
-            <button
+            <button;
               className="nav-btn next"
               onClick={() => setCurrentStep(Math.min(steps.length - 1, currentStep + 1))}
             >
@@ -356,7 +357,7 @@ export const SafetyPlanBuilder: React.FC<SafetyPlanBuilderProps> = ({
   );
 };
 
-// Simple Input Component
+// Simple Input Component;
 const SimpleInput: React.FC<{
   items: string[];
   placeholder: string;
@@ -375,7 +376,7 @@ const SimpleInput: React.FC<{
   return (
     <div className="input-section">
       <div className="input-group">
-        <input
+        <input;
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
@@ -397,7 +398,7 @@ const SimpleInput: React.FC<{
   );
 };
 
-// Complex Input Component for contacts
+// Complex Input Component for contacts;
 const ComplexInput: React.FC<{
   stepKey: 'supportPeople' | 'professionals';
   items: unknown[];
@@ -410,7 +411,7 @@ const ComplexInput: React.FC<{
 
   const handleAdd = () => {
     if (name.trim() && phone.trim()) {
-      const newItem = stepKey === 'supportPeople'
+      const newItem = stepKey === 'supportPeople';
         ? { name, phone, relationship: extra }
         : { name, phone, role: extra };
       onAdd(newItem);
@@ -423,19 +424,19 @@ const ComplexInput: React.FC<{
   return (
     <div className="complex-input-section">
       <div className="complex-input-group">
-        <input
+        <input;
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Name"
         />
-        <input
+        <input;
           type="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           placeholder="Phone number"
         />
-        <input
+        <input;
           type="text"
           value={extra}
           onChange={(e) => setExtra(e.target.value)}
@@ -460,7 +461,7 @@ const ComplexInput: React.FC<{
   );
 };
 
-// Print View Component
+// Print View Component;
 const PrintView: React.FC<{ plan: SafetyPlanData; steps: any[] }> = ({ plan, steps }) => {
   return (
     <div className="print-view">

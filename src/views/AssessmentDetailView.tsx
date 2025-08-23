@@ -24,8 +24,8 @@ export const AssessmentDetailView: React.FC<AssessmentDetailViewProps> = ({ type
                 questions: phq9Questions,
                 getResult: getPhq9Result,
                 submit: submitPhq9Result,
-                maxScore: 27,
-            } else {
+                maxScore: 27,;
+  } else {
              return {
                 title: 'GAD-7 Anxiety Assessment',
                 questions: gad7Questions,
@@ -33,7 +33,8 @@ export const AssessmentDetailView: React.FC<AssessmentDetailViewProps> = ({ type
                 submit: submitGad7Result,
                 maxScore: 21,
             }
-    }, [type, submitPhq9Result, submitGad7Result]);
+    };
+  }, [type, submitPhq9Result, submitGad7Result]);
     
     const [answers, setAnswers] = useState<(number | null)[]>(Array(assessmentDetails.questions.length).fill(null));
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -110,7 +111,7 @@ export const AssessmentDetailView: React.FC<AssessmentDetailViewProps> = ({ type
                         <div className="assessment-options">
                             {q.options.map(option => (
                                 <div key={option.value} className="radio-group">
-                                    <input
+                                    <input;
                                         type="radio"
                                         id={`q${index}-${option.value}`}
                                         name={`question-${index}`}

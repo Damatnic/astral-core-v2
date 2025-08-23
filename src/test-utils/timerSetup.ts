@@ -1,7 +1,7 @@
 /**
  * Timer Setup for Tests
  * Configures fake timers and promise handling for tests
- */
+ */;
 
 export interface TimerHelpers {
   advanceAndFlush: (ms: number) => Promise<void>;
@@ -12,29 +12,29 @@ export interface TimerHelpers {
 
 /**
  * Setup fake timers with proper promise handling
- */
+ */;
 export const setupFakeTimers = (): TimerHelpers => {
   jest.useFakeTimers();
 
-  // Flush all pending promises
+  // Flush all pending promises;
   const flushPromises = async (): Promise<void> => {
     await new Promise(process.nextTick);
     await new Promise(resolve => setImmediate(resolve));
   };
 
-  // Advance timers and flush promises
+  // Advance timers and flush promises;
   const advanceAndFlush = async (ms: number): Promise<void> => {
     jest.advanceTimersByTime(ms);
     await flushPromises();
   };
 
-  // Run all timers and flush promises
+  // Run all timers and flush promises;
   const runAllAndFlush = async (): Promise<void> => {
     jest.runAllTimers();
     await flushPromises();
   };
 
-  // Tick with optional time and flush
+  // Tick with optional time and flush;
   const tickAsync = async (ms: number = 0): Promise<void> => {
     if (ms > 0) {
       jest.advanceTimersByTime(ms);
@@ -51,7 +51,7 @@ export const setupFakeTimers = (): TimerHelpers => {
 
 /**
  * Setup debounce/throttle test helpers
- */
+ */;
 export const setupDebounceTest = () => {
   const timers = setupFakeTimers();
   
@@ -93,7 +93,7 @@ export const setupDebounceTest = () => {
 
 /**
  * Clean up timers after test
- */
+ */;
 export const cleanupTimers = () => {
   jest.clearAllTimers();
   jest.useRealTimers();
@@ -101,7 +101,7 @@ export const cleanupTimers = () => {
 
 /**
  * Mock setTimeout and setInterval with tracking
- */
+ */;
 export const mockTimersWithTracking = () => {
   const timeouts: Array<{ id: number; callback: Function; delay: number; timestamp: number }> = [];
   const intervals: Array<{ id: number; callback: Function; delay: number; timestamp: number }> = [];
@@ -109,7 +109,8 @@ export const mockTimersWithTracking = () => {
 
   const mockSetTimeout = jest.fn((callback: Function, delay: number = 0) => {
     const id = nextId++;
-    timeouts.push({ id, callback, delay, timestamp: Date.now() });
+    timeouts.push({ id, callback, delay, timestamp: Date.now() };
+  };
     return id;
   });
 
@@ -148,7 +149,8 @@ export const mockTimersWithTracking = () => {
         t.callback();
         const index = timeouts.indexOf(t);
         if (index > -1) timeouts.splice(index, 1);
-      });
+      };
+  };
     },
     executeIntervals: (count: number = 1) => {
       intervals.forEach(i => {

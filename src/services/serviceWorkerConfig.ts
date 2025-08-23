@@ -1,7 +1,7 @@
 /**
  * Service Worker Configuration
  * Manages service worker registration with environment-specific settings
- */
+ */;
 
 interface ServiceWorkerOptions {
   onUpdate?: (registration: ServiceWorkerRegistration) => void;
@@ -67,7 +67,8 @@ export const registerServiceWorker = async (options?: ServiceWorkerOptions) => {
               // Call update callback if provided
               if (options?.onUpdate) {
                 options.onUpdate(registration);
-              } else if (window.confirm('New version available! Reload to update?')) {
+;
+  } else if (window.confirm('New version available! Reload to update?')) {
                 // Default behavior
                 window.location.reload();
               }
@@ -103,7 +104,7 @@ export const unregisterServiceWorker = async (): Promise<boolean> => {
   return false;
 };
 
-// For development: clear any existing service workers that might cause issues
+// For development: clear any existing service workers that might cause issues;
 export const updateServiceWorker = async () => {
   try {
     if ('serviceWorker' in navigator) {

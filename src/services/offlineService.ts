@@ -1,7 +1,7 @@
 /**
  * Offline Service
  * Manages offline functionality for the mental health platform
- */
+ */;
 
 import { logger } from '../utils/logger';
 import { localStorageService } from './localStorageService';
@@ -53,8 +53,8 @@ class OfflineService {
       } catch (error) {
         logger.error("Failed to load offline data", error, "OfflineService");
         this.offlineData = this.getDefaultData();
-      }
-    } else {
+      };
+  } else {
       this.offlineData = this.getDefaultData();
     }
   }
@@ -87,7 +87,7 @@ class OfflineService {
             'Exhale slowly for 6 counts',
             'Repeat 5-10 times'
           ],
-          duration: 5
+          duration: 5;
         },
         {
           id: 'cs2',
@@ -101,12 +101,12 @@ class OfflineService {
             'Name 2 things you can smell',
             'Name 1 thing you can taste'
           ],
-          duration: 3
+          duration: 3;
         }
       ],
       safetyPlan: null,
       recentMoodEntries: [],
-      lastSyncTime: new Date()
+      lastSyncTime: new Date();
     }
 
   getOnlineStatus(): boolean {
@@ -130,7 +130,7 @@ class OfflineService {
     const newEntry: MoodEntry = {
       ...entry,
       id: `mood_${Date.now()}`,
-      timestamp: new Date()
+      timestamp: new Date();
     };
 
     this.offlineData.recentMoodEntries.unshift(newEntry);
@@ -144,8 +144,9 @@ class OfflineService {
       this.addToSyncQueue({
         type: 'mood_entry',
         data: newEntry,
-        timestamp: new Date()
-      });
+        timestamp: new Date();
+      };
+  };
     }
 
     return newEntry;
@@ -190,7 +191,7 @@ class OfflineService {
   getSyncQueueStatus(): { itemsInQueue: number; isOnline: boolean } {
     return {
       itemsInQueue: this.syncQueue.length,
-      isOnline: this.isOnline
+      isOnline: this.isOnline;
     }
 }
 
@@ -198,7 +199,7 @@ export const offlineService = new OfflineService();
 export default offlineService;
  * Offline Service
  * Manages offline functionality for the mental health platform
- */
+ */;
 
 import { logger } from '../utils/logger';
 import { localStorageService } from './localStorageService';
@@ -250,8 +251,8 @@ class OfflineService {
       } catch (error) {
         logger.error("Failed to load offline data", error, "OfflineService");
         this.offlineData = this.getDefaultData();
-      }
-    } else {
+      };
+  } else {
       this.offlineData = this.getDefaultData();
     }
   }
@@ -261,7 +262,8 @@ class OfflineService {
       this.isOnline = true;
       logger.info("Connection restored", undefined, "OfflineService");
       this.processSyncQueue();
-    });
+    };
+  };
     
     window.addEventListener('offline', () => {
       this.isOnline = false;
@@ -284,7 +286,7 @@ class OfflineService {
             'Exhale slowly for 6 counts',
             'Repeat 5-10 times'
           ],
-          duration: 5
+          duration: 5;
         },
         {
           id: 'cs2',
@@ -298,12 +300,12 @@ class OfflineService {
             'Name 2 things you can smell',
             'Name 1 thing you can taste'
           ],
-          duration: 3
+          duration: 3;
         }
       ],
       safetyPlan: null,
       recentMoodEntries: [],
-      lastSyncTime: new Date()
+      lastSyncTime: new Date();
     }
 
   getOnlineStatus(): boolean {
@@ -327,7 +329,7 @@ class OfflineService {
     const newEntry: MoodEntry = {
       ...entry,
       id: `mood_${Date.now()}`,
-      timestamp: new Date()
+      timestamp: new Date();
     };
 
     this.offlineData.recentMoodEntries.unshift(newEntry);
@@ -341,8 +343,9 @@ class OfflineService {
       this.addToSyncQueue({
         type: 'mood_entry',
         data: newEntry,
-        timestamp: new Date()
-      });
+        timestamp: new Date();
+      };
+  };
     }
 
     return newEntry;
@@ -387,7 +390,7 @@ class OfflineService {
   getSyncQueueStatus(): { itemsInQueue: number; isOnline: boolean } {
     return {
       itemsInQueue: this.syncQueue.length,
-      isOnline: this.isOnline
+      isOnline: this.isOnline;
     }
 }
 

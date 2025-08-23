@@ -3,7 +3,7 @@
  * Comprehensive accessibility configuration panel for WCAG 2.1 AAA compliance
  * 
  * @license Apache-2.0
- */
+ */;
 
 import React, { useState, useEffect } from 'react';
 import { accessibilityService, AccessibilitySettings } from '../services/accessibilityService';
@@ -25,9 +25,10 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
 
   useEffect(() => {
     setVoiceSupported(accessibilityService.isVoiceNavigationSupported());
+  };
   }, []);
 
-  const handleSettingChange = <K extends keyof AccessibilitySettings>(
+  const handleSettingChange = <K extends keyof AccessibilitySettings>(;
     key: K,
     value: AccessibilitySettings[K]
   ) => {
@@ -71,7 +72,7 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
       simplifiedInterface: false,
       readingAssistance: false,
       contextualHelp: true,
-      errorSummaryEnabled: true
+      errorSummaryEnabled: true;
     };
     
     setSettings(defaultSettings);
@@ -82,7 +83,7 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
     accessibilityService.announce({
       message: 'Voice command test: Say "help" to see available commands.',
       priority: 'medium',
-      type: 'status'
+      type: 'status';
     });
   };
 
@@ -90,24 +91,24 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
     accessibilityService.announce({
       message: 'Screen reader test announcement. Accessibility features are working properly.',
       priority: 'medium',
-      type: 'status'
+      type: 'status';
     });
   };
 
-  const tabs = [
+  const tabs = [;
     { id: 'visual', label: 'Visual', icon: '👁️' },
     { id: 'audio', label: 'Audio', icon: '🔊' },
     { id: 'motor', label: 'Motor', icon: '⌨️' },
     { id: 'cognitive', label: 'Cognitive', icon: '🧠' }
   ] as const;
 
-  const renderVisualSettings = () => (
+  const renderVisualSettings = () => (;
     <div className="accessibility-settings-section">
       <h3>Visual Accessibility</h3>
       
       <div className="setting-group">
         <label className="setting-label">
-          <input
+          <input;
             type="checkbox"
             checked={settings.highContrast}
             onChange={(e) => handleSettingChange('highContrast', e.target.checked)}
@@ -119,7 +120,7 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
 
       <div className="setting-group">
         <label className="setting-label">
-          <input
+          <input;
             type="checkbox"
             checked={settings.reducedMotion}
             onChange={(e) => handleSettingChange('reducedMotion', e.target.checked)}
@@ -132,7 +133,7 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
       <div className="setting-group">
         <label htmlFor="text-size-scale" className="setting-title">Text Size Scale</label>
         <input
-          id="text-size-scale"
+          id="text-size-scale";
           type="range"
           min="1.0"
           max="2.0"
@@ -177,13 +178,13 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
     </div>
   );
 
-  const renderAudioSettings = () => (
+  const renderAudioSettings = () => (;
     <div className="accessibility-settings-section">
       <h3>Audio & Screen Reader</h3>
       
       <div className="setting-group">
         <label className="setting-label">
-          <input
+          <input;
             type="checkbox"
             checked={settings.screenReaderEnabled}
             onChange={(e) => handleSettingChange('screenReaderEnabled', e.target.checked)}
@@ -195,7 +196,7 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
 
       <div className="setting-group">
         <label className="setting-label">
-          <input
+          <input;
             type="checkbox"
             checked={settings.verboseDescriptions}
             onChange={(e) => handleSettingChange('verboseDescriptions', e.target.checked)}
@@ -208,7 +209,7 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
 
       <div className="setting-group">
         <label className="setting-label">
-          <input
+          <input;
             type="checkbox"
             checked={settings.crisisAnnouncements}
             onChange={(e) => handleSettingChange('crisisAnnouncements', e.target.checked)}
@@ -237,7 +238,7 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
         <>
           <div className="setting-group">
             <label className="setting-label">
-              <input
+              <input;
                 type="checkbox"
                 checked={settings.voiceNavigationEnabled}
                 onChange={(e) => handleSettingChange('voiceNavigationEnabled', e.target.checked)}
@@ -264,7 +265,7 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
 
           <div className="setting-group">
             <label className="setting-label">
-              <input
+              <input;
                 type="checkbox"
                 checked={settings.emergencyVoiceCommands}
                 onChange={(e) => handleSettingChange('emergencyVoiceCommands', e.target.checked)}
@@ -289,13 +290,13 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
     </div>
   );
 
-  const renderMotorSettings = () => (
+  const renderMotorSettings = () => (;
     <div className="accessibility-settings-section">
       <h3>Motor & Keyboard</h3>
       
       <div className="setting-group">
         <label className="setting-label">
-          <input
+          <input;
             type="checkbox"
             checked={settings.enhancedKeyboardNavigation}
             onChange={(e) => handleSettingChange('enhancedKeyboardNavigation', e.target.checked)}
@@ -307,7 +308,7 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
 
       <div className="setting-group">
         <label className="setting-label">
-          <input
+          <input;
             type="checkbox"
             checked={settings.skipLinksEnabled}
             onChange={(e) => handleSettingChange('skipLinksEnabled', e.target.checked)}
@@ -319,7 +320,7 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
 
       <div className="setting-group">
         <label className="setting-label">
-          <input
+          <input;
             type="checkbox"
             checked={settings.crisisShortcutsEnabled}
             onChange={(e) => handleSettingChange('crisisShortcutsEnabled', e.target.checked)}
@@ -331,7 +332,7 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
 
       <div className="setting-group">
         <label className="setting-label">
-          <input
+          <input;
             type="checkbox"
             checked={settings.tabTrapEnabled}
             onChange={(e) => handleSettingChange('tabTrapEnabled', e.target.checked)}
@@ -344,7 +345,7 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
       <div className="setting-group">
         <label htmlFor="click-timeout" className="setting-title">Click Timeout Multiplier</label>
         <input
-          id="click-timeout"
+          id="click-timeout";
           type="range"
           min="1.0"
           max="3.0"
@@ -359,7 +360,7 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
 
       <div className="setting-group">
         <label className="setting-label">
-          <input
+          <input;
             type="checkbox"
             checked={settings.dragAndDropAlternatives}
             onChange={(e) => handleSettingChange('dragAndDropAlternatives', e.target.checked)}
@@ -371,7 +372,7 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
 
       <div className="setting-group">
         <label className="setting-label">
-          <input
+          <input;
             type="checkbox"
             checked={settings.stickyKeys}
             onChange={(e) => handleSettingChange('stickyKeys', e.target.checked)}
@@ -395,13 +396,13 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
     </div>
   );
 
-  const renderCognitiveSettings = () => (
+  const renderCognitiveSettings = () => (;
     <div className="accessibility-settings-section">
       <h3>Cognitive Support</h3>
       
       <div className="setting-group">
         <label className="setting-label">
-          <input
+          <input;
             type="checkbox"
             checked={settings.simplifiedInterface}
             onChange={(e) => handleSettingChange('simplifiedInterface', e.target.checked)}
@@ -413,7 +414,7 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
 
       <div className="setting-group">
         <label className="setting-label">
-          <input
+          <input;
             type="checkbox"
             checked={settings.readingAssistance}
             onChange={(e) => handleSettingChange('readingAssistance', e.target.checked)}
@@ -425,7 +426,7 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
 
       <div className="setting-group">
         <label className="setting-label">
-          <input
+          <input;
             type="checkbox"
             checked={settings.contextualHelp}
             onChange={(e) => handleSettingChange('contextualHelp', e.target.checked)}
@@ -437,7 +438,7 @@ export const AccessibilitySettingsComponent: React.FC<AccessibilitySettingsProps
 
       <div className="setting-group">
         <label className="setting-label">
-          <input
+          <input;
             type="checkbox"
             checked={settings.errorSummaryEnabled}
             onChange={(e) => handleSettingChange('errorSummaryEnabled', e.target.checked)}

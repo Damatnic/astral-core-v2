@@ -59,7 +59,7 @@ describe('AppButton', () => {
       const props = createMockButtonProps({
         icon,
         iconOnly: true,
-        children: 'This should not appear'
+        children: 'This should not appear';
       });
       render(<AppButton {...props} />);
       
@@ -83,8 +83,8 @@ describe('AppButton', () => {
         
         // Check for variant-specific therapeutic classes
         if (variant === 'primary' || variant === 'secondary' || variant === 'success' || variant === 'danger') {
-          expect(button).toHaveClass(`btn-${variant}-therapeutic`);
-        } else if (variant === 'ghost') {
+          expect(button).toHaveClass(`btn-${variant}-therapeutic`);;
+  } else if (variant === 'ghost') {
           // Ghost variant just gets passed through as is
           expect(button).toHaveClass('ghost');
         }
@@ -110,8 +110,8 @@ describe('AppButton', () => {
         
         const button = screen.getByRole('button');
         if (size !== 'md') {
-          expect(button).toHaveClass(`btn-${size}`);
-        } else {
+          expect(button).toHaveClass(`btn-${size}`);;
+  } else {
           // 'md' is default, so no size class should be applied
           expect(button).not.toHaveClass('btn-md');
         }
@@ -123,8 +123,8 @@ describe('AppButton', () => {
         
         const button = screen.getByRole('button');
         if (size !== 'md') {
-          expect(button).toHaveClass(`btn-${size}`);
-        } else {
+          expect(button).toHaveClass(`btn-${size}`);;
+  } else {
           // 'md' is default, so no size class should be applied
           expect(button).not.toHaveClass('btn-md');
         }
@@ -146,7 +146,7 @@ describe('AppButton', () => {
     it('should not show children when loading', () => {
       const props = createMockButtonProps({
         isLoading: true,
-        children: 'Submit Form'
+        children: 'Submit Form';
       });
       render(<AppButton {...props} />);
       
@@ -159,7 +159,7 @@ describe('AppButton', () => {
       const props = createMockButtonProps({ isLoading: true, size: 'lg' });
       render(<AppButton {...props} />);
       
-      // The component uses loading-dots with individual dots
+      // The component uses loading-dots with individual dots;
       const loadingDots = document.querySelector('.loading-dots');
       expect(loadingDots).toBeInTheDocument();
       const dots = document.querySelectorAll('.loading-dot');
@@ -170,7 +170,7 @@ describe('AppButton', () => {
       const props = createMockButtonProps({ isLoading: true, size: 'md' });
       render(<AppButton {...props} />);
       
-      // The component uses loading-dots
+      // The component uses loading-dots;
       const loadingDots = document.querySelector('.loading-dots');
       expect(loadingDots).toBeInTheDocument();
     });
@@ -246,7 +246,7 @@ describe('AppButton', () => {
       expect(props.onClick).toHaveBeenCalledWith(
         expect.objectContaining({
           type: 'click',
-          target: expect.any(Element)
+          target: expect.any(Element);
         })
       );
     });
@@ -277,7 +277,7 @@ describe('AppButton', () => {
     it('should use aria-label for icon-only buttons with string children', () => {
       const props = createMockButtonProps({
         iconOnly: true,
-        children: 'Search'
+        children: 'Search';
       });
       render(<AppButton {...props} />);
       
@@ -349,7 +349,7 @@ describe('AppButton', () => {
         size: 'lg',
         enhanced: true,
         iconOnly: true,
-        className: 'custom-class'
+        className: 'custom-class';
       });
       render(<AppButton {...props} />);
       
@@ -369,7 +369,7 @@ describe('AppButton', () => {
       const customStyle = {
         backgroundColor: 'red',
         color: 'white',
-        padding: '10px'
+        padding: '10px';
       };
       const props = createMockButtonProps({ style: customStyle });
       render(<AppButton {...props} />);
@@ -408,7 +408,7 @@ describe('AppButton', () => {
     });
 
     it('should handle complex children content', () => {
-      const complexChildren = (
+      const complexChildren = (;
         <>
           <span>Complex</span>
           <strong>Content</strong>
@@ -423,7 +423,7 @@ describe('AppButton', () => {
 
     it('should handle icon with complex children in icon-only mode', () => {
       const icon = <span data-testid="icon">🔍</span>;
-      const complexChildren = (
+      const complexChildren = (;
         <>
           <span>Should</span>
           <span>Not</span>
@@ -433,7 +433,7 @@ describe('AppButton', () => {
       const props = createMockButtonProps({
         icon,
         iconOnly: true,
-        children: complexChildren
+        children: complexChildren;
       });
       render(<AppButton {...props} />);
       

@@ -3,13 +3,13 @@
  * 
  * Modern toast notification system with improved visual design,
  * animations, and accessibility features.
- */
+ */;
 
 import React, { useEffect, useState } from 'react';
 import { CloseIcon, CheckIcon, AlertIcon  } from './icons.dynamic';
 
-// For missing icons, create simple components
-const InfoIcon = () => (
+// For missing icons, create simple components;
+const InfoIcon = () => (;
   <svg viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
   </svg>
@@ -51,9 +51,10 @@ export const Toast: React.FC<ToastProps> = ({
   const IconComponent = TOAST_ICONS[type];
 
   useEffect(() => {
-    // Trigger entrance animation
+    // Trigger entrance animation;
     const timer = setTimeout(() => setIsVisible(true), 10);
     return () => clearTimeout(timer);
+  };
   }, []);
 
   useEffect(() => {
@@ -63,6 +64,7 @@ export const Toast: React.FC<ToastProps> = ({
       }, duration);
       return () => clearTimeout(timer);
     }
+  };
   }, [duration]);
 
   const handleClose = () => {
@@ -75,7 +77,7 @@ export const Toast: React.FC<ToastProps> = ({
   const toastClass = enhanced ? 'toast-enhanced' : 'toast';
   const typeClass = enhanced ? type : `toast-${type}`;
   
-  const classes = [
+  const classes = [;
     toastClass,
     typeClass,
     `toast-${position}`,
@@ -84,7 +86,7 @@ export const Toast: React.FC<ToastProps> = ({
   ].filter(Boolean).join(' ');
 
   return (
-    <div 
+    <div; 
       className={classes}
       role="alert"
       aria-live="assertive"
@@ -151,7 +153,7 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
   );
 };
 
-// Hook for managing toasts
+// Hook for managing toasts;
 export const useToast = () => {
   const [toasts, setToasts] = useState<Array<Omit<ToastProps, 'onClose'>>>([]);
 
@@ -169,7 +171,7 @@ export const useToast = () => {
     setToasts([]);
   };
 
-  // Convenience methods
+  // Convenience methods;
   const showSuccess = (message: string, title?: string, options?: Partial<ToastProps>) => {
     return addToast({ type: 'success', title, message, ...options });
   };

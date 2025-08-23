@@ -15,42 +15,42 @@ const CRISIS_RESOURCES: CrisisResource[] = [
     number: '988',
     description: 'Free, confidential crisis support 24/7',
     available: '24/7',
-    type: 'hotline'
+    type: 'hotline';
   },
   {
     name: 'Crisis Text Line',
     number: 'Text HOME to 741741',
     description: 'Free 24/7 text support',
     available: '24/7',
-    type: 'text'
+    type: 'text';
   },
   {
     name: 'Emergency Services',
     number: '911',
     description: 'Immediate emergency response',
     available: '24/7',
-    type: 'emergency'
+    type: 'emergency';
   },
   {
     name: 'SAMHSA National Helpline',
     number: '1-800-662-4357',
     description: 'Treatment referral and information',
     available: '24/7',
-    type: 'hotline'
+    type: 'hotline';
   },
   {
     name: 'Veterans Crisis Line',
     number: '1-800-273-8255',
     description: 'Support for veterans and families',
     available: '24/7',
-    type: 'hotline'
+    type: 'hotline';
   },
   {
     name: 'LGBTQ National Hotline',
     number: '1-888-843-4564',
     description: 'Support for LGBTQ individuals',
     available: 'Mon-Fri 1pm-9pm PT',
-    type: 'hotline'
+    type: 'hotline';
   }
 ];
 
@@ -68,10 +68,11 @@ export const CrisisHelpWidget: React.FC = () => {
       }, 10000);
       return () => clearInterval(interval);
     }
+  };
   }, [isExpanded]);
 
   const handleCallNumber = (number: string) => {
-    // Format number for tel: link
+    // Format number for tel: link;
     const telNumber = number.replace(/[^\d]/g, '');
     if (telNumber.length > 3) {
       window.location.href = `tel:${telNumber}`;
@@ -98,7 +99,7 @@ export const CrisisHelpWidget: React.FC = () => {
   return (
     <div className={`crisis-help-widget ${isExpanded ? 'expanded' : ''} ${pulseAnimation ? 'pulse' : ''}`}>
       {!isExpanded ? (
-        <button 
+        <button; 
           className="crisis-help-button"
           onClick={() => setIsExpanded(true)}
           aria-label="Get crisis help"
@@ -110,7 +111,7 @@ export const CrisisHelpWidget: React.FC = () => {
         <div className="crisis-help-panel">
           <div className="crisis-header">
             <h2>Crisis Support</h2>
-            <button 
+            <button; 
               className="close-button"
               onClick={() => {
                 setIsExpanded(false);
@@ -126,19 +127,19 @@ export const CrisisHelpWidget: React.FC = () => {
             <div className="urgency-selector">
               <p className="urgency-question">How urgent is your situation?</p>
               <div className="urgency-buttons">
-                <button 
+                <button; 
                   className={`urgency-btn low ${urgencyLevel === 'low' ? 'active' : ''}`}
                   onClick={() => setUrgencyLevel('low')}
                 >
                   I need support
                 </button>
-                <button 
+                <button; 
                   className={`urgency-btn medium ${urgencyLevel === 'medium' ? 'active' : ''}`}
                   onClick={() => setUrgencyLevel('medium')}
                 >
                   I&apos;m struggling
                 </button>
-                <button 
+                <button; 
                   className={`urgency-btn high ${urgencyLevel === 'high' ? 'active' : ''}`}
                   onClick={() => setUrgencyLevel('high')}
                 >
@@ -157,14 +158,14 @@ export const CrisisHelpWidget: React.FC = () => {
                   <p className="resource-description">{resource.description}</p>
                   <div className="resource-actions">
                     {resource.type === 'text' ? (
-                      <button 
+                      <button; 
                         className="action-btn text-btn"
                         onClick={handleTextSupport}
                       >
                         📱 {resource.number}
                       </button>
                     ) : (
-                      <button 
+                      <button; 
                         className="action-btn call-btn"
                         onClick={() => handleCallNumber(resource.number)}
                       >

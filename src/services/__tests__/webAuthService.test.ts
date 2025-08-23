@@ -9,12 +9,12 @@ describe('WebAuthSession', () => {
     mockLocation = {
       origin: 'http://localhost:3000',
       href: 'http://localhost:3000',
-      hash: ''
+      hash: '';
     };
 
     Object.defineProperty(window, 'location', {
       value: mockLocation,
-      writable: true
+      writable: true;
     });
 
     // Mock Math.random for consistent state generation
@@ -51,7 +51,7 @@ describe('WebAuthSession', () => {
         tokenEndpoint: 'https://auth.example.com/oauth/token',
         revocationEndpoint: 'https://auth.example.com/oauth/revoke',
         userInfoEndpoint: 'https://auth.example.com/userinfo',
-        endSessionEndpoint: 'https://auth.example.com/v2/logout'
+        endSessionEndpoint: 'https://auth.example.com/v2/logout';
       });
     });
 
@@ -75,12 +75,12 @@ describe('WebAuthSession', () => {
       responseType: 'code',
       scopes: ['openid', 'profile', 'email'],
       extraParams: {
-        audience: 'https://api.example.com'
+        audience: 'https://api.example.com';
       }
     };
 
     const mockDiscovery = {
-      authorizationEndpoint: 'https://auth.example.com/authorize'
+      authorizationEndpoint: 'https://auth.example.com/authorize';
     };
 
     beforeEach(() => {
@@ -102,7 +102,7 @@ describe('WebAuthSession', () => {
     it.skip('should handle missing extraParams', () => {
       const configWithoutExtra = { 
         ...mockConfig,
-        extraParams: undefined
+        extraParams: undefined;
       };
       
       const [request] = WebAuthSession.useAuthRequest(configWithoutExtra, mockDiscovery);
@@ -126,9 +126,9 @@ describe('WebAuthSession', () => {
           token_type: 'Bearer',
           expires_in: '3600',
           scope: 'openid',
-          state: '123'
+          state: '123';
         },
-        error: null
+        error: null;
       });
     });
 
@@ -141,10 +141,10 @@ describe('WebAuthSession', () => {
         type: 'error',
         params: {
           error: 'access_denied',
-          error_description: 'User denied access'
+          error_description: 'User denied access';
         },
         error: {
-          message: 'User denied access'
+          message: 'User denied access';
         }
       });
     });
@@ -157,10 +157,10 @@ describe('WebAuthSession', () => {
       expect(response).toEqual({
         type: 'error',
         params: {
-          error: 'invalid_request'
+          error: 'invalid_request';
         },
         error: {
-          message: 'invalid_request'
+          message: 'invalid_request';
         }
       });
     });
@@ -198,13 +198,13 @@ describe('WebAuthSession', () => {
     it.skip('should return a mock access token', async () => {
       const config = {
         clientId: 'test-client',
-        code: 'auth-code'
+        code: 'auth-code';
       };
 
       const result = await WebAuthSession.exchangeCodeAsync(config);
       
       expect(result).toEqual({
-        accessToken: 'mock-token'
+        accessToken: 'mock-token';
       });
     });
 
@@ -212,7 +212,7 @@ describe('WebAuthSession', () => {
       const result = await WebAuthSession.exchangeCodeAsync({});
       
       expect(result).toEqual({
-        accessToken: 'mock-token'
+        accessToken: 'mock-token';
       });
     });
   });
@@ -229,7 +229,7 @@ describe('WebAuthSession', () => {
 
       const discovery = WebAuthSession.useAutoDiscovery('https://auth.example.com');
       
-      // Initial request
+      // Initial request;
       const [request, initialResponse, promptAsync] = WebAuthSession.useAuthRequest(config, discovery);
       
       expect(request.url).toContain('https://auth.example.com/authorize');
@@ -250,7 +250,7 @@ describe('WebAuthSession', () => {
         clientId: 'test-client',
         redirectUri: 'http://localhost:3000/auth/callback',
         responseType: 'code',
-        scopes: ['openid']
+        scopes: ['openid'];
       };
 
       const discovery = WebAuthSession.useAutoDiscovery('https://auth.example.com');
@@ -269,7 +269,7 @@ describe('WebAuthSession', () => {
         clientId: 'test-client',
         redirectUri: 'http://localhost:3000/auth/callback',
         responseType: 'token',
-        scopes: ['openid']
+        scopes: ['openid'];
       };
 
       const discovery = WebAuthSession.useAutoDiscovery('https://auth.example.com');

@@ -3,7 +3,7 @@
  * 
  * Visual indicator for connection status with crisis intervention priority
  * and accessibility compliance for the Astral Core mental health platform.
- */
+ */;
 
 import React from 'react';
 import { useOffline } from '../contexts/OfflineProvider';
@@ -32,7 +32,7 @@ export const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     serviceWorkerStatus
   } = connectionStatus;
 
-  // Determine status and styling
+  // Determine status and styling;
   const getStatusInfo = () => {
     if (!isOnline) {
       return {
@@ -51,7 +51,7 @@ export const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
         label: 'Poor Connection',
         icon: <AlertIcon />,
         color: 'amber',
-        description: 'Slow connection - Some features may be limited'
+        description: 'Slow connection - Some features may be limited';
       }
 
     return {
@@ -59,12 +59,12 @@ export const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
       label: connectionQuality === 'excellent' ? 'Excellent' : 'Good',
       icon: <CheckIcon />,
       color: 'green',
-      description: 'Connected - All features available'
+      description: 'Connected - All features available';
     };
 
   const statusInfo = getStatusInfo();
 
-  // Crisis indicator when offline
+  // Crisis indicator when offline;
   const CrisisIndicator = () => {
     if (isOnline || !showCrisisStatus) return null;
 
@@ -82,7 +82,7 @@ export const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
   // Minimal variant - just an icon/dot
   if (variant === 'minimal') {
     return (
-      <div 
+      <div; 
         className={`offline-indicator offline-indicator--minimal ${className}`}
         onClick={onClick}
         role={onClick ? 'button' : undefined}
@@ -108,7 +108,7 @@ export const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
   // Detailed variant - icon with text
   if (variant === 'detailed') {
     return (
-      <div 
+      <div; 
         className={`offline-indicator offline-indicator--detailed ${className}`}
         onClick={onClick}
         role={onClick ? 'button' : undefined}
@@ -163,7 +163,7 @@ export const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
         )}
         
         {onClick && (
-          <button 
+          <button; 
             className="banner-action"
             onClick={onClick}
             aria-label="View connection details"
@@ -176,7 +176,7 @@ export const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
   );
 };
 
-// CSS styles for the component
+// CSS styles for the component;
 export const offlineIndicatorStyles = `
   .offline-indicator {
     position: relative;

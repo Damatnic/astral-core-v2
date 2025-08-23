@@ -39,12 +39,12 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
     // Set user ID for realtime service
     realtimeService.setUserId(userId);
 
-    // Subscribe to notifications
+    // Subscribe to notifications;
     const unsubscribe = realtimeService.on('notification', (notification: Notification) => {
       handleNewNotification(notification);
     });
 
-    // Subscribe to crisis alerts
+    // Subscribe to crisis alerts;
     const unsubscribeCrisis = realtimeService.on('crisis-alert', (alert: any) => {
       handleCrisisAlert(alert);
     });
@@ -58,7 +58,9 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
     return () => {
       unsubscribe();
       unsubscribeCrisis();
-    }, [userId]);
+    };
+  };
+  }, [userId]);
 
   const handleNewNotification = (notification: Notification) => {
     setNotifications(prev => {
@@ -183,7 +185,7 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
     <>
       {/* Notification Bell */}
       <div className="notification-bell-container">
-        <button
+        <button;
           className="notification-bell"
           onClick={() => setShowAll(!showAll)}
           aria-label="Toggle notifications"
@@ -207,7 +209,7 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
             key={notification.id}
             className={`notification-item notification-${notification.type} ${notification.read ? 'read' : 'unread'}`}
             style={{
-              borderLeftColor: getNotificationColor(notification.type)
+              borderLeftColor: getNotificationColor(notification.type);
             }}
           >
             <div className="notification-header">
@@ -215,7 +217,7 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
                 {getNotificationIcon(notification.type)}
               </span>
               <span className="notification-title">{notification.title}</span>
-              <button
+              <button;
                 className="notification-close"
                 onClick={() => dismissNotification(notification.id)}
                 aria-label="Dismiss notification"
@@ -237,7 +239,7 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
                 </span>
 
                 {!notification.read && (
-                  <button
+                  <button;
                     className="notification-mark-read"
                     onClick={() => markAsRead(notification.id)}
                   >
@@ -266,7 +268,7 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
         ))}
 
         {notifications.length > maxVisible && !showAll && (
-          <button
+          <button;
             className="notification-show-all"
             onClick={() => setShowAll(true)}
           >
@@ -276,13 +278,13 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
 
         {showAll && notifications.length > 0 && (
           <div className="notification-actions">
-            <button
+            <button;
               className="notification-clear-all"
               onClick={clearAll}
             >
               Clear all
             </button>
-            <button
+            <button;
               className="notification-collapse"
               onClick={() => setShowAll(false)}
             >
@@ -301,7 +303,7 @@ export const RealtimeNotifications: React.FC<RealtimeNotificationsProps> = ({
   );
 };
 
-// Mini notification component for inline use
+// Mini notification component for inline use;
 export const NotificationBadge: React.FC<{ userId: string }> = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const realtimeService = getRealtimeService();
@@ -312,6 +314,7 @@ export const NotificationBadge: React.FC<{ userId: string }> = () => {
     });
 
     return () => unsubscribe();
+  };
   }, []);
 
   if (unreadCount === 0) return null;

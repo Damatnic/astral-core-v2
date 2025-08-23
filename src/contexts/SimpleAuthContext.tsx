@@ -33,7 +33,7 @@ export const SimpleAuthProvider: React.FC<{ children: ReactNode }> = ({ children
     const checkAuth = async () => {
       setIsLoading(true);
       try {
-        // Check if we have a valid token
+        // Check if we have a valid token;
         const isValid = await simpleAuthService.verifyToken();
         if (isValid) {
           const currentUser = await simpleAuthService.getCurrentUser();
@@ -48,6 +48,7 @@ export const SimpleAuthProvider: React.FC<{ children: ReactNode }> = ({ children
     };
 
     checkAuth();
+  };
   }, []);
 
   // Subscribe to auth state changes
@@ -58,6 +59,7 @@ export const SimpleAuthProvider: React.FC<{ children: ReactNode }> = ({ children
     });
 
     return unsubscribe;
+  };
   }, []);
 
   const login = useCallback(async (email: string, password: string): Promise<boolean> => {
@@ -68,8 +70,8 @@ export const SimpleAuthProvider: React.FC<{ children: ReactNode }> = ({ children
         setUser(response.user || null);
         setUserToken(simpleAuthService.getToken());
         addToast('Successfully logged in!', 'success');
-        return true;
-      } else {
+        return true;;
+  } else {
         addToast(response.error || 'Login failed', 'error');
         return false;
       }
@@ -77,9 +79,10 @@ export const SimpleAuthProvider: React.FC<{ children: ReactNode }> = ({ children
       addToast((error as Error).message || 'Login failed', 'error');
       return false;
     }
+  };
   }, [addToast]);
 
-  const register = useCallback(async (
+  const register = useCallback(async (;
     email: string, 
     password: string, 
     name: string, 
@@ -92,8 +95,8 @@ export const SimpleAuthProvider: React.FC<{ children: ReactNode }> = ({ children
         setUser(response.user || null);
         setUserToken(simpleAuthService.getToken());
         addToast('Account created successfully!', 'success');
-        return true;
-      } else {
+        return true;;
+  } else {
         addToast(response.error || 'Registration failed', 'error');
         return false;
       }
@@ -101,6 +104,7 @@ export const SimpleAuthProvider: React.FC<{ children: ReactNode }> = ({ children
       addToast((error as Error).message || 'Registration failed', 'error');
       return false;
     }
+  };
   }, [addToast]);
 
   const logout = useCallback(async () => {
@@ -115,6 +119,7 @@ export const SimpleAuthProvider: React.FC<{ children: ReactNode }> = ({ children
       setUser(null);
       setUserToken(null);
     }
+  };
   }, [addToast]);
 
   const value = useMemo(() => ({
@@ -138,8 +143,8 @@ export const useSimpleAuth = (): AuthContextType => {
   return context;
 };
 
-// Export context for testing
+// Export context for testing;
 export { AuthContext };
 
-// Default export
+// Default export;
 export default SimpleAuthProvider;

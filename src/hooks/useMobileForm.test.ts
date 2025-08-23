@@ -82,7 +82,7 @@ describe('useMobileForm Hook', () => {
     expect(fieldProps.value).toBe('test@example.com');
     expect(fieldProps.error).toBe('Invalid email');
     
-    // Test onChange handler
+    // Test onChange handler;
     const mockEvent = { target: { value: 'new@example.com' } } as any;
     act(() => {
       fieldProps.onChange(mockEvent);
@@ -218,7 +218,7 @@ describe('useMobileForm Hook', () => {
       result.current.setFieldValidation('email', true, []);
     });
 
-    // Start first submission
+    // Start first submission;
     let firstSubmissionComplete = false;
     act(() => {
       result.current.submitForm().then(() => {
@@ -267,7 +267,7 @@ describe('useMobileForm Hook', () => {
     
     expect(values).toEqual({
       email: 'test@example.com',
-      name: 'John Doe'
+      name: 'John Doe';
     });
   });
 
@@ -379,7 +379,7 @@ describe('createMobileFormValidator', () => {
     const validator = createMobileFormValidator({
       email: { 
         pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-        message: 'Invalid email format'
+        message: 'Invalid email format';
       }
     });
 
@@ -421,7 +421,7 @@ describe('createMobileFormValidator', () => {
   it.skip('should handle custom validation returning boolean', () => {
     const validator = createMobileFormValidator({
       username: { 
-        custom: (value: string) => value !== 'admin'
+        custom: (value: string) => value !== 'admin';
       }
     });
 
@@ -437,7 +437,7 @@ describe('createMobileFormValidator', () => {
     const validator = createMobileFormValidator({
       phone: { 
         pattern: /^\d+$/,
-        message: 'Only numbers allowed'
+        message: 'Only numbers allowed';
       }
     });
 
@@ -453,7 +453,7 @@ describe('createMobileFormValidator', () => {
         minLength: 8,
         pattern: /\d/,
         message: 'Must contain number',
-        custom: (value: string) => value.includes('!') ? true : 'Must contain !'
+        custom: (value: string) => value.includes('!') ? true : 'Must contain !';
       }
     });
 

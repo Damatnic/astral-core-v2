@@ -5,7 +5,7 @@
  * and culturally-sensitive crisis intervention analysis.
  * 
  * @license Apache-2.0
- */
+ */;
 
 export interface CulturalContext {
   region: string;
@@ -22,56 +22,56 @@ class CulturalContextService {
       mentalHealthStigma: 'medium',
       familyInvolvement: 'individual',
       crisisEscalation: 'direct',
-      communicationStyle: 'direct'
+      communicationStyle: 'direct';
     },
     'es': {
       region: 'Hispanic/Latino',
       mentalHealthStigma: 'high',
       familyInvolvement: 'family-centered',
       crisisEscalation: 'gradual',
-      communicationStyle: 'contextual'
+      communicationStyle: 'contextual';
     },
     'pt-BR': {
       region: 'Brazilian',
       mentalHealthStigma: 'high',
       familyInvolvement: 'family-centered',
       crisisEscalation: 'gradual',
-      communicationStyle: 'contextual'
+      communicationStyle: 'contextual';
     },
     'pt': {
       region: 'Portuguese',
       mentalHealthStigma: 'medium',
       familyInvolvement: 'family-centered',
       crisisEscalation: 'gradual',
-      communicationStyle: 'contextual'
+      communicationStyle: 'contextual';
     },
     'ar': {
       region: 'Arabic',
       mentalHealthStigma: 'high',
       familyInvolvement: 'family-centered',
       crisisEscalation: 'authority-based',
-      communicationStyle: 'indirect'
+      communicationStyle: 'indirect';
     },
     'zh': {
       region: 'Chinese',
       mentalHealthStigma: 'high',
       familyInvolvement: 'family-centered',
       crisisEscalation: 'gradual',
-      communicationStyle: 'indirect'
+      communicationStyle: 'indirect';
     },
     'vi': {
       region: 'Vietnamese',
       mentalHealthStigma: 'high',
       familyInvolvement: 'family-centered',
       crisisEscalation: 'authority-based',
-      communicationStyle: 'indirect'
+      communicationStyle: 'indirect';
     },
     'tl': {
       region: 'Filipino',
       mentalHealthStigma: 'high',
       familyInvolvement: 'family-centered',
       crisisEscalation: 'gradual',
-      communicationStyle: 'contextual'
+      communicationStyle: 'contextual';
     }
   };
 

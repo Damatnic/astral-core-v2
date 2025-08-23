@@ -23,11 +23,11 @@ import type {
   FamilySupport
 } from '../culturalFamilySupportService';
 
-// Get mocked instances
+// Get mocked instances;
 const mockEnhancedOfflineService = enhancedOfflineService as jest.Mocked<typeof enhancedOfflineService>;
 const mockPrivacyAnalyticsService = privacyPreservingAnalyticsService as jest.Mocked<typeof privacyPreservingAnalyticsService>;
 
-// Mock console methods
+// Mock console methods;
 const originalConsoleLog = console.log;
 const originalConsoleWarn = console.warn;
 
@@ -142,7 +142,7 @@ describe('CulturalFamilySupportService', () => {
         communicationStyle: 'direct' as const,
       };
 
-      const familySupport = await service.createFamilySupport(
+      const familySupport = await service.createFamilySupport(;
         'user-123',
         culturalContext,
         'en',
@@ -171,8 +171,8 @@ describe('CulturalFamilySupportService', () => {
         communicationStyle: 'contextual' as const,
       };
 
-      // Test individual_only support level
-      const individualSupport = await service.createFamilySupport(
+      // Test individual_only support level;
+      const individualSupport = await service.createFamilySupport(;
         'user-1',
         culturalContext,
         'es',
@@ -181,8 +181,8 @@ describe('CulturalFamilySupportService', () => {
       );
       expect(individualSupport.privacySettings.shareWithFamily).toBe(false);
 
-      // Test family_involved support level
-      const familySupport = await service.createFamilySupport(
+      // Test family_involved support level;
+      const familySupport = await service.createFamilySupport(;
         'user-2',
         culturalContext,
         'es',
@@ -192,8 +192,8 @@ describe('CulturalFamilySupportService', () => {
       expect(familySupport.privacySettings.shareWithFamily).toBe(true);
       expect(familySupport.privacySettings.shareProgressReports).toBe(true);
 
-      // Test community_centered support level
-      const communitySupport = await service.createFamilySupport(
+      // Test community_centered support level;
+      const communitySupport = await service.createFamilySupport(;
         'user-3',
         culturalContext,
         'es',
@@ -245,8 +245,8 @@ describe('CulturalFamilySupportService', () => {
         communicationStyle: 'indirect' as const,
       };
 
-      // Should not throw even if analytics fails
-      const familySupport = await service.createFamilySupport(
+      // Should not throw even if analytics fails;
+      const familySupport = await service.createFamilySupport(;
         'user-error',
         culturalContext,
         'zh',
@@ -623,7 +623,7 @@ describe('CulturalFamilySupportService', () => {
         },
       });
 
-      // Enable emergency protocol
+      // Enable emergency protocol;
       const familySupport = service.getFamilySupport('user-crisis');
       if (familySupport) {
         familySupport.emergencyProtocol.enabled = true;
@@ -822,7 +822,7 @@ describe('CulturalFamilySupportService', () => {
         communicationStyle: 'direct',
       };
 
-      const message = (service as any).generateCulturalMessage(
+      const message = (service as any).generateCulturalMessage(;
         member,
         'crisis_alert',
         { severity: 8 },
@@ -864,7 +864,7 @@ describe('CulturalFamilySupportService', () => {
         communicationStyle: 'indirect',
       };
 
-      const message = (service as any).generateCulturalMessage(
+      const message = (service as any).generateCulturalMessage(;
         member,
         'crisis_alert',
         { severity: 7 },
@@ -904,7 +904,7 @@ describe('CulturalFamilySupportService', () => {
         communicationStyle: 'indirect',
       };
 
-      const message = (service as any).generateCulturalMessage(
+      const message = (service as any).generateCulturalMessage(;
         member,
         'mild_concern',
         { severity: 4 },
@@ -944,7 +944,7 @@ describe('CulturalFamilySupportService', () => {
         communicationStyle: 'contextual',
       };
 
-      const message = (service as any).generateCulturalMessage(
+      const message = (service as any).generateCulturalMessage(;
         member,
         'family_meeting',
         { severity: 5 },

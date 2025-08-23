@@ -1,7 +1,7 @@
 /**
  * Local Storage Service for Anonymous User Data
  * Manages persistent data for users who haven't logged in
- */
+ */;
 
 interface LocalStorageData {
   anonymousId: string;
@@ -179,7 +179,8 @@ class LocalStorageService {
         notifications: false,
         language: 'en',
       },
-    }
+    };
+  }
 
   /**
    * Clear all anonymous user data
@@ -292,8 +293,8 @@ class LocalStorageService {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const localStorageService = new LocalStorageService();
 
-// Export class for testing
+// Export class for testing;
 export default LocalStorageService;

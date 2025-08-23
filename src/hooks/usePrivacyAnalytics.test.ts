@@ -1,6 +1,6 @@
 /**
  * Tests for Privacy Analytics Hook
- */
+ */;
 
 import { renderHook, act, waitFor } from '../test-utils';
 import { usePrivacyAnalytics } from './usePrivacyAnalytics';
@@ -16,7 +16,7 @@ jest.mock('../services/privacyPreservingAnalyticsService', () => ({
     exportAnonymizedData: jest.fn(),
     getPrivacyMetrics: jest.fn(),
     resetPrivacyBudget: jest.fn(),
-    updateCulturalPatterns: jest.fn()
+    updateCulturalPatterns: jest.fn();
   }
 }));
 
@@ -38,7 +38,7 @@ const mockInsights = {
     totalSessions: 2847,
     privacyCompliantSessions: 2847,
     dataRetentionCompliance: 1.0,
-    differentialPrivacyBudgetUsed: 0.6
+    differentialPrivacyBudgetUsed: 0.6;
   },
   culturalComparisons: [
     {
@@ -47,7 +47,7 @@ const mockInsights = {
       averageRiskReduction: 0.31,
       preferredInterventions: ['CBT', 'mindfulness'],
       sessionCount: 1200,
-      followUpRate: 0.68
+      followUpRate: 0.68;
     },
     {
       culturalContext: 'Eastern',
@@ -55,14 +55,14 @@ const mockInsights = {
       averageRiskReduction: 0.35,
       preferredInterventions: ['family-therapy', 'meditation'],
       sessionCount: 800,
-      followUpRate: 0.75
+      followUpRate: 0.75;
     }
   ],
   privacyMetrics: {
     budgetUsed: 6.2,
     budgetRemaining: 3.8,
     dataPoints: 15430,
-    retentionCompliance: true
+    retentionCompliance: true;
   }
 };
 
@@ -70,7 +70,7 @@ const mockPrivacyMetrics = {
   budgetUsed: 6.2,
   budgetRemaining: 3.8,
   dataPoints: 15430,
-  retentionCompliance: true
+  retentionCompliance: true;
 };
 
 const mockReport = {
@@ -104,7 +104,7 @@ describe('usePrivacyAnalytics Hook', () => {
     (privacyPreservingAnalyticsService.exportAnonymizedData as jest.Mock).mockResolvedValue({
       exportTime: Date.now(),
       dataPoints: 15430,
-      privacyLevel: 'high'
+      privacyLevel: 'high';
     });
     (privacyPreservingAnalyticsService.recordInterventionOutcome as jest.Mock).mockResolvedValue(undefined);
     (privacyPreservingAnalyticsService.recordFollowUpEngagement as jest.Mock).mockResolvedValue(undefined);
@@ -119,7 +119,7 @@ describe('usePrivacyAnalytics Hook', () => {
       used: 0,
       remaining: 10,
       dataPoints: 0,
-      retentionCompliant: true
+      retentionCompliant: true;
     });
     expect(result.current.isLoading).toBe(false);
     expect(result.current.error).toBeNull();
@@ -141,7 +141,7 @@ describe('usePrivacyAnalytics Hook', () => {
       used: 6.2,
       remaining: 3.8,
       dataPoints: 15430,
-      retentionCompliant: true
+      retentionCompliant: true;
     });
     expect(result.current.error).toBeNull();
   });
@@ -179,7 +179,7 @@ describe('usePrivacyAnalytics Hook', () => {
       initialRiskLevel: 75,
       finalRiskLevel: 35,
       sessionDuration: 1800,
-      feedback: 4
+      feedback: 4;
     };
 
     await act(async () => {
@@ -206,7 +206,7 @@ describe('usePrivacyAnalytics Hook', () => {
       interventionType: 'human-helper' as const,
       initialRiskLevel: 80,
       finalRiskLevel: 40,
-      sessionDuration: 2400
+      sessionDuration: 2400;
     };
 
     await act(async () => {
@@ -373,7 +373,7 @@ describe('usePrivacyAnalytics Hook', () => {
       budgetUsed: 7.5,
       budgetRemaining: 2.5,
       dataPoints: 16000,
-      retentionCompliance: true
+      retentionCompliance: true;
     };
 
     (privacyPreservingAnalyticsService.getPrivacyMetrics as jest.Mock).mockReturnValue(updatedMetrics);
@@ -387,7 +387,7 @@ describe('usePrivacyAnalytics Hook', () => {
       interventionType: 'peer-support' as const,
       initialRiskLevel: 60,
       finalRiskLevel: 25,
-      sessionDuration: 2100
+      sessionDuration: 2100;
     };
 
     await act(async () => {
@@ -404,7 +404,7 @@ describe('usePrivacyAnalytics Hook', () => {
       budgetUsed: 9.8,
       budgetRemaining: 0.2,
       dataPoints: 25000,
-      retentionCompliance: true
+      retentionCompliance: true;
     };
 
     (privacyPreservingAnalyticsService.getPrivacyMetrics as jest.Mock).mockReturnValue(lowBudgetMetrics);
@@ -431,7 +431,7 @@ describe('usePrivacyAnalytics Hook', () => {
       used: 0,
       remaining: 10,
       dataPoints: 0,
-      retentionCompliant: true
+      retentionCompliant: true;
     });
   });
 
@@ -485,7 +485,7 @@ describe('usePrivacyAnalytics Hook', () => {
           interventionType: 'ai-chat' as const,
           initialRiskLevel: 70,
           finalRiskLevel: 30,
-          sessionDuration: 1500
+          sessionDuration: 1500;
         }),
         result.current.recordFollowUp('user-2', 'session-2'),
         result.current.generateReport()

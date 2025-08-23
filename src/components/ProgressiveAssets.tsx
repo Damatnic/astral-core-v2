@@ -1,9 +1,9 @@
 // Progressive Asset Loading System
-// Optimizes images, videos, and other media for better performance
+// Optimizes images, videos, and other media for better performance;
 
 import React from 'react';
 
-// Image optimization configuration
+// Image optimization configuration;
 export const imageOptimizationConfig = {
   // Supported image formats in order of preference
   preferredFormats: ['webp', 'avif', 'png', 'jpg', 'jpeg'],
@@ -16,7 +16,7 @@ export const imageOptimizationConfig = {
     thumbnail: 60,
     standard: 80,
     high: 90,
-    lossless: 100
+    lossless: 100;
   },
   
   // Lazy loading thresholds
@@ -25,11 +25,11 @@ export const imageOptimizationConfig = {
   // Intersection observer options
   observerOptions: {
     rootMargin: '50px 0px',
-    threshold: 0.1
+    threshold: 0.1;
   }
 };
 
-// Video optimization configuration
+// Video optimization configuration;
 export const videoOptimizationConfig = {
   // Preferred video formats
   formats: ['webm', 'mp4'],
@@ -38,7 +38,7 @@ export const videoOptimizationConfig = {
   quality: {
     low: '480p',
     medium: '720p',
-    high: '1080p'
+    high: '1080p';
   },
   
   // Lazy loading settings
@@ -48,7 +48,7 @@ export const videoOptimizationConfig = {
   chunkSize: 1024 * 1024 * 2, // 2MB chunks
 };
 
-// Progressive Image Component
+// Progressive Image Component;
 interface ProgressiveImageProps {
   src: string;
   alt: string;
@@ -69,7 +69,7 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   const [currentSrc, setCurrentSrc] = React.useState('');
   const imgRef = React.useRef<HTMLImageElement>(null);
 
-  // Generate responsive image sources
+  // Generate responsive image sources;
   const generateSrcSet = (baseSrc: string) => {
     return imageOptimizationConfig.breakpoints
       .map(width => {
@@ -88,7 +88,7 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
       return;
     }
 
-    const observer = new IntersectionObserver(
+    const observer = new IntersectionObserver(;
       (entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -102,6 +102,7 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
 
     observer.observe(img);
     return () => observer.disconnect();
+  };
   }, [src, priority]);
 
   const handleLoad = () => {
@@ -148,7 +149,7 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
           onError={handleError}
           style={{
             opacity: isLoading ? 0 : 1,
-            transition: 'opacity 0.3s ease'
+            transition: 'opacity 0.3s ease';
           }}
           loading={priority ? 'eager' : 'lazy'}
         />
@@ -157,7 +158,7 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   );
 };
 
-// Progressive Video Component
+// Progressive Video Component;
 interface ProgressiveVideoProps {
   src: string;
   poster?: string;
@@ -187,7 +188,7 @@ export const ProgressiveVideo: React.FC<ProgressiveVideoProps> = ({
     const video = videoRef.current;
     if (!video) return;
 
-    const observer = new IntersectionObserver(
+    const observer = new IntersectionObserver(;
       (entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -201,6 +202,7 @@ export const ProgressiveVideo: React.FC<ProgressiveVideoProps> = ({
 
     observer.observe(video);
     return () => observer.disconnect();
+  };
   }, []);
 
   const handleLoadStart = () => {
@@ -216,7 +218,7 @@ export const ProgressiveVideo: React.FC<ProgressiveVideoProps> = ({
     setIsLoading(false);
   };
 
-  // Generate video sources for different formats
+  // Generate video sources for different formats;
   const generateVideoSources = (baseSrc: string) => {
     const baseName = baseSrc.replace(/\.[^/.]+$/, '');
     
@@ -257,7 +259,7 @@ export const ProgressiveVideo: React.FC<ProgressiveVideoProps> = ({
         onError={handleError}
         style={{
           opacity: isLoading ? 0.5 : 1,
-          transition: 'opacity 0.5s ease'
+          transition: 'opacity 0.5s ease';
         }}
       >
         {shouldLoad && generateVideoSources(src).map((source) => (
@@ -277,7 +279,7 @@ export const ProgressiveVideo: React.FC<ProgressiveVideoProps> = ({
   );
 };
 
-// Asset Preloader Service
+// Asset Preloader Service;
 export class AssetPreloader {
   private preloadedImages = new Set<string>();
   private preloadedVideos = new Set<string>();
@@ -331,22 +333,22 @@ export class AssetPreloader {
     if ('requestIdleCallback' in window) {
       requestIdleCallback(() => {
         this.processQueueItems();
-      });
-    } else {
+      });;
+  } else {
       setTimeout(() => this.processQueueItems(), 100);
     }
   }
 
   private async processQueueItems() {
-    const batchSize = 3; // Process 3 items at a time
+    const batchSize = 3; // Process 3 items at a time;
     const batch = this.preloadQueue.splice(0, batchSize);
 
     const promises = batch.map(item => {
       if (item.type === 'image') {
         return this.preloadImage(item.src).catch(() => {
           // Silently handle preload failures
-        });
-      } else {
+        });;
+  } else {
         return this.preloadVideo(item.src).catch(() => {
           // Silently handle preload failures
         });
@@ -366,14 +368,14 @@ export class AssetPreloader {
     return {
       preloadedImages: this.preloadedImages.size,
       preloadedVideos: this.preloadedVideos.size,
-      queueLength: this.preloadQueue.length
+      queueLength: this.preloadQueue.length;
     }
 }
 
-// Critical asset preloading
+// Critical asset preloading;
 export const criticalAssetPreloader = new AssetPreloader();
 
-// Preload critical assets
+// Preload critical assets;
 export const preloadCriticalAssets = () => {
   // Preload crisis-related images first
   criticalAssetPreloader.queueAsset('image', '/icon-192.png', 10);
@@ -386,7 +388,7 @@ export const preloadCriticalAssets = () => {
   criticalAssetPreloader.processQueue();
 };
 
-// Asset optimization utilities
+// Asset optimization utilities;
 export const assetUtils = {
   // Check if browser supports modern image formats
   supportsWebP: () => {

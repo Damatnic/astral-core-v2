@@ -31,7 +31,7 @@ describe('ScreenReaderService', () => {
     appendChildSpy.mockRestore();
     document.getElementById = originalGetElementById;
     
-    // Clean up any created elements
+    // Clean up any created elements;
     const liveRegions = document.querySelectorAll('[aria-live]');
     liveRegions.forEach(region => region.remove());
   });
@@ -66,7 +66,7 @@ describe('ScreenReaderService', () => {
       service.announce({
         message: 'Crisis intervention available',
         priority: 'emergency',
-        type: 'crisis'
+        type: 'crisis';
       });
 
       // Announcement should be made
@@ -77,7 +77,7 @@ describe('ScreenReaderService', () => {
       service.announce({
         message: 'Connection established',
         priority: 'low',
-        type: 'status'
+        type: 'status';
       });
 
       // Announcement should be made
@@ -88,7 +88,7 @@ describe('ScreenReaderService', () => {
       service.announce({
         message: 'Navigated to Crisis Resources page',
         priority: 'medium',
-        type: 'navigation'
+        type: 'navigation';
       });
 
       const history = service.getAnnouncementHistory();
@@ -101,7 +101,7 @@ describe('ScreenReaderService', () => {
       service.announce({
         message: 'Test announcement',
         priority: 'low',
-        type: 'status'
+        type: 'status';
       });
 
       const history = service.getAnnouncementHistory();
@@ -119,7 +119,7 @@ describe('ScreenReaderService', () => {
     it.skip('should set crisis context', () => {
       service.setCrisisContext({
         isActive: true,
-        severity: 'high'
+        severity: 'high';
       });
 
       const context = service.getCrisisContext();
@@ -148,7 +148,7 @@ describe('ScreenReaderService', () => {
         service.announce({
           message: `Announcement ${i}`,
           priority: 'low',
-          type: 'status'
+          type: 'status';
         });
       }
       

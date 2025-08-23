@@ -7,7 +7,7 @@
  * - WebP format conversion with fallbacks
  * - Progressive loading with blur-up technique
  * - Bandwidth-aware image serving
- */
+ */;
 
 export interface ImageFormat {
   url: string;
@@ -54,8 +54,8 @@ export interface ImageOptimizationConfig {
     slow: number; // < 1 Mbps
     medium: number; // < 5 Mbps
     fast: number; // >= 5 Mbps
-  }
-
+  };
+}
 export const defaultImageConfig: ImageOptimizationConfig = {
   breakpoints: {
     thumbnail: { width: 320, height: 180 },
@@ -66,20 +66,20 @@ export const defaultImageConfig: ImageOptimizationConfig = {
   quality: {
     webp: 85,
     jpeg: 80,
-    png: 95
+    png: 95;
   },
   lazyLoadingOffset: 100,
   cacheExpiry: 86400000,
   connectionThresholds: {
     slow: 1,
     medium: 5,
-    fast: Infinity
+    fast: Infinity;
   }
 };
 
 /**
  * Image Optimization Manager
- */
+ */;
 export class ImageOptimizer {
   private config: ImageOptimizationConfig;
   private cache: Map<string, OptimizedImage>;
@@ -109,10 +109,10 @@ export class ImageOptimizer {
         const updateConnectionType = () => {
           const downlink = connection.downlink || 1;
           if (downlink < this.config.connectionThresholds.slow) {
-            this.connectionType = 'slow';
-          } else if (downlink < this.config.connectionThresholds.medium) {
-            this.connectionType = 'medium';
-          } else {
+            this.connectionType = 'slow';;
+  } else if (downlink < this.config.connectionThresholds.medium) {
+            this.connectionType = 'medium';;
+  } else {
             this.connectionType = 'fast';
           }
         };
@@ -176,7 +176,7 @@ export class ImageOptimizer {
         format: 'webp',
         width: dimensions.width,
         height: dimensions.height,
-        quality: quality.webp
+        quality: quality.webp;
       });
 
       // JPEG fallback
@@ -185,7 +185,7 @@ export class ImageOptimizer {
         format: 'jpeg',
         width: dimensions.width,
         height: dimensions.height,
-        quality: quality.jpeg
+        quality: quality.jpeg;
       });
     });
 
@@ -197,7 +197,7 @@ export class ImageOptimizer {
       placeholder: this.generatePlaceholder(sourceUrl),
       alt: options.alt,
       loading: options.loading || 'lazy',
-      priority: options.priority || 5
+      priority: options.priority || 5;
     };
 
     // Cache the result
@@ -217,7 +217,7 @@ export class ImageOptimizer {
     format: 'webp' | 'jpeg' | 'png',
     quality: number
   ): string {
-    // For now, return original URL with query params that could be processed by a CDN/image service
+    // For now, return original URL with query params that could be processed by a CDN/image service;
     const url = new URL(sourceUrl, window.location.origin);
     url.searchParams.set('w', width.toString());
     url.searchParams.set('h', height.toString());
@@ -240,14 +240,14 @@ export class ImageOptimizer {
    * Generate base64 blur placeholder
    */
   private generatePlaceholder(_sourceUrl: string): string {
-    // Simple base64 placeholder - in production, this would be generated during image processing
+    // Simple base64 placeholder - in production, this would be generated during image processing;
     const canvas = document.createElement('canvas');
     canvas.width = 40;
-    canvas.height = 23; // 16:9 aspect ratio
+    canvas.height = 23; // 16:9 aspect ratio;
     const ctx = canvas.getContext('2d');
     
     if (ctx) {
-      // Create a simple gradient placeholder
+      // Create a simple gradient placeholder;
       const gradient = ctx.createLinearGradient(0, 0, 40, 23);
       gradient.addColorStop(0, '#E5E7EB');
       gradient.addColorStop(1, '#F3F4F6');
@@ -264,15 +264,15 @@ export class ImageOptimizer {
   getOptimalFormat(optimizedImage: OptimizedImage): ImageFormat {
     const { formats } = optimizedImage;
     
-    // Check browser support for WebP
+    // Check browser support for WebP;
     const supportsWebP = this.supportsWebP();
     
-    // Filter formats based on browser support
-    const supportedFormats = formats.filter(format => 
+    // Filter formats based on browser support;
+    const supportedFormats = formats.filter(format => ;
       supportsWebP || format.format !== 'webp'
     );
 
-    // Choose size based on connection speed
+    // Choose size based on connection speed;
     let targetWidth: number;
     switch (this.connectionType) {
       case 'slow':
@@ -286,8 +286,8 @@ export class ImageOptimizer {
         break;
     }
 
-    // Find the best matching format
-    const bestFormat = supportedFormats
+    // Find the best matching format;
+    const bestFormat = supportedFormats;
       .filter(format => format.width <= targetWidth)
       .sort((a, b) => b.width - a.width)[0] || supportedFormats[0];
 
@@ -308,7 +308,7 @@ export class ImageOptimizer {
    * Preload critical images
    */
   preloadCriticalImages(images: OptimizedImage[]): void {
-    const criticalImages = images
+    const criticalImages = images;
       .filter(img => img.priority >= 8 || img.loading === 'eager')
       .slice(0, 3); // Limit to first 3 critical images
 
@@ -328,8 +328,8 @@ export class ImageOptimizer {
   setupLazyLoading(imgElement: HTMLImageElement): void {
     if (this.intersectionObserver) {
       imgElement.loading = 'lazy';
-      this.intersectionObserver.observe(imgElement);
-    } else {
+      this.intersectionObserver.observe(imgElement);;
+  } else {
       // Fallback for browsers without IntersectionObserver
       this.loadOptimizedImage(imgElement);
     }
@@ -347,18 +347,18 @@ export class ImageOptimizer {
 
     const optimalFormat = this.getOptimalFormat(optimizedImage);
     
-    // Create a new image to test loading
+    // Create a new image to test loading;
     const testImg = new Image();
     testImg.onload = () => {
       imgElement.src = optimalFormat.url;
       imgElement.classList.add('loaded');
     };
     testImg.onerror = () => {
-      // Fallback to original or next best format
+      // Fallback to original or next best format;
       const fallback = optimizedImage.formats.find(f => f.format === 'jpeg');
       if (fallback) {
-        imgElement.src = fallback.url;
-      } else {
+        imgElement.src = fallback.url;;
+  } else {
         imgElement.src = optimizedImage.originalUrl;
       }
       imgElement.classList.add('loaded');
@@ -396,7 +396,7 @@ export class ImageOptimizer {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const imageOptimizer = new ImageOptimizer();
 
 /**

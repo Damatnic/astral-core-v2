@@ -1,7 +1,7 @@
 /**
  * Emergency Contact Service
  * Manages emergency contacts and crisis response for mental health support
- */
+ */;
 
 import { logger } from '../utils/logger';
 import { localStorageService } from './localStorageService';
@@ -60,7 +60,7 @@ class EmergencyContactService {
   }
 
   private initializeService(): void {
-    // Load saved contacts from local storage
+    // Load saved contacts from local storage;
     const savedContacts = localStorageService.getItem(this.STORAGE_KEY);
     if (savedContacts) {
       try {
@@ -244,7 +244,7 @@ class EmergencyContactService {
     contactIds?: string[],
     notificationType: 'sms' | 'email' | 'call' = 'sms'
   ): Promise<void> {
-    const contactsToNotify = contactIds 
+    const contactsToNotify = contactIds ;
       ? this.contacts.filter(c => contactIds.includes(c.id))
       : this.contacts.filter(c => c.isPrimary);
 
@@ -263,15 +263,16 @@ class EmergencyContactService {
         notification.status = 'sent';
         logger.info("Emergency notification sent", { 
           contactId: contact.id, 
-          type: notificationType 
+          type: notificationType ;
         }, "EmergencyContactService");
       } catch (error) {
         notification.status = 'failed';
         notification.error = error instanceof Error ? error.message : 'Unknown error';
         logger.error("Failed to send emergency notification", error, "EmergencyContactService");
       }
+  }
 
-      this.notificationHistory.push(notification);
+  this.notificationHistory.push(notification);
     }
   }
 
@@ -358,7 +359,7 @@ class EmergencyContactService {
    * Validate phone number format
    */
   private isValidPhoneNumber(phone: string): boolean {
-    // Basic phone validation - can be enhanced based on region
+    // Basic phone validation - can be enhanced based on region;
     const phoneRegex = /^[\d\s\-\+\(\)]+$/;
     return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 10;
   }
@@ -380,18 +381,18 @@ class EmergencyContactService {
 
   /**
    * Export contacts for backup
-   */
+   */;
   exportContacts(): string {
     return JSON.stringify({
       contacts: this.contacts,
       exportDate: new Date().toISOString(),
-      version: '1.0'
+      version: '1.0';
     }, null, 2);
   }
 
   /**
    * Import contacts from backup
-   */
+   */;
   importContacts(data: string): boolean {
     try {
       const parsed = JSON.parse(data);
@@ -399,14 +400,16 @@ class EmergencyContactService {
         this.contacts = parsed.contacts;
         this.saveContacts();
         logger.info("Contacts imported successfully", { 
-          count: this.contacts.length 
+          count: this.contacts.length ;
         }, "EmergencyContactService");
         return true;
       }
     } catch (error) {
       logger.error("Failed to import contacts", error, "EmergencyContactService");
     }
-    return false;
+  }
+
+  return false;
   }
 
   /**
@@ -429,7 +432,7 @@ export const emergencyContactService = new EmergencyContactService();
 export default emergencyContactService;
  * Emergency Contact Service
  * Manages emergency contacts and crisis response for mental health support
- */
+ */;
 
 import { logger } from '../utils/logger';
 import { localStorageService } from './localStorageService';
@@ -488,7 +491,7 @@ class EmergencyContactService {
   }
 
   private initializeService(): void {
-    // Load saved contacts from local storage
+    // Load saved contacts from local storage;
     const savedContacts = localStorageService.getItem(this.STORAGE_KEY);
     if (savedContacts) {
       try {
@@ -672,7 +675,7 @@ class EmergencyContactService {
     contactIds?: string[],
     notificationType: 'sms' | 'email' | 'call' = 'sms'
   ): Promise<void> {
-    const contactsToNotify = contactIds 
+    const contactsToNotify = contactIds ;
       ? this.contacts.filter(c => contactIds.includes(c.id))
       : this.contacts.filter(c => c.isPrimary);
 
@@ -691,15 +694,16 @@ class EmergencyContactService {
         notification.status = 'sent';
         logger.info("Emergency notification sent", { 
           contactId: contact.id, 
-          type: notificationType 
+          type: notificationType ;
         }, "EmergencyContactService");
       } catch (error) {
         notification.status = 'failed';
         notification.error = error instanceof Error ? error.message : 'Unknown error';
         logger.error("Failed to send emergency notification", error, "EmergencyContactService");
       }
+  }
 
-      this.notificationHistory.push(notification);
+  this.notificationHistory.push(notification);
     }
   }
 
@@ -786,7 +790,7 @@ class EmergencyContactService {
    * Validate phone number format
    */
   private isValidPhoneNumber(phone: string): boolean {
-    // Basic phone validation - can be enhanced based on region
+    // Basic phone validation - can be enhanced based on region;
     const phoneRegex = /^[\d\s\-\+\(\)]+$/;
     return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 10;
   }
@@ -808,18 +812,18 @@ class EmergencyContactService {
 
   /**
    * Export contacts for backup
-   */
+   */;
   exportContacts(): string {
     return JSON.stringify({
       contacts: this.contacts,
       exportDate: new Date().toISOString(),
-      version: '1.0'
+      version: '1.0';
     }, null, 2);
   }
 
   /**
    * Import contacts from backup
-   */
+   */;
   importContacts(data: string): boolean {
     try {
       const parsed = JSON.parse(data);
@@ -827,14 +831,16 @@ class EmergencyContactService {
         this.contacts = parsed.contacts;
         this.saveContacts();
         logger.info("Contacts imported successfully", { 
-          count: this.contacts.length 
+          count: this.contacts.length ;
         }, "EmergencyContactService");
         return true;
       }
     } catch (error) {
       logger.error("Failed to import contacts", error, "EmergencyContactService");
     }
-    return false;
+  }
+
+  return false;
   }
 
   /**

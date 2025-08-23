@@ -4,7 +4,7 @@
  * Bidirectional crisis support feature that creates meaningful digital presence 
  * between users during difficult moments. Either party can initiate - whether 
  * someone is reaching out for help or checking in on a friend.
- */
+ */;
 
 import React, { useState, useEffect, useRef } from 'react';
 import { ViewHeader } from '../components/ViewHeader';
@@ -72,7 +72,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
   const { addToast } = useNotification();
   const tetherService = useRef(getAstralTetherService());
   
-  // State management
+  // State management;
   const [activeTether, setActiveTether] = useState<ActiveTether | null>(null);
   const [tetherCircle, setTetherCircle] = useState<TetherCircleMember[]>([]);
   const [pendingRequests, setPendingRequests] = useState<any[]>([]);
@@ -82,25 +82,25 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
     comfortMessages: ["I'm here", "You're safe", "Breathe with me"],
     autoEscalationMinutes: 5,
     silentMode: false,
-    breathingPattern: '4-7-8'
+    breathingPattern: '4-7-8';
   });
   
-  // Modal states
+  // Modal states;
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [_showCircleModal, setShowCircleModal] = useState(false);
   const [_showInsightsModal, setShowInsightsModal] = useState(false);
   
-  // Tether request form
+  // Tether request form;
   const [requestMessage, setRequestMessage] = useState('');
   const [requestUrgency, setRequestUrgency] = useState<'low' | 'medium' | 'high' | 'critical'>('medium');
   const [selectedMemberId, setSelectedMemberId] = useState<string>('');
   
-  // Breathing sync state
+  // Breathing sync state;
   const [breathingPhase, setBreathingPhase] = useState<'inhale' | 'hold' | 'exhale' | 'pause'>('inhale');
   const [breathingProgress, setBreathingProgress] = useState(0);
   
-  // Connection strength visualization
+  // Connection strength visualization;
   const animationRef = useRef<number>();
 
   useEffect(() => {
@@ -114,7 +114,8 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
               }
         tetherService.current.removeAllListeners();
       };
-    }, []);
+    };
+  }, []);
 
   const loadTetherCircle = async () => {
     try {
@@ -168,7 +169,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
         connectionStrength: 0,
         isBreathingSynced: false,
         isHapticEnabled: true,
-        status: 'connecting'
+        status: 'connecting';
       });
       addToast('Tether connection established!', 'success');
     });
@@ -197,7 +198,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
         toUserId: selectedMemberId,
         tetherType: 'conversation',
         message: requestMessage,
-        urgency: requestUrgency
+        urgency: requestUrgency;
       });
 
       addToast('Tether request sent', 'success');
@@ -289,7 +290,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
     // Trigger emergency escalation
     tetherService.current.emit('emergencyEscalation', {
       userId: user?.sub,
-      reason: 'No response to high urgency tether request'
+      reason: 'No response to high urgency tether request';
     });
     
     // Optionally redirect to crisis resources
@@ -303,7 +304,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
     
     setActiveTether(prev => prev ? {
       ...prev,
-      isBreathingSynced: !prev.isBreathingSynced
+      isBreathingSynced: !prev.isBreathingSynced;
     } : null);
     
     if (!activeTether.isBreathingSynced) {
@@ -331,15 +332,15 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
         setBreathingProgress(progress);
         
         if (progress >= 1) {
-          // Move to next phase
+          // Move to next phase;
           const phases: Array<'inhale' | 'hold' | 'exhale' | 'pause'> = ['inhale', 'hold', 'exhale', 'pause'];
           const currentIndex = phases.indexOf(phase);
           phase = phases[(currentIndex + 1) % 4];
           setBreathingPhase(phase);
           startTime = Date.now();
-        }
-      } else {
-        // Skip phases with 0 duration
+        };
+  } else {
+        // Skip phases with 0 duration;
         const phases: Array<'inhale' | 'hold' | 'exhale' | 'pause'> = ['inhale', 'hold', 'exhale', 'pause'];
         const currentIndex = phases.indexOf(phase);
         phase = phases[(currentIndex + 1) % 4];
@@ -374,23 +375,23 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
         <div className="connection-strength">
           <label>Connection Strength</label>
           <div className="strength-bar">
-            <div 
+            <div; 
               className="strength-fill"
               style={{ 
                 width: `${activeTether.connectionStrength * 100}%`,
-                backgroundColor: getStrengthColor(activeTether.connectionStrength)
+                backgroundColor: getStrengthColor(activeTether.connectionStrength);
               }}
             />
           </div>
           <div className="strength-controls">
-            <AppButton
+            <AppButton;
               variant="ghost"
               size="sm"
               onClick={() => updateConnectionStrength(-0.1)}
             >
               Lighter
             </AppButton>
-            <AppButton
+            <AppButton;
               variant="ghost"
               size="sm"
               onClick={() => updateConnectionStrength(0.1)}
@@ -404,7 +405,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
         <div className="breathing-sync-section">
           <div className="breathing-header">
             <h3>Synchronized Breathing</h3>
-            <AppButton
+            <AppButton;
               variant={activeTether.isBreathingSynced ? 'primary' : 'secondary'}
               size="sm"
               onClick={toggleBreathingSync}
@@ -416,7 +417,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
           {activeTether.isBreathingSynced && (
             <div className="breathing-visualization">
               <div className={`breathing-circle ${breathingPhase}`}>
-                <div 
+                <div; 
                   className="breathing-progress"
                   style={{ transform: `scale(${0.5 + breathingProgress * 0.5})` }}
                 />
@@ -445,7 +446,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
 
         {/* Action Buttons */}
         <div className="tether-actions">
-          <AppButton
+          <AppButton;
             variant="secondary"
             onClick={() => {
               if ('vibrate' in navigator) {
@@ -458,7 +459,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
             Send Warmth
           </AppButton>
           
-          <AppButton
+          <AppButton;
             variant="danger"
             onClick={endTether}
           >
@@ -474,7 +475,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
       <Card className="tether-circle-card">
         <div className="card-header">
           <h2>Your Tether Circle</h2>
-          <AppButton
+          <AppButton;
             variant="ghost"
             size="sm"
             onClick={() => setShowCircleModal(true)}
@@ -518,7 +519,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
                     {member.trustLevel}
                   </span>
                 </div>
-                <AppButton
+                <AppButton;
                   variant="ghost"
                   size="sm"
                   onClick={() => {
@@ -555,7 +556,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
                 </span>
               </div>
               <div className="request-actions">
-                <AppButton
+                <AppButton;
                   variant="primary"
                   size="sm"
                   onClick={() => acceptTetherRequest(request.id)}
@@ -563,7 +564,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
                   <CheckCircleIcon />
                   Accept
                 </AppButton>
-                <AppButton
+                <AppButton;
                   variant="ghost"
                   size="sm"
                   onClick={() => {
@@ -586,7 +587,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
       <Card className="quick-actions-card">
         <h2>Quick Actions</h2>
         <div className="action-buttons">
-          <AppButton
+          <AppButton;
             variant="primary"
             onClick={() => setShowRequestModal(true)}
             disabled={!!activeTether}
@@ -595,7 +596,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
             Request Tether
           </AppButton>
           
-          <AppButton
+          <AppButton;
             variant="secondary"
             onClick={() => {
               setRequestUrgency('critical');
@@ -607,7 +608,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
             Crisis Tether
           </AppButton>
           
-          <AppButton
+          <AppButton;
             variant="ghost"
             onClick={() => setShowInsightsModal(true)}
           >
@@ -615,7 +616,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
             View Insights
           </AppButton>
           
-          <AppButton
+          <AppButton;
             variant="ghost"
             onClick={() => setShowSettingsModal(true)}
           >
@@ -627,17 +628,17 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
     );
   };
 
-  // Utility functions
+  // Utility functions;
   const formatDuration = (ms: number): string => {
     const seconds = Math.floor(ms / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     
     if (hours > 0) {
-      return `${hours}h ${minutes % 60}m`;
-    } else if (minutes > 0) {
-      return `${minutes}m ${seconds % 60}s`;
-    } else {
+      return `${hours}h ${minutes % 60}m`;;
+  } else if (minutes > 0) {
+      return `${minutes}m ${seconds % 60}s`;;
+  } else {
       return `${seconds}s`;
     }
   };
@@ -660,7 +661,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
     return '#6bcf7f';
   };
 
-  // Add demo mode state
+  // Add demo mode state;
   const [isDemoMode, setIsDemoMode] = useState(true);
 
   return (
@@ -672,13 +673,13 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
 
       {/* Toggle between demo and real mode */}
       <div className="tether-mode-toggle">
-        <AppButton 
+        <AppButton; 
           variant={isDemoMode ? "primary" : "ghost"}
           onClick={() => setIsDemoMode(true)}
         >
           Demo Experience
         </AppButton>
-        <AppButton 
+        <AppButton; 
           variant={!isDemoMode ? "primary" : "ghost"}
           onClick={() => setIsDemoMode(false)}
         >
@@ -776,13 +777,13 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
           </div>
 
           <div className="modal-actions">
-            <AppButton
+            <AppButton;
               variant="primary"
               onClick={initiateTetherRequest}
             >
               Send Request
             </AppButton>
-            <AppButton
+            <AppButton;
               variant="ghost"
               onClick={() => setShowRequestModal(false)}
             >
@@ -805,7 +806,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
               value={tetherProfile.vibrationPattern}
               onChange={(e) => setTetherProfile(prev => ({
                 ...prev,
-                vibrationPattern: e.target.value as 'heartbeat' | 'wave' | 'pulse' | 'custom'
+                vibrationPattern: e.target.value as 'heartbeat' | 'wave' | 'pulse' | 'custom';
               }))}
               className="form-select"
             >
@@ -837,7 +838,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
               value={tetherProfile.breathingPattern}
               onChange={(e) => setTetherProfile(prev => ({
                 ...prev,
-                breathingPattern: e.target.value as '4-7-8' | 'box' | 'coherent'
+                breathingPattern: e.target.value as '4-7-8' | 'box' | 'coherent';
               }))}
               className="form-select"
             >
@@ -849,12 +850,12 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
 
           <div className="form-group">
             <label>Auto-Escalation (minutes)</label>
-            <AppInput
+            <AppInput;
               type="number"
               value={tetherProfile.autoEscalationMinutes.toString()}
               onChange={(e) => setTetherProfile(prev => ({
                 ...prev,
-                autoEscalationMinutes: parseInt(e.target.value) || 5
+                autoEscalationMinutes: parseInt(e.target.value) || 5;
               }))}
               min="1"
               max="30"
@@ -863,12 +864,12 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
 
           <div className="form-group">
             <label>
-              <input
+              <input;
                 type="checkbox"
                 checked={tetherProfile.silentMode}
                 onChange={(e) => setTetherProfile(prev => ({
                   ...prev,
-                  silentMode: e.target.checked
+                  silentMode: e.target.checked;
                 }))}
               />
               Silent Mode (no sounds or vibrations)
@@ -889,7 +890,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
                 placeholder="Enter comfort message"
               />
             ))}
-            <AppButton
+            <AppButton;
               variant="ghost"
               size="sm"
               onClick={() => setTetherProfile(prev => ({
@@ -902,7 +903,7 @@ const TetherView: React.FC<{ userToken?: string | null; setActiveView?: (view: a
           </div>
 
           <div className="modal-actions">
-            <AppButton
+            <AppButton;
               variant="primary"
               onClick={() => {
                 // Save settings

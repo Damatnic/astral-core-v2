@@ -3,7 +3,7 @@
  * Provides comprehensive mocking for performance APIs and timing functions
  */
 
-// Performance API Mock
+// Performance API Mock;
 export const mockPerformanceAPI = () => {
   const performanceNow = jest.fn(() => Date.now());
   const performanceMark = jest.fn();
@@ -25,7 +25,7 @@ export const mockPerformanceAPI = () => {
     clearMeasures: performanceClearMeasures,
     navigation: {
       type: 0,
-      redirectCount: 0
+      redirectCount: 0;
     },
     timing: {
       navigationStart: Date.now() - 1000,
@@ -43,19 +43,19 @@ export const mockPerformanceAPI = () => {
       domContentLoadedEventEnd: Date.now() - 40,
       domComplete: Date.now() - 30,
       loadEventStart: Date.now() - 20,
-      loadEventEnd: Date.now() - 10
+      loadEventEnd: Date.now() - 10;
     },
     memory: {
       jsHeapSizeLimit: 2147483648,
       totalJSHeapSize: 10485760,
-      usedJSHeapSize: 5242880
+      usedJSHeapSize: 5242880;
     }
   };
 
   Object.defineProperty(window, 'performance', {
     value: mockPerformance,
     configurable: true,
-    writable: true
+    writable: true;
   });
 
   return {
@@ -69,7 +69,7 @@ export const mockPerformanceAPI = () => {
     mockPerformance
   };
 
-// PerformanceObserver Mock
+// PerformanceObserver Mock;
 export class MockPerformanceObserver {
   callback: PerformanceObserverCallback;
   entryTypes: string[] = [];
@@ -95,13 +95,13 @@ export class MockPerformanceObserver {
     const list = {
       getEntries: () => entries,
       getEntriesByType: (type: string) => entries.filter(e => e.entryType === type),
-      getEntriesByName: (name: string) => entries.filter(e => e.name === name)
+      getEntriesByName: (name: string) => entries.filter(e => e.name === name);
     };
     this.callback(list as PerformanceObserverEntryList, this);
   }
 }
 
-// Request Animation Frame Mock with Fake Timers Support
+// Request Animation Frame Mock with Fake Timers Support;
 export const mockRequestAnimationFrame = () => {
   let rafCallbacks: Array<{ id: number; callback: FrameRequestCallback; timestamp: number }> = [];
   let rafId = 0;
@@ -109,7 +109,8 @@ export const mockRequestAnimationFrame = () => {
   const requestAnimationFrame = jest.fn((callback: FrameRequestCallback) => {
     const id = ++rafId;
     const timestamp = performance.now();
-    rafCallbacks.push({ id, callback, timestamp });
+    rafCallbacks.push({ id, callback, timestamp };
+  };
     
     // Use setTimeout with 16ms delay (60fps)
     setTimeout(() => {
@@ -131,7 +132,7 @@ export const mockRequestAnimationFrame = () => {
     }
   });
 
-  // Helper to flush all pending animation frames
+  // Helper to flush all pending animation frames;
   const flushAnimationFrames = () => {
     const callbacks = [...rafCallbacks];
     rafCallbacks = [];
@@ -149,7 +150,7 @@ export const mockRequestAnimationFrame = () => {
     flushAnimationFrames
   };
 
-// Intersection Observer Mock
+// Intersection Observer Mock;
 export class MockIntersectionObserver {
   callback: IntersectionObserverCallback;
   elements: Set<Element> = new Set();
@@ -185,14 +186,15 @@ export class MockIntersectionObserver {
       isIntersecting: entry.isIntersecting || false,
       rootBounds: entry.rootBounds || null,
       target: entry.target || document.createElement('div'),
-      time: entry.time || performance.now()
-    })) as IntersectionObserverEntry[];
+      time: entry.time || performance.now();
+    };
+  }) as IntersectionObserverEntry[];
     
     this.callback(fullEntries, this);
   }
 }
 
-// Resize Observer Mock
+// Resize Observer Mock;
 export class MockResizeObserver {
   callback: ResizeObserverCallback;
   elements: Set<Element> = new Set();
@@ -220,14 +222,14 @@ export class MockResizeObserver {
       contentBoxSize: entry.contentBoxSize || [{ blockSize: 0, inlineSize: 0 }],
       contentRect: entry.contentRect || {} as DOMRectReadOnly,
       devicePixelContentBoxSize: entry.devicePixelContentBoxSize || [],
-      target: entry.target || document.createElement('div')
+      target: entry.target || document.createElement('div');
     })) as ResizeObserverEntry[];
     
     this.callback(fullEntries, this);
   }
 }
 
-// Setup all performance mocks
+// Setup all performance mocks;
 export const setupPerformanceMocks = () => {
   const performanceMocks = mockPerformanceAPI();
   const rafMocks = mockRequestAnimationFrame();
@@ -246,7 +248,7 @@ export const setupPerformanceMocks = () => {
     ...rafMocks
   };
 
-// Cleanup all performance mocks
+// Cleanup all performance mocks;
 export const cleanupPerformanceMocks = () => {
   // Restore original values if needed
   if ('performance' in window) {
@@ -274,11 +276,11 @@ export const cleanupPerformanceMocks = () => {
   }
 };
 
-// Fake Timers Helper with Promise Support
+// Fake Timers Helper with Promise Support;
 export const setupFakeTimersWithPromises = () => {
   jest.useFakeTimers();
   
-  // Helper to advance timers and flush promises
+  // Helper to advance timers and flush promises;
   const advanceTimersAndFlushPromises = async (ms: number) => {
     jest.advanceTimersByTime(ms);
     // Flush microtasks
@@ -287,7 +289,7 @@ export const setupFakeTimersWithPromises = () => {
     await new Promise(resolve => setImmediate(resolve));
   };
   
-  // Helper to run all timers and flush promises
+  // Helper to run all timers and flush promises;
   const runAllTimersAndFlushPromises = async () => {
     jest.runAllTimers();
     await Promise.resolve();
@@ -299,18 +301,19 @@ export const setupFakeTimersWithPromises = () => {
     runAllTimersAndFlushPromises
   };
 
-// Memory measurement mock
+// Memory measurement mock;
 export const mockMemoryMeasurement = () => {
   if (!window.performance.memory) {
     Object.defineProperty(window.performance, 'memory', {
       value: {
         jsHeapSizeLimit: 2147483648,
         totalJSHeapSize: 10485760,
-        usedJSHeapSize: 5242880
+        usedJSHeapSize: 5242880;
       },
       configurable: true,
-      writable: true
-    });
+      writable: true;
+    };
+  };
   }
   
   return {
@@ -321,12 +324,13 @@ export const mockMemoryMeasurement = () => {
     }
   };
 
-// Debounce/Throttle test helper
+// Debounce/Throttle test helper;
 export const createTimingTestHelper = () => {
   const callbacks: Array<{ fn: Function; delay: number; timestamp: number }> = [];
   
   const scheduleCallback = (fn: Function, delay: number) => {
-    callbacks.push({ fn, delay, timestamp: Date.now() });
+    callbacks.push({ fn, delay, timestamp: Date.now() };
+  };
   };
   
   const flushScheduledCallbacks = (upToTime?: number) => {
@@ -342,5 +346,5 @@ export const createTimingTestHelper = () => {
   return {
     scheduleCallback,
     flushScheduledCallbacks,
-    clearCallbacks: () => callbacks.length = 0
+    clearCallbacks: () => callbacks.length = 0;
   };

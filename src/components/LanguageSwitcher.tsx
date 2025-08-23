@@ -5,7 +5,7 @@
  * RTL support, and accessibility features
  * 
  * @license Apache-2.0
- */
+ */;
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -56,11 +56,12 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 
   // Initialize selected language
   useEffect(() => {
-    const currentLang = languages.find(lang => 
+    const currentLang = languages.find(lang => ;
       lang.code === i18n.language || 
       i18n.language.startsWith(lang.code.split('-')[0])
     );
     setSelectedLanguage(currentLang || languages[0]);
+  };
   }, [i18n.language]);
 
   // Handle clicks outside dropdown
@@ -75,9 +76,10 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
       document.addEventListener('mousedown', handleClickOutside);
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
+  };
   }, [isOpen]);
 
-  // Handle keyboard navigation
+  // Handle keyboard navigation;
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Escape') {
       setIsOpen(false);
@@ -85,7 +87,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     }
   };
 
-  // Handle language change
+  // Handle language change;
   const handleLanguageSelect = async (language: Language) => {
     if (language.code === i18n.language) {
       setIsOpen(false);
@@ -98,15 +100,15 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
       // Change language
       await changeLanguage(language.code);
       
-      // Get cultural context
+      // Get cultural context;
       const context = getCulturalContext(language.code);
       
       // Apply RTL/LTR changes
       if (language.rtl) {
         document.documentElement.dir = 'rtl';
         document.documentElement.lang = language.code;
-        document.body.classList.add('rtl-mode');
-      } else {
+        document.body.classList.add('rtl-mode');;
+  } else {
         document.documentElement.dir = 'ltr';
         document.documentElement.lang = language.code;
         document.body.classList.remove('rtl-mode');
@@ -134,9 +136,9 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     }
   };
 
-  // Show notification
+  // Show notification;
   const showNotification = (message: string, type: 'success' | 'error' = 'success') => {
-    // Create notification element
+    // Create notification element;
     const notification = document.createElement('div');
     notification.className = `language-notification language-notification--${type}`;
     notification.setAttribute('role', 'alert');
@@ -178,7 +180,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
               {showNativeNames ? selectedLanguage.nativeName : selectedLanguage.name}
             </span>
           )}
-          <svg
+          <svg;
             className={isOpen ? 'language-arrow language-arrow--open' : 'language-arrow'}
             width="12"
             height="12"
@@ -197,7 +199,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         </button>
         
         {isOpen && (
-          <ul
+          <ul;
             className="language-menu"
             role="listbox"
             aria-label={t('language.availableLanguages')}
@@ -212,7 +214,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
                   language.code === i18n.language ? 'language-option--selected' : ''
                 } ${language.rtl ? 'language-option--rtl' : ''}`}
               >
-                <button
+                <button;
                   className="language-option__button"
                   onClick={() => handleLanguageSelect(language)}
                   disabled={isChanging}
@@ -230,7 +232,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
                     )}
                   </div>
                   {language.code === i18n.language && (
-                    <svg
+                    <svg;
                       className="language-check"
                       width="16"
                       height="16"
@@ -295,7 +297,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   // Render modal variant
   return (
     <div className={`language-switcher language-switcher--modal ${className}`}>
-      <button
+      <button;
         className="language-switcher__trigger"
         onClick={() => setIsOpen(true)}
         aria-label={t('language.selectLanguage')}
@@ -312,12 +314,12 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
       </button>
       
       {isOpen && (
-        <div
+        <div;
           className="language-modal-overlay"
           onClick={() => setIsOpen(false)}
           aria-hidden="true"
         >
-          <div
+          <div;
             className="language-modal"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
@@ -326,7 +328,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
           >
             <div className="language-modal__header">
               <h2 id="language-modal-title">{t('language.selectLanguage')}</h2>
-              <button
+              <button;
                 className="language-modal__close"
                 onClick={() => setIsOpen(false)}
                 aria-label={t('common.close')}
@@ -372,8 +374,8 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   );
 };
 
-// Styles
-const styles = `
+// Styles;
+const styles = `;
   /* Base styles */
   .language-switcher {
     position: relative;

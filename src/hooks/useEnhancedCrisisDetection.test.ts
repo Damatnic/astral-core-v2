@@ -4,7 +4,7 @@
 
 /**
  * @jest-environment jsdom
- */
+ */;
 import { renderHook, act, waitFor } from '../test-utils';
 import { useEnhancedCrisisDetection } from './useEnhancedCrisisDetection';
 import { enhancedAICrisisDetectionService } from '../services/enhancedAiCrisisDetectionService';
@@ -12,7 +12,7 @@ import { enhancedAICrisisDetectionService } from '../services/enhancedAiCrisisDe
 // Mock the enhanced AI crisis detection service
 jest.mock('../services/enhancedAiCrisisDetectionService', () => ({
   enhancedAICrisisDetectionService: {
-    analyzeCrisisWithML: jest.fn()
+    analyzeCrisisWithML: jest.fn();
   }
 }));
 
@@ -24,7 +24,7 @@ const mockMLAnalysisResult = {
     valence: -0.7,
     arousal: 0.6,
     dominance: -0.3,
-    timestamp: Date.now()
+    timestamp: Date.now();
   },
   realTimeRisk: {
     immediateRisk: 75,
@@ -32,21 +32,21 @@ const mockMLAnalysisResult = {
     recommendedInterventions: [
       {
         priority: 8,
-        description: 'Immediate professional intervention recommended'
+        description: 'Immediate professional intervention recommended';
       },
       {
         priority: 6,
-        description: 'Contact emergency mental health services'
+        description: 'Contact emergency mental health services';
       }
     ]
   },
   biasAdjustments: [
     {
       factor: 'Language bias adjustment',
-      confidence: 0.9
+      confidence: 0.9;
     }
   ],
-  culturalContext: 'Western'
+  culturalContext: 'Western';
 };
 
 // No wrapper needed for these tests
@@ -325,7 +325,7 @@ describe('useEnhancedCrisisDetection Hook', () => {
   });
 
   it.skip('should handle different severity levels correctly', async () => {
-    const testCases = [
+    const testCases = [;
       { risk: 15, expectedSeverity: 'none' },
       { risk: 25, expectedSeverity: 'low' },
       { risk: 45, expectedSeverity: 'medium' },
@@ -430,7 +430,7 @@ describe('useEnhancedCrisisDetection Hook', () => {
   });
 
   it.skip('should get emotional trend analysis', async () => {
-    const emotionalStates = [
+    const emotionalStates = [;
       { ...mockMLAnalysisResult.emotionalState, valence: -0.5, arousal: 0.3 },
       { ...mockMLAnalysisResult.emotionalState, valence: -0.3, arousal: 0.4 },
       { ...mockMLAnalysisResult.emotionalState, valence: -0.1, arousal: 0.2 }
@@ -440,7 +440,7 @@ describe('useEnhancedCrisisDetection Hook', () => {
       (enhancedAICrisisDetectionService.analyzeCrisisWithML as jest.Mock)
         .mockResolvedValueOnce({ 
           ...mockMLAnalysisResult, 
-          emotionalState: emotionalStates[i] 
+          emotionalState: emotionalStates[i] ;
         });
     }
 
@@ -609,7 +609,7 @@ describe('useEnhancedCrisisDetection Hook', () => {
   it.skip('should handle analysis without real-time risk', async () => {
     const analysisWithoutRisk = {
       ...mockMLAnalysisResult,
-      realTimeRisk: null
+      realTimeRisk: null;
     };
 
     (enhancedAICrisisDetectionService.analyzeCrisisWithML as jest.Mock)

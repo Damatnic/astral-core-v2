@@ -1,7 +1,7 @@
 /**
  * Test Suite for Crisis Escalation Workflow Service
  * Tests escalation tiers, emergency contacts, and intervention workflows
- */
+ */;
 
 import { crisisEscalationWorkflowService } from '../crisisEscalationWorkflowService';
 
@@ -21,10 +21,10 @@ describe('CrisisEscalationWorkflowService', () => {
         overallSeverity: 'low',
         immediateRisk: 30,
         escalationRequired: false,
-        emergencyServicesRequired: false
+        emergencyServicesRequired: false;
       };
       
-      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(
+      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(;
         crisisAnalysis as any,
         mockUserId,
         { languageCode: 'en', location: { country: mockLocation, hasGeolocation: true }, timeZone: 'America/New_York' },
@@ -42,10 +42,10 @@ describe('CrisisEscalationWorkflowService', () => {
         overallSeverity: 'medium',
         immediateRisk: 60,
         escalationRequired: true,
-        emergencyServicesRequired: false
+        emergencyServicesRequired: false;
       };
       
-      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(
+      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(;
         crisisAnalysis as any,
         mockUserId,
         { languageCode: 'en', location: { country: mockLocation, hasGeolocation: true }, timeZone: 'America/New_York' },
@@ -63,10 +63,10 @@ describe('CrisisEscalationWorkflowService', () => {
         overallSeverity: 'critical',
         immediateRisk: 85,
         escalationRequired: true,
-        emergencyServicesRequired: false
+        emergencyServicesRequired: false;
       };
       
-      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(
+      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(;
         crisisAnalysis as any,
         mockUserId,
         { languageCode: 'en', location: { country: mockLocation, hasGeolocation: true }, timeZone: 'America/New_York' },
@@ -84,10 +84,10 @@ describe('CrisisEscalationWorkflowService', () => {
         overallSeverity: 'emergency',
         immediateRisk: 95,
         escalationRequired: true,
-        emergencyServicesRequired: true
+        emergencyServicesRequired: true;
       };
       
-      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(
+      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(;
         crisisAnalysis as any,
         mockUserId,
         { languageCode: 'en', location: { country: mockLocation, hasGeolocation: true }, timeZone: 'America/New_York' },
@@ -141,10 +141,10 @@ describe('CrisisEscalationWorkflowService', () => {
         overallSeverity: 'high',
         immediateRisk: 70,
         escalationRequired: true,
-        emergencyServicesRequired: false
+        emergencyServicesRequired: false;
       };
       
-      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(
+      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(;
         crisisAnalysis as any,
         mockUserId,
         { languageCode: 'en', location: { country: mockLocation, hasGeolocation: true }, timeZone: 'America/New_York' },
@@ -163,10 +163,10 @@ describe('CrisisEscalationWorkflowService', () => {
         overallSeverity: 'medium',
         immediateRisk: 50,
         escalationRequired: true,
-        emergencyServicesRequired: false
+        emergencyServicesRequired: false;
       };
       
-      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(
+      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(;
         crisisAnalysis as any,
         mockUserId,
         { languageCode: 'en', location: { country: mockLocation, hasGeolocation: true }, timeZone: 'America/New_York' },
@@ -184,10 +184,10 @@ describe('CrisisEscalationWorkflowService', () => {
         overallSeverity: 'medium',
         immediateRisk: 60,
         escalationRequired: true,
-        emergencyServicesRequired: false
+        emergencyServicesRequired: false;
       };
       
-      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(
+      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(;
         crisisAnalysis as any,
         mockUserId,
         { languageCode: 'en', location: { country: mockLocation, hasGeolocation: true }, timeZone: 'America/New_York' },
@@ -207,10 +207,10 @@ describe('CrisisEscalationWorkflowService', () => {
         overallSeverity: 'critical',
         immediateRisk: 80,
         escalationRequired: true,
-        emergencyServicesRequired: false
+        emergencyServicesRequired: false;
       };
       
-      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(
+      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(;
         crisisAnalysis as any,
         mockUserId,
         { languageCode: 'en', location: { country: mockLocation, hasGeolocation: true }, timeZone: 'America/New_York' },
@@ -228,10 +228,10 @@ describe('CrisisEscalationWorkflowService', () => {
         overallSeverity: 'emergency',
         immediateRisk: 90,
         escalationRequired: true,
-        emergencyServicesRequired: true
+        emergencyServicesRequired: true;
       };
       
-      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(
+      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(;
         crisisAnalysis as any,
         mockUserId,
         { languageCode: 'en', location: { country: mockLocation, hasGeolocation: true }, timeZone: 'America/New_York' },
@@ -250,7 +250,7 @@ describe('CrisisEscalationWorkflowService', () => {
         overallSeverity: 'high',
         immediateRisk: 70,
         escalationRequired: true,
-        emergencyServicesRequired: false
+        emergencyServicesRequired: false;
       };
       
       await crisisEscalationWorkflowService.initiateCrisisEscalation(
@@ -271,10 +271,10 @@ describe('CrisisEscalationWorkflowService', () => {
         overallSeverity: 'high',
         immediateRisk: 75,
         escalationRequired: true,
-        emergencyServicesRequired: false
+        emergencyServicesRequired: false;
       };
       
-      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(
+      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(;
         crisisAnalysis as any,
         mockUserId,
         { languageCode: 'en', location: { country: mockLocation, hasGeolocation: true }, timeZone: 'America/New_York' },
@@ -305,17 +305,17 @@ describe('CrisisEscalationWorkflowService', () => {
         overallSeverity: 'high',
         immediateRisk: 70,
         escalationRequired: true,
-        emergencyServicesRequired: false
+        emergencyServicesRequired: false;
       };
       
-      const first = await crisisEscalationWorkflowService.initiateCrisisEscalation(
+      const first = await crisisEscalationWorkflowService.initiateCrisisEscalation(;
         crisisAnalysis as any,
         mockUserId,
         { languageCode: 'en', location: { country: mockLocation, hasGeolocation: true }, timeZone: 'America/New_York' },
         { conversationId: "test-conversation", messagesSent: 5, sessionDuration: 5000, previousEscalations: 0, riskTrend: "stable" as const }
       );
 
-      const second = await crisisEscalationWorkflowService.initiateCrisisEscalation(
+      const second = await crisisEscalationWorkflowService.initiateCrisisEscalation(;
         crisisAnalysis as any,
         mockUserId,
         { languageCode: 'en', location: { country: mockLocation, hasGeolocation: true }, timeZone: 'America/New_York' },
@@ -332,10 +332,10 @@ describe('CrisisEscalationWorkflowService', () => {
         overallSeverity: 'high',
         immediateRisk: 65,
         escalationRequired: true,
-        emergencyServicesRequired: false
+        emergencyServicesRequired: false;
       };
       
-      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(
+      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(;
         crisisAnalysis as any,
         mockUserId,
         { languageCode: 'en', location: { country: mockLocation, hasGeolocation: true }, timeZone: 'America/New_York' },
@@ -350,8 +350,8 @@ describe('CrisisEscalationWorkflowService', () => {
       // Simulate system failure
       jest.spyOn(console, 'error').mockImplementation(() => {});
       
-      // Pass null crisis analysis to trigger fallback
-      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(
+      // Pass null crisis analysis to trigger fallback;
+      const escalation = await crisisEscalationWorkflowService.initiateCrisisEscalation(;
         null,
         mockUserId,
         { languageCode: 'en', location: { country: mockLocation, hasGeolocation: true }, timeZone: 'America/New_York' },

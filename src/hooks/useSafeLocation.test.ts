@@ -12,22 +12,22 @@
 
 /**
  * Tests for Safe Location Hook
- */
+ */;
 
 import { renderHook, act, waitFor } from '../test-utils';
 import { useSafeLocation } from './useSafeLocation';
 
-// Mock react-router-dom
+// Mock react-router-dom;
 const mockLocation = {
   pathname: '/test-path',
   search: '?param=value',
   hash: '#section',
   state: { from: '/previous' },
-  key: 'test-key-123'
+  key: 'test-key-123';
 };
 
 jest.mock('react-router-dom', () => ({
-  useLocation: jest.fn()
+  useLocation: jest.fn();
 }));
 
 
@@ -59,7 +59,7 @@ describe('useSafeLocation Hook', () => {
       search: '',
       hash: '',
       state: null,
-      key: 'default'
+      key: 'default';
     });
   });
 
@@ -74,45 +74,45 @@ describe('useSafeLocation Hook', () => {
       search: '',
       hash: '',
       state: null,
-      key: 'default'
+      key: 'default';
     });
   });
 
   it.skip('should handle various location states', () => {
-    const locationStates = [
+    const locationStates = [;
       {
         pathname: '/',
         search: '',
         hash: '',
         state: null,
-        key: 'home'
+        key: 'home';
       },
       {
         pathname: '/mood-tracker',
         search: '?date=2024-01-15',
         hash: '#current-mood',
         state: { mood: 'happy' },
-        key: 'mood-key'
+        key: 'mood-key';
       },
       {
         pathname: '/crisis',
         search: '?urgent=true',
         hash: '#emergency',
         state: { emergency: true },
-        key: 'crisis-key'
+        key: 'crisis-key';
       },
       {
         pathname: '/community/support',
         search: '?group=anxiety&lang=en',
         hash: '#messages',
         state: { scrollTo: 'bottom' },
-        key: 'community-key'
+        key: 'community-key';
       }
     ];
 
     locationStates.forEach((locationState) => {
       jest.spyOn(React, 'useContext').mockReturnValue({
-        location: locationState
+        location: locationState;
       });
 
       const { result } = renderHook(() => useSafeLocation());
@@ -221,7 +221,7 @@ describe('useSafeLocation Hook', () => {
         search: '',
         hash: '',
         state: null,
-        key: 'initial'
+        key: 'initial';
       }
     };
 
@@ -238,7 +238,7 @@ describe('useSafeLocation Hook', () => {
         search: '?updated=true',
         hash: '#new',
         state: { updated: true } as any,
-        key: 'updated'
+        key: 'updated';
       }
     };
 
@@ -272,7 +272,7 @@ describe('useSafeLocation Hook', () => {
       search: '',
       hash: '',
       state: null,
-      key: 'default'
+      key: 'default';
     });
   });
 
@@ -290,7 +290,7 @@ describe('useSafeLocation Hook', () => {
         search: '?complex=true&nested=value',
         hash: '#complex-section',
         state: complexState,
-        key: 'complex-key'
+        key: 'complex-key';
       }
     });
 
@@ -310,7 +310,7 @@ describe('useSafeLocation Hook', () => {
         search: '',
         hash: '',
         state: '',
-        key: ''
+        key: '';
       }
     });
 

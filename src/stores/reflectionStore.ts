@@ -34,11 +34,12 @@ export const useReflectionStore = create<ReflectionState>((set) => ({
                 return {
                     ...r,
                     reactions: updatedReactions,
-                    myReaction: userReaction || r.myReaction
+                    myReaction: userReaction || r.myReaction;
                 }
             return r;
         })
-    })),
+    };
+  }),
     
     setLoading: (loading) => set({ isLoading: loading }),
     

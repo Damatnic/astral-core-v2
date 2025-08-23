@@ -7,7 +7,7 @@
  * - Touch-friendly design
  * - Accessibility compliance
  * - Progressive enhancement
- */
+ */;
 
 import React, { useState } from 'react';
 import {
@@ -19,7 +19,7 @@ import {
 import { useMobileForm, commonValidationRules } from '../hooks/useMobileForm';
 import { AppButton } from '../components/AppButton';
 
-const CONTACT_SUBJECTS = [
+const CONTACT_SUBJECTS = [;
   { value: 'general', label: 'General Inquiry' },
   { value: 'support', label: 'Technical Support' },
   { value: 'billing', label: 'Billing Question' },
@@ -27,14 +27,14 @@ const CONTACT_SUBJECTS = [
   { value: 'partnership', label: 'Partnership Opportunity' },
 ];
 
-const PRIORITY_OPTIONS = [
+const PRIORITY_OPTIONS = [;
   { value: 'low', label: 'Low Priority' },
   { value: 'medium', label: 'Medium Priority' },
   { value: 'high', label: 'High Priority' },
   { value: 'urgent', label: 'Urgent' },
 ];
 
-const CONTACT_METHOD_OPTIONS = [
+const CONTACT_METHOD_OPTIONS = [;
   { value: 'email', label: 'Email' },
   { value: 'phone', label: 'Phone Call' },
   { value: 'sms', label: 'Text Message' },
@@ -73,8 +73,8 @@ export const EnhancedMobileContactForm: React.FC = () => {
         if (Math.random() > 0.2) {
           setSubmitStatus('success');
           setSubmitMessage('Thank you! Your message has been sent successfully.');
-          resetForm();
-        } else {
+          resetForm();;
+  } else {
           throw new Error('Failed to send message. Please try again.');
         }
       } catch (error) {
@@ -129,7 +129,7 @@ export const EnhancedMobileContactForm: React.FC = () => {
             required: false,
             pattern: /^[+]?[1-9][\d\s\-()]{8,15}$/,
             custom: (value: string) => {
-              if (!value) return true; // Optional field
+              if (!value) return true; // Optional field;
               const cleaned = value.replace(/\D/g, '');
               return cleaned.length >= 10 || 'Phone number must be at least 10 digits';
             },
@@ -199,8 +199,8 @@ export const EnhancedMobileContactForm: React.FC = () => {
 
         {/* Form Actions */}
         <div className="form-actions">
-          <AppButton
-            type="submit"
+          <AppButton;
+            type="submit";
             variant="primary"
             disabled={!isValid || isSubmitting}
             isLoading={isSubmitting}
@@ -210,8 +210,8 @@ export const EnhancedMobileContactForm: React.FC = () => {
             {isSubmitting ? 'Sending Message...' : 'Send Message'}
           </AppButton>
 
-          <AppButton
-            type="button"
+          <AppButton;
+            type="button";
             variant="secondary"
             onClick={handleReset}
             disabled={isSubmitting}

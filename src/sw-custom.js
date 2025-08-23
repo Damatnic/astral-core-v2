@@ -3,14 +3,14 @@
  * 
  * Custom service worker implementation for Astral Core Mental Health Platform
  * Includes crisis-specific optimizations, push notifications, and enhanced offline support
- */
+ */;
 
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching';
 import { registerRoute, setCatchHandler } from 'workbox-routing';
 import { NetworkFirst } from 'workbox-strategies';
 import { BackgroundSync } from 'workbox-background-sync';
 
-// Crisis-specific constants
+// Crisis-specific constants;
 const CRISIS_CACHE_NAME = 'crisis-resources-v2';
 const CRISIS_NOTIFICATION_TAG = 'crisis-alert';
 const HELPER_NOTIFICATION_TAG = 'helper-request';
@@ -70,7 +70,7 @@ self.addEventListener('push', (event) => {
     notificationData = {
       title: 'Astral Core',
       body: event.data.text(),
-      type: 'general'
+      type: 'general';
     };
   }
 
@@ -108,7 +108,7 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
-// Background sync for failed requests
+// Background sync for failed requests;
 const crisisBackgroundSync = new BackgroundSync('crisis-requests', {
   maxRetentionTime: 60 * 60 * 24 * 7, // 7 days
   onSync: async ({ queue }) => {
@@ -124,7 +124,7 @@ const crisisBackgroundSync = new BackgroundSync('crisis-requests', {
           await self.registration.showNotification('Crisis Request Sent', {
             body: 'Your crisis support request has been processed.',
             icon: '/icon-192.png',
-            tag: 'crisis-sync-success'
+            tag: 'crisis-sync-success';
           });
         }
       } catch (error) {
@@ -137,7 +137,7 @@ const crisisBackgroundSync = new BackgroundSync('crisis-requests', {
 });
 
 const regularBackgroundSync = new BackgroundSync('regular-requests', {
-  maxRetentionTime: 60 * 60 * 24 * 3 // 3 days
+  maxRetentionTime: 60 * 60 * 24 * 3 // 3 days;
 });
 
 // Background sync route registration
@@ -145,7 +145,7 @@ registerRoute(
   /\/\.netlify\/functions\/(crisis|emergency|help)/,
   new NetworkFirst({
     cacheName: 'crisis-api-cache',
-    plugins: [crisisBackgroundSync]
+    plugins: [crisisBackgroundSync];
   }),
   'POST'
 );
@@ -154,7 +154,7 @@ registerRoute(
   /\/\.netlify\/functions\/(?!crisis|emergency|help)/,
   new NetworkFirst({
     cacheName: 'regular-api-cache',
-    plugins: [regularBackgroundSync]
+    plugins: [regularBackgroundSync];
   }),
   'POST'
 );
@@ -208,7 +208,7 @@ setCatchHandler(async ({ request, event }) => {
     return handleOfflineApiRequest(request);
   }
   
-  // For other resources, try emergency cache
+  // For other resources, try emergency cache;
   const emergencyCache = await caches.open(EMERGENCY_CACHE_NAME);
   const cachedResponse = await emergencyCache.match(request);
   
@@ -221,7 +221,7 @@ setCatchHandler(async ({ request, event }) => {
     JSON.stringify({
       error: 'Offline',
       message: 'You are currently offline. Crisis resources are still available.',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString();
     }),
     {
       status: 200,
@@ -230,14 +230,14 @@ setCatchHandler(async ({ request, event }) => {
   );
 });
 
-// Utility functions
+// Utility functions;
 function createNotificationOptions(data) {
   const baseOptions = {
     icon: '/icon-192.png',
     badge: '/icon-192.png',
     vibrate: [200, 100, 200],
     requireInteraction: false,
-    data: data
+    data: data;
   };
 
   switch (data.type) {
@@ -270,14 +270,14 @@ function createNotificationOptions(data) {
         ...baseOptions,
         body: data.body || 'System update available',
         tag: 'system-update',
-        requireInteraction: false
+        requireInteraction: false;
       };
       
     default:
       return {
         ...baseOptions,
         body: data.body || 'New notification from Astral Core',
-        tag: 'general'
+        tag: 'general';
       };
   }
 }
@@ -298,7 +298,7 @@ function getNotificationUrl(data, tag) {
 async function handleCrisisMode(payload) {
   console.log('[SW] Crisis mode activated:', payload);
   
-  // Pre-cache all crisis resources immediately
+  // Pre-cache all crisis resources immediately;
   const cache = await caches.open(CRISIS_CACHE_NAME);
   await cache.addAll([
     '/offline-crisis.html',
@@ -307,13 +307,14 @@ async function handleCrisisMode(payload) {
     '/emergency-contacts.json'
   ]);
   
-  // Notify all clients about crisis mode
+  // Notify all clients about crisis mode;
   const clients = await self.clients.matchAll();
   clients.forEach(client => {
     client.postMessage({
       type: 'CRISIS_MODE_READY',
       payload: { cached: true }
-    });
+    };
+  };
   });
 }
 
@@ -322,7 +323,7 @@ async function requestNotificationPermission() {
     const clients = await self.clients.matchAll();
     clients.forEach(client => {
       client.postMessage({
-        type: 'REQUEST_NOTIFICATION_PERMISSION_UI'
+        type: 'REQUEST_NOTIFICATION_PERMISSION_UI';
       });
     });
   }
@@ -332,10 +333,10 @@ async function subscribeUserToPush(payload) {
   try {
     const subscription = await self.registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: payload.vapidPublicKey
+      applicationServerKey: payload.vapidPublicKey;
     });
     
-    // Send subscription to server
+    // Send subscription to server;
     const clients = await self.clients.matchAll();
     clients.forEach(client => {
       client.postMessage({
@@ -359,7 +360,7 @@ async function subscribeUserToPush(payload) {
 async function cacheCrisisResources() {
   const cache = await caches.open(CRISIS_CACHE_NAME);
   
-  const criticalResources = [
+  const criticalResources = [;
     '/offline-crisis.html',
     '/crisis-resources.json',
     '/offline-coping-strategies.json',
@@ -395,7 +396,7 @@ async function handleOfflineApiRequest(request) {
     JSON.stringify({
       offline: true,
       message: 'This feature requires an internet connection. Crisis resources remain available.',
-      cached_at: new Date().toISOString()
+      cached_at: new Date().toISOString();
     }),
     {
       status: 503,
@@ -406,7 +407,7 @@ async function handleOfflineApiRequest(request) {
 
 async function validateCrisisResources() {
   const cache = await caches.open(CRISIS_CACHE_NAME);
-  const criticalResources = [
+  const criticalResources = [;
     '/offline-crisis.html',
     '/crisis-resources.json',
     '/emergency-contacts.json'

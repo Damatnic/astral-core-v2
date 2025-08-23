@@ -14,17 +14,17 @@ const fallbackLocation: Location = {
   search: '',
   hash: '',
   state: null,
-  key: 'default'
+  key: 'default';
 };
 
 /**
  * Safe wrapper for useLocation that provides a fallback when no Router context exists
  * Uses try-catch to handle cases where no Router context is available
- */
+ */;
 export const useSafeLocation = (): Location => {
   try {
     // First check if we're in a test environment with mocked context
-    // Tests mock React.useContext to provide location data
+    // Tests mock React.useContext to provide location data;
     const context = React.useContext({} as any);
     
     if (context && typeof context === 'object' && 'location' in context) {
@@ -32,7 +32,7 @@ export const useSafeLocation = (): Location => {
       return context.location;
     }
     
-    // Otherwise, try to use the regular useLocation hook
+    // Otherwise, try to use the regular useLocation hook;
     const location = useRouterLocation();
     return location;
   } catch (error) {

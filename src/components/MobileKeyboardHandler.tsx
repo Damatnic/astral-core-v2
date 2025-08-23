@@ -9,11 +9,11 @@
  * - Safe area inset support for iPhone notch/home indicator
  * - Keyboard state detection and layout adjustment
  * - Touch event optimization for mobile inputs
- */
+ */;
 
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 
-// Hook for detecting mobile viewport changes
+// Hook for detecting mobile viewport changes;
 export const useMobileViewport = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
@@ -27,7 +27,7 @@ export const useMobileViewport = () => {
     };
 
     const updateViewportHeight = () => {
-      // Use the new CSS viewport units for better mobile support
+      // Use the new CSS viewport units for better mobile support;
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
       
@@ -40,18 +40,18 @@ export const useMobileViewport = () => {
       const currentHeight = window.innerHeight;
       const windowHeight = window.screen.height;
       
-      // Threshold for keyboard detection (adjust based on testing)
+      // Threshold for keyboard detection (adjust based on testing);
       const keyboardThreshold = windowHeight * 0.25;
       
       if (windowHeight - currentHeight > keyboardThreshold) {
-        // Keyboard is likely open
+        // Keyboard is likely open;
         const calculatedKeyboardHeight = windowHeight - currentHeight;
         setKeyboardHeight(calculatedKeyboardHeight);
         setIsKeyboardOpen(true);
         document.documentElement.style.setProperty('--keyboard-height', `${calculatedKeyboardHeight}px`);
         document.documentElement.style.setProperty('--is-keyboard-open', '1');
-        document.body.classList.add('keyboard-open');
-      } else {
+        document.body.classList.add('keyboard-open');;
+  } else {
         // Keyboard is likely closed
         setKeyboardHeight(0);
         setIsKeyboardOpen(false);
@@ -84,8 +84,8 @@ export const useMobileViewport = () => {
             setKeyboardHeight(heightDiff);
             setIsKeyboardOpen(true);
             document.documentElement.style.setProperty('--keyboard-height', `${heightDiff}px`);
-            document.body.classList.add('keyboard-open');
-          } else {
+            document.body.classList.add('keyboard-open');;
+  } else {
             setKeyboardHeight(0);
             setIsKeyboardOpen(false);
             document.documentElement.style.setProperty('--keyboard-height', '0px');
@@ -105,7 +105,9 @@ export const useMobileViewport = () => {
     return () => {
       window.removeEventListener('resize', updateViewportHeight);
       window.removeEventListener('resize', detectKeyboard);
-    }, []);
+    };
+  };
+  }, []);
 
   const scrollIntoView = useCallback((element: HTMLElement, options: ScrollIntoViewOptions = {}) => {
     if (!isMobile) return;
@@ -117,6 +119,8 @@ export const useMobileViewport = () => {
     };
     
     element.scrollIntoView(defaultOptions);
+  };
+  };
   }, [isMobile]);
 
   return {
@@ -127,7 +131,7 @@ export const useMobileViewport = () => {
     scrollIntoView
   };
 
-// Enhanced mobile input component with proper focus handling
+// Enhanced mobile input component with proper focus handling;
 interface MobileAppInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -163,13 +167,16 @@ export const MobileAppInput: React.FC<MobileAppInputProps> = ({
     // Scroll input into view with delay to account for keyboard animation
     setTimeout(() => {
       if (inputRef.current) {
-        scrollIntoView(inputRef.current, { block: 'end' });
+        scrollIntoView(inputRef.current, { block: 'end' };
+  };
       }
     }, 300);
+  };
   }, [isMobile, scrollIntoView]);
 
   const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
     e.target.classList.remove('mobile-focused');
+  };
   }, []);
 
   const handleTouchStart = useCallback((e: React.TouchEvent<HTMLInputElement>) => {
@@ -178,6 +185,7 @@ export const MobileAppInput: React.FC<MobileAppInputProps> = ({
       e.preventDefault();
       inputRef.current.focus();
     }
+  };
   }, [isMobile]);
 
   return (
@@ -228,7 +236,7 @@ export const MobileAppInput: React.FC<MobileAppInputProps> = ({
   );
 };
 
-// Mobile-optimized chat composer component
+// Mobile-optimized chat composer component;
 interface MobileChatComposerProps {
   children: React.ReactNode;
   className?: string;
@@ -261,7 +269,7 @@ export const MobileChatComposer: React.FC<MobileChatComposerProps> = ({
   };
 
   return (
-    <div 
+    <div; 
       className={`chat-composer ${className} ${isMobile ? 'mobile-composer' : ''}`}
       style={composerStyle}
     >
@@ -270,14 +278,14 @@ export const MobileChatComposer: React.FC<MobileChatComposerProps> = ({
   );
 };
 
-// Provider component for mobile keyboard context
+// Provider component for mobile keyboard context;
 interface MobileKeyboardProviderProps {
   children: React.ReactNode;
 }
 
 export const MobileKeyboardProvider: React.FC<MobileKeyboardProviderProps> = ({ children }) => {
   useEffect(() => {
-    // Set viewport meta tag for proper mobile scaling
+    // Set viewport meta tag for proper mobile scaling;
     let viewportMeta = document.querySelector('meta[name="viewport"]') as HTMLMetaElement;
     
     if (!viewportMeta) {
@@ -289,7 +297,7 @@ export const MobileKeyboardProvider: React.FC<MobileKeyboardProviderProps> = ({ 
     // Updated viewport configuration for better mobile keyboard handling
     viewportMeta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover';
 
-    // Add CSS custom properties for safe areas
+    // Add CSS custom properties for safe areas;
     const style = document.createElement('style');
     style.textContent = `
       :root {
@@ -389,7 +397,9 @@ export const MobileKeyboardProvider: React.FC<MobileKeyboardProviderProps> = ({ 
 
     return () => {
       document.head.removeChild(style);
-    }, []);
+    };
+  };
+  }, []);
 
   return <>{children}</>;
 };

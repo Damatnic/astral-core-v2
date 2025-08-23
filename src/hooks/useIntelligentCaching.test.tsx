@@ -1,17 +1,17 @@
 /**
  * Tests for Intelligent Caching Hook
- */
+ */;
 
 import { renderHook, act, waitFor } from '../test-utils';
 import { useIntelligentCaching, CacheStatusMonitor, useCrisisOptimization } from './useIntelligentCaching';
 
-// Mock service worker functionality
+// Mock service worker functionality;
 const mockServiceWorker = {
   controller: {
-    postMessage: jest.fn()
+    postMessage: jest.fn();
   },
   addEventListener: jest.fn(),
-  getRegistration: jest.fn()
+  getRegistration: jest.fn();
 };
 
 // Mock navigator
@@ -21,12 +21,12 @@ Object.defineProperty(global, 'navigator', {
     connection: {
       effectiveType: '4g',
       downlink: 10,
-      rtt: 100
+      rtt: 100;
     },
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
   },
   writable: true,
-  configurable: true
+  configurable: true;
 });
 
 // Mock fetch
@@ -42,11 +42,11 @@ const mockCacheStatus = {
   userMetrics: {
     totalRequests: 150,
     cacheHits: 120,
-    hitRate: 0.8
+    hitRate: 0.8;
   },
   session: {
     startTime: Date.now() - 30000,
-    requestCount: 45
+    requestCount: 45;
   }
 };
 
@@ -70,7 +70,7 @@ describe('useIntelligentCaching Hook', () => {
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
       status: 200,
-      statusText: 'OK'
+      statusText: 'OK';
     });
   });
 
@@ -140,7 +140,7 @@ describe('useIntelligentCaching Hook', () => {
       messageHandler!({
         data: {
           type: 'CACHE_STATUS',
-          data: mockCacheStatus
+          data: mockCacheStatus;
         }
       } as MessageEvent);
     });
@@ -166,7 +166,7 @@ describe('useIntelligentCaching Hook', () => {
   });
 
   it.skip('should handle missing service worker controller', async () => {
-    // Mock no active service worker
+    // Mock no active service worker;
     const originalController = mockServiceWorker.controller;
     delete (mockServiceWorker as any).controller;
 
@@ -201,7 +201,7 @@ describe('useIntelligentCaching Hook', () => {
       data: {
         route: '/',
         timeSpent: expect.any(Number),
-        timestamp: expect.any(Number)
+        timestamp: expect.any(Number);
       }
     });
 
@@ -218,7 +218,7 @@ describe('useIntelligentCaching Hook', () => {
   });
 
   it.skip('should handle missing navigator.connection', async () => {
-    // Mock missing connection API
+    // Mock missing connection API;
     const originalConnection = (navigator as any).connection;
     delete (navigator as any).connection;
 
@@ -250,7 +250,7 @@ describe('useIntelligentCaching Hook', () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       status: 200,
-      statusText: 'OK'
+      statusText: 'OK';
     });
     
     const { result } = renderHook(() => useIntelligentCaching());
@@ -266,7 +266,7 @@ describe('useIntelligentCaching Hook', () => {
         'X-Prefetch': 'true',
         'X-Priority': 'medium'
       },
-      signal: expect.any(AbortSignal)
+      signal: expect.any(AbortSignal);
     });
   });
 
@@ -277,7 +277,7 @@ describe('useIntelligentCaching Hook', () => {
       await result.current.prefetchResource('/api/crisis', {
         priority: 'crisis',
         timeout: 5000,
-        networkAware: false
+        networkAware: false;
       });
     });
 
@@ -286,7 +286,7 @@ describe('useIntelligentCaching Hook', () => {
         'X-Prefetch': 'true',
         'X-Priority': 'crisis'
       },
-      signal: expect.any(AbortSignal)
+      signal: expect.any(AbortSignal);
     });
   });
 
@@ -320,7 +320,7 @@ describe('useIntelligentCaching Hook', () => {
     await act(async () => {
       prefetchResult = await result.current.prefetchResource('/api/crisis', {
         priority: 'crisis',
-        networkAware: true
+        networkAware: true;
       });
     });
 
@@ -373,7 +373,7 @@ describe('useIntelligentCaching Hook', () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
       status: 404,
-      statusText: 'Not Found'
+      statusText: 'Not Found';
     });
 
     const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
@@ -437,7 +437,7 @@ describe('useIntelligentCaching Hook', () => {
       type: 'USER_PREFERENCES_UPDATED',
       data: {
         preferences,
-        timestamp: expect.any(Number)
+        timestamp: expect.any(Number);
       }
     });
 
@@ -453,7 +453,7 @@ describe('useIntelligentCaching Hook', () => {
       expect(result.current.isServiceWorkerReady).toBe(true);
     });
 
-    // Mock MessageChannel
+    // Mock MessageChannel;
     const mockChannel = {
       port1: { onmessage: jest.fn() },
       port2: {}
@@ -470,7 +470,7 @@ describe('useIntelligentCaching Hook', () => {
       mockChannel.port1.onmessage({
         data: {
           type: 'CACHE_STATUS',
-          data: mockCacheStatus
+          data: mockCacheStatus;
         }
       });
     });
@@ -513,7 +513,7 @@ describe('useIntelligentCaching Hook', () => {
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
       status: 200,
-      statusText: 'OK'
+      statusText: 'OK';
     });
     
     const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
@@ -537,7 +537,7 @@ describe('useIntelligentCaching Hook', () => {
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
       status: 200,
-      statusText: 'OK'
+      statusText: 'OK';
     });
     
     // Ensure connection is good for this test
@@ -603,7 +603,7 @@ describe('useCrisisOptimization Hook', () => {
 
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
-      status: 200
+      status: 200;
     });
   });
 
@@ -621,7 +621,7 @@ describe('useCrisisOptimization Hook', () => {
     expect(mockServiceWorker.controller.postMessage).toHaveBeenCalledWith({
       type: 'CRISIS_DETECTED',
       data: expect.objectContaining({
-        timestamp: expect.any(Number)
+        timestamp: expect.any(Number);
       })
     });
 
@@ -668,7 +668,7 @@ describe('CacheStatusMonitor Component', () => {
   });
 
   it.skip('should render cache status when available - async state issues', async () => {
-    // Setup message handler before creating hook
+    // Setup message handler before creating hook;
     let messageHandler: ((event: MessageEvent) => void) | undefined;
     (mockServiceWorker.addEventListener as jest.Mock).mockImplementation((type, handler) => {
       if (type === 'message') {
@@ -691,7 +691,7 @@ describe('CacheStatusMonitor Component', () => {
         messageHandler({
           data: {
             type: 'CACHE_STATUS',
-            data: mockCacheStatus
+            data: mockCacheStatus;
           }
         } as MessageEvent);
       }

@@ -38,17 +38,18 @@ export const Modal: React.FC<{
             setTimeout(() => {
                 const focusableElement = modalRef.current?.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])') as HTMLElement;
                 if (focusableElement) {
-                    focusableElement.focus();
-                } else {
+                    focusableElement.focus();;
+  } else {
                     modalRef.current?.focus();
                 }
-            }, 100);
-        } else if (previousFocusRef.current) {
+            }, 100);;
+  } else if (previousFocusRef.current) {
             // Restore focus when modal closes
             previousFocusRef.current.focus();
             previousFocusRef.current = null;
         }
-    }, [isOpen]);
+    };
+  }, [isOpen]);
 
     // Handle keyboard events
     useEffect(() => {
@@ -64,7 +65,7 @@ export const Modal: React.FC<{
 
             // Handle Tab key for focus trapping
             if (event.key === 'Tab' && modalRef.current) {
-                const focusableElements = modalRef.current.querySelectorAll(
+                const focusableElements = modalRef.current.querySelectorAll(;
                     'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
                 );
                 const firstElement = focusableElements[0] as HTMLElement;
@@ -73,8 +74,8 @@ export const Modal: React.FC<{
                 if (event.shiftKey && document.activeElement === firstElement) {
                     // Shift + Tab on first element - go to last
                     event.preventDefault();
-                    lastElement?.focus();
-                } else if (!event.shiftKey && document.activeElement === lastElement) {
+                    lastElement?.focus();;
+  } else if (!event.shiftKey && document.activeElement === lastElement) {
                     // Tab on last element - go to first
                     event.preventDefault();
                     firstElement?.focus();
@@ -84,13 +85,14 @@ export const Modal: React.FC<{
 
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [isOpen, isDismissible, onClose]);
+    };
+  }, [isOpen, isDismissible, onClose]);
 
     if (!isOpen) return null;
 
     const overlayClasses = [enhanced ? 'modal-overlay-enhanced smooth-transition' : 'modal-overlay'];
     
-    // Determine content classes based on variant
+    // Determine content classes based on variant;
     let contentClasses = ['modal-panel'];
     if (enhanced) {
         switch(variant) {
@@ -116,7 +118,7 @@ export const Modal: React.FC<{
     return (
         <div className={overlayClasses.join(' ')}>
             {isDismissible && (
-                <button
+                <button;
                     className="modal-overlay-button"
                     onClick={onClose}
                     aria-label="Close modal"
@@ -129,7 +131,7 @@ export const Modal: React.FC<{
                         background: 'transparent',
                         border: 'none',
                         cursor: 'pointer',
-                        zIndex: -1
+                        zIndex: -1;
                     }}
                 />
             )}
@@ -147,7 +149,7 @@ export const Modal: React.FC<{
                 <div className={enhanced ? 'modal-header-enhanced smooth-transition' : 'modal-header'}>
                     <h2 id="modal-title" className={enhanced ? 'modal-title-enhanced gradient-text' : ''}>{title}</h2>
                     {isDismissible && (
-                        <button 
+                        <button; 
                             type="button"
                             onClick={onClose} 
                             className={`modal-close-btn touch-optimized smooth-transition ${enhanced ? 'glass-button' : ''}`} 
@@ -167,7 +169,7 @@ export const Modal: React.FC<{
                 </div>
                 {enhanced && isDismissible && (
                     <div className="modal-footer-enhanced">
-                        <button 
+                        <button; 
                             type="button"
                             onClick={onClose}
                             className="glass-button smooth-transition"

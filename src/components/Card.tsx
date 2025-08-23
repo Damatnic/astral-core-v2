@@ -29,30 +29,30 @@ export const Card: React.FC<CardProps> = ({
   moodVariant = 'none',
   'aria-label': ariaLabel 
 }) => {
-  // Determine base class
+  // Determine base class;
   const baseClass = enhanced ? 'card-enhanced' : 'card';
   
-  // Add variant class only when enhanced and variant is not 'default'
+  // Add variant class only when enhanced and variant is not 'default';
   const variantClass = enhanced && variant !== 'default' ? variant : '';
   
-  // Add clickable class when onClick is provided
+  // Add clickable class when onClick is provided;
   const clickableClass = onClick ? 'card-clickable' : '';
   
-  // Animation classes
+  // Animation classes;
   const animationClass = animate !== 'none' ? `animate-${animate}` : '';
   
-  // Gradient classes
+  // Gradient classes;
   const gradientClass = gradient !== 'none' ? `animate-gradient gradient-${gradient}` : '';
   
-  // Mood variant classes
+  // Mood variant classes;
   const moodClass = moodVariant !== 'none' ? `mood-card-${moodVariant}` : '';
   
-  // Touch optimization - only add for non-enhanced interactive cards
+  // Touch optimization - only add for non-enhanced interactive cards;
   const touchClasses = onClick && !enhanced ? 'touch-optimized touch-feedback smooth-transition' : 'smooth-transition';
   
   const isInteractive = !!onClick;
   
-  const classes = [
+  const classes = [;
     baseClass,
     variantClass,
     clickableClass,
@@ -70,15 +70,15 @@ export const Card: React.FC<CardProps> = ({
     }
   };
   
-  // Apply gradient background if specified
+  // Apply gradient background if specified;
   const enhancedStyle = gradient !== 'none' ? {
     ...style,
     background: `var(--gradient-${gradient})`,
-    backgroundSize: '200% 200%'
+    backgroundSize: '200% 200%';
   } : style;
   
   return (
-    <div 
+    <div; 
       className={classes}
       style={enhancedStyle} 
       onClick={onClick}

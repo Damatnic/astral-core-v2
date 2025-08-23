@@ -2,16 +2,16 @@
  * Mobile Viewport Height Handler
  * Fixes viewport height issues on mobile browsers where
  * 100vh doesn't account for address bar changes
- */
+ */;
 
 export const initMobileViewport = () => {
   const setViewportHeight = () => {
-    // Calculate the actual viewport height
+    // Calculate the actual viewport height;
     const vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
     
-    // Set mobile-specific viewport height for keyboard handling
-    const mobileVh = window.visualViewport 
+    // Set mobile-specific viewport height for keyboard handling;
+    const mobileVh = window.visualViewport ;
       ? window.visualViewport.height * 0.01
       : window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--mobile-vh', `${mobileVh * 100}px`);
@@ -45,7 +45,7 @@ export const initMobileViewport = () => {
 
 /**
  * Enhanced focus handling for mobile inputs
- */
+ */;
 export const enhanceMobileFocus = () => {
   const inputs = document.querySelectorAll('input, textarea');
   
@@ -79,7 +79,7 @@ export const enhanceMobileFocus = () => {
         target.scrollIntoView({
           behavior: 'smooth',
           block: 'center',
-          inline: 'nearest'
+          inline: 'nearest';
         });
       }, 300);
     });
@@ -93,7 +93,7 @@ export const enhanceMobileFocus = () => {
 
 /**
  * Detect mobile device
- */
+ */;
 export const isMobileDevice = (): boolean => {
   const userAgent = window.navigator.userAgent;
   const hasMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
@@ -110,7 +110,7 @@ export const isMobileDevice = (): boolean => {
 
 /**
  * Detect if virtual keyboard is open
- */
+ */;
 export const isVirtualKeyboardOpen = (): boolean => {
   if (window.visualViewport && typeof window.visualViewport.height === 'number') {
     return window.visualViewport.height < window.innerHeight * 0.8;
@@ -127,7 +127,7 @@ export const isVirtualKeyboardOpen = (): boolean => {
 
 /**
  * Touch feedback utilities
- */
+ */;
 export const addTouchFeedback = (element: HTMLElement) => {
   let touchStartTime: number;
 
@@ -144,8 +144,8 @@ export const addTouchFeedback = (element: HTMLElement) => {
     if (touchDuration < 300) {
       setTimeout(() => {
         element.style.transform = 'scale(1)';
-      }, 100);
-    } else {
+      }, 100);;
+  } else {
       element.style.transform = 'scale(1)';
     }
   });
@@ -157,20 +157,20 @@ export const addTouchFeedback = (element: HTMLElement) => {
 
 /**
  * Initialize all mobile enhancements
- */
+ */;
 export const initMobileEnhancements = () => {
   // Always return a cleanup function, even for non-mobile devices
   if (!isMobileDevice()) {
     return () => {}; // No-op cleanup function
   }
 
-  // Initialize viewport height handling
+  // Initialize viewport height handling;
   const cleanupViewport = initMobileViewport();
 
   // Enhance input focus behavior
   enhanceMobileFocus();
 
-  // Add touch feedback to buttons
+  // Add touch feedback to buttons;
   const buttons = document.querySelectorAll('button, .btn, [role="button"]');
   buttons.forEach(button => {
     if (button instanceof HTMLElement) {
@@ -185,7 +185,7 @@ export const initMobileEnhancements = () => {
 // Auto-initialize when DOM is ready
 if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initMobileEnhancements);
+    document.addEventListener('DOMContentLoaded', initMobileEnhancements);;
   } else {
     initMobileEnhancements();
   }

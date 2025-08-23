@@ -7,7 +7,7 @@
  * - Generate multiple thumbnail sizes
  * - Create placeholder images
  * - Optimize for mobile performance
- */
+ */;
 
 export interface VideoThumbnailOptions {
   frameTime?: number; // Time in seconds to extract frame (default: 1)
@@ -24,7 +24,7 @@ export interface GeneratedThumbnail {
   duration?: number;
 }
 
-const DEFAULT_SIZES = [
+const DEFAULT_SIZES = [;
   { width: 320, height: 180, suffix: 'small' },
   { width: 480, height: 270, suffix: 'medium' },
   { width: 720, height: 405, suffix: 'large' },
@@ -33,7 +33,7 @@ const DEFAULT_SIZES = [
 
 /**
  * Video Thumbnail Generator Class
- */
+ */;
 export class VideoThumbnailGenerator {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
@@ -74,11 +74,11 @@ export class VideoThumbnailGenerator {
         try {
           const aspectRatio = video.videoWidth / video.videoHeight;
           
-          // Generate thumbnails for all sizes
+          // Generate thumbnails for all sizes;
           const thumbnailSizes: Record<string, string> = {};
           
           for (const size of sizes) {
-            const thumbnailUrl = this.generateThumbnailAtSize(
+            const thumbnailUrl = this.generateThumbnailAtSize(;
               video,
               size.width,
               size.height,
@@ -87,7 +87,7 @@ export class VideoThumbnailGenerator {
             thumbnailSizes[size.suffix] = thumbnailUrl;
           }
 
-          // Generate placeholder if requested
+          // Generate placeholder if requested;
           let placeholder: string | undefined;
           if (generatePlaceholder) {
             placeholder = this.generatePlaceholder(video, aspectRatio);
@@ -98,7 +98,7 @@ export class VideoThumbnailGenerator {
             sizes: thumbnailSizes,
             placeholder,
             aspectRatio,
-            duration: video.duration
+            duration: video.duration;
           });
         } catch (error) {
           reject(error);
@@ -175,7 +175,7 @@ export class VideoThumbnailGenerator {
 
       // Generate thumbnails for all sizes
       for (const size of sizes) {
-        const thumbnailUrl = this.generateThumbnailAtSize(
+        const thumbnailUrl = this.generateThumbnailAtSize(;
           videoElement,
           size.width,
           size.height,
@@ -184,7 +184,7 @@ export class VideoThumbnailGenerator {
         thumbnailSizes[size.suffix] = thumbnailUrl;
       }
 
-      // Generate placeholder if requested
+      // Generate placeholder if requested;
       let placeholder: string | undefined;
       if (generatePlaceholder) {
         placeholder = this.generatePlaceholder(videoElement, aspectRatio);
@@ -195,7 +195,7 @@ export class VideoThumbnailGenerator {
         sizes: thumbnailSizes,
         placeholder,
         aspectRatio,
-        duration: videoElement.duration
+        duration: videoElement.duration;
       } catch (error) {
       console.error('Error generating thumbnail from element:', error);
       return null;
@@ -211,19 +211,19 @@ export class VideoThumbnailGenerator {
   ): Promise<GeneratedThumbnail[]> {
     const results: GeneratedThumbnail[] = [];
     
-    // Process videos in batches to avoid overwhelming the browser
+    // Process videos in batches to avoid overwhelming the browser;
     const batchSize = 3;
     
     for (let i = 0; i < videoSources.length; i += batchSize) {
       const batch = videoSources.slice(i, i + batchSize);
       
-      const batchPromises = batch.map(videoSrc =>
+      const batchPromises = batch.map(videoSrc =>;
         this.generateThumbnails(videoSrc, options)
           .catch(error => {
             console.error(`Failed to generate thumbnail for ${videoSrc}:`, error);
             return null;
-          })
-      );
+          };
+  });
 
       const batchResults = await Promise.all(batchPromises);
       results.push(...batchResults.filter((result): result is GeneratedThumbnail => result !== null));
@@ -249,7 +249,7 @@ export class VideoThumbnailGenerator {
           sizes: thumb.sizes,
           placeholder: thumb.placeholder,
           aspectRatio: thumb.aspectRatio,
-          duration: thumb.duration
+          duration: thumb.duration;
         }))
       };
 
@@ -269,7 +269,7 @@ export class VideoThumbnailGenerator {
 
       const cacheData = JSON.parse(cached);
       
-      // Check if cache is still valid (24 hours)
+      // Check if cache is still valid (24 hours);
       const isExpired = Date.now() - cacheData.timestamp > 24 * 60 * 60 * 1000;
       if (isExpired) {
         localStorage.removeItem('video-thumbnails-cache');
@@ -281,7 +281,7 @@ export class VideoThumbnailGenerator {
         sizes: thumb.sizes,
         placeholder: thumb.placeholder,
         aspectRatio: thumb.aspectRatio,
-        duration: thumb.duration
+        duration: thumb.duration;
       }));
     } catch (error) {
       console.warn('Failed to load thumbnails from cache:', error);
@@ -321,7 +321,7 @@ export class VideoThumbnailGenerator {
     this.canvas.width = width;
     this.canvas.height = height;
 
-    // Create gradient background
+    // Create gradient background;
     const gradient = this.ctx.createLinearGradient(0, 0, width, height);
     gradient.addColorStop(0, '#6366f1');
     gradient.addColorStop(1, '#8b5cf6');
@@ -336,7 +336,7 @@ export class VideoThumbnailGenerator {
     this.ctx.textBaseline = 'middle';
     this.ctx.fillText(text, width / 2, height / 2);
 
-    // Add play icon
+    // Add play icon;
     const iconSize = Math.min(width, height) / 4;
     this.ctx.beginPath();
     this.ctx.moveTo(width / 2 - iconSize / 3, height / 2 - iconSize / 2);
@@ -350,5 +350,5 @@ export class VideoThumbnailGenerator {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const videoThumbnailGenerator = new VideoThumbnailGenerator();

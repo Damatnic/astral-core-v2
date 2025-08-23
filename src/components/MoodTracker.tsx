@@ -21,7 +21,7 @@ const moodOptions: MoodOption[] = [
     label: 'Terrible',
     value: 1,
     color: '#ef4444',
-    description: 'Feeling really down today'
+    description: 'Feeling really down today';
   },
   {
     id: 'bad',
@@ -29,7 +29,7 @@ const moodOptions: MoodOption[] = [
     label: 'Bad',
     value: 2,
     color: '#f97316',
-    description: 'Not having a good day'
+    description: 'Not having a good day';
   },
   {
     id: 'okay',
@@ -37,7 +37,7 @@ const moodOptions: MoodOption[] = [
     label: 'Okay',
     value: 3,
     color: '#eab308',
-    description: 'Feeling neutral'
+    description: 'Feeling neutral';
   },
   {
     id: 'good',
@@ -45,7 +45,7 @@ const moodOptions: MoodOption[] = [
     label: 'Good',
     value: 4,
     color: '#22c55e',
-    description: 'Having a good day'
+    description: 'Having a good day';
   },
   {
     id: 'great',
@@ -53,11 +53,11 @@ const moodOptions: MoodOption[] = [
     label: 'Great',
     value: 5,
     color: '#10b981',
-    description: 'Feeling amazing!'
+    description: 'Feeling amazing!';
   }
 ];
 
-const moodTags = [
+const moodTags = [;
   'Grateful', 'Anxious', 'Tired', 'Hopeful', 'Stressed', 
   'Calm', 'Lonely', 'Productive', 'Excited', 'Peaceful',
   'Overwhelmed', 'Confident', 'Sad', 'Energetic', 'Worried',
@@ -96,12 +96,12 @@ export const MoodTracker: React.FC<MoodTrackerProps> = ({ onMoodSubmit }) => {
       return;
     }
 
-    // Check for potential crisis indicators based on mood selection and content
+    // Check for potential crisis indicators based on mood selection and content;
     const hasLowMood = selectedMood.value <= 2;
-    const hasConcerningTags = selectedTags.some(tag => 
+    const hasConcerningTags = selectedTags.some(tag => ;
       ['hopeless', 'overwhelmed', 'trapped', 'worthless', 'alone'].includes(tag.toLowerCase())
     );
-    const hasConcerningNote = note.toLowerCase().includes('suicide') || 
+    const hasConcerningNote = note.toLowerCase().includes('suicide') || ;
                               note.toLowerCase().includes('hurt myself') ||
                               note.toLowerCase().includes('end it all');
 
@@ -114,7 +114,7 @@ export const MoodTracker: React.FC<MoodTrackerProps> = ({ onMoodSubmit }) => {
     const moodData = {
       value: selectedMood.value,
       tags: selectedTags,
-      note: note.trim()
+      note: note.trim();
     };
 
     onMoodSubmit?.(moodData);
@@ -163,7 +163,7 @@ export const MoodTracker: React.FC<MoodTrackerProps> = ({ onMoodSubmit }) => {
           </div>
           <AppButton 
             enhanced 
-            size="sm" 
+            size="sm"; 
             variant="secondary" 
             onClick={handleReset}
           >
@@ -204,7 +204,7 @@ export const MoodTracker: React.FC<MoodTrackerProps> = ({ onMoodSubmit }) => {
               onClick={() => handleMoodSelect(mood)}
               style={{ 
                 '--mood-color': mood.color,
-                borderColor: selectedMood?.id === mood.id ? mood.color : 'transparent'
+                borderColor: selectedMood?.id === mood.id ? mood.color : 'transparent';
               } as React.CSSProperties}
             >
               <div className="mood-emoji">{mood.emoji}</div>
@@ -243,7 +243,7 @@ export const MoodTracker: React.FC<MoodTrackerProps> = ({ onMoodSubmit }) => {
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="How was your day? What's on your mind?"
+              placeholder="How was your day? What's on your mind?";
               className="mood-note-input"
               rows={3}
               maxLength={500}
@@ -256,7 +256,7 @@ export const MoodTracker: React.FC<MoodTrackerProps> = ({ onMoodSubmit }) => {
           <div className="mood-tracker-actions form-actions">
             <AppButton 
               enhanced 
-              size="sm" 
+              size="sm"; 
               variant="secondary" 
               onClick={handleReset}
             >
@@ -264,7 +264,7 @@ export const MoodTracker: React.FC<MoodTrackerProps> = ({ onMoodSubmit }) => {
             </AppButton>
             <AppButton 
               enhanced 
-              size="md" 
+              size="md"; 
               variant="primary" 
               onClick={handleSubmit}
               icon={<SparkleIcon />}

@@ -13,6 +13,7 @@ export const SafetyTipsModal: React.FC = () => {
     // if (!hasSeenTips) {
     //   setShowModal(true);
     // }
+  };
   }, []);
   
   const handleClose = () => {

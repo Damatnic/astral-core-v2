@@ -26,7 +26,7 @@
             <div className="cultural-header"> metrics.
  * 
  * @license Apache-2.0
- */
+ */;
 
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -64,7 +64,7 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
 
   /**
    * Handle report generation
-   */
+   */;
   const handleGenerateReport = async () => {
     setIsGeneratingReport(true);
     try {
@@ -80,14 +80,14 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
 
   /**
    * Handle data export
-   */
+   */;
   const handleExportData = async () => {
     try {
       const exportedData = await exportData();
       if (exportedData) {
-        // Create download link
+        // Create download link;
         const blob = new Blob([JSON.stringify(exportedData, null, 2)], { 
-          type: 'application/json' 
+          type: 'application/json' ;
         });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -124,7 +124,7 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
     );
   }
 
-  const renderOverview = () => (
+  const renderOverview = () => (;
     <div className="analytics-overview">
       <div className="analytics-grid">
         <Card className="metric-card">
@@ -188,7 +188,7 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
             <div key={lang} className="distribution-item">
               <span className="language-label">{t(`languages.${lang}`)}</span>
               <div className="distribution-bar">
-                <div 
+                <div; 
                   className="distribution-fill"
                   style={{ 
                     width: `${(count / Math.max(...Object.values(insights?.globalMetrics.languageDistribution || {}))) * 100}%` 
@@ -221,7 +221,7 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
     </div>
   );
 
-  const renderCulturalAnalysis = () => (
+  const renderCulturalAnalysis = () => (;
     <div className="cultural-analysis">
       <div className="cultural-metrics-grid">
         {culturalMetrics.map((metrics) => (
@@ -294,7 +294,7 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
     </div>
   );
 
-  const renderPrivacyMetrics = () => (
+  const renderPrivacyMetrics = () => (;
     <div className="privacy-metrics">
       <Card className="privacy-overview-card">
         <h4>{t('analytics.privacy.overview')}</h4>
@@ -302,7 +302,7 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
           <div className="privacy-stat">
             <span className="stat-label">{t('analytics.privacy.budgetUsed')}</span>
             <div className="budget-bar">
-              <div 
+              <div; 
                 className="budget-fill"
                 style={{ width: `${(privacyBudget.used / 10) * 100}%` }}
               />
@@ -388,7 +388,7 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
     </div>
   );
 
-  const renderReport = () => (
+  const renderReport = () => (;
     <div className="analytics-report">
       {reportData ? (
         <Card className="report-card">
@@ -461,25 +461,25 @@ export const PrivacyAnalyticsDashboard: React.FC<PrivacyAnalyticsDashboardProps>
       </div>
 
       <div className="dashboard-tabs">
-        <button
+        <button;
           className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`}
           onClick={() => setActiveTab('overview')}
         >
           {t('analytics.tabs.overview')}
         </button>
-        <button
+        <button;
           className={`tab-button ${activeTab === 'cultural' ? 'active' : ''}`}
           onClick={() => setActiveTab('cultural')}
         >
           {t('analytics.tabs.cultural')}
         </button>
-        <button
+        <button;
           className={`tab-button ${activeTab === 'privacy' ? 'active' : ''}`}
           onClick={() => setActiveTab('privacy')}
         >
           {t('analytics.tabs.privacy')}
         </button>
-        <button
+        <button;
           className={`tab-button ${activeTab === 'report' ? 'active' : ''}`}
           onClick={() => setActiveTab('report')}
         >

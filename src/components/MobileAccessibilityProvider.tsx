@@ -10,11 +10,11 @@
  * - Focus management
  * - Voice control optimization
  * - Haptic feedback
- */
+ */;
 
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 
-// Accessibility preferences interface
+// Accessibility preferences interface;
 interface AccessibilityPreferences {
   highContrast: boolean;
   reducedMotion: boolean;
@@ -27,7 +27,7 @@ interface AccessibilityPreferences {
   focusIndicatorStyle: 'default' | 'enhanced' | 'high-contrast';
 }
 
-// Focus management interface
+// Focus management interface;
 interface FocusManagement {
   currentFocus: string | null;
   focusHistory: string[];
@@ -35,7 +35,7 @@ interface FocusManagement {
   announcements: string[];
 }
 
-// Touch accessibility interface
+// Touch accessibility interface;
 interface TouchAccessibility {
   targetSize: number; // minimum touch target size in pixels
   spacing: number; // minimum spacing between touch targets
@@ -43,7 +43,7 @@ interface TouchAccessibility {
   pressAndHold: boolean; // enable press and hold gestures
 }
 
-// Screen reader interface
+// Screen reader interface;
 interface ScreenReaderSupport {
   enabled: boolean;
   announceChanges: boolean;
@@ -52,7 +52,7 @@ interface ScreenReaderSupport {
   skipLinkBehavior: 'immediate' | 'with-delay';
 }
 
-// Accessibility context interface
+// Accessibility context interface;
 interface MobileAccessibilityContextValue {
   preferences: AccessibilityPreferences;
   focusManagement: FocusManagement;
@@ -70,7 +70,7 @@ interface MobileAccessibilityContextValue {
   optimizeForTouch: (element: HTMLElement) => void;
 }
 
-// WCAG audit interface
+// WCAG audit interface;
 interface AccessibilityAuditResult {
   score: number; // 0-100
   issues: AccessibilityIssue[];
@@ -88,10 +88,10 @@ interface AccessibilityIssue {
   fix?: string;
 }
 
-// Create context
+// Create context;
 const MobileAccessibilityContext = createContext<MobileAccessibilityContextValue | null>(null);
 
-// Hook to use accessibility context
+// Hook to use accessibility context;
 export const useMobileAccessibility = () => {
   const context = useContext(MobileAccessibilityContext);
   if (!context) {
@@ -100,9 +100,9 @@ export const useMobileAccessibility = () => {
   return context;
 };
 
-// Provider component
+// Provider component;
 export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // State
+  // State;
   const [preferences, setPreferences] = useState<AccessibilityPreferences>({
     highContrast: false,
     reducedMotion: false,
@@ -112,21 +112,21 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     hapticFeedback: true,
     colorBlindness: 'none',
     fontSize: 100,
-    focusIndicatorStyle: 'default'
+    focusIndicatorStyle: 'default';
   });
 
   const [focusManagement, setFocusManagement] = useState<FocusManagement>({
     currentFocus: null,
     focusHistory: [],
     trapStack: [],
-    announcements: []
+    announcements: [];
   });
 
   const [touchAccessibility] = useState<TouchAccessibility>({
     targetSize: 44, // WCAG minimum 44x44 pixels
     spacing: 8,
     timeout: 3000,
-    pressAndHold: true
+    pressAndHold: true;
   });
 
   const [screenReader, setScreenReader] = useState<ScreenReaderSupport>({
@@ -134,10 +134,10 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     announceChanges: true,
     describeLandmarks: true,
     readingMode: 'detailed',
-    skipLinkBehavior: 'immediate'
+    skipLinkBehavior: 'immediate';
   });
 
-  // Refs
+  // Refs;
   const announcementRef = useRef<HTMLDivElement>(null);
   const focusTrapRef = useRef<string | null>(null);
 
@@ -150,9 +150,11 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     
     return () => {
       cleanupAccessibilityObservers();
-    }, []);
+    };
+  };
+  }, []);
 
-  // Detect user accessibility preferences
+  // Detect user accessibility preferences;
   const detectAccessibilityPreferences = useCallback(() => {
     const mediaQueries = {
       highContrast: window.matchMedia('(prefers-contrast: high)'),
@@ -173,9 +175,9 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
       detectedPreferences.reducedMotion = true;
     }
 
-    // Check for screen reader
+    // Check for screen reader;
     const screenReaderDetected = 
-      'speechSynthesis' in window || 
+      'speechSynthesis' in window || ;
       navigator.userAgent.includes('NVDA') ||
       navigator.userAgent.includes('JAWS') ||
       navigator.userAgent.includes('VoiceOver');
@@ -185,7 +187,7 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
       setScreenReader(prev => ({ ...prev, enabled: true }));
     }
 
-    // Check for touch support
+    // Check for touch support;
     const touchSupported = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     if (!touchSupported) {
       // Keyboard-first navigation for non-touch devices
@@ -195,7 +197,7 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     // Apply detected preferences
     setPreferences(prev => ({ ...prev, ...detectedPreferences }));
 
-    // Load saved preferences
+    // Load saved preferences;
     const savedPreferences = localStorage.getItem('accessibility-preferences');
     if (savedPreferences) {
       try {
@@ -205,11 +207,12 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
         console.warn('Failed to parse saved accessibility preferences:', error);
       }
     }
+  };
   }, []);
 
-  // Setup accessibility observers
+  // Setup accessibility observers;
   const setupAccessibilityObservers = useCallback(() => {
-    // Focus observer
+    // Focus observer;
     const focusObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.type === 'attributes' && mutation.attributeName === 'tabindex') {
@@ -222,10 +225,10 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     focusObserver.observe(document.body, {
       attributes: true,
       attributeFilter: ['tabindex', 'aria-hidden', 'role'],
-      subtree: true
+      subtree: true;
     });
 
-    // Content change observer for screen readers
+    // Content change observer for screen readers;
     const contentObserver = new MutationObserver((mutations) => {
       if (screenReader.enabled && screenReader.announceChanges) {
         mutations.forEach((mutation) => {
@@ -251,20 +254,23 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
 
     contentObserver.observe(document.body, {
       childList: true,
-      subtree: true
+      subtree: true;
     });
 
     return () => {
       focusObserver.disconnect();
       contentObserver.disconnect();
-    }, [screenReader.enabled, screenReader.announceChanges]);
+    };
+  };
+  }, [screenReader.enabled, screenReader.announceChanges]);
 
-  // Cleanup observers
+  // Cleanup observers;
   const cleanupAccessibilityObservers = useCallback(() => {
     // Cleanup handled by return value of setupAccessibilityObservers
+  };
   }, []);
 
-  // Inject accessibility styles
+  // Inject accessibility styles;
   const injectAccessibilityStyles = useCallback(() => {
     const existingStyle = document.getElementById('mobile-accessibility-styles');
     if (existingStyle) {
@@ -384,9 +390,10 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
 
     // Add color blindness SVG filters
     injectColorBlindnessFilters();
+  };
   }, [preferences.fontSize, touchAccessibility.targetSize, touchAccessibility.spacing]);
 
-  // Inject color blindness SVG filters
+  // Inject color blindness SVG filters;
   const injectColorBlindnessFilters = useCallback(() => {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('style', 'position: absolute; width: 0; height: 0;');
@@ -419,9 +426,10 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     `;
     
     document.body.appendChild(svg);
+  };
   }, []);
 
-  // Setup keyboard navigation
+  // Setup keyboard navigation;
   const setupKeyboardNavigation = useCallback(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // Skip to main content (Alt + M)
@@ -470,14 +478,16 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-    }, [preferences.highContrast]);
+    };
+  };
+  }, [preferences.highContrast]);
 
-  // Handle tab navigation
+  // Handle tab navigation;
   const handleTabNavigation = useCallback((event: KeyboardEvent) => {
     if (focusTrapRef.current) {
       const trapContainer = document.getElementById(focusTrapRef.current);
       if (trapContainer) {
-        const trapFocusables = trapContainer.querySelectorAll(
+        const trapFocusables = trapContainer.querySelectorAll(;
           'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
         );
         
@@ -487,8 +497,8 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
           
           if (event.shiftKey && document.activeElement === first) {
             event.preventDefault();
-            last.focus();
-          } else if (!event.shiftKey && document.activeElement === last) {
+            last.focus();;
+  } else if (!event.shiftKey && document.activeElement === last) {
             event.preventDefault();
             first.focus();
           }
@@ -507,9 +517,10 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
         }));
       }
     }, 0);
+  };
   }, []);
 
-  // Update preferences function
+  // Update preferences function;
   const updatePreferences = useCallback((updates: Partial<AccessibilityPreferences>) => {
     setPreferences(prev => {
       const newPreferences = { ...prev, ...updates };
@@ -522,9 +533,10 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
       
       return newPreferences;
     });
+  };
   }, []);
 
-  // Apply accessibility preferences to DOM
+  // Apply accessibility preferences to DOM;
   const applyAccessibilityPreferences = useCallback((prefs: AccessibilityPreferences) => {
     const body = document.body;
     
@@ -555,15 +567,16 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
       body.classList.add(`accessibility-${prefs.colorBlindness}`);
     }
     
-    // Update focus indicators
+    // Update focus indicators;
     const focusClass = `accessibility-focus-${prefs.focusIndicatorStyle}`;
     document.querySelectorAll('button, a, input, select, textarea, [tabindex]').forEach(element => {
       element.classList.remove('accessibility-focus-default', 'accessibility-focus-enhanced', 'accessibility-focus-high-contrast');
       element.classList.add(focusClass);
     });
+  };
   }, []);
 
-  // Screen reader announcement function
+  // Screen reader announcement function;
   const announceToScreenReader = useCallback((message: string, priority: 'polite' | 'assertive' = 'polite') => {
     if (!announcementRef.current) return;
     
@@ -583,9 +596,10 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
       ...prev,
       announcements: [...prev.announcements.slice(-4), message]
     }));
+  };
   }, []);
 
-  // Focus trap functions
+  // Focus trap functions;
   const setFocusTrap = useCallback((containerId: string) => {
     focusTrapRef.current = containerId;
     setFocusManagement(prev => ({
@@ -594,6 +608,7 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     }));
     
     announceToScreenReader('Focus trapped in dialog', 'assertive');
+  };
   }, [announceToScreenReader]);
 
   const removeFocusTrap = useCallback(() => {
@@ -602,15 +617,17 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
         const newStack = prev.trapStack.slice(0, -1);
         return {
           ...prev,
-          trapStack: newStack
-        });
+          trapStack: newStack;
+        };
+  };
       
       focusTrapRef.current = null;
       announceToScreenReader('Focus trap removed', 'assertive');
     }
+  };
   }, [announceToScreenReader]);
 
-  // Navigate to element function
+  // Navigate to element function;
   const navigateToElement = useCallback((elementId: string, options: { smooth?: boolean; announce?: boolean } = {}) => {
     const element = document.getElementById(elementId) as HTMLElement;
     if (!element) return;
@@ -622,20 +639,21 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     element.scrollIntoView({
       behavior: options.smooth && !preferences.reducedMotion ? 'smooth' : 'auto',
       block: 'center',
-      inline: 'nearest'
+      inline: 'nearest';
     });
     
     // Announce if requested
     if (options.announce) {
-      const label = element.getAttribute('aria-label') || 
+      const label = element.getAttribute('aria-label') || ;
                    element.getAttribute('title') || 
                    element.textContent?.trim() || 
                    `Element ${elementId}`;
       announceToScreenReader(`Navigated to ${label}`, 'assertive');
     }
+  };
   }, [preferences.reducedMotion, announceToScreenReader]);
 
-  // WCAG compliance check
+  // WCAG compliance check;
   const checkWCAGCompliance = useCallback((): AccessibilityAuditResult => {
     const issues: AccessibilityIssue[] = [];
     const suggestions: string[] = [];
@@ -651,12 +669,12 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
           element: img.src,
           wcagCriterion: '1.1.1',
           severity: 'high',
-          fix: 'Add descriptive alt attribute'
+          fix: 'Add descriptive alt attribute';
         });
       }
     });
     
-    // Check for proper heading structure
+    // Check for proper heading structure;
     const headings = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6'));
     let previousLevel = 0;
     headings.forEach(heading => {
@@ -669,7 +687,7 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
           element: heading.textContent?.substring(0, 50) || '',
           wcagCriterion: '1.3.1',
           severity: 'medium',
-          fix: 'Use sequential heading levels'
+          fix: 'Use sequential heading levels';
         });
       }
       previousLevel = level;
@@ -686,7 +704,7 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
           element: element.name || element.id || 'unnamed input',
           wcagCriterion: '1.3.1',
           severity: 'high',
-          fix: 'Add label element or aria-label'
+          fix: 'Add label element or aria-label';
         });
       }
     });
@@ -707,11 +725,11 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
       }
     });
     
-    // Check for proper landmarks
+    // Check for proper landmarks;
     const landmarks = document.querySelectorAll('main, nav, aside, header, footer, [role="main"], [role="navigation"], [role="complementary"], [role="banner"], [role="contentinfo"]');
     if (landmarks.length > 0) {
-      compliantAreas.push('Proper landmark structure');
-    } else {
+      compliantAreas.push('Proper landmark structure');;
+  } else {
       issues.push({
         type: 'warning',
         category: 'understandable',
@@ -722,7 +740,7 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
       });
     }
     
-    // Check for focus indicators
+    // Check for focus indicators;
     const focusableElements = document.querySelectorAll('button, a, input, select, textarea, [tabindex]:not([tabindex="-1"])');
     let hasFocusStyles = false;
     focusableElements.forEach(element => {
@@ -733,20 +751,20 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     });
     
     if (hasFocusStyles) {
-      compliantAreas.push('Focus indicators present');
-    } else {
+      compliantAreas.push('Focus indicators present');;
+  } else {
       issues.push({
         type: 'error',
         category: 'operable',
         description: 'Missing focus indicators',
         wcagCriterion: '2.4.7',
         severity: 'high',
-        fix: 'Add visible focus styles'
+        fix: 'Add visible focus styles';
       });
     }
     
-    // Calculate score
-    const totalChecks = 20; // Total number of checks performed
+    // Calculate score;
+    const totalChecks = 20; // Total number of checks performed;
     const errorWeight = 3;
     const warningWeight = 1;
     const errorCount = issues.filter(i => i.type === 'error').length;
@@ -770,16 +788,18 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
       issues,
       suggestions,
       compliantAreas
-    }, [touchAccessibility.targetSize]);
+    };
+  }, [touchAccessibility.targetSize]);
 
-  // Adapt for color blindness
+  // Adapt for color blindness;
   const adaptForColorBlindness = useCallback((element: HTMLElement) => {
     if (preferences.colorBlindness === 'none') return;
     
     element.classList.add(`accessibility-${preferences.colorBlindness}`);
+  };
   }, [preferences.colorBlindness]);
 
-  // Optimize for touch
+  // Optimize for touch;
   const optimizeForTouch = useCallback((element: HTMLElement) => {
     const rect = element.getBoundingClientRect();
     
@@ -791,16 +811,19 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
     if (preferences.hapticFeedback && 'vibrate' in navigator) {
       element.addEventListener('touchstart', () => {
         navigator.vibrate?.(10); // Short haptic feedback
-      }, { passive: true });
+      }, { passive: true };
+  };
     }
+  };
   }, [touchAccessibility.targetSize, preferences.hapticFeedback]);
 
   // Apply preferences on mount and changes
   useEffect(() => {
     applyAccessibilityPreferences(preferences);
+  };
   }, [preferences, applyAccessibilityPreferences]);
 
-  // Context value
+  // Context value;
   const contextValue: MobileAccessibilityContextValue = {
     preferences,
     focusManagement,
@@ -846,7 +869,7 @@ export const MobileAccessibilityProvider: React.FC<{ children: React.ReactNode }
   );
 };
 
-// Accessibility HOC for components
+// Accessibility HOC for components;
 export const withMobileAccessibility = <P extends object>(
   Component: React.ComponentType<P>
 ): React.ComponentType<P & { accessibilityOptions?: Partial<AccessibilityPreferences> }> => {
@@ -863,13 +886,14 @@ export const withMobileAccessibility = <P extends object>(
       if (componentRef.current) {
         adaptForColorBlindness(componentRef.current);
         
-        // Optimize all interactive elements
-        const interactiveElements = componentRef.current.querySelectorAll(
+        // Optimize all interactive elements;
+        const interactiveElements = componentRef.current.querySelectorAll(;
           'button, a, input, select, textarea, [tabindex]:not([tabindex="-1"])'
         );
         interactiveElements.forEach(element => optimizeForTouch(element as HTMLElement));
       }
-    }, [accessibilityOptions, updatePreferences, adaptForColorBlindness, optimizeForTouch]);
+    };
+  }, [accessibilityOptions, updatePreferences, adaptForColorBlindness, optimizeForTouch]);
     
     return (
       <div ref={componentRef} className="accessibility-component-wrapper">

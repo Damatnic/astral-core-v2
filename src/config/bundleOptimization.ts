@@ -3,25 +3,25 @@
  * 
  * Advanced webpack/rollup configuration for optimal bundle splitting
  * and performance optimization for the Astral Core platform.
- */
+ */;
 
 import { Plugin } from 'vite';
 import { advancedChunkSplitting } from './advancedBundleSplitting';
 import { logger } from '../utils/logger';
 
-// Bundle analysis configuration
+// Bundle analysis configuration;
 export const bundleAnalyzerConfig = {
   analyzerMode: 'static' as const,
   reportFilename: 'bundle-analysis.html',
   openAnalyzer: false,
   generateStatsFile: true,
-  statsFilename: 'bundle-stats.json'
+  statsFilename: 'bundle-stats.json';
 };
 
-// Enhanced optimal chunk splitting strategy using advanced splitting
+// Enhanced optimal chunk splitting strategy using advanced splitting;
 export const optimizedChunks = advancedChunkSplitting;
 
-// Asset optimization configuration
+// Asset optimization configuration;
 export const assetOptimization = {
   // Inline small assets
   assetsInlineLimit: 4096,
@@ -71,10 +71,10 @@ export const assetOptimization = {
     return 'assets/js/[name]-[hash].js';
   },
   
-  entryFileNames: 'assets/js/[name]-[hash].js'
+  entryFileNames: 'assets/js/[name]-[hash].js';
 };
 
-// Tree shaking configuration
+// Tree shaking configuration;
 export const treeShakingConfig = {
   // Preserve side effects for mental health libraries
   sideEffects: [
@@ -93,7 +93,7 @@ export const treeShakingConfig = {
   ]
 };
 
-// Performance budget configuration
+// Performance budget configuration;
 export const performanceBudget = {
   // Initial bundle size limits
   maxEntrypointSize: 512000, // 500KB for initial JS
@@ -110,7 +110,7 @@ export const performanceBudget = {
   }
 };
 
-// Terser optimization for production
+// Terser optimization for production;
 export const terserConfig = {
   compress: {
     // Remove console logs in production but keep crisis-related logs
@@ -119,19 +119,19 @@ export const terserConfig = {
     pure_funcs: [], // Removed console functions as we use logger utility
     // Keep crisis intervention function names for debugging
     keep_fnames: /crisis|emergency|safety/,
-    passes: 2
+    passes: 2;
   },
   mangle: {
     // Don't mangle crisis-related function names
     reserved: ['crisis', 'emergency', 'safety', 'offline'],
-    properties: false
+    properties: false;
   },
   format: {
-    comments: false
+    comments: false;
   }
 };
 
-// Preload strategy configuration
+// Preload strategy configuration;
 export const preloadStrategy = {
   // Critical resources to preload immediately
   critical: [
@@ -161,12 +161,12 @@ export const preloadStrategy = {
   ]
 };
 
-// Code splitting optimization plugin
+// Code splitting optimization plugin;
 export const codeSplittingPlugin = (): Plugin => {
   return {
     name: 'code-splitting-optimization',
     generateBundle(_options, bundle) {
-      // Analyze bundle and provide optimization suggestions
+      // Analyze bundle and provide optimization suggestions;
       const chunks = Object.values(bundle).filter(item => item.type === 'chunk');
       const totalSize = chunks.reduce((sum, chunk) => sum + (chunk as any).code?.length || 0, 0);
       
@@ -174,12 +174,13 @@ export const codeSplittingPlugin = (): Plugin => {
       logger.info(`   Total chunks: ${chunks.length}`, undefined, 'bundleOptimization');
       logger.info(`   Total size: ${(totalSize / 1024).toFixed(2)}KB`, undefined, 'bundleOptimization');
       
-      // Find largest chunks
-      const largeChunks = chunks
+      // Find largest chunks;
+      const largeChunks = chunks;
         .map(chunk => ({
           name: chunk.fileName,
-          size: (chunk as any).code?.length || 0
-        }))
+          size: (chunk as any).code?.length || 0;
+        };
+  })
         .sort((a, b) => b.size - a.size)
         .slice(0, 5);
       
@@ -188,8 +189,8 @@ export const codeSplittingPlugin = (): Plugin => {
         logger.info(`     ${chunk.name}: ${(chunk.size / 1024).toFixed(2)}KB`, undefined, 'bundleOptimization');
       });
       
-      // Crisis resource optimization check
-      const crisisChunks = chunks.filter(chunk => 
+      // Crisis resource optimization check;
+      const crisisChunks = chunks.filter(chunk => ;
         chunk.fileName.includes('crisis') || 
         chunk.fileName.includes('emergency')
       );
@@ -203,7 +204,7 @@ export const codeSplittingPlugin = (): Plugin => {
     }
   };
 
-// Dynamic import optimization
+// Dynamic import optimization;
 export const dynamicImportConfig = {
   // Chunk naming for dynamic imports
   webpackChunkName: (importPath: string) => {

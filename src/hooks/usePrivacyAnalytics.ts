@@ -5,7 +5,7 @@
  * while maintaining strict privacy standards and HIPAA compliance.
  * 
  * @license Apache-2.0
- */
+ */;
 
 import { useState, useEffect, useCallback } from 'react';
 import { privacyPreservingAnalyticsService } from '../services/privacyPreservingAnalyticsService';
@@ -65,27 +65,28 @@ export const usePrivacyAnalytics = (): UsePrivacyAnalyticsReturn => {
     used: 0,
     remaining: 10,
     dataPoints: 0,
-    retentionCompliant: true
+    retentionCompliant: true;
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   /**
    * Update privacy budget from service metrics
-   */
+   */;
   const updatePrivacyBudget = useCallback(() => {
     const privacyMetrics = privacyPreservingAnalyticsService.getPrivacyMetrics();
     setPrivacyBudget({
       used: privacyMetrics.budgetUsed,
       remaining: privacyMetrics.budgetRemaining,
       dataPoints: privacyMetrics.dataPoints,
-      retentionCompliant: privacyMetrics.retentionCompliance
+      retentionCompliant: privacyMetrics.retentionCompliance;
     });
+  };
   }, []);
 
   /**
    * Load analytics insights
-   */
+   */;
   const loadInsights = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -104,11 +105,12 @@ export const usePrivacyAnalytics = (): UsePrivacyAnalyticsReturn => {
     } finally {
       setIsLoading(false);
     }
+  };
   }, []);
 
   /**
    * Record intervention outcome
-   */
+   */;
   const recordIntervention = useCallback(async (outcomeData: {
     sessionId: string;
     userToken: string;
@@ -129,11 +131,12 @@ export const usePrivacyAnalytics = (): UsePrivacyAnalyticsReturn => {
       setError(err instanceof Error ? err.message : 'Failed to record intervention');
       console.error('[Privacy Analytics Hook] Failed to record intervention:', err);
     }
+  };
   }, []);
 
   /**
    * Record follow-up engagement
-   */
+   */;
   const recordFollowUp = useCallback(async (userToken: string, sessionId: string) => {
     try {
       await privacyPreservingAnalyticsService.recordFollowUpEngagement(userToken, sessionId);
@@ -145,11 +148,12 @@ export const usePrivacyAnalytics = (): UsePrivacyAnalyticsReturn => {
       setError(err instanceof Error ? err.message : 'Failed to record follow-up');
       console.error('[Privacy Analytics Hook] Failed to record follow-up:', err);
     }
+  };
   }, []);
 
   /**
    * Generate effectiveness report
-   */
+   */;
   const generateReport = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -162,11 +166,12 @@ export const usePrivacyAnalytics = (): UsePrivacyAnalyticsReturn => {
     } finally {
       setIsLoading(false);
     }
+  };
   }, []);
 
   /**
    * Export anonymized data
-   */
+   */;
   const exportData = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -179,26 +184,31 @@ export const usePrivacyAnalytics = (): UsePrivacyAnalyticsReturn => {
     } finally {
       setIsLoading(false);
     }
+  };
   }, []);
 
   /**
    * Refresh insights
-   */
+   */;
   const refreshInsights = useCallback(async () => {
     await loadInsights();
+  };
   }, [loadInsights]);
 
   /**
    * Reset privacy budget
-   */
+   */;
   const resetPrivacyBudget = useCallback(() => {
     privacyPreservingAnalyticsService.resetPrivacyBudget();
     updatePrivacyBudget();
+  };
   }, [updatePrivacyBudget]);
 
   // Load initial insights
   useEffect(() => {
     loadInsights();
+  };
+  };
   }, [loadInsights]);
 
   return {

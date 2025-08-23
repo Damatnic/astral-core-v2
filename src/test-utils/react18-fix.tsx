@@ -1,7 +1,7 @@
 /**
  * React 18 Testing Fix
  * Provides a working render implementation for React 18 with React Testing Library
- */
+ */;
 
 import React, { ReactElement } from 'react';
 import { queries, RenderOptions, RenderResult } from '@testing-library/react';
@@ -24,12 +24,12 @@ export function renderWithReact18(
     }
   }
   
-  // Create container
+  // Create container;
   const container = document.createElement('div');
   container.setAttribute('data-testid', 'react18-container');
   document.body.appendChild(container);
   
-  // Create root and render
+  // Create root and render;
   let root: ReturnType<typeof createRoot> | null = null;
   
   act(() => {
@@ -48,7 +48,8 @@ export function renderWithReact18(
           require('pretty-format').plugins.DOMElement,
           require('pretty-format').plugins.DOMCollection,
         ],
-      }));
+      };
+  });
     },
     unmount: () => {
       act(() => {

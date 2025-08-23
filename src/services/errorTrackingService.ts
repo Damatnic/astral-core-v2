@@ -2,18 +2,18 @@
  * Sentry Error Tracking Configuration
  * 
  * Production-ready error tracking with privacy-focused settings for mental health platform
- */
+ */;
 
 import * as Sentry from '@sentry/react';
 
 import { ENV } from '../utils/envConfig';
 
-// Environment configuration
+// Environment configuration;
 const isProduction = ENV.IS_PROD;
 const isDevelopment = ENV.IS_DEV;
 const sentryDsn = ENV.SENTRY_DSN;
 
-// Error classification for mental health context
+// Error classification for mental health context;
 export interface ErrorContext {
   errorType: 'system' | 'user-action' | 'network' | 'security' | 'crisis';
   severity: 'low' | 'medium' | 'high' | 'critical';
@@ -22,10 +22,10 @@ export interface ErrorContext {
   privacyLevel: 'public' | 'private' | 'sensitive';
 }
 
-// Privacy-safe error filtering
+// Privacy-safe error filtering;
 const sanitizeErrorData = (error: Error, context?: any) => {
-  // Remove sensitive data from error messages and context
-  const sensitivePatterns = [
+  // Remove sensitive data from error messages and context;
+  const sensitivePatterns = [;
     /password/gi,
     /token/gi,
     /auth/gi,
@@ -63,18 +63,18 @@ const sanitizeErrorData = (error: Error, context?: any) => {
 
   return {
     message: sanitizedMessage,
-    context: sanitizedContext
+    context: sanitizedContext;
   };
 }
 
-// Get environment name helper
+// Get environment name helper;
 const getEnvironmentName = (): string => {
   if (isProduction) return 'production';
   if (isDevelopment) return 'development';
   return 'staging';
 };
 
-// Initialize Sentry
+// Initialize Sentry;
 export const initializeSentry = () => {
   if (!sentryDsn) {
     console.warn('Sentry DSN not configured');
@@ -104,7 +104,7 @@ export const initializeSentry = () => {
 
       // Filter out non-critical errors in production
       if (isProduction) {
-        const ignoredErrors = [
+        const ignoredErrors = [;
           'ResizeObserver loop limit exceeded',
           'Script error',
           'Network request failed',
@@ -148,10 +148,11 @@ export const initializeSentry = () => {
     
     // Release tracking
     release: ENV.APP_VERSION || 'unknown',
-  });
+  };
+  };
 };
 
-// Error tracking service
+// Error tracking service;
 export class ErrorTrackingService {
   /**
    * Track application errors with mental health context
@@ -184,7 +185,7 @@ export class ErrorTrackingService {
         url: window.location.pathname, // Don't include query params
         viewport: {
           width: window.innerWidth,
-          height: window.innerHeight
+          height: window.innerHeight;
         }
       });
 
@@ -214,7 +215,7 @@ export class ErrorTrackingService {
       severity: 'critical',
       userType: crisisContext.userType,
       feature: 'crisis-detection',
-      privacyLevel: 'sensitive'
+      privacyLevel: 'sensitive';
     }, {
       escalation_level: crisisContext.escalationLevel,
       has_detection_result: !!crisisContext.detectionResult,
@@ -237,7 +238,7 @@ export class ErrorTrackingService {
       severity: 'medium',
       userType,
       feature,
-      privacyLevel: 'private'
+      privacyLevel: 'private';
     }, {
       action,
       ...extra
@@ -257,7 +258,7 @@ export class ErrorTrackingService {
     this.captureError(error, {
       errorType: 'network',
       severity: statusCode && statusCode >= 500 ? 'high' : 'medium',
-      privacyLevel: 'public'
+      privacyLevel: 'public';
     }, {
       endpoint: endpoint.replace(/\/\d+/g, '/[ID]'), // Remove IDs from endpoint
       method,
@@ -281,7 +282,7 @@ export class ErrorTrackingService {
       this.captureError(error, {
         errorType: 'system',
         severity: duration > threshold * 2 ? 'high' : 'medium',
-        privacyLevel: 'public'
+        privacyLevel: 'public';
       }, {
         performance_metric: name,
         duration,
@@ -385,12 +386,12 @@ export class ErrorTrackingService {
   }
 }
 
-// React Error Boundary integration
+// React Error Boundary integration;
 export const SentryErrorBoundary = Sentry.withErrorBoundary;
 
-// Performance monitoring hook (deprecated)
+// Performance monitoring hook (deprecated);
 export const useSentryPerformance = (name: string, operation: string = 'react') => {
-  // Mock transaction object for compatibility
+  // Mock transaction object for compatibility;
   const transaction = {
     name,
     op: operation,

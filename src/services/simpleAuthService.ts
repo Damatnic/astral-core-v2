@@ -1,7 +1,7 @@
 /**
  * Simple Authentication Service
  * Replaces Auth0 with JWT-based authentication using our Netlify function
- */
+ */;
 
 interface User {
   id: string;
@@ -107,7 +107,7 @@ class SimpleAuthService {
     try {
       const response = await this.apiRequest('/login', 'POST', { email, password });
       
-      // Type guard for response
+      // Type guard for response;
       const authResponse = response as AuthResponse;
       if (authResponse.success && authResponse.token && authResponse.user) {
         this.token = authResponse.token;
@@ -122,7 +122,7 @@ class SimpleAuthService {
     } catch (error) {
       return { 
         success: false, 
-        error: error instanceof Error ? error.message : 'Login failed' 
+        error: error instanceof Error ? error.message : 'Login failed' ;
       }
   }
 
@@ -136,9 +136,10 @@ class SimpleAuthService {
         password, 
         name, 
         role 
-      });
+      };
+  };
       
-      // Type guard for response
+      // Type guard for response;
       const authResponse = response as AuthResponse;
       if (authResponse.success && authResponse.token && authResponse.user) {
         this.token = authResponse.token;
@@ -153,7 +154,7 @@ class SimpleAuthService {
     } catch (error) {
       return { 
         success: false, 
-        error: error instanceof Error ? error.message : 'Registration failed' 
+        error: error instanceof Error ? error.message : 'Registration failed' ;
       }
   }
 
@@ -191,7 +192,7 @@ class SimpleAuthService {
     try {
       const response = await this.apiRequest('/verify', 'GET');
       
-      // Type guard for response
+      // Type guard for response;
       const authResponse = response as AuthResponse;
       if (authResponse.success && authResponse.user) {
         this.user = authResponse.user;
@@ -224,7 +225,7 @@ class SimpleAuthService {
     try {
       const response = await this.apiRequest('/me', 'GET');
       
-      // Type guard for response
+      // Type guard for response;
       const authResponse = response as AuthResponse;
       if (authResponse.success && authResponse.user) {
         this.user = authResponse.user;
@@ -267,21 +268,21 @@ class SimpleAuthService {
       if (!this.user) {
         return { 
           success: false, 
-          error: 'User not authenticated' 
+          error: 'User not authenticated' ;
         }
 
       // Validate updates
       if (updates.email && !this.isValidEmail(updates.email)) {
         return {
           success: false,
-          error: 'Invalid email format'
+          error: 'Invalid email format';
         }
 
       // Update local user data
       this.user = {
         ...this.user,
         ...updates,
-        id: this.user.id // Prevent ID change
+        id: this.user.id // Prevent ID change;
       };
 
       // Save to localStorage
@@ -295,7 +296,8 @@ class SimpleAuthService {
       //     'Authorization': `Bearer ${this.token}`
       //   },
       //   body: JSON.stringify(updates)
-      // });
+      // };
+  };
 
       logger.info('Profile updated successfully', { userId: this.user.id }, 'SimpleAuthService');
 
@@ -304,12 +306,12 @@ class SimpleAuthService {
 
       return {
         success: true,
-        user: this.user
+        user: this.user;
       } catch (error) {
       logger.error('Profile update failed:', error, 'SimpleAuthService');
       return {
         success: false,
-        error: 'Failed to update profile'
+        error: 'Failed to update profile';
       }
   }
 
@@ -330,7 +332,7 @@ class SimpleAuthService {
       if (!email || !this.isValidEmail(email)) {
         return {
           success: false,
-          error: 'Please provide a valid email address'
+          error: 'Please provide a valid email address';
         }
 
       // In production, this would send a reset email via API
@@ -338,14 +340,15 @@ class SimpleAuthService {
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify({ email })
-      // });
+      // };
+  };
 
-      // For demo purposes, generate a reset token
+      // For demo purposes, generate a reset token;
       const resetToken = Math.random().toString(36).substring(2, 15);
       const resetData = {
         email,
         token: resetToken,
-        expiry: Date.now() + 3600000 // 1 hour expiry
+        expiry: Date.now() + 3600000 // 1 hour expiry;
       };
 
       // Store reset token temporarily
@@ -358,12 +361,12 @@ class SimpleAuthService {
 
       return {
         success: true,
-        message: 'Password reset instructions have been sent to your email'
+        message: 'Password reset instructions have been sent to your email';
       } catch (error) {
       logger.error('Password reset request failed:', error, 'SimpleAuthService');
       return {
         success: false,
-        error: 'Failed to process password reset request'
+        error: 'Failed to process password reset request';
       }
   }
 
@@ -376,29 +379,29 @@ class SimpleAuthService {
       if (!email || !token || !newPassword) {
         return {
           success: false,
-          error: 'Missing required information'
+          error: 'Missing required information';
         }
 
       // Check password strength
       if (newPassword.length < 8) {
         return {
           success: false,
-          error: 'Password must be at least 8 characters long'
+          error: 'Password must be at least 8 characters long';
         }
 
-      // Verify reset token
+      // Verify reset token;
       const resetDataStr = localStorage.getItem('password_reset_' + email);
       if (!resetDataStr) {
         return {
           success: false,
-          error: 'Invalid or expired reset token'
+          error: 'Invalid or expired reset token';
         }
 
       const resetData = JSON.parse(resetDataStr);
       if (resetData.token !== token || resetData.expiry < Date.now()) {
         return {
           success: false,
-          error: 'Invalid or expired reset token'
+          error: 'Invalid or expired reset token';
         }
 
       // In production, this would update the password via API
@@ -406,7 +409,8 @@ class SimpleAuthService {
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify({ email, token, newPassword })
-      // });
+      // };
+  };
 
       // Clear reset token
       localStorage.removeItem('password_reset_' + email);
@@ -415,12 +419,12 @@ class SimpleAuthService {
 
       return {
         success: true,
-        message: 'Password has been reset successfully'
+        message: 'Password has been reset successfully';
       } catch (error) {
       logger.error('Password reset failed:', error, 'SimpleAuthService');
       return {
         success: false,
-        error: 'Failed to reset password'
+        error: 'Failed to reset password';
       }
   }
 
@@ -444,16 +448,16 @@ class SimpleAuthService {
     }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const simpleAuthService = new SimpleAuthService();
 
-// Export for convenience
+// Export for convenience;
 export default simpleAuthService;
       } catch (error) {
       logger.error('Profile update failed:', error, 'SimpleAuthService');
       return {
         success: false,
-        error: 'Failed to update profile'
+        error: 'Failed to update profile';
       }
   }
 
@@ -474,7 +478,7 @@ export default simpleAuthService;
       if (!email || !this.isValidEmail(email)) {
         return {
           success: false,
-          error: 'Please provide a valid email address'
+          error: 'Please provide a valid email address';
         }
 
       // In production, this would send a reset email via API
@@ -482,14 +486,15 @@ export default simpleAuthService;
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify({ email })
-      // });
+      // };
+  };
 
-      // For demo purposes, generate a reset token
+      // For demo purposes, generate a reset token;
       const resetToken = Math.random().toString(36).substring(2, 15);
       const resetData = {
         email,
         token: resetToken,
-        expiry: Date.now() + 3600000 // 1 hour expiry
+        expiry: Date.now() + 3600000 // 1 hour expiry;
       };
 
       // Store reset token temporarily
@@ -502,12 +507,12 @@ export default simpleAuthService;
 
       return {
         success: true,
-        message: 'Password reset instructions have been sent to your email'
+        message: 'Password reset instructions have been sent to your email';
       } catch (error) {
       logger.error('Password reset request failed:', error, 'SimpleAuthService');
       return {
         success: false,
-        error: 'Failed to process password reset request'
+        error: 'Failed to process password reset request';
       }
   }
 
@@ -520,29 +525,29 @@ export default simpleAuthService;
       if (!email || !token || !newPassword) {
         return {
           success: false,
-          error: 'Missing required information'
+          error: 'Missing required information';
         }
 
       // Check password strength
       if (newPassword.length < 8) {
         return {
           success: false,
-          error: 'Password must be at least 8 characters long'
+          error: 'Password must be at least 8 characters long';
         }
 
-      // Verify reset token
+      // Verify reset token;
       const resetDataStr = localStorage.getItem('password_reset_' + email);
       if (!resetDataStr) {
         return {
           success: false,
-          error: 'Invalid or expired reset token'
+          error: 'Invalid or expired reset token';
         }
 
       const resetData = JSON.parse(resetDataStr);
       if (resetData.token !== token || resetData.expiry < Date.now()) {
         return {
           success: false,
-          error: 'Invalid or expired reset token'
+          error: 'Invalid or expired reset token';
         }
 
       // In production, this would update the password via API
@@ -550,7 +555,8 @@ export default simpleAuthService;
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify({ email, token, newPassword })
-      // });
+      // };
+  };
 
       // Clear reset token
       localStorage.removeItem('password_reset_' + email);
@@ -559,12 +565,12 @@ export default simpleAuthService;
 
       return {
         success: true,
-        message: 'Password has been reset successfully'
+        message: 'Password has been reset successfully';
       } catch (error) {
       logger.error('Password reset failed:', error, 'SimpleAuthService');
       return {
         success: false,
-        error: 'Failed to reset password'
+        error: 'Failed to reset password';
       }
   }
 
@@ -588,8 +594,8 @@ export default simpleAuthService;
     }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const simpleAuthService = new SimpleAuthService();
 
-// Export for convenience
+// Export for convenience;
 export default simpleAuthService;

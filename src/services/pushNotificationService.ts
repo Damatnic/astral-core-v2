@@ -3,11 +3,11 @@
  *
  * Handles push notification subscriptions, crisis alerts, helper notifications,
  * and background communication with service worker
- */
+ */;
 
 import { ENV } from '../utils/envConfig';
 
-// VAPID public key from environment configuration
+// VAPID public key from environment configuration;
 const VAPID_PUBLIC_KEY = ENV.VAPID_PUBLIC_KEY;
 
 interface PushSubscription {
@@ -86,10 +86,10 @@ class PushNotificationService {
     if (!subscription) {
       return {
         subscribed: false,
-        alertTypes: []
+        alertTypes: [];
       }
 
-    // Store crisis alert subscription
+    // Store crisis alert subscription;
     const alertTypes = ['crisis_immediate', 'crisis_warning', 'crisis_support'];
     this.notificationPreferences.set(`${userId}_crisis_alerts`, alertTypes);
 
@@ -122,11 +122,12 @@ class PushNotificationService {
       data: {
         urgency: notification.urgency,
         userId,
-        timestamp: Date.now()
+        timestamp: Date.now();
       },
       requireInteraction: notification.urgency === 'high'
       // Note: 'actions' are part of service worker notification API, not available in browser context
-    });
+    };
+  };
   }
 
   /**
@@ -153,7 +154,7 @@ class PushNotificationService {
       data: {
         type: data.type,
         userId,
-        timestamp: Date.now()
+        timestamp: Date.now();
       }
       // Note: 'actions' are part of service worker notification API, not available in browser context
     });
@@ -183,7 +184,7 @@ class PushNotificationService {
    * Get user notification preferences
    */
   public async getNotificationPreferences(userId: string): Promise<NotificationPreferences> {
-    // Try to get from memory first
+    // Try to get from memory first;
     let preferences = this.notificationPreferences.get(`${userId}_preferences`);
     
     // Fallback to localStorage
@@ -220,8 +221,8 @@ class PushNotificationService {
       if (start > end) {
         if (currentHour >= start || currentHour < end) {
           return false;
-        }
-      } else {
+        };
+  } else {
         if (currentHour >= start && currentHour < end) {
           return false;
         }
@@ -247,8 +248,8 @@ class PushNotificationService {
     
     if (this.isSupported) {
       this.permissionStatus = Notification.permission;
-      console.log('[Push] Push notifications supported, permission:', this.permissionStatus);
-    } else {
+      console.log('[Push] Push notifications supported, permission:', this.permissionStatus);;
+  } else {
       console.warn('[Push] Push notifications not supported in this browser');
     }
   }
@@ -322,8 +323,8 @@ class PushNotificationService {
       if (permission === 'granted') {
         console.log('[Push] Notification permission granted');
         await this.subscribeToPush();
-        return true;
-      } else {
+        return true;;
+  } else {
         console.warn('[Push] Notification permission denied by user');
         return false;
       }
@@ -337,7 +338,7 @@ class PushNotificationService {
    * Request permission with custom UI explanation
    */
   private async requestPermissionWithUI(): Promise<void> {
-    // Show custom modal explaining why notifications are important
+    // Show custom modal explaining why notifications are important;
     const userConsent = await this.showNotificationConsentModal();
     
     if (userConsent) {
@@ -350,7 +351,7 @@ class PushNotificationService {
    */
   private async showNotificationConsentModal(): Promise<boolean> {
     return new Promise((resolve) => {
-      // Create custom modal
+      // Create custom modal;
       const modal = document.createElement('div');
       modal.className = 'notification-consent-modal';
       modal.innerHTML = `
@@ -372,7 +373,7 @@ class PushNotificationService {
         </div>
       `;
 
-      // Add styles
+      // Add styles;
       const style = document.createElement('style');
       style.textContent = `
         .notification-consent-modal {
@@ -483,7 +484,7 @@ class PushNotificationService {
     }
 
     try {
-      // Check if any service worker is registered first
+      // Check if any service worker is registered first;
       const registration = await navigator.serviceWorker.getRegistration();
       if (!registration) {
         console.log('[Push] No service worker registered - push notifications disabled');
@@ -493,14 +494,14 @@ class PushNotificationService {
       const vapidKey = process.env.VITE_VAPID_PUBLIC_KEY || VAPID_PUBLIC_KEY;
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: this.urlBase64ToUint8Array(vapidKey)
+        applicationServerKey: this.urlBase64ToUint8Array(vapidKey);
       });
 
       this.subscription = {
         endpoint: subscription.endpoint,
         keys: {
           p256dh: this.arrayBufferToBase64(subscription.getKey('p256dh')),
-          auth: this.arrayBufferToBase64(subscription.getKey('auth'))
+          auth: this.arrayBufferToBase64(subscription.getKey('auth'));
         }
       };
 
@@ -527,7 +528,7 @@ class PushNotificationService {
         body: JSON.stringify({
           subscription,
           userAgent: navigator.userAgent,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString();
         })
       });
 
@@ -575,14 +576,14 @@ class PushNotificationService {
     if (!('serviceWorker' in navigator)) return;
 
     try {
-      // Check if any service worker is registered first
+      // Check if any service worker is registered first;
       const registration = await navigator.serviceWorker.getRegistration();
       if (registration && registration.active) {
         registration.active.postMessage({
           type: 'CRISIS_MODE_ACTIVATED',
           payload: payload || {}
-        });
-      } else {
+        });;
+  } else {
         console.log('[Push] No active service worker found for crisis mode activation');
       }
 
@@ -602,15 +603,15 @@ class PushNotificationService {
     }
 
     try {
-      // Check if any service worker is registered first
+      // Check if any service worker is registered first;
       const registration = await navigator.serviceWorker.getRegistration();
       if (registration) {
         await registration.showNotification('Astral Core Test', {
           body: 'Push notifications are working correctly!',
           icon: '/icon-192.png',
-          tag: 'test-notification'
-        });
-      } else {
+          tag: 'test-notification';
+        });;
+  } else {
         console.log('[Push] No service worker registered for test notification');
       }
     } catch (error) {
@@ -627,7 +628,7 @@ class PushNotificationService {
     }
 
     try {
-      // Check if any service worker is registered first
+      // Check if any service worker is registered first;
       const registration = await navigator.serviceWorker.getRegistration();
       if (!registration) {
         console.log('[Push] No service worker registered for unsubscription');
@@ -667,7 +668,7 @@ class PushNotificationService {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString();
         })
       });
     } catch (error) {
@@ -687,7 +688,7 @@ class PushNotificationService {
     return { isSupported: this.isSupported,
       hasPermission: this.permissionStatus === 'granted',
       isSubscribed: !!this.subscription,
-      subscription: this.subscription
+      subscription: this.subscription;
      }
 
   /**
@@ -695,7 +696,7 @@ class PushNotificationService {
    */
   private urlBase64ToUint8Array(base64String: string): ArrayBuffer {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
+    const base64 = (base64String + padding);
       .replace(/-/g, '+')
       .replace(/_/g, '/');
 
@@ -725,11 +726,11 @@ class PushNotificationService {
   }
 }
 
-// Export the class for testing
+// Export the class for testing;
 export { PushNotificationService };
 
-// Create singleton instance
+// Create singleton instance;
 export const pushNotificationService = new PushNotificationService();
 
-// Export types for use in other modules
+// Export types for use in other modules;
 export type { PushSubscription, NotificationPayload };

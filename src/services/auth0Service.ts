@@ -1,7 +1,7 @@
 /**
  * Auth0 Service for CoreV2
  * Handles authentication, authorization, and token management
- */
+ */;
 
 import { Auth0Client } from '@auth0/auth0-spa-js';
 import { User, Helper } from '../types';
@@ -9,7 +9,7 @@ import { isProduction } from '../utils/envValidator';
 
 import { ENV } from '../utils/envConfig';
 
-// Auth0 configuration with fallbacks for development
+// Auth0 configuration with fallbacks for development;
 const auth0Config = {
   domain: ENV.AUTH0_DOMAIN,
   clientId: ENV.AUTH0_CLIENT_ID,
@@ -23,7 +23,7 @@ const auth0Config = {
   }),
 };
 
-// User roles
+// User roles;
 export enum UserRole {
   USER = 'user',
   HELPER = 'helper',
@@ -32,7 +32,7 @@ export enum UserRole {
   CRISIS_RESPONDER = 'crisis_responder',
 }
 
-// Token storage keys
+// Token storage keys;
 const TOKEN_STORAGE_KEY = 'corev2_auth_token';
 const REFRESH_TOKEN_KEY = 'corev2_refresh_token';
 const USER_STORAGE_KEY = 'corev2_user';
@@ -52,7 +52,7 @@ class Auth0Service {
     try {
       this.auth0Client = new Auth0Client(auth0Config);
       
-      // Check if user is already authenticated
+      // Check if user is already authenticated;
       const isAuthenticated = await this.auth0Client.isAuthenticated();
       
       if (isAuthenticated) {
@@ -114,7 +114,7 @@ class Auth0Service {
     const result = await this.auth0Client.handleRedirectCallback();
     await this.handleAuthentication();
     
-    // Redirect to return URL or home
+    // Redirect to return URL or home;
     const returnTo = result.appState?.returnTo || '/';
     window.history.replaceState({}, document.title, returnTo);
   }
@@ -126,11 +126,11 @@ class Auth0Service {
     if (!this.auth0Client) return;
 
     try {
-      // Get user profile
+      // Get user profile;
       const user = await this.auth0Client.getUser();
       if (!user) return;
 
-      // Get tokens
+      // Get tokens;
       const token = await this.auth0Client.getTokenSilently();
       
       // Transform Auth0 user to app user
@@ -184,8 +184,8 @@ class Auth0Service {
     if (isProduction()) {
       // Store in memory only
       sessionStorage.setItem(TOKEN_STORAGE_KEY, token);
-      sessionStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
-    } else {
+      sessionStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));;
+  } else {
       // Development: use localStorage for persistence
       localStorage.setItem(TOKEN_STORAGE_KEY, token);
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
@@ -271,7 +271,7 @@ class Auth0Service {
       return this.currentUser;
     }
 
-    // Try to get from storage
+    // Try to get from storage;
     const storage = isProduction() ? sessionStorage : localStorage;
     const storedUser = storage.getItem(USER_STORAGE_KEY);
     
@@ -341,7 +341,7 @@ class Auth0Service {
       throw new Error('User not authenticated');
     }
 
-    // Update in Auth0
+    // Update in Auth0;
     const token = await this.getAccessToken();
     if (!token) throw new Error('No access token');
 
@@ -355,7 +355,8 @@ class Auth0Service {
         name: updates.name,
         picture: updates.picture,
       }),
-    });
+    };
+  };
 
     if (!response.ok) {
       throw new Error('Failed to update profile');
@@ -468,7 +469,7 @@ class Auth0Service {
     const token = await this.getAccessToken();
     if (!token) return null;
 
-    // In production, this should be done server-side
+    // In production, this should be done server-side;
     const response = await fetch(`https://${auth0Config.domain}/oauth/token`, {
       method: 'POST',
       headers: {
@@ -491,10 +492,10 @@ class Auth0Service {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const auth0Service = new Auth0Service();
 
-// Export for backward compatibility
+// Export for backward compatibility;
 export const authService = {
   initialize: () => auth0Service.initialize(),
   login: (options?: any) => auth0Service.login(options),

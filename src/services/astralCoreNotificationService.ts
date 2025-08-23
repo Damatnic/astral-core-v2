@@ -1,12 +1,12 @@
 /**
  * Notification Service for Astral Core
  * Handles push notifications, in-app notifications, and notification preferences
- */
+ */;
 
 import { apiClient } from './apiClient';
 import { getEnv } from '../utils/envValidator';
 
-// Notification Types
+// Notification Types;
 export enum NotificationType {
   CRISIS_ALERT = 'crisis_alert',
   PEER_MESSAGE = 'peer_message',
@@ -64,14 +64,14 @@ export interface NotificationPreferences {
   quietHours: {
     enabled: boolean;
     start: string; // HH:MM format
-    end: string; // HH:MM format
+    end: string; // HH:MM format;
   };
   blockedTypes: NotificationType[];
 }
 
 /**
  * Astral Core Notification Service
- */
+ */;
 class AstralCoreNotificationService {
   private swRegistration: ServiceWorkerRegistration | null = null;
   private permission: NotificationPermission = 'default';
@@ -166,7 +166,7 @@ class AstralCoreNotificationService {
     }
 
     try {
-      // Check if already subscribed
+      // Check if already subscribed;
       let subscription = await this.swRegistration.pushManager.getSubscription();
 
       if (!subscription) {
@@ -198,7 +198,7 @@ class AstralCoreNotificationService {
       return;
     }
 
-    // Create full notification object
+    // Create full notification object;
     const fullNotification: Notification = {
       id: this.generateId(),
       type: notification.type || NotificationType.SYSTEM_ALERT,
@@ -247,8 +247,8 @@ class AstralCoreNotificationService {
 
     // Use service worker if available
     if (this.swRegistration) {
-      await this.swRegistration.showNotification(notification.title, options);
-    } else {
+      await this.swRegistration.showNotification(notification.title, options);;
+  } else {
       // Fallback to browser notification
       new Notification(notification.title, options);
     }
@@ -282,7 +282,7 @@ class AstralCoreNotificationService {
   /**
    * Show wellness reminder
    */
-  async showWellnessReminder(
+  async showWellnessReminder(;
     type: 'mood' | 'meditation' | 'journal' | 'assessment',
     customMessage?: string
   ): Promise<void> {
@@ -335,7 +335,7 @@ class AstralCoreNotificationService {
     const pushEvent = event as any;
     const data = pushEvent.data?.json() || {};
     
-    // Create notification from push data
+    // Create notification from push data;
     const notification: Partial<Notification> = {
       type: data.type,
       priority: data.priority,
@@ -466,8 +466,8 @@ class AstralCoreNotificationService {
       if (start <= end) {
         if (currentTime >= start && currentTime <= end) {
           return false;
-        }
-      } else if (currentTime >= start || currentTime <= end) {
+        };
+  } else if (currentTime >= start || currentTime <= end) {
         return false;
       }
     }
@@ -508,7 +508,7 @@ class AstralCoreNotificationService {
    * Snooze notification
    */
   private async snoozeNotification(data: unknown): Promise<void> {
-    // Schedule notification for 15 minutes later
+    // Schedule notification for 15 minutes later;
     const notificationData = data as Partial<Notification>;
     if (notificationData) {
       setTimeout(() => {
@@ -535,7 +535,7 @@ class AstralCoreNotificationService {
    * Track notification analytics
    */
   private trackNotification(notification: Notification): void {
-    // Send analytics event
+    // Send analytics event;
     const windowWithGtag = window as any;
     if (windowWithGtag.gtag) {
       windowWithGtag.gtag('event', 'notification_shown', {
@@ -602,7 +602,7 @@ class AstralCoreNotificationService {
    */
   private urlBase64ToUint8Array(base64String: string): Uint8Array {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
+    const base64 = (base64String + padding);
       .replace(/-/g, '+')
       .replace(/_/g, '/');
 
@@ -637,7 +637,7 @@ class AstralCoreNotificationService {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const astralCoreNotificationService = new AstralCoreNotificationService();
 
 export default astralCoreNotificationService;

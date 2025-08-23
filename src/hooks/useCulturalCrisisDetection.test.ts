@@ -1,6 +1,6 @@
 /**
  * Tests for Cultural Crisis Detection Hook
- */
+ */;
 
 import { renderHook, act, waitFor } from '../test-utils';
 import { useCulturalCrisisDetection } from './useCulturalCrisisDetection';
@@ -11,13 +11,13 @@ jest.mock('../services/culturalCrisisDetectionService', () => ({
   culturalCrisisDetectionService: {
     analyzeCrisisWithCulturalContext: jest.fn(),
     updateCulturalPatterns: jest.fn(),
-    getCulturalMetrics: jest.fn()
+    getCulturalMetrics: jest.fn();
   },
   FamilyInvolvementLevel: {
     NONE: 'none',
     LOW: 'low',
     MEDIUM: 'medium',
-    HIGH: 'high'
+    HIGH: 'high';
   }
 }));
 
@@ -26,14 +26,14 @@ const mockAnalysisResult = {
   culturallyAdjustedRisk: {
     originalRisk: 30,
     adjustedRisk: 25,
-    culturalFactors: ['western-individualistic-adjustment']
+    culturalFactors: ['western-individualistic-adjustment'];
   },
   culturalBiasAdjustments: [
     {
       factor: 'Western individualistic bias',
       originalValue: 30,
       adjustedValue: 25,
-      confidence: 0.85
+      confidence: 0.85;
     }
   ],
   culturalInterventions: {
@@ -41,7 +41,7 @@ const mockAnalysisResult = {
     communityApproach: false,
     religiousConsideration: false,
     culturalResources: ['Western counseling approaches'],
-    languageSpecificResources: ['English mental health resources']
+    languageSpecificResources: ['English mental health resources'];
   },
   culturalIndicators: [
     {
@@ -56,7 +56,7 @@ const mockAnalysisResult = {
     recommendedInterventions: [
       {
         priority: 3,
-        description: 'Connect with culturally appropriate counselor'
+        description: 'Connect with culturally appropriate counselor';
       }
     ]
   }
@@ -69,7 +69,7 @@ describe('useCulturalCrisisDetection Hook', () => {
     (culturalCrisisDetectionService.getCulturalMetrics as jest.Mock).mockResolvedValue({
       totalAnalyses: 100,
       biasReductionRate: 0.25,
-      culturalAccuracy: 0.88
+      culturalAccuracy: 0.88;
     });
   });
 
@@ -199,7 +199,7 @@ describe('useCulturalCrisisDetection Hook', () => {
 
     expect(culturalCrisisDetectionService.analyzeCrisisWithCulturalContext).toHaveBeenCalledTimes(1);
 
-    // Second analysis with same text (should return cached result)
+    // Second analysis with same text (should return cached result);
     let secondResult: any;
     await act(async () => {
       secondResult = await result.current.analyzeCulturalCrisis(testText);
@@ -246,7 +246,7 @@ describe('useCulturalCrisisDetection Hook', () => {
   it.skip('should call crisis detected callback', async () => {
     const crisisAnalysisResult = {
       ...mockAnalysisResult,
-      hasCrisisIndicators: true
+      hasCrisisIndicators: true;
     };
 
     (culturalCrisisDetectionService.analyzeCrisisWithCulturalContext as jest.Mock)
@@ -294,7 +294,7 @@ describe('useCulturalCrisisDetection Hook', () => {
         communityApproach: false,
         religiousConsideration: false,
         culturalResources: expect.arrayContaining(['Western counseling approaches']),
-        languageSpecificResources: expect.arrayContaining(['English mental health resources'])
+        languageSpecificResources: expect.arrayContaining(['English mental health resources']);
       })
     );
   });
@@ -328,7 +328,7 @@ describe('useCulturalCrisisDetection Hook', () => {
 
     const { result } = renderHook(() => useCulturalCrisisDetection({ 
       debounceMs: 500,
-      autoAnalyze: true 
+      autoAnalyze: true ;
     }));
 
     // Call debounced analysis multiple times quickly
@@ -396,7 +396,7 @@ describe('useCulturalCrisisDetection Hook', () => {
       culturalRegion: 'Western',
       actualRisk: 30,
       predictedRisk: 25,
-      culturallyAppropriate: true
+      culturallyAppropriate: true;
     });
   });
 
@@ -462,7 +462,7 @@ describe('useCulturalCrisisDetection Hook', () => {
         ...mockAnalysisResult.culturalInterventions,
         familyInvolvement: 'high' as const,
         communityApproach: true,
-        religiousConsideration: true
+        religiousConsideration: true;
       }
     };
 

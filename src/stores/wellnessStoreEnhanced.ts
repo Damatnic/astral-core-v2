@@ -7,7 +7,7 @@
  * - Optimistic updates
  * - Performance optimizations
  * - Retry logic
- */
+ */;
 
 import { create } from 'zustand';
 import { persist, devtools } from 'zustand/middleware';
@@ -56,10 +56,10 @@ interface WellnessActions {
 
 type EnhancedWellnessState = WithEnhancedState<WellnessData & WellnessActions>;
 
-// Cache for API responses
+// Cache for API responses;
 const wellnessCache = new StoreCache<any>(300); // 5 minute cache
 
-// Create a properly typed debounced sync wrapper
+// Create a properly typed debounced sync wrapper;
 let syncTimeout: NodeJS.Timeout | null = null;
 const debouncedSync = (syncFn: () => Promise<void>) => {
   if (syncTimeout) {
@@ -99,7 +99,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
           return;
         }
         
-        // Check cache first
+        // Check cache first;
         const cached = wellnessCache.get(`history-${userToken}`);
         if (cached) {
           set({ history: cached, isLoading: false });
@@ -116,7 +116,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
               history: data,
               lastSyncTime: new Date(),
               syncStatus: 'synced',
-              updateCount: get().updateCount + 1
+              updateCount: get().updateCount + 1;
             });
             return data;
           },
@@ -124,7 +124,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
           get().setLoading,
           3
         ).catch(() => {
-          // Fallback to demo data on error
+          // Fallback to demo data on error;
           const demoHistory = generateDemoHistory(userToken);
           set({ history: demoHistory });
         }).finally(() => {
@@ -144,7 +144,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
           ...checkInData,
           id: tempId,
           userToken,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString();
         };
         
         await withOptimisticUpdate(
@@ -165,7 +165,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
           // Rollback
           () => {
             set(state => ({
-              history: state.history.filter(h => h.id !== tempId)
+              history: state.history.filter(h => h.id !== tempId);
             }));
           },
           get().setError
@@ -194,8 +194,8 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
               ApiClient.habits.getCompletions(userToken)
             ]);
             
-            // Create TrackedHabit objects from the tracked IDs
-            const trackedHabits = predefined
+            // Create TrackedHabit objects from the tracked IDs;
+            const trackedHabits = predefined;
               .filter(habit => trackedIds.includes(habit.id))
               .map(habit => {
                 const habitCompletions = completions.filter(c => c.habitId === habit.id);
@@ -209,14 +209,15 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
                   currentStreak: 0, // Will be calculated properly later
                   longestStreak: 0, // Will be calculated properly later  
                   isCompletedToday
-                });
+                };
+  };
             
             set({
               predefinedHabits: predefined,
               trackedHabits: trackedHabits,
               completions: completions,
               lastSyncTime: new Date(),
-              syncStatus: 'synced'
+              syncStatus: 'synced';
             });
             
             return { predefined, trackedHabits, completions },
@@ -227,8 +228,9 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
           // Provide demo habits on error
           set({
             predefinedHabits: generateDemoHabits(),
-            trackedHabits: []
-          });
+            trackedHabits: [];
+          };
+  };
         }).finally(() => {
           set({ isLoading: false });
         });
@@ -256,7 +258,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
               trackedAt: new Date().toISOString(),
               currentStreak: 0,
               longestStreak: 0,
-              isCompletedToday: false
+              isCompletedToday: false;
             };
             set(state => ({
               trackedHabits: [...state.trackedHabits, trackedHabit]
@@ -270,7 +272,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
           // Rollback
           () => {
             set(state => ({
-              trackedHabits: state.trackedHabits.filter(h => h.habitId !== habitId)
+              trackedHabits: state.trackedHabits.filter(h => h.habitId !== habitId);
             }));
           },
           get().setError
@@ -290,7 +292,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
           // Optimistic update
           () => {
             set(state => ({
-              trackedHabits: state.trackedHabits.filter(h => h.habitId !== habitId)
+              trackedHabits: state.trackedHabits.filter(h => h.habitId !== habitId);
             }));
           },
           // Actual update
@@ -317,7 +319,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
           id: `temp-${Date.now()}`,
           habitId,
           completedAt: new Date().toISOString(),
-          userId: userToken
+          userId: userToken;
         };
         
         await withOptimisticUpdate(
@@ -327,16 +329,17 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
               completions: [...state.completions, tempCompletion],
               trackedHabits: state.trackedHabits.map(h => {
                 if (h.habitId === habitId) {
-                  // Simplified optimistic update without accessing completions property
+                  // Simplified optimistic update without accessing completions property;
                   const streaks = { current: 0, longest: 0 }; // Simplified for optimistic update
                   return {
                     ...h,
                     currentStreak: streaks.current,
-                    longestStreak: streaks.longest
+                    longestStreak: streaks.longest;
                   }
                 return h;
               })
-            }));
+            };
+  });
           },
           // Actual update
           async () => {
@@ -373,7 +376,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
           return;
         }
         
-        // Check cache first
+        // Check cache first;
         const cached = wellnessCache.get(`journal-${userToken}`);
         if (cached) {
           set({ journalEntries: cached });
@@ -388,7 +391,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
             wellnessCache.set(`journal-${userToken}`, entries);
             set({ 
               journalEntries: entries,
-              lastSyncTime: new Date()
+              lastSyncTime: new Date();
             });
             return entries;
           },
@@ -433,7 +436,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
           // Rollback
           () => {
             set(state => ({
-              journalEntries: state.journalEntries.filter(e => e.id !== tempEntry.id)
+              journalEntries: state.journalEntries.filter(e => e.id !== tempEntry.id);
             }));
           },
           get().setError
@@ -468,7 +471,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
             
             // Remove from queue after successful sync
             set(state => ({
-              offlineQueue: state.offlineQueue.filter(i => i !== item)
+              offlineQueue: state.offlineQueue.filter(i => i !== item);
             }));
           } catch (error) {
             console.error(`Failed to sync offline action ${item.action}:`, error);
@@ -489,7 +492,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
           offlineQueue: [...state.offlineQueue, {
             action,
             data,
-            timestamp: new Date()
+            timestamp: new Date();
           }]
         }));
         
@@ -523,7 +526,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
           syncStatus: 'idle',
           offlineQueue: [],
           error: null,
-          isLoading: false
+          isLoading: false;
         });
       }
     }),
@@ -539,7 +542,7 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
         trackedHabits: state.trackedHabits,
         completions: state.completions,
         offlineQueue: state.offlineQueue,
-        lastSyncTime: state.lastSyncTime
+        lastSyncTime: state.lastSyncTime;
       }),
       migrate: (persistedState: any, version: number) => {
         if (version === 0) {
@@ -547,15 +550,14 @@ export const useEnhancedWellnessStore = create<EnhancedWellnessState>()(
           return {
             ...persistedState,
             offlineQueue: persistedState.offlineQueue || [],
-            lastSyncTime: persistedState.lastSyncTime || null
+            lastSyncTime: persistedState.lastSyncTime || null;
           }
         return persistedState;
       }
-    }
-  )
-);
+    };
+  });
 
-// Helper functions for demo data
+// Helper functions for demo data;
 function generateDemoHistory(userToken: string): MoodCheckIn[] {
   const demoHistory: MoodCheckIn[] = [];
   for (let i = 0; i < 14; i++) {
@@ -604,16 +606,16 @@ function generateDemoJournalEntries(): JournalEntry[] {
       id: 'j1',
       content: 'Today was challenging but I managed to practice self-compassion.',
       timestamp: new Date(Date.now() - 86400000).toISOString(),
-      userToken: 'demo-user'
+      userToken: 'demo-user';
     },
     {
       id: 'j2',
       content: 'Feeling grateful for the support from my friends and family.',
       timestamp: new Date(Date.now() - 172800000).toISOString(),
-      userToken: 'demo-user'
+      userToken: 'demo-user';
     }
   ];
 }
 
-// Export for backward compatibility
+// Export for backward compatibility;
 export const useWellnessStore = useEnhancedWellnessStore;

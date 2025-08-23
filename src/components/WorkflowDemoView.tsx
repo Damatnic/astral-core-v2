@@ -29,7 +29,7 @@ const WorkflowDemoView: React.FC = () => {
                         title: 'User Posts Vulnerable Content',
                         timestamp: workflowData.incidentOverview.timestamp,
                         content: workflowData.incidentOverview.content,
-                        outcome: 'AI concern detection triggered'
+                        outcome: 'AI concern detection triggered';
                     },
                     {
                         step: 2,
@@ -38,7 +38,7 @@ const WorkflowDemoView: React.FC = () => {
                         timestamp: workflowData.aiSystem.detectionTime,
                         content: `Risk Level: ${workflowData.aiSystem.riskLevel} | Confidence: ${workflowData.aiSystem.confidenceScore}`,
                         actions: workflowData.aiSystem.automatedActions,
-                        outcome: 'Crisis specialist automatically assigned'
+                        outcome: 'Crisis specialist automatically assigned';
                     },
                     {
                         step: 3,
@@ -47,7 +47,7 @@ const WorkflowDemoView: React.FC = () => {
                         timestamp: workflowData.helperResponse.responseTime,
                         content: workflowData.helperResponse.initialResponse,
                         actions: workflowData.helperResponse.interventionActions,
-                        outcome: workflowData.helperResponse.outcomeAssessment
+                        outcome: workflowData.helperResponse.outcomeAssessment;
                     },
                     {
                         step: 4,
@@ -56,7 +56,7 @@ const WorkflowDemoView: React.FC = () => {
                         timestamp: workflowData.myReview.reviewTime,
                         content: `Quality Score: ${workflowData.myReview.qualityScore}/10`,
                         actions: workflowData.myReview.adminActions,
-                        outcome: workflowData.myReview.escalationDecision
+                        outcome: workflowData.myReview.escalationDecision;
                     }
                 ];
             
@@ -69,7 +69,7 @@ const WorkflowDemoView: React.FC = () => {
                         title: 'Critical Suicide Risk Post',
                         timestamp: suicideScenario.incident.timestamp,
                         content: suicideScenario.incident.content,
-                        outcome: 'Critical crisis detected with 98% confidence'
+                        outcome: 'Critical crisis detected with 98% confidence';
                     },
                     {
                         step: 2,
@@ -78,7 +78,7 @@ const WorkflowDemoView: React.FC = () => {
                         timestamp: suicideScenario.aiSystem.detectionTime,
                         content: `${suicideScenario.aiSystem.algorithm} - Confidence: ${suicideScenario.aiSystem.confidenceScore}`,
                         actions: suicideScenario.aiSystem.automatedActions,
-                        outcome: 'All crisis specialists alerted immediately'
+                        outcome: 'All crisis specialists alerted immediately';
                     },
                     {
                         step: 3,
@@ -87,7 +87,7 @@ const WorkflowDemoView: React.FC = () => {
                         timestamp: suicideScenario.helperResponse.responseTime,
                         content: `${suicideScenario.helperResponse.responderName} - ${suicideScenario.helperResponse.urgencyProtocol}`,
                         actions: suicideScenario.helperResponse.immediateActions,
-                        outcome: suicideScenario.helperResponse.riskMitigation
+                        outcome: suicideScenario.helperResponse.riskMitigation;
                     },
                     {
                         step: 4,
@@ -110,7 +110,7 @@ const WorkflowDemoView: React.FC = () => {
                         title: 'Domestic Violence Emergency',
                         timestamp: dvScenario.incident.timestamp,
                         content: dvScenario.incident.content,
-                        outcome: 'Safety crisis detected with children at risk'
+                        outcome: 'Safety crisis detected with children at risk';
                     },
                     {
                         step: 2,
@@ -119,7 +119,7 @@ const WorkflowDemoView: React.FC = () => {
                         timestamp: dvScenario.aiSystem.detectionTime,
                         content: `${dvScenario.aiSystem.algorithm} - Confidence: ${dvScenario.aiSystem.confidenceScore}`,
                         actions: dvScenario.aiSystem.automatedActions,
-                        outcome: 'Domestic violence specialist immediately notified'
+                        outcome: 'Domestic violence specialist immediately notified';
                     },
                     {
                         step: 3,
@@ -128,7 +128,7 @@ const WorkflowDemoView: React.FC = () => {
                         timestamp: dvScenario.helperResponse.responseTime,
                         content: `${dvScenario.helperResponse.responderName} - ${dvScenario.helperResponse.urgencyProtocol}`,
                         actions: dvScenario.helperResponse.safetyActions,
-                        outcome: 'Emergency safety plan activated'
+                        outcome: 'Emergency safety plan activated';
                     },
                     {
                         step: 4,
@@ -151,7 +151,7 @@ const WorkflowDemoView: React.FC = () => {
                         title: 'Overdose Medical Emergency',
                         timestamp: substanceScenario.incident.timestamp,
                         content: substanceScenario.incident.content,
-                        outcome: 'Medical emergency detected with overdose symptoms'
+                        outcome: 'Medical emergency detected with overdose symptoms';
                     },
                     {
                         step: 2,
@@ -160,7 +160,7 @@ const WorkflowDemoView: React.FC = () => {
                         timestamp: substanceScenario.aiSystem.detectionTime,
                         content: `${substanceScenario.aiSystem.algorithm} - Confidence: ${substanceScenario.aiSystem.confidenceScore}`,
                         actions: substanceScenario.aiSystem.automatedActions,
-                        outcome: 'Medical emergency specialist alerted'
+                        outcome: 'Medical emergency specialist alerted';
                     },
                     {
                         step: 3,
@@ -169,7 +169,7 @@ const WorkflowDemoView: React.FC = () => {
                         timestamp: substanceScenario.helperResponse.responseTime,
                         content: `${substanceScenario.helperResponse.responderName} - ${substanceScenario.helperResponse.urgencyProtocol}`,
                         actions: substanceScenario.helperResponse.emergencyActions,
-                        outcome: 'Emergency services coordination activated'
+                        outcome: 'Emergency services coordination activated';
                     },
                     {
                         step: 4,
@@ -191,7 +191,7 @@ const WorkflowDemoView: React.FC = () => {
                         title: 'User Joins Wellness Challenge',
                         timestamp: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(),
                         content: "Joined the '30-Day Mindful Moments' challenge to help manage my anxiety. Ready to start this journey!",
-                        outcome: 'Enrolled in mindfulness challenge with 12-day streak'
+                        outcome: 'Enrolled in mindfulness challenge with 12-day streak';
                     },
                     {
                         step: 2,
@@ -200,7 +200,7 @@ const WorkflowDemoView: React.FC = () => {
                         timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
                         content: 'Progress analyzed: 12/30 days completed, current streak maintained, engagement level: high',
                         actions: ['Daily reminder sent', 'Peer encouragement matched', 'Progress milestone celebrated'],
-                        outcome: 'Continued engagement supported with peer connections'
+                        outcome: 'Continued engagement supported with peer connections';
                     },
                     {
                         step: 3,
@@ -218,7 +218,7 @@ const WorkflowDemoView: React.FC = () => {
                         timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
                         content: 'Wellness challenge metrics: 85% completion rate, 92% user satisfaction, positive mental health outcomes tracked',
                         actions: ['Challenge effectiveness validated', 'User feedback analyzed', 'Future challenges planned'],
-                        outcome: 'Successful community wellness program validated'
+                        outcome: 'Successful community wellness program validated';
                     }
                 ];
 
@@ -230,7 +230,7 @@ const WorkflowDemoView: React.FC = () => {
                         title: 'User Joins Support Group',
                         timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
                         content: "Joining the 'Managing Anxiety in Daily Life' support group. Looking forward to connecting with others who understand.",
-                        outcome: 'Successfully joined anxiety support community'
+                        outcome: 'Successfully joined anxiety support community';
                     },
                     {
                         step: 2,
@@ -239,7 +239,7 @@ const WorkflowDemoView: React.FC = () => {
                         timestamp: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
                         content: 'User profile matched with compatible support group members based on anxiety triggers and coping preferences',
                         actions: ['Peer compatibility analysis', 'Safe space protocols activated', 'Interaction guidelines shared'],
-                        outcome: 'Optimal peer support environment established'
+                        outcome: 'Optimal peer support environment established';
                     },
                     {
                         step: 3,
@@ -248,7 +248,7 @@ const WorkflowDemoView: React.FC = () => {
                         timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
                         content: "Dr. Jennifer Walsh: 'Welcome to our supportive community! Sharing the 4-7-8 breathing technique has helped many members find calm.'",
                         actions: ['Weekly group facilitation', 'Therapeutic technique sharing', 'Member support encouragement'],
-                        outcome: 'Therapeutic support provided within peer community'
+                        outcome: 'Therapeutic support provided within peer community';
                     },
                     {
                         step: 4,
@@ -257,7 +257,7 @@ const WorkflowDemoView: React.FC = () => {
                         timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
                         content: 'Support group health metrics: High engagement, positive peer interactions, 88% report reduced anxiety symptoms',
                         actions: ['Group dynamics analyzed', 'Mental health outcomes tracked', 'Facilitator support provided'],
-                        outcome: 'Healthy support community with measurable mental health benefits'
+                        outcome: 'Healthy support community with measurable mental health benefits';
                     }
                 ];
 
@@ -269,7 +269,7 @@ const WorkflowDemoView: React.FC = () => {
                         title: 'User Seeks Accountability Partner',
                         timestamp: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
                         content: "Looking for an accountability buddy to help with daily meditation and journaling goals. Want someone who understands anxiety recovery.",
-                        outcome: 'Requested peer connection for mutual support'
+                        outcome: 'Requested peer connection for mutual support';
                     },
                     {
                         step: 2,
@@ -278,7 +278,7 @@ const WorkflowDemoView: React.FC = () => {
                         timestamp: new Date(Date.now() - 13 * 24 * 60 * 60 * 1000).toISOString(),
                         content: 'Matched with MindfulMate based on: similar anxiety management goals, compatible time zones, shared mindfulness interests',
                         actions: ['Compatibility analysis completed', 'Initial connection facilitated', 'Shared goals established'],
-                        outcome: 'Optimal peer accountability partnership formed'
+                        outcome: 'Optimal peer accountability partnership formed';
                     },
                     {
                         step: 3,
@@ -287,7 +287,7 @@ const WorkflowDemoView: React.FC = () => {
                         timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
                         content: "Connection Guide: '14 days of consistent mutual support! Your partnership shows the power of shared accountability.'",
                         actions: ['Partnership progress celebrated', 'Goal achievement recognized', 'Relationship health monitored'],
-                        outcome: 'Successful peer support relationship maintained'
+                        outcome: 'Successful peer support relationship maintained';
                     },
                     {
                         step: 4,
@@ -296,7 +296,7 @@ const WorkflowDemoView: React.FC = () => {
                         timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
                         content: 'Peer connection metrics: 28 mutual interactions, 100% goal check-in rate, positive mental health impact documented',
                         actions: ['Partnership effectiveness measured', 'User satisfaction validated', 'Platform connection algorithms refined'],
-                        outcome: 'Evidence-based peer support system demonstrating positive outcomes'
+                        outcome: 'Evidence-based peer support system demonstrating positive outcomes';
                     }
                 ];
             
@@ -308,7 +308,7 @@ const WorkflowDemoView: React.FC = () => {
                         title: 'User Reports Boundary Violation',
                         timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
                         content: "Helper shared their personal phone number and suggested meeting in person outside the platform. This made me very uncomfortable.",
-                        outcome: 'Investigation initiated'
+                        outcome: 'Investigation initiated';
                     },
                     {
                         step: 2,
@@ -317,7 +317,7 @@ const WorkflowDemoView: React.FC = () => {
                         timestamp: new Date(Date.now() - 7 * 60 * 60 * 1000).toISOString(),
                         content: "I thought I was being helpful by offering more personal support. I didn't realize this violated platform guidelines.",
                         actions: ['Account temporarily suspended', 'Mandatory retraining scheduled'],
-                        outcome: 'Remedial action required'
+                        outcome: 'Remedial action required';
                     },
                     {
                         step: 3,
@@ -331,7 +331,7 @@ const WorkflowDemoView: React.FC = () => {
                             'User provided additional support',
                             'Platform guidelines clarified'
                         ],
-                        outcome: 'violation_confirmed_training_required'
+                        outcome: 'violation_confirmed_training_required';
                     }
                 ];
             
@@ -386,61 +386,61 @@ const WorkflowDemoView: React.FC = () => {
                 <div className="scenario-selector">
                     <h3>Select Scenario</h3>
                     <div className="button-group">
-                        <button 
+                        <button; 
                             className={selectedScenario === 'crisis' ? 'active' : ''}
                             onClick={() => setSelectedScenario('crisis')}
                         >
                             🚨 Crisis Intervention
                         </button>
-                        <button 
+                        <button; 
                             className={selectedScenario === 'suicide' ? 'active' : ''}
                             onClick={() => setSelectedScenario('suicide')}
                         >
                             ⚠️ Suicide Risk
                         </button>
-                        <button 
+                        <button; 
                             className={selectedScenario === 'domestic-violence' ? 'active' : ''}
                             onClick={() => setSelectedScenario('domestic-violence')}
                         >
                             🏠 Domestic Violence
                         </button>
-                        <button 
+                        <button; 
                             className={selectedScenario === 'substance-abuse' ? 'active' : ''}
                             onClick={() => setSelectedScenario('substance-abuse')}
                         >
                             💊 Substance Crisis
                         </button>
-                        <button 
+                        <button; 
                             className={selectedScenario === 'wellness-challenge' ? 'active' : ''}
                             onClick={() => setSelectedScenario('wellness-challenge')}
                         >
                             🌱 Wellness Challenge
                         </button>
-                        <button 
+                        <button; 
                             className={selectedScenario === 'support-group' ? 'active' : ''}
                             onClick={() => setSelectedScenario('support-group')}
                         >
                             👥 Support Group
                         </button>
-                        <button 
+                        <button; 
                             className={selectedScenario === 'peer-connection' ? 'active' : ''}
                             onClick={() => setSelectedScenario('peer-connection')}
                         >
                             🤝 Peer Connection
                         </button>
-                        <button 
+                        <button; 
                             className={selectedScenario === 'boundary' ? 'active' : ''}
                             onClick={() => setSelectedScenario('boundary')}
                         >
                             ⚠️ Boundary Violation
                         </button>
-                        <button 
+                        <button; 
                             className={selectedScenario === 'content' ? 'active' : ''}
                             onClick={() => setSelectedScenario('content')}
                         >
                             🚫 Content Moderation
                         </button>
-                        <button 
+                        <button; 
                             className={selectedScenario === 'success' ? 'active' : ''}
                             onClick={() => setSelectedScenario('success')}
                         >
@@ -452,19 +452,19 @@ const WorkflowDemoView: React.FC = () => {
                 <div className="role-selector">
                     <h3>View From Role</h3>
                     <div className="button-group">
-                        <button 
+                        <button; 
                             className={selectedRole === 'user' ? 'active' : ''}
                             onClick={() => setSelectedRole('user')}
                         >
                             👤 Starkeeper
                         </button>
-                        <button 
+                        <button; 
                             className={selectedRole === 'helper' ? 'active' : ''}
                             onClick={() => setSelectedRole('helper')}
                         >
                             ✨ Constellation Guide
                         </button>
-                        <button 
+                        <button; 
                             className={selectedRole === 'admin' ? 'active' : ''}
                             onClick={() => setSelectedRole('admin')}
                         >
@@ -481,7 +481,7 @@ const WorkflowDemoView: React.FC = () => {
                         className={`workflow-step ${step.role} ${selectedRole === step.role ? 'highlighted' : ''}`}
                     >
                         <div className="step-indicator">
-                            <div 
+                            <div; 
                                 className="step-number"
                                 style={{ backgroundColor: getRoleColor(step.role) }}
                             >

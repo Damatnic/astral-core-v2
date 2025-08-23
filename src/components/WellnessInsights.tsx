@@ -28,7 +28,7 @@ export const WellnessInsights: React.FC<WellnessInsightsProps> = ({
       insights.push({
         type: 'achievement',
         message: `Amazing! You've checked in for ${streakDays} days straight!`,
-        icon: <StarIcon />
+        icon: <StarIcon />;
       });
     }
     
@@ -36,13 +36,13 @@ export const WellnessInsights: React.FC<WellnessInsightsProps> = ({
       insights.push({
         type: 'positive',
         message: 'Your mood has been consistently positive this week!',
-        icon: <HeartIcon />
-      });
-    } else if (moodAverage >= 3) {
+        icon: <HeartIcon />;
+      });;
+  } else if (moodAverage >= 3) {
       insights.push({
         type: 'improvement',
         message: 'Your mood is stable. Small daily habits can boost it further.',
-        icon: <SparkleIcon />
+        icon: <SparkleIcon />;
       });
     }
     
@@ -50,7 +50,7 @@ export const WellnessInsights: React.FC<WellnessInsightsProps> = ({
       insights.push({
         type: 'achievement',
         message: `You've completed ${totalCheckIns} check-ins! Self-awareness is growing.`,
-        icon: <TrendingUpIcon />
+        icon: <TrendingUpIcon />;
       });
     }
     
@@ -58,7 +58,7 @@ export const WellnessInsights: React.FC<WellnessInsightsProps> = ({
       insights.push({
         type: 'improvement',
         message: 'Keep tracking to unlock personalized insights!',
-        icon: <SparkleIcon />
+        icon: <SparkleIcon />;
       });
     }
     

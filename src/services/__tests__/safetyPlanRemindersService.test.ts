@@ -23,13 +23,13 @@ jest.mock('../safetyPlanRemindersService', () => ({
     updatePlan: jest.fn(),
     getSyncStatus: jest.fn(),
     checkReviewStatus: jest.fn(),
-    getVersionHistory: jest.fn()
+    getVersionHistory: jest.fn();
   }
 }));
 
 import { safetyPlanRemindersService, SafetyPlanReminder } from '../safetyPlanRemindersService';
 
-// Define types for test data
+// Define types for test data;
 interface SafetyPlan {
   id: string;
   userId: string;
@@ -112,7 +112,7 @@ interface ActivationResult {
   guidedSupport?: boolean;
 }
 
-// Type the mocked service
+// Type the mocked service;
 const mockedService = safetyPlanRemindersService as jest.Mocked<typeof safetyPlanRemindersService>;
 
 describe('SafetyPlanRemindersService', () => {
@@ -161,7 +161,7 @@ describe('SafetyPlanRemindersService', () => {
         copingStrategies: planData.copingStrategies,
         supportContacts: planData.supportContacts,
         createdAt: new Date(),
-        lastUpdated: new Date()
+        lastUpdated: new Date();
       };
 
       mockedService.createSafetyPlan.mockResolvedValue(expectedPlan as any);
@@ -181,7 +181,7 @@ describe('SafetyPlanRemindersService', () => {
       const incompletePlan = {
         userId: 'user-456',
         warningSignsTriggers: [],
-        copingStrategies: []
+        copingStrategies: [];
       };
 
       const expectedResult = {
@@ -200,7 +200,7 @@ describe('SafetyPlanRemindersService', () => {
     });
 
     it.skip('should create templates for common situations', async () => {
-      const expectedTemplates = [
+      const expectedTemplates = [;
         { name: 'Depression Safety Plan', category: 'mood' },
         { name: 'Anxiety Crisis Plan', category: 'anxiety' },
         { name: 'Substance Use Safety Plan', category: 'substance' }
@@ -212,15 +212,15 @@ describe('SafetyPlanRemindersService', () => {
       
       expect(templates).toContainEqual(expect.objectContaining({
         name: 'Depression Safety Plan',
-        category: 'mood'
+        category: 'mood';
       }));
       expect(templates).toContainEqual(expect.objectContaining({
         name: 'Anxiety Crisis Plan',
-        category: 'anxiety'
+        category: 'anxiety';
       }));
       expect(templates).toContainEqual(expect.objectContaining({
         name: 'Substance Use Safety Plan',
-        category: 'substance'
+        category: 'substance';
       }));
     });
   });
@@ -259,7 +259,7 @@ describe('SafetyPlanRemindersService', () => {
         copingStrategies: ['Meditation', 'Journaling'],
         reminderSettings: {
           practiceReminders: true,
-          practiceFrequency: 'weekly'
+          practiceFrequency: 'weekly';
         }
       };
 
@@ -285,7 +285,7 @@ describe('SafetyPlanRemindersService', () => {
       const userPatterns = {
         highRiskTimes: ['evening', 'weekend'],
         lowEngagementTimes: ['morning'],
-        timezone: 'America/New_York'
+        timezone: 'America/New_York';
       };
 
       const expectedPlan = {
@@ -295,7 +295,7 @@ describe('SafetyPlanRemindersService', () => {
           { time: 'evening', type: 'high-risk-check' },
           { time: 'weekend', type: 'high-risk-check' }
         ],
-        adaptedSchedule: true
+        adaptedSchedule: true;
       };
 
       mockedService.createAdaptivePlan.mockResolvedValue(expectedPlan as any);
@@ -312,13 +312,13 @@ describe('SafetyPlanRemindersService', () => {
     it.skip('should trigger safety plan when crisis detected', async () => {
       const planData = {
         userId: 'user-crisis',
-        triggerOnCrisis: true
+        triggerOnCrisis: true;
       };
 
       const createdPlan = {
         id: 'plan-crisis',
         userId: 'user-crisis',
-        triggerOnCrisis: true
+        triggerOnCrisis: true;
       };
 
       mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
@@ -327,7 +327,7 @@ describe('SafetyPlanRemindersService', () => {
       const crisisEvent = {
         userId: 'user-crisis',
         severity: 'high',
-        timestamp: Date.now()
+        timestamp: Date.now();
       };
 
       const expectedResponse = {
@@ -350,19 +350,19 @@ describe('SafetyPlanRemindersService', () => {
     it.skip('should escalate reminders during high-risk periods', async () => {
       const planData = {
         userId: 'user-risk',
-        adaptiveIntensity: true
+        adaptiveIntensity: true;
       };
 
       const createdPlan = {
         id: 'plan-risk',
         userId: 'user-risk',
-        adaptiveIntensity: true
+        adaptiveIntensity: true;
       };
 
       mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
       await safetyPlanRemindersService.createSafetyPlan(planData as any);
 
-      const activeReminders = [
+      const activeReminders = [;
         { id: 'rem-1', frequency: 'hourly', priority: 'high' },
         { id: 'rem-2', frequency: '30min', priority: 'urgent' }
       ];
@@ -382,13 +382,13 @@ describe('SafetyPlanRemindersService', () => {
       const reminderData = {
         userId: 'user-interactive',
         strategy: 'breathing-exercise',
-        interactive: true
+        interactive: true;
       };
 
       const expectedReminder = {
         type: 'interactive',
         actions: ['Start', 'Skip', 'Snooze'],
-        feedbackRequired: true
+        feedbackRequired: true;
       };
 
       mockedService.createInteractiveReminder.mockResolvedValue(expectedReminder as any);
@@ -402,12 +402,12 @@ describe('SafetyPlanRemindersService', () => {
 
     it.skip('should track reminder engagement', async () => {
       const planData = {
-        userId: 'user-engagement'
+        userId: 'user-engagement';
       };
 
       const createdPlan = {
         id: 'plan-engagement',
-        userId: 'user-engagement'
+        userId: 'user-engagement';
       };
 
       mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
@@ -417,20 +417,20 @@ describe('SafetyPlanRemindersService', () => {
       await safetyPlanRemindersService.recordInteraction(plan.id, {
         reminderId: 'rem-1',
         action: 'completed',
-        timestamp: Date.now()
+        timestamp: Date.now();
       } as any);
 
       await safetyPlanRemindersService.recordInteraction(plan.id, {
         reminderId: 'rem-2',
         action: 'skipped',
-        timestamp: Date.now()
+        timestamp: Date.now();
       } as any);
 
       const expectedEngagement = {
         totalReminders: 2,
         completedReminders: 1,
         engagementRate: 0.5,
-        mostEngagedStrategy: 'breathing-exercise'
+        mostEngagedStrategy: 'breathing-exercise';
       };
 
       mockedService.getEngagementMetrics.mockResolvedValue(expectedEngagement as any);
@@ -446,7 +446,7 @@ describe('SafetyPlanRemindersService', () => {
     it.skip('should provide quick access buttons in reminders', async () => {
       const reminderData = {
         userId: 'user-quick',
-        includeQuickActions: true
+        includeQuickActions: true;
       };
 
       const expectedReminder = {
@@ -465,7 +465,7 @@ describe('SafetyPlanRemindersService', () => {
   describe('Progress Tracking', () => {
     it.skip('should track safety plan usage over time', async () => {
       const planData = {
-        userId: 'user-track'
+        userId: 'user-track';
       };
 
       const createdPlan = {
@@ -474,7 +474,7 @@ describe('SafetyPlanRemindersService', () => {
         usageStats: {
           totalAccesses: 10,
           lastAccessed: new Date(),
-          mostUsedStrategy: 'breathing'
+          mostUsedStrategy: 'breathing';
         }
       };
 
@@ -494,7 +494,7 @@ describe('SafetyPlanRemindersService', () => {
         communicationStyle: 'encouraging',
         reminderTone: 'gentle',
         preferredStrategies: ['art', 'music'],
-        avoidStrategies: ['social']
+        avoidStrategies: ['social'];
       };
 
       const expectedPlan = {
@@ -516,13 +516,13 @@ describe('SafetyPlanRemindersService', () => {
 
     it.skip('should learn from user feedback', async () => {
       const planData = {
-        userId: 'user-learning'
+        userId: 'user-learning';
       };
 
       const createdPlan = {
         id: 'plan-learning',
         userId: 'user-learning',
-        learningEnabled: true
+        learningEnabled: true;
       };
 
       mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
@@ -544,7 +544,7 @@ describe('SafetyPlanRemindersService', () => {
         id: 'plan-multichannel',
         userId: 'user-multichannel',
         deliveredChannels: ['app', 'sms', 'email'],
-        deliveryStatus: 'success'
+        deliveryStatus: 'success';
       };
 
       mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
@@ -567,7 +567,7 @@ describe('SafetyPlanRemindersService', () => {
         userId: 'user-fallback',
         primaryFailed: true,
         deliveredVia: 'sms',
-        fallbackUsed: true
+        fallbackUsed: true;
       };
 
       mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
@@ -592,7 +592,7 @@ describe('SafetyPlanRemindersService', () => {
 
       const createdPlan = {
         id: 'plan-emergency',
-        userId: 'user-emergency'
+        userId: 'user-emergency';
       };
 
       mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
@@ -604,7 +604,7 @@ describe('SafetyPlanRemindersService', () => {
           { name: 'Therapist' }
         ],
         locationShared: true,
-        crisisResourcesProvided: true
+        crisisResourcesProvided: true;
       };
 
       mockedService.activateEmergencyProtocol.mockResolvedValue(expectedActivation as any);
@@ -619,12 +619,12 @@ describe('SafetyPlanRemindersService', () => {
 
     it.skip('should provide immediate coping strategies during activation', async () => {
       const planData = {
-        userId: 'user-immediate'
+        userId: 'user-immediate';
       };
 
       const createdPlan = {
         id: 'plan-immediate',
-        userId: 'user-immediate'
+        userId: 'user-immediate';
       };
 
       mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
@@ -634,7 +634,7 @@ describe('SafetyPlanRemindersService', () => {
         immediateStrategies: [
           { name: 'Grounding Exercise', duration: '5 minutes' }
         ],
-        guidedSupport: true
+        guidedSupport: true;
       };
 
       mockedService.activateImmediate.mockResolvedValue(expectedActivation as any);
@@ -644,7 +644,7 @@ describe('SafetyPlanRemindersService', () => {
       expect(activation.immediateStrategies).toBeDefined();
       expect(activation.immediateStrategies).toContainEqual(expect.objectContaining({
         name: 'Grounding Exercise',
-        duration: '5 minutes'
+        duration: '5 minutes';
       }));
       expect(activation.guidedSupport).toBe(true);
     });
@@ -653,12 +653,12 @@ describe('SafetyPlanRemindersService', () => {
   describe('Collaboration Features', () => {
     it.skip('should allow sharing safety plan with trusted contacts', async () => {
       const planData = {
-        userId: 'user-share'
+        userId: 'user-share';
       };
 
       const createdPlan = {
         id: 'plan-share',
-        userId: 'user-share'
+        userId: 'user-share';
       };
 
       mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
@@ -666,13 +666,13 @@ describe('SafetyPlanRemindersService', () => {
 
       const shareOptions = {
         recipients: ['contact1@example.com', 'contact2@example.com'],
-        permissions: 'view-only'
+        permissions: 'view-only';
       };
 
       const expectedResult = {
         shared: true,
         recipients: shareOptions.recipients,
-        accessLevel: 'view-only'
+        accessLevel: 'view-only';
       };
 
       mockedService.sharePlan.mockResolvedValue(expectedResult as any);
@@ -692,20 +692,20 @@ describe('SafetyPlanRemindersService', () => {
 
       const createdPlan = {
         id: 'plan-team',
-        userId: 'user-team'
+        userId: 'user-team';
       };
 
       mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
       const plan = await safetyPlanRemindersService.createSafetyPlan(planData as any) as SafetyPlan;
 
       await safetyPlanRemindersService.updatePlan(plan.id, {
-        copingStrategies: ['New strategy']
+        copingStrategies: ['New strategy'];
       } as any);
 
       const expectedSyncStatus = {
         synced: true,
         lastSync: new Date(),
-        syncedWith: ['therapist-id']
+        syncedWith: ['therapist-id'];
       };
 
       mockedService.getSyncStatus.mockResolvedValue(expectedSyncStatus as any);
@@ -722,12 +722,12 @@ describe('SafetyPlanRemindersService', () => {
     it.skip('should prompt for periodic plan reviews', async () => {
       const planData = {
         userId: 'user-review',
-        createdAt: Date.now() - 30 * 24 * 60 * 60 * 1000 // 30 days ago
+        createdAt: Date.now() - 30 * 24 * 60 * 60 * 1000 // 30 days ago;
       };
 
       const createdPlan = {
         id: 'plan-review',
-        userId: 'user-review'
+        userId: 'user-review';
       };
 
       mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
@@ -750,12 +750,12 @@ describe('SafetyPlanRemindersService', () => {
 
     it.skip('should track plan version history', async () => {
       const planData = {
-        userId: 'user-version'
+        userId: 'user-version';
       };
 
       const createdPlan = {
         id: 'plan-version',
-        userId: 'user-version'
+        userId: 'user-version';
       };
 
       mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
@@ -763,11 +763,11 @@ describe('SafetyPlanRemindersService', () => {
 
       // Make updates
       await safetyPlanRemindersService.updatePlan(plan.id, {
-        copingStrategies: ['Updated strategy 1']
+        copingStrategies: ['Updated strategy 1'];
       } as any);
 
       await safetyPlanRemindersService.updatePlan(plan.id, {
-        copingStrategies: ['Updated strategy 2']
+        copingStrategies: ['Updated strategy 2'];
       } as any);
 
       const expectedHistory = {
@@ -776,7 +776,7 @@ describe('SafetyPlanRemindersService', () => {
           { version: 2, date: new Date(), changes: 'Updated coping strategies' },
           { version: 3, date: new Date(), changes: 'Updated coping strategies' }
         ],
-        canRevert: true
+        canRevert: true;
       };
 
       mockedService.getVersionHistory.mockResolvedValue(expectedHistory as any);

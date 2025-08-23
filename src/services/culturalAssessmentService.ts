@@ -16,13 +16,13 @@
  * - Integration with existing privacy analytics
  * 
  * @license Apache-2.0
- */
+ */;
 
 import { culturalContextService } from './culturalContextService';
 import { privacyPreservingAnalyticsService } from './privacyPreservingAnalyticsService';
 import { AssessmentQuestion, AssessmentResult, Assessment } from '../types';
 
-// Cultural assessment types
+// Cultural assessment types;
 export interface CulturalAssessmentQuestion extends AssessmentQuestion {
   culturalAdaptations: {
     [culturalRegion: string]: {
@@ -53,8 +53,8 @@ export interface CulturalAssessmentResult extends AssessmentResult {
     culturallyAdjusted: boolean;
     biasReductionApplied: boolean;
     culturalConfidenceScore: number;
-  }
-
+  };
+}
 export interface CulturalAssessment extends Assessment {
   culturalContext: string;
   languageCode: string;
@@ -63,7 +63,7 @@ export interface CulturalAssessment extends Assessment {
   privacyPreserved: boolean;
 }
 
-// Cultural expression patterns for mental health symptoms
+// Cultural expression patterns for mental health symptoms;
 interface CulturalExpressionPatterns {
   depression: {
     somatic: string[];
@@ -204,34 +204,34 @@ class CulturalAssessmentService {
       const context = culturalContext || culturalContextService.getCulturalContext(languageCode).region;
       const contextInfo = culturalContextService.getCulturalContext(languageCode);
       
-      // Calculate base score
+      // Calculate base score;
       const baseScore = scores.reduce((sum, score) => sum + score, 0);
       
-      // Apply cultural adjustments
-      const culturalAdjustments = this.calculateCulturalAdjustments(
+      // Apply cultural adjustments;
+      const culturalAdjustments = this.calculateCulturalAdjustments(;
         assessmentType,
         answers,
         context,
         contextInfo
       );
       
-      // Apply bias reduction
-      const adjustedScore = this.applyBiasReduction(
+      // Apply bias reduction;
+      const adjustedScore = this.applyBiasReduction(;
         baseScore,
         culturalAdjustments,
         contextInfo
       );
       
-      // Generate culturally-appropriate severity assessment
-      const severity = this.calculateCulturalSeverity(
+      // Generate culturally-appropriate severity assessment;
+      const severity = this.calculateCulturalSeverity(;
         adjustedScore,
         assessmentType,
         culturalAdjustments,
         contextInfo
       );
       
-      // Generate cultural recommendations
-      const recommendations = await this.generateCulturalRecommendations(
+      // Generate cultural recommendations;
+      const recommendations = await this.generateCulturalRecommendations(;
         severity,
         assessmentType,
         culturalAdjustments,
@@ -239,8 +239,8 @@ class CulturalAssessmentService {
         languageCode
       );
       
-      // Calculate cultural factors
-      const culturalFactors = this.analyzeCulturalFactors(
+      // Calculate cultural factors;
+      const culturalFactors = this.analyzeCulturalFactors(;
         answers,
         context,
         contextInfo
@@ -256,7 +256,7 @@ class CulturalAssessmentService {
         privacyMetadata: {
           culturallyAdjusted: true,
           biasReductionApplied: true,
-          culturalConfidenceScore: culturalAdjustments.confidenceScore
+          culturalConfidenceScore: culturalAdjustments.confidenceScore;
         }
       } catch (error) {
       console.error('[Cultural Assessment] Failed to calculate result:', error);
@@ -281,8 +281,8 @@ class CulturalAssessmentService {
     try {
       const { userToken, type, scores, answers, languageCode, culturalContext, sessionDuration } = assessmentData;
       
-      // Calculate cultural assessment result
-      const result = await this.calculateCulturalAssessmentResult(
+      // Calculate cultural assessment result;
+      const result = await this.calculateCulturalAssessmentResult(;
         type,
         scores,
         answers,
@@ -290,7 +290,7 @@ class CulturalAssessmentService {
         culturalContext
       );
       
-      // Create cultural assessment record
+      // Create cultural assessment record;
       const assessment: CulturalAssessment = {
         id: this.generateAssessmentId(),
         userToken: this.anonymizeUserToken(userToken),
@@ -302,7 +302,7 @@ class CulturalAssessmentService {
         languageCode,
         culturalAdaptationsUsed: this.getCulturalAdaptationsUsed(type, result.culturalContext),
         culturalFactors: result.culturalFactors,
-        privacyPreserved: true
+        privacyPreserved: true;
       };
       
       // Record for privacy-preserving analytics
@@ -325,11 +325,11 @@ class CulturalAssessmentService {
     privacyCompliant: boolean;
   }> {
     try {
-      // Get effectiveness report from privacy analytics
+      // Get effectiveness report from privacy analytics;
       const effectivenessReport = await privacyPreservingAnalyticsService.generateEffectivenessReport();
       
-      // Filter for cultural context if specified
-      const culturalInsights = culturalContext
+      // Filter for cultural context if specified;
+      const culturalInsights = culturalContext;
         ? effectivenessReport.culturalInsights.filter(insight => 
             insight.toLowerCase().includes(culturalContext.toLowerCase())
           )
@@ -339,7 +339,7 @@ class CulturalAssessmentService {
         effectiveness: effectivenessReport.summary,
         culturalInsights,
         recommendations: effectivenessReport.recommendations,
-        privacyCompliant: true
+        privacyCompliant: true;
       } catch (error) {
       console.error('[Cultural Assessment] Failed to get analytics:', error);
       throw error;
@@ -440,8 +440,8 @@ class CulturalAssessmentService {
             { value: 3, text: 'Nearly every day' }
           ]
         }
-      ];
-    } else {
+      ];;
+  } else {
       return [
         {
           id: 'gad7_1',
@@ -524,7 +524,7 @@ class CulturalAssessmentService {
   ): CulturalAssessmentQuestion {
     const culturalAdaptations: { [region: string]: any } = {};
     
-    // Add cultural adaptations based on context
+    // Add cultural adaptations based on context;
     const contextKey = culturalContext.toLowerCase().replace(/[\s-]/g, '_');
     const expressions = this.culturalExpressionPatterns[contextKey];
     
@@ -570,7 +570,7 @@ class CulturalAssessmentService {
     _expressions: CulturalExpressionPatterns,
     _languageCode: string
   ): string[] {
-    // Generate culturally-appropriate alternative phrasings
+    // Generate culturally-appropriate alternative phrasings;
     const alternatives: string[] = [];
     
     if (text.toLowerCase().includes('depressed')) {
@@ -625,7 +625,7 @@ class CulturalAssessmentService {
     stigmaAdjustment: number;
     confidenceScore: number;
   } {
-    // Calculate adjustments based on cultural factors
+    // Calculate adjustments based on cultural factors;
     const somaticBias = this.calculateSomaticBias(answers, culturalContext);
     const expressivenessAdjustment = this.calculateExpressivenessAdjustment(answers, contextInfo);
     const stigmaAdjustment = this.calculateStigmaAdjustment(assessmentType, contextInfo);
@@ -634,11 +634,11 @@ class CulturalAssessmentService {
       somaticBias,
       expressivenessAdjustment,
       stigmaAdjustment,
-      confidenceScore: 0.85 // High confidence in cultural adjustments
+      confidenceScore: 0.85 // High confidence in cultural adjustments;
     }
 
   private calculateSomaticBias(_answers: string[], culturalContext: string): number {
-    // Some cultures express mental health through physical symptoms
+    // Some cultures express mental health through physical symptoms;
     const somaticCultures = ['chinese', 'korean', 'japanese', 'vietnamese'];
     if (somaticCultures.some(culture => culturalContext.toLowerCase().includes(culture))) {
       return 0.1; // 10% adjustment for somatic expression bias
@@ -655,7 +655,7 @@ class CulturalAssessmentService {
   }
 
   private calculateStigmaAdjustment(_assessmentType: 'phq-9' | 'gad-7', contextInfo: any): number {
-    // Adjust for mental health stigma levels
+    // Adjust for mental health stigma levels;
     const stigmaLevel = contextInfo.mentalHealthStigma || 0.5;
     return stigmaLevel * 0.2; // Up to 20% adjustment for high stigma
   }
@@ -694,28 +694,28 @@ class CulturalAssessmentService {
     _culturalAdjustments: any,
     contextInfo: any
   ): string {
-    // Adjust severity thresholds based on cultural context
+    // Adjust severity thresholds based on cultural context;
     let stigmaLevel = 0.5; // Default medium
     if (contextInfo.mentalHealthStigma === 'high') {
-      stigmaLevel = 0.7;
-    } else if (contextInfo.mentalHealthStigma === 'low') {
+      stigmaLevel = 0.7;;
+  } else if (contextInfo.mentalHealthStigma === 'low') {
       stigmaLevel = 0.3;
     }
     
     if (assessmentType === 'phq-9') {
-      return this.calculatePhq9Severity(score, stigmaLevel);
-    } else {
+      return this.calculatePhq9Severity(score, stigmaLevel);;
+  } else {
       return this.calculateGad7Severity(score, stigmaLevel);
     }
   }
 
   private calculatePhq9Severity(score: number, stigmaLevel: number): string {
-    // Adjust PHQ-9 thresholds for cultural factors
+    // Adjust PHQ-9 thresholds for cultural factors;
     const adjustedThresholds = {
       minimal: 4 + (stigmaLevel * 2),
       mild: 9 + (stigmaLevel * 2),
       moderate: 14 + (stigmaLevel * 2),
-      moderatelySevere: 19 + (stigmaLevel * 2)
+      moderatelySevere: 19 + (stigmaLevel * 2);
     };
     
     if (score <= adjustedThresholds.minimal) return 'minimal';
@@ -726,11 +726,11 @@ class CulturalAssessmentService {
   }
 
   private calculateGad7Severity(score: number, stigmaLevel: number): string {
-    // Adjust GAD-7 thresholds for cultural factors
+    // Adjust GAD-7 thresholds for cultural factors;
     const adjustedThresholds = {
       minimal: 4 + (stigmaLevel * 1),
       mild: 9 + (stigmaLevel * 1),
-      moderate: 14 + (stigmaLevel * 1)
+      moderate: 14 + (stigmaLevel * 1);
     };
     
     if (score <= adjustedThresholds.minimal) return 'minimal';
@@ -750,21 +750,21 @@ class CulturalAssessmentService {
     const familyInvolvement = contextInfo.familyInvolvement || 'individual';
     const helpSeekingStyle = contextInfo.helpSeekingPreference || 'professional';
     
-    // Base recommendations
+    // Base recommendations;
     const baseRecommendations = this.getBaseRecommendations(severity, assessmentType);
     
-    // Cultural adaptations
-    const culturalRecommendations = this.getCulturalRecommendations(
+    // Cultural adaptations;
+    const culturalRecommendations = this.getCulturalRecommendations(;
       severity,
       culturalGroup,
       helpSeekingStyle
     );
     
-    // Resource recommendations
+    // Resource recommendations;
     const resources = this.getCulturalResources(culturalGroup, languageCode);
     
-    // Family guidance if appropriate
-    const familyGuidance = familyInvolvement !== 'individual' 
+    // Family guidance if appropriate;
+    const familyGuidance = familyInvolvement !== 'individual' ;
       ? this.getFamilyGuidance(severity, culturalGroup, familyInvolvement)
       : undefined;
     
@@ -806,14 +806,14 @@ class CulturalAssessmentService {
       recommendations.push('Explore culturally-informed therapy options with bilingual providers');
       if (helpSeekingStyle === 'religious') {
         recommendations.push('Connect with your spiritual community for additional support');
-      }
-    } else if (culturalGroup === 'arabic') {
+      };
+  } else if (culturalGroup === 'arabic') {
       recommendations.push('Consider involving family in your healing process if culturally appropriate');
       recommendations.push('Look for mental health providers familiar with Islamic values and perspectives');
       if (helpSeekingStyle === 'traditional') {
         recommendations.push('Combine professional support with traditional wellness practices');
-      }
-    } else if (culturalGroup === 'chinese') {
+      };
+  } else if (culturalGroup === 'chinese') {
       recommendations.push('Consider holistic approaches that address mind-body wellness');
       recommendations.push('Explore providers who understand concepts like emotional balance and harmony');
       recommendations.push('Family support may be beneficial in your healing journey');
@@ -828,11 +828,11 @@ class CulturalAssessmentService {
     // Add language-specific resources
     if (languageCode === 'es') {
       resources.push('National Suicide Prevention Lifeline en Español: 1-888-628-9454');
-      resources.push('Crisis Text Line: Text HOLA to 741741');
-    } else if (languageCode === 'ar') {
+      resources.push('Crisis Text Line: Text HOLA to 741741');;
+  } else if (languageCode === 'ar') {
       resources.push('Arab Community Center for Economic and Social Services (ACCESS)');
-      resources.push('Muslim Mental Health resources');
-    } else if (languageCode === 'zh') {
+      resources.push('Muslim Mental Health resources');;
+  } else if (languageCode === 'zh') {
       resources.push('Asian Mental Health Collective');
       resources.push('National Suicide Prevention Lifeline: 1-800-273-8255');
     }
@@ -850,8 +850,8 @@ class CulturalAssessmentService {
     familyInvolvement: string
   ): string {
     if (familyInvolvement === 'family-inclusive') {
-      return `In ${culturalGroup} culture, family support is often crucial for healing. Consider involving trusted family members in your recovery process while maintaining your personal boundaries.`;
-    } else if (familyInvolvement === 'community-oriented') {
+      return `In ${culturalGroup} culture, family support is often crucial for healing. Consider involving trusted family members in your recovery process while maintaining your personal boundaries.`;;
+  } else if (familyInvolvement === 'community-oriented') {
       return `Community support can be valuable in your healing journey. Consider connecting with cultural community centers or support groups.`;
     }
     return 'Family involvement in mental health care can be beneficial when approached thoughtfully and respectfully.';
@@ -862,14 +862,14 @@ class CulturalAssessmentService {
     culturalContext: string,
     contextInfo: any
   ): CulturalAssessmentResult['culturalFactors'] {
-    // Analyze cultural expression patterns in responses
+    // Analyze cultural expression patterns in responses;
     const expressions = this.analyzeExpressionPatterns(answers, culturalContext);
     
     return {
       expressionStyle: expressions.style,
       stigmaLevel: contextInfo.mentalHealthStigma || 0.5,
       familyInvolvement: contextInfo.familyInvolvement || 'individual',
-      helpSeekingStyle: contextInfo.helpSeekingPreference || 'professional'
+      helpSeekingStyle: contextInfo.helpSeekingPreference || 'professional';
     }
 
   private analyzeExpressionPatterns(_answers: string[], _culturalContext: string): {
@@ -894,8 +894,9 @@ class CulturalAssessmentService {
         initialRiskLevel: result.score,
         finalRiskLevel: Math.max(0, result.score - 2), // Assume slight improvement from assessment
         sessionDuration,
-        feedback: undefined // No immediate feedback for assessments
-      });
+        feedback: undefined // No immediate feedback for assessments;
+      };
+  };
     } catch (error) {
       console.error('[Cultural Assessment] Failed to record analytics:', error);
       // Don't throw - analytics failure shouldn't break assessment
@@ -921,6 +922,6 @@ class CulturalAssessmentService {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export default CulturalAssessmentService;
 export const culturalAssessmentService = new CulturalAssessmentService();

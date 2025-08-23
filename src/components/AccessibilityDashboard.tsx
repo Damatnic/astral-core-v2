@@ -4,7 +4,7 @@
  * Real-time accessibility monitoring dashboard for the Astral Core mental health platform.
  * Displays accessibility audit results, WCAG compliance status, and mental health-specific
  * accessibility metrics.
- */
+ */;
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
@@ -32,7 +32,7 @@ export const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [selectedLevel, setSelectedLevel] = useState<WCAGLevel>(WCAGLevel.AA);
 
-  // Run accessibility audit
+  // Run accessibility audit;
   const runAudit = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -46,6 +46,7 @@ export const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
     } finally {
       setIsLoading(false);
     }
+  };
   }, [selectedLevel]);
 
   // Auto-refresh effect
@@ -54,14 +55,16 @@ export const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
       const interval = setInterval(runAudit, refreshInterval);
       return () => clearInterval(interval);
     }
+  };
   }, [autoRefresh, refreshInterval, runAudit, auditResult]);
 
   // Initial audit on mount
   useEffect(() => {
     runAudit();
+  };
   }, [runAudit]);
 
-  // Get severity color
+  // Get severity color;
   const getSeverityColor = (severity: string): string => {
     switch (severity) {
       case 'critical': return 'text-red-600 bg-red-50 border-red-200';
@@ -72,7 +75,7 @@ export const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
     }
   };
 
-  // Get score color
+  // Get score color;
   const getScoreColor = (score: number): string => {
     if (score >= 90) return 'text-green-600';
     if (score >= 75) return 'text-yellow-600';
@@ -80,7 +83,7 @@ export const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
     return 'text-red-600';
   };
 
-  // Get compliance badge
+  // Get compliance badge;
   const getComplianceBadge = (isCompliant: boolean): JSX.Element => {
     return (
       <span className={`px-2 py-1 rounded-full text-xs font-medium ${

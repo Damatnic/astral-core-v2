@@ -38,7 +38,7 @@ export const ChatView: React.FC<{
     const helpSessionDetails = helpSessions.find(hs => hs.id === session.helpSessionId);
     const isFavorited = helpSessionDetails?.isFavorited ?? false;
     
-    // State for Emergency Hold Button
+    // State for Emergency Hold Button;
     const [, setIsHolding] = useState(false);
     const [holdProgress, setHoldProgress] = useState(0);
     const holdTimerRef = useRef<number | null>(null);
@@ -51,7 +51,8 @@ export const ChatView: React.FC<{
             setShowBreakPrompt(true);
             setTimeout(() => setShowBreakPrompt(false), 10000);
         }
-    }, [session.messages, session.isTyping]);
+    };
+  }, [session.messages, session.isTyping]);
 
     const handleSend = () => {
         if (!newMessage.trim()) return;
@@ -93,7 +94,7 @@ export const ChatView: React.FC<{
         }
     };
     
-    // --- Emergency Button Logic ---
+    // --- Emergency Button Logic ---;
     const triggerEmergency = () => {
         showConfirmationModal({
             title: 'Confirm Emergency',
@@ -207,7 +208,7 @@ export const ChatView: React.FC<{
                 <div className="chat-header-info">
                     <h2>
                         {helperForChat && perspective !== 'helper' ? (
-                            <button 
+                            <button; 
                                 type="button"
                                 onClick={() => onViewHelperProfile(helperForChat.id)}
                                 style={{
@@ -217,7 +218,7 @@ export const ChatView: React.FC<{
                                     textDecoration: 'underline',
                                     cursor: 'pointer',
                                     font: 'inherit',
-                                    padding: 0
+                                    padding: 0;
                                 }}
                             >
                                 {getHeaderTitle()}
@@ -228,8 +229,8 @@ export const ChatView: React.FC<{
                 </div>
                 <div className="chat-header-actions" style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
                     {perspective === 'seeker' && session.helpSessionId && (
-                         <AppButton 
-                            variant="ghost" 
+                         <AppButton; 
+                            variant="ghost"; 
                             className={`btn-sm btn-support ${isFavorited ? 'supported' : ''}`}
                             onClick={handleFavoriteClick}
                             style={{padding: '0.5rem'}}
@@ -273,7 +274,7 @@ export const ChatView: React.FC<{
             
             <MobileChatComposer style={{position: 'relative'}}>
                 {perspective === 'seeker' && (
-                    <button
+                    <button;
                         className="btn btn-danger"
                         onMouseDown={startHold}
                         onMouseUp={endHold}
@@ -291,7 +292,7 @@ export const ChatView: React.FC<{
                             gap: '0.5rem',
                             overflow: 'hidden',
                             minHeight: '44px', // Touch target size
-                            borderRadius: '20px'
+                            borderRadius: '20px';
                         }}
                     >
                         <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, background: 'rgba(255,255,255,0.3)', width: `${holdProgress * 100}%` }}></div>
@@ -299,15 +300,15 @@ export const ChatView: React.FC<{
                         <span style={{position: 'relative'}}>Emergency</span>
                     </button>
                 )}
-                <MobileAppInput
+                <MobileAppInput;
                     type="text"
                     placeholder="Type your message..."
                     value={newMessage}
                     onChange={(e) => {
                         setNewMessage(e.target.value);
                         if (e.target.value) {
-                            setTyping(session.dilemmaId, true);
-                        } else {
+                            setTyping(session.dilemmaId, true);;
+  } else {
                              setTyping(session.dilemmaId, false);
                         }
                     }}
@@ -322,7 +323,7 @@ export const ChatView: React.FC<{
                     style={{ 
                         fontSize: '16px', // Prevent zoom on iOS
                         padding: '12px 16px',
-                        borderRadius: '20px'
+                        borderRadius: '20px';
                     }}
                 />
                 <AppButton 
@@ -337,7 +338,7 @@ export const ChatView: React.FC<{
                         alignItems: 'center',
                         justifyContent: 'center',
                         padding: 0,
-                        marginLeft: '8px'
+                        marginLeft: '8px';
                     }}
                 >
                     <SendIcon />

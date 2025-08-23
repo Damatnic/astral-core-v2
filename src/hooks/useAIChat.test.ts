@@ -10,14 +10,14 @@ jest.mock('../utils/ApiClient', () => ({
       resetAIChat: jest.fn(),
       sendMessageToAI: jest.fn(),
       chat: jest.fn(),
-      saveChatHistory: jest.fn()
+      saveChatHistory: jest.fn();
     }
   }
 }));
 
 jest.mock('../contexts/AuthContext', () => ({
   authState: {
-    userToken: 'test-token'
+    userToken: 'test-token';
   }
 }));
 
@@ -27,7 +27,7 @@ jest.mock('../services/crisisDetectionService', () => ({
       hasCrisisIndicators: false,
       severityLevel: 'low',
       crisisTypes: [],
-      confidence: 0.1
+      confidence: 0.1;
     })
   }
 }));
@@ -37,11 +37,11 @@ jest.mock('../services/aiModerationService', () => ({
     moderateMessage: jest.fn().mockReturnValue({
       safe: true,
       category: null,
-      escalate: false
+      escalate: false;
     }),
     generateSafeResponse: jest.fn().mockReturnValue('Content has been moderated for safety.'),
     sanitizeForDisplay: jest.fn((text) => text),
-    needsHumanIntervention: jest.fn().mockReturnValue(false)
+    needsHumanIntervention: jest.fn().mockReturnValue(false);
   }
 }));
 
@@ -65,7 +65,7 @@ describe('useAIChat Hook', () => {
   });
 
   it.skip('should fetch chat history on mount', async () => {
-    const mockHistory = [
+    const mockHistory = [;
       { id: '1', sender: 'user', text: 'Hello', timestamp: '2024-01-01T00:00:00Z' },
       { id: '2', sender: 'ai', text: 'Hi there!', timestamp: '2024-01-01T00:01:00Z' }
     ];
@@ -130,7 +130,7 @@ describe('useAIChat Hook', () => {
       expect.arrayContaining([
         expect.objectContaining({
           sender: 'user',
-          text: 'I need help'
+          text: 'I need help';
         })
       ]),
       'test-token',
@@ -185,7 +185,7 @@ describe('useAIChat Hook', () => {
   });
 
   it.skip('should reset chat session', async () => {
-    const mockHistory = [
+    const mockHistory = [;
       { id: '1', sender: 'user', text: 'Hello', timestamp: '2024-01-01T00:00:00Z' }
     ];
     

@@ -5,7 +5,7 @@
  * mental health context, time-of-day usage, and emotional state indicators
  */
 
-// Types for preloading priorities
+// Types for preloading priorities;
 type PreloadPriority = 'immediate' | 'high' | 'medium' | 'low';
 
 export interface UserJourney {
@@ -23,8 +23,8 @@ export interface UserJourney {
     dayOfWeek: string;
     sessionDuration: number;
     averageTimePerPage: number;
-  }
-
+  };
+}
 export interface PredictionModel {
   name: string;
   accuracy: number;
@@ -71,7 +71,7 @@ export class IntelligentPreloadingEngine {
       rapidNavigation: false,
       timeSpentOnCrisisResources: 0,
       repeatVisitsToSameContent: 0,
-      urgentLanguageDetected: false
+      urgentLanguageDetected: false;
      }
 
   /**
@@ -86,9 +86,10 @@ export class IntelligentPreloadingEngine {
       parameters: {
         transitionMatrix: this.buildRouteTransitionMatrix(),
         timeWeights: this.getTimeBasedWeights(),
-        emotionalWeights: this.getEmotionalWeights()
+        emotionalWeights: this.getEmotionalWeights();
       }
-    });
+    };
+  };
 
     // Resource Usage Model - predicts which resources will be needed
     this.predictionModels.set('resource-usage', {
@@ -98,7 +99,7 @@ export class IntelligentPreloadingEngine {
       parameters: {
         usagePatterns: this.buildResourceUsagePatterns(),
         contextualFactors: this.getContextualFactors(),
-        timeDecayFunction: this.getTimeDecayFunction()
+        timeDecayFunction: this.getTimeDecayFunction();
       }
     });
 
@@ -110,7 +111,7 @@ export class IntelligentPreloadingEngine {
       parameters: {
         crisisIndicators: this.getCrisisIndicators(),
         behaviorSignals: this.getBehaviorSignals(),
-        urgencyThresholds: this.getUrgencyThresholds()
+        urgencyThresholds: this.getUrgencyThresholds();
       }
     });
 
@@ -122,7 +123,7 @@ export class IntelligentPreloadingEngine {
       parameters: {
         emotionalStates: this.getEmotionalStates(),
         stateTransitions: this.getEmotionalTransitions(),
-        recoveryPatterns: this.getRecoveryPatterns()
+        recoveryPatterns: this.getRecoveryPatterns();
       }
     });
   }
@@ -143,7 +144,7 @@ export class IntelligentPreloadingEngine {
         timeOfDay,
         dayOfWeek,
         sessionDuration: 0,
-        averageTimePerPage: 0
+        averageTimePerPage: 0;
       }
     };
 
@@ -182,7 +183,7 @@ export class IntelligentPreloadingEngine {
     // Update behavior patterns
     this.updateBehaviorPatterns(route, timeSpent, emotionalContext);
     
-    // Generate new predictions based on current context
+    // Generate new predictions based on current context;
     const predictions = await this.generatePredictions();
     
     // Execute preloading based on predictions
@@ -197,23 +198,23 @@ export class IntelligentPreloadingEngine {
   public async generatePredictions(): Promise<PreloadPrediction[]> {
     const predictions: PreloadPrediction[] = [];
 
-    // Route-based predictions
+    // Route-based predictions;
     const routePredictions = await this.predictNextRoutes();
     predictions.push(...routePredictions);
 
-    // Resource-based predictions
+    // Resource-based predictions;
     const resourcePredictions = await this.predictResourceNeeds();
     predictions.push(...resourcePredictions);
 
-    // Crisis-based predictions
+    // Crisis-based predictions;
     const crisisPredictions = await this.predictCrisisResources();
     predictions.push(...crisisPredictions);
 
-    // Emotional journey predictions
+    // Emotional journey predictions;
     const emotionalPredictions = await this.predictEmotionalNeeds();
     predictions.push(...emotionalPredictions);
 
-    // Time-based predictions
+    // Time-based predictions;
     const timePredictions = await this.predictTimeBasedNeeds();
     predictions.push(...timePredictions);
 
@@ -230,7 +231,7 @@ export class IntelligentPreloadingEngine {
     const timeOfDay = this.getTimeOfDay();
     const predictions: PreloadPrediction[] = [];
 
-    // Get route transition probabilities
+    // Get route transition probabilities;
     const transitions = model.parameters.transitionMatrix[currentRoute] || {};
     const timeWeights = model.parameters.timeWeights[timeOfDay] || {};
     const emotionalWeights = model.parameters.emotionalWeights[this.getEmotionalContext()] || {};
@@ -240,13 +241,13 @@ export class IntelligentPreloadingEngine {
       const emotionalWeight = emotionalWeights[nextRoute] || 1;
       const confidence = (baseProbability as number) * timeWeight * emotionalWeight;
 
-      if (confidence > 0.3) { // 30% confidence threshold
+      if (confidence > 0.3) { // 30% confidence threshold;
         let priority: 'immediate' | 'high' | 'medium' | 'low';
         if (confidence > 0.7) {
-          priority = 'high';
-        } else if (confidence > 0.5) {
-          priority = 'medium';
-        } else {
+          priority = 'high';;
+  } else if (confidence > 0.5) {
+          priority = 'medium';;
+  } else {
           priority = 'low';
         }
 
@@ -256,7 +257,7 @@ export class IntelligentPreloadingEngine {
           priority,
           reason: `Route transition prediction from ${currentRoute} to ${nextRoute}`,
           timeToLoad: this.estimateLoadTime(this.getRouteResources(nextRoute)),
-          expectedUsage: this.getRouteUsageEstimate(nextRoute)
+          expectedUsage: this.getRouteUsageEstimate(nextRoute);
         });
       }
     }
@@ -281,10 +282,10 @@ export class IntelligentPreloadingEngine {
       if (confidence > 0.25) {
         let priority: 'immediate' | 'high' | 'medium' | 'low';
         if (confidence > 0.6) {
-          priority = 'high';
-        } else if (confidence > 0.4) {
-          priority = 'medium';
-        } else {
+          priority = 'high';;
+  } else if (confidence > 0.4) {
+          priority = 'medium';;
+  } else {
           priority = 'low';
         }
 
@@ -293,12 +294,12 @@ export class IntelligentPreloadingEngine {
           confidence,
           priority,
           reason: `Resource usage pattern match (${(confidence * 100).toFixed(1)}%)`,
-          timeToLoad: this.estimateLoadTime(resource)
+          timeToLoad: this.estimateLoadTime(resource);
         });
       }
     }
 
-    // Mental health specific predictions
+    // Mental health specific predictions;
     const mentalHealthPredictions = this.predictMentalHealthResources();
     predictions.push(...mentalHealthPredictions);
 
@@ -320,8 +321,8 @@ export class IntelligentPreloadingEngine {
       console.log(`[Crisis Detection] Risk level: ${crisisRisk}, Keywords: ${this.emotionalState.crisisKeywords.join(', ')}`);
     }
     
-    if (crisisRisk > 0.2) { // 20% crisis risk threshold
-      const crisisResources = [
+    if (crisisRisk > 0.2) { // 20% crisis risk threshold;
+      const crisisResources = [;
         '/crisis-resources.json',
         '/emergency-contacts.json',
         '/offline-crisis.html',
@@ -333,10 +334,10 @@ export class IntelligentPreloadingEngine {
       for (const resource of crisisResources) {
         let priority: PreloadPriority;
         if (crisisRisk > 0.6) {
-          priority = 'immediate';
-        } else if (crisisRisk > 0.4) {
-          priority = 'high';
-        } else {
+          priority = 'immediate';;
+  } else if (crisisRisk > 0.4) {
+          priority = 'high';;
+  } else {
           priority = 'medium';
         }
 
@@ -345,7 +346,7 @@ export class IntelligentPreloadingEngine {
           confidence: crisisRisk,
           priority,
           reason: `Crisis risk detected (${(crisisRisk * 100).toFixed(1)}% probability)`,
-          timeToLoad: 50 // Crisis resources must load fast
+          timeToLoad: 50 // Crisis resources must load fast;
         });
       }
     }
@@ -361,7 +362,7 @@ export class IntelligentPreloadingEngine {
     const predictions: PreloadPrediction[] = [];
     const currentEmotionalState = this.getEmotionalContext();
     
-    // Predict next emotional state and required resources
+    // Predict next emotional state and required resources;
     const stateTransitions = model.parameters.stateTransitions[currentEmotionalState] || {};
     
     for (const [nextState, probability] of Object.entries(stateTransitions)) {
@@ -375,7 +376,7 @@ export class IntelligentPreloadingEngine {
             priority: (probability as number) > 0.6 ? 'high' : 'medium',
             reason: `Emotional transition prediction: ${currentEmotionalState} → ${nextState}`,
             timeToLoad: this.estimateLoadTime(resource),
-            expectedUsage: this.getEmotionalResourceUsage(nextState)
+            expectedUsage: this.getEmotionalResourceUsage(nextState);
           });
         }
       }
@@ -392,7 +393,7 @@ export class IntelligentPreloadingEngine {
     const timeOfDay = this.getTimeOfDay();
     const dayOfWeek = this.getDayOfWeek();
     
-    // Time-based mental health patterns
+    // Time-based mental health patterns;
     const timeBasedResources = this.getTimeBasedResources(timeOfDay, dayOfWeek);
     
     for (const { resource, probability, reason } of timeBasedResources) {
@@ -415,8 +416,8 @@ export class IntelligentPreloadingEngine {
    * Execute preloading based on predictions
    */
   private async executePreloading(predictions: PreloadPrediction[]): Promise<void> {
-    // Sort by priority and confidence
-    const sortedPredictions = predictions
+    // Sort by priority and confidence;
+    const sortedPredictions = predictions;
       .sort((a, b) => {
         const priorityOrder = { immediate: 0, high: 1, medium: 2, low: 3 };
         const aPriority = priorityOrder[a.priority];
@@ -430,7 +431,7 @@ export class IntelligentPreloadingEngine {
       })
       .slice(0, 10); // Limit to top 10 predictions
 
-    // Check network conditions
+    // Check network conditions;
     const networkCapable = this.isNetworkCapable();
     const deviceCapable = this.isDeviceCapable();
 
@@ -455,7 +456,7 @@ export class IntelligentPreloadingEngine {
   private async preloadResource(prediction: PreloadPrediction): Promise<void> {
     const { resource, priority, timeToLoad } = prediction;
     
-    // Create prefetch request with appropriate headers
+    // Create prefetch request with appropriate headers;
     const headers: Record<string, string> = {
       'X-Prefetch': 'true',
       'X-Priority': priority,
@@ -469,7 +470,7 @@ export class IntelligentPreloadingEngine {
       headers['X-Cache-Control'] = 'must-revalidate';
     }
 
-    // Set timeout based on predicted load time
+    // Set timeout based on predicted load time;
     const timeout = timeToLoad ? Math.min(timeToLoad * 2, 30000) : 10000;
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -478,7 +479,7 @@ export class IntelligentPreloadingEngine {
       const response = await fetch(resource, {
         headers,
         signal: controller.signal,
-        mode: 'no-cors' // Allow cross-origin preloading
+        mode: 'no-cors' // Allow cross-origin preloading;
       });
 
       clearTimeout(timeoutId);
@@ -508,7 +509,7 @@ export class IntelligentPreloadingEngine {
         priority: 'high',
         reason: 'Assessment often leads to coping strategy recommendations',
         timeToLoad: this.estimateLoadTime('/coping-strategies.json'),
-        expectedUsage: 0.75
+        expectedUsage: 0.75;
       });
 
       predictions.push({
@@ -517,7 +518,7 @@ export class IntelligentPreloadingEngine {
         priority: 'medium',
         reason: 'Users often need follow-up assessment resources',
         timeToLoad: this.estimateLoadTime('/assessment-follow-up.json'),
-        expectedUsage: 0.6
+        expectedUsage: 0.6;
       });
     }
 
@@ -529,7 +530,7 @@ export class IntelligentPreloadingEngine {
         priority: 'high',
         reason: 'Progress tracking leads to insight analysis',
         timeToLoad: this.estimateLoadTime('/progress-insights.json'),
-        expectedUsage: 0.65
+        expectedUsage: 0.65;
       });
 
       predictions.push({
@@ -538,7 +539,7 @@ export class IntelligentPreloadingEngine {
         priority: 'medium',
         reason: 'Progress tracking often involves goal setting',
         timeToLoad: this.estimateLoadTime('/progress-goals.json'),
-        expectedUsage: 0.5
+        expectedUsage: 0.5;
       });
     }
 
@@ -550,7 +551,7 @@ export class IntelligentPreloadingEngine {
         priority: 'immediate',
         reason: 'Direct help-seeking behavior detected',
         timeToLoad: this.estimateLoadTime('/help-resources.json'),
-        expectedUsage: 0.8
+        expectedUsage: 0.8;
       });
 
       predictions.push({
@@ -559,7 +560,7 @@ export class IntelligentPreloadingEngine {
         priority: 'high',
         reason: 'Help-seekers need support option information',
         timeToLoad: this.estimateLoadTime('/support-options.json'),
-        expectedUsage: 0.75
+        expectedUsage: 0.75;
       });
 
       predictions.push({
@@ -568,7 +569,7 @@ export class IntelligentPreloadingEngine {
         priority: 'high',
         reason: 'Help-seekers need to know helper availability',
         timeToLoad: this.estimateLoadTime('/helper-availability.json'),
-        expectedUsage: 0.7
+        expectedUsage: 0.7;
       });
     }
 
@@ -580,7 +581,7 @@ export class IntelligentPreloadingEngine {
         priority: 'high',
         reason: 'Mood tracking often leads to journaling',
         timeToLoad: this.estimateLoadTime('/journal-prompts.json'),
-        expectedUsage: 0.65
+        expectedUsage: 0.65;
       });
 
       predictions.push({
@@ -589,7 +590,7 @@ export class IntelligentPreloadingEngine {
         priority: 'medium',
         reason: 'Users often view insights after tracking mood',
         timeToLoad: this.estimateLoadTime('/mood-insights.json'),
-        expectedUsage: 0.45
+        expectedUsage: 0.45;
       });
     }
 
@@ -601,7 +602,7 @@ export class IntelligentPreloadingEngine {
         priority: 'medium',
         reason: 'Long journaling sessions often lead to structured reflection',
         timeToLoad: this.estimateLoadTime('/reflection-templates.json'),
-        expectedUsage: 0.55
+        expectedUsage: 0.55;
       });
     }
 
@@ -613,7 +614,7 @@ export class IntelligentPreloadingEngine {
         priority: 'immediate',
         reason: 'Immediate coping resources for distressed users',
         timeToLoad: this.estimateLoadTime('/coping-strategies.json'),
-        expectedUsage: 0.8
+        expectedUsage: 0.8;
       });
 
       predictions.push({
@@ -622,7 +623,7 @@ export class IntelligentPreloadingEngine {
         priority: 'high',
         reason: 'Emergency coping strategies for immediate relief',
         timeToLoad: this.estimateLoadTime('/emergency-coping.json'),
-        expectedUsage: 0.65
+        expectedUsage: 0.65;
       });
     }
 
@@ -634,7 +635,7 @@ export class IntelligentPreloadingEngine {
         priority: 'medium',
         reason: 'Help-seekers often engage with community content',
         timeToLoad: this.estimateLoadTime('/community-posts.json'),
-        expectedUsage: 0.5
+        expectedUsage: 0.5;
       });
     }
 
@@ -672,7 +673,7 @@ export class IntelligentPreloadingEngine {
       risk += 0.35;
     }
 
-    // Time of day factor (higher risk at night)
+    // Time of day factor (higher risk at night);
     const timeOfDay = this.getTimeOfDay();
     if (timeOfDay === 'night') {
       risk += 0.1;
@@ -691,9 +692,9 @@ export class IntelligentPreloadingEngine {
     interactions: string[],
     _emotionalContext?: string
   ): void {
-    // Track crisis-related keywords
+    // Track crisis-related keywords;
     const crisisKeywords = ['crisis', 'emergency', 'suicide', 'help', 'urgent', 'immediate'];
-    const routeCrisisKeywords = crisisKeywords.filter(keyword => 
+    const routeCrisisKeywords = crisisKeywords.filter(keyword => ;
       route.toLowerCase().includes(keyword)
     );
     this.emotionalState.crisisKeywords.push(...routeCrisisKeywords);
@@ -708,7 +709,7 @@ export class IntelligentPreloadingEngine {
       this.emotionalState.timeSpentOnCrisisResources += timeSpent;
     }
 
-    // Track repeat visits
+    // Track repeat visits;
     const routeVisits = this.currentSession?.routes.filter(r => r.path === route).length || 0;
     if (routeVisits > 2) {
       this.emotionalState.repeatVisitsToSameContent = routeVisits;
@@ -732,7 +733,7 @@ export class IntelligentPreloadingEngine {
     return predictions
       .filter(p => p.confidence > 0.2) // Filter low confidence predictions
       .sort((a, b) => {
-        // Primary sort: Priority
+        // Primary sort: Priority;
         const priorityOrder = { immediate: 0, high: 1, medium: 2, low: 3 };
         const aPriority = priorityOrder[a.priority];
         const bPriority = priorityOrder[b.priority];
@@ -907,7 +908,7 @@ export class IntelligentPreloadingEngine {
   }
 
   private isDeviceCapable(): boolean {
-    // Check device memory and connection
+    // Check device memory and connection;
     const memory = (navigator as any).deviceMemory || 4;
     return memory >= 2; // Require at least 2GB RAM
   }
@@ -960,5 +961,5 @@ export class IntelligentPreloadingEngine {
   private updatePredictionAccuracy(_prediction: PreloadPrediction, _success: boolean): void { /* Update model accuracy */ }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const intelligentPreloader = new IntelligentPreloadingEngine();

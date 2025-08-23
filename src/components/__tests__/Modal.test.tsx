@@ -3,7 +3,7 @@ import { Modal } from '../Modal';
 
 // Mock the CloseIcon component
 jest.mock('../icons.dynamic', () => ({
-  CloseIcon: () => <div data-testid="close-icon">✕</div>
+  CloseIcon: () => <div data-testid="close-icon">✕</div>;
 }));
 
 describe('Modal', () => {
@@ -84,7 +84,7 @@ describe('Modal', () => {
       const props = createMockModalProps({
         allowSwipeToDismiss: true,
         enhanced: false,
-        isDismissible: true
+        isDismissible: true;
       });
       render(<Modal {...props} />);
       
@@ -95,7 +95,7 @@ describe('Modal', () => {
       const props = createMockModalProps({
         allowSwipeToDismiss: true,
         enhanced: true,
-        isDismissible: true
+        isDismissible: true;
       });
       render(<Modal {...props} />);
       
@@ -113,8 +113,8 @@ describe('Modal', () => {
         
         const dialog = screen.getByRole('dialog');
         if (size !== 'md') {
-          expect(dialog).toHaveClass('modal-content-enhanced', `modal-${size}`);
-        } else {
+          expect(dialog).toHaveClass('modal-content-enhanced', `modal-${size}`);;
+  } else {
           expect(dialog).toHaveClass('modal-content-enhanced');
           expect(dialog).not.toHaveClass('modal-md');
         }
@@ -153,7 +153,7 @@ describe('Modal', () => {
       const focusSpy = jest.spyOn(HTMLElement.prototype, 'focus').mockImplementation();
       
       const props = createMockModalProps({
-        children: <button>Test Button</button>
+        children: <button>Test Button</button>;
       });
       render(<Modal {...props} />);
       
@@ -168,7 +168,7 @@ describe('Modal', () => {
       const focusSpy = jest.spyOn(HTMLElement.prototype, 'focus').mockImplementation();
       
       const props = createMockModalProps({
-        children: <div>No focusable content</div>
+        children: <div>No focusable content</div>;
       });
       render(<Modal {...props} />);
       
@@ -369,7 +369,7 @@ describe('Modal', () => {
     });
 
     it('should handle complex children content', () => {
-      const complexChildren = (
+      const complexChildren = (;
         <div>
           <h3>Complex Content</h3>
           <form>
@@ -411,7 +411,7 @@ describe('Modal', () => {
       const focusSpy = jest.spyOn(HTMLElement.prototype, 'focus').mockImplementation();
       
       const props = createMockModalProps({
-        children: <div>Just text content with no focusable elements</div>
+        children: <div>Just text content with no focusable elements</div>;
       });
       render(<Modal {...props} />);
       

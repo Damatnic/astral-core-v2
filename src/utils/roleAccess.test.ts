@@ -1,6 +1,6 @@
 /**
  * @jest-environment jsdom
- */
+ */;
 
 import {
   UserRole,
@@ -17,7 +17,7 @@ import {
 import { Helper, View } from '../types';
 
 describe('roleAccess', () => {
-  // Helper to create mock helper objects
+  // Helper to create mock helper objects;
   const createMockHelper = (role: UserRole, id = 'test-helper-123'): Helper => ({
     id,
     auth0UserId: 'auth0|123456789',
@@ -204,7 +204,7 @@ describe('roleAccess', () => {
     });
 
     test('should work in conjunction with canAccessView', () => {
-      const testCases = [
+      const testCases = [;
         { role: 'Starkeeper' as UserRole, view: 'admin-dashboard' as View },
         { role: 'Admin' as UserRole, view: 'starkeeper-dashboard' as View },
         { role: 'Community' as UserRole, view: 'starkeeper-dashboard' as View },
@@ -254,7 +254,7 @@ describe('roleAccess', () => {
 
   describe('hasPermission', () => {
     test('should return correct permissions for each role', () => {
-      const testCases = [
+      const testCases = [;
         { role: 'Admin' as UserRole, permission: 'canAdminister' as const, expected: true },
         { role: 'Admin' as UserRole, permission: 'canModerate' as const, expected: true },
         { role: 'Moderator' as UserRole, permission: 'canModerate' as const, expected: true },
@@ -278,7 +278,7 @@ describe('roleAccess', () => {
     });
 
     test('should work with all available permission types', () => {
-      const permissions = [
+      const permissions = [;
         'canModerate',
         'canAdminister', 
         'canAccessCrisisTools',
@@ -295,7 +295,7 @@ describe('roleAccess', () => {
     });
 
     test('should maintain permission hierarchy', () => {
-      // Admin should have all permissions that Moderator has
+      // Admin should have all permissions that Moderator has;
       const moderatorPerms = ROLE_PERMISSIONS.Moderator.features;
       Object.entries(moderatorPerms).forEach(([perm, hasIt]) => {
         if (hasIt) {
@@ -362,7 +362,7 @@ describe('roleAccess', () => {
     });
 
     test('should provide appropriate redirect views', () => {
-      const testCases = [
+      const testCases = [;
         { role: 'Starkeeper' as UserRole, redirectTo: 'starkeeper-dashboard' },
         { role: 'Community' as UserRole, redirectTo: 'constellation-guide-dashboard' },
         { role: 'Admin' as UserRole, redirectTo: 'admin-dashboard' },
@@ -388,11 +388,11 @@ describe('roleAccess', () => {
     });
 
     test('should work with edge cases', () => {
-      // Test with empty string
+      // Test with empty string;
       const result1 = validateViewAccess('Admin', '' as View);
       expect(result1.allowed).toBe(false);
 
-      // Test with undefined view (type-wise this shouldn't happen but test defensive programming)
+      // Test with undefined view (type-wise this shouldn't happen but test defensive programming);
       const result2 = validateViewAccess('Admin', undefined as any);
       expect(result2.allowed).toBe(false);
     });
@@ -400,7 +400,7 @@ describe('roleAccess', () => {
 
   describe('Role-based feature access integration', () => {
     test('should maintain consistency between view access and feature permissions', () => {
-      // Admin dashboard should only be accessible to users with canAdminister
+      // Admin dashboard should only be accessible to users with canAdminister;
       const adminDashboardAccessors: UserRole[] = [];
       const adminPermissionHolders: UserRole[] = [];
 
@@ -442,7 +442,7 @@ describe('roleAccess', () => {
     });
 
     test('should handle malformed helper objects', () => {
-      const malformedHelpers = [
+      const malformedHelpers = [;
         {},
         { role: null },
         { role: '' },
@@ -456,7 +456,7 @@ describe('roleAccess', () => {
     });
 
     test('should handle case variations in role names defensively', () => {
-      // The function should be case-sensitive, these should default to Starkeeper
+      // The function should be case-sensitive, these should default to Starkeeper;
       const variations = ['admin', 'ADMIN', 'Admin', 'moderator', 'MODERATOR'];
       
       variations.forEach(variation => {
@@ -515,8 +515,8 @@ describe('roleAccess', () => {
       const mockHelper = createMockHelper('Community');
       const userRole = getUserRole(mockHelper);
       
-      // Simulate checking multiple routes
-      const routes = [
+      // Simulate checking multiple routes;
+      const routes = [;
         'feed',
         'constellation-guide-dashboard', 
         'helper-profile',
@@ -528,8 +528,8 @@ describe('roleAccess', () => {
         const validation = validateViewAccess(userRole, route);
         
         if (validation.allowed) {
-          expect(canAccessView(userRole, route)).toBe(true);
-        } else {
+          expect(canAccessView(userRole, route)).toBe(true);;
+  } else {
           expect(validation.redirectTo).toBeTruthy();
           expect(canAccessView(userRole, validation.redirectTo!)).toBe(true);
         }
@@ -538,7 +538,7 @@ describe('roleAccess', () => {
 
     test('should handle feature toggle scenario', () => {
       const roles: UserRole[] = ['Starkeeper', 'Community', 'Certified', 'Moderator', 'Admin'];
-      const features = [
+      const features = [;
         'canModerate',
         'canAdminister',
         'canAccessCrisisTools',
@@ -560,7 +560,7 @@ describe('roleAccess', () => {
     });
 
     test('should handle user registration and role assignment flow', () => {
-      // New user starts as Starkeeper
+      // New user starts as Starkeeper;
       let currentRole: UserRole = 'Starkeeper';
       expect(canAccessView(currentRole, 'starkeeper-dashboard')).toBe(true);
       expect(hasPermission(currentRole, 'canAccessCrisisTools')).toBe(false);

@@ -75,7 +75,7 @@ export const WelcomeScreen: React.FC<{ onComplete: () => void }> = ({ onComplete
           </p>
         </div>
 
-        <button 
+        <button; 
           className="welcome-continue-btn"
           onClick={handleContinue}
         >

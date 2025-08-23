@@ -83,7 +83,7 @@ describe('DemoDataService', () => {
 
       it.skip('should show improvement trend in mood data', () => {
         const checkIns = service.getStarkeeperMoodCheckIns(mockUserToken);
-        const sortedCheckIns = checkIns.sort((a, b) => 
+        const sortedCheckIns = checkIns.sort((a, b) => ;
           new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
         );
 
@@ -152,7 +152,7 @@ describe('DemoDataService', () => {
 
       it.skip('should show improvement in assessment scores over time', () => {
         const assessments = service.getStarkeeperAssessments(mockUserToken);
-        const gad7Assessments = assessments
+        const gad7Assessments = assessments;
           .filter(a => a.type === 'gad-7')
           .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 

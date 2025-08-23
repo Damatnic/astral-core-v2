@@ -1,7 +1,7 @@
 /**
  * Main App Component for Astral Core
  * Clean version with proper component integration
- */
+ */;
 
 import React, { useEffect } from 'react';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -9,7 +9,7 @@ import { OptionalAuthProvider } from './contexts/OptionalAuthContext';
 import { useAnalyticsTracking } from './hooks/useAnalyticsTracking';
 import AppRoutes from './routes/AppRoutes';
 
-// Providers
+// Providers;
 import { ThemeProvider } from './components/ThemeProvider';
 import { OfflineProvider } from './contexts/OfflineProvider';
 import { NotificationProvider } from './contexts/NotificationContext';
@@ -17,7 +17,7 @@ import { SessionProvider } from './contexts/SessionContext';
 import { WellnessProvider } from './contexts/WellnessContext';
 import { SwipeNavigationProvider } from './contexts/SwipeNavigationContext';
 
-// Components
+// Components;
 import { Sidebar } from './components/Sidebar';
 import { NetworkBanner } from './components/NetworkBanner';
 import ServiceWorkerUpdate from './components/ServiceWorkerUpdate';
@@ -27,7 +27,7 @@ import { CrisisHelpWidget } from './components/CrisisSupport/CrisisHelpWidget';
 // import { MobileViewportProvider } from './components/MobileViewportProvider';
 // import ConsentBanner from './components/privacy/ConsentBanner';
 
-// Layout component
+// Layout component;
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
@@ -51,7 +51,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <div className="app-layout">
       {/* Mobile menu toggle button - only visible on mobile */}
       {isMobile && (
-        <button 
+        <button; 
           className="mobile-menu-toggle"
           onClick={toggleMobileMenu}
           aria-label="Toggle navigation menu"
@@ -69,7 +69,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       
       {/* Mobile overlay */}
       {isMobileMenuOpen && (
-        <div 
+        <div; 
           className="sidebar-overlay active"
           onClick={() => setIsMobileMenuOpen(false)}
           aria-hidden="true"
@@ -88,7 +88,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   );
 };
 
-// Main App Component
+// Main App Component;
 const App: React.FC = () => {
   const { trackEvent } = useAnalyticsTracking({ componentName: 'App' });
 
@@ -100,12 +100,14 @@ const App: React.FC = () => {
         timestamp: Date.now(),
         userAgent: navigator.userAgent,
         platform: navigator.platform
+;
       }
     });
+  };
   }, [trackEvent]);
 
   useEffect(() => {
-    // Set up viewport for mobile
+    // Set up viewport for mobile;
     const viewport = document.querySelector('meta[name="viewport"]');
     if (viewport) {
       viewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes');
@@ -114,17 +116,19 @@ const App: React.FC = () => {
     // Add app-specific classes to body
     document.body.classList.add('astral-core-app');
     
-    // Detect and add platform classes
+    // Detect and add platform classes;
     const platform = navigator.platform.toLowerCase();
     if (platform.includes('mac')) {
       document.body.classList.add('platform-mac');
-    } else if (platform.includes('win')) {
+;
+  } else if (platform.includes('win')) {
       document.body.classList.add('platform-windows');
-    } else if (platform.includes('linux')) {
+;
+  } else if (platform.includes('linux')) {
       document.body.classList.add('platform-linux');
     }
 
-    // Detect mobile
+    // Detect mobile;
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     if (isMobile) {
       document.body.classList.add('is-mobile');
@@ -133,6 +137,7 @@ const App: React.FC = () => {
     return () => {
       document.body.classList.remove('astral-core-app', 'platform-mac', 'platform-windows', 'platform-linux', 'is-mobile');
     };
+  };
   }, []);
 
   return (
@@ -146,7 +151,7 @@ const App: React.FC = () => {
   );
 };
 
-// Inner component that can use auth
+// Inner component that can use auth;
 const AppWithAuth: React.FC = () => {
 
   return (

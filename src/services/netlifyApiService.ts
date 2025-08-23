@@ -1,7 +1,7 @@
 /**
  * Netlify API Service for CoreV2
  * Handles communication with Netlify Functions backend
- */
+ */;
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/.netlify/functions';
 
@@ -325,6 +325,6 @@ class NetlifyApiService {
     return token ? { 'Authorization': `Bearer ${token}` } : {}
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const netlifyApiService = new NetlifyApiService();
 export default netlifyApiService;

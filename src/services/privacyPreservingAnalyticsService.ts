@@ -9,11 +9,11 @@
  * - Zero-knowledge proofs for outcome verification
  * 
  * @license Apache-2.0
- */
+ */;
 
 import { culturalContextService } from './culturalContextService';
 
-// Privacy-preserving analytics types
+// Privacy-preserving analytics types;
 export interface InterventionOutcome {
   sessionId: string;
   anonymizedHash: string;
@@ -125,11 +125,11 @@ class PrivacyPreservingAnalyticsService {
    * Generate anonymized hash for user session
    */
   private generateAnonymizedHash(userToken: string, sessionId: string): string {
-    // Use cryptographic hash with salt to prevent re-identification
+    // Use cryptographic hash with salt to prevent re-identification;
     const salt = 'astralcore-privacy-salt-2025';
     const data = `${userToken}-${sessionId}-${salt}`;
     
-    // Simple hash implementation (in production, use crypto.subtle.digest)
+    // Simple hash implementation (in production, use crypto.subtle.digest);
     let hash = 0;
     for (let i = 0; i < data.length; i++) {
       const char = data.charCodeAt(i);
@@ -144,7 +144,7 @@ class PrivacyPreservingAnalyticsService {
    * Add differential privacy noise to numeric value
    */
   private addDifferentialPrivacyNoise(value: number, sensitivity: number = 1): number {
-    // Laplace mechanism for differential privacy
+    // Laplace mechanism for differential privacy;
     const scale = sensitivity / this.EPSILON;
     const noise = this.sampleLaplace(0, scale);
     return Math.max(0, value + noise);
@@ -182,18 +182,18 @@ class PrivacyPreservingAnalyticsService {
         return;
       }
 
-      // Get cultural context
+      // Get cultural context;
       const culturalContext = culturalContextService.getCulturalContext(language);
       
-      // Generate anonymized hash
+      // Generate anonymized hash;
       const anonymizedHash = this.generateAnonymizedHash(userToken, sessionId);
       
-      // Add differential privacy noise to sensitive values
+      // Add differential privacy noise to sensitive values;
       const noisyInitialRisk = this.addDifferentialPrivacyNoise(initialRiskLevel, 0.1);
       const noisyFinalRisk = this.addDifferentialPrivacyNoise(finalRiskLevel, 0.1);
       const noisyFeedback = feedback ? this.addDifferentialPrivacyNoise(feedback, 0.5) : 0;
       
-      // Calculate privacy budget consumed
+      // Calculate privacy budget consumed;
       const budgetConsumed = 0.1; // Small budget per record
       this.privacyBudgetUsed += budgetConsumed;
 
@@ -209,7 +209,7 @@ class PrivacyPreservingAnalyticsService {
         sessionDuration,
         followUpEngagement: false, // Will be updated if user returns
         anonymizedFeedback: noisyFeedback,
-        privacyBudget: budgetConsumed
+        privacyBudget: budgetConsumed;
       };
 
       // Store outcome (in production, this would be encrypted storage)
@@ -228,8 +228,8 @@ class PrivacyPreservingAnalyticsService {
     try {
       const anonymizedHash = this.generateAnonymizedHash(userToken, sessionId);
       
-      // Find and update the corresponding outcome
-      const outcome = this.analyticsData.find(
+      // Find and update the corresponding outcome;
+      const outcome = this.analyticsData.find(;
         o => o.anonymizedHash === anonymizedHash
       );
       
@@ -249,8 +249,8 @@ class PrivacyPreservingAnalyticsService {
     language: string,
     culturalGroup: string
   ): CulturalEffectivenessMetrics | null {
-    // Filter data for specific culture
-    const culturalData = this.analyticsData.filter(
+    // Filter data for specific culture;
+    const culturalData = this.analyticsData.filter(;
       outcome => outcome.language === language && outcome.culturalContext === culturalGroup
     );
 
@@ -259,44 +259,44 @@ class PrivacyPreservingAnalyticsService {
       return null;
     }
 
-    // Calculate metrics with differential privacy
-    const riskReductions = culturalData.map(
+    // Calculate metrics with differential privacy;
+    const riskReductions = culturalData.map(;
       o => Math.max(0, o.initialRiskLevel - o.finalRiskLevel)
     );
     
-    const averageRiskReduction = this.addDifferentialPrivacyNoise(
+    const averageRiskReduction = this.addDifferentialPrivacyNoise(;
       riskReductions.reduce((sum, r) => sum + r, 0) / riskReductions.length,
       0.1
     );
 
     const successCount = culturalData.filter(o => o.finalRiskLevel < o.initialRiskLevel).length;
-    const successRate = this.addDifferentialPrivacyNoise(
+    const successRate = this.addDifferentialPrivacyNoise(;
       (successCount / culturalData.length) * 100,
       1.0
     );
 
-    const averageSessionDuration = this.addDifferentialPrivacyNoise(
+    const averageSessionDuration = this.addDifferentialPrivacyNoise(;
       culturalData.reduce((sum, o) => sum + o.sessionDuration, 0) / culturalData.length,
       5.0
     );
 
-    const followUpRate = this.addDifferentialPrivacyNoise(
+    const followUpRate = this.addDifferentialPrivacyNoise(;
       (culturalData.filter(o => o.followUpEngagement).length / culturalData.length) * 100,
       1.0
     );
 
-    const satisfactionScores = culturalData
+    const satisfactionScores = culturalData;
       .filter(o => o.anonymizedFeedback > 0)
       .map(o => o.anonymizedFeedback);
     
-    const satisfactionScore = satisfactionScores.length > 0 
+    const satisfactionScore = satisfactionScores.length > 0 ;
       ? this.addDifferentialPrivacyNoise(
           satisfactionScores.reduce((sum, s) => sum + s, 0) / satisfactionScores.length,
           0.2
         )
       : 0;
 
-    // Calculate confidence interval (simplified)
+    // Calculate confidence interval (simplified);
     const margin = 1.96 * Math.sqrt(successRate * (100 - successRate) / culturalData.length);
     
     return { language,
@@ -311,19 +311,19 @@ class PrivacyPreservingAnalyticsService {
         Math.max(0, successRate - margin),
         Math.min(100, successRate + margin)
       ],
-      privacyNoise: this.EPSILON
+      privacyNoise: this.EPSILON;
      }
 
   /**
    * Generate global metrics with privacy preservation
    */
   private generateGlobalMetrics(): AnalyticsInsights['globalMetrics'] {
-    const totalInterventions = this.addDifferentialPrivacyNoise(
+    const totalInterventions = this.addDifferentialPrivacyNoise(;
       this.analyticsData.length,
       1.0
     );
 
-    const globalEffectiveness = this.analyticsData.length > 0
+    const globalEffectiveness = this.analyticsData.length > 0;
       ? this.addDifferentialPrivacyNoise(
           this.analyticsData.reduce((sum, o) => 
             sum + Math.max(0, o.initialRiskLevel - o.finalRiskLevel), 0
@@ -332,7 +332,7 @@ class PrivacyPreservingAnalyticsService {
         )
       : 0;
 
-    // Calculate language distribution
+    // Calculate language distribution;
     const languageDistribution: Record<string, number> = {};
     const languages = [...new Set(this.analyticsData.map(o => o.language))];
     
@@ -341,7 +341,7 @@ class PrivacyPreservingAnalyticsService {
       languageDistribution[language] = this.addDifferentialPrivacyNoise(count, 1.0);
     }
 
-    // Calculate cultural distribution
+    // Calculate cultural distribution;
     const culturalDistribution: Record<string, number> = {};
     const cultures = [...new Set(this.analyticsData.map(o => o.culturalContext))];
     
@@ -364,7 +364,7 @@ class PrivacyPreservingAnalyticsService {
     const languages = [...new Set(this.analyticsData.map(o => o.language))];
     
     for (const language of languages) {
-      const culturesForLanguage = [...new Set(
+      const culturesForLanguage = [...new Set(;
         this.analyticsData
           .filter(o => o.language === language)
           .map(o => o.culturalContext)
@@ -391,7 +391,7 @@ class PrivacyPreservingAnalyticsService {
     for (const type of interventionTypes) {
       const typeData = this.analyticsData.filter(o => o.interventionType === type);
       if (typeData.length >= this.MIN_COHORT_SIZE) {
-        const effectiveness = typeData.reduce((sum, o) => 
+        const effectiveness = typeData.reduce((sum, o) => ;
           sum + Math.max(0, o.initialRiskLevel - o.finalRiskLevel), 0
         ) / typeData.length;
         
@@ -413,15 +413,15 @@ class PrivacyPreservingAnalyticsService {
     const now = Date.now();
     
     for (let i = 6; i >= 0; i--) {
-      const periodStart = now - (i + 1) * 7 * 24 * 60 * 60 * 1000; // Week ago
+      const periodStart = now - (i + 1) * 7 * 24 * 60 * 60 * 1000; // Week ago;
       const periodEnd = now - i * 7 * 24 * 60 * 60 * 1000;
       
-      const periodData = this.analyticsData.filter(
+      const periodData = this.analyticsData.filter(;
         o => o.timestamp >= periodStart && o.timestamp < periodEnd
       );
       
       if (periodData.length > 0) {
-        const effectiveness = periodData.reduce((sum, o) => 
+        const effectiveness = periodData.reduce((sum, o) => ;
           sum + Math.max(0, o.initialRiskLevel - o.finalRiskLevel), 0
         ) / periodData.length;
         
@@ -429,7 +429,8 @@ class PrivacyPreservingAnalyticsService {
           period: new Date(periodStart).toISOString().split('T')[0],
           effectiveness: this.addDifferentialPrivacyNoise(effectiveness, 0.1),
           volume: this.addDifferentialPrivacyNoise(periodData.length, 1.0)
-        });
+        };
+  };
       }
     }
     
@@ -454,7 +455,7 @@ class PrivacyPreservingAnalyticsService {
         privacyMetrics: {
           totalBudgetConsumed: this.privacyBudgetUsed,
           averageNoiseLevel: this.EPSILON,
-          dataRetentionCompliance: true
+          dataRetentionCompliance: true;
         }
       } catch (error) {
       console.error('[Privacy Analytics] Failed to generate insights:', error);
@@ -484,7 +485,7 @@ class PrivacyPreservingAnalyticsService {
           differentialPrivacyApplied: true,
           dataAnonymized: true,
           retentionCompliant: true,
-          minimumCohortSizeEnforced: true
+          minimumCohortSizeEnforced: true;
         }
       } catch (error) {
       console.error('[Privacy Analytics] Failed to export anonymized data:', error);
@@ -504,15 +505,15 @@ class PrivacyPreservingAnalyticsService {
     try {
       const insights = await this.generateAnalyticsInsights();
       
-      // Generate summary
+      // Generate summary;
       const totalInterventions = Math.round(insights.globalMetrics.totalInterventions);
       const avgEffectiveness = (insights.globalMetrics.averageEffectiveness * 100).toFixed(1);
       
       const summary = `Analysis of ${totalInterventions} anonymized crisis interventions shows an average risk reduction of ${avgEffectiveness}%. Data spans ${Object.keys(insights.globalMetrics.languageDistribution).length} languages and ${Object.keys(insights.globalMetrics.culturalDistribution).length} cultural contexts.`;
 
-      // Generate cultural insights
+      // Generate cultural insights;
       const culturalInsights: string[] = [];
-      const topCultures = insights.culturalComparisons
+      const topCultures = insights.culturalComparisons;
         .sort((a, b) => b.successRate - a.successRate)
         .slice(0, 3);
       
@@ -522,7 +523,7 @@ class PrivacyPreservingAnalyticsService {
         );
       }
 
-      // Generate recommendations
+      // Generate recommendations;
       const recommendations: string[] = [
         'Consider culturally-adapted interventions for communities with lower effectiveness scores',
         'Expand successful intervention types to underperforming cultural contexts',
@@ -530,7 +531,7 @@ class PrivacyPreservingAnalyticsService {
         'Develop targeted training for cultural sensitivity in crisis intervention'
       ];
 
-      // Privacy limitations
+      // Privacy limitations;
       const limitations: string[] = [
         `Differential privacy noise (ε=${this.EPSILON}) added to all metrics for privacy protection`,
         `Minimum cohort size of ${this.MIN_COHORT_SIZE} enforced to prevent re-identification`,
@@ -561,7 +562,7 @@ class PrivacyPreservingAnalyticsService {
     return { budgetUsed: this.privacyBudgetUsed,
       budgetRemaining: Math.max(0, 10.0 - this.privacyBudgetUsed),
       dataPoints: this.analyticsData.length,
-      retentionCompliance: true
+      retentionCompliance: true;
      }
 
   /**
@@ -573,5 +574,5 @@ class PrivacyPreservingAnalyticsService {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const privacyPreservingAnalyticsService = new PrivacyPreservingAnalyticsService();

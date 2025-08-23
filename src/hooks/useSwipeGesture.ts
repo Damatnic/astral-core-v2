@@ -71,7 +71,7 @@ export const useSwipeGesture = (options: UseSwipeGestureOptions = {}) => {
       return;
     }
 
-    // Use the last touch position if we have it, otherwise use start position
+    // Use the last touch position if we have it, otherwise use start position;
     const endPosition = touchEndRef.current || touchStartRef.current;
 
     const deltaX = endPosition.x - touchStartRef.current.x;
@@ -91,7 +91,7 @@ export const useSwipeGesture = (options: UseSwipeGestureOptions = {}) => {
       return;
     }
 
-    // Determine direction
+    // Determine direction;
     const absDeltaX = Math.abs(deltaX);
     const absDeltaY = Math.abs(deltaY);
     
@@ -99,8 +99,8 @@ export const useSwipeGesture = (options: UseSwipeGestureOptions = {}) => {
     
     if (absDeltaX > absDeltaY) {
       // Horizontal swipe
-      direction = deltaX > 0 ? 'right' : 'left';
-    } else {
+      direction = deltaX > 0 ? 'right' : 'left';;
+  } else {
       // Vertical swipe
       direction = deltaY > 0 ? 'down' : 'up';
     }
@@ -150,7 +150,7 @@ export const useSwipeGesture = (options: UseSwipeGestureOptions = {}) => {
   };
 }
 
-// React ref-based hook for easier integration
+// React ref-based hook for easier integration;
 export const useSwipeRef = <T extends HTMLElement>(
   options: UseSwipeGestureOptions = {}
 ) => {
@@ -165,7 +165,10 @@ export const useSwipeRef = <T extends HTMLElement>(
 
     return () => {
       detachListeners(element);
-    }, [attachListeners, detachListeners]);
+    };
+  };
+  };
+  }, [attachListeners, detachListeners]);
 
   return {
     ref: elementRef,
@@ -173,7 +176,7 @@ export const useSwipeRef = <T extends HTMLElement>(
   };
 };
 
-// Hook for handling pull-to-refresh gesture
+// Hook for handling pull-to-refresh gesture;
 export const usePullToRefresh = (
   onRefresh: () => void | Promise<void>,
   options: {
@@ -251,8 +254,8 @@ export const usePullToRefresh = (
           isRefreshingRef.current = false;
           setIsRefreshing(false);
           resetPull();
-        }
-      } else {
+        };
+  } else {
         resetPull();
       }
     };
@@ -265,7 +268,8 @@ export const usePullToRefresh = (
       touchMoveRef.current = null;
     };
 
-    element.addEventListener('touchstart', handleTouchStart, { passive: true });
+    element.addEventListener('touchstart', handleTouchStart, { passive: true };
+  };
     element.addEventListener('touchmove', handleTouchMove, { passive: false });
     element.addEventListener('touchend', handleTouchEnd, { passive: true });
     element.addEventListener('touchcancel', resetPull, { passive: true });
@@ -276,6 +280,8 @@ export const usePullToRefresh = (
       element.removeEventListener('touchend', handleTouchEnd);
       element.removeEventListener('touchcancel', resetPull);
     };
+  };
+  };
   }, [enabled, threshold, resistance, onRefresh]);
 
   return {

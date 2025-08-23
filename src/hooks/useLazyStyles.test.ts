@@ -1,30 +1,30 @@
 /**
  * Tests for Lazy CSS Loading functionality
- */
+ */;
 
 import { renderHook, act, waitFor } from '../test-utils';
 import { useLazyStyles, cssOptimization } from './useLazyStyles';
 
-// Mock React Router
+// Mock React Router;
 const mockLocation = { pathname: '/test' };
 jest.mock('react-router-dom', () => ({
-  useLocation: () => mockLocation
+  useLocation: () => mockLocation;
 }));
 
-// Mock DOM methods
+// Mock DOM methods;
 const mockAppendChild = jest.fn();
 const mockRemoveChild = jest.fn();
 const mockQuerySelectorAll = jest.fn(() => []);
 
-// Store original document methods
+// Store original document methods;
 const originalCreateElement = document.createElement.bind(document);
 const originalHead = document.head;
 const originalDocumentElement = document.documentElement;
 const originalBodyAppendChild = document.body.appendChild.bind(document.body);
 
-// Mock document.createElement to track calls but return real elements
+// Mock document.createElement to track calls but return real elements;
 const mockCreateElement = jest.fn((tagName: string) => {
-  // Create a real element using the original method
+  // Create a real element using the original method;
   const element = originalCreateElement(tagName);
   
   // If it's a link element, add some properties for testing
@@ -63,10 +63,10 @@ Object.defineProperty(document, 'head', {
     removeChild: mockRemoveChild.mockImplementation(function(node) {
       return node;
     }),
-    querySelectorAll: mockQuerySelectorAll
+    querySelectorAll: mockQuerySelectorAll;
   },
   writable: true,
-  configurable: true
+  configurable: true;
 });
 
 // Mock documentElement.classList
@@ -86,11 +86,11 @@ Object.defineProperty(document, 'documentElement', {
       forEach: jest.fn(),
       entries: jest.fn(),
       keys: jest.fn(),
-      values: jest.fn()
+      values: jest.fn();
     }
   },
   writable: true,
-  configurable: true
+  configurable: true;
 });
 
 // Mock window methods if not already mocked
@@ -105,7 +105,7 @@ if (!window.removeEventListener || !jest.isMockFunction(window.removeEventListen
 Object.defineProperty(window, 'innerWidth', {
   value: 1024,
   writable: true,
-  configurable: true
+  configurable: true;
 });
 
 if (!window.matchMedia || !jest.isMockFunction(window.matchMedia)) {
@@ -121,7 +121,7 @@ if (!window.matchMedia || !jest.isMockFunction(window.matchMedia)) {
       dispatchEvent: jest.fn(),
     })),
     writable: true,
-    configurable: true
+    configurable: true;
   });
 }
 
@@ -206,7 +206,7 @@ describe('useLazyStyles Hook', () => {
     // Mock mobile viewport
     Object.defineProperty(window, 'innerWidth', {
       value: 500,
-      writable: true
+      writable: true;
     });
     
     renderHook(() => useLazyStyles());
@@ -215,7 +215,7 @@ describe('useLazyStyles Hook', () => {
   });
 
   it.skip('should setup interaction-based loading', () => {
-    // Mock document.addEventListener if not already mocked
+    // Mock document.addEventListener if not already mocked;
     const addEventListenerSpy = jest.spyOn(document, 'addEventListener').mockImplementation(() => {});
     
     renderHook(() => useLazyStyles());
@@ -273,7 +273,7 @@ describe('CSS Optimization Utilities', () => {
     // Mock PerformanceObserver
     global.PerformanceObserver = jest.fn().mockImplementation((_callback) => ({
       observe: jest.fn(),
-      disconnect: jest.fn()
+      disconnect: jest.fn();
     })) as any;
     (global.PerformanceObserver as any).supportedEntryTypes = ['resource'];
     
@@ -291,7 +291,7 @@ describe('CSS Optimization Utilities', () => {
           { name: 'other.css', duration: 200 }
         ])
       },
-      writable: true
+      writable: true;
     });
     
     const metrics = cssOptimization.getCSSMetrics();
@@ -322,7 +322,7 @@ describe('CSS Loading Manager', () => {
   it.skip('should handle CSS loading errors gracefully', async () => {
     const { result } = renderHook(() => useLazyStyles());
     
-    // Mock console.warn to capture error handling
+    // Mock console.warn to capture error handling;
     const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
     
     // Simulate CSS loading error
@@ -333,7 +333,7 @@ describe('CSS Loading Manager', () => {
       onload: null,
       onerror: null,
       addEventListener: jest.fn(),
-      removeEventListener: jest.fn()
+      removeEventListener: jest.fn();
     });
     
     await act(async () => {

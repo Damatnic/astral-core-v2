@@ -5,7 +5,7 @@ import './TimestampTooltipExample.css';
 /**
  * Example component demonstrating TimestampTooltip usage
  * Shows various configurations and use cases
- */
+ */;
 export const TimestampTooltipExample: React.FC = () => {
   const now = new Date();
   const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
@@ -145,7 +145,7 @@ export const TimestampTooltipExample: React.FC = () => {
               day: 'numeric',
               hour: '2-digit',
               minute: '2-digit',
-              second: '2-digit'
+              second: '2-digit';
             }}
           >
             Custom detailed format
@@ -197,7 +197,7 @@ export const TimestampTooltipExample: React.FC = () => {
               month: '1 month ago',
               months: 'months ago',
               year: '1 year ago',
-              years: 'years ago'
+              years: 'years ago';
             }}
           >
             Custom labels

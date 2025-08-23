@@ -7,7 +7,7 @@ import { useNotification } from './NotificationContext';
 import { logger } from '../utils/logger';
 
 // --- Auth0 Configuration ---
-// Handle both Vite and Jest environments
+// Handle both Vite and Jest environments;
 const getEnvVar = (key: string, defaultValue: string) => {
   // In test environment, use defaultValue
   if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
@@ -32,7 +32,7 @@ const AUTH0_AUDIENCE = getEnvVar('VITE_AUTH0_AUDIENCE', 'demo-audience');
 if (typeof process === 'undefined' || process.env.NODE_ENV !== 'test') {
   const isDev = getEnvVar('DEV', 'false') === 'true' || getEnvVar('VITE_DEV', 'false') === 'true';
   if (isDev && (!getEnvVar('VITE_AUTH0_DOMAIN', '') || !getEnvVar('VITE_AUTH0_CLIENT_ID', '') || !getEnvVar('VITE_AUTH0_AUDIENCE', ''))) {
-    // Check if we're on non-Netlify dev port
+    // Check if we're on non-Netlify dev port;
     const currentPort = typeof window !== 'undefined' ? window.location.port : '';
     if (currentPort && currentPort !== '8888') {
         logger.info('✓ Running in demo mode - Auth0 not required', undefined, 'AuthContext');
@@ -41,7 +41,7 @@ if (typeof process === 'undefined' || process.env.NODE_ENV !== 'test') {
 }
 
 
-// This should match one of the "Allowed Callback URLs" in your Auth0 Application settings
+// This should match one of the "Allowed Callback URLs" in your Auth0 Application settings;
 const REDIRECT_URI = AuthSession.makeRedirectUri();
 
 export interface AuthContextType {
@@ -65,7 +65,7 @@ export interface AuthContextType {
   register?: () => Promise<void>; // Added for test compatibility
 }
 
-// Global state object to bridge context and stores
+// Global state object to bridge context and stores;
 export const authState: {
   isAuthenticated: boolean;
   user: AuthUser | null;
@@ -81,10 +81,10 @@ export const authState: {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Export the context for testing purposes
+// Export the context for testing purposes;
 export { AuthContext };
 
-// Helper to decode JWT payload.
+// Helper to decode JWT payload.;
 const jwtDecode = (token: string): JWTPayload | null => {
     try {
         const base64Url = token.split('.')[1];
@@ -143,6 +143,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setHelperProfile(null);
         setIsNewUser(true);
     }
+  };
   }, []);
 
   const setAuthData = useCallback(async (accessToken: string | null) => {
@@ -153,7 +154,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             setUser({
                 ...decodedToken,
                 id: decodedToken.sub,
-                email: decodedToken.email || ''
+                email: decodedToken.email || '';
             } as AuthUser);
         }
         if (decodedToken?.sub) {
@@ -165,6 +166,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setHelperProfile(null);
         setIsNewUser(false);
     }
+  };
   }, [fetchHelperProfile]);
   
   // Anonymous user token management
@@ -175,12 +177,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       localStorage.setItem('userToken', token);
     }
     setUserToken(token);
+  };
   }, []);
 
   const logout = useCallback(async () => {
     setIsLoading(true);
     
-    // Check if this is a demo user logout
+    // Check if this is a demo user logout;
     const demoUser = localStorage.getItem('demo_user');
     if (demoUser) {
         // Clear demo user data
@@ -212,6 +215,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const logoutUrl = `${discovery.endSessionEndpoint}?client_id=${AUTH0_CLIENT_ID}&returnTo=${encodeURIComponent(window.location.origin)}`;
         window.location.assign(logoutUrl);
     }
+  };
   }, [discovery, setAuthData]);
 
   useEffect(() => {
@@ -219,7 +223,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         logger.debug("Starting token load, setting isLoading to true", undefined, 'AuthContext');
         setIsLoading(true);
         try {
-            // Check for demo user first
+            // Check for demo user first;
             const demoUser = localStorage.getItem('demo_user');
             const demoToken = localStorage.getItem('demo_token');
             
@@ -248,7 +252,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 return;
             }
             
-            // Original token loading logic for real authentication
+            // Original token loading logic for real authentication;
             const storedToken = sessionStorage.getItem('accessToken');
             logger.debug("Stored token: " + (storedToken ? "exists" : "none"), undefined, 'AuthContext');
             if (storedToken) {
@@ -274,6 +278,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     };
     loadToken();
+  };
   }, [setAuthData]);
 
   useEffect(() => {
@@ -283,6 +288,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         addToast('Authentication error: ' + (response.params.error_description || response.error?.message), 'error');
         logger.error("Authentication error", response.error, 'AuthContext');
     }
+  };
   }, [response, setAuthData, addToast]);
 
 
@@ -294,6 +300,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return;
     }
     await promptAsync();
+  };
   }, [request, promptAsync, addToast]);
 
   // Global listener for auth errors (e.g., 401 Unauthorized)
@@ -306,17 +313,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     window.addEventListener('auth-error', handleAuthError);
     return () => {
         window.removeEventListener('auth-error', handleAuthError);
-    }, [logout, addToast]);
+    };
+  };
+  }, [logout, addToast]);
 
 
   const reloadProfile = useCallback(async () => {
     if (user?.sub) {
       await fetchHelperProfile(user.sub);
     }
+  };
   }, [user, fetchHelperProfile]);
   
   const updateHelperProfile = useCallback((updatedProfile: Helper) => {
     setHelperProfile(updatedProfile);
+  };
   }, []);
 
   const value = useMemo(() => ({
@@ -340,6 +351,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       authState.user = value.user;
       authState.helperProfile = value.helperProfile;
       authState.userToken = value.userToken;
+  };
   }, [value]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -353,7 +365,7 @@ export const useAuth = (): AuthContextType => {
   return context;
 };
 
-// --- Legal Consent Hook ---
+// --- Legal Consent Hook ---;
 const LEGAL_DOC_VERSIONS = {
     terms_of_service: '1.0',
     privacy_policy: '1.0',
@@ -362,7 +374,7 @@ const LEGAL_DOC_VERSIONS = {
 
 export const useLegalConsents = () => {
     const [requiredConsent, setRequiredConsent] = useState<string | null>(null);
-    const [allConsentsGiven, setAllConsentsGiven] = useState(true); // Temporarily set to true for development
+    const [allConsentsGiven, setAllConsentsGiven] = useState(true); // Temporarily set to true for development;
     const { isAuthenticated, helperProfile, userToken } = useAuth();
     const { addToast } = useNotification();
 
@@ -395,11 +407,13 @@ export const useLegalConsents = () => {
             addToast("Could not verify legal agreements. Please try again later.", "error");
             setAllConsentsGiven(false); // Fail safe
         }
-    }, [userToken, helperProfile, isAuthenticated, addToast]);
+    };
+  }, [userToken, helperProfile, isAuthenticated, addToast]);
 
     useEffect(() => {
         checkConsents();
-    }, [checkConsents]);
+    };
+  }, [checkConsents]);
 
     const acceptConsent = async () => {
         const currentUserId = helperProfile?.id || userToken;
@@ -423,7 +437,7 @@ export const useLegalConsents = () => {
         switch(docType) {
             case 'terms_of_service': return {
                 title: `Terms of Service (v${version})`,
-                text: 'Please review and accept our updated Terms of Service to continue. Our terms outline the rules for community conduct and the scope of our peer support services.'
+                text: 'Please review and accept our updated Terms of Service to continue. Our terms outline the rules for community conduct and the scope of our peer support services.';
             };
             case 'privacy_policy': return {
                 title: `Privacy Policy (v${version})`,

@@ -1,4 +1,4 @@
-// Security service for input validation, rate limiting, and XSS protection
+// Security service for input validation, rate limiting, and XSS protection;
 
 import React from 'react';
 
@@ -59,8 +59,8 @@ class SecurityService {
   }
 
   private setupCSP() {
-    // Set up Content Security Policy
-    const cspDirectives = [
+    // Set up Content Security Policy;
+    const cspDirectives = [;
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' https://esm.sh https://cdn.jsdelivr.net",
       "style-src 'self' 'unsafe-inline'",
@@ -117,8 +117,8 @@ class SecurityService {
     if (rules.custom) {
       const customResult = rules.custom(value);
       if (typeof customResult === 'string') {
-        errors.push(customResult);
-      } else if (!customResult) {
+        errors.push(customResult);;
+  } else if (!customResult) {
         errors.push('Invalid value');
       }
     }
@@ -151,7 +151,7 @@ class SecurityService {
   sanitizeHTML(html: string): string {
     // Basic HTML sanitization - in production, use DOMPurify
 
-    // Remove script tags and dangerous attributes
+    // Remove script tags and dangerous attributes;
     let sanitized = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
     sanitized = sanitized.replace(/on\w+\s*=\s*"[^"]*"/gi, '');
     sanitized = sanitized.replace(/on\w+\s*=\s*'[^']*'/gi, '');
@@ -177,26 +177,27 @@ class SecurityService {
       // New window or expired
       this.rateLimitStore.set(rateLimitKey, {
         count: 1,
-        resetTime: now + config.windowMs
-      });
+        resetTime: now + config.windowMs;
+      };
+  };
       return { 
         allowed: true, 
         resetTime: now + config.windowMs,
-        remaining: config.maxRequests - 1
+        remaining: config.maxRequests - 1;
       }
 
     if (existing.count >= config.maxRequests) {
       return { 
         allowed: false, 
         resetTime: existing.resetTime,
-        remaining: 0
+        remaining: 0;
       }
 
     existing.count++;
     return { 
       allowed: true, 
       resetTime: existing.resetTime,
-      remaining: config.maxRequests - existing.count
+      remaining: config.maxRequests - existing.count;
     }
 
   // IP blocking
@@ -221,8 +222,8 @@ class SecurityService {
 
     // Length check
     if (password.length >= 8) {
-      score += 1;
-    } else {
+      score += 1;;
+  } else {
       feedback.push('Password should be at least 8 characters long');
     }
 
@@ -239,8 +240,8 @@ class SecurityService {
     if (/[^A-Za-z0-9]/.test(password)) score += 1;
     else feedback.push('Add special characters');
 
-    // Common password check
-    const commonPasswords = [
+    // Common password check;
+    const commonPasswords = [;
       'password', '123456', 'password123', 'admin', 'qwerty',
       'letmein', 'welcome', 'monkey', '1234567890'
     ];
@@ -258,14 +259,15 @@ class SecurityService {
 
   hashPassword(password: string): Promise<string> {
     // In a real app, use bcrypt or similar
-    // This is a simple example using Web Crypto API
+    // This is a simple example using Web Crypto API;
     const encoder = new TextEncoder();
     const data = encoder.encode(password + 'astral_salt');
     
     return crypto.subtle.digest('SHA-256', data).then(hashBuffer => {
       const hashArray = Array.from(new Uint8Array(hashBuffer));
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    });
+    };
+  };
   }
 
   // Session security
@@ -299,7 +301,7 @@ class SecurityService {
 
   // Content filtering
   containsProfanity(text: string): boolean {
-    // Basic profanity filter - in production, use a comprehensive list
+    // Basic profanity filter - in production, use a comprehensive list;
     const profanityWords: string[] = [
       // Add your profanity list here
     ];
@@ -310,7 +312,7 @@ class SecurityService {
 
   filterContent(text: string): string {
     if (this.containsProfanity(text)) {
-      // Replace profanity with asterisks
+      // Replace profanity with asterisks;
       let filtered = text;
       // Implementation would replace detected words
       return filtered;
@@ -326,10 +328,10 @@ class SecurityService {
       details,
       severity,
       userAgent: navigator.userAgent,
-      url: window.location.href
+      url: window.location.href;
     };
 
-    // Store in localStorage for development
+    // Store in localStorage for development;
     const logs = JSON.parse(localStorage.getItem('security_logs') || '[]');
     logs.push(logEntry);
     
@@ -346,7 +348,7 @@ class SecurityService {
 
   // Form security
   addFormProtection(form: HTMLFormElement) {
-    // Add CSRF token
+    // Add CSRF token;
     const csrfToken = this.generateCSRFToken();
     const csrfInput = document.createElement('input');
     csrfInput.type = 'hidden';
@@ -354,7 +356,7 @@ class SecurityService {
     csrfInput.value = csrfToken;
     form.appendChild(csrfInput);
 
-    // Add input validation
+    // Add input validation;
     const inputs = form.querySelectorAll('input, textarea');
     inputs.forEach(input => {
       input.addEventListener('input', (e) => {
@@ -364,8 +366,8 @@ class SecurityService {
           this.logSecurityEvent('xss_attempt', { 
             field: target.name, 
             value: target.value.substring(0, 100) 
-          }, 'high');
-        } else {
+          }, 'high');;
+  } else {
           target.setCustomValidity('');
         }
       });
@@ -391,17 +393,19 @@ class SecurityService {
   }
 }
 
-// React hooks
+// React hooks;
 export const useSecurity = () => {
   const [service] = React.useState(() => new SecurityService());
 
   React.useEffect(() => {
-    // Clean up rate limit store periodically
+    // Clean up rate limit store periodically;
     const cleanup = setInterval(() => {
       service.clearRateLimitStore();
     }, 60000); // Every minute
 
     return () => clearInterval(cleanup);
+  };
+  };
   }, [service]);
 
   return {
@@ -417,40 +421,40 @@ export const useSecurity = () => {
     validateCSRFToken: service.validateCSRFToken.bind(service),
     filterContent: service.filterContent.bind(service),
     logSecurityEvent: service.logSecurityEvent.bind(service),
-    addFormProtection: service.addFormProtection.bind(service)
+    addFormProtection: service.addFormProtection.bind(service);
   };
 
-// Validation rules presets
+// Validation rules presets;
 export const ValidationRules = {
   email: {
     required: true,
     pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    maxLength: 254
+    maxLength: 254;
   },
   password: {
     required: true,
     minLength: 8,
-    maxLength: 128
+    maxLength: 128;
   },
   username: {
     required: true,
     minLength: 3,
     maxLength: 30,
-    pattern: /^\w+$/
+    pattern: /^\w+$/;
   },
   post: {
     required: true,
     minLength: 1,
-    maxLength: 2000
+    maxLength: 2000;
   },
   comment: {
     required: true,
     minLength: 1,
-    maxLength: 500
+    maxLength: 500;
   }
 };
 
-// Singleton instance
+// Singleton instance;
 let securityServiceInstance: SecurityService | null = null;
 
 export const getSecurityService = () => {

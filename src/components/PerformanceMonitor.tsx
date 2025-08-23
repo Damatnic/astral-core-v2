@@ -3,7 +3,7 @@
  * 
  * Real-time performance monitoring and bundle analysis
  * for the Astral Core mental health platform.
- */
+ */;
 
 import React, { useState, useEffect } from 'react';
 import { usePerformanceMonitoring } from './LazyComponent';
@@ -38,7 +38,7 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
     loadTime: 3000,
     bundleSize: 1048576, // 1MB
     lcp: 2500,
-    cls: 0.1
+    cls: 0.1;
   },
   onThresholdExceeded,
   className = ''
@@ -58,21 +58,21 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
         const lcpEntries = performance.getEntriesByType('largest-contentful-paint');
         const clsEntries = performance.getEntriesByType('layout-shift');
         
-        // Core Web Vitals
+        // Core Web Vitals;
         const fcp = paintEntries.find(entry => entry.name === 'first-contentful-paint')?.startTime || 0;
         const lcp = lcpEntries[lcpEntries.length - 1]?.startTime || 0;
         const cls = clsEntries.reduce((sum, entry) => sum + (entry as any).value, 0);
         
-        // Load timing
+        // Load timing;
         const loadTime = navigation.loadEventEnd - navigation.loadEventStart;
         const domContentLoaded = navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart;
         
-        // Bundle information
+        // Bundle information;
         const bundleSize = bundleInfo?.totalTransferSize || 0;
         const chunkCount = bundleInfo?.jsResources || 0;
         
-        // Estimate cache hit rate (simplified)
-        const cacheHitRate = bundleInfo ? 
+        // Estimate cache hit rate (simplified);
+        const cacheHitRate = bundleInfo ? ;
           (bundleInfo.jsResources / Math.max(bundleInfo.totalResources, 1)) * 100 : 0;
         
         const newMetrics: PerformanceMetrics = {
@@ -89,7 +89,7 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
 
         setMetrics(newMetrics);
         
-        // Check thresholds and generate warnings
+        // Check thresholds and generate warnings;
         const newWarnings: string[] = [];
         
         if (loadTime > (threshold.loadTime || 3000)) {
@@ -121,18 +121,19 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
 
     // Collect metrics after page load
     if (document.readyState === 'complete') {
-      collectMetrics();
-    } else {
+      collectMetrics();;
+  } else {
       window.addEventListener('load', collectMetrics);
       return () => window.removeEventListener('load', collectMetrics);
     }
 
-    // Periodic updates for dynamic metrics
+    // Periodic updates for dynamic metrics;
     const interval = setInterval(collectMetrics, 30000); // Every 30 seconds
     return () => clearInterval(interval);
+  };
   }, [threshold, onThresholdExceeded, bundleInfo]);
 
-  // Format metrics for display
+  // Format metrics for display;
   const formatMetric = (value: number, unit: string, precision = 0) => {
     if (unit === 'ms') {
       return `${value.toFixed(precision)}ms`;
@@ -146,7 +147,7 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
     return `${value.toFixed(precision)}${unit}`;
   };
 
-  // Performance thresholds configuration
+  // Performance thresholds configuration;
   const performanceThresholds = {
     firstContentfulPaint: { good: 1800, needsImprovement: 3000 },
     largestContentfulPaint: { good: 2500, needsImprovement: 4000 },
@@ -155,16 +156,16 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
     bundleSize: { good: 512000, needsImprovement: 1048576 }
   };
 
-  // Get metric status (good, needs improvement, poor)
+  // Get metric status (good, needs improvement, poor);
   const getMetricStatus = (metric: keyof PerformanceMetrics, value: number) => {
     const thresholds = performanceThresholds[metric as keyof typeof performanceThresholds];
     if (!thresholds) return 'good';
     
     if (value <= thresholds.good) {
-      return 'good';
-    } else if (value <= thresholds.needsImprovement) {
-      return 'needs-improvement';
-    } else {
+      return 'good';;
+  } else if (value <= thresholds.needsImprovement) {
+      return 'needs-improvement';;
+  } else {
       return 'poor';
     }
   };
@@ -287,7 +288,7 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
   );
 };
 
-// CSS styles for the performance monitor
+// CSS styles for the performance monitor;
 export const performanceMonitorStyles = `
   .performance-monitor {
     font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);

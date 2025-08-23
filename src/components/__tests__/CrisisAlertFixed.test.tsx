@@ -14,7 +14,7 @@ describe('CrisisAlert', () => {
       open: jest.fn(),
       alert: jest.fn(),
       confirm: jest.fn(),
-      prompt: jest.fn()
+      prompt: jest.fn();
     };
     
     // Apply mocks to global window
@@ -149,7 +149,7 @@ describe('CrisisAlert', () => {
       render(<CrisisAlert {...props} />);
       
       const callButtons = screen.getAllByRole('button');
-      const emergencyButtons = callButtons.filter((button: HTMLElement) => 
+      const emergencyButtons = callButtons.filter((button: HTMLElement) => ;
         button.textContent?.includes('988') || 
         button.textContent?.includes('741741') || 
         button.textContent?.includes('911')
@@ -299,7 +299,7 @@ describe('CrisisAlert', () => {
     it('should handle missing onEmergencyCall handler', () => {
       const props = createMockCrisisAlert({
         severity: 'critical',
-        onEmergencyCall: undefined
+        onEmergencyCall: undefined;
       });
       render(<CrisisAlert {...props} />);
       
@@ -360,41 +360,41 @@ describe('CrisisAlert', () => {
   });
 
   describe('Severity Configurations', () => {
-    const severityTests = [
+    const severityTests = [;
       {
         severity: 'critical' as const,
         expectedTitle: 'IMMEDIATE ATTENTION NEEDED',
         expectedClass: 'crisis-alert--critical',
         shouldPulse: true,
-        shouldShowEmergencyContacts: true
+        shouldShowEmergencyContacts: true;
       },
       {
         severity: 'high' as const,
         expectedTitle: 'Crisis Support Needed',
         expectedClass: 'crisis-alert--high',
         shouldPulse: true,
-        shouldShowEmergencyContacts: true
+        shouldShowEmergencyContacts: true;
       },
       {
         severity: 'medium' as const,
         expectedTitle: 'Support Recommended',
         expectedClass: 'crisis-alert--medium',
         shouldPulse: false,
-        shouldShowEmergencyContacts: false
+        shouldShowEmergencyContacts: false;
       },
       {
         severity: 'low' as const,
         expectedTitle: 'Resources Available',
         expectedClass: 'crisis-alert--low',
         shouldPulse: false,
-        shouldShowEmergencyContacts: false
+        shouldShowEmergencyContacts: false;
       },
       {
         severity: 'none' as const,
         expectedTitle: 'Support Available',
         expectedClass: 'crisis-alert--none',
         shouldPulse: false,
-        shouldShowEmergencyContacts: false
+        shouldShowEmergencyContacts: false;
       }
     ];
 
@@ -410,14 +410,14 @@ describe('CrisisAlert', () => {
         
         const icon = alert.querySelector('.crisis-alert__icon');
         if (shouldPulse) {
-          expect(icon).toHaveClass('crisis-alert__icon--pulse');
-        } else {
+          expect(icon).toHaveClass('crisis-alert__icon--pulse');;
+  } else {
           expect(icon).not.toHaveClass('crisis-alert__icon--pulse');
         }
         
         if (shouldShowEmergencyContacts) {
-          expect(screen.getByText('Immediate Help Available')).toBeInTheDocument();
-        } else {
+          expect(screen.getByText('Immediate Help Available')).toBeInTheDocument();;
+  } else {
           expect(screen.queryByText('Immediate Help Available')).not.toBeInTheDocument();
         }
       });

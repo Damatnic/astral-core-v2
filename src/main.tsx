@@ -1,43 +1,43 @@
 /**
  * Main Entry Point for Astral Core Application
  * This file bootstraps the React application
- */
+ */;
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-// Using App with Optional Auth - login is not required
+// Using App with Optional Auth - login is not required;
 import App from './App';
 import './index.css';
 
-// Import global styles
-import './styles/layout-fix-critical.css'; // CRITICAL: Must be first to fix layout issues
+// Import global styles;
+import './styles/layout-fix-critical.css'; // CRITICAL: Must be first to fix layout issues;
 import './styles/design-system.css';
 import './styles/accessibility.css';
 import './styles/mobile-responsive-fixes.css';
 import './styles/dark-theme-enhancements.css';
 import './styles/safe-ui-system.css';
 
-// Import i18n configuration
+// Import i18n configuration;
 import './i18n';
 import { logger } from './utils/logger';
 
 // Auth0 provider - not used with simple auth
 // import { auth0Service } from './services/auth0Service';
 
-// Import environment validator
+// Import environment validator;
 import { loadAndValidateEnv } from './utils/envValidator';
 
-// Import error tracking
+// Import error tracking;
 import { initializeErrorTracking } from './config/errorTracking';
 
-// Import service worker manager
+// Import service worker manager;
 import { registerServiceWorker } from './services/serviceWorkerConfig';
 
-// Import OpenTelemetry (using stub implementation)
+// Import OpenTelemetry (using stub implementation);
 import { openTelemetryService } from './services/openTelemetryService';
 
-// Import performance monitoring
+// Import performance monitoring;
 import { performanceMonitoringService } from './services/performanceMonitoringService';
 
 // Validate environment variables on startup
@@ -80,14 +80,14 @@ performanceMonitoringService.initialize();
 //   logger.error('Failed to initialize Auth0:', error, 'main');
 // });
 
-// Get root element
+// Get root element;
 const rootElement = document.getElementById('root');
 
 if (!rootElement) {
   throw new Error('Failed to find root element. Make sure index.html contains a div with id="root"');
 }
 
-// Create React root and render app with Optional Auth
+// Create React root and render app with Optional Auth;
 const root = ReactDOM.createRoot(rootElement);
 
 root.render(
@@ -112,7 +112,7 @@ if (import.meta.hot) {
 
 // Performance monitoring
 if (process.env.NODE_ENV === 'production') {
-  // Report Web Vitals
+  // Report Web Vitals;
   import('web-vitals').then(({ onCLS, onINP, onFCP, onLCP, onTTFB }) => {
     onCLS((metric) => logger.debug('CLS metric', metric, 'web-vitals'));
     onINP((metric) => logger.debug('INP metric', metric, 'web-vitals'));
@@ -156,5 +156,5 @@ window.addEventListener('unhandledrejection', event => {
   event.preventDefault();
 });
 
-// Export for testing
+// Export for testing;
 export { root };

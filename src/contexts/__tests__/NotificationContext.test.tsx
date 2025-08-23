@@ -280,7 +280,7 @@ describe('NotificationContext', () => {
       });
 
       const ids = screen.getByTestId('toast-ids').textContent;
-      // Check that IDs are unique (no duplicates when split)
+      // Check that IDs are unique (no duplicates when split);
       const idArray = ids?.match(/\S+/g) || [];
       const uniqueIds = new Set(idArray);
       expect(uniqueIds.size).toBe(idArray.length);
@@ -315,7 +315,7 @@ describe('NotificationContext', () => {
 
   describe('useNotification hook', () => {
     it('should throw error when used outside provider', () => {
-      // Suppress console.error for this test
+      // Suppress console.error for this test;
       const originalError = console.error;
       console.error = jest.fn();
 

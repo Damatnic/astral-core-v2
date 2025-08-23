@@ -2,7 +2,7 @@
  * Error Tracking Hook
  * 
  * React hook for easy integration of error tracking in components
- */
+ */;
 
 import { useCallback, useEffect } from 'react';
 import ErrorTrackingService, { ErrorContext } from '../services/errorTracking';
@@ -26,12 +26,13 @@ export function useErrorTracking(options: UseErrorTrackingOptions = {}) {
         { user_type: userType }
       );
     }
+  };
   }, [autoTrackMount, feature, userType]);
 
   /**
    * Track errors with automatic context
-   */
-  const trackError = useCallback((
+   */;
+  const trackError = useCallback((;
     error: Error,
     context: Partial<ErrorContext> = {},
     extra?: Record<string, any>
@@ -46,12 +47,13 @@ export function useErrorTracking(options: UseErrorTrackingOptions = {}) {
     };
 
     ErrorTrackingService.captureError(error, fullContext, extra);
+  };
   }, [userType, feature]);
 
   /**
    * Track crisis-specific errors
-   */
-  const trackCrisisError = useCallback((
+   */;
+  const trackCrisisError = useCallback((;
     error: Error,
     crisisContext: {
       detectionResult?: any;
@@ -68,12 +70,13 @@ export function useErrorTracking(options: UseErrorTrackingOptions = {}) {
       userType: userType as 'seeker' | 'helper',
       ...crisisContext
     }, extra);
+  };
   }, [userType]);
 
   /**
    * Track user actions
-   */
-  const trackUserAction = useCallback((
+   */;
+  const trackUserAction = useCallback((;
     action: string,
     error?: Error,
     extra?: Record<string, any>
@@ -85,8 +88,8 @@ export function useErrorTracking(options: UseErrorTrackingOptions = {}) {
         userType as 'seeker' | 'helper',
         feature,
         extra
-      );
-    } else {
+      );;
+  } else {
       ErrorTrackingService.addBreadcrumb(
         `User action: ${action}`,
         'user',
@@ -94,12 +97,13 @@ export function useErrorTracking(options: UseErrorTrackingOptions = {}) {
         { user_type: userType, feature, ...extra }
       );
     }
+  };
   }, [userType, feature]);
 
   /**
    * Track network errors
-   */
-  const trackNetworkError = useCallback((
+   */;
+  const trackNetworkError = useCallback((;
     error: Error,
     endpoint: string,
     method: string,
@@ -113,12 +117,13 @@ export function useErrorTracking(options: UseErrorTrackingOptions = {}) {
       statusCode,
       { user_type: userType, feature, ...extra }
     );
+  };
   }, [userType, feature]);
 
   /**
    * Track performance issues
-   */
-  const trackPerformance = useCallback((
+   */;
+  const trackPerformance = useCallback((;
     name: string,
     duration: number,
     threshold: number = 1000,
@@ -130,12 +135,13 @@ export function useErrorTracking(options: UseErrorTrackingOptions = {}) {
       threshold,
       { user_type: userType, feature, ...context }
     );
+  };
   }, [userType, feature]);
 
   /**
    * Add breadcrumb for debugging
-   */
-  const addBreadcrumb = useCallback((
+   */;
+  const addBreadcrumb = useCallback((;
     message: string,
     category: string = 'custom',
     level: 'fatal' | 'error' | 'warning' | 'info' | 'debug' = 'info',
@@ -147,12 +153,13 @@ export function useErrorTracking(options: UseErrorTrackingOptions = {}) {
       level,
       { user_type: userType, feature, ...data }
     );
+  };
   }, [userType, feature]);
 
   /**
    * Track custom messages
-   */
-  const trackMessage = useCallback((
+   */;
+  const trackMessage = useCallback((;
     message: string,
     level: 'fatal' | 'error' | 'warning' | 'info' | 'debug' = 'info',
     context: Partial<ErrorContext> = {},
@@ -168,6 +175,8 @@ export function useErrorTracking(options: UseErrorTrackingOptions = {}) {
     };
 
     ErrorTrackingService.captureMessage(message, level, fullContext, extra);
+  };
+  };
   }, [userType, feature]);
 
   return {

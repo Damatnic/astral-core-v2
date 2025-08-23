@@ -3,7 +3,7 @@
  * 
  * Provides seamless integration with the intelligent preloading engine
  * for user behavior tracking and predictive resource loading
- */
+ */;
 
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -41,7 +41,7 @@ export const useIntelligentPreloading = (
     isActive: false,
     currentPredictions: 0,
     totalResourcesPreloaded: 0,
-    lastPredictionTime: null
+    lastPredictionTime: null;
   });
 
   // Initialize preloading engine
@@ -54,9 +54,10 @@ export const useIntelligentPreloading = (
       
       setPreloadingState(prev => ({
         ...prev,
-        isActive: true
+        isActive: true;
       }));
     }
+  };
   }, [enabled]);
 
   // Track route changes
@@ -76,17 +77,18 @@ export const useIntelligentPreloading = (
     };
 
     trackRoute();
+  };
   }, [location.pathname, enabled, trackUserBehavior]);
 
-  // Trigger intelligent preloading predictions
+  // Trigger intelligent preloading predictions;
   const triggerPredictions = useCallback(async () => {
     if (!engineRef.current || !enabled) return;
 
     try {
       const predictions = await engineRef.current.generatePredictions();
       
-      // Filter by confidence threshold
-      const filteredPredictions = predictions
+      // Filter by confidence threshold;
+      const filteredPredictions = predictions;
         .filter(p => p.confidence >= minConfidence)
         .slice(0, maxPredictions);
 
@@ -95,7 +97,7 @@ export const useIntelligentPreloading = (
         ...prev,
         currentPredictions: filteredPredictions.length,
         totalResourcesPreloaded: prev.totalResourcesPreloaded + filteredPredictions.length,
-        lastPredictionTime: Date.now()
+        lastPredictionTime: Date.now();
       }));
 
       // Log prediction results for debugging
@@ -110,15 +112,17 @@ export const useIntelligentPreloading = (
     } catch (error) {
       console.error('Intelligent preloading failed:', error);
     }
+  };
   }, [enabled, minConfidence, maxPredictions]);
 
-  // Force predictions (useful for manual triggers)
+  // Force predictions (useful for manual triggers);
   const forcePredictions = useCallback(() => {
     triggerPredictions();
+  };
   }, [triggerPredictions]);
 
-  // Track user interaction for behavior analysis
-  const trackInteraction = useCallback((
+  // Track user interaction for behavior analysis;
+  const trackInteraction = useCallback((;
     action: string,
     target?: string,
     metadata?: Record<string, any>
@@ -134,6 +138,8 @@ export const useIntelligentPreloading = (
     if (['click', 'form_submit', 'modal_open'].includes(action)) {
       setTimeout(triggerPredictions, 100);
     }
+  };
+  };
   }, [enabled, trackUserBehavior, location.pathname, triggerPredictions]);
 
   return {
@@ -147,10 +153,10 @@ export const useIntelligentPreloading = (
     forcePredictions,
     
     // Engine access (for advanced usage)
-    engine: engineRef.current
+    engine: engineRef.current;
   };
 
-// Higher-order component for automatic interaction tracking
+// Higher-order component for automatic interaction tracking;
 export const withIntelligentPreloading = <P extends object>(
   Component: React.ComponentType<P>,
   trackingOptions?: {

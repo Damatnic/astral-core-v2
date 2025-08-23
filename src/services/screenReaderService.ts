@@ -4,7 +4,7 @@
  * Provides live regions, descriptive announcements, and crisis-aware messaging
  * 
  * @license Apache-2.0
- */
+ */;
 
 export interface ScreenReaderAnnouncement {
   message: string;
@@ -37,7 +37,7 @@ class ScreenReaderService {
   private crisisContext = {
     isActive: false,
     severity: 'low' as 'low' | 'medium' | 'high',
-    interventionType: 'none' as 'none' | 'helper' | 'ai' | 'emergency'
+    interventionType: 'none' as 'none' | 'helper' | 'ai' | 'emergency';
   };
 
   /**
@@ -60,7 +60,7 @@ class ScreenReaderService {
         message: 'Screen reader enhanced. Mental health support features are active.',
         priority: 'medium',
         type: 'status',
-        delay: 1000
+        delay: 1000;
       });
     } catch (error) {
       console.error('[ScreenReader] Initialization failed:', error);
@@ -72,36 +72,36 @@ class ScreenReaderService {
    * Setup enhanced live regions for different announcement types
    */
   private setupLiveRegions(): void {
-    const regions = [
+    const regions = [;
       {
         id: 'sr-navigation',
         politeness: 'polite',
         label: 'Navigation announcements',
-        description: 'Page navigation and location updates'
+        description: 'Page navigation and location updates';
       },
       {
         id: 'sr-status',
         politeness: 'polite',
         label: 'Status updates',
-        description: 'General status and progress information'
+        description: 'General status and progress information';
       },
       {
         id: 'sr-alerts',
         politeness: 'assertive',
         label: 'Important alerts',
-        description: 'Important notifications and warnings'
+        description: 'Important notifications and warnings';
       },
       {
         id: 'sr-crisis',
         politeness: 'assertive',
         label: 'Crisis notifications',
-        description: 'Emergency and crisis-related announcements'
+        description: 'Emergency and crisis-related announcements';
       },
       {
         id: 'sr-forms',
         politeness: 'polite',
         label: 'Form assistance',
-        description: 'Form validation and input assistance'
+        description: 'Form validation and input assistance';
       }
     ];
 
@@ -138,7 +138,7 @@ class ScreenReaderService {
     // Add aria-descriptions to critical elements
     this.enhanceElementsWithDescriptions();
     
-    // Monitor DOM changes for new elements
+    // Monitor DOM changes for new elements;
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.type === 'childList') {
@@ -153,7 +153,7 @@ class ScreenReaderService {
 
     observer.observe(document.body, {
       childList: true,
-      subtree: true
+      subtree: true;
     });
   }
 
@@ -161,36 +161,36 @@ class ScreenReaderService {
    * Enhance elements with descriptive aria labels
    */
   private enhanceElementsWithDescriptions(): void {
-    // Crisis buttons
+    // Crisis buttons;
     const crisisButtons = document.querySelectorAll('[data-crisis], .crisis-button, .emergency-button');
     crisisButtons.forEach((button) => {
       this.enhanceElementWithDescription(button as HTMLElement, {
         role: 'button',
         context: 'crisis',
-        urgency: 'high'
+        urgency: 'high';
       });
     });
 
-    // Helper chat elements
+    // Helper chat elements;
     const chatElements = document.querySelectorAll('[data-chat], .chat-message, .helper-message');
     chatElements.forEach((element) => {
       this.enhanceElementWithDescription(element as HTMLElement, {
         role: 'chat',
         context: 'support',
-        dynamic: true
+        dynamic: true;
       });
     });
 
-    // Navigation elements
+    // Navigation elements;
     const navElements = document.querySelectorAll('nav, [role="navigation"], .sidebar, .menu');
     navElements.forEach((element) => {
       this.enhanceElementWithDescription(element as HTMLElement, {
         role: 'navigation',
-        context: 'main'
+        context: 'main';
       });
     });
 
-    // Form elements
+    // Form elements;
     const formElements = document.querySelectorAll('input, textarea, select, button[type="submit"]');
     formElements.forEach((element) => {
       this.enhanceFormElement(element as HTMLElement);
@@ -362,8 +362,8 @@ class ScreenReaderService {
     // Add crisis-specific form guidance
     if (element.closest('.crisis-form, .emergency-form')) {
       description = 'Crisis support form. ';
-      instructions += ' This information helps us provide appropriate support.';
-    } else if (element.closest('.safety-plan')) {
+      instructions += ' This information helps us provide appropriate support.';;
+  } else if (element.closest('.safety-plan')) {
       description = 'Safety plan form. ';
       instructions += ' This creates your personal crisis management plan.';
     }
@@ -390,7 +390,7 @@ class ScreenReaderService {
         message: `${fieldName}: ${message}`,
         priority: 'medium',
         type: 'error',
-        context: 'form_validation'
+        context: 'form_validation';
       });
     });
 
@@ -404,7 +404,7 @@ class ScreenReaderService {
           message: `${fieldName}: Input is now valid`,
           priority: 'low',
           type: 'success',
-          context: 'form_validation'
+          context: 'form_validation';
         });
       }
     });
@@ -427,7 +427,7 @@ class ScreenReaderService {
    * Setup navigation announcements
    */
   private setupNavigationAnnouncements(): void {
-    // Monitor page/view changes
+    // Monitor page/view changes;
     let lastUrl = location.href;
     let lastTitle = document.title;
 
@@ -440,7 +440,7 @@ class ScreenReaderService {
           message: `Navigated to ${pageName}. ${pageDescription}`,
           priority: 'medium',
           type: 'navigation',
-          context: 'page_change'
+          context: 'page_change';
         });
 
         lastUrl = location.href;
@@ -448,7 +448,7 @@ class ScreenReaderService {
       }
     };
 
-    // Monitor for programmatic navigation
+    // Monitor for programmatic navigation;
     const originalPushState = history.pushState;
     const originalReplaceState = history.replaceState;
 
@@ -479,7 +479,7 @@ class ScreenReaderService {
    * Get user-friendly page name
    */
   private getPageName(): string {
-    // Try to extract from main heading
+    // Try to extract from main heading;
     const mainHeading = document.querySelector('h1, [role="heading"][aria-level="1"]');
     if (mainHeading?.textContent) {
       return mainHeading.textContent.trim();
@@ -490,7 +490,7 @@ class ScreenReaderService {
       return document.title;
     }
 
-    // Extract from URL or view state
+    // Extract from URL or view state;
     const path = location.pathname;
     const pathSegments = path.split('/').filter(Boolean);
     
@@ -532,9 +532,9 @@ class ScreenReaderService {
       return true;
     }
 
-    // Announce interactive elements
+    // Announce interactive elements;
     const interactiveTags = ['button', 'a', 'input', 'select', 'textarea'];
-    const hasInteractiveRole = ['button', 'link', 'tab', 'menuitem'].includes(
+    const hasInteractiveRole = ['button', 'link', 'tab', 'menuitem'].includes(;
       element.getAttribute('role') || ''
     );
 
@@ -551,7 +551,7 @@ class ScreenReaderService {
         message: description,
         priority: 'low',
         type: 'navigation',
-        context: 'focus_change'
+        context: 'focus_change';
       });
     }
   }
@@ -562,23 +562,23 @@ class ScreenReaderService {
   private generateElementAnnouncement(element: HTMLElement): string {
     const parts: string[] = [];
 
-    // Element name/text
+    // Element name/text;
     const name = this.getElementName(element);
     if (name) parts.push(name);
 
-    // Element role
+    // Element role;
     const role = this.getElementRole(element);
     if (role) parts.push(role);
 
-    // Element state
+    // Element state;
     const state = this.getElementState(element);
     if (state) parts.push(state);
 
-    // Position information
+    // Position information;
     const position = this.getElementPosition(element);
     if (position) parts.push(position);
 
-    // Available shortcuts
+    // Available shortcuts;
     const shortcuts = this.getElementShortcuts(element);
     if (shortcuts.length > 0) {
       parts.push(`Shortcut: ${shortcuts.join(', ')}`);
@@ -626,8 +626,8 @@ class ScreenReaderService {
 
     // Checked state
     if (element.hasAttribute('aria-checked')) {
-      states.push(element.getAttribute('aria-checked') === 'true' ? 'checked' : 'unchecked');
-    } else if ((element as HTMLInputElement).checked !== undefined) {
+      states.push(element.getAttribute('aria-checked') === 'true' ? 'checked' : 'unchecked');;
+  } else if ((element as HTMLInputElement).checked !== undefined) {
       states.push((element as HTMLInputElement).checked ? 'checked' : 'unchecked');
     }
 
@@ -658,7 +658,7 @@ class ScreenReaderService {
    * Get element position information
    */
   private getElementPosition(element: HTMLElement): string {
-    // Try aria-setsize and aria-posinset first
+    // Try aria-setsize and aria-posinset first;
     const posInSet = element.getAttribute('aria-posinset');
     const setSize = element.getAttribute('aria-setsize');
     
@@ -666,10 +666,10 @@ class ScreenReaderService {
       return `${posInSet} of ${setSize}`;
     }
 
-    // Calculate position in parent container
+    // Calculate position in parent container;
     const parent = element.parentElement;
     if (parent) {
-      const siblings = Array.from(parent.children).filter(
+      const siblings = Array.from(parent.children).filter(;
         child => child.tagName === element.tagName
       );
       const index = siblings.indexOf(element);
@@ -688,7 +688,7 @@ class ScreenReaderService {
   private getElementShortcuts(element: HTMLElement): string[] {
     const shortcuts: string[] = [];
 
-    // Check for accesskey
+    // Check for accesskey;
     const accessKey = element.getAttribute('accesskey');
     if (accessKey) {
       shortcuts.push(`Alt+${accessKey}`);
@@ -722,8 +722,8 @@ class ScreenReaderService {
       this.crisisContext = { isActive, severity, interventionType };
       
       if (isActive) {
-        this.announceCrisisActivation(severity, interventionType);
-      } else {
+        this.announceCrisisActivation(severity, interventionType);;
+  } else {
         this.announceCrisisResolution();
       }
     }) as EventListener);
@@ -762,7 +762,7 @@ class ScreenReaderService {
       message,
       priority: 'emergency',
       type: 'crisis',
-      persistent: true
+      persistent: true;
     });
   }
 
@@ -773,7 +773,7 @@ class ScreenReaderService {
     this.announce({
       message: 'Crisis support session ended. Regular support resources remain available.',
       priority: 'medium',
-      type: 'status'
+      type: 'status';
     });
   }
 
@@ -787,8 +787,8 @@ class ScreenReaderService {
     let message = `${action} activated. `;
     
     if (isEmergency) {
-      message += 'Emergency services are being contacted. Stay on the line.';
-    } else {
+      message += 'Emergency services are being contacted. Stay on the line.';;
+  } else {
       message += 'Crisis resources are loading. Help is on the way.';
     }
 
@@ -796,7 +796,7 @@ class ScreenReaderService {
       message,
       priority: 'emergency',
       type: 'crisis',
-      persistent: true
+      persistent: true;
     });
   }
 
@@ -882,8 +882,8 @@ class ScreenReaderService {
     // Add new announcement
     setTimeout(() => {
       if (announcement.persistent) {
-        region.textContent += ` ${announcement.message}`;
-      } else {
+        region.textContent += ` ${announcement.message}`;;
+  } else {
         region.textContent = announcement.message;
       }
     }, 50);
@@ -935,14 +935,15 @@ class ScreenReaderService {
         message: `Validation error for ${field}: ${error}`,
         priority: 'medium',
         type: 'error',
-        context: 'form-validation'
-      });
-    } else {
+        context: 'form-validation';
+      };
+  };;
+  } else {
       this.announce({
         message: `${field} is valid`,
         priority: 'low',
         type: 'success',
-        context: 'form-validation'
+        context: 'form-validation';
       });
     }
   }
@@ -958,7 +959,7 @@ class ScreenReaderService {
       message: `Focus moved to ${role}: ${label}`,
       priority: 'low',
       type: 'navigation',
-      context: context || 'focus-change'
+      context: context || 'focus-change';
     });
   }
 
@@ -970,7 +971,7 @@ class ScreenReaderService {
       message: isLoading ? 'Loading content, please wait' : 'Content loaded',
       priority: 'medium',
       type: 'status',
-      context: context || 'loading'
+      context: context || 'loading';
     });
   }
 
@@ -982,7 +983,7 @@ class ScreenReaderService {
       message,
       priority: 'medium',
       type: 'success',
-      context: context || 'success'
+      context: context || 'success';
     });
   }
 
@@ -994,7 +995,7 @@ class ScreenReaderService {
       message,
       priority: 'high',
       type: 'error',
-      context: context || 'error'
+      context: context || 'error';
     });
   }
 
@@ -1006,7 +1007,7 @@ class ScreenReaderService {
       message: `Navigated to ${pageName}`,
       priority: 'medium',
       type: 'navigation',
-      context: context || 'page-change'
+      context: context || 'page-change';
     });
   }
 
@@ -1019,7 +1020,7 @@ class ScreenReaderService {
       message,
       priority: 'low',
       type: 'status',
-      context: 'keyboard-shortcuts'
+      context: 'keyboard-shortcuts';
     });
   }
 
@@ -1032,7 +1033,7 @@ class ScreenReaderService {
       priority: 'emergency',
       type: 'crisis',
       context: 'crisis-escalation',
-      persistent: true
+      persistent: true;
     });
   }
 
@@ -1049,6 +1050,6 @@ class ScreenReaderService {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export default ScreenReaderService;
 export const screenReaderService = new ScreenReaderService();

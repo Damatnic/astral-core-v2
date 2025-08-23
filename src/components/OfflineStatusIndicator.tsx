@@ -5,7 +5,7 @@
  * and provides controls for managing offline data and sync status.
  * 
  * @license Apache-2.0
- */
+ */;
 
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -34,7 +34,7 @@ export const OfflineStatusIndicator: React.FC = () => {
 
   /**
    * Format storage usage for display
-   */
+   */;
   const formatStorageSize = (bytes: number): string => {
     if (bytes === 0) return '0 B';
     const sizes = ['B', 'KB', 'MB', 'GB'];
@@ -44,7 +44,7 @@ export const OfflineStatusIndicator: React.FC = () => {
 
   /**
    * Get status color based on online/offline state
-   */
+   */;
   const getStatusColor = (): string => {
     if (isOnline) return 'var(--accent-success)';
     return hasOfflineSupport ? 'var(--accent-warning)' : 'var(--accent-error)';
@@ -52,7 +52,7 @@ export const OfflineStatusIndicator: React.FC = () => {
 
   /**
    * Get status text
-   */
+   */;
   const getStatusText = (): string => {
     if (isInitializing) return t('offline.status.initializing', 'Initializing...');
     if (isOnline) return t('offline.status.online', 'Online');
@@ -63,7 +63,7 @@ export const OfflineStatusIndicator: React.FC = () => {
 
   /**
    * Handle resource update
-   */
+   */;
   const handleUpdateResources = async () => {
     try {
       await updateOfflineResources();
@@ -74,7 +74,7 @@ export const OfflineStatusIndicator: React.FC = () => {
 
   /**
    * Handle clear offline data
-   */
+   */;
   const handleClearData = async () => {
     try {
       await clearOfflineData();
@@ -89,7 +89,7 @@ export const OfflineStatusIndicator: React.FC = () => {
   return (
     <>
       {/* Compact status indicator */}
-      <button 
+      <button; 
         className="offline-status-indicator"
         onClick={() => setShowDetailsModal(true)}
         onKeyDown={(e) => {
@@ -114,7 +114,7 @@ export const OfflineStatusIndicator: React.FC = () => {
           fontSize: '12px',
           display: 'flex',
           alignItems: 'center',
-          gap: '6px'
+          gap: '6px';
         }}
       >
         <div 
@@ -122,7 +122,7 @@ export const OfflineStatusIndicator: React.FC = () => {
             width: '8px',
             height: '8px',
             borderRadius: '50%',
-            backgroundColor: getStatusColor()
+            backgroundColor: getStatusColor();
           }}
         />
         <span style={{ fontWeight: 'bold' }}>
@@ -134,7 +134,7 @@ export const OfflineStatusIndicator: React.FC = () => {
             color: 'white', 
             borderRadius: '10px', 
             padding: '2px 6px',
-            fontSize: '10px'
+            fontSize: '10px';
           }}>
             {syncQueueSize}
           </span>
@@ -159,7 +159,7 @@ export const OfflineStatusIndicator: React.FC = () => {
                   width: '12px',
                   height: '12px',
                   borderRadius: '50%',
-                  backgroundColor: getStatusColor()
+                  backgroundColor: getStatusColor();
                 }}
               />
               <span className="font-medium">{getStatusText()}</span>
@@ -214,7 +214,7 @@ export const OfflineStatusIndicator: React.FC = () => {
                 <span>{formatStorageSize(storageUsage.quota)}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
+                <div; 
                   className="bg-blue-600 h-2 rounded-full"
                   style={{ width: `${Math.min(storageUsage.percentage, 100)}%` }}
                 />
@@ -297,7 +297,7 @@ export const OfflineStatusIndicator: React.FC = () => {
             </AppButton>
             <AppButton
               onClick={handleClearData}
-              variant="secondary"
+              variant="secondary";
               className="flex-1"
             >
               {t('offline.actions.clear', 'Clear Offline Data')}

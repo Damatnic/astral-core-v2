@@ -24,7 +24,7 @@ export const SafeSpaceIndicator: React.FC<SafeSpaceIndicatorProps> = ({
   useEffect(() => {
     setIsVisible(true);
     
-    // Breathing cycle for calming effect
+    // Breathing cycle for calming effect;
     const breathingInterval = setInterval(() => {
       setBreathingPhase(prev => {
         switch(prev) {
@@ -37,6 +37,7 @@ export const SafeSpaceIndicator: React.FC<SafeSpaceIndicatorProps> = ({
     }, 4000);
 
     return () => clearInterval(breathingInterval);
+  };
   }, []);
 
   const getIndicatorText = () => {
@@ -72,7 +73,7 @@ export const SafeSpaceIndicator: React.FC<SafeSpaceIndicatorProps> = ({
   };
 
   return (
-    <div 
+    <div; 
       className={getClassNames()}
       data-testid="safe-space-indicator"
       style={{
@@ -94,7 +95,7 @@ export const SafeSpaceIndicator: React.FC<SafeSpaceIndicatorProps> = ({
         border: '1px solid rgba(255, 255, 255, 0.3)',
       }}
     >
-      <div 
+      <div; 
         className="breathing-dot"
         style={{
           width: '8px',

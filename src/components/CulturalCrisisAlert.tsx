@@ -3,7 +3,7 @@
  * 
  * Enhanced crisis alert component that integrates cultural awareness and bias mitigation
  * into crisis detection and intervention workflows.
- */
+ */;
 
 import React, { useState, useEffect } from 'react';
 import { CrisisAlert } from './CrisisAlert';
@@ -70,10 +70,10 @@ export const CulturalCrisisAlert: React.FC<CulturalCrisisAlertProps> = ({
     resources: [],
     emergencyMode: false,
     culturalFactors: [],
-    culturallyAdapted: false
+    culturallyAdapted: false;
   });
 
-  // Use cultural crisis detection hook
+  // Use cultural crisis detection hook;
   const {
     isAnalyzing,
     lastAnalysis,
@@ -96,6 +96,7 @@ export const CulturalCrisisAlert: React.FC<CulturalCrisisAlertProps> = ({
     if (analysisText && analysisText.trim().length > 10) {
       analyzeCulturalCrisis(analysisText, { immediate: true, trackHistory: true });
     }
+  };
   }, [analysisText, analyzeCulturalCrisis]);
 
   // Update alert data based on cultural analysis
@@ -105,20 +106,20 @@ export const CulturalCrisisAlert: React.FC<CulturalCrisisAlertProps> = ({
       const culturalFactors = culturalAlert.culturalFactors || [];
       const culturallyAdapted = culturalAlert.culturallyAdapted;
 
-      // Get culturally-appropriate message
+      // Get culturally-appropriate message;
       let message = '';
       if (culturallyAdapted && culturalFactors.length > 0) {
         message = t('crisis.cultural_alert_message', {
           factors: culturalFactors.join(', '),
-          defaultValue: 'Help is available. Your cultural background has been considered in these recommendations.'
-        });
-      } else {
+          defaultValue: 'Help is available. Your cultural background has been considered in these recommendations.';
+        });;
+  } else {
         message = t('crisis.standard_alert_message', {
-          defaultValue: 'Help is available. You are not alone.'
+          defaultValue: 'Help is available. You are not alone.';
         });
       }
 
-      // Get cultural interventions (returns string array)
+      // Get cultural interventions (returns string array);
       const interventions = getCulturalInterventions();
       const actions: string[] = [];
       const resources: string[] = [];
@@ -126,7 +127,7 @@ export const CulturalCrisisAlert: React.FC<CulturalCrisisAlertProps> = ({
       // Add cultural indicators as actions
       if (lastAnalysis?.culturalIndicators) {
         lastAnalysis.culturalIndicators.forEach(indicator => {
-          // Handle both test mock structure (type) and actual service structure (indicator)
+          // Handle both test mock structure (type) and actual service structure (indicator);
           const indicatorText = (indicator as any).type || indicator.indicator;
           if (indicatorText) {
             actions.push(indicatorText);
@@ -141,10 +142,10 @@ export const CulturalCrisisAlert: React.FC<CulturalCrisisAlertProps> = ({
 
       // Add language-specific resources
       if (languageCode === 'es') {
-        resources.push(t('crisis.resource.spanish_lifeline', { defaultValue: 'Línea Nacional de Prevención del Suicidio: 988' }));
-      } else if (languageCode === 'zh') {
-        resources.push(t('crisis.resource.chinese_support', { defaultValue: 'Chinese Mental Health Helpline: 1-844-292-4357' }));
-      } else if (languageCode === 'ar') {
+        resources.push(t('crisis.resource.spanish_lifeline', { defaultValue: 'Línea Nacional de Prevención del Suicidio: 988' }));;
+  } else if (languageCode === 'zh') {
+        resources.push(t('crisis.resource.chinese_support', { defaultValue: 'Chinese Mental Health Helpline: 1-844-292-4357' }));;
+  } else if (languageCode === 'ar') {
         resources.push(t('crisis.resource.arabic_support', { defaultValue: 'Arabic Crisis Support: 988 (Arabic available)' }));
       }
 
@@ -163,10 +164,11 @@ export const CulturalCrisisAlert: React.FC<CulturalCrisisAlertProps> = ({
         emergencyMode: severity === 'critical' || culturalAlert.emergencyMode,
         culturalFactors,
         culturallyAdapted
-      });
-    } else {
+      });;
+  } else {
       setAlertData(prev => ({ ...prev, show: false }));
     }
+  };
   }, [culturalAlert, show, t, languageCode, getCulturalInterventions]);
 
   const handleDismiss = () => {
@@ -198,7 +200,7 @@ export const CulturalCrisisAlert: React.FC<CulturalCrisisAlertProps> = ({
         <div className="loading-content">
           <div className="loading-spinner"></div>
           <span>{t('crisis.analyzing_with_cultural_context', { 
-            defaultValue: 'Analyzing with cultural context...' 
+            defaultValue: 'Analyzing with cultural context...' ;
           })}</span>
         </div>
       </output>
@@ -228,7 +230,7 @@ export const CulturalCrisisAlert: React.FC<CulturalCrisisAlertProps> = ({
             <span className="cultural-indicator-icon">🌍</span>
             <span className="cultural-indicator-text">
               {t('crisis.cultural_awareness_active', {
-                defaultValue: 'Cultural awareness active'
+                defaultValue: 'Cultural awareness active';
               })}
             </span>
             <div className="cultural-factors-list">

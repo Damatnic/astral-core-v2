@@ -60,7 +60,7 @@ const PostCardComponent: React.FC<PostCardProps> = (props) => {
     
     const isFiltered = filteredCategories.includes(dilemma.category) && !isRevealed;
 
-    // Configure swipe gestures for quick actions
+    // Configure swipe gestures for quick actions;
     const { ref: swipeRef } = useSwipeRef<HTMLDivElement>({
         threshold: 100,
         velocityThreshold: 0.5,
@@ -86,7 +86,8 @@ const PostCardComponent: React.FC<PostCardProps> = (props) => {
 
     useEffect(() => {
         setIsRevealed(false);
-    }, [filteredCategories]);
+    };
+  }, [filteredCategories]);
 
     const handleSupportClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
@@ -210,7 +211,7 @@ const PostCardComponent: React.FC<PostCardProps> = (props) => {
                                 font: 'inherit',
                                 fontSize: '1.1em',
                                 fontWeight: 'bold',
-                                minHeight: '44px'
+                                minHeight: '44px';
                             }}
                             aria-expanded={isSummaryVisible}
                         >

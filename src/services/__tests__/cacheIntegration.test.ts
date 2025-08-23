@@ -1,6 +1,6 @@
 /**
  * @jest-environment jsdom
- */
+ */;
 
 import { CacheIntegration, cacheIntegration } from '../cacheIntegration';
 
@@ -19,21 +19,21 @@ jest.mock('../intelligentCachingService', () => ({
       misses: 20,
       hitRate: 0.83,
       totalEntries: 50,
-      totalSize: 1024000
+      totalSize: 1024000;
     }))
   },
   CachePriority: {
     CRITICAL: 'critical',
     HIGH: 'high',
     MEDIUM: 'medium',
-    LOW: 'low'
+    LOW: 'low';
   },
   ResourceType: {
     DOCUMENT: 'document',
     SCRIPT: 'script',
     STYLE: 'style',
     IMAGE: 'image',
-    API: 'api'
+    API: 'api';
   }
 }));
 
@@ -45,7 +45,7 @@ jest.mock('../cacheStrategyCoordinator', () => ({
     initializeCacheWarming: jest.fn(() => Promise.resolve()),
     setupCacheStrategies: jest.fn(),
     getCacheStrategy: jest.fn(),
-    updateStrategy: jest.fn()
+    updateStrategy: jest.fn();
   }
 }));
 
@@ -70,7 +70,7 @@ describe('CacheIntegration', () => {
       const config = {
         enableCacheWarming: false,
         enableIntelligentEviction: false,
-        maintenanceInterval: 60
+        maintenanceInterval: 60;
       };
 
       const integration = new CacheIntegration(config);
@@ -99,7 +99,7 @@ describe('CacheIntegration', () => {
 
     it.skip('should initialize with cache warming disabled', async () => {
       const integration = new CacheIntegration({
-        enableCacheWarming: false
+        enableCacheWarming: false;
       });
       
       await expect(integration.initialize()).resolves.not.toThrow();

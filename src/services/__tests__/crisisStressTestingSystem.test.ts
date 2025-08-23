@@ -1,7 +1,7 @@
 /**
  * Test Suite for Crisis Stress Testing System
  * Tests system resilience under high crisis loads
- */
+ */;
 
 import { crisisStressTestingSystem } from '../crisisStressTestingSystem';
 
@@ -25,14 +25,14 @@ describe('CrisisStressTestingSystem', () => {
           targetComponents: ['crisis-detection'],
           expectedOutcome: 'All requests processed',
           failureConditions: ['Response time > 1000ms'],
-          recoveryTime: 500
+          recoveryTime: 500;
         }],
         failureThresholds: {
           responseTime: 1000,
           errorRate: 0.05,
-          availability: 0.99
+          availability: 0.99;
         },
-        emergencyBreakConditions: ['System failure']
+        emergencyBreakConditions: ['System failure'];
       };
 
       const results = await crisisStressTestingSystem.runCrisisStressTests(config);
@@ -57,14 +57,14 @@ describe('CrisisStressTestingSystem', () => {
           targetComponents: ['emergency-button', 'crisis-alerts'],
           expectedOutcome: 'Emergency cases processed first',
           failureConditions: ['Emergency response > 100ms'],
-          recoveryTime: 200
+          recoveryTime: 200;
         }],
         failureThresholds: {
           responseTime: 100,
           errorRate: 0.01,
-          availability: 0.999
+          availability: 0.999;
         },
-        emergencyBreakConditions: ['Emergency failure']
+        emergencyBreakConditions: ['Emergency failure'];
       };
 
       const results = await crisisStressTestingSystem.runCrisisStressTests(config);
@@ -87,14 +87,14 @@ describe('CrisisStressTestingSystem', () => {
           targetComponents: ['ai-crisis-detection'],
           expectedOutcome: 'Maintain 95% accuracy',
           failureConditions: ['Accuracy < 95%'],
-          recoveryTime: 1000
+          recoveryTime: 1000;
         }],
         failureThresholds: {
           responseTime: 500,
           errorRate: 0.05,
-          availability: 0.95
+          availability: 0.95;
         },
-        emergencyBreakConditions: ['Accuracy below 90%']
+        emergencyBreakConditions: ['Accuracy below 90%'];
       };
 
       const results = await crisisStressTestingSystem.runCrisisStressTests(config);
@@ -108,7 +108,7 @@ describe('CrisisStressTestingSystem', () => {
     it.skip('should handle primary detector failure', async () => {
       const failoverTests = await crisisStressTestingSystem.runEmergencyFailoverTests();
       
-      const primaryFailure = failoverTests.find(test => 
+      const primaryFailure = failoverTests.find(test => ;
         test.failureType === 'service' && test.component.includes('detection')
       );
       
@@ -122,7 +122,7 @@ describe('CrisisStressTestingSystem', () => {
     it.skip('should handle database connection loss', async () => {
       const failoverTests = await crisisStressTestingSystem.runEmergencyFailoverTests();
       
-      const dbFailure = failoverTests.find(test => 
+      const dbFailure = failoverTests.find(test => ;
         test.failureType === 'database'
       );
       
@@ -136,7 +136,7 @@ describe('CrisisStressTestingSystem', () => {
     it.skip('should handle API rate limiting', async () => {
       const failoverTests = await crisisStressTestingSystem.runEmergencyFailoverTests();
       
-      const apiFailure = failoverTests.find(test => 
+      const apiFailure = failoverTests.find(test => ;
         test.simulatedFailure.includes('API') || test.simulatedFailure.includes('rate')
       );
       
@@ -153,8 +153,8 @@ describe('CrisisStressTestingSystem', () => {
       // Check multiple failures were tested
       expect(failoverTests.length).toBeGreaterThan(1);
       
-      // Verify recovery from failures
-      const recoveredCount = failoverTests.filter(test => 
+      // Verify recovery from failures;
+      const recoveredCount = failoverTests.filter(test => ;
         test.testResult?.fallbackWorked === true
       ).length;
       
@@ -178,14 +178,14 @@ describe('CrisisStressTestingSystem', () => {
           targetComponents: ['crisis-detection'],
           expectedOutcome: 'Track metrics',
           failureConditions: ['Response time > 1000ms'],
-          recoveryTime: 500
+          recoveryTime: 500;
         }],
         failureThresholds: {
           responseTime: 1000,
           errorRate: 0.05,
-          availability: 0.95
+          availability: 0.95;
         },
-        emergencyBreakConditions: []
+        emergencyBreakConditions: [];
       };
 
       const results = await crisisStressTestingSystem.runCrisisStressTests(config);
@@ -208,14 +208,14 @@ describe('CrisisStressTestingSystem', () => {
           targetComponents: ['crisis-detection', 'crisis-alerts'],
           expectedOutcome: 'Detect degradation',
           failureConditions: ['Performance degraded'],
-          recoveryTime: 2000
+          recoveryTime: 2000;
         }],
         failureThresholds: {
           responseTime: 500,
           errorRate: 0.1,
-          availability: 0.9
+          availability: 0.9;
         },
-        emergencyBreakConditions: ['Severe degradation']
+        emergencyBreakConditions: ['Severe degradation'];
       };
 
       const results = await crisisStressTestingSystem.runCrisisStressTests(config);
@@ -238,14 +238,14 @@ describe('CrisisStressTestingSystem', () => {
           targetComponents: ['ai-crisis-detection'],
           expectedOutcome: 'Monitor resources',
           failureConditions: ['Resource exhaustion'],
-          recoveryTime: 1000
+          recoveryTime: 1000;
         }],
         failureThresholds: {
           responseTime: 2000,
           errorRate: 0.1,
-          availability: 0.9
+          availability: 0.9;
         },
-        emergencyBreakConditions: ['Out of memory']
+        emergencyBreakConditions: ['Out of memory'];
       };
 
       const results = await crisisStressTestingSystem.runCrisisStressTests(config);
@@ -259,12 +259,12 @@ describe('CrisisStressTestingSystem', () => {
     it.skip('should handle random failures gracefully', async () => {
       const failoverTests = await crisisStressTestingSystem.runEmergencyFailoverTests();
       
-      // Verify system handles various failure types
+      // Verify system handles various failure types;
       const failureTypes = new Set(failoverTests.map(test => test.failureType));
       
-      expect(failureTypes.size).toBeGreaterThan(2); // Multiple failure types tested
+      expect(failureTypes.size).toBeGreaterThan(2); // Multiple failure types tested;
       
-      const successfulRecoveries = failoverTests.filter(test => 
+      const successfulRecoveries = failoverTests.filter(test => ;
         test.testResult?.fallbackWorked === true
       );
       
@@ -274,7 +274,7 @@ describe('CrisisStressTestingSystem', () => {
     it.skip('should handle network partitions', async () => {
       const failoverTests = await crisisStressTestingSystem.runEmergencyFailoverTests();
       
-      const networkFailure = failoverTests.find(test => 
+      const networkFailure = failoverTests.find(test => ;
         test.failureType === 'network'
       );
       
@@ -299,14 +299,14 @@ describe('CrisisStressTestingSystem', () => {
           targetComponents: ['crisis-detection'],
           expectedOutcome: 'Handle timing issues',
           failureConditions: [],
-          recoveryTime: 100
+          recoveryTime: 100;
         }],
         failureThresholds: {
           responseTime: 5000,
           errorRate: 0.2,
-          availability: 0.8
+          availability: 0.8;
         },
-        emergencyBreakConditions: []
+        emergencyBreakConditions: [];
       };
 
       const results = await crisisStressTestingSystem.runCrisisStressTests(config);
@@ -330,14 +330,14 @@ describe('CrisisStressTestingSystem', () => {
           targetComponents: ['crisis-detection', 'crisis-alerts'],
           expectedOutcome: 'Handle 1000 concurrent users',
           failureConditions: ['Cannot scale'],
-          recoveryTime: 2000
+          recoveryTime: 2000;
         }],
         failureThresholds: {
           responseTime: 500,
           errorRate: 0.05,
-          availability: 0.99
+          availability: 0.99;
         },
-        emergencyBreakConditions: ['Scaling failure']
+        emergencyBreakConditions: ['Scaling failure'];
       };
 
       const results = await crisisStressTestingSystem.runCrisisStressTests(config);
@@ -360,14 +360,14 @@ describe('CrisisStressTestingSystem', () => {
           targetComponents: ['crisis-detection'],
           expectedOutcome: 'Auto-scale successfully',
           failureConditions: ['Scaling timeout'],
-          recoveryTime: 3000
+          recoveryTime: 3000;
         }],
         failureThresholds: {
           responseTime: 200,
           errorRate: 0.02,
-          availability: 0.999
+          availability: 0.999;
         },
-        emergencyBreakConditions: ['Scale limit reached']
+        emergencyBreakConditions: ['Scale limit reached'];
       };
 
       const results = await crisisStressTestingSystem.runCrisisStressTests(config);
@@ -392,14 +392,14 @@ describe('CrisisStressTestingSystem', () => {
           targetComponents: ['crisis-detection'],
           expectedOutcome: 'Maintain data consistency',
           failureConditions: ['Data corruption', 'Lost writes'],
-          recoveryTime: 500
+          recoveryTime: 500;
         }],
         failureThresholds: {
           responseTime: 1000,
           errorRate: 0,
-          availability: 1.0
+          availability: 1.0;
         },
-        emergencyBreakConditions: ['Data inconsistency detected']
+        emergencyBreakConditions: ['Data inconsistency detected'];
       };
 
       const results = await crisisStressTestingSystem.runCrisisStressTests(config);
@@ -411,8 +411,8 @@ describe('CrisisStressTestingSystem', () => {
     it.skip('should handle distributed transactions', async () => {
       const failoverTests = await crisisStressTestingSystem.runEmergencyFailoverTests();
       
-      // Verify data integrity across failures
-      const testsWithIntegrity = failoverTests.filter(test => 
+      // Verify data integrity across failures;
+      const testsWithIntegrity = failoverTests.filter(test => ;
         test.testResult?.dataIntegrity === true
       );
       
@@ -436,14 +436,14 @@ describe('CrisisStressTestingSystem', () => {
           targetComponents: ['ai-crisis-detection'],
           expectedOutcome: 'Handle long texts',
           failureConditions: ['Memory overflow'],
-          recoveryTime: 500
+          recoveryTime: 500;
         }],
         failureThresholds: {
           responseTime: 5000,
           errorRate: 0.1,
-          availability: 0.9
+          availability: 0.9;
         },
-        emergencyBreakConditions: []
+        emergencyBreakConditions: [];
       };
 
       const results = await crisisStressTestingSystem.runCrisisStressTests(config);
@@ -465,14 +465,14 @@ describe('CrisisStressTestingSystem', () => {
           targetComponents: ['crisis-detection'],
           expectedOutcome: 'Maintain user context',
           failureConditions: ['Context loss'],
-          recoveryTime: 1000
+          recoveryTime: 1000;
         }],
         failureThresholds: {
           responseTime: 200,
           errorRate: 0.01,
-          availability: 0.99
+          availability: 0.99;
         },
-        emergencyBreakConditions: ['Context corruption']
+        emergencyBreakConditions: ['Context corruption'];
       };
 
       const results = await crisisStressTestingSystem.runCrisisStressTests(config);
@@ -495,14 +495,14 @@ describe('CrisisStressTestingSystem', () => {
           targetComponents: ['crisis-detection'],
           expectedOutcome: 'Handle invalid inputs gracefully',
           failureConditions: ['System crash', 'Unhandled exception'],
-          recoveryTime: 100
+          recoveryTime: 100;
         }],
         failureThresholds: {
           responseTime: 1000,
           errorRate: 0.5, // Higher tolerance for malformed inputs
-          availability: 0.8
+          availability: 0.8;
         },
-        emergencyBreakConditions: ['System crash']
+        emergencyBreakConditions: ['System crash'];
       };
 
       const results = await crisisStressTestingSystem.runCrisisStressTests(config);
@@ -527,14 +527,14 @@ describe('CrisisStressTestingSystem', () => {
           targetComponents: ['emergency-button', 'crisis-chat', 'ai-crisis-detection'],
           expectedOutcome: 'Complete stress test successfully',
           failureConditions: [],
-          recoveryTime: 1000
+          recoveryTime: 1000;
         }],
         failureThresholds: {
           responseTime: 100,
           errorRate: 0.01,
-          availability: 0.99
+          availability: 0.99;
         },
-        emergencyBreakConditions: []
+        emergencyBreakConditions: [];
       };
 
       const results = await crisisStressTestingSystem.runCrisisStressTests(config);
@@ -558,14 +558,14 @@ describe('CrisisStressTestingSystem', () => {
           targetComponents: ['crisis-detection'],
           expectedOutcome: 'Trigger alerts on breach',
           failureConditions: ['Response time > 100ms'],
-          recoveryTime: 100
+          recoveryTime: 100;
         }],
         failureThresholds: {
           responseTime: 100,
           errorRate: 0.01,
-          availability: 0.99
+          availability: 0.99;
         },
-        emergencyBreakConditions: ['Critical breach']
+        emergencyBreakConditions: ['Critical breach'];
       };
 
       const results = await crisisStressTestingSystem.runCrisisStressTests(config);

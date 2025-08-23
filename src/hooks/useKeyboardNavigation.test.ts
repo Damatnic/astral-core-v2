@@ -4,7 +4,7 @@
 
 /**
  * @jest-environment jsdom
- */
+ */;
 import { renderHook, act, waitFor } from '../test-utils';
 import { 
   useKeyboardNavigation, 
@@ -34,7 +34,7 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-// Mock DOM methods
+// Mock DOM methods;
 const mockFocus = jest.fn();
 const mockClick = jest.fn();
 const mockScrollIntoView = jest.fn();
@@ -60,23 +60,23 @@ const createMockElement = (tagName: string, props: any = {}) => ({
 const mockContainer = {
   querySelectorAll: jest.fn(),
   querySelector: jest.fn(),
-  contains: jest.fn(() => true)
+  contains: jest.fn(() => true);
 };
 
 // Mock document methods
 Object.defineProperty(document, 'activeElement', {
   writable: true,
-  value: null
+  value: null;
 });
 
 Object.defineProperty(document, 'addEventListener', {
   value: jest.fn(),
-  writable: true
+  writable: true;
 });
 
 Object.defineProperty(document, 'removeEventListener', {
   value: jest.fn(),
-  writable: true
+  writable: true;
 });
 
 // Don't override createElement - it might interfere with React Testing Library
@@ -250,7 +250,7 @@ describe('useKeyboardNavigation Hook', () => {
     const mockEvent = {
       key: 'ArrowDown',
       preventDefault: jest.fn(),
-      target: elements[0]
+      target: elements[0];
     };
 
     mockContainer.contains.mockReturnValue(true);
@@ -258,7 +258,7 @@ describe('useKeyboardNavigation Hook', () => {
 
     renderHook(() => useKeyboardNavigation(containerRef));
 
-    // Simulate keydown event
+    // Simulate keydown event;
     const eventListeners = (document.addEventListener as jest.Mock).mock.calls;
     const keydownListener = eventListeners.find(call => call[0] === 'keydown')[1];
 
@@ -275,7 +275,7 @@ describe('useKeyboardNavigation Hook', () => {
     const mockHomeEvent = {
       key: 'Home',
       preventDefault: jest.fn(),
-      target: elements[1]
+      target: elements[1];
     };
 
     mockContainer.contains.mockReturnValue(true);
@@ -299,7 +299,7 @@ describe('useKeyboardNavigation Hook', () => {
     const mockEnterEvent = {
       key: 'Enter',
       preventDefault: jest.fn(),
-      target: elements[0]
+      target: elements[0];
     };
 
     mockContainer.contains.mockReturnValue(true);
@@ -323,7 +323,7 @@ describe('useKeyboardNavigation Hook', () => {
     const mockEscapeEvent = {
       key: 'Escape',
       preventDefault: jest.fn(),
-      target: mockContainer.querySelectorAll()[0]
+      target: mockContainer.querySelectorAll()[0];
     };
 
     mockContainer.contains.mockReturnValue(true);
@@ -360,7 +360,7 @@ describe('useKeyboardNavigation Hook', () => {
     const mockEvent = {
       key: 'Enter',
       preventDefault: jest.fn(),
-      target: elements[0]
+      target: elements[0];
     };
 
     mockContainer.contains.mockReturnValue(true);
@@ -391,7 +391,7 @@ describe('useKeyboardNavigation Hook', () => {
     const mockEvent = {
       key: 'ArrowRight',
       preventDefault: jest.fn(),
-      target: elements[0]
+      target: elements[0];
     };
 
     mockContainer.contains.mockReturnValue(true);
@@ -414,7 +414,7 @@ describe('useKeyboardNavigation Hook', () => {
     const mockEvent = {
       key: 'ArrowDown',
       preventDefault: jest.fn(),
-      target: createMockElement('button')
+      target: createMockElement('button');
     };
 
     mockContainer.contains.mockReturnValue(false);
@@ -481,7 +481,7 @@ describe('useFocusTrap Hook', () => {
     const mockTabEvent = {
       key: 'Tab',
       shiftKey: false,
-      preventDefault: jest.fn()
+      preventDefault: jest.fn();
     };
 
     (document as any).activeElement = elements[elements.length - 1]; // Last element
@@ -504,7 +504,7 @@ describe('useFocusTrap Hook', () => {
     const mockShiftTabEvent = {
       key: 'Tab',
       shiftKey: true,
-      preventDefault: jest.fn()
+      preventDefault: jest.fn();
     };
 
     (document as any).activeElement = elements[0]; // First element
@@ -603,7 +603,7 @@ describe('useSkipNavigation Hook', () => {
     expect(mainElement.focus).toHaveBeenCalled();
     expect(mainElement.scrollIntoView).toHaveBeenCalledWith({
       behavior: 'smooth',
-      block: 'start'
+      block: 'start';
     });
   });
 
@@ -749,7 +749,7 @@ describe('useGlobalKeyboardShortcuts Hook', () => {
       shiftKey: false,
       metaKey: false,
       key: 's',
-      preventDefault: jest.fn()
+      preventDefault: jest.fn();
     };
 
     act(() => {
@@ -764,7 +764,7 @@ describe('useGlobalKeyboardShortcuts Hook', () => {
   it.skip('should handle multiple modifier keys', () => {
     const complexHandler = jest.fn();
     
-    // The hook builds the key in the order: ctrl+alt+shift+meta+key
+    // The hook builds the key in the order: ctrl+alt+shift+meta+key;
     const shortcuts = {
       'ctrl+alt+shift+z': complexHandler
     };
@@ -784,7 +784,7 @@ describe('useGlobalKeyboardShortcuts Hook', () => {
       shiftKey: true,
       metaKey: false,
       key: 'z',
-      preventDefault: jest.fn()
+      preventDefault: jest.fn();
     };
 
     act(() => {
@@ -823,7 +823,7 @@ describe('useGlobalKeyboardShortcuts Hook', () => {
       shiftKey: false,
       metaKey: false,
       key: 's',
-      preventDefault: jest.fn()
+      preventDefault: jest.fn();
     };
 
     act(() => {

@@ -4,7 +4,7 @@
  * React component that provides a complete performance monitoring dashboard
  * with real-time alerts, performance budgets, optimization recommendations,
  * and mental health-specific performance considerations.
- */
+ */;
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
@@ -34,7 +34,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
   const [isLoading, setIsLoading] = useState(true);
   const [performanceGrade, setPerformanceGrade] = useState<string>('');
 
-  // Update metrics and related data
+  // Update metrics and related data;
   const updatePerformanceData = useCallback(() => {
     const currentMetrics = comprehensivePerformanceMonitor.getCurrentMetrics();
     const activeAlerts = comprehensivePerformanceMonitor.getActiveAlerts();
@@ -45,24 +45,25 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
     setRecommendations(optimizationRecs);
     
     if (currentMetrics) {
-      // Generate performance report and extract grade
+      // Generate performance report and extract grade;
       const report = comprehensivePerformanceMonitor.generatePerformanceReport();
       const gradeMatch = report.match(/## 📈 Performance Grade\n(.+)/);
       setPerformanceGrade(gradeMatch ? gradeMatch[1] : 'Unknown');
     }
     
     setIsLoading(false);
+  };
   }, []);
 
-  // Handle alert updates
+  // Handle alert updates;
   const handleAlertUpdate = useCallback((alert: PerformanceAlert) => {
     setAlerts(prev => {
       const updated = [...prev];
       const existingIndex = updated.findIndex(a => a.id === alert.id);
       
       if (existingIndex >= 0) {
-        updated[existingIndex] = alert;
-      } else {
+        updated[existingIndex] = alert;;
+  } else {
         updated.push(alert);
       }
       
@@ -71,6 +72,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
     
     // Notify parent component
     onAlert?.(alert);
+  };
   }, [onAlert]);
 
   // Set up real-time monitoring and alerts
@@ -78,10 +80,10 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
     // Initial data load
     updatePerformanceData();
 
-    // Set up periodic updates
+    // Set up periodic updates;
     const interval = setInterval(updatePerformanceData, 10000); // Every 10 seconds
 
-    // Set up alert handling
+    // Set up alert handling;
     let unsubscribeAlert: (() => void) | undefined;
     
     if (enableRealTimeAlerts) {
@@ -91,9 +93,11 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
     return () => {
       clearInterval(interval);
       unsubscribeAlert?.();
-    }, [updatePerformanceData, enableRealTimeAlerts, handleAlertUpdate]);
+    };
+  };
+  }, [updatePerformanceData, enableRealTimeAlerts, handleAlertUpdate]);
 
-  // Format metric values for display
+  // Format metric values for display;
   const formatMetric = (value: number, unit: string, precision = 0): string => {
     if (unit === 'ms') return `${value.toFixed(precision)}ms`;
     if (unit === 'MB') return `${value.toFixed(precision)}MB`;
@@ -102,7 +106,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
     return `${value.toFixed(precision)}`;
   };
 
-  // Get severity color
+  // Get severity color;
   const getSeverityColor = (severity: AlertSeverity): string => {
     switch (severity) {
       case 'critical': return '#dc2626'; // red-600
@@ -113,7 +117,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
     }
   };
 
-  // Get metric status color
+  // Get metric status color;
   const getMetricStatusColor = (value: number, target: number, warning: number): string => {
     if (value <= target) return '#22c55e'; // green-500
     if (value <= warning) return '#eab308'; // yellow-500
@@ -198,7 +202,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
           <div className="metrics-grid">
             <div className="metric-card">
               <span className="metric-label">First Contentful Paint</span>
-              <span 
+              <span; 
                 className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.firstContentfulPaint, 1500, 3000) }}
               >
@@ -207,7 +211,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
             </div>
             <div className="metric-card">
               <span className="metric-label">Largest Contentful Paint</span>
-              <span 
+              <span; 
                 className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.largestContentfulPaint, 2500, 4000) }}
               >
@@ -216,7 +220,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
             </div>
             <div className="metric-card">
               <span className="metric-label">First Input Delay</span>
-              <span 
+              <span; 
                 className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.firstInputDelay, 50, 100) }}
               >
@@ -225,7 +229,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
             </div>
             <div className="metric-card">
               <span className="metric-label">Cumulative Layout Shift</span>
-              <span 
+              <span; 
                 className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.cumulativeLayoutShift, 0.05, 0.1) }}
               >
@@ -240,7 +244,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
           <div className="metrics-grid">
             <div className="metric-card crisis-metric">
               <span className="metric-label">Crisis Detection Response</span>
-              <span 
+              <span; 
                 className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.crisisDetectionResponseTime, 100, 300) }}
               >
@@ -250,7 +254,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
             </div>
             <div className="metric-card">
               <span className="metric-label">Chat Message Latency</span>
-              <span 
+              <span; 
                 className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.chatMessageLatency, 200, 500) }}
               >
@@ -277,7 +281,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
           <div className="metrics-grid">
             <div className="metric-card">
               <span className="metric-label">Bundle Size</span>
-              <span 
+              <span; 
                 className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.bundleSize, 500000, 1000000) }}
               >
@@ -286,7 +290,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
             </div>
             <div className="metric-card">
               <span className="metric-label">Memory Usage</span>
-              <span 
+              <span; 
                 className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.memoryUsage, 50, 100) }}
               >
@@ -295,7 +299,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
             </div>
             <div className="metric-card">
               <span className="metric-label">Load Time</span>
-              <span 
+              <span; 
                 className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.loadTime, 2000, 4000) }}
               >
@@ -328,7 +332,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
             </div>
             <div className="metric-card">
               <span className="metric-label">Accessibility Score</span>
-              <span 
+              <span; 
                 className="metric-value"
                 style={{ color: getMetricStatusColor(metrics.accessibilityScore, 85, 70) }}
               >
@@ -386,7 +390,7 @@ export const ComprehensivePerformanceMonitorComponent: React.FC<ComprehensivePer
   );
 };
 
-// CSS styles for the comprehensive performance monitor
+// CSS styles for the comprehensive performance monitor;
 export const comprehensivePerformanceMonitorStyles = `
   .comprehensive-performance-monitor {
     font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);

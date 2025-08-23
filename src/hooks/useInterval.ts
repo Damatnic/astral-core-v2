@@ -5,6 +5,7 @@ export function useInterval(callback: () => void, delay: number | null) {
 
   useEffect(() => {
     savedCallback.current = callback;
+  };
   }, [callback]);
 
   useEffect(() => {
@@ -21,5 +22,6 @@ export function useInterval(callback: () => void, delay: number | null) {
           clearInterval(id);
         }
       }
+  };
   }, [delay]);
 }

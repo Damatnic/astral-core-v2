@@ -1,7 +1,7 @@
 /**
  * Comprehensive Security Middleware for CoreV2
  * Implements OWASP best practices and HIPAA compliance
- */
+ */;
 
 import { Request, Response, NextFunction } from 'express';
 import helmet from 'helmet';
@@ -12,13 +12,13 @@ import jwt from 'jsonwebtoken';
 import { getSecurityConfigForEnvironment } from '../config/security.config';
 import { isProduction, isStaging } from '../utils/envValidator';
 
-const securityConfig = getSecurityConfigForEnvironment(
+const securityConfig = getSecurityConfigForEnvironment(;
   (process.env.NODE_ENV as 'development' | 'staging' | 'production') || 'production'
 );
 
 /**
  * Content Security Policy Middleware
- */
+ */;
 export const cspMiddleware = () => {
   const generateNonce = () => randomBytes(16).toString('base64');
   
@@ -34,7 +34,7 @@ export const cspMiddleware = () => {
       );
     }
     
-    const cspHeader = Object.entries(directives)
+    const cspHeader = Object.entries(directives);
       .map(([key, value]) => {
         const directive = key.replace(/([A-Z])/g, '-$1').toLowerCase();
         if (typeof value === 'boolean') {
@@ -55,7 +55,7 @@ export const cspMiddleware = () => {
 
 /**
  * OWASP Security Headers Middleware
- */
+ */;
 export const securityHeadersMiddleware = () => {
   return helmet({
     contentSecurityPolicy: false, // We handle CSP separately
@@ -84,7 +84,7 @@ export const securityHeadersMiddleware = () => {
 
 /**
  * Rate Limiting Middleware Factory
- */
+ */;
 export const createRateLimiter = (config: typeof securityConfig.rateLimiting.global) => {
   const limiterConfig = {
     windowMs: config.windowMs,
@@ -108,33 +108,33 @@ export const createRateLimiter = (config: typeof securityConfig.rateLimiting.glo
 
 /**
  * Global Rate Limiter
- */
+ */;
 export const globalRateLimiter = createRateLimiter(securityConfig.rateLimiting.global);
 
 /**
  * API Rate Limiter
- */
+ */;
 export const apiRateLimiter = createRateLimiter(securityConfig.rateLimiting.api);
 
 /**
  * Auth Rate Limiter
- */
+ */;
 export const authRateLimiter = createRateLimiter(securityConfig.rateLimiting.auth);
 
 /**
  * Crisis Endpoint Rate Limiter (More permissive)
- */
+ */;
 export const crisisRateLimiter = createRateLimiter(securityConfig.rateLimiting.crisis);
 
 /**
  * CORS Middleware
- */
+ */;
 export const corsMiddleware = () => {
   const corsOptions = {
     origin: (origin: string | undefined, callback: Function) => {
       if (!origin || securityConfig.cors.origins.includes(origin)) {
-        callback(null, true);
-      } else {
+        callback(null, true);;
+  } else {
         callback(new Error('Not allowed by CORS'));
       }
     },
@@ -152,7 +152,7 @@ export const corsMiddleware = () => {
 
 /**
  * JWT Authentication Middleware
- */
+ */;
 export const jwtAuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization?.replace('Bearer ', '');
   
@@ -176,7 +176,7 @@ export const jwtAuthMiddleware = (req: Request, res: Response, next: NextFunctio
 
 /**
  * Session Validation Middleware
- */
+ */;
 export const sessionValidationMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const session = (req as unknown).session;
   
@@ -184,7 +184,7 @@ export const sessionValidationMiddleware = (req: Request, res: Response, next: N
     return res.status(401).json({ error: 'Valid session required' });
   }
 
-  // Check session timeout
+  // Check session timeout;
   const lastActivity = session.lastActivity || Date.now();
   const timeout = securityConfig.session.security.sessionTimeout;
   
@@ -202,7 +202,7 @@ export const sessionValidationMiddleware = (req: Request, res: Response, next: N
 
 /**
  * API Key Authentication Middleware
- */
+ */;
 export const apiKeyAuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (!securityConfig.apiSecurity.authentication.apiKeyRequired) {
     return next();
@@ -214,7 +214,7 @@ export const apiKeyAuthMiddleware = (req: Request, res: Response, next: NextFunc
     return res.status(401).json({ error: 'API key required' });
   }
 
-  // Validate API key (implement your validation logic)
+  // Validate API key (implement your validation logic);
   const isValidApiKey = validateApiKey(apiKey);
   
   if (!isValidApiKey) {
@@ -226,7 +226,7 @@ export const apiKeyAuthMiddleware = (req: Request, res: Response, next: NextFunc
 
 /**
  * Input Sanitization Middleware
- */
+ */;
 export const inputSanitizationMiddleware = (req: Request, _res: Response, next: NextFunction) => {
   if (!securityConfig.apiSecurity.validation.inputSanitization) {
     return next();
@@ -265,13 +265,13 @@ export const inputSanitizationMiddleware = (req: Request, _res: Response, next: 
 
 /**
  * SQL Injection Protection Middleware
- */
+ */;
 export const sqlInjectionProtectionMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (!securityConfig.apiSecurity.validation.sqlInjectionProtection) {
     return next();
   }
 
-  const sqlPatterns = [
+  const sqlPatterns = [;
     /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|ALTER|CREATE|TRUNCATE|EXEC|EXECUTE)\b)/gi,
     /(--|#|\/\*|\*\/)/g,
     /(\bOR\b\s*\d+\s*=\s*\d+)/gi,
@@ -311,7 +311,7 @@ export const sqlInjectionProtectionMiddleware = (req: Request, res: Response, ne
 
 /**
  * XSS Protection Middleware
- */
+ */;
 export const xssProtectionMiddleware = (_req: Request, res: Response, next: NextFunction) => {
   if (!securityConfig.apiSecurity.validation.xssProtection) {
     return next();
@@ -323,7 +323,7 @@ export const xssProtectionMiddleware = (_req: Request, res: Response, next: Next
 
 /**
  * Device Fingerprinting Middleware
- */
+ */;
 export const deviceFingerprintMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (!securityConfig.zeroTrust.verifyExplicitly.requireDeviceFingerprinting) {
     return next();
@@ -335,7 +335,7 @@ export const deviceFingerprintMiddleware = (req: Request, res: Response, next: N
     return res.status(400).json({ error: 'Device fingerprint required' });
   }
 
-  // Validate fingerprint (implement your validation logic)
+  // Validate fingerprint (implement your validation logic);
   const isValidFingerprint = validateDeviceFingerprint(fingerprint, req);
   
   if (!isValidFingerprint) {
@@ -347,7 +347,7 @@ export const deviceFingerprintMiddleware = (req: Request, res: Response, next: N
 
 /**
  * Crisis Override Middleware
- */
+ */;
 export const crisisOverrideMiddleware = (req: Request, _res: Response, next: NextFunction) => {
   const crisisHeader = req.headers['x-crisis-override'] as string;
   
@@ -375,15 +375,15 @@ export const crisisOverrideMiddleware = (req: Request, _res: Response, next: Nex
 /**
  * HTTPS Enforcement Middleware
  * Redirects all HTTP traffic to HTTPS in production/staging
- */
+ */;
 export const httpsEnforcementMiddleware = (req: Request, res: Response, next: NextFunction) => {
   // Only enforce HTTPS in production and staging
   if (!isProduction() && !isStaging()) {
     return next();
   }
 
-  // Check if request is already HTTPS
-  const isHttps = req.secure || 
+  // Check if request is already HTTPS;
+  const isHttps = req.secure || ;
                   req.headers['x-forwarded-proto'] === 'https' ||
                   req.protocol === 'https';
 
@@ -396,9 +396,9 @@ export const httpsEnforcementMiddleware = (req: Request, res: Response, next: Ne
         timestamp: new Date().toISOString(),
       });
       // Set security warning header
-      res.setHeader('X-Security-Warning', 'Insecure-Connection');
-    } else {
-      // Redirect to HTTPS
+      res.setHeader('X-Security-Warning', 'Insecure-Connection');;
+  } else {
+      // Redirect to HTTPS;
       const httpsUrl = `https://${req.headers.host}${req.url}`;
       console.log('Redirecting HTTP to HTTPS:', httpsUrl);
       return res.redirect(301, httpsUrl);
@@ -408,7 +408,7 @@ export const httpsEnforcementMiddleware = (req: Request, res: Response, next: Ne
   // Add Strict-Transport-Security header for HTTPS connections
   if (isHttps && securityConfig.securityHeaders.hsts.enabled) {
     const hstsValue = `max-age=${securityConfig.securityHeaders.hsts.maxAge}`;
-    const includeSubDomains = securityConfig.securityHeaders.hsts.includeSubDomains 
+    const includeSubDomains = securityConfig.securityHeaders.hsts.includeSubDomains ;
       ? '; includeSubDomains' : '';
     const preload = securityConfig.securityHeaders.hsts.preload ? '; preload' : '';
     
@@ -421,18 +421,18 @@ export const httpsEnforcementMiddleware = (req: Request, res: Response, next: Ne
 /**
  * TLS Version Check Middleware
  * Ensures minimum TLS version in production
- */
+ */;
 export const tlsVersionCheckMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (!isProduction()) {
     return next();
   }
 
-  // Get TLS version from the connection
+  // Get TLS version from the connection;
   const tlsSocket = (req as unknown).socket;
   if (tlsSocket && tlsSocket.getPeerCertificate) {
     const tlsVersion = tlsSocket.getProtocol ? tlsSocket.getProtocol() : null;
     
-    // Check if TLS version meets minimum requirements
+    // Check if TLS version meets minimum requirements;
     const minTlsVersion = process.env.MIN_TLS_VERSION || 'TLSv1.2';
     const acceptedVersions = ['TLSv1.2', 'TLSv1.3'];
     
@@ -456,7 +456,7 @@ export const tlsVersionCheckMiddleware = (req: Request, res: Response, next: Nex
 /**
  * Certificate Pinning Middleware
  * Validates client certificates in high-security environments
- */
+ */;
 export const certificatePinningMiddleware = (req: Request, res: Response, next: NextFunction) => {
   // Only enforce in production with certificate pinning enabled
   if (!isProduction() || !securityConfig.encryption.inTransit.certificatePinning) {
@@ -468,7 +468,7 @@ export const certificatePinningMiddleware = (req: Request, res: Response, next: 
     const cert = tlsSocket.getPeerCertificate();
     
     if (cert && cert.fingerprint) {
-      // Get expected certificate fingerprints from environment
+      // Get expected certificate fingerprints from environment;
       const expectedFingerprints = process.env.CERT_FINGERPRINTS?.split(',') || [];
       
       if (expectedFingerprints.length > 0 && !expectedFingerprints.includes(cert.fingerprint)) {
@@ -489,7 +489,7 @@ export const certificatePinningMiddleware = (req: Request, res: Response, next: 
 
 /**
  * Audit Logging Middleware
- */
+ */;
 export const auditLoggingMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (!securityConfig.audit.enabled) {
     return next();
@@ -518,15 +518,15 @@ export const auditLoggingMiddleware = (req: Request, res: Response, next: NextFu
   next();
 };
 
-// Helper functions (implement these based on your needs)
+// Helper functions (implement these based on your needs);
 function validateApiKey(apiKey: string): boolean {
   // Implement API key validation logic
   return apiKey === process.env.INTERNAL_API_KEY;
 }
 
 function validateDeviceFingerprint(fingerprint: string, req: Request): boolean {
-  // Implement device fingerprint validation logic
-  const expectedFingerprint = createHash('sha256')
+  // Implement device fingerprint validation logic;
+  const expectedFingerprint = createHash('sha256');
     .update(req.headers['user-agent'] || '')
     .update(req.ip || '')
     .digest('hex');
@@ -541,7 +541,7 @@ function logAuditEvent(event: Event): void {
 
 /**
  * Compose all security middleware
- */
+ */;
 export const securityMiddleware = [
   httpsEnforcementMiddleware,
   tlsVersionCheckMiddleware,
@@ -558,7 +558,7 @@ export const securityMiddleware = [
 
 /**
  * Auth-specific middleware composition
- */
+ */;
 export const authMiddleware = [
   httpsEnforcementMiddleware,
   jwtAuthMiddleware,
@@ -567,7 +567,7 @@ export const authMiddleware = [
 
 /**
  * API-specific middleware composition
- */
+ */;
 export const apiMiddleware = [
   httpsEnforcementMiddleware,
   apiRateLimiter,
@@ -578,7 +578,7 @@ export const apiMiddleware = [
 
 /**
  * Crisis-specific middleware composition
- */
+ */;
 export const crisisMiddleware = [
   httpsEnforcementMiddleware,
   crisisOverrideMiddleware,

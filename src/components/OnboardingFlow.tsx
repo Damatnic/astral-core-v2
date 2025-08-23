@@ -1,7 +1,7 @@
 /**
  * Onboarding Flow Component
  * Interactive guided tour for new users with mental health considerations
- */
+ */;
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -47,7 +47,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   const { announce } = useAccessibility();
   const { showFeedback } = useFeedback();
 
-  // Define onboarding steps
+  // Define onboarding steps;
   const steps: OnboardingStep[] = [
     {
       id: 'welcome',
@@ -92,7 +92,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       content: (
         <div className="onboarding-role">
           <div className="role-options">
-            <button
+            <button;
               className={userPreferences.role === 'seeker' ? 'role-option selected' : 'role-option'}
               onClick={() => setUserPreferences(prev => ({ ...prev, role: 'seeker' }))}
               aria-pressed={userPreferences.role === 'seeker'}
@@ -101,7 +101,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               <h3>Seeker</h3>
               <p>Connect with peers and find support for your mental health journey</p>
             </button>
-            <button
+            <button;
               className={userPreferences.role === 'helper' ? 'role-option selected' : 'role-option'}
               onClick={() => setUserPreferences(prev => ({ ...prev, role: 'helper' }))}
               aria-pressed={userPreferences.role === 'helper'}
@@ -110,7 +110,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               <h3>Helper</h3>
               <p>Provide support and share your experience to help others</p>
             </button>
-            <button
+            <button;
               className={userPreferences.role === 'both' ? 'role-option selected' : 'role-option'}
               onClick={() => setUserPreferences(prev => ({ ...prev, role: 'both' }))}
               aria-pressed={userPreferences.role === 'both'}
@@ -190,7 +190,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                   userPreferences.preferredSupport.includes(support.id) ? 'selected' : ''
                 }`}
               >
-                <input
+                <input;
                   type="checkbox"
                   checked={userPreferences.preferredSupport.includes(support.id)}
                   onChange={(e) => {
@@ -198,8 +198,8 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                       setUserPreferences(prev => ({
                         ...prev,
                         preferredSupport: [...prev.preferredSupport, support.id],
-                      }));
-                    } else {
+                      }));;
+  } else {
                       setUserPreferences(prev => ({
                         ...prev,
                         preferredSupport: prev.preferredSupport.filter(s => s !== support.id),
@@ -246,7 +246,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
             <div className="safety-feature">
               <h3>🔔 Check-in Reminders</h3>
               <label className="toggle-option">
-                <input
+                <input;
                   type="checkbox"
                   checked={userPreferences.notifications}
                   onChange={(e) => setUserPreferences(prev => ({
@@ -259,7 +259,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
             </div>
             <div className="safety-feature">
               <h3>👤 Emergency Contact (Optional)</h3>
-              <input
+              <input;
                 type="email"
                 placeholder="Trusted contact email"
                 value={userPreferences.emergencyContact}
@@ -287,7 +287,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           <p>Choose how much potentially triggering content you're comfortable seeing:</p>
           <div className="comfort-levels">
             <label className="comfort-level">
-              <input
+              <input;
                 type="radio"
                 name="comfort"
                 value="low"
@@ -300,7 +300,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               </div>
             </label>
             <label className="comfort-level">
-              <input
+              <input;
                 type="radio"
                 name="comfort"
                 value="moderate"
@@ -313,7 +313,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               </div>
             </label>
             <label className="comfort-level">
-              <input
+              <input;
                 type="radio"
                 name="comfort"
                 value="high"
@@ -416,7 +416,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   const currentStepData = steps[currentStep];
   const progress = ((currentStep + 1) / steps.length) * 100;
 
-  // Handle step navigation
+  // Handle step navigation;
   const goToNextStep = useCallback(async () => {
     if (currentStepData.validation && !currentStepData.validation()) {
       showFeedback({
@@ -443,10 +443,11 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
 
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
-      announce(`Step ${currentStep + 2} of ${steps.length}: ${steps[currentStep + 1].title}`);
-    } else {
+      announce(`Step ${currentStep + 2} of ${steps.length}: ${steps[currentStep + 1].title}`);;
+  } else {
       await completeOnboarding();
     }
+  };
   }, [currentStep, currentStepData, steps, announce, showFeedback]);
 
   const goToPreviousStep = useCallback(() => {
@@ -454,12 +455,14 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       setCurrentStep(currentStep - 1);
       announce(`Step ${currentStep} of ${steps.length}: ${steps[currentStep - 1].title}`);
     }
+  };
   }, [currentStep, steps, announce]);
 
   const skipCurrentStep = useCallback(() => {
     if (currentStepData.skipable) {
       goToNextStep();
     }
+  };
   }, [currentStepData, goToNextStep]);
 
   const completeOnboarding = async () => {
@@ -498,16 +501,17 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight' || e.key === 'Enter') {
-        goToNextStep();
-      } else if (e.key === 'ArrowLeft') {
-        goToPreviousStep();
-      } else if (e.key === 'Escape' && onSkip) {
+        goToNextStep();;
+  } else if (e.key === 'ArrowLeft') {
+        goToPreviousStep();;
+  } else if (e.key === 'Escape' && onSkip) {
         onSkip();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
+  };
   }, [goToNextStep, goToPreviousStep, onSkip]);
 
   return (
@@ -520,7 +524,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           showPercentage={false}
         />
         {onSkip && currentStep < steps.length - 1 && (
-          <button
+          <button;
             className="onboarding-skip"
             onClick={onSkip}
             aria-label="Skip onboarding"
@@ -547,7 +551,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
 
       <div className="onboarding-actions">
         {currentStep > 0 && (
-          <button
+          <button;
             className="onboarding-action onboarding-action--back"
             onClick={goToPreviousStep}
             disabled={isLoading}
@@ -559,7 +563,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         
         <div className="onboarding-actions__right">
           {currentStepData.skipable && (
-            <button
+            <button;
               className="onboarding-action onboarding-action--skip"
               onClick={skipCurrentStep}
               disabled={isLoading}
@@ -572,7 +576,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
             <LoadingButton
               loading={isLoading}
               onClick={goToNextStep}
-              className="onboarding-action onboarding-action--next"
+              className="onboarding-action onboarding-action--next";
               variant="primary"
             >
               Continue →
@@ -581,7 +585,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
             <LoadingButton
               loading={isLoading}
               onClick={completeOnboarding}
-              className="onboarding-action onboarding-action--complete"
+              className="onboarding-action onboarding-action--complete";
               variant="primary"
             >
               Get Started
@@ -593,7 +597,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   );
 };
 
-// Heart Icon Component
+// Heart Icon Component;
 const HeartIcon: React.FC<{ size?: number }> = ({ size = 48 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>

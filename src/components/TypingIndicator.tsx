@@ -16,17 +16,17 @@ const TypingIndicator: React.FC<TypingIndicatorProps> = ({
   const sizeClasses = {
     small: 'typing-indicator-small',
     medium: 'typing-indicator-medium',
-    large: 'typing-indicator-large'
+    large: 'typing-indicator-large';
   };
 
-  const classes = [
+  const classes = [;
     'typing-indicator',
     sizeClasses[size],
     className
   ].filter(Boolean).join(' ');
 
   return (
-    <div
+    <div;
       className={classes}
       style={style}
       role="status"

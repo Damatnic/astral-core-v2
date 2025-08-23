@@ -1,15 +1,14 @@
 /**
  * Global Store Manager for Astral Core V4
  * Integrates all Zustand stores with service layer
- */
+ */;
 
-import { create } from "zustand"
-import { subscribeWithSelector, devtools } from "zustand/middleware"
-import { integrationService } from "../services/integrationService"
-import { supabase, realtimeManager } from "../lib/supabase"
-// Import individual store types
+import { create } from "zustand";
+import { subscribeWithSelector, devtools } from "zustand/middleware";
+import { integrationService } from "../services/integrationService";
+import { supabase, realtimeManager } from '../lib/supabase';// Import individual store types;
 import type { User } from '@supabase/supabase-js'
-// Global application state interface
+// Global application state interface;
 interface GlobalState {
   // Authentication state
   user: User | null,
@@ -48,7 +47,7 @@ interface GlobalState {
   notifications: unknown[];
 }
 
-// Global actions interface
+// Global actions interface;
 interface GlobalActions {
   // Authentication actions
   setUser: (user: User | null) => void,
@@ -88,10 +87,10 @@ interface GlobalActions {
   removeNotification: (id: string) => void;
 }
 
-// Combined store type
+// Combined store type;
 type GlobalStore = GlobalState & GlobalActions',
 
-// Initial state
+// Initial state;
 const initialState: GlobalState={
   user: null,
   isAuthenticated: false,
@@ -109,15 +108,15 @@ const initialState: GlobalState={
   performanceMetrics: {
     pageLoadTime: 0,
     criticalResourcesLoaded: false,
-    errorCount: 0
+    errorCount: 0;
   },
   sidebarOpen: false,
   mobileMenuOpen: false,
   modalStack: [],
-  notifications: []
+  notifications: [];
 }
 
-// Create the global store
+// Create the global store;
 export const useGlobalStore = create<GlobalStore>()(
   devtools(
     subscribeWithSelector((set, get) => ({
@@ -128,7 +127,7 @@ export const useGlobalStore = create<GlobalStore>()(
         set((state) => ({
           user,
           isAuthenticated: !!user,
-          authLoading: false
+          authLoading: false;
         }))
         
         // Set up user-specific subscriptions if authenticated
@@ -143,7 +142,7 @@ export const useGlobalStore = create<GlobalStore>()(
           set({
             user: null,
             isAuthenticated: false,
-            authLoading: false
+            authLoading: false;
           })
           
           // Clean up subscriptions
@@ -189,15 +188,15 @@ export const useGlobalStore = create<GlobalStore>()(
         
         if (!isOnline && !get().isOfflineMode) {
 
-          set({ isOfflineMode: true })
-        } else if (isOnline && get().isOfflineMode) {
+          set({ isOfflineMode: true });
+  } else if (isOnline && get().isOfflineMode) {
 
           // Trigger data sync when back online
           get().syncOfflineData()
         }
       },
       toggleOfflineMode: () => set((state) => ({
-        isOfflineMode: !state.isOfflineMode
+        isOfflineMode: !state.isOfflineMode;
       })),
       setAppReady: (appReady) => set({ appReady }),
 
@@ -211,7 +210,7 @@ export const useGlobalStore = create<GlobalStore>()(
         // Trigger crisis protocols
         integrationService.emit('crisisModeActivated', {
           timestamp: new Date().toISOString(),
-          userId: get().user?.id
+          userId: get().user?.id;
         })
       },
       deactivateCrisisMode: () => {
@@ -220,7 +219,7 @@ export const useGlobalStore = create<GlobalStore>()(
         
         integrationService.emit('crisisModeDeactivated', {
           timestamp: new Date().toISOString(),
-          userId: get().user?.id
+          userId: get().user?.id;
         })
       },
       addEmergencyContact: (contact) => set((state) => ({
@@ -241,20 +240,21 @@ export const useGlobalStore = create<GlobalStore>()(
       // Performance actions
       updatePerformanceMetrics: (metrics) => set((state) => ({
         performanceMetrics: { ...state.performanceMetrics, ...metrics }
-      })),
+      };
+  }),
       incrementErrorCount: () => set((state) => ({
         performanceMetrics: {
           ...state.performanceMetrics,
-          errorCount: state.performanceMetrics.errorCount + 1
+          errorCount: state.performanceMetrics.errorCount + 1;
         }
       })),
 
       // UI actions
       toggleSidebar: () => set((state) => ({
-        sidebarOpen: !state.sidebarOpen
+        sidebarOpen: !state.sidebarOpen;
       })),
       toggleMobileMenu: () => set((state) => ({
-        mobileMenuOpen: !state.mobileMenuOpen
+        mobileMenuOpen: !state.mobileMenuOpen;
       })),
       openModal: (modalId) => set((state) => ({
         modalStack: [...state.modalStack, modalId]
@@ -268,7 +268,7 @@ export const useGlobalStore = create<GlobalStore>()(
         notifications: [...state.notifications, {
           ...notification,
           id: notification.id || `notif_${Date.now()},
-          timestamp: notification.timestamp || new Date().toISOString()
+          timestamp: notification.timestamp || new Date().toISOString();
         }]
       })),
       removeNotification: (id) => set((state) => ({
@@ -277,12 +277,12 @@ export const useGlobalStore = create<GlobalStore>()(
 
       // Helper methods
       setupUserSubscriptions: (userId: string) => {
-        // Subscribe to crisis events
+        // Subscribe to crisis events;
         const crisisSub = realtimeManager.subscribeToCrisisEvents(userId, (payload: unknown) => {
           integrationService.emit('crisisDetected', payload)
         })
         
-        // Subscribe to mood updates
+        // Subscribe to mood updates;
         const moodSub = realtimeManager.subscribeToMoodUpdates(userId, (payload: unknown) => {
           integrationService.emit('wellnessDataUpdated', payload)
         })
@@ -307,40 +307,40 @@ export const useGlobalStore = create<GlobalStore>()(
         // Only persist certain parts of the state
         isOfflineMode: state.isOfflineMode,
         emergencyContacts: state.emergencyContacts,
-        crisisMode: state.crisisMode
+        crisisMode: state.crisisMode;
       })
     }
   )
 )
 
-// Selectors for common state combinations
+// Selectors for common state combinations;
 export const useAuthState = () => useGlobalStore((state) => ({
   user: state.user,
   isAuthenticated: state.isAuthenticated,
-  authLoading: state.authLoading
-}))
+  authLoading: state.authLoading;
+}));
 
 export const useServiceState = () => useGlobalStore((state) => ({
   servicesReady: state.servicesReady,
   criticalServicesReady: state.criticalServicesReady,
-  serviceErrors: state.serviceErrors
-}))
+  serviceErrors: state.serviceErrors;
+}));
 
 export const useAppState = () => useGlobalStore((state) => ({
   isOnline: state.isOnline,
   isOfflineMode: state.isOfflineMode,
   appReady: state.appReady,
-  crisisMode: state.crisisMode
-}))
+  crisisMode: state.crisisMode;
+}));
 
 export const useUIState = () => useGlobalStore((state) => ({
   sidebarOpen: state.sidebarOpen,
   mobileMenuOpen: state.mobileMenuOpen,
   modalStack: state.modalStack,
-  notifications: state.notifications
+  notifications: state.notifications;
 }))
 
-// Initialize store on app startup
+// Initialize store on app startup;
 export const initializeGlobalStore = (): void => {
   const store = useGlobalStore.getState()',;
   
@@ -380,7 +380,7 @@ export const initializeGlobalStore = (): void => {
       const loadTime = performance.now()';
       store.updatePerformanceMetrics({
         pageLoadTime: loadTime,
-        criticalResourcesLoaded: true
+        criticalResourcesLoaded: true;
       })
     })
     

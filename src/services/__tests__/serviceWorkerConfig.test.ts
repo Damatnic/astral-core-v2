@@ -1,6 +1,6 @@
 import { registerServiceWorker, unregisterServiceWorker, updateServiceWorker } from '../serviceWorkerConfig';
 
-// Mock service worker APIs
+// Mock service worker APIs;
 const mockServiceWorkerRegistration = {
   waiting: null as unknown,
   installing: null,
@@ -33,7 +33,7 @@ describe('Service Worker Configuration', () => {
 
       expect(navigator.serviceWorker.register).toHaveBeenCalledWith('/sw.js', {
         scope: '/',
-        updateViaCache: 'none'
+        updateViaCache: 'none';
       });
       expect(registration).toBe(mockServiceWorkerRegistration);
     });
@@ -75,7 +75,7 @@ describe('Service Worker Configuration', () => {
       
       // Simulate update detection
       await registerServiceWorker({
-        onUpdate: updateHandler
+        onUpdate: updateHandler;
       });
 
       expect(updateHandler).toBeInstanceOf(Function);
@@ -104,7 +104,7 @@ describe('Service Worker Configuration', () => {
       const installHandler = jest.fn();
       
       registerServiceWorker({
-        onInstall: installHandler
+        onInstall: installHandler;
       });
 
       expect(installHandler).toBeInstanceOf(Function);
@@ -114,7 +114,7 @@ describe('Service Worker Configuration', () => {
       const activateHandler = jest.fn();
       
       registerServiceWorker({
-        onActivate: activateHandler
+        onActivate: activateHandler;
       });
 
       expect(activateHandler).toBeInstanceOf(Function);
@@ -124,7 +124,7 @@ describe('Service Worker Configuration', () => {
       const fetchHandler = jest.fn();
       
       registerServiceWorker({
-        onFetch: fetchHandler
+        onFetch: fetchHandler;
       });
 
       expect(fetchHandler).toBeInstanceOf(Function);
@@ -170,7 +170,7 @@ describe('Service Worker Configuration', () => {
     it.skip('should configure offline page', () => {
       const config = {
         offlinePage: '/offline.html',
-        offlineAssets: ['/css/offline.css']
+        offlineAssets: ['/css/offline.css'];
       };
 
       registerServiceWorker(config);
@@ -198,7 +198,7 @@ describe('Service Worker Configuration', () => {
       const config = {
         pushNotifications: {
           enabled: true,
-          vapidKey: 'test-vapid-key'
+          vapidKey: 'test-vapid-key';
         }
       };
 
@@ -240,7 +240,7 @@ describe('Service Worker Configuration', () => {
       const config = {
         resourceHints: {
           preconnect: ['https://api.crisis-support.org'],
-          prefetch: ['/api/resources/crisis']
+          prefetch: ['/api/resources/crisis'];
         }
       };
 
@@ -255,10 +255,10 @@ describe('Service Worker Configuration', () => {
       const errorHandler = jest.fn();
       
       await registerServiceWorker({
-        onError: errorHandler
+        onError: errorHandler;
       });
 
-      // Simulate error
+      // Simulate error;
       const error = new Error('Service worker error');
       errorHandler(error);
 
@@ -269,7 +269,7 @@ describe('Service Worker Configuration', () => {
       const performanceHandler = jest.fn();
       
       registerServiceWorker({
-        onPerformance: performanceHandler
+        onPerformance: performanceHandler;
       });
 
       expect(performanceHandler).toBeInstanceOf(Function);

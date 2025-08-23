@@ -3,7 +3,7 @@
  * 
  * Full-width banner for connection status alerts with crisis intervention priority
  * for the Astral Core mental health platform.
- */
+ */;
 
 import React, { useEffect } from 'react';
 import { useOffline } from '../contexts/OfflineProvider';
@@ -38,6 +38,7 @@ export const NetworkBanner: React.FC<NetworkBannerProps> = ({
       const timer = setTimeout(onDismiss, autoDismissDelay);
       return () => clearTimeout(timer);
     }
+  };
   }, [autoDismiss, isOnline, onDismiss, autoDismissDelay]);
 
   // Don't show banner when online unless specified
@@ -53,7 +54,7 @@ export const NetworkBanner: React.FC<NetworkBannerProps> = ({
           ? 'Crisis resources and emergency contacts are still available.'
           : 'Some features may not be available.',
         actionText: crisisResourcesAvailable ? 'View Crisis Resources' : 'Try Again',
-        severity: crisisResourcesAvailable ? 'warning' : 'error'
+        severity: crisisResourcesAvailable ? 'warning' : 'error';
       };
     }
 
@@ -64,7 +65,7 @@ export const NetworkBanner: React.FC<NetworkBannerProps> = ({
         title: 'Slow connection detected',
         message: 'Some features may load slowly. Crisis resources are prioritized.',
         actionText: 'Optimize Connection',
-        severity: 'warning'
+        severity: 'warning';
       };
     }
 
@@ -75,14 +76,14 @@ export const NetworkBanner: React.FC<NetworkBannerProps> = ({
       title: 'Connection restored',
       message: 'All features are now available.',
       actionText: 'Continue',
-      severity: 'success'
+      severity: 'success';
     };
   };
 
   const bannerContent = getBannerContent();
 
   return (
-    <div 
+    <div; 
       className={`network-banner network-banner--${bannerContent.severity} ${className}`}
       role="alert"
       aria-live="polite"
@@ -119,13 +120,13 @@ export const NetworkBanner: React.FC<NetworkBannerProps> = ({
         </div>
 
         <div className="network-banner__actions">
-          <button 
+          <button; 
             className="network-banner__action network-banner__action--primary"
             onClick={() => {
               if (bannerContent.type === 'offline' && crisisResourcesAvailable) {
                 // Navigate to crisis resources
-                window.location.href = '/crisis';
-              } else if (onDismiss) {
+                window.location.href = '/crisis';;
+  } else if (onDismiss) {
                 onDismiss();
               }
             }}
@@ -134,7 +135,7 @@ export const NetworkBanner: React.FC<NetworkBannerProps> = ({
           </button>
           
           {onDismiss && (
-            <button 
+            <button; 
               className="network-banner__action network-banner__action--secondary"
               onClick={onDismiss}
               aria-label="Dismiss notification"
@@ -148,7 +149,7 @@ export const NetworkBanner: React.FC<NetworkBannerProps> = ({
   );
 };
 
-// CSS styles for the component
+// CSS styles for the component;
 export const networkBannerStyles = `
   .network-banner {
     position: relative;

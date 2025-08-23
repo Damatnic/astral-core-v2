@@ -12,7 +12,7 @@
  * - Emergency protocol activation
  * 
  * @license Apache-2.0
- */
+ */;
 
 import { culturalContextService } from './culturalContextService';
 import { enhancedAICrisisDetectionService } from './enhancedAiCrisisDetectionService';
@@ -129,7 +129,7 @@ class EnhancedOfflineService {
         crisisResources: false,
         translations: false,
         culturalContent: false,
-        aiModels: false
+        aiModels: false;
       }
     };
 
@@ -226,7 +226,7 @@ class EnhancedOfflineService {
    */
   private async loadCrisisResources(): Promise<void> {
     const languages = ['en', 'es', 'pt-BR', 'pt', 'ar', 'zh', 'vi', 'tl'];
-    const culturalContexts = [
+    const culturalContexts = [;
       'western', 'hispanic-latino', 'brazilian', 'portuguese',
       'arabic', 'chinese', 'vietnamese', 'filipino'
     ];
@@ -277,7 +277,7 @@ class EnhancedOfflineService {
         priority: 'high',
         category: 'coping',
         tags: ['coping', 'strategies', 'self-help'],
-        lastUpdated: Date.now()
+        lastUpdated: Date.now();
       },
 
       // Safety planning
@@ -291,7 +291,7 @@ class EnhancedOfflineService {
         priority: 'high',
         category: 'safety-planning',
         tags: ['safety', 'planning', 'prevention'],
-        lastUpdated: Date.now()
+        lastUpdated: Date.now();
       },
 
       // Cultural guidance
@@ -305,7 +305,7 @@ class EnhancedOfflineService {
         priority: 'medium',
         category: 'cultural-support',
         tags: ['cultural', 'guidance', 'family', 'community'],
-        lastUpdated: Date.now()
+        lastUpdated: Date.now();
       },
 
       // Emergency protocols
@@ -319,7 +319,7 @@ class EnhancedOfflineService {
         priority: 'critical',
         category: 'emergency-protocol',
         tags: ['emergency', 'protocol', 'steps'],
-        lastUpdated: Date.now()
+        lastUpdated: Date.now();
       }
     ];
 
@@ -334,47 +334,47 @@ class EnhancedOfflineService {
     text: string;
     chat?: string;
   } {
-    // Regional emergency contacts based on cultural context
+    // Regional emergency contacts based on cultural context;
     const contacts: { [key: string]: any } = {
       'western': {
         phone: '988', // US/Canada Suicide & Crisis Lifeline
         text: '741741', // Crisis Text Line
-        chat: 'https://suicidepreventionlifeline.org/chat/'
+        chat: 'https://suicidepreventionlifeline.org/chat/';
       },
       'hispanic-latino': {
         phone: '1-888-628-9454', // Spanish National Suicide Prevention Lifeline
         text: 'HABLANOS to 741741',
-        chat: 'https://suicidepreventionlifeline.org/chat/'
+        chat: 'https://suicidepreventionlifeline.org/chat/';
       },
       'brazilian': {
         phone: '188', // Centro de Valorização da Vida (CVV)
         text: '(11) 96363-4111',
-        chat: 'https://www.cvv.org.br/fale-conosco/'
+        chat: 'https://www.cvv.org.br/fale-conosco/';
       },
       'portuguese': {
         phone: '213 544 545', // SOS Voz Amiga
         text: '(+351) 96 898 21 61',
-        chat: 'https://sosvozamiga.org/contactos/'
+        chat: 'https://sosvozamiga.org/contactos/';
       },
       'arabic': {
         phone: '1-800-273-8255', // International - many Arabic countries use this
         text: 'HELP to 741741',
-        chat: 'https://suicidepreventionlifeline.org/chat/'
+        chat: 'https://suicidepreventionlifeline.org/chat/';
       },
       'chinese': {
         phone: '400-161-9995', // Beijing Crisis Intervention
         text: '+86-400-161-9995',
-        chat: 'https://www.crisis.org.cn/'
+        chat: 'https://www.crisis.org.cn/';
       },
       'vietnamese': {
         phone: '1-800-273-8255', // International access
         text: 'HELLO to 741741',
-        chat: 'https://suicidepreventionlifeline.org/chat/'
+        chat: 'https://suicidepreventionlifeline.org/chat/';
       },
       'filipino': {
         phone: '(02) 804-4673', // In Touch Crisis Line Philippines
         text: '0917-800-1123',
-        chat: 'https://www.hopeline.ph/'
+        chat: 'https://www.hopeline.ph/';
       }
     };
 
@@ -440,13 +440,13 @@ class EnhancedOfflineService {
     const transaction = this.db.transaction(['crisisResources'], 'readonly');
     const store = transaction.objectStore('crisisResources');
     
-    // Get all resources for language and cultural context
+    // Get all resources for language and cultural context;
     const languageIndex = store.index('language');
     const languageRequest = languageIndex.getAll(language);
     
     return new Promise((resolve, reject) => {
       languageRequest.onsuccess = () => {
-        const resources = languageRequest.result.filter(resource => 
+        const resources = languageRequest.result.filter(resource => ;
           resource.culturalContext === culturalContext &&
           (type ? resource.type === type : true)
         );
@@ -474,25 +474,25 @@ class EnhancedOfflineService {
     confidence: number;
   }> {
     try {
-      // Use enhanced AI crisis detection service if available
-      const analysis = await enhancedAICrisisDetectionService.analyzeCrisisWithML(
+      // Use enhanced AI crisis detection service if available;
+      const analysis = await enhancedAICrisisDetectionService.analyzeCrisisWithML(;
         text, 
         { language, culturalContext }
       );
 
-      // Get offline recommendations based on analysis
-      const recommendations = await this.getCrisisResources(
+      // Get offline recommendations based on analysis;
+      const recommendations = await this.getCrisisResources(;
         language,
         culturalContext,
         (analysis.realTimeRisk?.immediateRisk || 0) > 7 ? 'crisis-contact' : 'coping-strategy'
       );
 
-      // Determine severity based on risk level
+      // Determine severity based on risk level;
       let severity: SeverityLevel = 'low';
       const immediateRisk = analysis.realTimeRisk?.immediateRisk || 0;
       if (immediateRisk > 7) {
-        severity = 'high';
-      } else if (immediateRisk > 5) {
+        severity = 'high';;
+  } else if (immediateRisk > 5) {
         severity = 'medium';
       }
 
@@ -501,7 +501,7 @@ class EnhancedOfflineService {
         severity,
         keywords: [], // ML analysis doesn't provide specific trigger words
         recommendations: recommendations.slice(0, 3),
-        confidence: analysis.confidence
+        confidence: analysis.confidence;
       } catch (error) {
       console.warn('[Enhanced Offline] ML crisis detection failed, using fallback:', error);
       return this.fallbackCrisisDetection(text, language, culturalContext);
@@ -516,7 +516,7 @@ class EnhancedOfflineService {
       ...item,
       id: `sync-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
       timestamp: Date.now(),
-      retryCount: 0
+      retryCount: 0;
     };
 
     this.syncQueue.push(syncItem);
@@ -540,7 +540,7 @@ class EnhancedOfflineService {
   private initializeFallbackMode(): void {
     console.log('[Enhanced Offline] Initializing fallback mode');
     
-    // Store basic crisis resources in localStorage
+    // Store basic crisis resources in localStorage;
     const fallbackResources = this.getFallbackCrisisResources('en', 'western');
     localStorage.setItem('astral_offline_crisis_resources', JSON.stringify(fallbackResources));
     
@@ -555,7 +555,7 @@ class EnhancedOfflineService {
         crisisResources: true, // We have fallback resources
         translations: false,
         culturalContent: false,
-        aiModels: false
+        aiModels: false;
       }
     };
     
@@ -635,17 +635,17 @@ class EnhancedOfflineService {
   }
 
   private fallbackCrisisDetection(text: string, language: string, culturalContext: string): any {
-    // Basic keyword-based crisis detection as fallback
+    // Basic keyword-based crisis detection as fallback;
     const crisisKeywords = ['suicide', 'kill myself', 'end it all', 'hopeless', 'can\'t go on'];
-    const foundKeywords = crisisKeywords.filter(keyword => 
+    const foundKeywords = crisisKeywords.filter(keyword => ;
       text.toLowerCase().includes(keyword)
     );
 
-    // Determine severity based on keyword count
+    // Determine severity based on keyword count;
     let severity: SeverityLevel = 'low';
     if (foundKeywords.length > 2) {
-      severity = 'high';
-    } else if (foundKeywords.length > 0) {
+      severity = 'high';;
+  } else if (foundKeywords.length > 0) {
       severity = 'medium';
     }
 
@@ -654,7 +654,7 @@ class EnhancedOfflineService {
       severity,
       keywords: foundKeywords,
       recommendations: this.getFallbackCrisisResources(language, culturalContext),
-      confidence: foundKeywords.length > 0 ? 0.8 : 0.2
+      confidence: foundKeywords.length > 0 ? 0.8 : 0.2;
     }
 
   private async processSyncQueue(): Promise<void> {

@@ -16,13 +16,13 @@
  * - Family involvement preferences integration
  * 
  * @license Apache-2.0
- */
+ */;
 
 import { enhancedAICrisisDetectionService, MLCrisisAnalysisResult } from './enhancedAiCrisisDetectionService';
 import { culturalContextService, CulturalContext } from './culturalContextService';
 import { privacyPreservingAnalyticsService } from './privacyPreservingAnalyticsService';
 
-// Cultural crisis detection interfaces
+// Cultural crisis detection interfaces;
 export type FamilyInvolvementLevel = 'none' | 'low' | 'medium' | 'high';
 
 export interface CulturalCrisisIndicator {
@@ -82,7 +82,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Western'],
         communicationStyle: 'direct',
         expressionType: 'verbal',
-        culturalSignificance: 0.8
+        culturalSignificance: 0.8;
       },
       {
         indicator: 'I need help',
@@ -90,7 +90,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Western'],
         communicationStyle: 'direct',
         expressionType: 'verbal',
-        culturalSignificance: 0.9
+        culturalSignificance: 0.9;
       },
       {
         indicator: 'feeling overwhelmed',
@@ -98,7 +98,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Western'],
         communicationStyle: 'direct',
         expressionType: 'verbal',
-        culturalSignificance: 0.7
+        culturalSignificance: 0.7;
       }
     ],
     'Hispanic/Latino': [
@@ -108,7 +108,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Hispanic/Latino', 'Brazilian'],
         communicationStyle: 'contextual',
         expressionType: 'somatic',
-        culturalSignificance: 0.9
+        culturalSignificance: 0.9;
       },
       {
         indicator: 'no puedo más',
@@ -116,7 +116,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Hispanic/Latino'],
         communicationStyle: 'contextual',
         expressionType: 'verbal',
-        culturalSignificance: 0.9
+        culturalSignificance: 0.9;
       },
       {
         indicator: 'dolor en el corazón',
@@ -124,7 +124,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Hispanic/Latino'],
         communicationStyle: 'metaphorical',
         expressionType: 'somatic',
-        culturalSignificance: 0.8
+        culturalSignificance: 0.8;
       },
       {
         indicator: 'estoy en las manos de Dios',
@@ -132,7 +132,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Hispanic/Latino'],
         communicationStyle: 'indirect',
         expressionType: 'metaphorical',
-        culturalSignificance: 0.7
+        culturalSignificance: 0.7;
       }
     ],
     'Arabic': [
@@ -142,7 +142,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Arabic'],
         communicationStyle: 'indirect',
         expressionType: 'verbal',
-        culturalSignificance: 0.9
+        culturalSignificance: 0.9;
       },
       {
         indicator: 'قلبي مكسور',
@@ -150,7 +150,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Arabic'],
         communicationStyle: 'metaphorical',
         expressionType: 'somatic',
-        culturalSignificance: 0.8
+        culturalSignificance: 0.8;
       },
       {
         indicator: 'تعبان نفسياً',
@@ -158,7 +158,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Arabic'],
         communicationStyle: 'indirect',
         expressionType: 'somatic',
-        culturalSignificance: 0.9
+        culturalSignificance: 0.9;
       },
       {
         indicator: 'مش قادر أكمل',
@@ -166,7 +166,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Arabic'],
         communicationStyle: 'indirect',
         expressionType: 'verbal',
-        culturalSignificance: 0.8
+        culturalSignificance: 0.8;
       }
     ],
     'Chinese': [
@@ -176,7 +176,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Chinese'],
         communicationStyle: 'indirect',
         expressionType: 'somatic',
-        culturalSignificance: 0.9
+        culturalSignificance: 0.9;
       },
       {
         indicator: '压力很大',
@@ -184,7 +184,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Chinese'],
         communicationStyle: 'indirect',
         expressionType: 'somatic',
-        culturalSignificance: 0.8
+        culturalSignificance: 0.8;
       },
       {
         indicator: '想不开',
@@ -192,7 +192,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Chinese'],
         communicationStyle: 'indirect',
         expressionType: 'metaphorical',
-        culturalSignificance: 0.9
+        culturalSignificance: 0.9;
       },
       {
         indicator: '活着没意思',
@@ -200,7 +200,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Chinese'],
         communicationStyle: 'indirect',
         expressionType: 'verbal',
-        culturalSignificance: 0.8
+        culturalSignificance: 0.8;
       }
     ],
     'Vietnamese': [
@@ -210,7 +210,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Vietnamese'],
         communicationStyle: 'indirect',
         expressionType: 'verbal',
-        culturalSignificance: 0.8
+        culturalSignificance: 0.8;
       },
       {
         indicator: 'không có hy vọng',
@@ -218,7 +218,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Vietnamese'],
         communicationStyle: 'indirect',
         expressionType: 'verbal',
-        culturalSignificance: 0.9
+        culturalSignificance: 0.9;
       },
       {
         indicator: 'đau lòng quá',
@@ -226,7 +226,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Vietnamese'],
         communicationStyle: 'indirect',
         expressionType: 'somatic',
-        culturalSignificance: 0.8
+        culturalSignificance: 0.8;
       }
     ],
     'Filipino': [
@@ -236,7 +236,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Filipino'],
         communicationStyle: 'contextual',
         expressionType: 'verbal',
-        culturalSignificance: 0.8
+        culturalSignificance: 0.8;
       },
       {
         indicator: 'walang pag-asa',
@@ -244,7 +244,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Filipino'],
         communicationStyle: 'contextual',
         expressionType: 'verbal',
-        culturalSignificance: 0.9
+        culturalSignificance: 0.9;
       },
       {
         indicator: 'sakit sa puso',
@@ -252,7 +252,7 @@ class CulturalCrisisDetectionService {
         culturalRegions: ['Filipino'],
         communicationStyle: 'metaphorical',
         expressionType: 'somatic',
-        culturalSignificance: 0.8
+        culturalSignificance: 0.8;
       }
     ]
   };
@@ -266,7 +266,7 @@ class CulturalCrisisDetectionService {
       implicitness: 0.1,
       stigmaLevel: 'medium',
       familyInvolvementImplied: false,
-      helpSeekingStyle: 'direct'
+      helpSeekingStyle: 'direct';
     },
     // Hispanic/Latino patterns
     {
@@ -275,7 +275,7 @@ class CulturalCrisisDetectionService {
       implicitness: 0.7,
       stigmaLevel: 'high',
       familyInvolvementImplied: true,
-      helpSeekingStyle: 'indirect'
+      helpSeekingStyle: 'indirect';
     },
     {
       pattern: 'Dios me ayudará',
@@ -283,7 +283,7 @@ class CulturalCrisisDetectionService {
       implicitness: 0.8,
       stigmaLevel: 'high',
       familyInvolvementImplied: false,
-      helpSeekingStyle: 'religious'
+      helpSeekingStyle: 'religious';
     },
     // Arabic patterns
     {
@@ -292,7 +292,7 @@ class CulturalCrisisDetectionService {
       implicitness: 0.9,
       stigmaLevel: 'high',
       familyInvolvementImplied: false,
-      helpSeekingStyle: 'religious'
+      helpSeekingStyle: 'religious';
     },
     {
       pattern: 'العائلة لا تفهم',
@@ -300,7 +300,7 @@ class CulturalCrisisDetectionService {
       implicitness: 0.6,
       stigmaLevel: 'high',
       familyInvolvementImplied: true,
-      helpSeekingStyle: 'indirect'
+      helpSeekingStyle: 'indirect';
     },
     // Chinese patterns
     {
@@ -309,7 +309,7 @@ class CulturalCrisisDetectionService {
       implicitness: 0.8,
       stigmaLevel: 'high',
       familyInvolvementImplied: true,
-      helpSeekingStyle: 'indirect'
+      helpSeekingStyle: 'indirect';
     },
     {
       pattern: '不好意思说',
@@ -317,7 +317,7 @@ class CulturalCrisisDetectionService {
       implicitness: 0.9,
       stigmaLevel: 'high',
       familyInvolvementImplied: false,
-      helpSeekingStyle: 'indirect'
+      helpSeekingStyle: 'indirect';
     },
     // Vietnamese patterns
     {
@@ -326,7 +326,7 @@ class CulturalCrisisDetectionService {
       implicitness: 0.8,
       stigmaLevel: 'high',
       familyInvolvementImplied: true,
-      helpSeekingStyle: 'indirect'
+      helpSeekingStyle: 'indirect';
     },
     // Filipino patterns
     {
@@ -335,7 +335,7 @@ class CulturalCrisisDetectionService {
       implicitness: 0.7,
       stigmaLevel: 'high',
       familyInvolvementImplied: true,
-      helpSeekingStyle: 'community'
+      helpSeekingStyle: 'community';
     }
   ];
 
@@ -348,46 +348,46 @@ class CulturalCrisisDetectionService {
     languageCode: string = 'en',
     culturalContext?: string
   ): Promise<CulturalCrisisAnalysisResult> {
-    // Get base ML analysis
-    const baseAnalysis = await enhancedAICrisisDetectionService.analyzeCrisisWithML(
+    // Get base ML analysis;
+    const baseAnalysis = await enhancedAICrisisDetectionService.analyzeCrisisWithML(;
       text,
       { userId, languageCode, culturalContext }
     );
 
-    // Get cultural context information
+    // Get cultural context information;
     const cultureInfo = culturalContextService.getCulturalContext(languageCode);
     const culturalRegion = culturalContext || cultureInfo.region;
 
-    // Analyze cultural crisis indicators
+    // Analyze cultural crisis indicators;
     const culturalIndicators = this.detectCulturalCrisisIndicators(text, culturalRegion);
     
-    // Analyze communication patterns
+    // Analyze communication patterns;
     const communicationPatterns = this.analyzeCommunicationPatterns(text, culturalRegion);
     
-    // Apply cultural bias adjustments
-    const culturalBiasAdjustments = this.calculateCulturalBiasAdjustments(
+    // Apply cultural bias adjustments;
+    const culturalBiasAdjustments = this.calculateCulturalBiasAdjustments(;
       baseAnalysis,
       cultureInfo,
       culturalIndicators,
       communicationPatterns
     );
     
-    // Calculate culturally-adjusted risk
-    const culturallyAdjustedRisk = this.calculateCulturallyAdjustedRisk(
+    // Calculate culturally-adjusted risk;
+    const culturallyAdjustedRisk = this.calculateCulturallyAdjustedRisk(;
       baseAnalysis.realTimeRisk?.immediateRisk || 0,
       culturalBiasAdjustments,
       cultureInfo
     );
     
-    // Generate cultural interventions
-    const culturalInterventions = this.generateCulturalInterventions(
+    // Generate cultural interventions;
+    const culturalInterventions = this.generateCulturalInterventions(;
       baseAnalysis,
       cultureInfo,
       culturalIndicators,
       languageCode
     );
 
-    // Enhanced result with cultural context
+    // Enhanced result with cultural context;
     const culturalResult: CulturalCrisisAnalysisResult = {
       ...baseAnalysis,
       culturalIndicators,
@@ -408,7 +408,7 @@ class CulturalCrisisDetectionService {
         ...culturalBiasAdjustments.map(adj => ({
           type: adj.factor,
           description: adj.explanation,
-          severity: adj.adjustment
+          severity: adj.adjustment;
         }))
       ]
     };
@@ -429,7 +429,7 @@ class CulturalCrisisDetectionService {
     const detectedIndicators: CulturalCrisisIndicator[] = [];
     const lowerText = text.toLowerCase();
     
-    // Get patterns for this cultural region
+    // Get patterns for this cultural region;
     const patterns = this.culturalCrisisPatterns[culturalRegion] || this.culturalCrisisPatterns['Western'];
     
     for (const pattern of patterns) {
@@ -447,7 +447,7 @@ class CulturalCrisisDetectionService {
             detectedIndicators.push({
               ...pattern,
               weight: pattern.weight * 0.6,
-              culturalSignificance: pattern.culturalSignificance * 0.7
+              culturalSignificance: pattern.culturalSignificance * 0.7;
             });
           }
         }
@@ -496,7 +496,7 @@ class CulturalCrisisDetectionService {
         adjustment: 0.25, // Increase risk detection sensitivity
         confidence: 0.8,
         culturalRelevance: [cultureInfo.region],
-        explanation: 'Adjusted for high mental health stigma - implicit help-seeking behaviors weighted higher'
+        explanation: 'Adjusted for high mental health stigma - implicit help-seeking behaviors weighted higher';
       });
     }
 
@@ -507,7 +507,7 @@ class CulturalCrisisDetectionService {
         adjustment: 0.20, // Increase sensitivity for indirect expressions
         confidence: 0.7,
         culturalRelevance: [cultureInfo.region],
-        explanation: 'Adjusted for indirect communication style - metaphorical and implicit expressions weighted higher'
+        explanation: 'Adjusted for indirect communication style - metaphorical and implicit expressions weighted higher';
       });
     }
 
@@ -520,12 +520,12 @@ class CulturalCrisisDetectionService {
           adjustment: 0.15,
           confidence: 0.9,
           culturalRelevance: [cultureInfo.region],
-          explanation: 'Adjusted for family-centered culture - family-related crisis expressions detected'
+          explanation: 'Adjusted for family-centered culture - family-related crisis expressions detected';
         });
       }
     }
 
-    // Somatic expression bias adjustment
+    // Somatic expression bias adjustment;
     const somaticIndicators = culturalIndicators.filter(i => i.expressionType === 'somatic');
     if (somaticIndicators.length > 0) {
       adjustments.push({
@@ -533,11 +533,11 @@ class CulturalCrisisDetectionService {
         adjustment: 0.18,
         confidence: 0.8,
         culturalRelevance: [cultureInfo.region],
-        explanation: 'Adjusted for somatic expression of mental health symptoms - physical symptom descriptions weighted appropriately'
+        explanation: 'Adjusted for somatic expression of mental health symptoms - physical symptom descriptions weighted appropriately';
       });
     }
 
-    // Religious/spiritual coping adjustment
+    // Religious/spiritual coping adjustment;
     const religiousPatterns = communicationPatterns.filter(p => p.helpSeekingStyle === 'religious');
     if (religiousPatterns.length > 0) {
       adjustments.push({
@@ -545,7 +545,7 @@ class CulturalCrisisDetectionService {
         adjustment: -0.10, // May indicate coping mechanism
         confidence: 0.6,
         culturalRelevance: [cultureInfo.region],
-        explanation: 'Adjusted for religious coping expressions - spiritual references may indicate resilience factors'
+        explanation: 'Adjusted for religious coping expressions - spiritual references may indicate resilience factors';
       });
     }
 
@@ -578,8 +578,8 @@ class CulturalCrisisDetectionService {
     // Apply overall cultural bias reduction
     adjustedRisk = adjustedRisk * (1 - this.CULTURAL_BIAS_REDUCTION_FACTOR);
 
-    // Calculate cultural confidence
-    const culturalConfidence = Math.min(1, 
+    // Calculate cultural confidence;
+    const culturalConfidence = Math.min(1, ;
       adjustments.reduce((sum, adj) => sum + adj.confidence, 0) / Math.max(1, adjustments.length)
     );
 
@@ -604,32 +604,32 @@ class CulturalCrisisDetectionService {
     culturalResources: string[];
     languageSpecificResources: string[];
   } {
-    // Determine family involvement level
+    // Determine family involvement level;
     let familyInvolvement: FamilyInvolvementLevel;
     if (cultureInfo.familyInvolvement === 'family-centered') {
-      familyInvolvement = 'high';
-    } else if (cultureInfo.familyInvolvement === 'community-based') {
-      familyInvolvement = 'medium';
-    } else {
+      familyInvolvement = 'high';;
+  } else if (cultureInfo.familyInvolvement === 'community-based') {
+      familyInvolvement = 'medium';;
+  } else {
       familyInvolvement = 'low';
     }
 
-    // Community approach recommendation
-    const communityApproach = cultureInfo.familyInvolvement === 'community-based' ||
+    // Community approach recommendation;
+    const communityApproach = cultureInfo.familyInvolvement === 'community-based' ||;
                              cultureInfo.region === 'Filipino';
 
-    // Religious consideration
-    const religiousIndicators = culturalIndicators.filter(i => 
+    // Religious consideration;
+    const religiousIndicators = culturalIndicators.filter(i => ;
       i.indicator.includes('Dios') || i.indicator.includes('الله') || 
       i.indicator.includes('God') || i.indicator.includes('prayer')
     );
-    const religiousConsideration = religiousIndicators.length > 0 ||
+    const religiousConsideration = religiousIndicators.length > 0 ||;
                                   ['Arabic', 'Hispanic/Latino', 'Filipino'].includes(cultureInfo.region);
 
-    // Cultural resources
+    // Cultural resources;
     const culturalResources = this.getCulturalResources(cultureInfo.region);
     
-    // Language-specific resources
+    // Language-specific resources;
     const languageSpecificResources = this.getLanguageSpecificResources(languageCode);
 
     return { familyInvolvement,
@@ -736,8 +736,9 @@ class CulturalCrisisDetectionService {
         initialRiskLevel: result.culturallyAdjustedRisk.originalRisk / 100,
         finalRiskLevel: result.culturallyAdjustedRisk.adjustedRisk / 100,
         sessionDuration: 1, // Analysis duration
-        feedback: undefined
-      });
+        feedback: undefined;
+      };
+  };
 
       console.log('[Cultural Crisis Detection] Analytics logged for cultural context:', result.culturalContext);
     } catch (error) {
@@ -766,7 +767,7 @@ class CulturalCrisisDetectionService {
         regionSpecificMetrics: {
           summary: effectiveness.summary,
           insights: effectiveness.culturalInsights.length,
-          recommendations: effectiveness.recommendations.length
+          recommendations: effectiveness.recommendations.length;
         }
       } catch (error) {
       console.error('[Cultural Crisis Detection] Failed to get metrics:', error);
@@ -794,13 +795,13 @@ class CulturalCrisisDetectionService {
     // This would implement privacy-preserving learning from cultural feedback
     console.log('[Cultural Crisis Detection] Cultural pattern update requested for region:', feedback.culturalRegion);
     
-    // Store anonymized pattern learning data
+    // Store anonymized pattern learning data;
     const patternData = {
       textLength: feedback.text.length,
       culturalRegion: feedback.culturalRegion,
       accuracyGap: Math.abs(feedback.actualRisk - feedback.predictedRisk),
       culturalAppropriateness: feedback.culturallyAppropriate,
-      timestamp: Date.now()
+      timestamp: Date.now();
     };
 
     const existingPatterns = JSON.parse(localStorage.getItem('cultural_patterns_learning') || '[]');
@@ -815,6 +816,6 @@ class CulturalCrisisDetectionService {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const culturalCrisisDetectionService = new CulturalCrisisDetectionService();
 export default culturalCrisisDetectionService;

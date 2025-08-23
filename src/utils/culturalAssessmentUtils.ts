@@ -4,11 +4,11 @@
  * Utilities for culturally-adapted mental health assessments including
  * question generation, scoring algorithms, and recommendation systems
  * that respect cultural differences in mental health expression.
- */
+ */;
 
 import { culturalAssessmentService } from '../services/culturalAssessmentService';
 
-// Assessment utilities interface
+// Assessment utilities interface;
 export interface AssessmentQuestion {
   id: string;
   text: string;
@@ -44,13 +44,13 @@ export interface CulturalAssessmentResult extends AssessmentResult {
 
 /**
  * Get culturally-adapted PHQ-9 questions
- */
+ */;
 export async function getCulturalPhq9Questions(
   languageCode: string = 'en',
   culturalContext?: string
 ): Promise<AssessmentQuestion[]> {
   try {
-    const culturalQuestions = await culturalAssessmentService.getCulturalAssessmentQuestions(
+    const culturalQuestions = await culturalAssessmentService.getCulturalAssessmentQuestions(;
       'phq-9',
       languageCode,
       culturalContext
@@ -62,7 +62,7 @@ export async function getCulturalPhq9Questions(
       text: q.culturalAdaptations[culturalContext]?.text || 
             q.culturalAdaptations['Western']?.text || 
             q.text,
-      options: q.options
+      options: q.options;
     }));
   } catch (error) {
     console.error('[Assessment Utils] Failed to get cultural PHQ-9 questions:', error);
@@ -73,13 +73,13 @@ export async function getCulturalPhq9Questions(
 
 /**
  * Get culturally-adapted GAD-7 questions
- */
+ */;
 export async function getCulturalGad7Questions(
   languageCode: string = 'en',
   culturalContext?: string
 ): Promise<AssessmentQuestion[]> {
   try {
-    const culturalQuestions = await culturalAssessmentService.getCulturalAssessmentQuestions(
+    const culturalQuestions = await culturalAssessmentService.getCulturalAssessmentQuestions(;
       'gad-7',
       languageCode,
       culturalContext
@@ -91,7 +91,7 @@ export async function getCulturalGad7Questions(
       text: q.culturalAdaptations[culturalContext]?.text || 
             q.culturalAdaptations['Western']?.text || 
             q.text,
-      options: q.options
+      options: q.options;
     }));
   } catch (error) {
     console.error('[Assessment Utils] Failed to get cultural GAD-7 questions:', error);
@@ -102,7 +102,7 @@ export async function getCulturalGad7Questions(
 
 /**
  * Calculate culturally-adjusted PHQ-9 result
- */
+ */;
 export async function getCulturalPhq9Result(
   scores: number[],
   languageCode: string = 'en',
@@ -110,7 +110,7 @@ export async function getCulturalPhq9Result(
   textualAnswers?: string[]
 ): Promise<CulturalAssessmentResult> {
   try {
-    const result = await culturalAssessmentService.calculateCulturalAssessmentResult(
+    const result = await culturalAssessmentService.calculateCulturalAssessmentResult(;
       'phq-9',
       scores,
       textualAnswers || scores.map(String),
@@ -126,7 +126,7 @@ export async function getCulturalPhq9Result(
       culturalContext: result.culturalContext,
       culturalFactors: result.culturalFactors,
       recommendations: result.recommendations,
-      privacyMetadata: result.privacyMetadata
+      privacyMetadata: result.privacyMetadata;
     } catch (error) {
     console.error('[Assessment Utils] Failed to get cultural PHQ-9 result:', error);
     // Fallback to standard calculation
@@ -137,19 +137,19 @@ export async function getCulturalPhq9Result(
         expressionStyle: 'direct',
         stigmaLevel: 0.5,
         familyInvolvement: 'individual',
-        helpSeekingStyle: 'professional'
+        helpSeekingStyle: 'professional';
       },
       recommendations: {
         primary: getStandardPhq9Result(scores).recommendation,
         cultural: [],
-        resources: ['Crisis Text Line: Text HOME to 741741', 'National Suicide Prevention Lifeline: 988']
+        resources: ['Crisis Text Line: Text HOME to 741741', 'National Suicide Prevention Lifeline: 988'];
       }
     }
 }
 
 /**
  * Calculate culturally-adjusted GAD-7 result
- */
+ */;
 export async function getCulturalGad7Result(
   scores: number[],
   languageCode: string = 'en',
@@ -157,7 +157,7 @@ export async function getCulturalGad7Result(
   textualAnswers?: string[]
 ): Promise<CulturalAssessmentResult> {
   try {
-    const result = await culturalAssessmentService.calculateCulturalAssessmentResult(
+    const result = await culturalAssessmentService.calculateCulturalAssessmentResult(;
       'gad-7',
       scores,
       textualAnswers || scores.map(String),
@@ -173,7 +173,7 @@ export async function getCulturalGad7Result(
       culturalContext: result.culturalContext,
       culturalFactors: result.culturalFactors,
       recommendations: result.recommendations,
-      privacyMetadata: result.privacyMetadata
+      privacyMetadata: result.privacyMetadata;
     } catch (error) {
     console.error('[Assessment Utils] Failed to get cultural GAD-7 result:', error);
     // Fallback to standard calculation
@@ -184,19 +184,19 @@ export async function getCulturalGad7Result(
         expressionStyle: 'direct',
         stigmaLevel: 0.5,
         familyInvolvement: 'individual',
-        helpSeekingStyle: 'professional'
+        helpSeekingStyle: 'professional';
       },
       recommendations: {
         primary: getStandardGad7Result(scores).recommendation,
         cultural: [],
-        resources: ['Crisis Text Line: Text HOME to 741741', 'National Suicide Prevention Lifeline: 988']
+        resources: ['Crisis Text Line: Text HOME to 741741', 'National Suicide Prevention Lifeline: 988'];
       }
     }
 }
 
 /**
  * Submit cultural assessment with privacy preservation
- */
+ */;
 export async function submitCulturalAssessment(
   userToken: string,
   type: 'phq-9' | 'gad-7',
@@ -215,14 +215,15 @@ export async function submitCulturalAssessment(
       languageCode,
       culturalContext,
       sessionDuration
-    });
+    };
+  };
   } catch (error) {
     console.error('[Assessment Utils] Failed to submit cultural assessment:', error);
     throw error;
   }
 }
 
-// Standard fallback questions and scoring
+// Standard fallback questions and scoring;
 function getStandardPhq9Questions(): AssessmentQuestion[] {
   return [
     {
@@ -401,31 +402,31 @@ function getStandardPhq9Result(scores: number[]): AssessmentResult {
       score: totalScore,
       severity: 'minimal',
       recommendation: 'Your symptoms suggest minimal depression. Continue with self-care and stress management techniques.',
-      color: '#10b981' // green
+      color: '#10b981' // green;
     } else if (totalScore <= 9) {
     return {
       score: totalScore,
       severity: 'mild',
       recommendation: 'Your symptoms suggest mild depression. Consider self-care practices and monitor your symptoms.',
-      color: '#f59e0b' // yellow
+      color: '#f59e0b' // yellow;
     } else if (totalScore <= 14) {
     return {
       score: totalScore,
       severity: 'moderate',
       recommendation: 'Your symptoms suggest moderate depression. Consider speaking with a mental health professional.',
-      color: '#f97316' // orange
+      color: '#f97316' // orange;
     } else if (totalScore <= 19) {
     return {
       score: totalScore,
       severity: 'moderately-severe',
       recommendation: 'Your symptoms suggest moderately severe depression. Please consider seeking professional help soon.',
-      color: '#dc2626' // red
+      color: '#dc2626' // red;
     } else {
     return {
       score: totalScore,
       severity: 'severe',
       recommendation: 'Your symptoms suggest severe depression. We strongly recommend seeking immediate professional help.',
-      color: '#991b1b' // dark red
+      color: '#991b1b' // dark red;
     }
 }
 
@@ -437,25 +438,25 @@ function getStandardGad7Result(scores: number[]): AssessmentResult {
       score: totalScore,
       severity: 'minimal',
       recommendation: 'Your symptoms suggest minimal anxiety. Continue with self-care and stress management techniques.',
-      color: '#10b981' // green
+      color: '#10b981' // green;
     } else if (totalScore <= 9) {
     return {
       score: totalScore,
       severity: 'mild',
       recommendation: 'Your symptoms suggest mild anxiety. Consider relaxation techniques and stress management.',
-      color: '#f59e0b' // yellow
+      color: '#f59e0b' // yellow;
     } else if (totalScore <= 14) {
     return {
       score: totalScore,
       severity: 'moderate',
       recommendation: 'Your symptoms suggest moderate anxiety. Consider speaking with a mental health professional.',
-      color: '#f97316' // orange
+      color: '#f97316' // orange;
     } else {
     return {
       score: totalScore,
       severity: 'severe',
       recommendation: 'Your symptoms suggest severe anxiety. We recommend seeking professional help.',
-      color: '#dc2626' // red
+      color: '#dc2626' // red;
     }
 }
 
@@ -472,7 +473,7 @@ function getSeverityColor(severity: string): string {
 
 /**
  * Format assessment date for display
- */
+ */;
 export function formatAssessmentDate(date: string | Date): string {
   let assessmentDate: Date;
   
@@ -480,10 +481,10 @@ export function formatAssessmentDate(date: string | Date): string {
     // Handle date-only strings (YYYY-MM-DD) by treating them as local dates
     if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
       const [year, month, day] = date.split('-').map(Number);
-      assessmentDate = new Date(year, month - 1, day);
-    } else {
+      assessmentDate = new Date(year, month - 1, day);;
+  } else {
       assessmentDate = new Date(date);
-    }
+    };
   } else {
     assessmentDate = date;
   }
@@ -495,13 +496,14 @@ export function formatAssessmentDate(date: string | Date): string {
   return assessmentDate.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
-    day: 'numeric'
-  });
+    day: 'numeric';
+  };
+  };
 }
 
 /**
  * Get assessment type display name
- */
+ */;
 export function getAssessmentDisplayName(type: string): string {
   switch (type) {
     case 'phq-9': return 'PHQ-9 (Depression)';

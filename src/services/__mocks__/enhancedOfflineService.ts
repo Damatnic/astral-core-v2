@@ -1,6 +1,6 @@
 /**
  * Mock for Enhanced Offline Service
- */
+ */;
 
 export const enhancedOfflineService = {
   isOnline: true,
@@ -16,7 +16,7 @@ export const enhancedOfflineService = {
     messaging: true,
     journaling: true,
     moodTracking: true,
-    crisisResources: true
+    crisisResources: true;
   }),
   addSyncListener: jest.fn(),
   removeSyncListener: jest.fn(),

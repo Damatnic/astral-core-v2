@@ -12,7 +12,7 @@ export interface EnhancedModalProps {
   title: string;
   /** Modal content */
   children: React.ReactNode;
-  /** Additional CSS classes */
+  /** Additional CSS classes */;
   className?: string;
   /** Whether to show close button */
   showCloseButton?: boolean;
@@ -26,7 +26,7 @@ export interface EnhancedModalProps {
   autoFocus?: boolean;
   /** Size of the modal */
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
-  /** Modal variant */
+  /** Modal variant */;
   variant?: 'default' | 'confirmation' | 'form' | 'info';
   /** Announcement for screen readers when modal opens */
   openAnnouncement?: string;
@@ -61,7 +61,7 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const lastFocusedElement = useRef<HTMLElement | null>(null);
 
-  // Initialize keyboard navigation
+  // Initialize keyboard navigation;
   const {
     focusFirst,
     focusLast,
@@ -73,21 +73,22 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
     enableEscape: closeOnEscape,
     onEscape: onClose,
     restoreFocus: true,
-    handleTab: true
+    handleTab: true;
   });
 
   /**
    * Handle backdrop click
-   */
+   */;
   const handleBackdropClick = useCallback((event: React.MouseEvent) => {
     if (closeOnBackdropClick && event.target === backdropRef.current) {
       onClose();
     }
+  };
   }, [closeOnBackdropClick, onClose]);
 
   /**
    * Handle escape key
-   */
+   */;
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
     if (!isOpen) return;
 
@@ -114,8 +115,8 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
             if (currentIndex === 0 || currentIndex === -1) {
               event.preventDefault();
               focusLast();
-            }
-          } else {
+            };
+  } else {
             // Tab - go to next
             if (currentIndex === focusableElements.length - 1 || currentIndex === -1) {
               event.preventDefault();
@@ -125,6 +126,7 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
         }
         break;
     }
+  };
   }, [isOpen, closeOnEscape, onClose, trapFocus, getFocusableElements, focusFirst, focusLast]);
 
   /**
@@ -149,8 +151,8 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
         if (autoFocus) {
           const focusableElements = getFocusableElements();
           if (focusableElements.length > 0) {
-            focusableElements[0].focus();
-          } else if (closeButtonRef.current) {
+            focusableElements[0].focus();;
+  } else if (closeButtonRef.current) {
             closeButtonRef.current.focus();
           }
         }
@@ -188,7 +190,7 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
           }, 100);
         }
 
-        // Announce modal closing
+        // Announce modal closing;
         const announcement = document.createElement('div');
         announcement.setAttribute('aria-live', 'assertive');
         announcement.setAttribute('aria-atomic', 'true');
@@ -197,12 +199,13 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
         document.body.appendChild(announcement);
         setTimeout(() => document.body.removeChild(announcement), 1000);
       }
+  };
   }, [isOpen, autoFocus, trapFocus, openAnnouncement, getFocusableElements, trapFocusInContainer, handleKeyDown]);
 
   // Don't render if not open
   if (!isOpen) return null;
 
-  const modalClasses = [
+  const modalClasses = [;
     'enhanced-modal',
     `enhanced-modal--${size}`,
     `enhanced-modal--${variant}`,
@@ -234,7 +237,7 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
           {showCloseButton && (
             <button
               ref={closeButtonRef}
-              type="button"
+              type="button";
               className="enhanced-modal__close"
               onClick={onClose}
               aria-label={closeButtonLabel}
@@ -270,7 +273,7 @@ export const EnhancedModal: React.FC<EnhancedModalProps> = ({
 
 /**
  * Modal context for managing multiple modals
- */
+ */;
 interface ModalContextValue {
   openModal: (id: string, props: Omit<EnhancedModalProps, 'isOpen' | 'onClose'>) => void;
   closeModal: (id: string) => void;
@@ -297,9 +300,10 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       [id]: {
         ...props,
         isOpen: true,
-        onClose: () => closeModal(id)
+        onClose: () => closeModal(id);
       }
     }));
+  };
   }, []);
 
   const closeModal = useCallback((id: string) => {
@@ -307,14 +311,17 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const { [id]: _, ...rest } = prev;
       return rest;
     });
+  };
   }, []);
 
   const closeAllModals = useCallback(() => {
     setModals({});
+  };
   }, []);
 
   const isModalOpen = useCallback((id: string) => {
     return Boolean(modals[id]?.isOpen);
+  };
   }, [modals]);
 
   const contextValue: ModalContextValue = {

@@ -1,4 +1,4 @@
-// Comprehensive Backend API Service
+// Comprehensive Backend API Service;
 import { simpleAuthService } from './simpleAuthService';
 
 const API_BASE = '/.netlify/functions';
@@ -19,7 +19,7 @@ class BackendApiService {
       const response = await fetch(`${API_BASE}${endpoint}`, {
         method,
         headers,
-        body: data ? JSON.stringify(data) : undefined
+        body: data ? JSON.stringify(data) : undefined;
       });
       
       const result = await response.json();
@@ -167,8 +167,8 @@ class BackendApiService {
   // Crisis Detection Service
   crisisDetection = {
     analyzeText: async (text: string) => {
-      // Local crisis keyword detection
-      const crisisKeywords = [
+      // Local crisis keyword detection;
+      const crisisKeywords = [;
         'suicide', 'kill myself', 'end it all', 'want to die',
         'hurt myself', 'self harm', 'cutting', 'overdose',
         'no point', 'hopeless', 'can\'t go on', 'better off dead'
@@ -191,7 +191,7 @@ class BackendApiService {
               { name: 'Crisis Text Line', number: 'Text HOME to 741741' },
               { name: 'Emergency Services', number: '911' }
             ],
-            message: 'We\'re concerned about you. Please reach out for help.'
+            message: 'We\'re concerned about you. Please reach out for help.';
           }
         }
       
@@ -199,9 +199,9 @@ class BackendApiService {
         success: true,
         data: {
           crisisDetected: false,
-          severity: 'none'
-        }
-      },
+          severity: 'none';
+        };
+  },
     
     analyzeMood: async (moodData: {
       score: number;
@@ -209,7 +209,7 @@ class BackendApiService {
       notes?: string;
     }) => {
       const isHighRisk = 
-        moodData.score <= 2 || 
+        moodData.score <= 2 || ;
         moodData.anxiety >= 4 ||
         (moodData.notes && await this.crisisDetection.analyzeText(moodData.notes).then(r => r.data.crisisDetected));
       
@@ -229,7 +229,7 @@ class BackendApiService {
     syncAll: async () => {
       try {
         // Collect local data for sync
-        // In production, this would sync with the backend
+        // In production, this would sync with the backend;
         const wellness = localStorage.getItem('wellnessData');
         const assessments = localStorage.getItem('assessmentsData');
         const settings = localStorage.getItem('userSettings');
@@ -238,19 +238,20 @@ class BackendApiService {
         console.log('Data sync initiated', { 
           hasWellness: !!wellness, 
           hasAssessments: !!assessments, 
-          hasSettings: !!settings 
-        });
+          hasSettings: !!settings ;
+        };
+  };
         
         return {
           success: true,
-          message: 'Data synced successfully'
+          message: 'Data synced successfully';
         } catch (error) {
         console.error('Sync failed:', error);
         return {
           success: false,
-          error: 'Sync failed'
-        }
-    },
+          error: 'Sync failed';
+        };
+  },
     
     backup: async () => {
       try {
@@ -259,10 +260,10 @@ class BackendApiService {
           journal: await this.wellness.getJournalEntries(),
           assessments: await this.assessments.getHistory(),
           settings: await this.settings.getAll(),
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString();
         };
         
-        // Create downloadable backup
+        // Create downloadable backup;
         const dataStr = JSON.stringify(backup, null, 2);
         const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
         
@@ -273,12 +274,12 @@ class BackendApiService {
         
         return {
           success: true,
-          message: 'Backup created successfully'
+          message: 'Backup created successfully';
         } catch (error) {
         console.error('Backup failed:', error);
         return {
           success: false,
-          error: 'Backup failed'
+          error: 'Backup failed';
         }
     }
   }

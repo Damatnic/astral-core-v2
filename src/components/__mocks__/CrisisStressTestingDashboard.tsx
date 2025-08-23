@@ -3,7 +3,7 @@
  * 
  * This mock prevents the actual stress testing dashboard from running tests
  * during unit testing, avoiding timeouts and interference.
- */
+ */;
 
 import React from 'react';
 

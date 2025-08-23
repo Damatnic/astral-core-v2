@@ -8,7 +8,7 @@
  * 
  * React hook for integrating enhanced AI crisis detection with machine learning capabilities,
  * real-time risk assessment, and cultural context awareness.
- */
+ */;
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { 
@@ -86,7 +86,7 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
     modelMetrics: {
       accuracy: 0,
       confidence: 0,
-      totalAnalyses: 0
+      totalAnalyses: 0;
     }
   });
 
@@ -97,7 +97,7 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
     riskLevel: 0,
     interventions: [],
     culturallyAdapted: false,
-    emergencyMode: false
+    emergencyMode: false;
   });
 
   const debounceRef = useRef<NodeJS.Timeout>();
@@ -106,8 +106,8 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
 
   /**
    * Analyze text using enhanced AI crisis detection
-   */
-  const analyzeText = useCallback(async (
+   */;
+  const analyzeText = useCallback(async (;
     text: string, 
     options: { immediate?: boolean; trackHistory?: boolean } = {}
   ): Promise<MLCrisisAnalysisResult | null> => {
@@ -123,8 +123,8 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
     setState(prev => ({ ...prev, isAnalyzing: true }));
 
     try {
-      // Perform enhanced AI crisis analysis
-      const result = await enhancedAICrisisDetectionService.analyzeCrisisWithML(
+      // Perform enhanced AI crisis analysis;
+      const result = await enhancedAICrisisDetectionService.analyzeCrisisWithML(;
         text,
         { userId, languageCode, culturalContext }
       );
@@ -133,15 +133,15 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
 
       // Update state with results
       setState(prev => {
-        const newEmotionalHistory = options.trackHistory !== false 
+        const newEmotionalHistory = options.trackHistory !== false ;
           ? [...prev.emotionalHistory.slice(-(maxHistorySize - 1)), result.emotionalState]
           : prev.emotionalHistory;
 
-        const newRiskTrend = options.trackHistory !== false && result.realTimeRisk
+        const newRiskTrend = options.trackHistory !== false && result.realTimeRisk;
           ? [...prev.riskTrend.slice(-(maxHistorySize - 1)), result.realTimeRisk.immediateRisk]
           : prev.riskTrend;
 
-        const newAnalysisHistory = options.trackHistory !== false
+        const newAnalysisHistory = options.trackHistory !== false;
           ? [...prev.analysisHistory.slice(-(maxHistorySize - 1)), result]
           : prev.analysisHistory;
 
@@ -156,9 +156,10 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
           modelMetrics: {
             accuracy: 0.85, // Default values since getModelMetrics doesn't exist
             confidence: result.mlConfidence || 0.5,
-            totalAnalyses: analysisCountRef.current
+            totalAnalyses: analysisCountRef.current;
           }
-        });
+        };
+  };
 
       // Handle crisis detection callbacks
       if (result.hasCrisisIndicators && onCrisisDetected) {
@@ -188,6 +189,7 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
       setState(prev => ({ ...prev, isAnalyzing: false }));
       return null;
     }
+  };
   }, [
     minAnalysisLength, enableMLFeatures, userId, languageCode, culturalContext,
     maxHistorySize, onCrisisDetected, onRiskEscalation, onInterventionRecommended
@@ -195,7 +197,7 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
 
   /**
    * Analyze text with debouncing for real-time input
-   */
+   */;
   const analyzeTextDebounced = useCallback((text: string) => {
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
@@ -204,11 +206,12 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
     debounceRef.current = setTimeout(() => {
       analyzeText(text, { trackHistory: true });
     }, debounceMs);
+  };
   }, [analyzeText, debounceMs]);
 
   /**
    * Monitor text input continuously
-   */
+   */;
   const monitorTextInput = useCallback((inputElement: HTMLElement) => {
     if (!autoAnalyze) return () => {};
 
@@ -225,11 +228,13 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
     return () => {
       inputElement.removeEventListener('input', handleInput);
       inputElement.removeEventListener('paste', handleInput);
-    }, [autoAnalyze, analyzeTextDebounced]);
+    };
+  };
+  }, [autoAnalyze, analyzeTextDebounced]);
 
   /**
    * Update crisis alert based on analysis results
-   */
+   */;
   const updateCrisisAlert = useCallback((result: MLCrisisAnalysisResult) => {
     if (!result.realTimeRisk) {
       setCrisisAlert({
@@ -239,7 +244,7 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
         riskLevel: 0,
         interventions: [],
         culturallyAdapted: false,
-        emergencyMode: false
+        emergencyMode: false;
       });
       return;
     }
@@ -249,14 +254,14 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
 
     // Note: interventionUrgency appears to be a number, not a string
     if (riskLevel >= 90) {
-      severity = 'immediate';
-    } else if (riskLevel >= 80) {
-      severity = 'critical';
-    } else if (riskLevel >= 60) {
-      severity = 'high';
-    } else if (riskLevel >= 40) {
-      severity = 'medium';
-    } else if (riskLevel >= 20) {
+      severity = 'immediate';;
+  } else if (riskLevel >= 80) {
+      severity = 'critical';;
+  } else if (riskLevel >= 60) {
+      severity = 'high';;
+  } else if (riskLevel >= 40) {
+      severity = 'medium';;
+  } else if (riskLevel >= 20) {
       severity = 'low';
     }
 
@@ -267,20 +272,22 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
       riskLevel,
       interventions: result.realTimeRisk.recommendedInterventions?.map(i => i.description) || [],
       culturallyAdapted: (result.biasAdjustments?.length || 0) > 0,
-      emergencyMode: severity === 'immediate' || severity === 'critical'
+      emergencyMode: severity === 'immediate' || severity === 'critical';
     });
+  };
   }, []);
 
   /**
    * Dismiss crisis alert
-   */
+   */;
   const dismissAlert = useCallback(() => {
     setCrisisAlert(prev => ({ ...prev, show: false }));
+  };
   }, []);
 
   /**
    * Get emotional trend analysis
-   */
+   */;
   const getEmotionalTrend = useCallback(() => {
     const recentEmotions = state.emotionalHistory.slice(-10);
     if (recentEmotions.length < 3) {
@@ -289,25 +296,26 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
     const valenceValues = recentEmotions.map(e => e.valence);
     const arousalValues = recentEmotions.map(e => e.arousal);
 
-    // Simple trend calculation
+    // Simple trend calculation;
     const valenceSlope = (valenceValues[valenceValues.length - 1] - valenceValues[0]) / valenceValues.length;
     const arousalSlope = (arousalValues[arousalValues.length - 1] - arousalValues[0]) / arousalValues.length;
 
     let trend: 'improving' | 'deteriorating' | 'stable' = 'stable';
     
     if (valenceSlope > 0.1 && arousalSlope < 0.1) {
-      trend = 'improving';
-    } else if (valenceSlope < -0.1 || arousalSlope > 0.2) {
+      trend = 'improving';;
+  } else if (valenceSlope < -0.1 || arousalSlope > 0.2) {
       trend = 'deteriorating';
     }
 
     const confidence = Math.min(1, recentEmotions.length / 10);
 
-    return { trend, confidence, valenceSlope, arousalSlope }, [state.emotionalHistory]);
+    return { trend, confidence, valenceSlope, arousalSlope };
+  }, [state.emotionalHistory]);
 
   /**
    * Get risk prediction for next 24 hours
-   */
+   */;
   const getRiskPrediction = useCallback(() => {
     if (state.riskTrend.length < 3) {
       return { predictedRisk: 0, confidence: 0, trend: 'unknown' as const, currentRisk: 0, riskChange: 0 }
@@ -316,14 +324,14 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
     const currentRisk = recentRisks[recentRisks.length - 1];
     const previousRisk = recentRisks.length > 1 ? recentRisks[recentRisks.length - 2] : currentRisk;
     
-    // Simple linear prediction
+    // Simple linear prediction;
     const riskSlope = (currentRisk - recentRisks[0]) / recentRisks.length;
-    const predictedRisk = Math.max(0, Math.min(100, currentRisk + (riskSlope * 24))); // 24 hour prediction
+    const predictedRisk = Math.max(0, Math.min(100, currentRisk + (riskSlope * 24))); // 24 hour prediction;
 
     let trend: 'increasing' | 'decreasing' | 'stable' = 'stable';
     if (riskSlope > 2) {
-      trend = 'increasing';
-    } else if (riskSlope < -2) {
+      trend = 'increasing';;
+  } else if (riskSlope < -2) {
       trend = 'decreasing';
     }
 
@@ -334,12 +342,13 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
       confidence, 
       trend, 
       currentRisk, 
-      riskChange: currentRisk - previousRisk 
-    }, [state.riskTrend]);
+      riskChange: currentRisk - previousRisk ;
+    };
+  }, [state.riskTrend]);
 
   /**
    * Get personalized intervention recommendations
-   */
+   */;
   const getPersonalizedInterventions = useCallback((): InterventionRecommendation[] => {
     if (!state.lastAnalysis?.realTimeRisk) {
       return [];
@@ -386,21 +395,24 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
         })
       .sort((a, b) => b.priority - a.priority)
       .slice(0, 5); // Top 5 recommendations
+  };
   }, [state.lastAnalysis]);
 
   /**
    * Clear analysis history
-   */
+   */;
   const clearHistory = useCallback(() => {
     setState(prev => ({
       ...prev,
       emotionalHistory: [],
       riskTrend: [],
       analysisHistory: [],
-      lastAnalysis: null
-    }));
+      lastAnalysis: null;
+    };
+  });
     analysisCountRef.current = 0;
     lastRiskLevelRef.current = 0;
+  };
   }, []);
 
   // Cleanup debounce on unmount
@@ -409,7 +421,8 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
       }
-    }, []);
+    };
+  }, []);
 
   return {
     // State
@@ -441,7 +454,7 @@ export function useEnhancedCrisisDetection(options: EnhancedCrisisDetectionOptio
     interventionUrgency: state.lastAnalysis?.realTimeRisk?.interventionUrgency || 0,
     isEmergency: crisisAlert.emergencyMode,
     mlConfidence: state.lastAnalysis?.mlConfidence || 0,
-    analysisCount: analysisCountRef.current
+    analysisCount: analysisCountRef.current;
   }
 
 export default useEnhancedCrisisDetection;

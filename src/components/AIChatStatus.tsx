@@ -23,6 +23,7 @@ export const AIChatStatus: React.FC<AIChatStatusProps> = ({ className = '' }) =>
     checkProviderStatus();
     const interval = setInterval(checkProviderStatus, 60000); // Check every minute
     return () => clearInterval(interval);
+  };
   }, []);
   
   const checkProviderStatus = async () => {
@@ -39,19 +40,19 @@ export const AIChatStatus: React.FC<AIChatStatusProps> = ({ className = '' }) =>
             name: 'OpenAI',
             available: data.providers.includes('openai'),
             responseTime,
-            lastChecked: new Date()
+            lastChecked: new Date();
           },
           {
             name: 'Claude',
             available: data.providers.includes('claude'),
             responseTime,
-            lastChecked: new Date()
+            lastChecked: new Date();
           }
         ];
         
         setProviders(providerStatuses);
-        setConnectionStatus('connected');
-      } else {
+        setConnectionStatus('connected');;
+  } else {
         setConnectionStatus('error');
       }
     } catch (error) {
@@ -93,7 +94,7 @@ export const AIChatStatus: React.FC<AIChatStatusProps> = ({ className = '' }) =>
       <div className="ai-status-header">
         <div className="ai-status-indicator" style={{ backgroundColor: getStatusColor() }}></div>
         <span className="ai-status-text">{getStatusText()}</span>
-        <button 
+        <button; 
           className="ai-status-refresh"
           onClick={checkProviderStatus}
           disabled={isChecking}

@@ -31,7 +31,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({
   enableEmojis = true,
   enableTypingIndicator = true
 }) => {
-  // Use the username from props (for display purposes)
+  // Use the username from props (for display purposes);
   const currentUsername = propUsername;
   const { messages, typingUsers, sendMessage, sendTyping } = useRealtimeChannel(roomId);
   const [inputValue, setInputValue] = useState('');
@@ -41,15 +41,16 @@ export const LiveChat: React.FC<LiveChatProps> = ({
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Common emojis for quick access
+  // Common emojis for quick access;
   const quickEmojis = ['😊', '👍', '❤️', '😂', '🎉', '🤗', '😢', '🙏', '💪', '✨'];
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
   }, [messages]);
 
-  // Handle typing indicator
+  // Handle typing indicator;
   const handleTyping = useCallback(() => {
     if (!isTyping && enableTypingIndicator) {
       setIsTyping(true);
@@ -68,6 +69,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({
         sendTyping(false);
       }
     }, 2000);
+  };
   }, [isTyping, sendTyping, enableTypingIndicator]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,7 +119,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({
     const isOwnMessage = message.userId === userId;
     const messageClass = `message ${isOwnMessage ? 'own-message' : 'other-message'}`;
 
-    // Check if message is just an emoji
+    // Check if message is just an emoji;
     const isEmojiOnly = message.message.length <= 2 && /^\p{Emoji}+$/u.test(message.message);
 
     return (
@@ -142,7 +144,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({
     
     if (otherTypingUsers.length === 0) return null;
 
-    const typingText = otherTypingUsers.length === 1
+    const typingText = otherTypingUsers.length === 1;
       ? `${otherTypingUsers[0]} is typing...`
       : otherTypingUsers.length === 2
       ? `${otherTypingUsers[0]} and ${otherTypingUsers[1]} are typing...`
@@ -169,7 +171,8 @@ export const LiveChat: React.FC<LiveChatProps> = ({
       if (isTyping) {
         sendTyping(false);
       }
-    }, [isTyping, sendTyping]);
+    };
+  }, [isTyping, sendTyping]);
 
   return (
     <div className="live-chat-container" style={{ height }}>
@@ -198,7 +201,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({
       <div className="live-chat-input-container">
         {enableEmojis && (
           <div className="emoji-picker-container">
-            <button
+            <button;
               className="emoji-picker-toggle"
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               aria-label="Toggle emoji picker"
@@ -225,7 +228,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({
 
         <input
           ref={inputRef}
-          type="text"
+          type="text";
           className="live-chat-input"
           placeholder="Type a message..."
           value={inputValue}
@@ -234,7 +237,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({
           aria-label="Chat message input"
         />
 
-        <button
+        <button;
           className="live-chat-send-button"
           onClick={handleSendMessage}
           disabled={!inputValue.trim()}

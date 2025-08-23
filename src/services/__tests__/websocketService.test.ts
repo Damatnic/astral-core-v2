@@ -1,6 +1,6 @@
 import { getWebSocketService } from '../webSocketService';
 
-// Mock WebSocket
+// Mock WebSocket;
 class MockWebSocket {
   static readonly CONNECTING = 0;
   static readonly OPEN = 1;
@@ -88,7 +88,7 @@ describe('WebSocketService', () => {
     });
 
     it.skip('should handle connection failures gracefully', async () => {
-      // Mock WebSocket constructor to throw error
+      // Mock WebSocket constructor to throw error;
       const FailingWebSocket = function() {
         throw new Error('Connection failed');
       } as any;
@@ -116,7 +116,7 @@ describe('WebSocketService', () => {
         type: 'crisis_alert',
         userId: 'user-123',
         riskLevel: 'high',
-        message: 'Immediate intervention needed'
+        message: 'Immediate intervention needed';
       };
 
       await service.sendCrisisAlert(crisisAlert);
@@ -125,7 +125,7 @@ describe('WebSocketService', () => {
         JSON.stringify({
           type: 'crisis_alert',
           payload: crisisAlert,
-          timestamp: expect.any(Number)
+          timestamp: expect.any(Number);
         })
       );
     });
@@ -135,7 +135,7 @@ describe('WebSocketService', () => {
         sessionId: 'session-456',
         senderId: 'user-123',
         text: 'I need someone to talk to',
-        timestamp: Date.now()
+        timestamp: Date.now();
       };
 
       await service.sendChatMessage(chatMessage);
@@ -144,7 +144,7 @@ describe('WebSocketService', () => {
         JSON.stringify({
           type: 'chat_message',
           payload: chatMessage,
-          timestamp: expect.any(Number)
+          timestamp: expect.any(Number);
         })
       );
     });
@@ -158,15 +158,15 @@ describe('WebSocketService', () => {
         payload: {
           sessionId: 'session-456',
           senderId: 'helper-789',
-          text: 'I\'m here to help. How are you feeling?'
+          text: 'I\'m here to help. How are you feeling?';
         },
-        timestamp: Date.now()
+        timestamp: Date.now();
       };
 
       // Simulate incoming message
       if (mockWebSocket.onmessage) {
         mockWebSocket.onmessage(new MessageEvent('message', {
-          data: JSON.stringify(incomingMessage)
+          data: JSON.stringify(incomingMessage);
         }));
       }
 
@@ -182,13 +182,13 @@ describe('WebSocketService', () => {
         payload: {
           userId: 'helper-789',
           status: 'online',
-          availability: 'available'
+          availability: 'available';
         }
       };
 
       if (mockWebSocket.onmessage) {
         mockWebSocket.onmessage(new MessageEvent('message', {
-          data: JSON.stringify(presenceUpdate)
+          data: JSON.stringify(presenceUpdate);
         }));
       }
 
@@ -210,9 +210,9 @@ describe('WebSocketService', () => {
           payload: {
             roomId: 'crisis-room-123',
             userId: 'user-456',
-            roomType: 'crisis_support'
+            roomType: 'crisis_support';
           },
-          timestamp: expect.any(Number)
+          timestamp: expect.any(Number);
         })
       );
     });
@@ -225,9 +225,9 @@ describe('WebSocketService', () => {
           type: 'leave_room',
           payload: {
             roomId: 'crisis-room-123',
-            userId: 'user-456'
+            userId: 'user-456';
           },
-          timestamp: expect.any(Number)
+          timestamp: expect.any(Number);
         })
       );
     });
@@ -248,7 +248,7 @@ describe('WebSocketService', () => {
 
       if (mockWebSocket.onmessage) {
         mockWebSocket.onmessage(new MessageEvent('message', {
-          data: JSON.stringify(roomEvent)
+          data: JSON.stringify(roomEvent);
         }));
       }
 
@@ -276,7 +276,7 @@ describe('WebSocketService', () => {
           type: 'crisis_escalation',
           payload: escalation,
           priority: 'immediate',
-          timestamp: expect.any(Number)
+          timestamp: expect.any(Number);
         })
       );
     });
@@ -291,13 +291,13 @@ describe('WebSocketService', () => {
           userId: 'user-123',
           interventionType: 'immediate_contact',
           responderAssigned: 'counselor-456',
-          estimatedResponseTime: 300
+          estimatedResponseTime: 300;
         }
       };
 
       if (mockWebSocket.onmessage) {
         mockWebSocket.onmessage(new MessageEvent('message', {
-          data: JSON.stringify(intervention)
+          data: JSON.stringify(intervention);
         }));
       }
 
@@ -309,7 +309,7 @@ describe('WebSocketService', () => {
         userId: 'user-789',
         checkType: 'wellness',
         scheduledTime: Date.now() + 3600000, // 1 hour from now
-        priority: 'medium'
+        priority: 'medium';
       };
 
       await service.sendSafetyCheck(safetyCheck);
@@ -318,7 +318,7 @@ describe('WebSocketService', () => {
         JSON.stringify({
           type: 'safety_check',
           payload: safetyCheck,
-          timestamp: expect.any(Number)
+          timestamp: expect.any(Number);
         })
       );
     });
@@ -337,7 +337,7 @@ describe('WebSocketService', () => {
       expect(mockWebSocket.send).toHaveBeenCalledWith(
         JSON.stringify({
           type: 'heartbeat',
-          timestamp: expect.any(Number)
+          timestamp: expect.any(Number);
         })
       );
     });
@@ -361,14 +361,14 @@ describe('WebSocketService', () => {
       expect(connectionIssueHandler).toHaveBeenCalledWith({
         issue: 'high_latency',
         severity: expect.any(String),
-        timestamp: expect.any(Number)
+        timestamp: expect.any(Number);
       });
     });
   });
 
   describe('message queuing and offline support', () => {
     it.skip('should queue messages when disconnected', async () => {
-      // Don't connect, so messages should be queued
+      // Don't connect, so messages should be queued;
       const message = {
         type: 'chat_message',
         payload: { text: 'Hello' }
@@ -416,7 +416,7 @@ describe('WebSocketService', () => {
       const validMessage = {
         type: 'chat_message',
         payload: { text: 'Hello' },
-        timestamp: Date.now()
+        timestamp: Date.now();
       };
 
       const isValid = service.validateMessage(validMessage);
@@ -437,7 +437,7 @@ describe('WebSocketService', () => {
       const unsafeMessage = {
         type: 'chat_message',
         payload: {
-          text: '<script>alert("xss")</script>Safe text'
+          text: '<script>alert("xss")</script>Safe text';
         }
       };
 

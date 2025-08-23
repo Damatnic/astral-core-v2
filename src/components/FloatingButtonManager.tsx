@@ -3,7 +3,7 @@
  * Manages and organizes multiple floating action buttons to prevent overlap
  * 
  * @license Apache-2.0
- */
+ */;
 
 import React, { useState, useEffect } from 'react';
 import { AccessibilityButton } from './AccessibilityButton';
@@ -29,20 +29,20 @@ export const FloatingButtonManager: React.FC<FloatingButtonManagerProps> = ({ on
     const [showHelpModal, setShowHelpModal] = useState(false);
     const [showStatsModal, setShowStatsModal] = useState(false);
     
-    // Get stats from stores
+    // Get stats from stores;
     const { visibleDilemmas } = useDilemmaStore();
     const { reflections } = useReflectionStore();
     
     const totalPosts = visibleDilemmas.length;
     const totalReflections = reflections.length;
-    const totalReactions = reflections.reduce((sum, r) => 
+    const totalReactions = reflections.reduce((sum, r) => ;
         sum + Object.values(r.reactions).reduce((a, b) => a + b, 0), 0
     );
 
     const handleAIChatClick = () => {
         if (onShowAIChat) {
-            onShowAIChat();
-        } else {
+            onShowAIChat();;
+  } else {
             // Fallback: redirect to ai-chat view if no callback provided
             window.location.hash = '#ai-chat';
         }
@@ -55,7 +55,7 @@ export const FloatingButtonManager: React.FC<FloatingButtonManagerProps> = ({ on
             icon: <AlertCircleIcon />,
             label: 'Need Help Now',
             onClick: () => setShowHelpModal(true),
-            color: '#ef4444'
+            color: '#ef4444';
         },
         {
             id: 'stats',
@@ -63,14 +63,14 @@ export const FloatingButtonManager: React.FC<FloatingButtonManagerProps> = ({ on
             label: 'Site Statistics',
             onClick: () => setShowStatsModal(true),
             badge: totalPosts + totalReflections,
-            color: '#10b981'
+            color: '#10b981';
         },
         {
             id: 'ai-chat',
             icon: <SparkleIcon />,
             label: 'AI Companion',
             onClick: handleAIChatClick,
-            color: '#8b5cf6'
+            color: '#8b5cf6';
         }
     ];
 
@@ -101,12 +101,13 @@ export const FloatingButtonManager: React.FC<FloatingButtonManagerProps> = ({ on
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [isExpanded, onShowAIChat]);
+    };
+  }, [isExpanded, onShowAIChat]);
 
     return (
         <>
             {/* Get Help Now Button - Always Visible */}
-            <button 
+            <button; 
                 className="help-now-button"
                 onClick={() => setShowHelpModal(true)}
                 aria-label="Get Help Now - Crisis Support"
@@ -523,7 +524,7 @@ export const FloatingButtonManager: React.FC<FloatingButtonManagerProps> = ({ on
                                 transitionDelay: isExpanded ? `${index * 50}ms` : '0ms'
                             }}>
                                 <span className="fab-label">{button.label}</span>
-                                <button
+                                <button;
                                     className="fab-button"
                                     onClick={button.onClick}
                                     style={{ background: button.color || '#667eea' }}
@@ -540,7 +541,7 @@ export const FloatingButtonManager: React.FC<FloatingButtonManagerProps> = ({ on
                         ))}
                     </div>
 
-                    <button
+                    <button;
                         className={isExpanded ? 'fab-main expanded' : 'fab-main'}
                         onClick={() => setIsExpanded(!isExpanded)}
                         aria-label={isExpanded ? 'Close menu' : 'Open menu'}
@@ -561,7 +562,7 @@ export const FloatingButtonManager: React.FC<FloatingButtonManagerProps> = ({ on
             <div className={showStatsModal ? 'stats-modal open' : 'stats-modal'}>
                 <div className="stats-header">
                     <h3 className="stats-title">Site Statistics</h3>
-                    <button
+                    <button;
                         className="stats-close"
                         onClick={() => setShowStatsModal(false)}
                         aria-label="Close stats"
@@ -596,7 +597,7 @@ export const FloatingButtonManager: React.FC<FloatingButtonManagerProps> = ({ on
             <div className={showHelpModal ? 'help-modal open' : 'help-modal'}>
                 <div className="help-header">
                     <h3 className="help-title">Need Help Now?</h3>
-                    <button
+                    <button;
                         className="stats-close"
                         onClick={() => setShowHelpModal(false)}
                         aria-label="Close help"

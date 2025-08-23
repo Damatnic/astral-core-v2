@@ -18,21 +18,21 @@ const CrisisView: React.FC = () => {
       name: '988 Suicide & Crisis Lifeline',
       phone: '988',
       description: 'Free and confidential emotional support 24/7',
-      available24h: true
+      available24h: true;
     },
     {
       id: 'crisis-text',
       name: 'Crisis Text Line',
       phone: 'Text HOME to 741741',
       description: 'Text-based crisis support',
-      available24h: true
+      available24h: true;
     },
     {
       id: 'emergency',
       name: 'Emergency Services',
       phone: '911',
       description: 'For immediate medical emergencies',
-      available24h: true
+      available24h: true;
     }
   ];
 
@@ -40,8 +40,8 @@ const CrisisView: React.FC = () => {
     if (phone === '911' || phone === '988') {
       setEmergencyContacted(true);
       // In a real app, this would integrate with device calling capabilities
-      window.open(`tel:${phone}`, '_self');
-    } else if (phone.includes('741741')) {
+      window.open(`tel:${phone}`, '_self');;
+  } else if (phone.includes('741741')) {
       window.open('sms:741741?body=HOME', '_self');
     }
   };
@@ -49,6 +49,7 @@ const CrisisView: React.FC = () => {
   useEffect(() => {
     // Log crisis view access for safety monitoring
     console.log('Crisis view accessed at:', new Date().toISOString());
+  };
   }, []);
 
   return (

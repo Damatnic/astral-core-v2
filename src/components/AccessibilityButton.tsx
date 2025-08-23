@@ -3,7 +3,7 @@
  * Floating accessibility button for quick access to accessibility settings
  * 
  * @license Apache-2.0
- */
+ */;
 
 import React, { useState, useEffect } from 'react';
 import { accessibilityService } from '../services/accessibilityService';
@@ -25,21 +25,23 @@ export const AccessibilityButton: React.FC = () => {
     
     return () => {
       window.removeEventListener('accessibility-settings-changed', handleSettingsChange);
-    }, []);
+    };
+  };
+  }, []);
 
   const handleQuickActions = (action: string) => {
     switch (action) {
       case 'high-contrast': {
         const newSettings = {
           ...settings,
-          highContrast: !settings.highContrast
+          highContrast: !settings.highContrast;
         };
         accessibilityService.updateSettings(newSettings);
         setSettings(newSettings);
         accessibilityService.announce({
           message: `High contrast ${newSettings.highContrast ? 'enabled' : 'disabled'}`,
           priority: 'high',
-          type: 'status'
+          type: 'status';
         });
         break;
       }
@@ -48,56 +50,56 @@ export const AccessibilityButton: React.FC = () => {
         const newSize = currentSize === 1.0 ? 1.5 : currentSize === 1.5 ? 2.0 : 1.0;
         const newSettings = {
           ...settings,
-          increasedTextSize: newSize
+          increasedTextSize: newSize;
         };
         accessibilityService.updateSettings(newSettings);
         setSettings(newSettings);
         accessibilityService.announce({
           message: `Text size set to ${newSize === 1.0 ? 'normal' : newSize === 1.5 ? 'large' : 'extra-large'}`,
           priority: 'high',
-          type: 'status'
+          type: 'status';
         });
         break;
       }
       case 'reduce-motion': {
         const newSettings = {
           ...settings,
-          reducedMotion: !settings.reducedMotion
+          reducedMotion: !settings.reducedMotion;
         };
         accessibilityService.updateSettings(newSettings);
         setSettings(newSettings);
         accessibilityService.announce({
           message: `Animations ${newSettings.reducedMotion ? 'reduced' : 'enabled'}`,
           priority: 'high',
-          type: 'status'
+          type: 'status';
         });
         break;
       }
       case 'screen-reader': {
         const newSettings = {
           ...settings,
-          screenReaderEnabled: !settings.screenReaderEnabled
+          screenReaderEnabled: !settings.screenReaderEnabled;
         };
         accessibilityService.updateSettings(newSettings);
         setSettings(newSettings);
         accessibilityService.announce({
           message: `Screen reader mode ${newSettings.screenReaderEnabled ? 'enabled' : 'disabled'}`,
           priority: 'high',
-          type: 'status'
+          type: 'status';
         });
         break;
       }
       case 'keyboard-nav': {
         const newSettings = {
           ...settings,
-          enhancedKeyboardNavigation: !settings.enhancedKeyboardNavigation
+          enhancedKeyboardNavigation: !settings.enhancedKeyboardNavigation;
         };
         accessibilityService.updateSettings(newSettings);
         setSettings(newSettings);
         accessibilityService.announce({
           message: `Keyboard navigation ${newSettings.enhancedKeyboardNavigation ? 'enabled' : 'disabled'}`,
           priority: 'high',
-          type: 'status'
+          type: 'status';
         });
         break;
       }
@@ -105,7 +107,7 @@ export const AccessibilityButton: React.FC = () => {
         accessibilityService.announce({
           message: 'Crisis shortcuts: Alt+C for crisis resources, Alt+E for emergency, Alt+S for safety plan, Alt+Q for quiet space',
           priority: 'high',
-          type: 'status'
+          type: 'status';
         });
         break;
       }
@@ -143,6 +145,7 @@ export const AccessibilityButton: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
+  };
   }, [isExpanded, settings]);
 
   return (
@@ -394,7 +397,7 @@ export const AccessibilityButton: React.FC = () => {
                 <SettingsIcon />
                 Accessibility
               </h3>
-              <button
+              <button;
                 className="accessibility-close-btn"
                 onClick={() => setIsExpanded(false)}
                 aria-label="Close accessibility panel"
@@ -403,7 +406,7 @@ export const AccessibilityButton: React.FC = () => {
               </button>
             </div>
 
-            <button
+            <button;
               className={settings.highContrast ? 'quick-action-item active' : 'quick-action-item'}
               onClick={() => handleQuickActions('high-contrast')}
               aria-label="Toggle high contrast mode"
@@ -418,7 +421,7 @@ export const AccessibilityButton: React.FC = () => {
               <div className={settings.highContrast ? 'quick-action-toggle active' : 'quick-action-toggle'} />
             </button>
 
-            <button
+            <button;
               className={(settings.increasedTextSize || 1.0) > 1.0 ? 'quick-action-item active' : 'quick-action-item'}
               onClick={() => handleQuickActions('large-text')}
               aria-label="Cycle text size"
@@ -433,7 +436,7 @@ export const AccessibilityButton: React.FC = () => {
               <div className={(settings.increasedTextSize || 1.0) > 1.0 ? 'quick-action-toggle active' : 'quick-action-toggle'} />
             </button>
 
-            <button
+            <button;
               className={settings.reducedMotion ? 'quick-action-item active' : 'quick-action-item'}
               onClick={() => handleQuickActions('reduce-motion')}
               aria-label="Toggle reduced motion"
@@ -448,7 +451,7 @@ export const AccessibilityButton: React.FC = () => {
               <div className={settings.reducedMotion ? 'quick-action-toggle active' : 'quick-action-toggle'} />
             </button>
 
-            <button
+            <button;
               className={settings.screenReaderEnabled ? 'quick-action-item active' : 'quick-action-item'}
               onClick={() => handleQuickActions('screen-reader')}
               aria-label="Toggle screen reader mode"
@@ -463,7 +466,7 @@ export const AccessibilityButton: React.FC = () => {
               <div className={settings.screenReaderEnabled ? 'quick-action-toggle active' : 'quick-action-toggle'} />
             </button>
 
-            <button
+            <button;
               className={settings.enhancedKeyboardNavigation ? 'quick-action-item active' : 'quick-action-item'}
               onClick={() => handleQuickActions('keyboard-nav')}
               aria-label="Toggle keyboard navigation"
@@ -478,7 +481,7 @@ export const AccessibilityButton: React.FC = () => {
               <div className={settings.enhancedKeyboardNavigation ? 'quick-action-toggle active' : 'quick-action-toggle'} />
             </button>
 
-            <button
+            <button;
               className="quick-action-item"
               onClick={() => handleQuickActions('crisis-shortcuts')}
               aria-label="Announce crisis keyboard shortcuts"
@@ -492,7 +495,7 @@ export const AccessibilityButton: React.FC = () => {
               </div>
             </button>
 
-            <button
+            <button;
               className="accessibility-settings-link"
               onClick={() => {
                 setIsSettingsOpen(true);
@@ -505,7 +508,7 @@ export const AccessibilityButton: React.FC = () => {
           </div>
         )}
 
-        <button
+        <button;
           className={isExpanded ? 'accessibility-main-button active' : 'accessibility-main-button'}
           onClick={() => setIsExpanded(!isExpanded)}
           aria-label={isExpanded ? 'Close accessibility menu' : 'Open accessibility menu'}

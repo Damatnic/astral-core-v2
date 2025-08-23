@@ -34,7 +34,8 @@ export const PublicHelperProfileView: React.FC<{
                 onClose();
             })
             .finally(() => setIsLoading(false));
-    }, [helperId, onClose, addToast]);
+    };
+  }, [helperId, onClose, addToast]);
     
     const handleSubmitRequest = async () => {
         if (!userToken) {

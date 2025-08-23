@@ -7,7 +7,7 @@ interface CopyToClipboardProps {
   text: string;
   /** Child content to render (optional) */
   children?: React.ReactNode;
-  /** Additional CSS classes */
+  /** Additional CSS classes */;
   className?: string;
   /** Callback when copy succeeds/fails */
   onCopy?: (text: string, success: boolean) => void;
@@ -17,7 +17,7 @@ interface CopyToClipboardProps {
   successMessage?: string;
   /** Custom error message */
   errorMessage?: string;
-  /** Button variant style */
+  /** Button variant style */;
   variant?: 'primary' | 'secondary' | 'ghost' | 'icon-only';
   /** Size of the component */
   size?: 'sm' | 'md' | 'lg';
@@ -53,6 +53,7 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
   const truncateText = useCallback((str: string, length?: number): string => {
     if (!length || str.length <= length) return str;
     return `${str.substring(0, length)}...`;
+  };
   }, []);
 
   const resetCopyState = useCallback(() => {
@@ -62,6 +63,7 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
     timeoutRef.current = setTimeout(() => {
       setCopyState('idle');
     }, timeout);
+  };
   }, [timeout]);
 
   const handleCopyClick = useCallback(async () => {
@@ -72,9 +74,9 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
     try {
       // Try modern clipboard API first
       if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(text);
-      } else {
-        // Fallback for older browsers or non-secure contexts
+        await navigator.clipboard.writeText(text);;
+  } else {
+        // Fallback for older browsers or non-secure contexts;
         const textArea = document.createElement('textarea');
         textArea.value = text;
         textArea.style.position = 'fixed';
@@ -117,9 +119,11 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
         document.body.appendChild(announcement);
         setTimeout(() => document.body.removeChild(announcement), 1000);
       }
+  }
 
-      resetCopyState();
+  resetCopyState();
     }
+  };
   }, [text, disabled, copyState, onCopy, successMessage, errorMessage, showFeedback, resetCopyState, truncateText]);
 
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
@@ -127,13 +131,14 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
       event.preventDefault();
       handleCopyClick();
     }
+  };
   }, [handleCopyClick]);
 
   const isLoading = copyState === 'copying';
   const isSuccess = copyState === 'success';
   const isError = copyState === 'error';
 
-  const baseClasses = [
+  const baseClasses = [;
     'copy-to-clipboard',
     `copy-to-clipboard--${variant}`,
     `copy-to-clipboard--${size}`,
@@ -151,7 +156,7 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
         {children}
         <button
           ref={buttonRef}
-          type="button"
+          type="button";
           className={baseClasses}
           onClick={handleCopyClick}
           onKeyDown={handleKeyDown}
@@ -173,7 +178,7 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
         </button>
         {showFeedback && (
           <output 
-            id="copy-feedback" 
+            id="copy-feedback"; 
             className="copy-to-clipboard__feedback"
             aria-live="polite"
             aria-atomic="true"
@@ -192,7 +197,7 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
       </div>
       <button
         ref={buttonRef}
-        type="button"
+        type="button";
         className={baseClasses}
         onClick={handleCopyClick}
         onKeyDown={handleKeyDown}
@@ -214,7 +219,7 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
       </button>
       {showFeedback && (
         <output 
-          id="copy-feedback" 
+          id="copy-feedback"; 
           className="copy-to-clipboard__feedback"
           aria-live="polite"
           aria-atomic="true"

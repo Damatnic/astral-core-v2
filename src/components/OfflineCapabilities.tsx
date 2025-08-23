@@ -3,7 +3,7 @@
  * 
  * Display available features and offline functionality status
  * for the Astral Core mental health platform.
- */
+ */;
 
 import React, { useState } from 'react';
 import { useOffline } from '../contexts/OfflineProvider';
@@ -47,7 +47,7 @@ export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
         status: 'online',
         icon: <CheckIcon />,
         text: 'Available',
-        color: 'green'
+        color: 'green';
       }
 
     if (available) {
@@ -55,28 +55,28 @@ export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
         status: 'offline-available',
         icon: <CheckIcon />,
         text: 'Available offline',
-        color: 'blue'
+        color: 'blue';
       }
 
     return {
       status: 'offline-unavailable',
       icon: <AlertIcon />,
       text: capability?.fallbackAction || 'Not available offline',
-      color: 'amber'
+      color: 'amber';
     };
 
   const handleFeatureToggle = (feature: string) => {
     if (expandedFeature === feature) {
-      setExpandedFeature(null);
-    } else {
+      setExpandedFeature(null);;
+  } else {
       setExpandedFeature(feature);
     }
   };
 
   const handleFeatureAction = (feature: string) => {
     if (onFeatureClick) {
-      onFeatureClick(feature);
-    } else {
+      onFeatureClick(feature);;
+  } else {
       // Default actions
       switch (feature.toLowerCase()) {
         case 'crisis resources':
@@ -144,7 +144,7 @@ export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
                     </div>
                   </div>
                   {showActions && available && (
-                    <button
+                    <button;
                       className="capability-action"
                       onClick={() => handleFeatureAction(capability.feature)}
                       aria-label={`Access ${capability.feature}`}
@@ -218,7 +218,7 @@ export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
 
               <div className="capability-actions">
                 {available && showActions && (
-                  <button
+                  <button;
                     className="capability-primary-action"
                     onClick={() => handleFeatureAction(capability.feature)}
                   >
@@ -226,7 +226,7 @@ export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
                   </button>
                 )}
                 
-                <button
+                <button;
                   className="capability-details-toggle"
                   onClick={() => handleFeatureToggle(capability.feature)}
                   aria-expanded={isExpanded}
@@ -271,7 +271,7 @@ export const OfflineCapabilities: React.FC<OfflineCapabilitiesProps> = ({
   );
 };
 
-// CSS styles for the component
+// CSS styles for the component;
 export const offlineCapabilitiesStyles = `
   .offline-capabilities {
     font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);

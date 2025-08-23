@@ -1,6 +1,6 @@
 /**
  * @jest-environment jsdom
- */
+ */;
 
 import { AccessibilityAuditSystem, WCAGLevel, WCAGPrinciple, accessibilityAuditSystem } from '../accessibilityAuditSystem';
 
@@ -20,9 +20,9 @@ jest.mock('../../utils/accessibilityUtils', () => ({
     }),
     isCrisisElement: jest.fn((el: Element) => el.classList.contains('crisis') || el.getAttribute('data-crisis') === 'true'),
     getComplianceThresholds: jest.fn((level: WCAGLevel) => ({
-      maxHigh: level === WCAGLevel.AAA ? 0 : level === WCAGLevel.AA ? 2 : 5
+      maxHigh: level === WCAGLevel.AAA ? 0 : level === WCAGLevel.AA ? 2 : 5;
     })),
-    findComplexText: jest.fn(() => [])
+    findComplexText: jest.fn(() => []);
   }
 }));
 
@@ -91,17 +91,17 @@ describe('AccessibilityAuditSystem', () => {
 
   describe('ContrastAnalyzer', () => {
     test.skip('should calculate contrast ratio correctly', () => {
-      // Test black on white (maximum contrast)
+      // Test black on white (maximum contrast);
       const maxContrast = (auditSystem as any).contrastAnalyzer.calculateContrastRatio('#000000', '#ffffff');
       expect(maxContrast).toBeCloseTo(21, 0);
 
-      // Test same color (no contrast)
+      // Test same color (no contrast);
       const noContrast = (auditSystem as any).contrastAnalyzer.calculateContrastRatio('#ffffff', '#ffffff');
       expect(noContrast).toBe(1);
     });
 
     test.skip('should check WCAG contrast compliance', () => {
-      const meetsAA = (auditSystem as any).contrastAnalyzer.meetsWCAGContrast(
+      const meetsAA = (auditSystem as any).contrastAnalyzer.meetsWCAGContrast(;
         '#000000', 
         '#ffffff', 
         WCAGLevel.AA, 
@@ -109,7 +109,7 @@ describe('AccessibilityAuditSystem', () => {
       );
       expect(meetsAA).toBe(true);
 
-      const failsAA = (auditSystem as any).contrastAnalyzer.meetsWCAGContrast(
+      const failsAA = (auditSystem as any).contrastAnalyzer.meetsWCAGContrast(;
         '#999999', 
         '#aaaaaa', 
         WCAGLevel.AA, 
@@ -119,8 +119,8 @@ describe('AccessibilityAuditSystem', () => {
     });
 
     test.skip('should handle large text contrast differently', () => {
-      // Large text has more lenient contrast requirements
-      const largeTextAA = (auditSystem as any).contrastAnalyzer.meetsWCAGContrast(
+      // Large text has more lenient contrast requirements;
+      const largeTextAA = (auditSystem as any).contrastAnalyzer.meetsWCAGContrast(;
         '#777777', 
         '#ffffff', 
         WCAGLevel.AA, 
@@ -128,7 +128,7 @@ describe('AccessibilityAuditSystem', () => {
       );
       expect(largeTextAA).toBe(true);
 
-      const smallTextAA = (auditSystem as any).contrastAnalyzer.meetsWCAGContrast(
+      const smallTextAA = (auditSystem as any).contrastAnalyzer.meetsWCAGContrast(;
         '#777777', 
         '#ffffff', 
         WCAGLevel.AA, 
@@ -140,7 +140,7 @@ describe('AccessibilityAuditSystem', () => {
 
   describe('KeyboardNavigationTester', () => {
     beforeEach(() => {
-      // Mock AccessibilityUtils.getFocusableElements
+      // Mock AccessibilityUtils.getFocusableElements;
       const mockGetFocusableElements = require('../../utils/accessibilityUtils').AccessibilityUtils.getFocusableElements;
       mockGetFocusableElements.mockReturnValue([]);
     });
@@ -262,7 +262,7 @@ describe('AccessibilityAuditSystem', () => {
 
       const result = await auditSystem.runAccessibilityAudit();
       
-      const headingIssues = result.issues.filter(issue => 
+      const headingIssues = result.issues.filter(issue => ;
         issue.id === 'heading-start-level' || issue.id.includes('heading-skip-level')
       );
       expect(headingIssues.length).toBeGreaterThan(0);
@@ -277,7 +277,7 @@ describe('AccessibilityAuditSystem', () => {
 
       const result = await auditSystem.runAccessibilityAudit();
       
-      const altIssues = result.issues.filter(issue => 
+      const altIssues = result.issues.filter(issue => ;
         issue.id.includes('missing-alt') || issue.id.includes('alt-too-long')
       );
       expect(altIssues.length).toBeGreaterThan(0);
@@ -353,8 +353,8 @@ describe('AccessibilityAuditSystem', () => {
               case 'outline': return 'none';
               case 'box-shadow': return 'none';
               default: return '';
-            }
-          } else {
+            };
+  } else {
             switch (property) {
               case 'display': return 'block';
               case 'visibility': return 'visible';
@@ -388,7 +388,8 @@ describe('AccessibilityAuditSystem', () => {
           outline: 'none',
           boxShadow: 'none',
           getPropertyValue
-        });
+        };
+  };
 
       const result = await auditSystem.runAccessibilityAudit();
       
@@ -519,8 +520,8 @@ describe('AccessibilityAuditSystem', () => {
       
       expect(result.recommendations.length).toBeGreaterThan(0);
       
-      // Should prioritize crisis-related issues
-      const crisisRecommendations = result.recommendations.filter(rec => 
+      // Should prioritize crisis-related issues;
+      const crisisRecommendations = result.recommendations.filter(rec => ;
         rec.includes('CRISIS PRIORITY')
       );
       expect(crisisRecommendations.length).toBeGreaterThan(0);
@@ -619,7 +620,7 @@ describe('AccessibilityAuditSystem', () => {
 
   describe('Error Handling', () => {
     test.skip('should handle DOM exceptions gracefully', async () => {
-      // Mock a method that might throw but only for specific selectors
+      // Mock a method that might throw but only for specific selectors;
       const originalQuerySelectorAll = document.querySelectorAll.bind(document);
       let callCount = 0;
       
@@ -648,8 +649,8 @@ describe('AccessibilityAuditSystem', () => {
       // or at least fail gracefully
       if (result) {
         expect(result).toBeDefined();
-        expect(Array.isArray(result.issues)).toBe(true);
-      } else {
+        expect(Array.isArray(result.issues)).toBe(true);;
+  } else {
         // If it failed completely, that's also acceptable as long as it didn't crash
         expect(errorThrown).toBe(true);
       }

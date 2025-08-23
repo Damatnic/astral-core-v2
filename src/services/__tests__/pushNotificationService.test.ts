@@ -1,6 +1,6 @@
 import { pushNotificationService } from '../pushNotificationService';
 
-// Mock service worker registration
+// Mock service worker registration;
 const mockServiceWorkerRegistration = {
   pushManager: {
     subscribe: jest.fn(),
@@ -55,7 +55,7 @@ describe('PushNotificationService', () => {
         endpoint: 'https://fcm.googleapis.com/fcm/send/test',
         keys: {
           p256dh: 'test-key',
-          auth: 'test-auth'
+          auth: 'test-auth';
         }
       };
 
@@ -79,7 +79,7 @@ describe('PushNotificationService', () => {
       await service.sendCrisisNotification('user-123', {
         type: 'crisis_immediate',
         message: 'Crisis intervention needed',
-        urgency: 'high'
+        urgency: 'high';
       });
 
       expect(mockServiceWorkerRegistration.showNotification).toHaveBeenCalledWith(
@@ -87,7 +87,7 @@ describe('PushNotificationService', () => {
         expect.objectContaining({
           body: 'Crisis intervention needed',
           priority: 'high',
-          tag: 'crisis_immediate'
+          tag: 'crisis_immediate';
         })
       );
     });
@@ -95,14 +95,14 @@ describe('PushNotificationService', () => {
     it.skip('should send safety check notifications', async () => {
       await service.sendSafetyCheckNotification('user-456', {
         message: 'How are you feeling today?',
-        type: 'daily_check'
+        type: 'daily_check';
       });
 
       expect(mockServiceWorkerRegistration.showNotification).toHaveBeenCalledWith(
         'Daily Safety Check',
         expect.objectContaining({
           body: 'How are you feeling today?',
-          tag: 'safety_check'
+          tag: 'safety_check';
         })
       );
     });

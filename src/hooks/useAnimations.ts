@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 
 /**
  * Hook for managing smooth scroll-based animations
- */
+ */;
 export const useScrollAnimation = (threshold = 0.1) => {
   const [isVisible, setIsVisible] = useState(false);
   const elementRef = useRef<HTMLElement>(null);
@@ -11,7 +11,7 @@ export const useScrollAnimation = (threshold = 0.1) => {
     const element = elementRef.current;
     if (!element) return;
 
-    const observer = new IntersectionObserver(
+    const observer = new IntersectionObserver(;
       ([entry]) => {
         setIsVisible(entry.isIntersecting);
       },
@@ -22,13 +22,15 @@ export const useScrollAnimation = (threshold = 0.1) => {
 
     return () => {
       observer.unobserve(element);
-    }, [threshold]);
+    };
+  };
+  }, [threshold]);
 
   return { elementRef, isVisible };
 
 /**
  * Hook for managing element animations with delays
- */
+ */;
 export const useStaggeredAnimation = (itemCount: number, baseDelay = 100) => {
   const [animatedItems, setAnimatedItems] = useState<Set<number>>(new Set());
 
@@ -40,22 +42,26 @@ export const useStaggeredAnimation = (itemCount: number, baseDelay = 100) => {
         setAnimatedItems(prev => new Set([...prev, i]));
       }, i * baseDelay);
     }
+  };
   }, [itemCount, baseDelay]);
 
   const isItemAnimated = useCallback((index: number) => {
     return animatedItems.has(index);
+  };
+  };
   }, [animatedItems]);
 
   return { triggerAnimation, isItemAnimated };
 
 /**
  * Hook for managing ripple effects on button clicks
- */
+ */;
 export const useRippleEffect = () => {
   const [ripples, setRipples] = useState<Array<{ x: number; y: number; id: number }>>([]);
 
   const removeRipple = useCallback((id: number) => {
     setRipples(prev => prev.filter(ripple => ripple.id !== id));
+  };
   }, []);
 
   const createRipple = useCallback((event: React.MouseEvent<HTMLElement>) => {
@@ -69,13 +75,15 @@ export const useRippleEffect = () => {
 
     // Remove ripple after animation completes
     setTimeout(() => removeRipple(id), 600);
+  };
+  };
   }, [removeRipple]);
 
   return { ripples, createRipple };
 
 /**
  * Hook for managing hover states with delays
- */
+ */;
 export const useDelayedHover = (enterDelay = 0, leaveDelay = 300) => {
   const [isHovered, setIsHovered] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout>();
@@ -88,6 +96,7 @@ export const useDelayedHover = (enterDelay = 0, leaveDelay = 300) => {
     timeoutRef.current = setTimeout(() => {
       setIsHovered(true);
     }, enterDelay);
+  };
   }, [enterDelay]);
 
   const handleMouseLeave = useCallback(() => {
@@ -98,6 +107,7 @@ export const useDelayedHover = (enterDelay = 0, leaveDelay = 300) => {
     timeoutRef.current = setTimeout(() => {
       setIsHovered(false);
     }, leaveDelay);
+  };
   }, [leaveDelay]);
 
   useEffect(() => {
@@ -105,13 +115,14 @@ export const useDelayedHover = (enterDelay = 0, leaveDelay = 300) => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
-    }, []);
+    };
+  }, []);
 
   return { isHovered, handleMouseEnter, handleMouseLeave };
 
 /**
  * Hook for managing loading states with minimum duration
- */
+ */;
 export const useLoadingState = (minDuration = 500) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
@@ -121,6 +132,7 @@ export const useLoadingState = (minDuration = 500) => {
     startTimeRef.current = Date.now();
     setIsLoading(true);
     setShowLoading(true);
+  };
   }, []);
 
   const stopLoading = useCallback(() => {
@@ -132,17 +144,19 @@ export const useLoadingState = (minDuration = 500) => {
       
       setTimeout(() => {
         setShowLoading(false);
-      }, remainingTime);
-    } else {
+      }, remainingTime);;
+  } else {
       setShowLoading(false);
     }
+  };
+  };
   }, [minDuration]);
 
   return { isLoading, showLoading, startLoading, stopLoading };
 
 /**
  * Hook for managing animation sequences
- */
+ */;
 export const useAnimationSequence = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -154,6 +168,7 @@ export const useAnimationSequence = () => {
     if (index === totalSteps - 1) {
       setIsPlaying(false);
     }
+  };
   }, []);
 
   const playSequence = useCallback((steps: Array<() => void>, delays: number[]) => {
@@ -167,21 +182,25 @@ export const useAnimationSequence = () => {
     steps.forEach((step, index) => {
       setTimeout(() => executeStep(step, index, steps.length), totalDelay);
       totalDelay += delays[index] || 0;
-    });
+    };
+  };
+  };
   }, [isPlaying, executeStep]);
 
   const resetSequence = useCallback(() => {
     setCurrentStep(0);
     setIsPlaying(false);
+  };
   }, []);
 
   return { currentStep, isPlaying, playSequence, resetSequence };
 
 /**
  * Hook for managing form animations and feedback
- */
+ */;
 export const useFormAnimations = () => {
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({};
+  };
   const [successFields, setSuccessFields] = useState<Set<string>>(new Set());
 
   const clearError = useCallback((fieldName: string) => {
@@ -190,6 +209,7 @@ export const useFormAnimations = () => {
       delete newErrors[fieldName];
       return newErrors;
     });
+  };
   }, []);
 
   const clearSuccess = useCallback((fieldName: string) => {
@@ -198,6 +218,7 @@ export const useFormAnimations = () => {
       newSet.delete(fieldName);
       return newSet;
     });
+  };
   }, []);
 
   const showFieldError = useCallback((fieldName: string, errorMessage: string) => {
@@ -205,6 +226,7 @@ export const useFormAnimations = () => {
     
     // Auto-clear error after delay
     setTimeout(() => clearError(fieldName), 5000);
+  };
   }, [clearError]);
 
   const showFieldSuccess = useCallback((fieldName: string) => {
@@ -212,11 +234,14 @@ export const useFormAnimations = () => {
     
     // Auto-clear success after delay
     setTimeout(() => clearSuccess(fieldName), 3000);
+  };
   }, [clearSuccess]);
 
   const clearFieldState = useCallback((fieldName: string) => {
     clearError(fieldName);
     clearSuccess(fieldName);
+  };
+  };
   }, [clearError, clearSuccess]);
 
   return {
@@ -229,7 +254,7 @@ export const useFormAnimations = () => {
 
 /**
  * Hook for managing page transition animations
- */
+ */;
 export const usePageTransition = () => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [transitionStage, setTransitionStage] = useState<'enter' | 'exit' | 'idle'>('idle');
@@ -248,13 +273,14 @@ export const usePageTransition = () => {
       setIsTransitioning(false);
       setTransitionStage('idle');
     }, 500);
+  };
   }, []);
 
   return { isTransitioning, transitionStage, startTransition };
 
 /**
  * Hook for managing reduced motion preferences
- */
+ */;
 export const useReducedMotion = () => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
@@ -270,7 +296,9 @@ export const useReducedMotion = () => {
     
     return () => {
       mediaQuery.removeEventListener('change', handleChange);
-    }, []);
+    };
+  };
+  }, []);
 
   return prefersReducedMotion;
 };

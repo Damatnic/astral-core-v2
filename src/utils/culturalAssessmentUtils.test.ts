@@ -1,7 +1,7 @@
 /**
  * Cultural Assessment Utils Test Suite
  * Tests culturally-adapted mental health assessments and scoring
- */
+ */;
 
 import {
   getCulturalPhq9Questions,
@@ -40,7 +40,7 @@ describe('culturalAssessmentUtils', () => {
   });
 
   describe('getCulturalPhq9Questions', () => {
-    const mockCulturalQuestions = [
+    const mockCulturalQuestions = [;
       {
         id: 'phq9_1_cultural',
         text: 'Standard question text',
@@ -166,7 +166,7 @@ describe('culturalAssessmentUtils', () => {
   });
 
   describe('getCulturalGad7Questions', () => {
-    const mockGad7Questions = [
+    const mockGad7Questions = [;
       {
         id: 'gad7_1_cultural',
         text: 'Standard GAD-7 question',
@@ -246,7 +246,7 @@ describe('culturalAssessmentUtils', () => {
     it('should return cultural PHQ-9 assessment result', async () => {
       mockCulturalAssessmentService.calculateCulturalAssessmentResult.mockResolvedValue(mockCulturalResult);
 
-      const scores = [2, 2, 1, 2, 1, 2, 1, 1, 0]; // Total: 12
+      const scores = [2, 2, 1, 2, 1, 2, 1, 1, 0]; // Total: 12;
       const result = await getCulturalPhq9Result(scores, 'en', 'Asian', ['Several days', 'Several days']);
 
       expect(mockCulturalAssessmentService.calculateCulturalAssessmentResult).toHaveBeenCalledWith(
@@ -295,7 +295,7 @@ describe('culturalAssessmentUtils', () => {
     it('should fallback to standard calculation on service failure', async () => {
       mockCulturalAssessmentService.calculateCulturalAssessmentResult.mockRejectedValue(new Error('Service failed'));
 
-      const scores = [2, 2, 2, 2, 2, 1, 1, 1, 0]; // Total: 13 (moderate)
+      const scores = [2, 2, 2, 2, 2, 1, 1, 1, 0]; // Total: 13 (moderate);
       const result = await getCulturalPhq9Result(scores, 'en', 'Asian');
 
       expect(result).toEqual({
@@ -324,7 +324,7 @@ describe('culturalAssessmentUtils', () => {
     });
 
     it('should handle different severity levels and colors', async () => {
-      const severityTests = [
+      const severityTests = [;
         { severity: 'minimal', expectedColor: '#10b981' },
         { severity: 'mild', expectedColor: '#f59e0b' },
         { severity: 'moderate', expectedColor: '#f97316' },
@@ -372,7 +372,7 @@ describe('culturalAssessmentUtils', () => {
     it('should return cultural GAD-7 assessment result', async () => {
       mockCulturalAssessmentService.calculateCulturalAssessmentResult.mockResolvedValue(mockGad7Result);
 
-      const scores = [1, 1, 2, 1, 1, 1, 1]; // Total: 8
+      const scores = [1, 1, 2, 1, 1, 1, 1]; // Total: 8;
       const result = await getCulturalGad7Result(scores, 'es', 'Latino');
 
       expect(result).toEqual({
@@ -384,7 +384,7 @@ describe('culturalAssessmentUtils', () => {
     it('should fallback to standard GAD-7 calculation on failure', async () => {
       mockCulturalAssessmentService.calculateCulturalAssessmentResult.mockRejectedValue(new Error('Failed'));
 
-      const scores = [2, 2, 2, 1]; // Total: 7 (mild)
+      const scores = [2, 2, 2, 1]; // Total: 7 (mild);
       const result = await getCulturalGad7Result(scores);
 
       expect(result.score).toBe(7);
@@ -416,7 +416,7 @@ describe('culturalAssessmentUtils', () => {
     it('should submit cultural assessment with all parameters', async () => {
       mockCulturalAssessmentService.submitCulturalAssessment.mockResolvedValue(mockSubmissionResult);
 
-      const result = await submitCulturalAssessment(
+      const result = await submitCulturalAssessment(;
         'user-123',
         'phq-9',
         [1, 2, 1, 2, 1, 2, 1, 1, 0],
@@ -485,7 +485,7 @@ describe('culturalAssessmentUtils', () => {
     });
 
     it('should handle different date formats', () => {
-      const testDates = [
+      const testDates = [;
         { input: '2024-12-25', expected: 'Dec 25, 2024' },
         { input: '2024-01-01', expected: 'Jan 1, 2024' },
         { input: '2024-06-15', expected: 'Jun 15, 2024' },
@@ -548,7 +548,7 @@ describe('culturalAssessmentUtils', () => {
       it('should classify severe depression correctly', () => {
         mockCulturalAssessmentService.calculateCulturalAssessmentResult.mockRejectedValue(new Error('Failed'));
         
-        const scores = [3, 3, 3, 3, 3, 3, 3, 3, 3]; // Total: 27 (severe)
+        const scores = [3, 3, 3, 3, 3, 3, 3, 3, 3]; // Total: 27 (severe);
         const result = getCulturalPhq9Result(scores);
         
         result.then(r => {
@@ -563,7 +563,7 @@ describe('culturalAssessmentUtils', () => {
       it('should classify minimal anxiety correctly', () => {
         mockCulturalAssessmentService.calculateCulturalAssessmentResult.mockRejectedValue(new Error('Failed'));
         
-        const scores = [0, 0, 1, 0, 1, 1, 1]; // Total: 4 (minimal)
+        const scores = [0, 0, 1, 0, 1, 1, 1]; // Total: 4 (minimal);
         const result = getCulturalGad7Result(scores);
         
         result.then(r => {
@@ -575,7 +575,7 @@ describe('culturalAssessmentUtils', () => {
       it('should classify severe anxiety correctly', () => {
         mockCulturalAssessmentService.calculateCulturalAssessmentResult.mockRejectedValue(new Error('Failed'));
         
-        const scores = [3, 3, 3, 3, 3]; // Total: 15 (severe)
+        const scores = [3, 3, 3, 3, 3]; // Total: 15 (severe);
         const result = getCulturalGad7Result(scores);
         
         result.then(r => {

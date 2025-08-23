@@ -1,17 +1,17 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- */
+ */;
 
-import i18n from "i18next"
-import { initReactI18next } from "react-i18next"
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector"
-// Cultural context definitions for mental health terminology
-type StigmaLevel = "low" | "medium" | "high"
-type InvolvementLevel = "low" | "medium" | "high"
-type ReligiousContext = "secular" | "christian" | "islamic" | "buddhist" | "mixed"
-type EscalationPreference = "individual" | "family" | "community" | "professional"
-type CommunicationStyle = "direct" | "indirect" | "formal" | "familial"
+// Cultural context definitions for mental health terminology;
+type StigmaLevel = "low" | "medium" | "high";
+type InvolvementLevel = "low" | "medium" | "high";
+type ReligiousContext = "secular" | "christian" | "islamic" | "buddhist" | "mixed";
+type EscalationPreference = "individual" | "family" | "community" | "professional";
+type CommunicationStyle = "direct" | "indirect" | "formal" | "familial";
 interface CulturalContext {
   rtl: boolean;
   mentalHealthStigma: StigmaLevel;
@@ -30,7 +30,7 @@ export const culturalContexts: Record<string, CulturalContext> = {
     communitySupport: "medium",
     religiousContext: "mixed",
     crisisEscalationPreference: "professional",
-    preferredCommunicationStyle: "direct"
+    preferredCommunicationStyle: "direct";
   },
   es: {
     rtl: false,
@@ -39,7 +39,7 @@ export const culturalContexts: Record<string, CulturalContext> = {
     communitySupport: "high",
     religiousContext: "christian",
     crisisEscalationPreference: "family",
-    preferredCommunicationStyle: "familial"
+    preferredCommunicationStyle: "familial";
   },
   "pt-BR": {
     rtl: false,
@@ -48,7 +48,7 @@ export const culturalContexts: Record<string, CulturalContext> = {
     communitySupport: "high",
     religiousContext: "christian",
     crisisEscalationPreference: "community",
-    preferredCommunicationStyle: "indirect"
+    preferredCommunicationStyle: "indirect";
   },
   "pt-PT": {
     rtl: false,
@@ -57,7 +57,7 @@ export const culturalContexts: Record<string, CulturalContext> = {
     communitySupport: "medium",
     religiousContext: "christian",
     crisisEscalationPreference: "professional",
-    preferredCommunicationStyle: "formal"
+    preferredCommunicationStyle: "formal";
   },
   ar: {
     rtl: true,
@@ -66,7 +66,7 @@ export const culturalContexts: Record<string, CulturalContext> = {
     communitySupport: "high",
     religiousContext: "islamic",
     crisisEscalationPreference: "family",
-    preferredCommunicationStyle: "indirect"
+    preferredCommunicationStyle: "indirect";
   },
   zh: {
     rtl: false,
@@ -75,7 +75,7 @@ export const culturalContexts: Record<string, CulturalContext> = {
     communitySupport: "medium",
     religiousContext: "mixed",
     crisisEscalationPreference: "family",
-    preferredCommunicationStyle: "indirect"
+    preferredCommunicationStyle: "indirect";
   },
   vi: {
     rtl: false,
@@ -84,7 +84,7 @@ export const culturalContexts: Record<string, CulturalContext> = {
     communitySupport: "high",
     religiousContext: "buddhist",
     crisisEscalationPreference: "community",
-    preferredCommunicationStyle: "indirect"
+    preferredCommunicationStyle: "indirect";
   },
   tl: {
     rtl: false,
@@ -93,11 +93,11 @@ export const culturalContexts: Record<string, CulturalContext> = {
     communitySupport: "high",
     religiousContext: "christian",
     crisisEscalationPreference: "family",
-    preferredCommunicationStyle: "familial"
+    preferredCommunicationStyle: "familial";
   }
 };
 
-// Language resources loaded dynamically
+// Language resources loaded dynamically;
 const loadTranslations = async (language: string, namespace: string) => {
   try {
     const module = await import(`./locales/${language}/${namespace}.json`);
@@ -108,7 +108,7 @@ const loadTranslations = async (language: string, namespace: string) => {
   }
 };
 
-// Language detection configuration
+// Language detection configuration;
 const detectionOptions = {
   order: ["querystring", "cookie", "localStorage", "sessionStorage", "navigator", "htmlTag"],
   lookupQuerystring: "lng",
@@ -119,7 +119,7 @@ const detectionOptions = {
   lookupFromSubdomainIndex: 0,
   caches: ["localStorage", "cookie"],
   excludeCacheFor: ["cimode"],
-  checkWhitelist: true
+  checkWhitelist: true;
 }
 
 // Initialize i18n
@@ -135,7 +135,7 @@ i18n
 
     // Interpolation options
     interpolation: {
-      escapeValue: false // React already escapes values
+      escapeValue: false // React already escapes values;
     },
 
     // Default namespace
@@ -194,7 +194,7 @@ i18n
           guidelines: "Guidelines",
           legal: "Legal",
           helper_login: "Helper Login",
-          settings: "Settings"
+          settings: "Settings";
         },
         // ShareView translations
         share_your_thoughts: "Share Your Thoughts",
@@ -253,9 +253,10 @@ i18n
       }
     }
   }
-});
+};
+  };
 
-// Load initial translations for supported languages
+// Load initial translations for supported languages;
 const initializeTranslations = async () => {
   const supportedLanguages = ["en", "es", "pt", "ar", "zh", "vi", "tl"];
   const namespaces = ["common", "crisis"];
@@ -269,7 +270,7 @@ const initializeTranslations = async () => {
     }
   }
 
-  // Also load Portuguese variants
+  // Also load Portuguese variants;
   const ptTranslations = {
     common: await loadTranslations("pt", "common"),
     crisis: await loadTranslations("pt", "crisis")
@@ -285,7 +286,7 @@ initializeTranslations().catch(error => {
   console.error('Failed to initialize translations:', error);
 });
 
-// Cultural context utilities
+// Cultural context utilities;
 export const getCulturalContext = (language: string): any => {
   return culturalContexts[language] || culturalContexts.en;
 };
@@ -306,15 +307,15 @@ export const getPreferredCommunicationStyle = (language: string): string => {
   return getCulturalContext(language).preferredCommunicationStyle;
 };
 
-// Language change utilities with cultural context awareness
+// Language change utilities with cultural context awareness;
 export const changeLanguage = async (language: string): Promise<void> => {
   await i18n.changeLanguage(language);
 
-  // Apply RTL/LTR styling
+  // Apply RTL/LTR styling;
   const htmlElement = document.documentElement;
   if (isRTLLanguage(language)) {
     htmlElement.setAttribute("dir", "rtl");
-    htmlElement.setAttribute("lang", language);
+    htmlElement.setAttribute("lang", language);;
   } else {
     htmlElement.setAttribute("dir", "ltr");
     htmlElement.setAttribute("lang", language);
@@ -324,7 +325,7 @@ export const changeLanguage = async (language: string): Promise<void> => {
   localStorage.setItem("astral_language", language);
   localStorage.setItem("astral_cultural_context", JSON.stringify(getCulturalContext(language)));
 
-  // Announce language change to screen readers
+  // Announce language change to screen readers;
   const announcement = i18n.t("accessibility.language_changed", { language: i18n.t(`languages.${language}`) });
   const screenReaderAnnouncement = document.createElement("div");
   screenReaderAnnouncement.setAttribute("aria-live", "polite");
@@ -337,7 +338,7 @@ export const changeLanguage = async (language: string): Promise<void> => {
   }, 3000);
 }
 
-// Crisis-specific language utilities with proper typing
+// Crisis-specific language utilities with proper typing;
 export const getCrisisTranslation = (key: string, options?: Record<string, unknown>): string => {
   const result = i18n.t(`crisis:${key}`, options);
   return typeof result === "string" ? result : "";
@@ -348,7 +349,7 @@ export const getCommonTranslation = (key: string, options?: Record<string, unkno
   return typeof result === "string" ? result : "";
 };
 
-// Helper function for culturally appropriate crisis messaging
+// Helper function for culturally appropriate crisis messaging;
 export const getCulturallyAppropriateCrisisMessage = (key: string, language: string = i18n.language): string => {
   const context = getCulturalContext(language);
   const baseMessage = getCrisisTranslation(key);
@@ -363,5 +364,5 @@ export const getCulturallyAppropriateCrisisMessage = (key: string, language: str
   }
 };
 
-// Export configured i18n instance
+// Export configured i18n instance;
 export default i18n;

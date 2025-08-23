@@ -1,7 +1,7 @@
 /**
  * Storage Service
  * Provides unified interface for browser storage with encryption support
- */
+ */;
 
 export interface StorageItem {
   key: string;
@@ -30,7 +30,7 @@ class StorageService {
       key,
       value,
       timestamp: Date.now(),
-      expiresAt: ttl ? Date.now() + ttl : undefined
+      expiresAt: ttl ? Date.now() + ttl : undefined;
     };
     
     try {
@@ -201,6 +201,6 @@ class StorageService {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const storageService = new StorageService();
 export default StorageService;

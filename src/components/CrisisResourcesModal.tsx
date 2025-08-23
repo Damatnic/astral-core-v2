@@ -3,7 +3,7 @@
  * 
  * Emergency offline access to crisis intervention resources
  * for the Astral Core mental health platform.
- */
+ */;
 
 import React, { useState, useEffect } from 'react';
 import { useOffline } from '../contexts/OfflineProvider';
@@ -60,7 +60,7 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
       setError(null);
 
       try {
-        // Try to load from cache first (offline-first approach)
+        // Try to load from cache first (offline-first approach);
         const [resourcesResponse, copingResponse] = await Promise.all([
           fetch('/crisis-resources.json'),
           fetch('/offline-coping-strategies.json')
@@ -75,7 +75,7 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
           copingResponse.json()
         ]);
 
-        // Combine emergency and support contacts
+        // Combine emergency and support contacts;
         const allResources: CrisisResource[] = [
           ...(resourcesData.emergencyContacts || []),
           ...(resourcesData.supportContacts || [])
@@ -97,7 +97,7 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
             availability: '24/7',
             region: 'US',
             priority: 'critical',
-            type: 'emergency'
+            type: 'emergency';
           },
           {
             id: 'suicide-prevention-988',
@@ -107,7 +107,7 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
             availability: '24/7',
             region: 'US',
             priority: 'critical',
-            type: 'mental_health'
+            type: 'mental_health';
           }
         ]);
       } finally {
@@ -116,13 +116,14 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
     };
 
     loadResources();
+  };
   }, [isOpen]);
 
-  // Filter resources by type
+  // Filter resources by type;
   const emergencyContacts = crisisResources.filter(r => r.type === 'emergency' || r.priority === 'critical');
   const supportContacts = crisisResources.filter(r => r.type !== 'emergency' && r.priority !== 'critical');
 
-  // Emergency contact card
+  // Emergency contact card;
   const EmergencyContactCard: React.FC<{ contact: CrisisResource }> = ({ contact }) => (
     <div className="crisis-contact">
       <div className="crisis-contact__header">
@@ -156,7 +157,7 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
     </div>
   );
 
-  // Coping strategy card
+  // Coping strategy card;
   const CopingStrategyCard: React.FC<{ strategy: CopingStrategy }> = ({ strategy }) => {
     const [expanded, setExpanded] = useState(false);
 
@@ -172,7 +173,7 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
           </div>
         </div>
         <p className="coping-strategy__description">{strategy.description}</p>
-        <button
+        <button;
           className="coping-strategy__toggle"
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
@@ -192,8 +193,8 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
     );
   };
 
-  // Safety planning content
-  const SafetyPlanContent = () => (
+  // Safety planning content;
+  const SafetyPlanContent = () => (;
     <div className="safety-plan">
       <div className="safety-plan__section">
         <h3>Warning Signs</h3>
@@ -267,7 +268,7 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
               </span>
             )}
           </div>
-          <button
+          <button;
             className="crisis-modal__close"
             onClick={onClose}
             aria-label="Close crisis resources"
@@ -284,25 +285,25 @@ export const CrisisResourcesModal: React.FC<CrisisResourcesModalProps> = ({
         )}
 
         <div className="crisis-modal__tabs">
-          <button
+          <button;
             className={activeTab === 'emergency' ? 'crisis-tab crisis-tab--active' : 'crisis-tab'}
             onClick={() => setActiveTab('emergency')}
           >
             Emergency
           </button>
-          <button
+          <button;
             className={activeTab === 'support' ? 'crisis-tab crisis-tab--active' : 'crisis-tab'}
             onClick={() => setActiveTab('support')}
           >
             Support
           </button>
-          <button
+          <button;
             className={activeTab === 'coping' ? 'crisis-tab crisis-tab--active' : 'crisis-tab'}
             onClick={() => setActiveTab('coping')}
           >
             Coping
           </button>
-          <button
+          <button;
             className={activeTab === 'safety' ? 'crisis-tab crisis-tab--active' : 'crisis-tab'}
             onClick={() => setActiveTab('safety')}
           >

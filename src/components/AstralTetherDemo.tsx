@@ -37,8 +37,8 @@ export const AstralTetherDemo: React.FC = () => {
         // Simulate energy fluctuation
         setEnergyLevel(prev => Math.min(100, prev + (Math.random() * 2 - 0.5)));
         setResonanceStrength(prev => Math.min(100, prev + (Math.random() * 3 - 1)));
-      }, 1000);
-    } else {
+      }, 1000);;
+  } else {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
@@ -49,7 +49,8 @@ export const AstralTetherDemo: React.FC = () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
-    }, [isActive]);
+    };
+  }, [isActive]);
 
   const startTetherSession = () => {
     setIsActive(true);
@@ -157,7 +158,7 @@ export const AstralTetherDemo: React.FC = () => {
         {/* Action Button */}
         <div className="tether-actions">
           {!isActive ? (
-            <AppButton
+            <AppButton;
               variant="primary"
               size="lg"
               onClick={startTetherSession}
@@ -168,7 +169,7 @@ export const AstralTetherDemo: React.FC = () => {
               Start {selectedMode.name} Session
             </AppButton>
           ) : (
-            <AppButton
+            <AppButton;
               variant="secondary"
               size="lg"
               onClick={endTetherSession}

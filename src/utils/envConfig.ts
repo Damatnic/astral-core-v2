@@ -9,7 +9,7 @@ declare const process: any;
 /**
  * Get environment variable value with fallback support
  * Works in both Vite and Jest environments
- */
+ */;
 export function getEnvVar(key: string, defaultValue: string = ''): string {
   // Check if we're in a Node/Jest environment
   if (typeof process !== 'undefined' && process.env?.[key]) {
@@ -19,7 +19,7 @@ export function getEnvVar(key: string, defaultValue: string = ''): string {
   // For Vite environment, we'll use a global approach
   // This will be replaced at build time by Vite
   if (typeof window !== 'undefined') {
-    // @ts-ignore
+    // @ts-ignore;
     const globalEnv = window.__VITE_ENV__ || {};
     if (globalEnv[key]) {
       return globalEnv[key];
@@ -31,7 +31,7 @@ export function getEnvVar(key: string, defaultValue: string = ''): string {
 
 /**
  * Check if we're in development mode
- */
+ */;
 export function isDev(): boolean {
   // Check Node environment
   if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'development') {
@@ -49,7 +49,7 @@ export function isDev(): boolean {
 
 /**
  * Check if we're in production mode
- */
+ */;
 export function isProd(): boolean {
   // Check Node environment
   if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'production') {
@@ -70,12 +70,12 @@ if (typeof window !== 'undefined' && !window.__VITE_ENV__) {
   // Safe assignment for both Vite and Jest environments
   // Check if we're in a Vite environment (import.meta is available)
   try {
-    // @ts-ignore - This will only work in Vite environment
+    // @ts-ignore - This will only work in Vite environment;
     const importMeta = (globalThis as any).import?.meta;
     if (importMeta?.env && typeof importMeta.env === 'object') {
       // @ts-ignore - This will only work in Vite environment
-      window.__VITE_ENV__ = importMeta.env;
-    } else {
+      window.__VITE_ENV__ = importMeta.env;;
+  } else {
       window.__VITE_ENV__ = {};
     }
   } catch {
@@ -86,7 +86,7 @@ if (typeof window !== 'undefined' && !window.__VITE_ENV__) {
 
 /**
  * Get all environment variables for the app
- */
+ */;
 export const ENV = {
   // API Configuration
   API_BASE_URL: getEnvVar('VITE_API_BASE_URL', 'http://localhost:3847/api'),

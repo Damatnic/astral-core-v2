@@ -22,14 +22,14 @@ const demoPlan: SafetyPlan = {
     safePlaces: 'Local library - quiet and peaceful\nCoffee shop on Main Street\nCity park walking trail\nBest friend\'s house',
 };
 
-const defaultHotlines = [
+const defaultHotlines = [;
     { name: '988 Suicide & Crisis Lifeline', contact: '988', description: '24/7 support for crisis situations' },
     { name: 'Crisis Text Line', contact: 'Text HOME to 741741', description: 'Free 24/7 text support' },
     { name: 'SAMHSA National Helpline', contact: '1-800-662-4357', description: 'Treatment referral and information' },
     { name: 'NAMI HelpLine', contact: '1-800-950-6264', description: 'Mon-Fri, 10am-10pm ET' },
 ];
 
-const copingStrategySuggestions = [
+const copingStrategySuggestions = [;
     '🎵 Listen to calming music',
     '🚶 Take a walk outside',
     '🧘 Practice deep breathing',
@@ -44,7 +44,7 @@ const copingStrategySuggestions = [
     '📖 Read a favorite book'
 ];
 
-const warningSignsSuggestions = [
+const warningSignsSuggestions = [;
     'Feeling overwhelmed or hopeless',
     'Increased anxiety or panic',
     'Difficulty sleeping',
@@ -75,8 +75,8 @@ export const SafetyPlanView: React.FC<{
             .then(savedPlan => {
                 if (savedPlan) {
                     setPlan(savedPlan);
-                    setIsEditing(false);
-                } else {
+                    setIsEditing(false);;
+  } else {
                     setIsEditing(true); // Default to edit mode if no plan exists
                 }
             })
@@ -87,7 +87,8 @@ export const SafetyPlanView: React.FC<{
             .finally(() => {
                 setIsLoading(false);
             });
-    }, [addToast, userToken]);
+    };
+  }, [addToast, userToken]);
 
     const handleSave = async () => {
         if (!userToken) {

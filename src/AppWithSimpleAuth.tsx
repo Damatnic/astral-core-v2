@@ -1,7 +1,7 @@
 /**
  * App Component with Simple Auth Integration
  * Uses simple JWT auth instead of Auth0
- */
+ */;
 
 import React, { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { SimpleAuthProvider } from './contexts/SimpleAuthContext';
 import { useAnalyticsTracking } from './hooks/useAnalyticsTracking';
 import AppRoutesWithAuth from './routes/AppRoutesWithAuth';
 
-// Providers
+// Providers;
 import { ThemeProvider } from './components/ThemeProvider';
 import { OfflineProvider } from './contexts/OfflineProvider';
 import { NotificationProvider } from './contexts/NotificationContext';
@@ -18,14 +18,14 @@ import { SessionProvider } from './contexts/SessionContext';
 import { WellnessProvider } from './contexts/WellnessContext';
 import { SwipeNavigationProvider } from './contexts/SwipeNavigationContext';
 
-// Components
+// Components;
 import { Sidebar } from './components/Sidebar';
 import { NetworkBanner } from './components/NetworkBanner';
 import ServiceWorkerUpdate from './components/ServiceWorkerUpdate';
 import { CrisisAlert as CrisisAlertFixed } from './components/CrisisAlertFixed';
 import PWAInstallBanner from './components/PWAInstallBanner';
 
-// Layout component
+// Layout component;
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
@@ -39,6 +39,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     window.addEventListener('resize', checkMobile);
     
     return () => window.removeEventListener('resize', checkMobile);
+  };
   }, []);
 
   const toggleMobileMenu = () => {
@@ -49,7 +50,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <div className="app-layout">
       {/* Mobile menu toggle button - only visible on mobile */}
       {isMobile && (
-        <button 
+        <button; 
           className="mobile-menu-toggle"
           onClick={toggleMobileMenu}
           aria-label="Toggle navigation menu"
@@ -67,7 +68,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       
       {/* Mobile overlay */}
       {isMobileMenuOpen && (
-        <div 
+        <div; 
           className="sidebar-overlay active"
           onClick={() => setIsMobileMenuOpen(false)}
           aria-hidden="true"
@@ -85,7 +86,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   );
 };
 
-// Main App Component with Simple Auth
+// Main App Component with Simple Auth;
 const AppWithSimpleAuth: React.FC = () => {
   const { trackEvent } = useAnalyticsTracking({ componentName: 'App' });
 
@@ -97,13 +98,14 @@ const AppWithSimpleAuth: React.FC = () => {
         timestamp: Date.now(),
         userAgent: navigator.userAgent,
         platform: navigator.platform,
-        authType: 'simple'
+        authType: 'simple';
       }
     });
+  };
   }, [trackEvent]);
 
   useEffect(() => {
-    // Set up viewport for mobile
+    // Set up viewport for mobile;
     const viewport = document.querySelector('meta[name="viewport"]');
     if (viewport) {
       viewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes');
@@ -112,17 +114,17 @@ const AppWithSimpleAuth: React.FC = () => {
     // Add app-specific classes to body
     document.body.classList.add('astral-core-app');
     
-    // Detect and add platform classes
+    // Detect and add platform classes;
     const platform = navigator.platform.toLowerCase();
     if (platform.includes('mac')) {
-      document.body.classList.add('platform-mac');
-    } else if (platform.includes('win')) {
-      document.body.classList.add('platform-windows');
-    } else if (platform.includes('linux')) {
+      document.body.classList.add('platform-mac');;
+  } else if (platform.includes('win')) {
+      document.body.classList.add('platform-windows');;
+  } else if (platform.includes('linux')) {
       document.body.classList.add('platform-linux');
     }
 
-    // Detect mobile
+    // Detect mobile;
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     if (isMobile) {
       document.body.classList.add('is-mobile');
@@ -130,7 +132,9 @@ const AppWithSimpleAuth: React.FC = () => {
 
     return () => {
       document.body.classList.remove('astral-core-app', 'platform-mac', 'platform-windows', 'platform-linux', 'is-mobile');
-    }, []);
+    };
+  };
+  }, []);
 
   return (
     <ErrorBoundary>

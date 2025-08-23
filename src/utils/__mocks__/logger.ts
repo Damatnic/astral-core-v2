@@ -1,7 +1,7 @@
 /**
  * Mock logger for testing
  * Provides no-op implementations to avoid import.meta issues in Jest
- */
+ */;
 
 class MockLogger {
   debug = jest.fn();

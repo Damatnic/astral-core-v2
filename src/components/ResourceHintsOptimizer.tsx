@@ -3,7 +3,7 @@
  * 
  * Implements resource hints (preload, prefetch, dns-prefetch) to optimize
  * Core Web Vitals for crisis intervention scenarios.
- */
+ */;
 
 import { useEffect, useRef } from 'react';
 import { useSafeLocation } from '../hooks/useSafeLocation';
@@ -29,7 +29,7 @@ const ResourceHintsOptimizer: React.FC = () => {
   const location = useSafeLocation();
   const addedHintsRef = useRef<Set<string>>(new Set());
 
-  // Configuration for resource hints
+  // Configuration for resource hints;
   const config: ResourceHintsConfig = {
     // Critical resources that should always be preloaded
     criticalResources: [
@@ -39,7 +39,7 @@ const ResourceHintsOptimizer: React.FC = () => {
         as: 'fetch',
         type: 'application/json',
         priority: 'critical',
-        isCrisisCritical: true
+        isCrisisCritical: true;
       },
       {
         rel: 'preload',
@@ -47,7 +47,7 @@ const ResourceHintsOptimizer: React.FC = () => {
         as: 'fetch',
         type: 'application/json',
         priority: 'critical',
-        isCrisisCritical: true
+        isCrisisCritical: true;
       },
       {
         rel: 'preload',
@@ -55,7 +55,7 @@ const ResourceHintsOptimizer: React.FC = () => {
         as: 'fetch',
         type: 'application/json',
         priority: 'high',
-        isCrisisCritical: true
+        isCrisisCritical: true;
       }
     ],
 
@@ -66,13 +66,13 @@ const ResourceHintsOptimizer: React.FC = () => {
           rel: 'prefetch',
           href: '/api/chat/history',
           as: 'fetch',
-          priority: 'high'
+          priority: 'high';
         },
         {
           rel: 'preload',
           href: '/sounds/notification.mp3',
           as: 'audio',
-          priority: 'medium'
+          priority: 'medium';
         }
       ],
       '/crisis': [
@@ -81,13 +81,13 @@ const ResourceHintsOptimizer: React.FC = () => {
           href: '/offline-crisis.html',
           as: 'document',
           priority: 'critical',
-          isCrisisCritical: true
+          isCrisisCritical: true;
         },
         {
           rel: 'preconnect',
           href: 'https://suicidepreventionlifeline.org',
           priority: 'critical',
-          isCrisisCritical: true
+          isCrisisCritical: true;
         }
       ],
       '/safety-plan': [
@@ -95,7 +95,7 @@ const ResourceHintsOptimizer: React.FC = () => {
           rel: 'prefetch',
           href: '/api/safety-plan',
           as: 'fetch',
-          priority: 'high'
+          priority: 'high';
         }
       ],
       '/wellness': [
@@ -103,7 +103,7 @@ const ResourceHintsOptimizer: React.FC = () => {
           rel: 'prefetch',
           href: '/Videos/',
           as: 'document',
-          priority: 'low'
+          priority: 'low';
         }
       ],
       '/community': [
@@ -111,7 +111,7 @@ const ResourceHintsOptimizer: React.FC = () => {
           rel: 'prefetch',
           href: '/api/posts',
           as: 'fetch',
-          priority: 'medium'
+          priority: 'medium';
         }
       ]
     },
@@ -122,19 +122,19 @@ const ResourceHintsOptimizer: React.FC = () => {
         rel: 'preconnect',
         href: 'https://988lifeline.org',
         priority: 'critical',
-        isCrisisCritical: true
+        isCrisisCritical: true;
       },
       {
         rel: 'preconnect',
         href: 'https://crisistextline.org',
         priority: 'critical',
-        isCrisisCritical: true
+        isCrisisCritical: true;
       },
       {
         rel: 'dns-prefetch',
         href: 'https://emergency-services.local',
         priority: 'critical',
-        isCrisisCritical: true
+        isCrisisCritical: true;
       }
     ],
 
@@ -143,19 +143,19 @@ const ResourceHintsOptimizer: React.FC = () => {
       {
         rel: 'dns-prefetch',
         href: 'https://fonts.googleapis.com',
-        priority: 'low'
+        priority: 'low';
       },
       {
         rel: 'preconnect',
         href: 'https://cdn.jsdelivr.net',
-        priority: 'medium'
+        priority: 'medium';
       }
     ]
   };
 
   /**
    * Add resource hint to document head
-   */
+   */;
   const addResourceHint = (hint: ResourceHint): (() => void) | void => {
     const key = `${hint.rel}-${hint.href}`;
     
@@ -175,12 +175,12 @@ const ResourceHintsOptimizer: React.FC = () => {
       link.setAttribute('fetchpriority', hint.priority === 'critical' ? 'high' : hint.priority);
     }
 
-    // Add to head with appropriate position based on priority
+    // Add to head with appropriate position based on priority;
     const head = document.head;
     if (hint.priority === 'critical' || hint.isCrisisCritical) {
       // Insert critical resources at the beginning
-      head.insertBefore(link, head.firstChild);
-    } else {
+      head.insertBefore(link, head.firstChild);;
+  } else {
       // Append non-critical resources at the end
       head.appendChild(link);
     }
@@ -197,7 +197,7 @@ const ResourceHintsOptimizer: React.FC = () => {
 
   /**
    * Remove resource hint from document head
-   */
+   */;
   const removeResourceHint = (hint: ResourceHint): void => {
     const key = `${hint.rel}-${hint.href}`;
     const links = document.querySelectorAll(`link[rel="${hint.rel}"][href="${hint.href}"]`);
@@ -213,7 +213,7 @@ const ResourceHintsOptimizer: React.FC = () => {
 
   /**
    * Apply resource hints based on current route and conditions
-   */
+   */;
   const applyResourceHints = (): (() => void)[] => {
     const cleanupFunctions: (() => void)[] = [];
 
@@ -231,7 +231,7 @@ const ResourceHintsOptimizer: React.FC = () => {
       });
     }
 
-    // Add route-specific hints
+    // Add route-specific hints;
     const currentPath = location.pathname;
     const routeHints = config.routeSpecificHints[currentPath] || [];
     routeHints.forEach(hint => {
@@ -252,7 +252,7 @@ const ResourceHintsOptimizer: React.FC = () => {
 
   /**
    * Check if current route is crisis-related
-   */
+   */;
   const isCrisisRoute = (): boolean => {
     const crisisRoutes = ['/crisis', '/emergency', '/safety-plan', '/offline-crisis'];
     return crisisRoutes.some(route => location.pathname.startsWith(route));
@@ -260,7 +260,7 @@ const ResourceHintsOptimizer: React.FC = () => {
 
   /**
    * Check if crisis is detected (could be enhanced with AI detection)
-   */
+   */;
   const isCrisisDetected = (): boolean => {
     // This could integrate with crisis detection service
     // For now, check localStorage for crisis indicators
@@ -274,9 +274,9 @@ const ResourceHintsOptimizer: React.FC = () => {
 
   /**
    * Determine if connection optimizations should be applied
-   */
+   */;
   const shouldOptimizeConnections = (): boolean => {
-    // Check network conditions
+    // Check network conditions;
     const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
     
     if (connection) {
@@ -290,9 +290,9 @@ const ResourceHintsOptimizer: React.FC = () => {
 
   /**
    * Optimize resource hints based on user interaction patterns
-   */
+   */;
   const optimizeBasedOnUserBehavior = (): void => {
-    // Preload resources for likely next navigation
+    // Preload resources for likely next navigation;
     const userJourney = getUserJourney();
     const predictedNextRoute = predictNextRoute(userJourney);
     
@@ -308,7 +308,7 @@ const ResourceHintsOptimizer: React.FC = () => {
 
   /**
    * Get user journey from analytics or localStorage
-   */
+   */;
   const getUserJourney = (): string[] => {
     try {
       const journey = localStorage.getItem('user_journey');
@@ -320,11 +320,11 @@ const ResourceHintsOptimizer: React.FC = () => {
 
   /**
    * Predict next route based on user journey patterns
-   */
+   */;
   const predictNextRoute = (journey: string[]): string | null => {
     if (journey.length < 2) return null;
 
-    // Simple prediction based on common patterns
+    // Simple prediction based on common patterns;
     const patterns: Record<string, string[]> = {
       '/dashboard': ['/chat', '/community', '/wellness'],
       '/community': ['/chat', '/post/create'],
@@ -345,7 +345,7 @@ const ResourceHintsOptimizer: React.FC = () => {
 
   /**
    * Monitor performance and adjust hints accordingly
-   */
+   */;
   const monitorAndAdjust = (): (() => void) | void => {
     // Check Core Web Vitals performance
     if ('PerformanceObserver' in window) {
@@ -377,10 +377,10 @@ const ResourceHintsOptimizer: React.FC = () => {
   useEffect(() => {
     const cleanupFunctions = applyResourceHints();
     
-    // Optimize based on user behavior after a delay
+    // Optimize based on user behavior after a delay;
     const behaviorTimeout = setTimeout(optimizeBasedOnUserBehavior, 2000);
     
-    // Set up performance monitoring
+    // Set up performance monitoring;
     const monitorCleanup = monitorAndAdjust();
 
     return () => {
@@ -388,7 +388,9 @@ const ResourceHintsOptimizer: React.FC = () => {
       cleanupFunctions.forEach(cleanup => cleanup());
       clearTimeout(behaviorTimeout);
       if (monitorCleanup) monitorCleanup();
-    }, [location.pathname]);
+    };
+  };
+  }, [location.pathname]);
 
   // Monitor crisis state changes
   useEffect(() => {
@@ -408,7 +410,9 @@ const ResourceHintsOptimizer: React.FC = () => {
     return () => {
       window.removeEventListener('crisis_detected', handleCrisisStateChange);
       window.removeEventListener('storage', handleCrisisStateChange);
-    }, []);
+    };
+  };
+  }, []);
 
   // This component doesn't render anything - it only manages resource hints
   return null;

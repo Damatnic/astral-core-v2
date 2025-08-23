@@ -12,13 +12,13 @@
  * - Privacy-preserving peer discovery
  * 
  * @license Apache-2.0
- */
+ */;
 
 import { culturalContextService } from './culturalContextService';
 import { enhancedAICrisisDetectionService } from './enhancedAiCrisisDetectionService';
 import { privacyPreservingAnalyticsService } from './privacyPreservingAnalyticsService';
 
-// Peer Support Types
+// Peer Support Types;
 export interface PeerProfile {
   id: string;
   userToken: string;
@@ -195,7 +195,7 @@ class PeerSupportNetworkService {
     const salt = 'peer-support-anonymization-2025';
     const data = `${userToken}-${salt}`;
     
-    // Simple hash implementation
+    // Simple hash implementation;
     let hash = 0;
     for (let i = 0; i < data.length; i++) {
       const char = data.charCodeAt(i);
@@ -211,7 +211,7 @@ class PeerSupportNetworkService {
    */
   async findCompatiblePeers(request: PeerSupportRequest): Promise<PeerMatch[]> {
     try {
-      const availablePeers = Array.from(this.peerProfiles.values())
+      const availablePeers = Array.from(this.peerProfiles.values());
         .filter(peer => 
           peer.availabilityStatus === 'available' &&
           peer.preferredLanguages.includes(request.language)
@@ -240,27 +240,27 @@ class PeerSupportNetworkService {
    * Calculate peer compatibility using multiple factors
    */
   private async calculatePeerCompatibility(peer: PeerProfile, request: PeerSupportRequest): Promise<PeerMatch> {
-    // Cultural compatibility
+    // Cultural compatibility;
     const culturalContext = culturalContextService.getCulturalContext(request.language);
     const culturalMatch = peer.culturalBackground === culturalContext.region ? 1.0 : 0.7;
 
-    // Language compatibility
+    // Language compatibility;
     const primaryLanguageMatch = peer.language === request.language ? 1.0 : 0.0;
     const secondaryLanguageMatch = peer.preferredLanguages.includes(request.language) ? 0.8 : 0.0;
     const languageMatch = Math.max(primaryLanguageMatch, secondaryLanguageMatch);
 
-    // Experience compatibility
+    // Experience compatibility;
     const experienceMatch = this.calculateExperienceMatch(peer.experienceAreas, request.experienceNeeded);
 
-    // Availability and responsiveness
+    // Availability and responsiveness;
     const timeSinceLastActive = Date.now() - peer.lastActive;
     const availabilityMatch = Math.max(0, 1 - (timeSinceLastActive / (24 * 60 * 60 * 1000))); // Decay over 24 hours
 
-    // Safety and quality score
+    // Safety and quality score;
     const safetyScore = (peer.safetyRating / 5.0) * 0.7 + (peer.averageRating / 5.0) * 0.3;
 
-    // Overall compatibility score
-    const compatibilityScore = (
+    // Overall compatibility score;
+    const compatibilityScore = (;
       culturalMatch * 0.25 +
       languageMatch * 0.25 +
       experienceMatch * 0.25 +
@@ -268,10 +268,10 @@ class PeerSupportNetworkService {
       safetyScore * 0.10
     );
 
-    // Generate match reason
+    // Generate match reason;
     const matchReason = this.generateMatchReason(culturalMatch, languageMatch, experienceMatch, availabilityMatch);
 
-    // Estimate wait time based on peer's current load
+    // Estimate wait time based on peer's current load;
     const estimatedWaitTime = this.calculateEstimatedWaitTime(peer);
 
     return { peerId: peer.id,
@@ -289,22 +289,22 @@ class PeerSupportNetworkService {
    * Calculate experience area match score
    */
   private calculateExperienceMatch(peerExperience: ExperienceArea[], requestedExperience: string[]): number {
-    if (requestedExperience.length === 0) return 0.5; // Neutral if no specific experience requested
+    if (requestedExperience.length === 0) return 0.5; // Neutral if no specific experience requested;
 
-    const matchingAreas = peerExperience.filter(exp => 
+    const matchingAreas = peerExperience.filter(exp => ;
       requestedExperience.includes(exp.category)
     );
 
     if (matchingAreas.length === 0) return 0.2; // Low score if no matching experience
 
-    // Weight by experience level
+    // Weight by experience level;
     const weightedScore = matchingAreas.reduce((sum, exp) => {
       let levelWeight: number;
       if (exp.level === 'professional') {
-        levelWeight = 1.0;
-      } else if (exp.level === 'supported-others') {
-        levelWeight = 0.8;
-      } else {
+        levelWeight = 1.0;;
+  } else if (exp.level === 'supported-others') {
+        levelWeight = 0.8;;
+  } else {
         levelWeight = 0.6;
       }
       return sum + levelWeight;
@@ -333,11 +333,11 @@ class PeerSupportNetworkService {
    * Calculate estimated wait time for peer
    */
   private calculateEstimatedWaitTime(peer: PeerProfile): number {
-    const activeSessions = Array.from(this.activeSessions.values())
+    const activeSessions = Array.from(this.activeSessions.values());
       .filter(session => session.supporterId === peer.id && session.status === 'active');
 
-    // Base wait time on current load and historical session length
-    const baseWaitTime = activeSessions.length * 15; // 15 minutes per active session
+    // Base wait time on current load and historical session length;
+    const baseWaitTime = activeSessions.length * 15; // 15 minutes per active session;
     const randomVariation = Math.random() * 10; // Add some variation
 
     return Math.round(baseWaitTime + randomVariation);
@@ -355,7 +355,7 @@ class PeerSupportNetworkService {
         throw new Error('Supporter not found');
       }
 
-      // Get initial risk assessment
+      // Get initial risk assessment;
       const initialRiskLevel = await this.assessInitialRisk(request);
 
       const session: PeerSupportSession = {
@@ -370,7 +370,7 @@ class PeerSupportNetworkService {
         escalationTriggers: [],
         moderationFlags: [],
         sessionType: request.sessionType,
-        privacyLevel: 'anonymous'
+        privacyLevel: 'anonymous';
       };
 
       this.activeSessions.set(sessionId, session);
@@ -393,13 +393,13 @@ class PeerSupportNetworkService {
    */
   private async assessInitialRisk(request: PeerSupportRequest): Promise<number> {
     try {
-      // Use enhanced AI crisis detection for initial assessment
-      const analysis = await enhancedAICrisisDetectionService.analyzeCrisisWithML(
+      // Use enhanced AI crisis detection for initial assessment;
+      const analysis = await enhancedAICrisisDetectionService.analyzeCrisisWithML(;
         request.description,
         request.language
       );
 
-      // Map urgency level to risk score
+      // Map urgency level to risk score;
       const urgencyRisk = {
         'low': 0.2,
         'medium': 0.5,
@@ -424,7 +424,7 @@ class PeerSupportNetworkService {
       if (session.status !== 'active') continue;
 
       try {
-        // Check session duration for potential issues
+        // Check session duration for potential issues;
         const sessionDuration = (Date.now() - session.startTime) / (1000 * 60); // minutes
         
         if (sessionDuration > 120) { // 2 hours
@@ -474,7 +474,8 @@ class PeerSupportNetworkService {
         initialRiskLevel: session.riskLevel,
         finalRiskLevel: session.riskLevel, // Risk level maintained due to escalation
         sessionDuration: (Date.now() - session.startTime) / (1000 * 60),
-      });
+      };
+  };
 
       console.log(`[Peer Support] Escalated session ${sessionId} to professional support`);
     } catch (error) {
@@ -516,7 +517,7 @@ class PeerSupportNetworkService {
       session.status = 'completed';
       session.riskLevel = feedback.finalRiskLevel;
 
-      // Update supporter availability and stats
+      // Update supporter availability and stats;
       const supporter = this.peerProfiles.get(session.supporterId);
       if (supporter) {
         supporter.availabilityStatus = 'available';
@@ -524,7 +525,7 @@ class PeerSupportNetworkService {
         supporter.lastActive = Date.now();
 
         if (feedback.supporterRating) {
-          // Update average rating
+          // Update average rating;
           const totalRating = supporter.averageRating * (supporter.totalSupportSessions - 1) + feedback.supporterRating;
           supporter.averageRating = totalRating / supporter.totalSupportSessions;
         }
@@ -532,7 +533,7 @@ class PeerSupportNetworkService {
         this.peerProfiles.set(session.supporterId, supporter);
       }
 
-      // Record session outcome in analytics
+      // Record session outcome in analytics;
       const sessionDuration = (session.endTime - session.startTime) / (1000 * 60);
       await privacyPreservingAnalyticsService.recordInterventionOutcome({
         sessionId: sessionId,
@@ -542,7 +543,7 @@ class PeerSupportNetworkService {
         initialRiskLevel: session.riskLevel,
         finalRiskLevel: feedback.finalRiskLevel,
         sessionDuration,
-        feedback: feedback.seekerRating
+        feedback: feedback.seekerRating;
       });
 
       // Remove from active sessions
@@ -579,13 +580,13 @@ class PeerSupportNetworkService {
     culturalDistribution: Record<string, number>;
   } {
     const totalPeers = this.peerProfiles.size;
-    const availablePeers = Array.from(this.peerProfiles.values())
+    const availablePeers = Array.from(this.peerProfiles.values());
       .filter(peer => peer.availabilityStatus === 'available').length;
     
-    const activeSessions = Array.from(this.activeSessions.values())
+    const activeSessions = Array.from(this.activeSessions.values());
       .filter(session => session.status === 'active').length;
 
-    // Calculate completed sessions and average duration
+    // Calculate completed sessions and average duration;
     let completedSessions = 0;
     let totalDuration = 0;
     
@@ -593,7 +594,7 @@ class PeerSupportNetworkService {
       completedSessions += peer.totalSupportSessions;
     });
 
-    // Language and cultural distribution
+    // Language and cultural distribution;
     const languageDistribution: Record<string, number> = {};
     const culturalDistribution: Record<string, number> = {};
 
@@ -613,5 +614,5 @@ class PeerSupportNetworkService {
     }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const peerSupportNetworkService = new PeerSupportNetworkService();

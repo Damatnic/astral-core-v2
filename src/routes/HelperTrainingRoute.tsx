@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 /**
  * Route wrapper for HelperTrainingView that provides required props
- */
+ */;
 const HelperTrainingRoute: React.FC = () => {
   const navigate = useNavigate();
 

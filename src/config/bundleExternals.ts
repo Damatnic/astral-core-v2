@@ -1,7 +1,7 @@
 // Bundle Externals Configuration
 // Prevents heavy server-side dependencies from being included in browser bundle
 
-// Dependencies that should be excluded from browser bundle
+// Dependencies that should be excluded from browser bundle;
 export const browserExternals = [
   // Database clients (should be server-side only)
   'pg',
@@ -55,7 +55,7 @@ export const browserExternals = [
   'vitest'
 ];
 
-// Conditional externals based on environment
+// Conditional externals based on environment;
 export const getConditionalExternals = (isDevelopment: boolean) => {
   const baseExternals = [...browserExternals];
   
@@ -72,7 +72,7 @@ export const getConditionalExternals = (isDevelopment: boolean) => {
   return baseExternals;
 };
 
-// Vite-specific externals configuration
+// Vite-specific externals configuration;
 export const viteExternalsConfig = {
   external: (id: string) => {
     // Check if the id is in our externals list
@@ -94,13 +94,13 @@ export const viteExternalsConfig = {
   }
 };
 
-// Rollup-specific externals configuration
+// Rollup-specific externals configuration;
 export const rollupExternalsConfig = (id: string) => {
   // Return true for modules that should be external
   return browserExternals.some(external => id.includes(external));
 };
 
-// AI-specific optimization configuration
+// AI-specific optimization configuration;
 export const aiOptimizationConfig = {
   // TensorFlow.js optimization
   tensorflow: {
@@ -134,7 +134,7 @@ export const aiOptimizationConfig = {
   }
 };
 
-// Tree-shaking configuration for better optimization
+// Tree-shaking configuration for better optimization;
 export const treeShakingConfig = {
   // Packages known to be tree-shakable
   treeShakable: [
@@ -161,7 +161,7 @@ export const treeShakingConfig = {
   ]
 };
 
-// Progressive loading configuration
+// Progressive loading configuration;
 export const progressiveLoadingConfig = {
   // Critical modules that should be in main bundle
   critical: [
@@ -188,27 +188,27 @@ export const progressiveLoadingConfig = {
   ]
 };
 
-// Bundle size optimization configuration
+// Bundle size optimization configuration;
 export const bundleSizeOptimization = {
   // Maximum sizes for different chunk types (in KB)
   maxSizes: {
     critical: 150,
     vendor: 400,
-    async: 250
+    async: 250;
   },
   
   // Compression settings
   compression: {
     gzip: true,
     brotli: true,
-    threshold: 1024 // Only compress files larger than 1KB
+    threshold: 1024 // Only compress files larger than 1KB;
   },
   
   // Asset optimization
   assets: {
     inlineLimit: 4096, // Inline assets smaller than 4KB
     imageOptimization: true,
-    svgOptimization: true
+    svgOptimization: true;
   }
 };
 

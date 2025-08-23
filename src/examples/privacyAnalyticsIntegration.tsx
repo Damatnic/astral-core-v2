@@ -5,7 +5,7 @@
  * with existing crisis intervention components while maintaining HIPAA compliance.
  * 
  * @license Apache-2.0
- */
+ */;
 
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +14,7 @@ import { PrivacyAnalyticsDashboard } from '../components/PrivacyAnalyticsDashboa
 import { AppButton } from '../components/AppButton';
 import { Card } from '../components/Card';
 
-// Example 1: Enhanced AI Chat with Analytics Integration
+// Example 1: Enhanced AI Chat with Analytics Integration;
 export const EnhancedAIChatWithAnalytics: React.FC<{
   sessionId: string;
   userToken: string;
@@ -28,7 +28,7 @@ export const EnhancedAIChatWithAnalytics: React.FC<{
   const [finalRiskLevel, setFinalRiskLevel] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<number | null>(null);
 
-  // Record intervention outcome when session ends
+  // Record intervention outcome when session ends;
   const handleSessionEnd = async () => {
     if (initialRiskLevel !== null && finalRiskLevel !== null) {
       const sessionDuration = (Date.now() - sessionStart) / (1000 * 60); // minutes
@@ -41,7 +41,7 @@ export const EnhancedAIChatWithAnalytics: React.FC<{
         initialRiskLevel,
         finalRiskLevel,
         sessionDuration,
-        feedback: feedback || undefined
+        feedback: feedback || undefined;
       });
     }
     
@@ -62,7 +62,7 @@ export const EnhancedAIChatWithAnalytics: React.FC<{
         <div className="risk-inputs">
           <label>
             {t('analytics.riskAssessment.initial')}
-            <input
+            <input;
               type="range"
               min="0"
               max="1"
@@ -75,7 +75,7 @@ export const EnhancedAIChatWithAnalytics: React.FC<{
           
           <label>
             {t('analytics.riskAssessment.final')}
-            <input
+            <input;
               type="range"
               min="0"
               max="1"
@@ -116,7 +116,7 @@ export const EnhancedAIChatWithAnalytics: React.FC<{
   );
 };
 
-// Example 2: Crisis Resources with Follow-up Tracking
+// Example 2: Crisis Resources with Follow-up Tracking;
 export const CrisisResourcesWithTracking: React.FC<{
   userToken: string;
   sessionId: string;
@@ -126,7 +126,7 @@ export const CrisisResourcesWithTracking: React.FC<{
   const { recordIntervention, recordFollowUp } = usePrivacyAnalytics();
   const [hasViewedResources, setHasViewedResources] = useState(false);
 
-  // Record resource access
+  // Record resource access;
   const handleResourceAccess = async () => {
     setHasViewedResources(true);
     
@@ -142,20 +142,21 @@ export const CrisisResourcesWithTracking: React.FC<{
     });
   };
 
-  // Record follow-up engagement
+  // Record follow-up engagement;
   const handleFollowUpEngagement = async () => {
     await recordFollowUp(userToken, sessionId);
   };
 
   useEffect(() => {
     if (hasViewedResources) {
-      // Set up follow-up tracking after 24 hours
+      // Set up follow-up tracking after 24 hours;
       const followUpTimer = setTimeout(() => {
         handleFollowUpEngagement();
       }, 24 * 60 * 60 * 1000);
 
       return () => clearTimeout(followUpTimer);
     }
+  };
   }, [hasViewedResources]);
 
   return (
@@ -186,7 +187,7 @@ export const CrisisResourcesWithTracking: React.FC<{
   );
 };
 
-// Example 3: Helper Dashboard with Analytics
+// Example 3: Helper Dashboard with Analytics;
 export const HelperDashboardWithAnalytics: React.FC<{
   helperRole: 'Helper' | 'Moderator' | 'Admin';
 }> = ({ helperRole }) => {
@@ -221,7 +222,7 @@ export const HelperDashboardWithAnalytics: React.FC<{
   );
 };
 
-// Example 4: Safety Plan with Outcome Tracking
+// Example 4: Safety Plan with Outcome Tracking;
 export const SafetyPlanWithOutcomeTracking: React.FC<{
   userToken: string;
   language: string;
@@ -232,7 +233,7 @@ export const SafetyPlanWithOutcomeTracking: React.FC<{
   const [planCompleted, setPlanCompleted] = useState(false);
   const [sessionStart] = useState(Date.now());
 
-  // Record safety plan completion
+  // Record safety plan completion;
   const handlePlanCompletion = async () => {
     setPlanCompleted(true);
     
@@ -278,7 +279,7 @@ export const SafetyPlanWithOutcomeTracking: React.FC<{
   );
 };
 
-// Example 5: Admin Analytics Dashboard
+// Example 5: Admin Analytics Dashboard;
 export const AdminAnalyticsDashboard: React.FC = () => {
   const { t } = useTranslation();
   const { 
@@ -342,11 +343,11 @@ export const AdminAnalyticsDashboard: React.FC = () => {
   );
 };
 
-// Utility function for manual intervention recording
+// Utility function for manual intervention recording;
 export const useManualInterventionRecording = () => {
   const { recordIntervention } = usePrivacyAnalytics();
   
-  const recordManualIntervention = async (
+  const recordManualIntervention = async (;
     userToken: string,
     language: string,
     interventionType: 'ai-chat' | 'human-helper' | 'peer-support' | 'crisis-resources' | 'safety-plan',

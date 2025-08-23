@@ -1,5 +1,5 @@
 // Dynamic Icon Loading System
-// This system provides true tree-shaking by loading icons only when needed
+// This system provides true tree-shaking by loading icons only when needed;
 import React, { Suspense, lazy, memo } from 'react';
 
 interface IconProps {
@@ -8,9 +8,9 @@ interface IconProps {
   style?: React.CSSProperties;
 }
 
-// Base Icon Component
+// Base Icon Component;
 export const Icon: React.FC<IconProps & { path: string }> = memo(({ path, className, size = 24, style }) => (
-  <svg
+  <svg;
     className={className}
     width={size}
     height={size}
@@ -29,21 +29,22 @@ export const Icon: React.FC<IconProps & { path: string }> = memo(({ path, classN
 
 Icon.displayName = 'Icon';
 
-// Icon factory for creating icon components
+// Icon factory for creating icon components;
 const createIcon = (path: string, displayName: string) => {
   const IconComponent = memo((props: IconProps) => <Icon path={path} {...props} />);
   IconComponent.displayName = displayName;
   return IconComponent;
 };
 
-// Lazy loading for rarely used icons
+// Lazy loading for rarely used icons;
 const createLazyIcon = (importFn: () => Promise<{ default: string }>, displayName: string) => {
   const LazyIcon = lazy(async () => {
     const { default: path } = await importFn();
     return { default: (props: IconProps) => <Icon path={path} {...props} /> };
-  });
+  };
+  };
   
-  const WrappedIcon = memo((props: IconProps) => (
+  const WrappedIcon = memo((props: IconProps) => (;
     <Suspense fallback={<div style={{ width: props.size || 24, height: props.size || 24 }} />}>
       <LazyIcon {...props} />
     </Suspense>
@@ -53,7 +54,7 @@ const createLazyIcon = (importFn: () => Promise<{ default: string }>, displayNam
   return WrappedIcon;
 };
 
-// Frequently used icons - loaded immediately
+// Frequently used icons - loaded immediately;
 export const HeartIcon = createIcon('M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z', 'HeartIcon');
 export const CloseIcon = createIcon('M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z', 'CloseIcon');
 export const BackIcon = createIcon('M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z', 'BackIcon');
@@ -62,9 +63,9 @@ export const CheckIcon = createIcon('M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41
 export const AlertIcon = createIcon('M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z', 'AlertIcon');
 export const PhoneIcon = createIcon('M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z', 'PhoneIcon');
 
-// Crisis-specific icons
+// Crisis-specific icons;
 export const Clock = createIcon('M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M16.2,16.2L11,13V7H12.5V12.2L17,14.7L16.2,16.2Z', 'Clock');
-export const ClockIcon = Clock; // Alias for compatibility
+export const ClockIcon = Clock; // Alias for compatibility;
 export const X = createIcon('M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z', 'X');
 export const XCircleIcon = createIcon('M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z', 'XCircleIcon');
 export const CheckCircleIcon = createIcon('M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', 'CheckCircleIcon');
@@ -76,7 +77,7 @@ export const MessageCircle = createIcon('M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h1
 export const ExternalLink = createIcon('M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6m4-3h6v6m-11 5L18 3', 'ExternalLink');
 export const AlertTriangle = createIcon('M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z', 'AlertTriangle');
 
-// Helper and user interface icons
+// Helper and user interface icons;
 export const LogoutIcon = createIcon('M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5z', 'LogoutIcon');
 export const CertifiedIcon = createIcon('M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z', 'CertifiedIcon');
 export const PostsIcon = createIcon('M3 5v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2zm12 4c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3zm-9 8c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1H6v-1z', 'PostsIcon');
@@ -92,7 +93,7 @@ export const ThumbsUpIcon = createIcon('M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.
 export const KudosIcon = createIcon('M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z', 'KudosIcon');
 export const AchievementsIcon = createIcon('M5 16L3 5l5.5 4L12 4l3.5 5L21 5l-2 11H5zm2.7-2h8.6l.9-5.4-2.1 1.7L12 8l-3.1 2.3-2.1-1.7L7.7 14z', 'AchievementsIcon');
 
-// Video and media icons
+// Video and media icons;
 export const MessageCircleIcon = createIcon('M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z', 'MessageCircleIcon');
 export const StarIcon = createIcon('M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z', 'StarIcon');
 export const PlayIcon = createIcon('M8 5v14l11-7z', 'PlayIcon');
@@ -107,22 +108,22 @@ export const CommentIcon = createIcon('M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c
 export const PlusIcon = createIcon('M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z', 'PlusIcon');
 export const MusicIcon = createIcon('M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z', 'MusicIcon');
 
-// Navigation icons
+// Navigation icons;
 export const MenuIcon = createIcon('M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z', 'MenuIcon');
 export const UsersIcon = createIcon('M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z', 'UsersIcon');
 export const SettingsIcon = createIcon('M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.44,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z', 'SettingsIcon');
 
-// Communication icons
+// Communication icons;
 export const ChatIcon = createIcon('M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z', 'ChatIcon');
 export const VideoIcon = createIcon('M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z', 'VideoIcon');
 export const ShareIcon = createIcon('M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z', 'ShareIcon');
 
-// AI and wellness icons
+// AI and wellness icons;
 export const AICompanionIcon = createIcon('M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.41 14.59L12 13.17l-3.41 3.42-1.41-1.41L10.59 12 7.17 8.59l1.41-1.41L12 10.83l3.41-3.42 1.41 1.41L13.41 12l3.42 3.41-1.42 1.18z', 'AICompanionIcon');
 export const SparkleIcon = createIcon('M9 11H7v3h2v-3zm4 0h-2v3h2v-3zm4 0h-2v3h2v-3zm-4-1V7h-2v3h2zm4 0V7h-2v3h2zm-8 0V7H7v3h2z', 'SparkleIcon');
 export const WellnessIcon = createIcon('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z', 'WellnessIcon');
 
-// Crisis and safety icons  
+// Crisis and safety icons;  
 export const CrisisIcon = createIcon('M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z', 'CrisisIcon');
 export const SafetyPlanIcon = createIcon('M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z', 'SafetyPlanIcon');
 export const ShieldIcon = createIcon('M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1Z', 'ShieldIcon');
@@ -131,7 +132,7 @@ export const RefreshIcon = createIcon('M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0
 export const DownloadIcon = createIcon('M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z', 'DownloadIcon');
 export const UploadIcon = createIcon('M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z', 'UploadIcon');
 
-// Missing icons
+// Missing icons;
 export const SunIcon = createIcon('M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z', 'SunIcon');
 export const MoonIcon = createIcon('M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z', 'MoonIcon');
 export const SmileIcon = createIcon('M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zm4 0c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zm1.5-4.5H8.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5h7c.28 0 .5.22.5.5s-.22.5-.5.5z', 'SmileIcon');
@@ -148,7 +149,7 @@ export const MoreIcon = createIcon('M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2
 export const MessageIcon = createIcon('M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM18 14H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z', 'MessageIcon');
 export const CalendarIcon = createIcon('M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z', 'CalendarIcon');
 
-// Less frequently used icons - lazy loaded
+// Less frequently used icons - lazy loaded;
 export const BookIcon = createLazyIcon(() => import('./icon-paths/book'), 'BookIcon');
 export const BookmarkIcon = createLazyIcon(() => import('./icon-paths/bookmark'), 'BookmarkIcon');
 export const ClipboardCheckIcon = createLazyIcon(() => import('./icon-paths/clipboard-check'), 'ClipboardCheckIcon');
@@ -158,7 +159,7 @@ export const FeedIcon = createLazyIcon(() => import('./icon-paths/feed'), 'FeedI
 export const GoogleIcon = createLazyIcon(() => import('./icon-paths/google'), 'GoogleIcon');
 export const AppleIcon = createLazyIcon(() => import('./icon-paths/apple'), 'AppleIcon');
 
-// Custom hook for dynamic icon loading
+// Custom hook for dynamic icon loading;
 export const useIcon = (iconName: string): React.ComponentType<IconProps> | null => {
   return React.useMemo(() => {
     const iconMap: Record<string, React.ComponentType<IconProps>> = {
@@ -228,6 +229,7 @@ export const useIcon = (iconName: string): React.ComponentType<IconProps> | null
     };
     
     return iconMap[iconName] || null;
+  };
   }, [iconName]);
 };
 

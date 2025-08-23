@@ -1,12 +1,12 @@
 /**
  * User Feedback System
  * Provides comprehensive feedback for all user actions
- */
+ */;
 
 import React, { useState, useEffect, useCallback, createContext, useContext } from 'react';
 import { useAccessibility } from './AccessibilityProvider';
 
-// Feedback types
+// Feedback types;
 export type FeedbackType = 'success' | 'error' | 'warning' | 'info' | 'loading';
 export type FeedbackPosition = 'top' | 'bottom' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
 
@@ -36,7 +36,7 @@ interface FeedbackContextValue {
 
 const FeedbackContext = createContext<FeedbackContextValue | undefined>(undefined);
 
-// Default icons for feedback types
+// Default icons for feedback types;
 const FeedbackIcons = {
   success: (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
@@ -66,7 +66,7 @@ const FeedbackIcons = {
   ),
 };
 
-// Toast Notification Component
+// Toast Notification Component;
 const Toast: React.FC<{
   feedback: FeedbackMessage;
   onDismiss: (id: string) => void;
@@ -103,6 +103,7 @@ const Toast: React.FC<{
         clearInterval(interval);
         clearTimeout(timer);
       }
+  };
   }, [feedback, onDismiss, announce]);
 
   const typeClasses = {
@@ -114,7 +115,7 @@ const Toast: React.FC<{
   };
 
   return (
-    <div
+    <div;
       className={[
         'feedback-toast',
         typeClasses[feedback.type],
@@ -132,7 +133,7 @@ const Toast: React.FC<{
           <div className="feedback-toast__description">{feedback.description}</div>
         )}
         {feedback.action && (
-          <button
+          <button;
             className="feedback-toast__action"
             onClick={feedback.action.onClick}
             aria-label={feedback.action.label}
@@ -142,7 +143,7 @@ const Toast: React.FC<{
         )}
       </div>
       {feedback.dismissible && (
-        <button
+        <button;
           className="feedback-toast__dismiss"
           onClick={() => {
             setIsVisible(false);
@@ -155,7 +156,7 @@ const Toast: React.FC<{
       )}
       {!feedback.persistent && feedback.duration && (
         <div className="feedback-toast__progress">
-          <div
+          <div;
             className="feedback-toast__progress-bar"
             style={{ width: `${progress}%` }}
           />
@@ -165,7 +166,7 @@ const Toast: React.FC<{
   );
 };
 
-// Inline Feedback Component
+// Inline Feedback Component;
 export const InlineFeedback: React.FC<{
   type: FeedbackType;
   message: string;
@@ -183,7 +184,7 @@ export const InlineFeedback: React.FC<{
   if (!visible) return null;
 
   return (
-    <div
+    <div;
       className={`inline-feedback ${typeClasses[type]} ${className}`}
       role={type === 'error' ? 'alert' : 'status'}
       aria-live={type === 'error' ? 'assertive' : 'polite'}
@@ -196,7 +197,7 @@ export const InlineFeedback: React.FC<{
   );
 };
 
-// Form Field Feedback Component
+// Form Field Feedback Component;
 export const FieldFeedback: React.FC<{
   error?: string;
   warning?: string;
@@ -235,7 +236,7 @@ export const FieldFeedback: React.FC<{
   return null;
 };
 
-// Confirmation Dialog Component
+// Confirmation Dialog Component;
 export const ConfirmationDialog: React.FC<{
   isOpen: boolean;
   title: string;
@@ -267,7 +268,7 @@ export const ConfirmationDialog: React.FC<{
 
   return (
     <div className="confirmation-dialog-overlay" onClick={onCancel}>
-      <div
+      <div;
         className={`confirmation-dialog ${typeClasses[type]}`}
         onClick={(e) => e.stopPropagation()}
         role="alertdialog"
@@ -281,14 +282,14 @@ export const ConfirmationDialog: React.FC<{
           {message}
         </p>
         <div className="confirmation-dialog__actions">
-          <button
+          <button;
             className="confirmation-dialog__cancel"
             onClick={onCancel}
             aria-label={getAriaLabel('button.cancel')}
           >
             {cancelLabel}
           </button>
-          <button
+          <button;
             className={`confirmation-dialog__confirm confirmation-dialog__confirm--${type}`}
             onClick={onConfirm}
             aria-label={getAriaLabel('button.submit')}
@@ -301,7 +302,7 @@ export const ConfirmationDialog: React.FC<{
   );
 };
 
-// Main Feedback Provider Component
+// Main Feedback Provider Component;
 export const FeedbackProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [feedbackMessages, setFeedbackMessages] = useState<FeedbackMessage[]>([]);
   let feedbackIdCounter = 0;
@@ -318,20 +319,24 @@ export const FeedbackProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     setFeedbackMessages(prev => [...prev, newFeedback]);
     return id;
+  };
   }, []);
 
   const hideFeedback = useCallback((id: string) => {
     setFeedbackMessages(prev => prev.filter(f => f.id !== id));
+  };
   }, []);
 
   const clearAllFeedback = useCallback(() => {
     setFeedbackMessages([]);
+  };
   }, []);
 
   const updateFeedback = useCallback((id: string, updates: Partial<FeedbackMessage>) => {
     setFeedbackMessages(prev =>
       prev.map(f => f.id === id ? { ...f, ...updates } : f)
     );
+  };
   }, []);
 
   const value: FeedbackContextValue = {
@@ -341,7 +346,7 @@ export const FeedbackProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     updateFeedback,
   };
 
-  // Group feedback by position
+  // Group feedback by position;
   const feedbackByPosition = feedbackMessages.reduce((acc, feedback) => {
     const position = feedback.position || 'top-right';
     if (!acc[position]) acc[position] = [];
@@ -363,7 +368,7 @@ export const FeedbackProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   );
 };
 
-// Hook to use feedback system
+// Hook to use feedback system;
 export const useFeedback = () => {
   const context = useContext(FeedbackContext);
   if (!context) {
@@ -372,7 +377,7 @@ export const useFeedback = () => {
   return context;
 };
 
-// Utility functions for common feedback scenarios
+// Utility functions for common feedback scenarios;
 export const feedbackUtils = {
   success: (message: string, options?: Partial<FeedbackMessage>) => ({
     type: 'success' as FeedbackType,
@@ -425,7 +430,7 @@ export const feedbackUtils = {
       const result = await promise;
       hideFeedback(loadingId);
       
-      const successMessage = typeof messages.success === 'function'
+      const successMessage = typeof messages.success === 'function';
         ? messages.success(result)
         : messages.success || 'Operation completed successfully';
       
@@ -434,7 +439,7 @@ export const feedbackUtils = {
     } catch (error) {
       hideFeedback(loadingId);
       
-      const errorMessage = typeof messages.error === 'function'
+      const errorMessage = typeof messages.error === 'function';
         ? messages.error(error as Error)
         : messages.error || 'An error occurred';
       

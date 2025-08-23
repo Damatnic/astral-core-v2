@@ -12,6 +12,7 @@ export const CrisisAlertBanner: React.FC<{
   
   useEffect(() => {
     setIsVisible(show);
+  };
   }, [show]);
   
   const handleClose = () => {
@@ -40,7 +41,7 @@ export const CrisisAlertBanner: React.FC<{
         <div className="crisis-alert-header">
           <h3>You&apos;re Not Alone - Help is Available 24/7</h3>
           {onClose && (
-            <button 
+            <button; 
               className="crisis-alert-close" 
               onClick={handleClose}
               aria-label="Close crisis alert"
@@ -77,12 +78,12 @@ export const CrisisAlertBanner: React.FC<{
           <a 
             href={resources.url} 
             target="_blank" 
-            rel="noopener noreferrer"
+            rel="noopener noreferrer";
             className="crisis-action-primary"
           >
             Get Help Now
           </a>
-          <button 
+          <button; 
             className="crisis-action-secondary"
             onClick={() => window.location.href = '#crisis'}
           >
@@ -94,7 +95,7 @@ export const CrisisAlertBanner: React.FC<{
   );
 };
 
-// Floating Crisis Button - Always visible
+// Floating Crisis Button - Always visible;
 export const FloatingCrisisButton: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   
@@ -127,7 +128,7 @@ export const FloatingCrisisButton: React.FC = () => {
   return (
     <div className={isExpanded ? 'floating-crisis-button expanded' : 'floating-crisis-button'}>
       {!isExpanded ? (
-        <button 
+        <button; 
           className="crisis-help-trigger urgent-pulse"
           onClick={handleExpand}
           aria-label="Get immediate help - Crisis support available 24/7"
@@ -140,7 +141,7 @@ export const FloatingCrisisButton: React.FC = () => {
           <div className="crisis-header">
             <AlertIcon />
             <h4>Immediate Help Available 24/7</h4>
-            <button 
+            <button; 
               className="crisis-close-btn"
               onClick={handleClose}
               aria-label="Close crisis help menu"
@@ -184,7 +185,7 @@ export const FloatingCrisisButton: React.FC = () => {
             </button>
             
             <a 
-              href="/crisis" 
+              href="/crisis"; 
               className="crisis-emergency-btn crisis-professional-btn"
               onClick={handleClose}
             >
@@ -198,7 +199,7 @@ export const FloatingCrisisButton: React.FC = () => {
           
           <div className="crisis-additional-help">
             <a 
-              href="/crisis" 
+              href="/crisis"; 
               className="crisis-more-link"
               onClick={handleClose}
             >

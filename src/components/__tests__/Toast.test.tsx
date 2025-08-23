@@ -4,7 +4,7 @@ import { Toast as ToastType } from '../../types';
 import { Toast, ToastContainer } from '../Toast';
 import { NotificationProvider } from '../../contexts/NotificationContext';
 
-// Mock functions for NotificationContext
+// Mock functions for NotificationContext;
 const mockRemoveToast = jest.fn();
 const mockAddToast = jest.fn();
 const mockShowConfirmationModal = jest.fn();
@@ -332,7 +332,7 @@ describe('Toast', () => {
       const toast1 = createMockToast({ id: 'toast-1', message: 'First toast' });
       const toast2 = createMockToast({ id: 'toast-2', message: 'Second toast' });
       
-      // Start with one toast
+      // Start with one toast;
       const { rerender } = render(
         <NotificationProvider value={{ toasts: [toast1], removeToast: mockRemoveToast }}>
           <ToastContainer />

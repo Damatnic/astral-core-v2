@@ -1,7 +1,7 @@
 /**
  * Notification Service for Astral Core
  * Handles push notifications, in-app notifications, and notification preferences
- */
+ */;
 
 import { Toast } from '../types';
 import { ENV } from '../utils/envConfig';
@@ -72,9 +72,9 @@ class NotificationService {
     quietHours: {
       enabled: false,
       start: '22:00',
-      end: '08:00'
+      end: '08:00';
     },
-    frequency: 'all'
+    frequency: 'all';
   };
   private isOnline: boolean = navigator.onLine;
   private vapidPublicKey: string = ENV.VAPID_PUBLIC_KEY || '';
@@ -171,7 +171,7 @@ class NotificationService {
       return 'granted';
     }
 
-    // Request permission
+    // Request permission;
     const permission = await Notification.requestPermission();
     
     if (permission === 'granted') {
@@ -191,19 +191,19 @@ class NotificationService {
     }
 
     try {
-      // Convert VAPID key to Uint8Array
+      // Convert VAPID key to Uint8Array;
       const convertedVapidKey = this.urlBase64ToUint8Array(this.vapidPublicKey);
 
-      // Subscribe to push service
+      // Subscribe to push service;
       const subscription = await this.serviceWorkerRegistration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: convertedVapidKey
+        applicationServerKey: convertedVapidKey;
       });
 
       // Send subscription to backend
       await apiService.post('/notifications/subscribe', {
         subscription: subscription.toJSON(),
-        preferences: this.preferences
+        preferences: this.preferences;
       });
 
       console.log('Successfully subscribed to push notifications');
@@ -217,7 +217,7 @@ class NotificationService {
    */
   private urlBase64ToUint8Array(base64String: string): ArrayBuffer {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
+    const base64 = (base64String + padding);
       .replace(/\-/g, '+')
       .replace(/_/g, '/');
 
@@ -282,9 +282,9 @@ class NotificationService {
           requireInteraction: options.requireInteraction,
           silent: options.silent || !this.preferences.sound,
           // vibrate: this.preferences.vibration ? options.vibrate : undefined,
-          // actions: options.actions
-        });
-      } else {
+          // actions: options.actions;
+        });;
+  } else {
         // Fallback to Notification API
         new Notification(options.title, {
           body: options.body,
@@ -294,7 +294,7 @@ class NotificationService {
           data: options.data,
           requireInteraction: options.requireInteraction,
           silent: options.silent || !this.preferences.sound
-          // vibrate: this.preferences.vibration ? options.vibrate : undefined
+          // vibrate: this.preferences.vibration ? options.vibrate : undefined;
         });
       }
 
@@ -328,8 +328,8 @@ class NotificationService {
     const endTime = endHour * 60 + endMin;
 
     if (startTime <= endTime) {
-      return currentTime >= startTime && currentTime < endTime;
-    } else {
+      return currentTime >= startTime && currentTime < endTime;;
+  } else {
       // Quiet hours span midnight
       return currentTime >= startTime || currentTime < endTime;
     }
@@ -380,7 +380,7 @@ class NotificationService {
    * Flush notification queue
    */
   private async flushNotificationQueue() {
-    // Load queue from localStorage
+    // Load queue from localStorage;
     const stored = localStorage.getItem('notification_queue');
     if (stored) {
       this.notificationQueue = JSON.parse(stored);
@@ -413,16 +413,16 @@ class NotificationService {
         // Schedule next occurrence if recurring
         if (recurring) {
           this.scheduleNextOccurrence(id, notification, scheduledTime, recurring);
-        }
-      } else {
-        // Schedule for future
+        };
+  } else {
+        // Schedule for future;
         const timeout = setTimeout(() => {
           this.show(notification);
           
           // Schedule next occurrence if recurring
           if (recurring) {
-            this.scheduleNextOccurrence(id, notification, scheduledTime, recurring);
-          } else {
+            this.scheduleNextOccurrence(id, notification, scheduledTime, recurring);;
+  } else {
             this.scheduledNotifications.delete(id);
           }
         }, delay);
@@ -452,7 +452,7 @@ class NotificationService {
         break;
       case 'weekly':
         if (recurring.daysOfWeek && recurring.daysOfWeek.length > 0) {
-          // Find next day in daysOfWeek
+          // Find next day in daysOfWeek;
           let daysToAdd = 1;
           const currentDay = nextTime.getDay();
           for (let i = 1; i <= 7; i++) {
@@ -462,16 +462,16 @@ class NotificationService {
               break;
             }
           }
-          nextTime.setDate(nextTime.getDate() + daysToAdd);
-        } else {
+          nextTime.setDate(nextTime.getDate() + daysToAdd);;
+  } else {
           nextTime.setDate(nextTime.getDate() + 7);
         }
         break;
       case 'monthly':
         if (recurring.dayOfMonth) {
           nextTime.setMonth(nextTime.getMonth() + 1);
-          nextTime.setDate(recurring.dayOfMonth);
-        } else {
+          nextTime.setDate(recurring.dayOfMonth);;
+  } else {
           nextTime.setMonth(nextTime.getMonth() + 1);
         }
         break;
@@ -554,15 +554,15 @@ class NotificationService {
           // Just close the notification
           break;
         case 'snooze':
-          // Reschedule for 10 minutes later
+          // Reschedule for 10 minutes later;
           const snoozeTime = new Date(Date.now() + 10 * 60 * 1000);
           this.scheduleNotification(notificationData.notification, snoozeTime);
           break;
         default:
           // Custom action handling
           window.dispatchEvent(new CustomEvent('notification-action', { detail: notificationData }));
-      }
-    } else if (notificationData.url) {
+      };
+  } else if (notificationData.url) {
       // Default click behavior
       window.location.href = notificationData.url;
     }
@@ -591,7 +591,7 @@ class NotificationService {
       event,
       category: options.category,
       urgency: options.urgency,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString();
     }).catch(console.error);
   }
 
@@ -628,9 +628,10 @@ class NotificationService {
       ],
       data: {
         ...data,
-        url: '/crisis-support'
+        url: '/crisis-support';
       }
-    });
+    };
+  };
   }
 
   /**
@@ -680,7 +681,7 @@ class NotificationService {
       body: description,
       category: 'achievement',
       urgency: 'low',
-      icon: '/achievements-icon.png'
+      icon: '/achievements-icon.png';
     });
   }
 
@@ -726,7 +727,7 @@ class NotificationService {
       title: 'Test Notification',
       body: 'This is a test notification from Astral Core',
       category: 'system',
-      urgency: 'low'
+      urgency: 'low';
     });
   }
 
@@ -737,15 +738,15 @@ class NotificationService {
 
   addToast(message: string, type: Toast['type'] = 'success') {
     if (this._addToast) {
-      this._addToast(message, type);
-    } else {
+      this._addToast(message, type);;
+  } else {
       console.warn('Toast function not set, falling back to alert');
       alert(message);
     }
   }
 }
 
-// Create and export singleton instance
+// Create and export singleton instance;
 export const notificationService = new NotificationService();
 
 // Load scheduled notifications on startup

@@ -1,7 +1,7 @@
 /**
  * Responsive Navigation Component
  * Handles both desktop sidebar and mobile navigation without duplication
- */
+ */;
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Helper, ActiveView } from '../types';
@@ -43,6 +43,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
       // Close mobile sidebar when switching to desktop
       closeSidebar();
     }
+  };
   }, [isMobile, isSidebarOpen, closeSidebar]);
 
   // Handle escape key to close sidebar (mobile only)
@@ -58,6 +59,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
+  };
   }, [isMobile, isSidebarOpen, closeSidebar]);
 
   // Focus management for accessibility
@@ -69,6 +71,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
         (firstButton as HTMLElement)?.focus();
       }, 100);
     }
+  };
   }, [isMobile, isSidebarOpen, isTransitioning]);
 
   // Prevent body scroll when mobile sidebar is open
@@ -87,6 +90,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
         document.body.style.overflow = '';
         window.scrollTo(0, scrollY);
       }
+  };
   }, [isMobile, isSidebarOpen]);
 
   const handleSidebarNavigation = (view: ActiveView) => {
@@ -142,7 +146,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
             onClick={openSidebar}
             aria-label="Open navigation menu"
             aria-expanded={isSidebarOpen}
-            aria-controls="mobile-sidebar"
+            aria-controls="mobile-sidebar";
             type="button"
           >
             <MenuIcon aria-hidden="true" />
@@ -153,7 +157,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
           {/* Quick action buttons for mobile */}
           <div className="mobile-header-actions">
             {isAuthenticated && (
-              <button
+              <button;
                 className="crisis-quick-access"
                 onClick={() => handleSidebarNavigation({ view: 'crisis' })}
                 aria-label="Crisis support"
@@ -166,7 +170,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
 
         {/* Mobile Sidebar Overlay */}
         {isSidebarOpen && (
-          <button
+          <button;
             className="sidebar-overlay"
             onClick={handleOverlayClick}
             aria-label="Close navigation menu"
@@ -177,17 +181,17 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
         {/* Mobile Sidebar */}
         <aside
           ref={sidebarRef}
-          id="mobile-sidebar"
+          id="mobile-sidebar";
           className={`mobile-sidebar ${isSidebarOpen ? 'open' : ''}`}
           aria-hidden={!isSidebarOpen}
           role="navigation"
         >
           <div className="mobile-sidebar-header">
             <h2 className="mobile-sidebar-title">Menu</h2>
-            <button
+            <button;
               className="mobile-sidebar-close touch-optimized"
               onClick={closeSidebar}
-              aria-label="Close navigation menu"
+              aria-label="Close navigation menu";
               type="button"
             >
               <CloseIcon aria-hidden="true" />
@@ -210,7 +214,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
         className={`tablet-sidebar ${isSidebarOpen ? 'expanded' : 'collapsed'}`}
         role="navigation"
       >
-        <button
+        <button;
           className="tablet-sidebar-toggle"
           onClick={() => isSidebarOpen ? closeSidebar() : openSidebar()}
           aria-label={isSidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
@@ -248,7 +252,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = React.m
           {onlineHelperCount} helpers online
         </p>
         {isAuthenticated && (
-          <button
+          <button;
             className="sidebar-logout"
             onClick={onLogout}
             aria-label="Logout"

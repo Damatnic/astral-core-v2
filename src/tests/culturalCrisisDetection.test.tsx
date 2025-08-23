@@ -3,10 +3,10 @@
  * 
  * Comprehensive tests for cultural crisis detection integration across
  * different UI components, cultural contexts, and crisis scenarios.
- */
+ */;
 
 import { screen, fireEvent, waitFor } from '@testing-library/react';
-import { render } from '../test-utils'; // Use the comprehensive test utilities
+import { render } from '../test-utils'; // Use the comprehensive test utilities;
 import '@testing-library/jest-dom';
 
 // Mock the cultural crisis detection service
@@ -21,32 +21,32 @@ jest.mock('../services/culturalCrisisDetectionService', () => ({
         type: 'communication_style',
         present: true,
         culturalSignificance: 'high',
-        description: 'Direct expression of distress typical in Western cultures'
+        description: 'Direct expression of distress typical in Western cultures';
       }],
       communicationPatterns: [{
         pattern: 'direct_expression',
         culturalContext: 'western',
-        confidence: 0.9
+        confidence: 0.9;
       }],
       culturalBiasAdjustments: [{
         factor: 'communication_style',
         adjustment: -0.1,
         confidence: 0.8,
         culturalRelevance: ['western'],
-        explanation: 'Direct communication style reduces underestimation bias'
+        explanation: 'Direct communication style reduces underestimation bias';
       }],
       culturallyAdjustedRisk: {
         originalRisk: 75,
         adjustedRisk: 68,
         culturalConfidence: 0.85,
-        adjustmentFactors: ['communication_directness']
+        adjustmentFactors: ['communication_directness'];
       },
       culturalInterventions: {
         familyInvolvement: 'medium' as const,
         communityApproach: false,
         religiousConsideration: false,
         culturalResources: ['western_counseling'],
-        languageSpecificResources: ['english_crisis_line']
+        languageSpecificResources: ['english_crisis_line'];
       }
     }),
     initialize: jest.fn(),
@@ -61,34 +61,34 @@ jest.mock('../services/enhancedAiCrisisDetectionService', () => ({
   }
 }));
 
-// Mock components
+// Mock components;
 import { MoodTracker } from '../components/MoodTracker';
 import CulturalCrisisAlert from '../components/CulturalCrisisAlert';
 import { culturalCrisisDetectionService } from '../services/culturalCrisisDetectionService';
 
-// Test data for different cultural contexts and crisis scenarios
+// Test data for different cultural contexts and crisis scenarios;
 const testScenarios = {
   // Different cultural contexts
   culturalContexts: {
     western: {
       languageCode: 'en',
       culturalContext: 'western-individualistic',
-      communicationStyle: 'direct'
+      communicationStyle: 'direct';
     },
     eastern: {
       languageCode: 'zh',
       culturalContext: 'eastern-collectivistic',
-      communicationStyle: 'indirect'
+      communicationStyle: 'indirect';
     },
     latinAmerican: {
       languageCode: 'es',
       culturalContext: 'latin-american',
-      communicationStyle: 'expressive'
+      communicationStyle: 'expressive';
     },
     middleEastern: {
       languageCode: 'ar',
       culturalContext: 'middle-eastern',
-      communicationStyle: 'contextual'
+      communicationStyle: 'contextual';
     }
   },
 
@@ -98,25 +98,25 @@ const testScenarios = {
       western: "I want to kill myself, I can't take this anymore",
       eastern: "I feel like I'm a burden to my family, maybe they'd be better off without me",
       latinAmerican: "No puedo más, siento que todo está perdido",
-      middleEastern: "I feel like I have brought shame to my family"
+      middleEastern: "I feel like I have brought shame to my family";
     },
     indirectDistress: {
       western: "Everything feels pointless and I'm completely alone",
       eastern: "I have failed to meet my family's expectations and feel worthless",
       latinAmerican: "Mi familia no me entiende y me siento muy solo",
-      middleEastern: "I feel disconnected from Allah and my community"
+      middleEastern: "I feel disconnected from Allah and my community";
     },
     familyConflict: {
       western: "My parents don't understand me and I feel trapped",
       eastern: "I cannot honor my family while being true to myself",
       latinAmerican: "Mis padres no aceptan quién soy realmente",
-      middleEastern: "I struggle between tradition and my own path"
+      middleEastern: "I struggle between tradition and my own path";
     },
     academicPressure: {
       western: "I'm failing everything and feel like a complete failure",
       eastern: "I have dishonored my family by not achieving academic excellence",
       latinAmerican: "No puedo cumplir con las expectativas de mi familia",
-      middleEastern: "I fear I am not living up to what is expected of me"
+      middleEastern: "I fear I am not living up to what is expected of me";
     }
   },
 
@@ -125,17 +125,17 @@ const testScenarios = {
     criticalMood: {
       mood: { id: 'terrible', value: 1, label: 'Terrible' },
       tags: ['hopeless', 'overwhelmed'],
-      note: 'I feel like giving up on everything'
+      note: 'I feel like giving up on everything';
     },
     concerningTags: {
       mood: { id: 'bad', value: 2, label: 'Bad' },
       tags: ['worthless', 'trapped'],
-      note: 'Nothing seems to matter anymore'
+      note: 'Nothing seems to matter anymore';
     },
     culturalDistress: {
       mood: { id: 'bad', value: 2, label: 'Bad' },
       tags: ['alone', 'misunderstood'],
-      note: 'My family would be ashamed if they knew how I really feel'
+      note: 'My family would be ashamed if they knew how I really feel';
     }
   }
 };
@@ -167,7 +167,7 @@ describe('Cultural Crisis Detection Integration', () => {
         communityApproach: true,
         religiousConsideration: false,
         culturalResources: ['family_therapy', 'cultural_counselor'],
-        languageSpecificResources: ['crisis_hotline_native_language']
+        languageSpecificResources: ['crisis_hotline_native_language'];
       }
     };
 
@@ -183,11 +183,11 @@ describe('Cultural Crisis Detection Integration', () => {
         <MoodTracker onMoodSubmit={mockOnMoodSubmit} />
       );
 
-      // Select terrible mood (value 1)
+      // Select terrible mood (value 1);
       const terribleMoodButton = screen.getByText('Terrible');
       fireEvent.click(terribleMoodButton);
 
-      // Submit mood
+      // Submit mood;
       const submitButton = screen.getByText('Log My Mood');
       fireEvent.click(submitButton);
 
@@ -207,17 +207,17 @@ describe('Cultural Crisis Detection Integration', () => {
         <MoodTracker onMoodSubmit={mockOnMoodSubmit} />
       );
 
-      // Select moderate mood
+      // Select moderate mood;
       const okayMoodButton = screen.getByText('Okay');
       fireEvent.click(okayMoodButton);
 
-      // Select concerning tags
+      // Select concerning tags;
       const hopelessTag = screen.getByText(/hopeless/i);
       const overwhelmedTag = screen.getByText(/overwhelmed/i);
       fireEvent.click(hopelessTag);
       fireEvent.click(overwhelmedTag);
 
-      // Submit mood
+      // Submit mood;
       const submitButton = screen.getByText('Log My Mood');
       fireEvent.click(submitButton);
 
@@ -234,17 +234,17 @@ describe('Cultural Crisis Detection Integration', () => {
         <MoodTracker onMoodSubmit={mockOnMoodSubmit} />
       );
 
-      // Select moderate mood
+      // Select moderate mood;
       const okayMoodButton = screen.getByText('Okay');
       fireEvent.click(okayMoodButton);
 
-      // Enter concerning note
+      // Enter concerning note;
       const noteTextarea = screen.getByPlaceholderText(/how was your day/i);
       fireEvent.change(noteTextarea, { 
         target: { value: 'I want to hurt myself and end it all' }
       });
 
-      // Submit mood
+      // Submit mood;
       const submitButton = screen.getByText('Log My Mood');
       fireEvent.click(submitButton);
 
@@ -272,7 +272,7 @@ describe('Cultural Crisis Detection Integration', () => {
           communityApproach: true,
           religiousConsideration: true,
           culturalResources: ['family_therapy', 'community_elder'],
-          languageSpecificResources: ['native_language_counselor']
+          languageSpecificResources: ['native_language_counselor'];
         }
       };
 
@@ -337,7 +337,7 @@ describe('Cultural Crisis Detection Integration', () => {
               communicationPatterns: [{
                 pattern: 'cultural_expression',
                 culturalContext: context.culturalContext,
-                confidence: 0.8
+                confidence: 0.8;
               }],
               culturalBiasAdjustments: [{
                 factor: 'cultural_context',
@@ -404,19 +404,19 @@ describe('Cultural Crisis Detection Integration', () => {
           type: 'communication_style',
           present: true,
           culturalSignificance: 'high',
-          description: 'Indirect communication style detected'
+          description: 'Indirect communication style detected';
         }],
         communicationPatterns: [{
           pattern: 'indirect_expression',
           culturalContext: 'eastern-collectivistic',
-          confidence: 0.85
+          confidence: 0.85;
         }],
         culturalBiasAdjustments: [{
           factor: 'communication_style',
           adjustment: -0.3, // Significant reduction due to cultural bias
           confidence: 0.85,
           culturalRelevance: ['indirect_communication'],
-          explanation: 'Adjusted for indirect communication style in collectivistic culture'
+          explanation: 'Adjusted for indirect communication style in collectivistic culture';
         }],
         culturallyAdjustedRisk: {
           originalRisk: 90, // High original risk
@@ -433,7 +433,7 @@ describe('Cultural Crisis Detection Integration', () => {
           communityApproach: true,
           religiousConsideration: false,
           culturalResources: ['eastern_counseling'],
-          languageSpecificResources: ['zh_crisis_line']
+          languageSpecificResources: ['zh_crisis_line'];
         }
       };
 
@@ -501,11 +501,11 @@ describe('Cultural Crisis Detection Integration', () => {
         <MoodTracker onMoodSubmit={mockOnMoodSubmit} />
       );
 
-      // Select low mood
+      // Select low mood;
       const terribleMoodButton = screen.getByText('Terrible');
       fireEvent.click(terribleMoodButton);
 
-      // Submit mood
+      // Submit mood;
       const submitButton = screen.getByText('Log My Mood');
       fireEvent.click(submitButton);
 
@@ -525,21 +525,21 @@ describe('Cultural Crisis Detection Integration', () => {
           type: 'communication_style',
           present: true,
           culturalSignificance: 'high',
-          description: 'Direct expression of distress typical in Western cultures'
+          description: 'Direct expression of distress typical in Western cultures';
         }],
         culturalBiasAdjustments: [{
           factor: 'communication_style',
           adjustment: -0.1,
           confidence: 0.8,
           culturalRelevance: ['western'],
-          explanation: 'Direct communication style reduces underestimation bias'
+          explanation: 'Direct communication style reduces underestimation bias';
         }],
         culturalInterventions: {
           familyInvolvement: 'medium' as const,
           communityApproach: false,
           religiousConsideration: false,
           culturalResources: ['western_counseling'],
-          languageSpecificResources: ['english_crisis_line']
+          languageSpecificResources: ['english_crisis_line'];
         }
       };
 
@@ -555,11 +555,11 @@ describe('Cultural Crisis Detection Integration', () => {
       );
 
       await waitFor(() => {
-        // Check for proper ARIA attributes
+        // Check for proper ARIA attributes;
         const alert = screen.getByRole('alert');
         expect(alert).toHaveAttribute('aria-live', 'assertive');
         
-        // Check that cultural actions are properly labeled
+        // Check that cultural actions are properly labeled;
         const actionsSection = screen.getByText(/Recommended Actions/i);
         expect(actionsSection).toBeInTheDocument();
       });
@@ -573,21 +573,21 @@ describe('Cultural Crisis Detection Integration', () => {
           type: 'communication_style',
           present: true,
           culturalSignificance: 'high',
-          description: 'Direct expression of distress typical in Western cultures'
+          description: 'Direct expression of distress typical in Western cultures';
         }],
         culturalBiasAdjustments: [{
           factor: 'communication_style',
           adjustment: -0.1,
           confidence: 0.8,
           culturalRelevance: ['western'],
-          explanation: 'Direct communication style reduces underestimation bias'
+          explanation: 'Direct communication style reduces underestimation bias';
         }],
         culturalInterventions: {
           familyInvolvement: 'medium' as const,
           communityApproach: false,
           religiousConsideration: false,
           culturalResources: ['western_counseling'],
-          languageSpecificResources: ['english_crisis_line']
+          languageSpecificResources: ['english_crisis_line'];
         }
       };
 

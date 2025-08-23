@@ -6,7 +6,7 @@
  * - Field state tracking
  * - Form submission handling
  * - Mobile-specific optimizations
- */
+ */;
 
 import { useState, useCallback, useRef } from 'react';
 
@@ -54,11 +54,12 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
       isValid: true,
       isSubmitting: false,
       submitCount: 0,
-    });
+    };
+  };
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  // Update field value
+  // Update field value;
   const setFieldValue = useCallback((fieldName: string, value: string) => {
     setFormState(prev => ({
       ...prev,
@@ -72,10 +73,11 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
     }));
 
     onFieldChange?.(fieldName, value);
+  };
   }, [onFieldChange]);
 
-  // Update field validation state
-  const setFieldValidation = useCallback((
+  // Update field validation state;
+  const setFieldValidation = useCallback((;
     fieldName: string, 
     isValid: boolean, 
     errors: string[] = []
@@ -91,17 +93,19 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
         },
       };
 
-      // Calculate overall form validity
+      // Calculate overall form validity;
       const allValid = Object.values(newFields).every(field => field.isValid);
 
       return {
         ...prev,
         fields: newFields,
         isValid: allValid,
-      });
+      };
+  };
+  };
   }, []);
 
-  // Mark field as touched
+  // Mark field as touched;
   const setFieldTouched = useCallback((fieldName: string, touched = true) => {
     setFormState(prev => ({
       ...prev,
@@ -113,9 +117,10 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
         },
       },
     }));
+  };
   }, []);
 
-  // Set field validating state
+  // Set field validating state;
   const setFieldValidating = useCallback((fieldName: string, validating = true) => {
     setFormState(prev => ({
       ...prev,
@@ -127,9 +132,10 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
         },
       },
     }));
+  };
   }, []);
 
-  // Get field props for form components
+  // Get field props for form components;
   const getFieldProps = useCallback((fieldName: string) => {
     const field = formState.fields[fieldName] || {
       value: '',
@@ -151,9 +157,10 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
       onValidationChange: (isValid: boolean, errors: string[]) => {
         setFieldValidation(fieldName, isValid, errors);
       },
-    }, [formState.fields, setFieldValue, setFieldTouched, setFieldValidation]);
+    };
+  }, [formState.fields, setFieldValue, setFieldTouched, setFieldValidation]);
 
-  // Reset form
+  // Reset form;
   const resetForm = useCallback(() => {
     const fields: Record<string, FormField> = {};
     Object.keys(initialValues).forEach(key => {
@@ -163,7 +170,8 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
         errors: [],
         isTouched: false,
         isValidating: false,
-      });
+      };
+  };
 
     setFormState({
       fields,
@@ -171,13 +179,14 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
       isSubmitting: false,
       submitCount: 0,
     });
+  };
   }, [initialValues]);
 
-  // Submit form
+  // Submit form;
   const submitForm = useCallback(async () => {
     if (!onSubmit || formState.isSubmitting) return;
 
-    // Mark all fields as touched to show validation errors
+    // Mark all fields as touched to show validation errors;
     const touchedFields = { ...formState.fields };
     Object.keys(touchedFields).forEach(key => {
       touchedFields[key] = { ...touchedFields[key], isTouched: true });
@@ -190,7 +199,7 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
     }));
 
     try {
-      // Get form values
+      // Get form values;
       const values: Record<string, string> = {};
       Object.keys(formState.fields).forEach(key => {
         values[key] = formState.fields[key].value;
@@ -208,24 +217,27 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
         isSubmitting: false,
       }));
     }
+  };
   }, [onSubmit, formState]);
 
-  // Handle form submit event
+  // Handle form submit event;
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     submitForm();
+  };
   }, [submitForm]);
 
-  // Get all form values
+  // Get all form values;
   const getValues = useCallback(() => {
     const values: Record<string, string> = {};
     Object.keys(formState.fields).forEach(key => {
       values[key] = formState.fields[key].value;
     });
     return values;
+  };
   }, [formState.fields]);
 
-  // Get form errors
+  // Get form errors;
   const getErrors = useCallback(() => {
     const errors: Record<string, string[]> = {};
     Object.keys(formState.fields).forEach(key => {
@@ -235,21 +247,25 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
       }
     });
     return errors;
+  };
   }, [formState.fields]);
 
-  // Check if field has error
+  // Check if field has error;
   const hasFieldError = useCallback((fieldName: string) => {
     const field = formState.fields[fieldName];
     return field ? field.isTouched && !field.isValid : false;
+  };
   }, [formState.fields]);
 
-  // Get field error message
+  // Get field error message;
   const getFieldError = useCallback((fieldName: string) => {
     const field = formState.fields[fieldName];
     if (field && field.isTouched && !field.isValid && field.errors.length > 0) {
       return field.errors[0];
     }
     return undefined;
+  };
+  };
   }, [formState.fields]);
 
   return {
@@ -281,7 +297,7 @@ export const useMobileForm = (options: UseFormOptions = {}) => {
     formRef,
   };
 
-// Validation helpers
+// Validation helpers;
 export const createMobileFormValidator = (rules: Record<string, any>) => {
   return (fieldName: string, value: string) => {
     const rule = rules[fieldName];
@@ -313,8 +329,8 @@ export const createMobileFormValidator = (rules: Record<string, any>) => {
       if (rule.custom) {
         const customResult = rule.custom(value);
         if (typeof customResult === 'string') {
-          errors.push(customResult);
-        } else if (!customResult) {
+          errors.push(customResult);;
+  } else if (!customResult) {
           errors.push(`${fieldName} is invalid`);
         }
       }
@@ -325,7 +341,7 @@ export const createMobileFormValidator = (rules: Record<string, any>) => {
       errors,
     };
 
-// Common validation patterns
+// Common validation patterns;
 export const commonValidationRules = {
   email: {
     required: true,

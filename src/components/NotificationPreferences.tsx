@@ -38,7 +38,7 @@ export const NotificationPreferences: React.FC = () => {
       enabled: true,
       icon: <AlertIcon />,
       category: 'crisis',
-      priority: 'high'
+      priority: 'high';
     },
     {
       id: 'medication_reminders',
@@ -47,7 +47,7 @@ export const NotificationPreferences: React.FC = () => {
       enabled: true,
       icon: <CalendarIcon />,
       category: 'wellness',
-      priority: 'high'
+      priority: 'high';
     },
     {
       id: 'mood_checkins',
@@ -56,7 +56,7 @@ export const NotificationPreferences: React.FC = () => {
       enabled: true,
       icon: <HeartIcon />,
       category: 'wellness',
-      priority: 'medium'
+      priority: 'medium';
     },
     {
       id: 'peer_messages',
@@ -65,7 +65,7 @@ export const NotificationPreferences: React.FC = () => {
       enabled: true,
       icon: <UsersIcon />,
       category: 'social',
-      priority: 'medium'
+      priority: 'medium';
     },
     {
       id: 'wellness_tips',
@@ -74,7 +74,7 @@ export const NotificationPreferences: React.FC = () => {
       enabled: false,
       icon: <HeartIcon />,
       category: 'wellness',
-      priority: 'low'
+      priority: 'low';
     },
     {
       id: 'system_updates',
@@ -83,14 +83,14 @@ export const NotificationPreferences: React.FC = () => {
       enabled: false,
       icon: <BellIcon />,
       category: 'system',
-      priority: 'low'
+      priority: 'low';
     }
   ]);
 
   const [quietHours, setQuietHours] = useState<QuietHours>({
     enabled: true,
     start: '22:00',
-    end: '08:00'
+    end: '08:00';
   });
 
   const [schedules, setSchedules] = useState<NotificationSchedule[]>([
@@ -101,7 +101,7 @@ export const NotificationPreferences: React.FC = () => {
       time: '09:00',
       days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       enabled: true,
-      message: 'Time to take your morning medication'
+      message: 'Time to take your morning medication';
     },
     {
       id: '2',
@@ -110,7 +110,7 @@ export const NotificationPreferences: React.FC = () => {
       time: '20:00',
       days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       enabled: true,
-      message: 'How are you feeling this evening?'
+      message: 'How are you feeling this evening?';
     }
   ]);
 
@@ -125,6 +125,7 @@ export const NotificationPreferences: React.FC = () => {
     
     // Load saved preferences
     loadSavedPreferences();
+  };
   }, []);
 
   const checkNotificationStatus = async () => {
@@ -155,7 +156,7 @@ export const NotificationPreferences: React.FC = () => {
       preferences,
       quietHours,
       schedules,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString();
     };
     
     localStorage.setItem(`notification_prefs_${userId}`, JSON.stringify(data));
@@ -174,7 +175,7 @@ export const NotificationPreferences: React.FC = () => {
           setIsSubscribed(true);
           setPermission('granted');
           
-          // Subscribe to crisis alerts by default
+          // Subscribe to crisis alerts by default;
           const userId = localStorage.getItem('userId') || 'default';
           await pushNotificationService.subscribeToCrisisAlerts(userId);
         }
@@ -202,17 +203,17 @@ export const NotificationPreferences: React.FC = () => {
 
   const togglePreference = (id: string) => {
     setPreferences(prev => {
-      const updated = prev.map(p => 
+      const updated = prev.map(p => ;
         p.id === id ? { ...p, enabled: !p.enabled } : p
       );
       
-      // Save immediately
+      // Save immediately;
       const userId = localStorage.getItem('userId') || 'default';
       const data = {
         preferences: updated,
         quietHours,
         schedules,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString();
       };
       localStorage.setItem(`notification_prefs_${userId}`, JSON.stringify(data));
       pushNotificationService.updateNotificationPreferences(userId, data);
@@ -239,7 +240,7 @@ export const NotificationPreferences: React.FC = () => {
 
   const toggleSchedule = (id: string) => {
     setSchedules(prev => {
-      const updated = prev.map(s => 
+      const updated = prev.map(s => ;
         s.id === id ? { ...s, enabled: !s.enabled } : s
       );
       savePreferences();
@@ -255,7 +256,7 @@ export const NotificationPreferences: React.FC = () => {
       time: '12:00',
       days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
       enabled: true,
-      message: 'Custom reminder'
+      message: 'Custom reminder';
     };
     
     setSchedules(prev => {
@@ -319,7 +320,7 @@ export const NotificationPreferences: React.FC = () => {
             <div>
               <h3>Enable Push Notifications</h3>
               <p>Get important alerts for crisis support, medication reminders, and wellness check-ins</p>
-              <button 
+              <button; 
                 className="btn-primary"
                 onClick={handleEnableNotifications}
                 disabled={loading}
@@ -335,14 +336,14 @@ export const NotificationPreferences: React.FC = () => {
               <h3>Notifications Enabled</h3>
               <p>You're receiving push notifications</p>
               <div className="status-actions">
-                <button 
+                <button; 
                   className="btn-secondary"
                   onClick={sendTestNotification}
                   disabled={testSent}
                 >
                   {testSent ? 'Test Sent!' : 'Send Test'}
                 </button>
-                <button 
+                <button; 
                   className="btn-danger"
                   onClick={handleDisableNotifications}
                   disabled={loading}
@@ -361,7 +362,7 @@ export const NotificationPreferences: React.FC = () => {
         <div className="preference-list">
           {preferences.map(pref => (
             <div key={pref.id} className="preference-item">
-              <div 
+              <div; 
                 className="pref-icon"
                 style={{ color: getCategoryColor(pref.category) }}
               >
@@ -375,7 +376,7 @@ export const NotificationPreferences: React.FC = () => {
                       <span className="priority-badge high">High Priority</span>
                     )}
                   </label>
-                  <input
+                  <input;
                     type="checkbox"
                     id={`pref-${pref.id}`}
                     checked={pref.enabled}
@@ -401,7 +402,7 @@ export const NotificationPreferences: React.FC = () => {
             <label htmlFor="quiet-hours-enabled">
               Enable Quiet Hours
             </label>
-            <input
+            <input;
               type="checkbox"
               id="quiet-hours-enabled"
               checked={quietHours.enabled}
@@ -413,7 +414,7 @@ export const NotificationPreferences: React.FC = () => {
             <div className="quiet-hours-times">
               <div className="time-input">
                 <label htmlFor="quiet-start">Start</label>
-                <input
+                <input;
                   type="time"
                   id="quiet-start"
                   value={quietHours.start}
@@ -423,7 +424,7 @@ export const NotificationPreferences: React.FC = () => {
               </div>
               <div className="time-input">
                 <label htmlFor="quiet-end">End</label>
-                <input
+                <input;
                   type="time"
                   id="quiet-end"
                   value={quietHours.end}
@@ -443,7 +444,7 @@ export const NotificationPreferences: React.FC = () => {
       <div className="preferences-section">
         <div className="section-header">
           <h3>Scheduled Reminders</h3>
-          <button 
+          <button; 
             className="btn-add"
             onClick={addSchedule}
             disabled={!isSubscribed}
@@ -455,13 +456,13 @@ export const NotificationPreferences: React.FC = () => {
           {schedules.map(schedule => (
             <div key={schedule.id} className="schedule-item">
               <div className="schedule-header">
-                <input
+                <input;
                   type="checkbox"
                   checked={schedule.enabled}
                   onChange={() => toggleSchedule(schedule.id)}
                   disabled={!isSubscribed}
                 />
-                <input
+                <input;
                   type="text"
                   value={schedule.label}
                   className="schedule-label"
@@ -472,7 +473,7 @@ export const NotificationPreferences: React.FC = () => {
                   }}
                   disabled={!isSubscribed}
                 />
-                <button
+                <button;
                   className="btn-remove"
                   onClick={() => removeSchedule(schedule.id)}
                   disabled={!isSubscribed}
@@ -481,7 +482,7 @@ export const NotificationPreferences: React.FC = () => {
                 </button>
               </div>
               <div className="schedule-details">
-                <input
+                <input;
                   type="time"
                   value={schedule.time}
                   onChange={(e) => {
@@ -499,12 +500,13 @@ export const NotificationPreferences: React.FC = () => {
                       onClick={() => {
                         setSchedules(prev => prev.map(s => {
                           if (s.id === schedule.id) {
-                            const days = s.days.includes(day)
+                            const days = s.days.includes(day);
                               ? s.days.filter(d => d !== day)
                               : [...s.days, day];
                             return { ...s, days }
                           return s;
-                        }));
+                        };
+  });
                       }}
                       disabled={!isSubscribed}
                     >
@@ -514,7 +516,7 @@ export const NotificationPreferences: React.FC = () => {
                 </div>
               </div>
               {schedule.message && (
-                <input
+                <input;
                   type="text"
                   value={schedule.message}
                   className="schedule-message"

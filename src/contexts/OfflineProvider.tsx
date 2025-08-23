@@ -3,23 +3,23 @@
  * 
  * Provides app-wide offline state management and crisis resource access
  * for the Astral Core mental health platform.
- */
+ */;
 
-import React, { createContext, useContext, ReactNode, useMemo } from 'react'
-import { useConnectionStatus, ConnectionStatus, OfflineCapability } from "../hooks/useConnectionStatus"
+import React, { createContext, useContext, ReactNode, useMemo } from 'react';
+import { useConnectionStatus, ConnectionStatus, OfflineCapability } from "../hooks/useConnectionStatus";
 export interface OfflineContextValue {
   connectionStatus: ConnectionStatus;
   updateCrisisResources: () => Promise<boolean>;
   forceCacheUpdate: () => Promise<boolean>;
   sendMessageToServiceWorker: (message: ChatMessage) => Promise<boolean>;
   isFeatureAvailable: (feature: string) => boolean;
-  getOfflineCapability: (feature: string) => OfflineCapability | undefined
+  getOfflineCapability: (feature: string) => OfflineCapability | undefined;
 }
 
 const OfflineContext = createContext<OfflineContextValue | undefined>(undefined);
 ;
 export interface OfflineProviderProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export const OfflineProvider: React.FC<OfflineProviderProps> = ({ children }) => {
@@ -28,12 +28,12 @@ export const OfflineProvider: React.FC<OfflineProviderProps> = ({ children }) =>
     updateCrisisResources,
     forceCacheUpdate,
     sendMessageToServiceWorker
-  } = useConnectionStatus()
+  } = useConnectionStatus();
 
   const isFeatureAvailable = (feature: string): boolean => {
-    if (connectionStatus.isOnline) return true
+    if (connectionStatus.isOnline) return true;
     
-    const capability = connectionStatus.offlineCapabilities.find(
+    const capability = connectionStatus.offlineCapabilities.find(;
       cap => cap.feature.toLowerCase() === feature.toLowerCase()
     )
     

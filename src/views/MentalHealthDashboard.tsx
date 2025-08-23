@@ -3,7 +3,7 @@ import { BreathingExercise } from '../components/BreathingExercise';
 import { GroundingTechnique } from '../components/GroundingTechnique';
 import { SafetyPlanBuilder } from '../components/SafetyPlan';
 import { MeditationTimer } from '../components/MeditationTimer';
-// import { CrisisHelpWidget } from '../components/CrisisSupport/CrisisHelpWidget'; // Already in App.tsx
+// import { CrisisHelpWidget } from '../components/CrisisSupport/CrisisHelpWidget'; // Already in App.tsx;
 
 interface DashboardCard {
   id: string;
@@ -45,7 +45,7 @@ export const MentalHealthDashboard: React.FC = () => {
       description: 'Track your mood patterns with AI insights',
       icon: '📊',
       color: 'purple',
-      comingSoon: false
+      comingSoon: false;
     },
     {
       id: 'journal',
@@ -53,7 +53,7 @@ export const MentalHealthDashboard: React.FC = () => {
       description: 'Therapeutic writing prompts and reflection',
       icon: '📝',
       color: 'indigo',
-      comingSoon: true
+      comingSoon: true;
     },
     {
       id: 'meditation',
@@ -62,7 +62,7 @@ export const MentalHealthDashboard: React.FC = () => {
       icon: '🔔',
       color: 'orange',
       component: <MeditationTimer onComplete={() => setShowMeditation(false)} />,
-      comingSoon: false
+      comingSoon: false;
     },
     {
       id: 'safety',
@@ -71,7 +71,7 @@ export const MentalHealthDashboard: React.FC = () => {
       icon: '🛡️',
       color: 'red',
       component: <SafetyPlanBuilder />,
-      comingSoon: false
+      comingSoon: false;
     },
     {
       id: 'selfcare',
@@ -79,7 +79,7 @@ export const MentalHealthDashboard: React.FC = () => {
       description: 'Personalized reminders for wellness activities',
       icon: '💝',
       color: 'pink',
-      comingSoon: true
+      comingSoon: true;
     },
     {
       id: 'resources',
@@ -87,27 +87,27 @@ export const MentalHealthDashboard: React.FC = () => {
       description: 'Curated mental health resources and articles',
       icon: '📚',
       color: 'teal',
-      comingSoon: true
+      comingSoon: true;
     }
   ];
 
   const handleFeatureClick = (featureId: string) => {
     if (featureId === 'breathing') {
       setShowBreathing(true);
-      setActiveFeature('breathing');
-    } else if (featureId === 'grounding') {
+      setActiveFeature('breathing');;
+  } else if (featureId === 'grounding') {
       setShowGrounding(true);
-      setActiveFeature('grounding');
-    } else if (featureId === 'safety') {
+      setActiveFeature('grounding');;
+  } else if (featureId === 'safety') {
       setShowSafetyPlan(true);
-      setActiveFeature('safety');
-    } else if (featureId === 'meditation') {
+      setActiveFeature('safety');;
+  } else if (featureId === 'meditation') {
       setShowMeditation(true);
-      setActiveFeature('meditation');
-    } else if (featureId === 'mood') {
+      setActiveFeature('meditation');;
+  } else if (featureId === 'mood') {
       // Navigate to wellness view
-      window.location.href = '#/wellness';
-    } else {
+      window.location.href = '#/wellness';;
+  } else {
       setActiveFeature(featureId);
     }
   };
@@ -420,7 +420,7 @@ export const MentalHealthDashboard: React.FC = () => {
                showSafetyPlan ? 'Safety Plan Builder' :
                'Meditation Timer'}
             </h2>
-            <button 
+            <button; 
               className="close-feature-btn"
               onClick={() => {
                 setShowBreathing(false);

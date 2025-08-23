@@ -12,7 +12,7 @@
  * - Conflict resolution
  * 
  * @license Apache-2.0
- */
+ */;
 
 interface SyncRequest {
   id: string;
@@ -248,7 +248,7 @@ class BackgroundSyncService {
       id: this.generateRequestId(),
       timestamp: Date.now(),
       retryCount: 0,
-      maxRetries: request.maxRetries || 3
+      maxRetries: request.maxRetries || 3;
     };
     
     // Add to queue
@@ -329,22 +329,22 @@ class BackgroundSyncService {
     this.isSyncing = true;
     console.log(`[BackgroundSync] Processing ${this.syncQueue.size} queued requests`);
     
-    // Sort queue by priority and timestamp
+    // Sort queue by priority and timestamp;
     const sortedQueue = Array.from(this.syncQueue.values()).sort((a, b) => {
       const priorityOrder = { critical: 0, high: 1, normal: 2, low: 3 };
       const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
       return priorityDiff !== 0 ? priorityDiff : a.timestamp - b.timestamp;
     });
     
-    // Process in batches if enabled
+    // Process in batches if enabled;
     const batchSize = this.options.enableBatching ? this.options.batchSize! : sortedQueue.length;
     
     for (let i = 0; i < sortedQueue.length; i += batchSize) {
       const batch = sortedQueue.slice(i, i + batchSize);
       
       if (this.options.enableBatching && batch.length > 1) {
-        await this.processBatch(batch);
-      } else {
+        await this.processBatch(batch);;
+  } else {
         for (const request of batch) {
           await this.processRequest(request);
         }
@@ -368,7 +368,7 @@ class BackgroundSyncService {
     try {
       console.log(`[BackgroundSync] Processing request ${request.id}`);
       
-      // Prepare fetch options
+      // Prepare fetch options;
       const fetchOptions: RequestInit = {
         method: request.method,
         headers: {
@@ -383,7 +383,7 @@ class BackgroundSyncService {
         fetchOptions.body = JSON.stringify(request.body);
       }
       
-      // Make the request with timeout
+      // Make the request with timeout;
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 seconds timeout
       
@@ -399,19 +399,19 @@ class BackgroundSyncService {
         this.syncQueue.delete(request.id);
         await this.removeFromStorage(request.id);
         
-        // Notify listeners
+        // Notify listeners;
         const result: SyncResult = {
           success: true,
           requestId: request.id,
           response: responseData,
-          timestamp: Date.now()
+          timestamp: Date.now();
         };
         
         await this.saveSyncResult(result);
         this.notifySyncListeners(result);
         
-        console.log(`[BackgroundSync] Request ${request.id} synced successfully`);
-      } else {
+        console.log(`[BackgroundSync] Request ${request.id} synced successfully`);;
+  } else {
         // Server error - handle based on status
         await this.handleSyncError(request, `Server error: ${response.status}`);
       }
@@ -435,7 +435,7 @@ class BackgroundSyncService {
           method: req.method,
           headers: req.headers,
           body: req.body,
-          metadata: req.metadata
+          metadata: req.metadata;
         }))
       };
       
@@ -445,7 +445,7 @@ class BackgroundSyncService {
           'Content-Type': 'application/json',
           'X-Batch-Sync': 'true'
         },
-        body: JSON.stringify(batchRequest)
+        body: JSON.stringify(batchRequest);
       });
       
       if (response.ok) {
@@ -463,17 +463,17 @@ class BackgroundSyncService {
                 success: true,
                 requestId: request.id,
                 response: result.response,
-                timestamp: Date.now()
+                timestamp: Date.now();
               };
               
               await this.saveSyncResult(syncResult);
-              this.notifySyncListeners(syncResult);
-            } else {
+              this.notifySyncListeners(syncResult);;
+  } else {
               await this.handleSyncError(request, result.error);
             }
           }
-        }
-      } else {
+        };
+  } else {
         // Batch failed - process individually
         console.warn('[BackgroundSync] Batch sync failed, processing individually');
         for (const request of batch) {
@@ -504,22 +504,22 @@ class BackgroundSyncService {
       this.syncQueue.delete(request.id);
       await this.removeFromStorage(request.id);
       
-      // Notify failure
+      // Notify failure;
       const result: SyncResult = {
         success: false,
         requestId: request.id,
         error: `Failed after ${request.maxRetries} retries: ${error}`,
-        timestamp: Date.now()
+        timestamp: Date.now();
       };
       
       await this.saveSyncResult(result);
-      this.notifySyncListeners(result);
-    } else {
+      this.notifySyncListeners(result);;
+  } else {
       // Update retry count and persist
       this.syncQueue.set(request.id, request);
       await this.persistRequest(request);
       
-      // Schedule retry with exponential backoff
+      // Schedule retry with exponential backoff;
       const delay = Math.min(1000 * Math.pow(2, request.retryCount), 60000); // Max 1 minute
       console.log(`[BackgroundSync] Request ${request.id} will retry in ${delay}ms`);
       
@@ -576,7 +576,7 @@ class BackgroundSyncService {
    * Prune old items from queue
    */
   private async pruneQueue(): Promise<void> {
-    const sortedQueue = Array.from(this.syncQueue.values())
+    const sortedQueue = Array.from(this.syncQueue.values());
       .sort((a, b) => a.timestamp - b.timestamp);
     
     const itemsToRemove = sortedQueue.slice(0, 10); // Remove oldest 10 items
@@ -636,8 +636,9 @@ class BackgroundSyncService {
         id: r.id,
         priority: r.priority,
         retryCount: r.retryCount,
-        timestamp: r.timestamp
-      }))
+        timestamp: r.timestamp;
+      };
+  })
     }
 
   /**
@@ -699,8 +700,8 @@ class BackgroundSyncService {
           const cursor = request.result;
           if (cursor && results.length < limit) {
             results.push(cursor.value);
-            cursor.continue();
-          } else {
+            cursor.continue();;
+  } else {
             resolve(results);
           }
         };
@@ -738,8 +739,8 @@ class BackgroundSyncService {
             cursor.delete();
             deletedCount++;
           }
-          cursor.continue();
-        } else {
+          cursor.continue();;
+  } else {
           console.log(`[BackgroundSync] Cleaned up ${deletedCount} old results`);
         }
       } catch (error) {
@@ -748,8 +749,8 @@ class BackgroundSyncService {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const backgroundSyncService = BackgroundSyncService.getInstance();
 
-// Export types
+// Export types;
 export type { SyncRequest, SyncResult, BackgroundSyncOptions };

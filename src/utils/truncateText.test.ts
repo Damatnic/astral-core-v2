@@ -1,7 +1,7 @@
 /**
  * Truncate Text Test Suite
  * Tests text truncation utility with various edge cases
- */
+ */;
 
 import { truncateText } from './truncateText';
 
@@ -249,7 +249,7 @@ describe('truncateText', () => {
     });
 
     it.skip('should handle different data types gracefully', () => {
-      const inputs = [
+      const inputs = [;
         123,
         true,
         false,
@@ -268,7 +268,7 @@ describe('truncateText', () => {
 
   describe('integration with default export', () => {
     it.skip('should be available as default export', () => {
-      // Test that the default export works the same as named export
+      // Test that the default export works the same as named export;
       const { default: defaultTruncateText } = require('./truncateText');
       
       const text = 'Testing default export functionality';

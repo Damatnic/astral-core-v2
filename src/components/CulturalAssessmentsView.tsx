@@ -10,7 +10,7 @@
  * - Culturally-appropriate recommendations
  * - Privacy-preserving data collection
  * - Integration with existing assessment infrastructure
- */
+ */;
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card } from '../components/Card';
@@ -32,7 +32,7 @@ export const CulturalAssessmentsView: React.FC<CulturalAssessmentsViewProps> = (
   defaultLanguage = 'en',
   defaultCulturalContext
 }) => {
-  // State management
+  // State management;
   const [isLoading, setIsLoading] = useState(false);
   const [culturalContext, setCulturalContext] = useState<string>(
     defaultCulturalContext || culturalContextService.getCulturalContext(defaultLanguage).region
@@ -44,15 +44,17 @@ export const CulturalAssessmentsView: React.FC<CulturalAssessmentsViewProps> = (
   useEffect(() => {
     const contexts = culturalContextService.getCulturalRegions();
     setAvailableContexts(contexts);
+  };
   }, []);
 
-  // Cultural context selection handler
+  // Cultural context selection handler;
   const handleCulturalContextChange = useCallback((newContext: string) => {
     setCulturalContext(newContext);
     setShowCulturalSettings(false);
+  };
   }, []);
 
-  // Start cultural assessment
+  // Start cultural assessment;
   const startCulturalAssessment = useCallback((type: 'phq-9' | 'gad-7') => {
     setIsLoading(true);
     setActiveView({
@@ -61,23 +63,24 @@ export const CulturalAssessmentsView: React.FC<CulturalAssessmentsViewProps> = (
         type,
         culturalContext,
         language: defaultLanguage,
-        cultural: true
+        cultural: true;
       }
     });
+  };
   }, [setActiveView, culturalContext, defaultLanguage]);
 
   return (
     <>
       <ViewHeader title="Cultural Mental Health Assessments">
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <AppButton
+          <AppButton;
             variant="secondary"
             onClick={() => setShowCulturalSettings(!showCulturalSettings)}
             style={{ fontSize: '0.875rem' }}
           >
             🌍 {culturalContext}
           </AppButton>
-          <AppButton
+          <AppButton;
             variant="secondary"
             onClick={() => setActiveView({ view: 'assessment-history' })}
           >
@@ -146,7 +149,7 @@ export const CulturalAssessmentsView: React.FC<CulturalAssessmentsViewProps> = (
                 backgroundColor: '#e0f2fe', 
                 color: '#0369a1', 
                 padding: '0.25rem 0.5rem', 
-                borderRadius: '0.25rem' 
+                borderRadius: '0.25rem' ;
               }}>
                 Cultural Adapted
               </span>
@@ -155,7 +158,7 @@ export const CulturalAssessmentsView: React.FC<CulturalAssessmentsViewProps> = (
                 backgroundColor: '#f0fdf4', 
                 color: '#166534', 
                 padding: '0.25rem 0.5rem', 
-                borderRadius: '0.25rem' 
+                borderRadius: '0.25rem' ;
               }}>
                 Privacy Preserved
               </span>
@@ -184,7 +187,7 @@ export const CulturalAssessmentsView: React.FC<CulturalAssessmentsViewProps> = (
                 backgroundColor: '#e0f2fe', 
                 color: '#0369a1', 
                 padding: '0.25rem 0.5rem', 
-                borderRadius: '0.25rem' 
+                borderRadius: '0.25rem' ;
               }}>
                 Cultural Adapted
               </span>
@@ -193,7 +196,7 @@ export const CulturalAssessmentsView: React.FC<CulturalAssessmentsViewProps> = (
                 backgroundColor: '#f0fdf4', 
                 color: '#166534', 
                 padding: '0.25rem 0.5rem', 
-                borderRadius: '0.25rem' 
+                borderRadius: '0.25rem' ;
               }}>
                 Privacy Preserved
               </span>

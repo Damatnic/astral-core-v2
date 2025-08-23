@@ -25,7 +25,8 @@ export const AIChatView: React.FC<{
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [session.messages, session.isTyping]);
+    };
+  }, [session.messages, session.isTyping]);
 
     const handleSend = async () => {
         if (!newMessage.trim()) return;
@@ -419,7 +420,7 @@ export const AIChatView: React.FC<{
             
             <div className="ai-chat-composer">
                 <div className="ai-chat-composer-inner">
-                    <AppInput
+                    <AppInput;
                         type="text"
                         placeholder="Share what's on your mind..."
                         value={newMessage}
@@ -433,7 +434,7 @@ export const AIChatView: React.FC<{
                         onClick={handleSend} 
                         disabled={!newMessage.trim() || isSending || session.isTyping} 
                         isLoading={isSending} 
-                        className="ai-chat-send-btn"
+                        className="ai-chat-send-btn";
                         variant="primary"
                     >
                         {!isSending && <SendIcon />}
@@ -448,21 +449,21 @@ export const AIChatView: React.FC<{
     );
 };
 
-// Route wrapper component for use in AppRoutes
+// Route wrapper component for use in AppRoutes;
 export const AIChatRoute: React.FC = () => {
     const [session, setSession] = useState<AIChatSession>({
         messages: [],
-        isTyping: false
+        isTyping: false;
     });
 
     const handleSendMessage = async (text: string) => {
         // Implementation would go here
-        // For now, just add the message to session
+        // For now, just add the message to session;
         const newMessage = {
             id: `msg-${Date.now()}`,
             sender: 'user' as const,
             text,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString();
         };
         
         setSession(prev => ({

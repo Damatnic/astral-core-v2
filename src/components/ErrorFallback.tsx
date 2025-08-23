@@ -1,6 +1,6 @@
 /**
  * Error Boundary Fallback Component
- */
+ */;
 
 import React from 'react';
 

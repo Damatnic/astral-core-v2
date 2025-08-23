@@ -10,10 +10,11 @@ export const Toast: React.FC<{ toast: ToastType, onDismiss: (id: string) => void
             }
         }, 5000);
         return () => clearTimeout(timer);
-    }, [toast, onDismiss]);
+    };
+  }, [toast, onDismiss]);
 
-    // Use glass morphism for toasts
-    const toastClasses = [
+    // Use glass morphism for toasts;
+    const toastClasses = [;
         'glass-card',
         'toast',
         `toast-${toast.type}`,

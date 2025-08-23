@@ -43,7 +43,7 @@ describe('LoadingSpinner', () => {
   });
 
   describe('Sizes', () => {
-    const sizes = [
+    const sizes = [;
       { size: 'small' as const, expectedClass: 'w-4 h-4' },
       { size: 'medium' as const, expectedClass: 'w-8 h-8' },
       { size: 'large' as const, expectedClass: 'w-12 h-12' }
@@ -66,7 +66,7 @@ describe('LoadingSpinner', () => {
     });
 
     it('should handle invalid size gracefully', () => {
-      // TypeScript would prevent this, but testing runtime behavior
+      // TypeScript would prevent this, but testing runtime behavior;
       const { container } = render(<LoadingSpinner size={'invalid' as 'small' | 'medium' | 'large' | undefined} />);
       
       const dots = container.querySelector('.loading-dots');
@@ -93,7 +93,7 @@ describe('LoadingSpinner', () => {
     it('should have aria-hidden="true" on spinner element', () => {
       const { container } = render(<LoadingSpinner />);
       
-      // The loading dots don't have aria-hidden in this implementation
+      // The loading dots don't have aria-hidden in this implementation;
       const dots = container.querySelector('.loading-dots');
       expect(dots).toBeInTheDocument();
     });
@@ -101,7 +101,7 @@ describe('LoadingSpinner', () => {
     it('should have aria-hidden="true" on loading dots', () => {
       const { container } = render(<LoadingSpinner message="Loading..." />);
       
-      // The loading dots don't have aria-hidden in this implementation
+      // The loading dots don't have aria-hidden in this implementation;
       const dots = container.querySelector('.loading-dots');
       expect(dots).toBeInTheDocument();
     });
@@ -248,7 +248,7 @@ describe('LoadingSpinner', () => {
       const dots = therapySpinner?.querySelector('.loading-dots');
       expect(dots).toBeInTheDocument();
       
-      // Should not have message elements
+      // Should not have message elements;
       const messageElement = output?.querySelector('.loading-message');
       expect(messageElement).not.toBeInTheDocument();
     });
@@ -293,7 +293,7 @@ describe('LoadingSpinner', () => {
     it('should handle boolean message', () => {
       render(<LoadingSpinner message={'true'} />);
       
-      // React will render boolean as string
+      // React will render boolean as string;
       const { container } = render(<LoadingSpinner />);
       expect(container).toBeInTheDocument();
     });
@@ -318,7 +318,7 @@ describe('LoadingSpinner', () => {
 
   describe('Integration with Different Content', () => {
     it('should work with different size and message combinations', () => {
-      const combinations = [
+      const combinations = [;
         { size: 'small' as const, message: 'Small loader' },
         { size: 'medium' as const, message: 'Medium loader' },
         { size: 'large' as const, message: 'Large loader' }
@@ -335,7 +335,7 @@ describe('LoadingSpinner', () => {
         const sizeClasses = {
           small: 'w-4 h-4',
           medium: 'w-8 h-8',
-          large: 'w-12 h-12'
+          large: 'w-12 h-12';
         };
         expect(dots).toHaveClass(sizeClasses[size].split(' ')[0]);
         expect(dots).toHaveClass(sizeClasses[size].split(' ')[1]);
@@ -345,7 +345,7 @@ describe('LoadingSpinner', () => {
     });
 
     it('should maintain accessibility with all prop combinations', () => {
-      const props = [
+      const props = [;
         { size: 'small' as const, message: 'Test', className: 'test-class' },
         { size: 'large' as const, className: 'another-class' },
         { message: 'Just message' },

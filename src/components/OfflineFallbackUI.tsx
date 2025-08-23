@@ -5,7 +5,7 @@
  * loses connectivity, including crisis resources and sync status
  * 
  * @license Apache-2.0
- */
+ */;
 
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -35,39 +35,41 @@ export const OfflineFallbackUI: React.FC<OfflineFallbackUIProps> = ({
     lastSyncTime?: number;
   }>({
     size: 0,
-    isSyncing: false
+    isSyncing: false;
   });
   const [showCrisisResources, setShowCrisisResources] = useState(false);
   const [isRetrying, setIsRetrying] = useState(false);
 
   useEffect(() => {
-    // Update sync status
+    // Update sync status;
     const updateSyncStatus = () => {
       const status = backgroundSyncService.getQueueStatus();
       setSyncStatus({
         size: status.size,
         isSyncing: status.isSyncing,
-        lastSyncTime: Date.now()
+        lastSyncTime: Date.now();
       });
     };
 
     // Initial status
     updateSyncStatus();
 
-    // Listen for sync updates
+    // Listen for sync updates;
     const handleSyncResult = () => {
       updateSyncStatus();
     };
 
     backgroundSyncService.addSyncListener(handleSyncResult);
 
-    // Update periodically
+    // Update periodically;
     const interval = setInterval(updateSyncStatus, 5000);
 
     return () => {
       backgroundSyncService.removeSyncListener(handleSyncResult);
       clearInterval(interval);
-    }, []);
+    };
+  };
+  }, []);
 
   const handleRetry = async () => {
     setIsRetrying(true);
@@ -158,7 +160,7 @@ export const OfflineFallbackUI: React.FC<OfflineFallbackUIProps> = ({
             </div>
             
             {!showCrisisResources ? (
-              <AppButton
+              <AppButton;
                 variant="primary"
                 onClick={() => setShowCrisisResources(true)}
                 className="crisis-show-button"
@@ -197,7 +199,7 @@ export const OfflineFallbackUI: React.FC<OfflineFallbackUIProps> = ({
 
           {/* Actions */}
           <div className="offline-actions">
-            <AppButton
+            <AppButton;
               variant="primary"
               onClick={handleRetry}
               disabled={isRetrying}
@@ -213,7 +215,7 @@ export const OfflineFallbackUI: React.FC<OfflineFallbackUIProps> = ({
               )}
             </AppButton>
             
-            <AppButton
+            <AppButton;
               variant="secondary"
               onClick={handleUpdateResources}
               disabled={!isOnline}
@@ -251,8 +253,8 @@ export const OfflineFallbackUI: React.FC<OfflineFallbackUIProps> = ({
   );
 };
 
-// Styles
-const styles = `
+// Styles;
+const styles = `;
   .offline-fallback-fullscreen {
     position: fixed;
     top: 0;

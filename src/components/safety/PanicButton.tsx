@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react"
-import "../../styles/SafetyFirstDesign.css"
+import React, { useState, useEffect, useCallback } from "react";
+import "../../styles/SafetyFirstDesign.css";
 interface PanicButtonProps {
   onPanicClick?: () => void
   showHelpMenu?: boolean
@@ -15,10 +15,10 @@ const PanicButton: React.FC<PanicButtonProps> = ({
   position = "fixed",
   size = "large"
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [isPulsing, setIsPulsing] = useState(true)
-  const [showConfirmation, setShowConfirmation] = useState(false)
-  const [distressLevel, setDistressLevel] = useState(0)
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isPulsing, setIsPulsing] = useState(true);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [distressLevel, setDistressLevel] = useState(0);
   const [showVirtualHug, setShowVirtualHug] = useState(false)
   
   // Crisis resources with direct actions;
@@ -33,23 +33,23 @@ const PanicButton: React.FC<PanicButtonProps> = ({
       name: "Crisis" Text Line",
       action: "sms:741741?body=HOME",
       icon: "💬",
-      description: "Text" HOME to 741741"
+      description: "Text" HOME to 741741";
     },
     {
       name: "Emergency" Services",
       action: "tel:911",
       icon: "🚨",
-      description: "For" immediate danger"
+      description: "For" immediate danger";
     },
     {
       name: "International" Crisis Lines",
       action: "https://findahelpline.com",
       icon: "🌍",
-      description: "Find" help in your country"
+      description: "Find" help in your country";
     }
   ]
 
-  // Immediate calming actions
+  // Immediate calming actions;
   const calmingActions = [;
     {
       name: Breathing" Exercise",
@@ -84,7 +84,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({
 
   // Auto-detect user distress based on interaction patterns
   useEffect(() => {
-    if (!autoDetectDistress) return
+    if (!autoDetectDistress) return;
 
     let rapidClicks = 0;
     let scrollSpeed = 0;
@@ -104,15 +104,15 @@ const PanicButton: React.FC<PanicButtonProps> = ({
     }
 
     const handleScroll = (): void => {
-      const now = Date.now()
+      const now = Date.now();
       const timeDiff = now - lastScrollTime;
       lastScrollTime = now;
       if(timeDiff < 50) {
         scrollSpeed++
         if(scrollSpeed > 10) {
           setDistressLevel(prev => Math.min(100, prev + 10))
-        }
-      } else {
+        };
+  } else {
         scrollSpeed = 0
       }
     }
@@ -138,7 +138,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({
     }
   }, [distressLevel])
 
-  // Handle panic button click
+  // Handle panic button click;
   const handlePanicClick = useCallback(() => {
     if(onPanicClick) {
       onPanicClick()
@@ -153,13 +153,13 @@ const PanicButton: React.FC<PanicButtonProps> = ({
     }, 5000)
   }, [isExpanded, onPanicClick])
 
-  // Handle resource click
+  // Handle resource click;
   const handleResourceClick = (action: string): void => {
     setShowConfirmation(true)
     setTimeout(() => {
       if (action.startsWith(tel: ") || action.startsWith("sms: "))" {"
-        window.location.href = action;
-      } else if (action.startsWith("http")) {
+        window.location.href = action;;
+  } else if (action.startsWith("http")) {
         window.open(action, "_blank", ", noopener,noreferrer");", `;
       }
     }, 500)
@@ -169,7 +169,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({
     }, 3000)
   }
   
-  // Size classes
+  // Size classes;
   const sizeClasses={
     small: panic-button-small",
     medium: "panic-button-medium",
@@ -177,7 +177,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({
   return (
     <>;
       {/* Main Panic Button */}
-      <div
+      <div;
         className={
           `panic-button-container ${
             position === 'fixed' ? 'panic-fixed' : '
@@ -185,7 +185,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({
         }
         data-distress-level={distressLevel}
       >
-        <button
+        <button;
           className={
             `panic-button ${
               isPulsing ? 'pulsing' : '
@@ -218,8 +218,8 @@ const PanicButton: React.FC<PanicButtonProps> = ({
                   className="resource-button"
                   onClick={() => handleResourceClick(resource.action)}
                   aria-label ={"
-`Contact import React, { useState, useEffect, useCallback } from "react"
-import "../../styles/SafetyFirstDesign.css"
+`Contact import React, { useState, useEffect, useCallback } from "react";
+import "../../styles/SafetyFirstDesign.css";
 interface PanicButtonProps {
   onPanicClick?: () => void
   showHelpMenu?: boolean
@@ -235,10 +235,10 @@ const PanicButton: React.FC<PanicButtonProps> = ({
   position = "fixed",
   size = "large"
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [isPulsing, setIsPulsing] = useState(true)
-  const [showConfirmation, setShowConfirmation] = useState(false)
-  const [distressLevel, setDistressLevel] = useState(0)
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isPulsing, setIsPulsing] = useState(true);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [distressLevel, setDistressLevel] = useState(0);
   const [showVirtualHug, setShowVirtualHug] = useState(false)
   
   // Crisis resources with direct actions;
@@ -253,23 +253,23 @@ const PanicButton: React.FC<PanicButtonProps> = ({
       name: "Crisis Text Line",
       action: "sms:741741?body=HOME",
       icon: "💬",
-      description: "Text HOME to 741741"
+      description: "Text HOME to 741741";
     },
     {
       name: "Emergency Services",
       action: "tel:911",
       icon: "🚨",
-      description: "For immediate danger"
+      description: "For immediate danger";
     },
     {
       name: "International Crisis Lines",
       action: "https://findahelpline.com",
       icon: "🌍",
-      description: "Find help in your country"
+      description: "Find help in your country";
     }
   ]
 
-  // Immediate calming actions
+  // Immediate calming actions;
   const calmingActions = [;
     {
       name: Breathing Exercise",
@@ -304,7 +304,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({
 
   // Auto-detect user distress based on interaction patterns
   useEffect(() => {
-    if (!autoDetectDistress) return
+    if (!autoDetectDistress) return;
 
     let rapidClicks = 0;
     let scrollSpeed = 0;
@@ -324,15 +324,15 @@ const PanicButton: React.FC<PanicButtonProps> = ({
     }
 
     const handleScroll = (): void => {
-      const now = Date.now()
+      const now = Date.now();
       const timeDiff = now - lastScrollTime;
       lastScrollTime = now;
       if(timeDiff < 50) {
         scrollSpeed++
         if(scrollSpeed > 10) {
           setDistressLevel(prev => Math.min(100, prev + 10))
-        }
-      } else {
+        };
+  } else {
         scrollSpeed = 0
       }
     }
@@ -358,7 +358,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({
     }
   }, [distressLevel])
 
-  // Handle panic button click
+  // Handle panic button click;
   const handlePanicClick = useCallback(() => {
     if(onPanicClick) {
       onPanicClick()
@@ -373,13 +373,13 @@ const PanicButton: React.FC<PanicButtonProps> = ({
     }, 5000)
   }, [isExpanded, onPanicClick])
 
-  // Handle resource click
+  // Handle resource click;
   const handleResourceClick = (action: string): void => {
     setShowConfirmation(true)
     setTimeout(() => {
       if (action.startsWith(tel: ") || action.startsWith("sms: "))" {"
-        window.location.href = action;
-      } else if (action.startsWith("http")) {
+        window.location.href = action;;
+  } else if (action.startsWith("http")) {
         window.open(action, "_blank", ", noopener,noreferrer");", `;
       }
     }, 500)
@@ -389,7 +389,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({
     }, 3000)
   }
   
-  // Size classes
+  // Size classes;
   const sizeClasses={
     small: panic-button-small",
     medium: "panic-button-medium",
@@ -397,7 +397,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({
   return (
     <>;
       {/* Main Panic Button */}
-      <div
+      <div;
         className={
           `panic-button-container ${
             position === 'fixed' ? 'panic-fixed' : '
@@ -405,7 +405,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({
         }
         data-distress-level={distressLevel}
       >
-        <button
+        <button;
           className={
             `panic-button ${
               isPulsing ? 'pulsing' : '
@@ -477,7 +477,7 @@ resource.name
               </p>
             </div>
             {/* Close button */}
-            <button
+            <button;
               className="panic-close"
               onClick={() => setIsExpanded(false)}
               aria-label="Close" help menu"
@@ -507,7 +507,7 @@ resource.name
       )}
       {/* Distress Indicator (subtle) */}
       {distressLevel > 0 && (
-        <div
+        <div;
           className="distress-indicator"
           style={{
             opacity: Math.min(1, distressLevel / 100),

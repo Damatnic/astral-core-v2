@@ -1,7 +1,7 @@
 /**
  * Accessibility Provider Component
  * Provides comprehensive accessibility features and ARIA support throughout the app
- */
+ */;
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { AnyObject } from '../types/common';
@@ -50,7 +50,7 @@ interface AccessibilityContextValue extends AccessibilityState {
 
 const AccessibilityContext = createContext<AccessibilityContextValue | undefined>(undefined);
 
-// ARIA label templates
+// ARIA label templates;
 const ariaLabels: Record<string, string | ((params: AnyObject) => string)> = {
   // Navigation
   'nav.main': 'Main navigation',
@@ -115,7 +115,7 @@ const ariaLabels: Record<string, string | ((params: AnyObject) => string)> = {
 
 export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, setState] = useState<AccessibilityState>(() => {
-    // Load preferences from localStorage
+    // Load preferences from localStorage;
     const saved = localStorage.getItem('accessibility-preferences');
     if (saved) {
       try {
@@ -138,12 +138,14 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
       simpleLanguage: false,
       readingGuide: false,
       focusMode: false,
-    });
+    };
+  };
 
   // Save preferences to localStorage
   useEffect(() => {
     const { announcements, ...preferences } = state;
     localStorage.setItem('accessibility-preferences', JSON.stringify(preferences));
+  };
   }, [state]);
 
   // Apply accessibility classes to body
@@ -169,6 +171,7 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
                  'focus-mode'].includes(c))
       .concat(classes)
       .join(' ');
+  };
   }, [state]);
 
   // Keyboard navigation setup
@@ -209,9 +212,11 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('mousedown', handleMouseDown);
-    }, [state.keyboardNavigationEnabled]);
+    };
+  };
+  }, [state.keyboardNavigationEnabled]);
 
-  // Announce to screen readers
+  // Announce to screen readers;
   const announce = useCallback((message: string, priority: 'polite' | 'assertive' = 'polite') => {
     setState(prev => ({
       ...prev,
@@ -225,53 +230,65 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
         announcements: prev.announcements.filter(a => a !== message),
       }));
     }, priority === 'assertive' ? 1000 : 3000);
+  };
   }, []);
 
   const clearAnnouncements = useCallback(() => {
     setState(prev => ({ ...prev, announcements: [] }));
+  };
   }, []);
 
-  // Toggle functions
+  // Toggle functions;
   const toggleScreenReader = useCallback(() => {
     setState(prev => {
       const enabled = !prev.screenReaderEnabled;
       announce(enabled ? 'Screen reader mode enabled' : 'Screen reader mode disabled');
-      return { ...prev, screenReaderEnabled: enabled });
+      return { ...prev, screenReaderEnabled: enabled };
+  };
+  };
   }, [announce]);
 
   const toggleKeyboardNavigation = useCallback(() => {
     setState(prev => ({ ...prev, keyboardNavigationEnabled: !prev.keyboardNavigationEnabled }));
+  };
   }, []);
 
   const toggleHighContrast = useCallback(() => {
     setState(prev => {
       const enabled = !prev.highContrastMode;
       announce(enabled ? 'High contrast mode enabled' : 'High contrast mode disabled');
-      return { ...prev, highContrastMode: enabled });
+      return { ...prev, highContrastMode: enabled };
+  };
+  };
   }, [announce]);
 
   const toggleReducedMotion = useCallback(() => {
     setState(prev => ({ ...prev, reducedMotion: !prev.reducedMotion }));
+  };
   }, []);
 
   const setFontSize = useCallback((fontSize: AccessibilityState['fontSize']) => {
     setState(prev => ({ ...prev, fontSize }));
     announce(`Font size set to ${fontSize}`);
+  };
   }, [announce]);
 
   const toggleSimpleLanguage = useCallback(() => {
     setState(prev => ({ ...prev, simpleLanguage: !prev.simpleLanguage }));
+  };
   }, []);
 
   const toggleReadingGuide = useCallback(() => {
     setState(prev => ({ ...prev, readingGuide: !prev.readingGuide }));
+  };
   }, []);
 
   const toggleFocusMode = useCallback(() => {
     setState(prev => ({ ...prev, focusMode: !prev.focusMode }));
+  };
   }, []);
 
-  // ARIA helpers
+  // ARIA helpers;
   const getAriaLabel = useCallback((key: string, params?: AnyObject): string => {
     const label = ariaLabels[key];
     if (!label) return key;
@@ -281,10 +298,12 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     }
     
     return label;
+  };
   }, []);
 
   const getAriaDescribedBy = useCallback((key: string): string => {
     return `${key}-description`;
+  };
   }, []);
 
   const getLiveRegionProps = useCallback((priority: 'polite' | 'assertive' = 'polite'): Record<string, string> => {
@@ -292,7 +311,8 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
       'role': 'status',
       'aria-live': priority,
       'aria-atomic': 'true',
-    }, []);
+    };
+  }, []);
 
   const value: AccessibilityContextValue = {
     ...state,
@@ -345,7 +365,7 @@ export const useAccessibility = () => {
   return context;
 };
 
-// Accessibility-enhanced button component
+// Accessibility-enhanced button component;
 export const AccessibleButton: React.FC<{
   label: string;
   onClick: () => void;
@@ -385,7 +405,7 @@ export const AccessibleButton: React.FC<{
   );
 };
 
-// Accessibility-enhanced link component
+// Accessibility-enhanced link component;
 export const AccessibleLink: React.FC<{
   href: string;
   label: string;

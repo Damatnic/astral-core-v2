@@ -6,7 +6,7 @@ import { ChatSession, Dilemma } from '../types';
 /**
  * Route wrapper for ChatView that provides default props
  * This handles the routing requirements while maintaining component reusability
- */
+ */;
 const ChatRoute: React.FC = () => {
   const { user } = useAuth();
   const [session, setSession] = useState<ChatSession | null>(null);
@@ -23,10 +23,11 @@ const ChatRoute: React.FC = () => {
         isTyping: false,
         perspective: 'seeker',
         helpSessionId: undefined,
-        helper: undefined
+        helper: undefined;
       };
       setSession(defaultSession);
     }
+  };
   }, [user, session]);
 
   useEffect(() => {
@@ -49,10 +50,11 @@ const ChatRoute: React.FC = () => {
         summary: undefined,
         summaryLoading: false,
         moderation: undefined,
-        aiMatchReason: undefined
+        aiMatchReason: undefined;
       };
       setDilemma(defaultDilemma);
     }
+  };
   }, [dilemma, user]);
 
   const handleViewHelperProfile = (helperId: string) => {

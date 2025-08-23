@@ -1,7 +1,7 @@
 /**
  * Test Suite for Crisis Detection Integration Service
  * Tests integration of multiple crisis detection systems
- */
+ */;
 
 import { crisisDetectionIntegrationService } from '../crisisDetectionIntegrationService';
 
@@ -16,7 +16,7 @@ describe('CrisisDetectionIntegrationService', () => {
       const text = 'I am feeling overwhelmed and need help';
       const userId = 'user123';
       
-      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(
+      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(;
         text,
         { userId, userContext: { languageCode: 'en' } }
       );
@@ -31,7 +31,7 @@ describe('CrisisDetectionIntegrationService', () => {
     it.skip('should detect crisis from multiple sources', async () => {
       const criticalText = 'I want to die and have a plan';
       
-      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(
+      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(;
         criticalText,
         { userId: 'user123', userContext: { languageCode: 'en' } }
       );
@@ -45,7 +45,7 @@ describe('CrisisDetectionIntegrationService', () => {
     it.skip('should handle cultural context in integration', async () => {
       const text = 'Life has no meaning anymore';
       
-      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(
+      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(;
         text,
         { userId: 'user123', userContext: { languageCode: 'es', culturalContext: 'latin-american' } }
       );
@@ -57,7 +57,7 @@ describe('CrisisDetectionIntegrationService', () => {
     it.skip('should provide consensus-based severity', async () => {
       const text = 'Having thoughts of self-harm';
       
-      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(
+      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(;
         text,
         { userId: 'user123', userContext: { languageCode: 'en' } }
       );
@@ -71,7 +71,7 @@ describe('CrisisDetectionIntegrationService', () => {
     it.skip('should recommend escalation for high-risk cases', async () => {
       const text = 'I have pills ready and will take them tonight';
       
-      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(
+      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(;
         text,
         { userId: 'user123', userContext: { languageCode: 'en' } }
       );
@@ -84,7 +84,7 @@ describe('CrisisDetectionIntegrationService', () => {
     it.skip('should not escalate false positives', async () => {
       const text = 'I used to feel suicidal but therapy helped';
       
-      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(
+      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(;
         text,
         { userId: 'user123', userContext: { languageCode: 'en' } }
       );
@@ -98,7 +98,7 @@ describe('CrisisDetectionIntegrationService', () => {
     it.skip('should aggregate results from all detection models', async () => {
       const text = 'Feeling hopeless and considering ending it all';
       
-      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(
+      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(;
         text,
         { userId: 'user123', userContext: { languageCode: 'en' } }
       );
@@ -113,7 +113,7 @@ describe('CrisisDetectionIntegrationService', () => {
     it.skip('should handle model disagreements', async () => {
       const ambiguousText = 'Things are really hard right now';
       
-      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(
+      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(;
         ambiguousText,
         { userId: 'user123', userContext: { languageCode: 'en' } }
       );
@@ -127,7 +127,7 @@ describe('CrisisDetectionIntegrationService', () => {
     it.skip('should generate appropriate crisis response', async () => {
       const text = 'I need immediate help, having crisis thoughts';
       
-      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(
+      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(;
         text,
         { userId: 'user123', userContext: { languageCode: 'en' } }
       );
@@ -141,7 +141,7 @@ describe('CrisisDetectionIntegrationService', () => {
     it.skip('should include safety plan in response', async () => {
       const text = 'Feeling very unsafe right now';
       
-      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(
+      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(;
         text,
         { userId: 'user123', userContext: { languageCode: 'en' } }
       );
@@ -157,7 +157,7 @@ describe('CrisisDetectionIntegrationService', () => {
       // Mock a service failure
       jest.spyOn(console, 'error').mockImplementation(() => {});
       
-      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(
+      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(;
         'Test text',
         { userId: 'user123', userContext: { languageCode: 'en' } }
       );
@@ -182,15 +182,15 @@ describe('CrisisDetectionIntegrationService', () => {
     it.skip('should cache recent analyses', async () => {
       const text = 'Repeated crisis text';
       
-      // First call
-      const result1 = await crisisDetectionIntegrationService.analyzeTextForCrisis(
+      // First call;
+      const result1 = await crisisDetectionIntegrationService.analyzeTextForCrisis(;
         text,
         { userId: 'user123', userContext: { languageCode: 'en' } }
       );
       
-      // Second call (should be cached)
+      // Second call (should be cached);
       const startTime = Date.now();
-      const result2 = await crisisDetectionIntegrationService.analyzeTextForCrisis(
+      const result2 = await crisisDetectionIntegrationService.analyzeTextForCrisis(;
         text,
         { userId: 'user123', userContext: { languageCode: 'en' } }
       );
@@ -205,7 +205,7 @@ describe('CrisisDetectionIntegrationService', () => {
     it.skip('should log all crisis detections', async () => {
       const text = 'Crisis situation text';
       
-      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(
+      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(;
         text,
         { userId: 'user123', userContext: { languageCode: 'en' } }
       );
@@ -219,7 +219,7 @@ describe('CrisisDetectionIntegrationService', () => {
     it.skip('should track intervention recommendations', async () => {
       const text = 'I need immediate help';
       
-      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(
+      const result = await crisisDetectionIntegrationService.analyzeTextForCrisis(;
         text,
         { userId: 'user123', userContext: { languageCode: 'en' } }
       );

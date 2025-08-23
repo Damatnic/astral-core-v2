@@ -9,7 +9,7 @@
  * - Connection quality assessment
  * - Adaptive loading recommendations
  * - Real-time network change detection
- */
+ */;
 
 import React from 'react';
 
@@ -92,14 +92,14 @@ class MobileNetworkService {
     const loadTime = entry.loadEventEnd - entry.loadEventStart;
     const connectTime = entry.connectEnd - entry.connectStart;
 
-    // Estimate connection quality based on performance
+    // Estimate connection quality based on performance;
     let estimatedQuality: 'poor' | 'good' | 'excellent' = 'good';
     let estimatedSpeed: 'slow' | 'medium' | 'fast' = 'medium';
 
     if (loadTime > 3000 || connectTime > 1000) {
       estimatedQuality = 'poor';
-      estimatedSpeed = 'slow';
-    } else if (loadTime < 1000 && connectTime < 200) {
+      estimatedSpeed = 'slow';;
+  } else if (loadTime < 1000 && connectTime < 200) {
       estimatedQuality = 'excellent';
       estimatedSpeed = 'fast';
     }
@@ -128,7 +128,7 @@ class MobileNetworkService {
         quality: 'poor',
         downlink: 0,
         rtt: Infinity,
-        saveData: true
+        saveData: true;
       } else if (this.connection) {
       // Use Network Information API
       this.currentConnection = {
@@ -138,7 +138,7 @@ class MobileNetworkService {
         quality: this.getQualityFromConnection(),
         downlink: this.connection.downlink || 0,
         rtt: this.connection.rtt || 0,
-        saveData: this.connection.saveData || false
+        saveData: this.connection.saveData || false;
       } else {
       // Fallback estimation
       this.currentConnection = {
@@ -148,7 +148,7 @@ class MobileNetworkService {
         quality: 'good',
         downlink: 1,
         rtt: 100,
-        saveData: false
+        saveData: false;
       }
 
     this.updateAdaptiveStrategy();
@@ -199,7 +199,7 @@ class MobileNetworkService {
         lazyLoadThreshold: 0.1, // Load very close to viewport
         maxConcurrentRequests: 2,
         enableVideoAutoplay: false,
-        compressionLevel: 'high'
+        compressionLevel: 'high';
       } else if (quality === 'excellent' || speed === 'fast') {
       this.strategy = {
         imageQuality: 'high',
@@ -208,7 +208,7 @@ class MobileNetworkService {
         lazyLoadThreshold: 0.5, // Load well before viewport
         maxConcurrentRequests: 6,
         enableVideoAutoplay: true,
-        compressionLevel: 'low'
+        compressionLevel: 'low';
       } else {
       // Good quality - balanced approach
       this.strategy = {
@@ -218,7 +218,7 @@ class MobileNetworkService {
         lazyLoadThreshold: 0.2,
         maxConcurrentRequests: 4,
         enableVideoAutoplay: effectiveType === '4g',
-        compressionLevel: 'medium'
+        compressionLevel: 'medium';
       }
   }
 
@@ -325,10 +325,10 @@ class MobileNetworkService {
   }
 }
 
-// Singleton instance
+// Singleton instance;
 export const mobileNetworkService = new MobileNetworkService();
 
-// React hook for using network detection
+// React hook for using network detection;
 export const useMobileNetwork = () => {
   const [connection, setConnection] = React.useState<NetworkConnection | null>(
     mobileNetworkService.getCurrentConnection()
@@ -341,9 +341,11 @@ export const useMobileNetwork = () => {
     const unsubscribe = mobileNetworkService.onConnectionChange((newConnection) => {
       setConnection(newConnection);
       setStrategy(mobileNetworkService.getCurrentAdaptiveStrategy());
-    });
+    };
+  };
 
     return unsubscribe;
+  };
   }, []);
 
   return {
@@ -354,7 +356,7 @@ export const useMobileNetwork = () => {
     getImageQualitySettings: mobileNetworkService.getImageQualitySettings.bind(mobileNetworkService),
     shouldEnableAnimations: mobileNetworkService.shouldEnableAnimations.bind(mobileNetworkService),
     shouldAutoplayVideo: mobileNetworkService.shouldAutoplayVideo.bind(mobileNetworkService),
-    getLazyLoadThreshold: mobileNetworkService.getLazyLoadThreshold.bind(mobileNetworkService)
+    getLazyLoadThreshold: mobileNetworkService.getLazyLoadThreshold.bind(mobileNetworkService);
   };
 
 // Type declaration for Navigator interface extension

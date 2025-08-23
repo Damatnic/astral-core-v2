@@ -1,7 +1,7 @@
 /**
  * Working Test Suite for QuickExitButton Component
  * Uses direct ReactDOM rendering to bypass RTL issues
- */
+ */;
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -10,27 +10,27 @@ import '@testing-library/jest-dom';
 import QuickExitButton from '../QuickExitButton';
 import { BrowserRouter } from 'react-router-dom';
 
-// Mock window.location
+// Mock window.location;
 const mockLocation = {
   href: 'http://localhost:3000',
   replace: jest.fn(),
-  assign: jest.fn()
+  assign: jest.fn();
 };
 
 Object.defineProperty(window, 'location', {
   value: mockLocation,
   writable: true,
-  configurable: true
+  configurable: true;
 });
 
-// Mock storage APIs with proper function mocking
+// Mock storage APIs with proper function mocking;
 const localStorageMock = {
   clear: jest.fn(),
   getItem: jest.fn(() => null),
   setItem: jest.fn(),
   removeItem: jest.fn(),
   key: jest.fn(),
-  length: 0
+  length: 0;
 };
 
 const sessionStorageMock = {
@@ -39,25 +39,25 @@ const sessionStorageMock = {
   setItem: jest.fn(),
   removeItem: jest.fn(),
   key: jest.fn(),
-  length: 0
+  length: 0;
 };
 
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
   writable: true,
-  configurable: true
+  configurable: true;
 });
 
 Object.defineProperty(window, 'sessionStorage', {
   value: sessionStorageMock,
   writable: true,
-  configurable: true
+  configurable: true;
 });
 
-// Helper to render component
+// Helper to render component;
 function renderComponent(component: React.ReactElement) {
   const container = document.createElement('div');
-  document.body.appendChild(container); // Ensure container is in the DOM
+  document.body.appendChild(container); // Ensure container is in the DOM;
   const root = ReactDOM.createRoot(container);
   
   act(() => {
@@ -78,7 +78,7 @@ describe('QuickExitButton - Working Tests', () => {
     localStorageMock.clear.mockClear();
     sessionStorageMock.clear.mockClear();
     
-    // Setup CSS variables for testing
+    // Setup CSS variables for testing;
     const style = document.createElement('style');
     style.innerHTML = `
       :root {
@@ -93,7 +93,8 @@ describe('QuickExitButton - Working Tests', () => {
       }
     `;
     document.head.appendChild(style);
-  });
+  };
+  };
 
   afterEach(() => {
     if (root) {
@@ -110,7 +111,7 @@ describe('QuickExitButton - Working Tests', () => {
 
   describe('Rendering', () => {
     it('should render the quick exit button', () => {
-      const result = renderComponent(
+      const result = renderComponent(;
         <BrowserRouter>
           <QuickExitButton />
         </BrowserRouter>
@@ -122,7 +123,7 @@ describe('QuickExitButton - Working Tests', () => {
       console.log('Container innerHTML:', container.innerHTML);
       console.log('Container children:', container.children.length);
       
-      // Try different selectors
+      // Try different selectors;
       const wrapper = container.querySelector('.quick-exit-wrapper');
       const buttonByClass = container.querySelector('.quick-exit-button');
       const button = container.querySelector('button');
@@ -138,7 +139,7 @@ describe('QuickExitButton - Working Tests', () => {
     });
 
     it('should display exit icon', () => {
-      const result = renderComponent(
+      const result = renderComponent(;
         <BrowserRouter>
           <QuickExitButton />
         </BrowserRouter>
@@ -152,7 +153,7 @@ describe('QuickExitButton - Working Tests', () => {
     });
 
     it('should have proper positioning styles', () => {
-      const result = renderComponent(
+      const result = renderComponent(;
         <BrowserRouter>
           <QuickExitButton position="top-right" />
         </BrowserRouter>
@@ -168,7 +169,7 @@ describe('QuickExitButton - Working Tests', () => {
 
   describe('Exit Functionality', () => {
     it('should clear browsing data on click', () => {
-      const result = renderComponent(
+      const result = renderComponent(;
         <BrowserRouter>
           <QuickExitButton />
         </BrowserRouter>
@@ -189,11 +190,11 @@ describe('QuickExitButton - Working Tests', () => {
           // Method 1: Direct click
           button.click();
           
-          // Method 2: Dispatch click event
+          // Method 2: Dispatch click event;
           const clickEvent = new MouseEvent('click', {
             bubbles: true,
             cancelable: true,
-            view: window
+            view: window;
           });
           button.dispatchEvent(clickEvent);
         }
@@ -209,7 +210,7 @@ describe('QuickExitButton - Working Tests', () => {
     });
 
     it('should redirect to safe site on click', () => {
-      const result = renderComponent(
+      const result = renderComponent(;
         <BrowserRouter>
           <QuickExitButton />
         </BrowserRouter>
@@ -223,11 +224,11 @@ describe('QuickExitButton - Working Tests', () => {
       act(() => {
         if (button) {
           button.click();
-          // Dispatch event as backup
+          // Dispatch event as backup;
           const clickEvent = new MouseEvent('click', {
             bubbles: true,
             cancelable: true,
-            view: window
+            view: window;
           });
           button.dispatchEvent(clickEvent);
         }
@@ -242,7 +243,7 @@ describe('QuickExitButton - Working Tests', () => {
     });
 
     it('should use custom redirect URL if provided', () => {
-      const result = renderComponent(
+      const result = renderComponent(;
         <BrowserRouter>
           <QuickExitButton redirectUrl="https://weather.com" />
         </BrowserRouter>
@@ -259,7 +260,7 @@ describe('QuickExitButton - Working Tests', () => {
           const clickEvent = new MouseEvent('click', {
             bubbles: true,
             cancelable: true,
-            view: window
+            view: window;
           });
           button.dispatchEvent(clickEvent);
         }
@@ -275,7 +276,7 @@ describe('QuickExitButton - Working Tests', () => {
 
   describe('Keyboard Shortcuts', () => {
     it('should exit on triple ESC press', () => {
-      const result = renderComponent(
+      const result = renderComponent(;
         <BrowserRouter>
           <QuickExitButton />
         </BrowserRouter>
@@ -298,7 +299,7 @@ describe('QuickExitButton - Working Tests', () => {
     });
 
     it('should work with custom shortcut key', () => {
-      const result = renderComponent(
+      const result = renderComponent(;
         <BrowserRouter>
           <QuickExitButton shortcutKey="q" shortcutCount={2} />
         </BrowserRouter>
@@ -320,7 +321,7 @@ describe('QuickExitButton - Working Tests', () => {
 
   describe('Customization', () => {
     it('should accept custom button text', () => {
-      const result = renderComponent(
+      const result = renderComponent(;
         <BrowserRouter>
           <QuickExitButton buttonText="Leave Now" />
         </BrowserRouter>
@@ -333,7 +334,7 @@ describe('QuickExitButton - Working Tests', () => {
     });
 
     it('should accept custom styles', () => {
-      const result = renderComponent(
+      const result = renderComponent(;
         <BrowserRouter>
           <QuickExitButton className="custom-exit-button" />
         </BrowserRouter>
@@ -346,7 +347,7 @@ describe('QuickExitButton - Working Tests', () => {
     });
 
     it('should support size variants', () => {
-      const result = renderComponent(
+      const result = renderComponent(;
         <BrowserRouter>
           <QuickExitButton size="large" />
         </BrowserRouter>
@@ -363,7 +364,7 @@ describe('QuickExitButton - Working Tests', () => {
     it('should clear cookies if configured', () => {
       const clearCookies = jest.fn();
       
-      const result = renderComponent(
+      const result = renderComponent(;
         <BrowserRouter>
           <QuickExitButton clearCookies={clearCookies} />
         </BrowserRouter>
@@ -380,7 +381,7 @@ describe('QuickExitButton - Working Tests', () => {
           const clickEvent = new MouseEvent('click', {
             bubbles: true,
             cancelable: true,
-            view: window
+            view: window;
           });
           button.dispatchEvent(clickEvent);
         }
@@ -400,7 +401,7 @@ describe('QuickExitButton - Working Tests', () => {
         throw new Error('Navigation blocked');
       });
 
-      const result = renderComponent(
+      const result = renderComponent(;
         <BrowserRouter>
           <QuickExitButton fallbackUrl="https://news.google.com" />
         </BrowserRouter>
@@ -417,7 +418,7 @@ describe('QuickExitButton - Working Tests', () => {
           const clickEvent = new MouseEvent('click', {
             bubbles: true,
             cancelable: true,
-            view: window
+            view: window;
           });
           button.dispatchEvent(clickEvent);
         }

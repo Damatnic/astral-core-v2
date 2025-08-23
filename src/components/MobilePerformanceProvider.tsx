@@ -8,11 +8,11 @@
  * - Mobile-specific caching strategies
  * - Progressive loading patterns
  * - Bundle size optimization
- */
+ */;
 
 import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 
-// Performance metrics interface
+// Performance metrics interface;
 interface PerformanceMetrics {
   bundleLoadTime: number;
   componentRenderTime: Record<string, number>;
@@ -25,7 +25,7 @@ interface PerformanceMetrics {
   ttfb: number; // Time to First Byte
 }
 
-// Network information interface
+// Network information interface;
 interface NetworkInfo {
   effectiveType: '2g' | '3g' | '4g' | 'slow-2g';
   downlink: number;
@@ -33,7 +33,7 @@ interface NetworkInfo {
   rtt: number;
 }
 
-// Device capabilities interface
+// Device capabilities interface;
 interface DeviceInfo {
   deviceMemory: number;
   hardwareConcurrency: number;
@@ -44,7 +44,7 @@ interface DeviceInfo {
   supportsWASM: boolean;
 }
 
-// Performance context interface
+// Performance context interface;
 interface MobilePerformanceContextValue {
   metrics: PerformanceMetrics;
   networkInfo: NetworkInfo;
@@ -58,7 +58,7 @@ interface MobilePerformanceContextValue {
   optimizeForMobile: boolean;
 }
 
-// Default values
+// Default values;
 const defaultMetrics: PerformanceMetrics = {
   bundleLoadTime: 0,
   componentRenderTime: {},
@@ -88,7 +88,7 @@ const defaultDeviceInfo: DeviceInfo = {
   supportsWASM: false,
 };
 
-// Create context
+// Create context;
 const MobilePerformanceContext = createContext<MobilePerformanceContextValue>({
   metrics: defaultMetrics,
   networkInfo: defaultNetworkInfo,
@@ -102,11 +102,11 @@ const MobilePerformanceContext = createContext<MobilePerformanceContextValue>({
   optimizeForMobile: false,
 });
 
-// Performance utilities
+// Performance utilities;
 class PerformanceUtils {
   // Get network information
   static getNetworkInfo(): NetworkInfo {
-    const connection = (navigator as any).connection || 
+    const connection = (navigator as any).connection || ;
                       (navigator as any).mozConnection || 
                       (navigator as any).webkitConnection;
     
@@ -122,11 +122,11 @@ class PerformanceUtils {
     const deviceMemory = (navigator as any).deviceMemory || 4;
     const hardwareConcurrency = navigator.hardwareConcurrency || 4;
     const maxTouchPoints = navigator.maxTouchPoints || 0;
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || ;
                      window.innerWidth <= 768;
     
-    // Determine if device is low-end
-    const isLowEnd = deviceMemory < 2 || hardwareConcurrency < 2 || 
+    // Determine if device is low-end;
+    const isLowEnd = deviceMemory < 2 || hardwareConcurrency < 2 || ;
                      (isMobile && window.screen.width < 375);
 
     return {
@@ -150,9 +150,10 @@ class PerformanceUtils {
             resolve(fcpEntry.startTime);
             observer.disconnect();
           }
-        });
-        observer.observe({ entryTypes: ['paint'] });
-      } else {
+        };
+  };
+        observer.observe({ entryTypes: ['paint'] });;
+  } else {
         resolve(0);
       }
     });
@@ -173,8 +174,8 @@ class PerformanceUtils {
         setTimeout(() => {
           observer.disconnect();
           resolve(0);
-        }, 5000);
-      } else {
+        }, 5000);;
+  } else {
         resolve(0);
       }
     });
@@ -198,8 +199,8 @@ class PerformanceUtils {
         setTimeout(() => {
           observer.disconnect();
           resolve(0);
-        }, 10000);
-      } else {
+        }, 10000);;
+  } else {
         resolve(0);
       }
     });
@@ -253,8 +254,8 @@ class PerformanceUtils {
 
   // Resource hints for better performance
   static addResourceHints(): void {
-    // DNS prefetch for external domains
-    const dnsPrefetch = [
+    // DNS prefetch for external domains;
+    const dnsPrefetch = [;
       'fonts.googleapis.com',
       'fonts.gstatic.com',
     ];
@@ -266,8 +267,8 @@ class PerformanceUtils {
       document.head.appendChild(link);
     });
 
-    // Preconnect for critical external resources
-    const preconnect = [
+    // Preconnect for critical external resources;
+    const preconnect = [;
       'https://fonts.googleapis.com',
     ];
 
@@ -281,7 +282,7 @@ class PerformanceUtils {
   }
 }
 
-// Component render tracker hook
+// Component render tracker hook;
 export const useComponentRenderTracker = (componentName: string) => {
   const { trackComponentRender } = useContext(MobilePerformanceContext);
   
@@ -292,10 +293,12 @@ export const useComponentRenderTracker = (componentName: string) => {
       const endTime = performance.now();
       const duration = endTime - startTime;
       trackComponentRender(componentName, duration);
-    }, [componentName, trackComponentRender]);
+    };
+  };
+  }, [componentName, trackComponentRender]);
 };
 
-// Network-aware loading hook
+// Network-aware loading hook;
 export const useNetworkAwareLoading = () => {
   const { networkInfo, deviceInfo, shouldPreload, preferredQuality } = useContext(MobilePerformanceContext);
   
@@ -303,10 +306,13 @@ export const useNetworkAwareLoading = () => {
     return !deviceInfo.isLowEnd && 
            networkInfo.effectiveType === '4g' && 
            !networkInfo.saveData;
+  };
   }, [deviceInfo.isLowEnd, networkInfo.effectiveType, networkInfo.saveData]);
   
   const shouldLoadImmediately = useMemo(() => {
     return PerformanceUtils.isOptimalConnection(networkInfo) && !deviceInfo.isLowEnd;
+  };
+  };
   }, [networkInfo, deviceInfo.isLowEnd]);
   
   return {
@@ -318,7 +324,7 @@ export const useNetworkAwareLoading = () => {
     deviceInfo,
   };
 
-// Performance monitoring hook
+// Performance monitoring hook;
 export const usePerformanceMonitoring = () => {
   const { metrics, reportWebVital } = useContext(MobilePerformanceContext);
   
@@ -331,18 +337,20 @@ export const usePerformanceMonitoring = () => {
             const navEntry = entry as PerformanceNavigationTiming;
             reportWebVital('ttfb', navEntry.responseStart - navEntry.requestStart);
           }
-        });
+        };
+  };
       });
       
       observer.observe({ entryTypes: ['navigation'] });
       return () => observer.disconnect();
     }
+  };
   }, [reportWebVital]);
 
   return metrics;
 };
 
-// Main provider component
+// Main provider component;
 interface MobilePerformanceProviderProps {
   children: React.ReactNode;
   enableMonitoring?: boolean;
@@ -369,6 +377,7 @@ export const MobilePerformanceProvider: React.FC<MobilePerformanceProviderProps>
     if (enablePreloading) {
       PerformanceUtils.addResourceHints();
     }
+  };
   }, [enablePreloading]);
 
   // Monitor network changes
@@ -383,6 +392,7 @@ export const MobilePerformanceProvider: React.FC<MobilePerformanceProviderProps>
       return () => {
         connection.removeEventListener('change', handleConnectionChange);
       }
+  };
   }, []);
 
   // Initialize performance monitoring
@@ -423,22 +433,26 @@ export const MobilePerformanceProvider: React.FC<MobilePerformanceProviderProps>
       observer.observe({ entryTypes: ['layout-shift'] });
       return () => observer.disconnect();
     }
+  };
   }, [enableMonitoring]);
 
-  // Calculate derived values
+  // Calculate derived values;
   const isOptimalLoading = useMemo(() => {
     return PerformanceUtils.isOptimalConnection(networkInfo) && !deviceInfo.isLowEnd;
+  };
   }, [networkInfo, deviceInfo.isLowEnd]);
 
   const shouldPreload = useMemo(() => {
     return enablePreloading && isOptimalLoading;
+  };
   }, [enablePreloading, isOptimalLoading]);
 
   const preferredQuality = useMemo(() => {
     return PerformanceUtils.getPreferredQuality(networkInfo, deviceInfo);
+  };
   }, [networkInfo, deviceInfo]);
 
-  // Track component render times
+  // Track component render times;
   const trackComponentRender = useCallback((componentName: string, duration: number) => {
     setMetrics(prev => ({
       ...prev,
@@ -447,16 +461,18 @@ export const MobilePerformanceProvider: React.FC<MobilePerformanceProviderProps>
         [componentName]: duration,
       },
     }));
+  };
   }, []);
 
-  // Preload resources with priority
+  // Preload resources with priority;
   const preloadResource = useCallback((resource: string, priority: 'low' | 'high') => {
     if (shouldPreload || priority === 'high') {
       PerformanceUtils.preloadResource(resource, 'script', priority);
     }
+  };
   }, [shouldPreload]);
 
-  // Report web vitals
+  // Report web vitals;
   const reportWebVital = useCallback((name: string, value: number) => {
     setMetrics(prev => ({
       ...prev,
@@ -473,6 +489,7 @@ export const MobilePerformanceProvider: React.FC<MobilePerformanceProviderProps>
         });
       }
     }
+  };
   }, []);
 
   const contextValue: MobilePerformanceContextValue = {
@@ -495,7 +512,7 @@ export const MobilePerformanceProvider: React.FC<MobilePerformanceProviderProps>
   );
 };
 
-// Hook to access performance context
+// Hook to access performance context;
 export const useMobilePerformance = () => {
   const context = useContext(MobilePerformanceContext);
   if (!context) {
@@ -504,7 +521,7 @@ export const useMobilePerformance = () => {
   return context;
 };
 
-// Performance debugger component (development only)
+// Performance debugger component (development only);
 export const PerformanceDebugger: React.FC = () => {
   const { metrics, networkInfo, deviceInfo } = useMobilePerformance();
 
@@ -549,7 +566,7 @@ export const PerformanceDebugger: React.FC = () => {
   );
 };
 
-// Named export for the full object (for existing imports)
+// Named export for the full object (for existing imports);
 export const MobilePerformanceBundle = {
   MobilePerformanceProvider,
   useMobilePerformance,
@@ -559,5 +576,5 @@ export const MobilePerformanceBundle = {
   PerformanceDebugger,
 };
 
-// Export the main provider component as default for lazy loading
+// Export the main provider component as default for lazy loading;
 export default MobilePerformanceProvider;

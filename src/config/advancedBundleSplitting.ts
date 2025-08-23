@@ -1,7 +1,7 @@
 // Enhanced Bundle Splitting Strategy
 // Advanced code splitting optimization for maximum performance impact
 
-// Route-based code splitting configuration
+// Route-based code splitting configuration;
 export const routeBasedSplitting = {
   // Critical routes - load immediately
   critical: [
@@ -34,7 +34,7 @@ export const routeBasedSplitting = {
   ]
 };
 
-// Feature-based code splitting
+// Feature-based code splitting;
 export const featureBasedSplitting = {
   // Crisis intervention system
   crisis: {
@@ -103,7 +103,7 @@ export const featureBasedSplitting = {
   }
 };
 
-// Vendor chunk optimization strategy
+// Vendor chunk optimization strategy;
 export const vendorChunkStrategy = (id: string) => {
   // React core - highest priority, smallest chunk
   if (id.includes('react/') && !id.includes('react-dom')) {
@@ -176,7 +176,7 @@ export const vendorChunkStrategy = (id: string) => {
   return null;
 };
 
-// Helper functions to reduce cognitive complexity
+// Helper functions to reduce cognitive complexity;
 const isCrisisRelated = (id: string): boolean => {
   return id.includes('crisis') || 
          id.includes('emergency') || 
@@ -283,14 +283,14 @@ const getStateChunk = (id: string): string => {
   return 'state-misc';
 };
 
-// Advanced chunk splitting with size optimization
+// Advanced chunk splitting with size optimization;
 export const advancedChunkSplitting = (id: string) => {
   // Crisis intervention - highest priority
   if (isCrisisRelated(id)) {
     return 'crisis-intervention';
   }
   
-  // Vendor libraries with specific strategy
+  // Vendor libraries with specific strategy;
   const vendorChunk = vendorChunkStrategy(id);
   if (vendorChunk) {
     return vendorChunk;
@@ -324,7 +324,7 @@ export const advancedChunkSplitting = (id: string) => {
   return null; // Let Vite decide for everything else
 };
 
-// Bundle size monitoring and optimization
+// Bundle size monitoring and optimization;
 export const bundleSizeOptimization = {
   // Target sizes for different chunk types (in KB)
   targets: {
@@ -346,7 +346,7 @@ export const bundleSizeOptimization = {
   }
 };
 
-// Preload strategy based on chunk priorities
+// Preload strategy based on chunk priorities;
 export const chunkPreloadStrategy = {
   immediate: [
     'crisis-intervention',

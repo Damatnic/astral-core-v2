@@ -1,5 +1,5 @@
 // Secure storage wrapper with automatic encryption for sensitive data
-// Provides a drop-in replacement for localStorage with HIPAA compliance
+// Provides a drop-in replacement for localStorage with HIPAA compliance;
 
 import { getEncryptionService } from './encryptionService';
 
@@ -79,7 +79,7 @@ class SecureStorageService {
       encrypted: this.shouldEncrypt(key),
       size: data.length,
       accessCount: (existing?.accessCount || 0) + (isRead ? 1 : 0),
-      lastAccessed: now
+      lastAccessed: now;
     };
 
     this.accessLog.set(key, metadata);
@@ -180,7 +180,7 @@ class SecureStorageService {
           key,
           size: value.length,
           encrypted: this.shouldEncrypt(key),
-          classification: this.getDataClassification(key)
+          classification: this.getDataClassification(key);
         });
       }
 
@@ -195,7 +195,7 @@ class SecureStorageService {
    */
   public async getItem(key: string): Promise<string | null> {
     try {
-      // Retrieve data using encryption service
+      // Retrieve data using encryption service;
       const value = await this.encryptionService.secureGetItem(key);
 
       if (value !== null) {
@@ -207,7 +207,7 @@ class SecureStorageService {
           this.logStorageEvent('data_accessed', {
             key,
             size: value.length,
-            classification: this.getDataClassification(key)
+            classification: this.getDataClassification(key);
           });
         }
       }
@@ -237,7 +237,7 @@ class SecureStorageService {
       if (this.options.enableAuditLogging) {
         this.logStorageEvent('data_removed', {
           key,
-          classification: this.getDataClassification(key)
+          classification: this.getDataClassification(key);
         });
       }
 
@@ -325,8 +325,8 @@ class SecureStorageService {
 
       if (metadata.encrypted) {
         stats.encryptedKeys++;
-        stats.byEncryption.encrypted++;
-      } else {
+        stats.byEncryption.encrypted++;;
+  } else {
         stats.byEncryption.plaintext++;
       }
 
@@ -418,7 +418,7 @@ class SecureStorageService {
     } = {
       data: exportData,
       exportTime: new Date().toISOString(),
-      version: '1.0'
+      version: '1.0';
     };
 
     if (includeMetadata) {
@@ -454,7 +454,7 @@ class SecureStorageService {
 
       this.logStorageEvent('data_imported', {
         importedCount: importedKeys.length,
-        keys: importedKeys
+        keys: importedKeys;
       });
 
     } catch (error) {
@@ -475,9 +475,9 @@ class SecureStorageService {
       details: {
         ...details,
         userAgent: navigator.userAgent,
-        url: window.location.href
+        url: window.location.href;
       },
-      severity: 'info' as const
+      severity: 'info' as const;
     };
 
     // Store in security logs
@@ -497,12 +497,12 @@ class SecureStorageService {
   }
 }
 
-// Singleton instance
+// Singleton instance;
 let secureStorageInstance: SecureStorageService | null = null;
 
 /**
  * Get the singleton secure storage instance
- */
+ */;
 export const getSecureStorage = (options?: SecureStorageOptions): SecureStorageService => {
   if (!secureStorageInstance) {
     secureStorageInstance = new SecureStorageService(options);
@@ -512,7 +512,7 @@ export const getSecureStorage = (options?: SecureStorageOptions): SecureStorageS
 
 /**
  * React hook for using secure storage
- */
+ */;
 export const useSecureStorage = () => {
   const storage = getSecureStorage();
 
@@ -545,7 +545,7 @@ export const useSecureStorage = () => {
     migrateToEncrypted: () => storage.migrateToEncrypted(),
     checkHIPAACompliance: () => storage.performHIPAAComplianceCheck(),
     exportData: (includeMetadata?: boolean) => storage.exportData(includeMetadata),
-    importData: (backup: any) => storage.importData(backup)
+    importData: (backup: any) => storage.importData(backup);
   };
 
 export { SecureStorageService };

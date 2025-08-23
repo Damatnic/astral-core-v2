@@ -1,7 +1,7 @@
 /**
  * Enhanced API Service for Astral Core
  * Provides a robust HTTP client with retry logic, caching, and error handling
- */
+ */;
 
 import { auth0Service } from './auth0Service';
 
@@ -47,7 +47,7 @@ class ApiService {
   private interceptors = {
     request: [] as Array<(config: ApiRequestConfig) => ApiRequestConfig | Promise<ApiRequestConfig>>,
     response: [] as Array<(response: ApiResponse) => ApiResponse | Promise<ApiResponse>>,
-    error: [] as Array<(error: ApiError) => ApiError | Promise<ApiError>>
+    error: [] as Array<(error: ApiError) => ApiError | Promise<ApiError>>;
   };
 
   constructor(config: ApiConfig) {
@@ -123,27 +123,27 @@ class ApiService {
    * Make HTTP request with retry logic and caching
    */
   async request<T = any>(url: string, config: ApiRequestConfig = {}): Promise<ApiResponse<T>> {
-    // Apply request interceptors
+    // Apply request interceptors;
     let finalConfig = { ...config };
     for (const interceptor of this.interceptors.request) {
       finalConfig = await interceptor(finalConfig);
     }
 
-    // Check cache for GET requests
+    // Check cache for GET requests;
     const cacheKey = this.getCacheKey(url, finalConfig);
     if (finalConfig.method === 'GET' || !finalConfig.method) {
       const cached = this.getFromCache(cacheKey);
       if (cached) {
         return { data: cached, status: 200, headers: new Headers(), ok: true }
 
-      // Check for pending request to prevent duplicate calls
+      // Check for pending request to prevent duplicate calls;
       const pending = this.pendingRequests.get(cacheKey);
       if (pending) {
         return pending as Promise<ApiResponse<T>>;
       }
     }
 
-    // Create request promise
+    // Create request promise;
     const requestPromise = this.executeRequest<T>(url, finalConfig);
 
     // Store as pending for deduplication
@@ -154,7 +154,7 @@ class ApiService {
     try {
       const response = await requestPromise;
       
-      // Apply response interceptors
+      // Apply response interceptors;
       let finalResponse = response;
       for (const interceptor of this.interceptors.response) {
         finalResponse = await interceptor(finalResponse);
@@ -193,17 +193,18 @@ class ApiService {
             ...config.headers
           },
           body: config.body ? JSON.stringify(config.body) : undefined,
-          signal: controller.signal
-        });
+          signal: controller.signal;
+        };
+  };
 
         clearTimeout(timeoutId);
 
-        // Parse response
+        // Parse response;
         let data: T;
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
-          data = await response.json();
-        } else {
+          data = await response.json();;
+  } else {
           data = await response.text() as unknown as T;
         }
 
@@ -212,10 +213,10 @@ class ApiService {
           const error: ApiError = {
             message: `HTTP ${response.status}: ${response.statusText}`,
             status: response.status,
-            details: data
+            details: data;
           };
 
-          // Apply error interceptors
+          // Apply error interceptors;
           let finalError = error;
           for (const interceptor of this.interceptors.error) {
             finalError = await interceptor(finalError);
@@ -235,27 +236,27 @@ class ApiService {
           data,
           status: response.status,
           headers: response.headers,
-          ok: response.ok
+          ok: response.ok;
         } catch (error) {
         // Handle network errors with proper type guards
         if (error instanceof Error) {
           if (error.name === 'AbortError') {
             lastError = {
               message: 'Request timeout',
-              code: 'TIMEOUT'
+              code: 'TIMEOUT';
             } else if (error instanceof TypeError && error.message === 'Failed to fetch') {
             lastError = {
               message: 'Network error',
-              code: 'NETWORK_ERROR'
+              code: 'NETWORK_ERROR';
             } else {
             lastError = {
               message: error.message,
-              code: 'UNKNOWN_ERROR'
-            }
-        } else {
+              code: 'UNKNOWN_ERROR';
+            };
+  } else {
           lastError = {
             message: typeof error === 'string' ? error : 'Unknown error occurred',
-            code: 'UNKNOWN_ERROR'
+            code: 'UNKNOWN_ERROR';
           }
 
         // Retry on network errors
@@ -264,14 +265,14 @@ class ApiService {
           continue;
         }
 
-        // Apply error interceptors
+        // Apply error interceptors;
         let finalError = lastError;
         if (finalError) {
           for (const interceptor of this.interceptors.error) {
             finalError = await interceptor(finalError);
           }
-          throw finalError;
-        } else {
+          throw finalError;;
+  } else {
           throw new Error('Request failed');
         }
       }
@@ -290,7 +291,7 @@ class ApiService {
       return url;
     }
 
-    const queryString = Object.entries(params)
+    const queryString = Object.entries(params);
       .filter(([_, value]) => value !== undefined && value !== null)
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
       .join('&');
@@ -331,8 +332,9 @@ class ApiService {
 
     this.cache.set(key, {
       data,
-      timestamp: Date.now()
-    });
+      timestamp: Date.now();
+    };
+  };
 
     // Clean old cache entries
     if (this.cache.size > 100) {
@@ -358,8 +360,8 @@ class ApiService {
         if (key.includes(pattern)) {
           this.cache.delete(key);
         }
-      });
-    } else {
+      });;
+  } else {
       this.cache.clear();
     }
   }
@@ -398,7 +400,7 @@ class ApiService {
   }
 }
 
-// Create and export default instance
+// Create and export default instance;
 import { ENV } from '../utils/envConfig';
 
 const apiService = new ApiService({
@@ -406,16 +408,16 @@ const apiService = new ApiService({
   timeout: 30000,
   retries: 3,
   cache: true,
-  cacheTTL: 5 * 60 * 1000 // 5 minutes
+  cacheTTL: 5 * 60 * 1000 // 5 minutes;
 });
 
-// Export for crisis endpoints (with different config)
+// Export for crisis endpoints (with different config);
 export const crisisApiService = new ApiService({
   baseURL: ENV.API_BASE_URL,
   timeout: 60000, // Longer timeout for crisis
   retries: 5, // More retries for crisis
   cache: true,
-  cacheTTL: 60 * 60 * 1000 // 1 hour cache for crisis resources
+  cacheTTL: 60 * 60 * 1000 // 1 hour cache for crisis resources;
 });
 
 export default apiService;

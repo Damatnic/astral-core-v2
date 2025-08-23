@@ -1,7 +1,7 @@
 /**
  * Enhanced Routing Test Suite
  * Tests route management, preloading, and performance tracking
- */
+ */;
 
 import {
   EnhancedRouteManager,
@@ -26,7 +26,7 @@ jest.mock('./bundleOptimization', () => ({
   initializeBundleOptimization: jest.fn(),
 }));
 
-// Mock browser APIs
+// Mock browser APIs;
 const mockIntersectionObserver = jest.fn();
 const mockObserve = jest.fn();
 const mockUnobserve = jest.fn();
@@ -59,7 +59,7 @@ Object.defineProperty(window, 'performance', {
   writable: true,
 });
 
-// Mock history API
+// Mock history API;
 const mockPushState = jest.fn();
 const mockReplaceState = jest.fn();
 Object.defineProperty(window, 'history', {
@@ -190,7 +190,7 @@ describe('enhancedRouting', () => {
       });
 
       it('should create lazy route with default options', () => {
-        const component = EnhancedRouteManager.createLazyRoute(
+        const component = EnhancedRouteManager.createLazyRoute(;
           mockImportFn,
           '/lazy-test'
         );
@@ -199,7 +199,7 @@ describe('enhancedRouting', () => {
       });
 
       it('should create lazy route with custom options', () => {
-        const component = EnhancedRouteManager.createLazyRoute(
+        const component = EnhancedRouteManager.createLazyRoute(;
           mockImportFn,
           '/lazy-test',
           {
@@ -219,7 +219,7 @@ describe('enhancedRouting', () => {
       });
 
       it('should record navigation patterns', () => {
-        // Simulate navigation
+        // Simulate navigation;
         const pushState = window.history.pushState;
         pushState.call(window.history, {}, '', '/new-page');
 
@@ -243,7 +243,7 @@ describe('enhancedRouting', () => {
       });
 
       it.skip('should preload critical routes on initialization', () => {
-        // Skipped: preloadCriticalRoutes method not accessible
+        // Skipped: preloadCriticalRoutes method not accessible;
         const { ComponentPreloader } = require('../components/EnhancedLazyComponent');
         
         // Reset mock to check calls after initialization
@@ -341,7 +341,7 @@ describe('enhancedRouting', () => {
       });
 
       it('should observe links when they are added to DOM', () => {
-        // Simulate MutationObserver callback
+        // Simulate MutationObserver callback;
         const mutationObserver = (window.MutationObserver as jest.Mock).mock.calls[0][0];
         const mockCallback = mutationObserver;
         
@@ -367,7 +367,7 @@ describe('enhancedRouting', () => {
       });
 
       it.skip('should setup hover preloading for specified routes', () => {
-        // Skipped: document.addEventListener not properly mocked
+        // Skipped: document.addEventListener not properly mocked;
         const TestComponent = () => React.createElement('div', null, 'Test');
         
         EnhancedRouteManager.registerRoute({
@@ -377,7 +377,7 @@ describe('enhancedRouting', () => {
         });
 
         // Simulate mouseover event
-        // Event object would be used in actual implementation
+        // Event object would be used in actual implementation;
 
         const hoverListener = document.addEventListener as jest.Mock;
         expect(hoverListener).toHaveBeenCalledWith('mouseover', expect.any(Function));
@@ -390,7 +390,7 @@ describe('enhancedRouting', () => {
       });
 
       it.skip('should setup interaction preloading for specified routes', () => {
-        // Skipped: document.addEventListener not properly mocked
+        // Skipped: document.addEventListener not properly mocked;
         const TestComponent = () => React.createElement('div', null, 'Test');
         
         EnhancedRouteManager.registerRoute({
@@ -456,7 +456,7 @@ describe('enhancedRouting', () => {
     });
 
     it.skip('should provide access to route manager methods', () => {
-      // Skipped: navigationHistory undefined issue
+      // Skipped: navigationHistory undefined issue;
       const { result } = renderHook(() => useEnhancedRouting());
       
       const stats = result.current.getNavigationStats();
@@ -510,7 +510,7 @@ describe('enhancedRouting', () => {
     });
 
     it('should handle anonymous components', () => {
-      const TrackedComponent = withRouteTracking(
+      const TrackedComponent = withRouteTracking(;
         () => React.createElement('div', null, 'Anonymous'),
         '/anonymous'
       );
@@ -538,7 +538,7 @@ describe('enhancedRouting', () => {
     });
 
     it('should track and predict navigation patterns', () => {
-      // Simulate navigation sequence
+      // Simulate navigation sequence;
       const pushState = window.history.pushState;
       
       pushState.call(window.history, {}, '', '/page1');
@@ -551,7 +551,7 @@ describe('enhancedRouting', () => {
     });
 
     it('should limit navigation history to prevent memory leaks', () => {
-      // Simulate many navigations
+      // Simulate many navigations;
       const pushState = window.history.pushState;
       
       for (let i = 0; i < 150; i++) {
@@ -570,7 +570,7 @@ describe('enhancedRouting', () => {
     });
 
     it('should handle intersection observer unavailability', () => {
-      // Mock missing IntersectionObserver
+      // Mock missing IntersectionObserver;
       const originalIO = window.IntersectionObserver;
       delete (window as any).IntersectionObserver;
 
@@ -583,7 +583,7 @@ describe('enhancedRouting', () => {
     });
 
     it('should handle mutation observer unavailability', () => {
-      // Mock missing MutationObserver
+      // Mock missing MutationObserver;
       const originalMO = window.MutationObserver;
       delete (window as any).MutationObserver;
 
@@ -597,7 +597,7 @@ describe('enhancedRouting', () => {
 
     it.skip('should handle performance API unavailability', () => {
       // Skipped: performance.now deletion not working correctly in test env
-      // Mock missing performance.now
+      // Mock missing performance.now;
       const originalPerf = window.performance.now;
       delete (window.performance as any).now;
 

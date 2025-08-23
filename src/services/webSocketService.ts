@@ -1,7 +1,7 @@
 /**
  * Enhanced WebSocket Service for Astral Core
  * Handles real-time communication for chat, notifications, and live updates
- */
+ */;
 
 import * as React from 'react';
 import { auth0Service } from './auth0Service';
@@ -96,7 +96,7 @@ class WebSocketService {
   }
 
   private checkDemoMode() {
-    // Enable demo mode if no backend is available
+    // Enable demo mode if no backend is available;
     const isDevelopment = process.env.NODE_ENV === 'development';
     const isLocalhost = this.url.includes('localhost');
     
@@ -117,8 +117,8 @@ class WebSocketService {
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
         // Page is hidden, stop heartbeat
-        this.stopHeartbeat();
-      } else if (this.isConnected()) {
+        this.stopHeartbeat();;
+  } else if (this.isConnected()) {
         // Page is visible again, restart heartbeat and check for missed notifications
         this.startHeartbeat();
         this.checkMissedNotifications();
@@ -168,8 +168,8 @@ class WebSocketService {
           }
         });
 
-        // Build WebSocket URL with auth if available
-        const wsUrl = token 
+        // Build WebSocket URL with auth if available;
+        const wsUrl = token ;
           ? `${this.url}?token=${encodeURIComponent(token)}`
           : this.url;
 
@@ -282,7 +282,7 @@ class WebSocketService {
         break;
       
       default: {
-        // Handle regular message listeners
+        // Handle regular message listeners;
         const listeners = this.listeners.get(message.type);
         if (listeners) {
           listeners.forEach(listener => {
@@ -312,21 +312,21 @@ class WebSocketService {
     const roomIndicators = this.typingIndicators.get(room)!;
 
     if (isTyping) {
-      // Clear existing timeout
+      // Clear existing timeout;
       const existingTimeout = roomIndicators.get(userId);
       if (existingTimeout) {
         clearTimeout(existingTimeout);
       }
 
-      // Set new timeout to clear indicator after 3 seconds
+      // Set new timeout to clear indicator after 3 seconds;
       const timeout = setTimeout(() => {
         roomIndicators.delete(userId);
         this.emit('typing', { room, userId, isTyping: false });
       }, 3000);
 
-      roomIndicators.set(userId, timeout);
-    } else {
-      // Clear typing indicator
+      roomIndicators.set(userId, timeout);;
+  } else {
+      // Clear typing indicator;
       const timeout = roomIndicators.get(userId);
       if (timeout) {
         clearTimeout(timeout);
@@ -344,7 +344,7 @@ class WebSocketService {
   }
 
   private handleNotification(data: unknown) {
-    // Type-safe data access
+    // Type-safe data access;
     const notificationData = data as {
       title?: string;
       message?: string;
@@ -360,7 +360,7 @@ class WebSocketService {
         body: notificationData.message || 'You have a new notification',
         urgency: notificationData.urgency || 'normal',
         category: notificationData.type || 'system',
-        data: notificationData.metadata
+        data: notificationData.metadata;
       });
     }
 
@@ -369,7 +369,7 @@ class WebSocketService {
   }
 
   private handleCrisisAlert(data: unknown) {
-    // Type-safe data access
+    // Type-safe data access;
     const alertData = data as {
       title?: string;
       message?: string;
@@ -411,7 +411,7 @@ class WebSocketService {
       return;
     }
     
-    const delay = Math.min(
+    const delay = Math.min(;
       this.reconnectInterval * Math.pow(2, this.reconnectAttempts - 1),
       30000 // Max 30 seconds
     );
@@ -478,9 +478,9 @@ class WebSocketService {
               id: Math.random().toString(36).substring(2, 11),
               userId: 'demo-echo',
               username: 'Demo Echo',
-              timestamp: Date.now()
+              timestamp: Date.now();
             },
-            timestamp: Date.now()
+            timestamp: Date.now();
           });
         }
       }, 100);
@@ -605,7 +605,7 @@ class WebSocketService {
   leaveRoom(roomId: string) {
     this.roomSubscriptions.delete(roomId);
     
-    // Clear typing indicators for this room
+    // Clear typing indicators for this room;
     const roomIndicators = this.typingIndicators.get(roomId);
     if (roomIndicators) {
       roomIndicators.forEach(timeout => clearTimeout(timeout));
@@ -629,7 +629,7 @@ class WebSocketService {
       roomId,
       message,
       metadata,
-      timestamp: Date.now()
+      timestamp: Date.now();
     }, roomId);
   }
 
@@ -671,7 +671,7 @@ class WebSocketService {
     this.send('crisis_alert', {
       userId,
       severity,
-      timestamp: Date.now()
+      timestamp: Date.now();
     });
   }
 
@@ -686,7 +686,7 @@ class WebSocketService {
   }
 }
 
-// React hooks for WebSocket
+// React hooks for WebSocket;
 export const useWebSocket = (url: string) => {
   const [service] = React.useState(() => new WebSocketService(url));
   const [isConnected, setIsConnected] = React.useState(false);
@@ -697,7 +697,9 @@ export const useWebSocket = (url: string) => {
     return () => {
       unsubscribe();
       service.disconnect();
-    }, [service]);
+    };
+  };
+  }, [service]);
 
   return { service, isConnected };
 
@@ -712,13 +714,14 @@ export const useChatRoom = (roomId: string, wsService: WebSocketService) => {
       if (message.roomId === roomId) {
         setMessages(prev => [...prev, message]);
       }
-    });
+    };
+  };
 
     const unsubscribeTyping = wsService.subscribe('typing_update', (data: { userId: string; username: string; isTyping: boolean }) => {
       setTypingUsers(prev => {
         if (data.isTyping) {
-          return prev.includes(data.username) ? prev : [...prev, data.username];
-        } else {
+          return prev.includes(data.username) ? prev : [...prev, data.username];;
+  } else {
           return prev.filter(user => user !== data.username);
         }
       });
@@ -728,18 +731,24 @@ export const useChatRoom = (roomId: string, wsService: WebSocketService) => {
       wsService.leaveChatRoom(roomId);
       unsubscribeMessages();
       unsubscribeTyping();
-    }, [roomId, wsService]);
+    };
+  };
+  }, [roomId, wsService]);
 
   const sendMessage = React.useCallback((message: string) => {
     wsService.sendChatMessage(roomId, message);
+  };
   }, [roomId, wsService]);
 
   const startTyping = React.useCallback(() => {
     wsService.startTyping(roomId);
+  };
   }, [roomId, wsService]);
 
   const stopTyping = React.useCallback(() => {
     wsService.stopTyping(roomId);
+  };
+  };
   }, [roomId, wsService]);
 
   return {
@@ -750,13 +759,13 @@ export const useChatRoom = (roomId: string, wsService: WebSocketService) => {
     stopTyping
   };
 
-// Singleton instance
+// Singleton instance;
 let wsServiceInstance: WebSocketService | null = null;
 
 export const getWebSocketService = () => {
   if (!wsServiceInstance) {
-    // Use environment variable or default URLs
-    const wsUrl = process.env.VITE_WS_URL ||
+    // Use environment variable or default URLs;
+    const wsUrl = process.env.VITE_WS_URL ||;
       (process.env.NODE_ENV === 'development'
         ? 'ws://localhost:8080/ws' 
         : 'wss://api.astralcore.app/ws');
@@ -777,7 +786,8 @@ if (typeof window !== 'undefined') {
         service.connect().catch(console.error);
       }
     }, 1000);
-  });
+  };
+  };
 
   // Listen for auth events
   window.addEventListener('auth-success', () => {

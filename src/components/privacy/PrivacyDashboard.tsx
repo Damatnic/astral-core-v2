@@ -31,6 +31,7 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
 
   useEffect(() => {
     loadPrivacyData();
+  };
   }, []);
 
   const loadPrivacyData = () => {
@@ -53,16 +54,16 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
   const handleExportData = async () => {
     setIsLoading(true);
     try {
-      // In a real app, this would use actual user ID
+      // In a real app, this would use actual user ID;
       const userId = 'current-user';
       const exportRequest = await analyticsService.exportUserData(userId);
       
-      // Create and download the export file
+      // Create and download the export file;
       const exportData = {
         request: exportRequest,
         consent: consentStatus,
         privacyReport: privacyReport,
-        exportDate: new Date().toISOString()
+        exportDate: new Date().toISOString();
       };
       
       const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
@@ -86,7 +87,7 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
   const handleDeleteData = async (retainCrisisData: boolean = true) => {
     setIsLoading(true);
     try {
-      // In a real app, this would use actual user ID
+      // In a real app, this would use actual user ID;
       const userId = 'current-user';
       await analyticsService.deleteUserData(userId, retainCrisisData);
       
@@ -256,7 +257,7 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
               </div>
               <div className="flex items-center">
                 <input
-                  id="analytics-consent"
+                  id="analytics-consent";
                   type="checkbox"
                   checked={consentStatus.analytics}
                   onChange={(e) => handleConsentChange('analytics', e.target.checked)}
@@ -275,7 +276,7 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
               </div>
               <div className="flex items-center">
                 <input
-                  id="marketing-consent"
+                  id="marketing-consent";
                   type="checkbox"
                   checked={consentStatus.marketing}
                   onChange={(e) => handleConsentChange('marketing', e.target.checked)}
@@ -296,7 +297,7 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
           Data Control Actions
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          <AppButton
+          <AppButton;
             variant="secondary"
             size="sm"
             onClick={() => setShowExportModal(true)}
@@ -304,7 +305,7 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
             Export My Data
           </AppButton>
           
-          <AppButton
+          <AppButton;
             variant="danger"
             size="sm"
             onClick={() => setShowDeleteModal(true)}
@@ -313,7 +314,7 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
           </AppButton>
           
           {analyticsService.isEnabled() ? (
-            <AppButton
+            <AppButton;
               variant="secondary"
               size="sm"
               onClick={handleOptOut}
@@ -321,7 +322,7 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
               Opt Out
             </AppButton>
           ) : (
-            <AppButton
+            <AppButton;
               variant="success"
               size="sm"
               onClick={handleOptIn}
@@ -330,7 +331,7 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
             </AppButton>
           )}
           
-          <AppButton
+          <AppButton;
             variant="ghost"
             size="sm"
             onClick={() => analyticsService.clearStoredData()}
@@ -364,14 +365,14 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
           </div>
 
           <div className="flex justify-end space-x-3">
-            <AppButton
+            <AppButton;
               variant="secondary"
               onClick={() => setShowExportModal(false)}
               disabled={isLoading}
             >
               Cancel
             </AppButton>
-            <AppButton
+            <AppButton;
               variant="primary"
               onClick={handleExportData}
               disabled={isLoading}
@@ -406,7 +407,7 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
           <div className="space-y-3">
             <div className="flex items-start space-x-3">
               <input
-                id="retain-crisis-data"
+                id="retain-crisis-data";
                 type="checkbox"
                 defaultChecked={true}
                 className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
@@ -423,14 +424,14 @@ const PrivacyDashboard: React.FC<PrivacyDashboardProps> = ({ className = '' }) =
           </div>
 
           <div className="flex justify-end space-x-3">
-            <AppButton
+            <AppButton;
               variant="secondary"
               onClick={() => setShowDeleteModal(false)}
               disabled={isLoading}
             >
               Cancel
             </AppButton>
-            <AppButton
+            <AppButton;
               variant="danger"
               onClick={() => handleDeleteData(true)}
               disabled={isLoading}

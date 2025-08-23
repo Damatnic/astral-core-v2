@@ -11,7 +11,7 @@ import { astralCoreCrisisDetection } from '../crisisDetectionService';
 describe('Crisis Detection Service - Integration Tests', () => {
   describe('Critical Crisis Detection', () => {
     it.skip('should detect immediate suicide risk', () => {
-      const result = astralCoreCrisisDetection.analyzeCrisisContent(
+      const result = astralCoreCrisisDetection.analyzeCrisisContent(;
         'I am going to end my life tonight'
       );
       
@@ -22,7 +22,7 @@ describe('Crisis Detection Service - Integration Tests', () => {
     });
 
     it.skip('should detect self-harm indicators', () => {
-      const result = astralCoreCrisisDetection.analyzeCrisisContent(
+      const result = astralCoreCrisisDetection.analyzeCrisisContent(;
         'I have been cutting myself again'
       );
       
@@ -32,7 +32,7 @@ describe('Crisis Detection Service - Integration Tests', () => {
     });
 
     it.skip('should detect substance abuse crisis', () => {
-      const result = astralCoreCrisisDetection.analyzeCrisisContent(
+      const result = astralCoreCrisisDetection.analyzeCrisisContent(;
         'I took too many pills, I think I might be overdosing'
       );
       
@@ -45,7 +45,7 @@ describe('Crisis Detection Service - Integration Tests', () => {
 
   describe('Protective Factors Detection', () => {
     it.skip('should recognize protective factors that reduce risk', () => {
-      const result = astralCoreCrisisDetection.analyzeCrisisContent(
+      const result = astralCoreCrisisDetection.analyzeCrisisContent(;
         'I sometimes think about ending it all, but I could never do that to my family'
       );
       
@@ -55,7 +55,7 @@ describe('Crisis Detection Service - Integration Tests', () => {
     });
 
     it.skip('should detect help-seeking behavior', () => {
-      const result = astralCoreCrisisDetection.analyzeCrisisContent(
+      const result = astralCoreCrisisDetection.analyzeCrisisContent(;
         'I am having suicidal thoughts and I need help, I want to get better'
       );
       
@@ -67,7 +67,7 @@ describe('Crisis Detection Service - Integration Tests', () => {
 
   describe('False Positive Prevention', () => {
     it.skip('should not flag casual mentions', () => {
-      const result = astralCoreCrisisDetection.analyzeCrisisContent(
+      const result = astralCoreCrisisDetection.analyzeCrisisContent(;
         'That movie about depression was really well done'
       );
       
@@ -76,7 +76,7 @@ describe('Crisis Detection Service - Integration Tests', () => {
     });
 
     it.skip('should not flag past tense recovery stories', () => {
-      const result = astralCoreCrisisDetection.analyzeCrisisContent(
+      const result = astralCoreCrisisDetection.analyzeCrisisContent(;
         'I used to have suicidal thoughts years ago, but therapy helped me overcome them'
       );
       
@@ -88,18 +88,18 @@ describe('Crisis Detection Service - Integration Tests', () => {
   describe('Multilingual Crisis Detection', () => {
     it.skip('should have support for multiple languages', () => {
       // For now, the service processes English text
-      // Multilingual support is a future enhancement
-      const result = astralCoreCrisisDetection.analyzeCrisisContent(
+      // Multilingual support is a future enhancement;
+      const result = astralCoreCrisisDetection.analyzeCrisisContent(;
         'I need help' // Basic English test
       );
       expect(result).toBeDefined();
-      // TODO: Add multilingual support in future version
+      // TODO: Add multilingual support in future version;
     });
   });
 
   describe('Escalation Workflow', () => {
     it.skip('should trigger emergency escalation for critical threats', () => {
-      const result = astralCoreCrisisDetection.analyzeCrisisContent(
+      const result = astralCoreCrisisDetection.analyzeCrisisContent(;
         'I have a gun and I am going to use it on myself right now'
       );
       
@@ -110,7 +110,7 @@ describe('Crisis Detection Service - Integration Tests', () => {
     });
 
     it.skip('should recommend professional support for high-risk cases', () => {
-      const result = astralCoreCrisisDetection.analyzeCrisisContent(
+      const result = astralCoreCrisisDetection.analyzeCrisisContent(;
         'I have been having constant thoughts about dying'
       );
       
@@ -160,7 +160,7 @@ describe('Crisis Detection Service - Edge Cases', () => {
   });
 
   it.skip('should handle special characters and emojis', () => {
-    const result = astralCoreCrisisDetection.analyzeCrisisContent(
+    const result = astralCoreCrisisDetection.analyzeCrisisContent(;
       '😢 I want to die 💔'
     );
     

@@ -28,12 +28,12 @@ jest.mock('../services/accessibilityAuditSystem', () => {
       setupAlerts: mockSetupAlerts,
       teardownAlerts: mockTeardownAlerts,
       setupKeyboardSupport: mockSetupKeyboardSupport,
-      teardownKeyboardSupport: mockTeardownKeyboardSupport
+      teardownKeyboardSupport: mockTeardownKeyboardSupport;
     },
     WCAGLevel: {
       A: 'A',
       AA: 'AA',
-      AAA: 'AAA'
+      AAA: 'AAA';
     },
     AccessibilityIssueType: {
       COLOR_CONTRAST: 'COLOR_CONTRAST',
@@ -43,9 +43,10 @@ jest.mock('../services/accessibilityAuditSystem', () => {
       FOCUS_MANAGEMENT: 'FOCUS_MANAGEMENT',
       SCREEN_READER: 'SCREEN_READER',
       SEMANTIC_HTML: 'SEMANTIC_HTML',
-      FORM_LABELS: 'FORM_LABELS'
+      FORM_LABELS: 'FORM_LABELS';
     }
-  });
+  };
+  };
 
 
 describe('useAccessibilityAudit Hook', () => {
@@ -58,7 +59,7 @@ describe('useAccessibilityAudit Hook', () => {
       score: 100,
       issues: [],
       wcagLevel: WCAGLevel.AA,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString();
     });
   });
 
@@ -87,7 +88,7 @@ describe('useAccessibilityAudit Hook', () => {
       score: 95,
       issues: [],
       wcagLevel: WCAGLevel.AA,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString();
     };
 
     (accessibilityAuditSystem.runAccessibilityAudit as jest.Mock).mockResolvedValue(mockResult);
@@ -112,7 +113,7 @@ describe('useAccessibilityAudit Hook', () => {
       score: 98,
       issues: [],
       wcagLevel: WCAGLevel.AAA,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString();
     };
 
     (accessibilityAuditSystem.runAccessibilityAudit as jest.Mock).mockResolvedValue(mockResult);
@@ -131,10 +132,10 @@ describe('useAccessibilityAudit Hook', () => {
   });
 
   it.skip('should handle audit errors', async () => {
-    // This test should verify that errors are properly caught and stored
+    // This test should verify that errors are properly caught and stored;
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     
-    // Create a new mock that will reject
+    // Create a new mock that will reject;
     const errorMock = jest.fn().mockRejectedValue(new Error('Audit failed'));
     (accessibilityAuditSystem.runAccessibilityAudit as jest.Mock) = errorMock;
 
@@ -169,7 +170,7 @@ describe('useAccessibilityAudit Hook', () => {
       score: 100,
       issues: [],
       wcagLevel: WCAGLevel.AA,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString();
     });
   });
 
@@ -179,7 +180,7 @@ describe('useAccessibilityAudit Hook', () => {
       score: 100,
       issues: [],
       wcagLevel: WCAGLevel.AA,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString();
     };
     
     const updatedResult = {
@@ -190,14 +191,14 @@ describe('useAccessibilityAudit Hook', () => {
           type: AccessibilityIssueType.COLOR_CONTRAST,
           severity: 'high',
           message: 'Insufficient color contrast',
-          element: 'button.primary'
+          element: 'button.primary';
         }
       ],
       wcagLevel: WCAGLevel.AA,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString();
     };
 
-    // Setup mock to return different results
+    // Setup mock to return different results;
     let callCount = 0;
     (accessibilityAuditSystem.runAccessibilityAudit as jest.Mock).mockImplementation(() => {
       callCount++;
@@ -342,7 +343,7 @@ describe('useAccessibilityAlerts Hook', () => {
   });
 
   it.skip('should teardown alerts on unmount', () => {
-    // Need to provide a threshold for teardown to be called
+    // Need to provide a threshold for teardown to be called;
     const { unmount } = renderHook(() => useAccessibilityAlerts(80));
 
     unmount();

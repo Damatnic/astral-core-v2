@@ -22,7 +22,7 @@ interface OptimizedImageProps {
  * - WebP format with JPEG fallback
  * - Progressive loading with blur-up technique
  * - Bandwidth-aware image serving
- */
+ */;
 export const OptimizedImageComponent: React.FC<OptimizedImageProps> = ({
   src,
   alt,
@@ -48,12 +48,14 @@ export const OptimizedImageComponent: React.FC<OptimizedImageProps> = ({
       });
       setOptimizedImage(optimized);
     }
+  };
   }, [src, alt, priority, loading]);
 
   useEffect(() => {
     if (optimizedImage && imgRef.current && loading === 'lazy') {
       imageOptimizer.setupLazyLoading(imgRef.current);
     }
+  };
   }, [optimizedImage, loading]);
 
   const handleLoad = () => {
@@ -79,7 +81,7 @@ export const OptimizedImageComponent: React.FC<OptimizedImageProps> = ({
 
   if (!optimizedImage) {
     return (
-      <div 
+      <div; 
         className={`optimized-image-loading ${className}`}
         style={{ ...style, backgroundColor: '#f3f4f6' }}
       >
@@ -88,14 +90,14 @@ export const OptimizedImageComponent: React.FC<OptimizedImageProps> = ({
     );
   }
 
-  const containerClass = [
+  const containerClass = [;
     'optimized-image-container',
     className,
     isLoaded ? 'loaded' : 'loading',
     hasError ? 'error' : ''
   ].filter(Boolean).join(' ');
 
-  // Generate srcset for responsive images
+  // Generate srcset for responsive images;
   const webpSrcSet = imageOptimizer.generateSrcSet(optimizedImage, 'webp');
   const jpegSrcSet = imageOptimizer.generateSrcSet(optimizedImage, 'jpeg');
   const sizes = imageOptimizer.generateSizes();
@@ -109,21 +111,21 @@ export const OptimizedImageComponent: React.FC<OptimizedImageProps> = ({
   } : {};
 
   return (
-    <div 
+    <div; 
       className={containerClass} 
       style={style} 
       {...containerProps}
     >
       {/* Blur placeholder */}
       {!isLoaded && (
-        <img
+        <img;
           className="optimized-image-placeholder"
           src={optimizedImage.placeholder}
           alt=""
           style={{
             filter: 'blur(10px)',
             transform: 'scale(1.1)',
-            transition: 'opacity 0.3s ease-out'
+            transition: 'opacity 0.3s ease-out';
           }}
         />
       )}
@@ -151,7 +153,7 @@ export const OptimizedImageComponent: React.FC<OptimizedImageProps> = ({
           onError={handleError}
           style={{
             transition: 'opacity 0.3s ease-out',
-            opacity: isLoaded ? 1 : 0
+            opacity: isLoaded ? 1 : 0;
           }}
         />
       </picture>
@@ -176,7 +178,7 @@ export const OptimizedImageComponent: React.FC<OptimizedImageProps> = ({
 /**
  * Video Thumbnail Component
  * Specialized for wellness video thumbnails with additional features
- */
+ */;
 interface VideoThumbnailProps extends OptimizedImageProps {
   videoId: string;
   videoDuration?: string;
@@ -194,7 +196,7 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
   className = '',
   ...imageProps
 }) => {
-  const thumbnailClass = [
+  const thumbnailClass = [;
     'video-thumbnail',
     className,
     isPlaying ? 'playing' : ''
@@ -213,12 +215,12 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
       <div className="video-thumbnail-overlay">
         {/* Play button */}
         {showPlayButton && !isPlaying && (
-          <button 
+          <button; 
             className="video-play-button"
             aria-label="Play video"
             onClick={imageProps.onClick}
           >
-            <svg 
+            <svg; 
               className="play-icon" 
               viewBox="0 0 24 24" 
               fill="currentColor"
@@ -257,7 +259,7 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
 
 /**
  * Image Grid Component for multiple thumbnails
- */
+ */;
 interface ImageGridProps {
   images: Array<{
     id: string;
@@ -279,16 +281,17 @@ export const ImageGrid: React.FC<ImageGridProps> = ({
   const visibleImages = images.slice(0, maxImages);
   
   useEffect(() => {
-    // Preload critical images (first 3)
-    const criticalImages = visibleImages
+    // Preload critical images (first 3);
+    const criticalImages = visibleImages;
       .slice(0, 3)
       .map(img => imageOptimizer.generateOptimizedImages(img.src, {
         alt: img.alt,
         priority: img.priority || 8,
-        loading: 'eager'
+        loading: 'eager';
       }));
     
     imageOptimizer.preloadCriticalImages(criticalImages);
+  };
   }, [visibleImages]);
 
   return (

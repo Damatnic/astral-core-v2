@@ -3,7 +3,7 @@ import AdminDashboardView from '../views/AdminDashboardView';
 
 /**
  * Route wrapper for AdminDashboardView that provides required props
- */
+ */;
 const AdminDashboardRoute: React.FC = () => {
   const handleUpdateApplicationStatus = (helperId: string, status: "none" | "pending" | "approved" | "rejected", notes?: string) => {
     // Handle application status update

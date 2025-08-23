@@ -6,7 +6,7 @@
  * @license Apache-2.0
  */
 
-// Web Speech API type declarations
+// Web Speech API type declarations;
 interface SpeechRecognition extends EventTarget {
   continuous: boolean;
   interimResults: boolean;
@@ -120,35 +120,35 @@ class AccessibilityService {
   private contrastThemes = {
     default: {
       name: 'Default',
-      cssClass: 'theme-default'
+      cssClass: 'theme-default';
     },
     highContrast: {
       name: 'High Contrast',
-      cssClass: 'theme-high-contrast'
+      cssClass: 'theme-high-contrast';
     },
     highContrastWhite: {
       name: 'High Contrast White',
-      cssClass: 'theme-high-contrast-white'
+      cssClass: 'theme-high-contrast-white';
     },
     highContrastBlack: {
       name: 'High Contrast Black',
-      cssClass: 'theme-high-contrast-black'
+      cssClass: 'theme-high-contrast-black';
     },
     deuteranopia: {
       name: 'Deuteranopia Support',
-      cssClass: 'theme-deuteranopia'
+      cssClass: 'theme-deuteranopia';
     },
     protanopia: {
       name: 'Protanopia Support',
-      cssClass: 'theme-protanopia'
+      cssClass: 'theme-protanopia';
     },
     tritanopia: {
       name: 'Tritanopia Support',
-      cssClass: 'theme-tritanopia'
+      cssClass: 'theme-tritanopia';
     },
     monochrome: {
       name: 'Monochrome',
-      cssClass: 'theme-monochrome'
+      cssClass: 'theme-monochrome';
     }
   };
 
@@ -190,7 +190,7 @@ class AccessibilityService {
       this.announce({
         message: 'Accessibility features are now active. Press Alt+H for help.',
         priority: 'low',
-        type: 'status'
+        type: 'status';
       });
       
       console.log('[Accessibility] Service initialized successfully');
@@ -237,7 +237,7 @@ class AccessibilityService {
       simplifiedInterface: false,
       readingAssistance: false,
       contextualHelp: true,
-      errorSummaryEnabled: true
+      errorSummaryEnabled: true;
      }
 
   /**
@@ -270,8 +270,9 @@ class AccessibilityService {
       console.log('[Accessibility] System preferences detected:', {
         reducedMotion: this.settings.reducedMotion,
         highContrast: this.settings.highContrast,
-        screenReader: this.settings.screenReaderEnabled
-      });
+        screenReader: this.settings.screenReaderEnabled;
+      };
+  };
     } catch (error) {
       console.warn('[Accessibility] Could not detect system preferences:', error);
     }
@@ -281,8 +282,8 @@ class AccessibilityService {
    * Detect if a screen reader is being used
    */
   private isScreenReaderDetected(): boolean {
-    // Multiple detection methods for better accuracy
-    const indicators = [
+    // Multiple detection methods for better accuracy;
+    const indicators = [;
       // Check for common screen reader user agents
       /JAWS|NVDA|ORCA|VoiceOver|TalkBack|Narrator/i.test(navigator.userAgent),
       
@@ -303,7 +304,7 @@ class AccessibilityService {
    * Setup live regions for screen reader announcements
    */
   private setupLiveRegions(): void {
-    const regions = [
+    const regions = [;
       { id: 'sr-status', politeness: 'polite', label: 'Status updates' },
       { id: 'sr-alerts', politeness: 'assertive', label: 'Important alerts' },
       { id: 'sr-emergency', politeness: 'assertive', label: 'Emergency notifications' }
@@ -340,42 +341,42 @@ class AccessibilityService {
         description: 'Quick access to crisis resources',
         action: () => this.navigateToCrisisResources(),
         enabled: this.settings.crisisShortcutsEnabled,
-        crisisRelated: true
+        crisisRelated: true;
       },
       {
         keys: ['Alt', 'h'],
         description: 'Show accessibility help',
         action: () => this.showAccessibilityHelp(),
         enabled: true,
-        crisisRelated: false
+        crisisRelated: false;
       },
       {
         keys: ['Alt', 'e'],
         description: 'Emergency contact activation',
         action: () => this.activateEmergencyContact(),
         enabled: this.settings.crisisShortcutsEnabled,
-        crisisRelated: true
+        crisisRelated: true;
       },
       {
         keys: ['Alt', 'n'],
         description: 'Navigate to main content',
         action: () => this.skipToMainContent(),
         enabled: this.settings.skipLinksEnabled,
-        crisisRelated: false
+        crisisRelated: false;
       },
       {
         keys: ['Alt', 's'],
         description: 'Go to safety plan',
         action: () => this.navigateToSafetyPlan(),
         enabled: this.settings.crisisShortcutsEnabled,
-        crisisRelated: true
+        crisisRelated: true;
       },
       {
         keys: ['Alt', 'v'],
         description: 'Toggle voice navigation',
         action: () => this.toggleVoiceNavigation(),
         enabled: true,
-        crisisRelated: false
+        crisisRelated: false;
       }
     ];
 
@@ -419,7 +420,7 @@ class AccessibilityService {
    * Setup high contrast themes and visual accessibility
    */
   private setupHighContrastThemes(): void {
-    // Create theme stylesheet if it doesn't exist
+    // Create theme stylesheet if it doesn't exist;
     let styleSheet = document.getElementById('accessibility-themes') as HTMLStyleElement;
     if (!styleSheet) {
       styleSheet = document.createElement('style');
@@ -427,8 +428,8 @@ class AccessibilityService {
       document.head.appendChild(styleSheet);
     }
 
-    // High contrast theme CSS
-    const highContrastCSS = `
+    // High contrast theme CSS;
+    const highContrastCSS = `;
       .theme-high-contrast {
         --bg-primary: #000000;
         --bg-secondary: #000000;
@@ -583,7 +584,7 @@ class AccessibilityService {
    * Initialize voice commands for crisis and navigation
    */
   private initializeVoiceCommands(): void {
-    const commands = [
+    const commands = [;
       // Crisis commands (priority)
       { phrase: 'emergency help', action: () => this.activateEmergencyContact() },
       { phrase: 'crisis resources', action: () => this.navigateToCrisisResources() },
@@ -627,7 +628,7 @@ class AccessibilityService {
         this.announce({
           message: `Command executed: ${transcript}`,
           priority: 'medium',
-          type: 'status'
+          type: 'status';
         });
         return;
       }
@@ -640,7 +641,7 @@ class AccessibilityService {
         this.announce({
           message: `Command executed: ${phrase}`,
           priority: 'medium',
-          type: 'status'
+          type: 'status';
         });
         return;
       }
@@ -650,7 +651,7 @@ class AccessibilityService {
     this.announce({
       message: 'Command not recognized. Say "help" for available commands.',
       priority: 'low',
-      type: 'error'
+      type: 'error';
     });
   }
 
@@ -686,8 +687,8 @@ class AccessibilityService {
       // Add new announcement
       setTimeout(() => {
         if (announcement.persistent) {
-          region.textContent += ` ${announcement.message}`;
-        } else {
+          region.textContent += ` ${announcement.message}`;;
+  } else {
           region.textContent = announcement.message;
         }
       }, 100);
@@ -716,7 +717,7 @@ class AccessibilityService {
       this.announce({
         message: `${label}, ${role}`,
         priority: 'low',
-        type: 'navigation'
+        type: 'navigation';
       });
     }
   }
@@ -811,8 +812,8 @@ class AccessibilityService {
     const body = document.body;
     
     if (this.settings.reducedMotion) {
-      body.classList.add('reduced-motion');
-    } else {
+      body.classList.add('reduced-motion');;
+  } else {
       body.classList.remove('reduced-motion');
     }
   }
@@ -834,7 +835,7 @@ class AccessibilityService {
       this.handleKeyboardShortcut(event);
     });
 
-    // Monitor media query changes
+    // Monitor media query changes;
     const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     reducedMotionQuery.addEventListener('change', (e) => {
       if (e.matches) {
@@ -875,7 +876,7 @@ class AccessibilityService {
       this.announce({
         message: `Activated: ${shortcut.description}`,
         priority: shortcut.crisisRelated ? 'high' : 'medium',
-        type: shortcut.crisisRelated ? 'crisis' : 'navigation'
+        type: shortcut.crisisRelated ? 'crisis' : 'navigation';
       });
     }
   }
@@ -922,7 +923,7 @@ class AccessibilityService {
       message: 'Activating emergency contacts. Help is on the way.',
       priority: 'emergency',
       type: 'crisis',
-      persistent: true
+      persistent: true;
     });
     
     // Additional emergency activation logic would go here
@@ -941,7 +942,7 @@ class AccessibilityService {
       this.announce({
         message: 'Skipped to main content',
         priority: 'low',
-        type: 'navigation'
+        type: 'navigation';
       });
     }
   }
@@ -956,7 +957,7 @@ class AccessibilityService {
   }
 
   private showAccessibilityHelp(): void {
-    const helpMessage = `
+    const helpMessage = `;
       Accessibility Help:
       Alt+C: Crisis resources
       Alt+E: Emergency contact
@@ -973,7 +974,7 @@ class AccessibilityService {
     this.announce({
       message: helpMessage,
       priority: 'medium',
-      type: 'status'
+      type: 'status';
     });
   }
 
@@ -981,8 +982,8 @@ class AccessibilityService {
     this.settings.voiceNavigationEnabled = !this.settings.voiceNavigationEnabled;
     
     if (this.settings.voiceNavigationEnabled) {
-      this.startVoiceNavigation();
-    } else {
+      this.startVoiceNavigation();;
+  } else {
       this.stopVoiceNavigation();
     }
   }
@@ -994,7 +995,7 @@ class AccessibilityService {
         this.announce({
           message: 'Voice navigation started. Say "help" for commands.',
           priority: 'medium',
-          type: 'status'
+          type: 'status';
         });
       } catch (error) {
         console.error('[Accessibility] Failed to start voice navigation:', error);
@@ -1008,7 +1009,7 @@ class AccessibilityService {
       this.announce({
         message: 'Voice navigation stopped.',
         priority: 'low',
-        type: 'status'
+        type: 'status';
       });
     }
   }
@@ -1021,7 +1022,7 @@ class AccessibilityService {
     this.announce({
       message: `High contrast ${this.settings.highContrast ? 'enabled' : 'disabled'}`,
       priority: 'medium',
-      type: 'status'
+      type: 'status';
     });
   }
 
@@ -1037,7 +1038,7 @@ class AccessibilityService {
 
   private extractPageContent(): string {
     const main = document.querySelector('main') || document.body;
-    const headings = Array.from(main.querySelectorAll('h1, h2, h3, h4, h5, h6'))
+    const headings = Array.from(main.querySelectorAll('h1, h2, h3, h4, h5, h6'));
       .map(h => h.textContent).join('. ');
     const content = main.textContent || '';
     return `Page content: ${headings}. ${content.slice(0, 500)}`;
@@ -1079,7 +1080,7 @@ class AccessibilityService {
     this.announce({
       message: 'Accessibility settings updated',
       priority: 'low',
-      type: 'status'
+      type: 'status';
     });
   }
 
@@ -1127,6 +1128,6 @@ class AccessibilityService {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const accessibilityService = new AccessibilityService();
 export default accessibilityService;

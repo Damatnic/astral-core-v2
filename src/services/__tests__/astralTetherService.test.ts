@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-// Define mocks before jest.mock calls
+// Define mocks before jest.mock calls;
 const mockWebSocketService = {
   subscribe: jest.fn(),
   send: jest.fn(),

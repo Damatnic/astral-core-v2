@@ -19,14 +19,17 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
   const addToast = useCallback((message: string, type: ToastType['type'] = 'success') => {
     const id = crypto.randomUUID();
     setToasts(prev => [...prev, { id, message, type }]);
+  };
   }, []);
 
   const removeToast = useCallback((id: string) => {
     setToasts(prev => prev.filter(t => t.id !== id));
+  };
   }, []);
 
   const showConfirmationModal = useCallback((config: ConfirmationModalState) => {
     setConfirmationModal(config);
+  };
   }, []);
 
   const hideConfirmationModal = useCallback(() => {
@@ -34,6 +37,7 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
         confirmationModal.onCancel();
     }
     setConfirmationModal(null);
+  };
   }, [confirmationModal]);
   
   const value = useMemo(() => ({ 
@@ -60,5 +64,5 @@ export const useNotification = (): NotificationContextType => {
   return context;
 };
 
-// Export NotificationContext for testing purposes
+// Export NotificationContext for testing purposes;
 export { NotificationContext };

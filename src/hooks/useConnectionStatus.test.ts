@@ -1,50 +1,50 @@
 import { renderHook, act, waitFor } from '../test-utils';
 import { useConnectionStatus } from './useConnectionStatus';
 
-// Mock navigator
+// Mock navigator;
 const mockNavigator = {
   onLine: true,
   serviceWorker: {
     getRegistration: jest.fn(),
     addEventListener: jest.fn(),
-    removeEventListener: jest.fn()
+    removeEventListener: jest.fn();
   },
   connection: {
     effectiveType: '4g',
     downlink: 2,
     addEventListener: jest.fn(),
-    removeEventListener: jest.fn()
+    removeEventListener: jest.fn();
   }
 };
 
 Object.defineProperty(global, 'navigator', {
   value: mockNavigator,
-  writable: true
+  writable: true;
 });
 
-// Mock caches API
+// Mock caches API;
 const mockCaches = {
   open: jest.fn(),
-  keys: jest.fn()
+  keys: jest.fn();
 };
 
 Object.defineProperty(global, 'caches', {
   value: mockCaches,
-  writable: true
+  writable: true;
 });
 
-// Mock window events
+// Mock window events;
 const mockAddEventListener = jest.fn();
 const mockRemoveEventListener = jest.fn();
 
 Object.defineProperty(window, 'addEventListener', {
   value: mockAddEventListener,
-  writable: true
+  writable: true;
 });
 
 Object.defineProperty(window, 'removeEventListener', {
   value: mockRemoveEventListener,
-  writable: true
+  writable: true;
 });
 
 
@@ -149,13 +149,13 @@ describe('useConnectionStatus Hook', () => {
     const mockStateChangeHandler = jest.fn();
     const mockServiceWorker = {
       state: 'installing',
-      addEventListener: mockStateChangeHandler
+      addEventListener: mockStateChangeHandler;
     };
     
     const mockRegistration = {
       installing: mockServiceWorker,
       waiting: null,
-      active: null
+      active: null;
     };
     
     mockNavigator.serviceWorker.getRegistration.mockResolvedValue(mockRegistration);
@@ -229,7 +229,7 @@ describe('useConnectionStatus Hook', () => {
     expect(mockAddEventListener).toHaveBeenCalledWith('online', expect.any(Function));
     expect(mockAddEventListener).toHaveBeenCalledWith('offline', expect.any(Function));
     
-    // Simulate offline event
+    // Simulate offline event;
     const offlineHandler = mockAddEventListener.mock.calls.find(call => call[0] === 'offline')?.[1];
     
     act(() => {
@@ -239,7 +239,7 @@ describe('useConnectionStatus Hook', () => {
     expect(result.current.connectionStatus.isOnline).toBe(false);
     expect(result.current.connectionStatus.connectionQuality).toBe('offline');
     
-    // Simulate online event
+    // Simulate online event;
     const onlineHandler = mockAddEventListener.mock.calls.find(call => call[0] === 'online')?.[1];
     
     act(() => {
@@ -257,7 +257,7 @@ describe('useConnectionStatus Hook', () => {
       expect.any(Function)
     );
     
-    // Simulate connection change
+    // Simulate connection change;
     const changeHandler = mockNavigator.connection.addEventListener.mock.calls[0][1];
     
     // Change connection to poor quality
@@ -277,7 +277,7 @@ describe('useConnectionStatus Hook', () => {
       active: { 
         state: 'active', 
         addEventListener: jest.fn(),
-        postMessage: mockPostMessage
+        postMessage: mockPostMessage;
       }
     };
     
@@ -309,7 +309,7 @@ describe('useConnectionStatus Hook', () => {
       active: { 
         state: 'active', 
         addEventListener: jest.fn(),
-        postMessage: mockPostMessage
+        postMessage: mockPostMessage;
       }
     };
     
@@ -340,7 +340,7 @@ describe('useConnectionStatus Hook', () => {
       active: { 
         state: 'active', 
         addEventListener: jest.fn(),
-        postMessage: mockPostMessage
+        postMessage: mockPostMessage;
       }
     };
     
@@ -359,7 +359,7 @@ describe('useConnectionStatus Hook', () => {
     
     expect(mockPostMessage).toHaveBeenCalledWith({
       type: 'update-crisis-resources',
-      timestamp: expect.any(Number)
+      timestamp: expect.any(Number);
     });
   });
 
@@ -369,7 +369,7 @@ describe('useConnectionStatus Hook', () => {
       active: { 
         state: 'active', 
         addEventListener: jest.fn(),
-        postMessage: mockPostMessage
+        postMessage: mockPostMessage;
       }
     };
     
@@ -388,7 +388,7 @@ describe('useConnectionStatus Hook', () => {
     
     expect(mockPostMessage).toHaveBeenCalledWith({
       type: 'force-cache-update',
-      timestamp: expect.any(Number)
+      timestamp: expect.any(Number);
     });
   });
 
@@ -416,7 +416,7 @@ describe('useConnectionStatus Hook', () => {
         messageHandler!({
           data: {
             type: 'crisis-resources-cached',
-            timestamp: Date.now()
+            timestamp: Date.now();
           }
         } as MessageEvent);
       });

@@ -5,7 +5,7 @@ import { useNotification } from '../contexts/NotificationContext';
 import ErrorState from '../components/ErrorState';
 import LoadingSpinner from '../components/LoadingSpinner';
 
-// Local videos from the Videos folder
+// Local videos from the Videos folder;
 const localVideos: WellnessVideo[] = [
     {
         id: 'local-1',
@@ -19,7 +19,7 @@ const localVideos: WellnessVideo[] = [
         uploadedBy: 'Local Content',
         uploadedAt: new Date().toISOString(),
         views: 0,
-        likes: 0
+        likes: 0;
     },
     {
         id: 'local-2',
@@ -33,7 +33,7 @@ const localVideos: WellnessVideo[] = [
         uploadedBy: 'Local Content',
         uploadedAt: new Date().toISOString(),
         views: 0,
-        likes: 0
+        likes: 0;
     },
     {
         id: 'local-3',
@@ -47,7 +47,7 @@ const localVideos: WellnessVideo[] = [
         uploadedBy: 'Local Content',
         uploadedAt: new Date().toISOString(),
         views: 0,
-        likes: 0
+        likes: 0;
     },
     {
         id: 'local-4',
@@ -61,7 +61,7 @@ const localVideos: WellnessVideo[] = [
         uploadedBy: 'Local Content',
         uploadedAt: new Date().toISOString(),
         views: 0,
-        likes: 0
+        likes: 0;
     },
     {
         id: 'local-5',
@@ -75,7 +75,7 @@ const localVideos: WellnessVideo[] = [
         uploadedBy: 'Local Content',
         uploadedAt: new Date().toISOString(),
         views: 0,
-        likes: 0
+        likes: 0;
     }
 ];
 
@@ -108,13 +108,15 @@ export const WellnessVideosView: React.FC<{
         } finally {
             setIsLoading(false);
         }
-    }, []);
+    };
+  }, []);
 
     useEffect(() => {
         fetchVideos();
-    }, [fetchVideos]);
+    };
+  }, [fetchVideos]);
 
-    // Handle scroll for video switching (TikTok style)
+    // Handle scroll for video switching (TikTok style);
     const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
         const container = e.currentTarget;
         const scrollPosition = container.scrollTop;
@@ -138,9 +140,10 @@ export const WellnessVideosView: React.FC<{
                 }
             }, 100);
         }
-    }, [currentVideoIndex, videos.length, isPlaying]);
+    };
+  }, [currentVideoIndex, videos.length, isPlaying]);
 
-    // Touch handlers for mobile swipe navigation
+    // Touch handlers for mobile swipe navigation;
     const handleTouchStart = (e: React.TouchEvent) => {
         touchStartY.current = e.touches[0].clientY;
     };
@@ -153,8 +156,8 @@ export const WellnessVideosView: React.FC<{
         if (Math.abs(diff) > threshold) {
             if (diff > 0 && currentVideoIndex < videos.length - 1) {
                 // Swipe up - next video
-                goToVideo(currentVideoIndex + 1);
-            } else if (diff < 0 && currentVideoIndex > 0) {
+                goToVideo(currentVideoIndex + 1);;
+  } else if (diff < 0 && currentVideoIndex > 0) {
                 // Swipe down - previous video
                 goToVideo(currentVideoIndex - 1);
             }
@@ -166,26 +169,26 @@ export const WellnessVideosView: React.FC<{
             setCurrentVideoIndex(index);
             containerRef.current.scrollTo({
                 top: index * containerRef.current.clientHeight,
-                behavior: 'smooth'
+                behavior: 'smooth';
             });
         }
     };
 
-    // Toggle play/pause
+    // Toggle play/pause;
     const togglePlayPause = () => {
         const currentVideo = videoRefs.current[currentVideoIndex];
         if (currentVideo) {
             if (isPlaying) {
                 currentVideo.pause();
-                setIsPlaying(false);
-            } else {
+                setIsPlaying(false);;
+  } else {
                 currentVideo.play().catch((err) => console.error('Video play failed:', err));
                 setIsPlaying(true);
             }
         }
     };
 
-    // Toggle mute/unmute
+    // Toggle mute/unmute;
     const toggleMute = () => {
         const currentVideo = videoRefs.current[currentVideoIndex];
         if (currentVideo) {
@@ -200,7 +203,8 @@ export const WellnessVideosView: React.FC<{
         if (currentVideo && isPlaying) {
             currentVideo.play().catch((err) => console.error('Video play failed:', err));
         }
-    }, [currentVideoIndex, isPlaying]);
+    };
+  }, [currentVideoIndex, isPlaying]);
 
     // Keyboard navigation
     useEffect(() => {
@@ -235,45 +239,46 @@ export const WellnessVideosView: React.FC<{
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [currentVideoIndex, videos.length]);
+    };
+  }, [currentVideoIndex, videos.length]);
 
-    // Like video
+    // Like video;
     const toggleLike = (videoId: string) => {
         const newLikedVideos = new Set(likedVideos);
         if (newLikedVideos.has(videoId)) {
             newLikedVideos.delete(videoId);
-            addToast('Removed from liked videos', 'info');
-        } else {
+            addToast('Removed from liked videos', 'info');;
+  } else {
             newLikedVideos.add(videoId);
             addToast('Added to liked videos! 💜', 'success');
         }
         setLikedVideos(newLikedVideos);
     };
 
-    // Save video
+    // Save video;
     const toggleSave = (videoId: string) => {
         const newSavedVideos = new Set(savedVideos);
         if (newSavedVideos.has(videoId)) {
             newSavedVideos.delete(videoId);
-            addToast('Removed from saved videos', 'info');
-        } else {
+            addToast('Removed from saved videos', 'info');;
+  } else {
             newSavedVideos.add(videoId);
             addToast('Video saved! 🌟', 'success');
         }
         setSavedVideos(newSavedVideos);
     };
 
-    // Share video
+    // Share video;
     const shareVideo = (video: WellnessVideo) => {
         if (navigator.share) {
             navigator.share({
                 title: video.description.split(':')[0],
                 text: video.description,
-                url: window.location.href
+                url: window.location.href;
             }).catch(() => {
                 addToast('Share cancelled', 'info');
-            });
-        } else {
+            });;
+  } else {
             navigator.clipboard.writeText(window.location.href);
             addToast('Link copied to clipboard!', 'success');
         }
@@ -320,14 +325,14 @@ export const WellnessVideosView: React.FC<{
                                 addToast('Video temporarily unavailable', 'warning');
                             }}
                             onLoadStart={() => {
-                                // Optional: Add loading state per video
+                                // Optional: Add loading state per video;
                             }}
                         />
                         
                         {/* Video Overlay - TikTok Style */}
                         <div className="tiktok-video-overlay">
                             {/* Back Button */}
-                            <button 
+                            <button; 
                                 className="video-back-button"
                                 onClick={exitVideoPlayer}
                                 aria-label="Go back to wellness videos"
@@ -343,7 +348,7 @@ export const WellnessVideosView: React.FC<{
                             
                             {/* Top controls */}
                             <div className="tiktok-top-controls">
-                                <button 
+                                <button; 
                                     className="tiktok-control-btn"
                                     onClick={toggleMute}
                                 >
@@ -367,7 +372,7 @@ export const WellnessVideosView: React.FC<{
                             
                             {/* Right side action buttons - TikTok style */}
                             <div className="tiktok-actions-sidebar">
-                                <button 
+                                <button; 
                                     className={`tiktok-action-btn ${likedVideos.has(video.id) ? 'liked' : ''}`}
                                     onClick={() => toggleLike(video.id)}
                                 >
@@ -379,7 +384,7 @@ export const WellnessVideosView: React.FC<{
                                     </span>
                                 </button>
                                 
-                                <button 
+                                <button; 
                                     className="tiktok-action-btn"
                                     onClick={() => addToast('Comments coming soon!', 'info')}
                                 >
@@ -389,7 +394,7 @@ export const WellnessVideosView: React.FC<{
                                     <span className="tiktok-action-count">{video.comments}</span>
                                 </button>
                                 
-                                <button 
+                                <button; 
                                     className="tiktok-action-btn"
                                     onClick={() => shareVideo(video)}
                                 >
@@ -399,7 +404,7 @@ export const WellnessVideosView: React.FC<{
                                     <span className="tiktok-action-count">{video.shares}</span>
                                 </button>
                                 
-                                <button 
+                                <button; 
                                     className={`tiktok-action-btn ${savedVideos.has(video.id) ? 'saved' : ''}`}
                                     onClick={() => toggleSave(video.id)}
                                 >

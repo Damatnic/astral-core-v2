@@ -3,12 +3,12 @@
  * 
  * Interactive dashboard for monitoring and managing mobile accessibility features.
  * Provides real-time accessibility auditing, preference management, and compliance reporting.
- */
+ */;
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useMobileAccessibility } from './MobileAccessibilityProvider';
 
-// Dashboard state interface
+// Dashboard state interface;
 interface DashboardState {
   isOpen: boolean;
   activeTab: 'preferences' | 'audit' | 'compliance' | 'help';
@@ -17,7 +17,7 @@ interface DashboardState {
   autoAudit: boolean;
 }
 
-// Audit result interfaces (duplicated to avoid circular imports)
+// Audit result interfaces (duplicated to avoid circular imports);
 interface AccessibilityAuditResult {
   score: number;
   issues: AccessibilityIssue[];
@@ -35,7 +35,7 @@ interface AccessibilityIssue {
   fix?: string;
 }
 
-// Dashboard component
+// Dashboard component;
 export const MobileAccessibilityDashboard: React.FC = () => {
   const {
     preferences,
@@ -49,37 +49,38 @@ export const MobileAccessibilityDashboard: React.FC = () => {
     activeTab: 'preferences',
     auditResults: null,
     isAuditing: false,
-    autoAudit: false
+    autoAudit: false;
   });
 
-  // Toggle dashboard visibility
+  // Toggle dashboard visibility;
   const toggleDashboard = useCallback(() => {
     setDashboardState(prev => {
       const newState = { ...prev, isOpen: !prev.isOpen };
       
       if (newState.isOpen) {
-        announceToScreenReader('Accessibility dashboard opened', 'assertive');
-      } else {
+        announceToScreenReader('Accessibility dashboard opened', 'assertive');;
+  } else {
         announceToScreenReader('Accessibility dashboard closed', 'assertive');
       }
       
       return newState;
     });
+  };
   }, [announceToScreenReader]);
 
-  // Run accessibility audit
+  // Run accessibility audit;
   const runAudit = useCallback(async () => {
     setDashboardState(prev => ({ ...prev, isAuditing: true }));
     announceToScreenReader('Running accessibility audit...', 'polite');
     
     try {
-      // Use built-in audit function
+      // Use built-in audit function;
       const results = checkWCAGCompliance();
       
       setDashboardState(prev => ({
         ...prev,
         auditResults: results,
-        isAuditing: false
+        isAuditing: false;
       }));
       
       announceToScreenReader(
@@ -91,6 +92,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
       setDashboardState(prev => ({ ...prev, isAuditing: false }));
       announceToScreenReader('Audit failed. Please try again.', 'assertive');
     }
+  };
   }, [checkWCAGCompliance, announceToScreenReader]);
 
   // Auto-audit on content changes
@@ -98,7 +100,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
     if (!dashboardState.autoAudit) return;
     
     const observer = new MutationObserver(() => {
-      // Debounce audit calls
+      // Debounce audit calls;
       const timeoutId = setTimeout(() => {
         runAudit();
       }, 2000);
@@ -114,6 +116,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
     });
     
     return () => observer.disconnect();
+  };
   }, [dashboardState.autoAudit, runAudit]);
 
   // Keyboard shortcuts
@@ -136,10 +139,11 @@ export const MobileAccessibilityDashboard: React.FC = () => {
     
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
+  };
   }, [toggleDashboard, runAudit, dashboardState.isOpen]);
 
-  // Render preferences tab
-  const renderPreferencesTab = () => (
+  // Render preferences tab;
+  const renderPreferencesTab = () => (;
     <div className="accessibility-tab-content" role="tabpanel" aria-labelledby="preferences-tab">
       <h3>Accessibility Preferences</h3>
       
@@ -147,7 +151,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
         <h4>Visual</h4>
         
         <label className="preference-item">
-          <input
+          <input;
             type="checkbox"
             checked={preferences.highContrast}
             onChange={(e) => updatePreferences({ highContrast: e.target.checked })}
@@ -158,7 +162,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
         </label>
         
         <label className="preference-item">
-          <input
+          <input;
             type="checkbox"
             checked={preferences.largeText}
             onChange={(e) => updatePreferences({ largeText: e.target.checked })}
@@ -171,7 +175,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
         <div className="preference-item">
           <label htmlFor="font-size-slider">Font Size: {preferences.fontSize}%</label>
           <input
-            id="font-size-slider"
+            id="font-size-slider";
             type="range"
             min="75"
             max="200"
@@ -189,7 +193,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
             id="colorblind-select"
             value={preferences.colorBlindness}
             onChange={(e) => updatePreferences({ 
-              colorBlindness: e.target.value as typeof preferences.colorBlindness 
+              colorBlindness: e.target.value as typeof preferences.colorBlindness ;
             })}
           >
             <option value="none">None</option>
@@ -204,7 +208,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
         <h4>Motion & Animation</h4>
         
         <label className="preference-item">
-          <input
+          <input;
             type="checkbox"
             checked={preferences.reducedMotion}
             onChange={(e) => updatePreferences({ reducedMotion: e.target.checked })}
@@ -219,7 +223,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
         <h4>Input & Navigation</h4>
         
         <label className="preference-item">
-          <input
+          <input;
             type="checkbox"
             checked={preferences.hapticFeedback}
             onChange={(e) => updatePreferences({ hapticFeedback: e.target.checked })}
@@ -235,7 +239,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
             id="focus-style-select"
             value={preferences.focusIndicatorStyle}
             onChange={(e) => updatePreferences({ 
-              focusIndicatorStyle: e.target.value as typeof preferences.focusIndicatorStyle
+              focusIndicatorStyle: e.target.value as typeof preferences.focusIndicatorStyle;
             })}
           >
             <option value="default">Default</option>
@@ -249,7 +253,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
         <h4>Screen Reader</h4>
         
         <label className="preference-item">
-          <input
+          <input;
             type="checkbox"
             checked={preferences.screenReader}
             onChange={(e) => updatePreferences({ screenReader: e.target.checked })}
@@ -260,7 +264,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
         </label>
         
         <label className="preference-item">
-          <input
+          <input;
             type="checkbox"
             checked={preferences.voiceControl}
             onChange={(e) => updatePreferences({ voiceControl: e.target.checked })}
@@ -273,8 +277,8 @@ export const MobileAccessibilityDashboard: React.FC = () => {
     </div>
   );
 
-  // Render audit tab
-  const renderAuditTab = () => (
+  // Render audit tab;
+  const renderAuditTab = () => (;
     <div className="accessibility-tab-content" role="tabpanel" aria-labelledby="audit-tab">
       <div className="audit-header">
         <h3>Accessibility Audit</h3>
@@ -290,12 +294,12 @@ export const MobileAccessibilityDashboard: React.FC = () => {
           <small id="audit-btn-desc">Performs comprehensive accessibility check</small>
           
           <label className="auto-audit-toggle">
-            <input
+            <input;
               type="checkbox"
               checked={dashboardState.autoAudit}
               onChange={(e) => setDashboardState(prev => ({ 
                 ...prev, 
-                autoAudit: e.target.checked 
+                autoAudit: e.target.checked ;
               }))}
             />
             <span>Auto-audit on changes</span>
@@ -363,8 +367,8 @@ export const MobileAccessibilityDashboard: React.FC = () => {
     </div>
   );
 
-  // Render compliance tab
-  const renderComplianceTab = () => (
+  // Render compliance tab;
+  const renderComplianceTab = () => (;
     <div className="accessibility-tab-content" role="tabpanel" aria-labelledby="compliance-tab">
       <h3>WCAG Compliance</h3>
       
@@ -438,8 +442,8 @@ export const MobileAccessibilityDashboard: React.FC = () => {
     </div>
   );
 
-  // Render help tab
-  const renderHelpTab = () => (
+  // Render help tab;
+  const renderHelpTab = () => (;
     <div className="accessibility-tab-content" role="tabpanel" aria-labelledby="help-tab">
       <h3>Accessibility Help</h3>
       
@@ -505,7 +509,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
     </div>
   );
 
-  // Get score class for styling
+  // Get score class for styling;
   const getScoreClass = (score: number): string => {
     if (score >= 90) return 'excellent';
     if (score >= 80) return 'good';
@@ -515,7 +519,7 @@ export const MobileAccessibilityDashboard: React.FC = () => {
 
   if (!dashboardState.isOpen) {
     return (
-      <button
+      <button;
         className="accessibility-dashboard-toggle"
         onClick={toggleDashboard}
         aria-label="Open accessibility dashboard"
@@ -527,14 +531,14 @@ export const MobileAccessibilityDashboard: React.FC = () => {
   }
 
   return (
-    <dialog 
+    <dialog; 
       className="accessibility-dashboard"
       aria-labelledby="dashboard-title"
       open={true}
     >
       <div className="dashboard-header">
         <h2 id="dashboard-title">Accessibility Dashboard</h2>
-        <button
+        <button;
           className="dashboard-close"
           onClick={toggleDashboard}
           aria-label="Close accessibility dashboard"

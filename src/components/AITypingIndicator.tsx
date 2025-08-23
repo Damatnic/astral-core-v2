@@ -21,6 +21,7 @@ export const AITypingIndicator: React.FC<AITypingIndicatorProps> = ({
       setAnimationPhase(prev => (prev + 1) % 3);
     }, 500);
     return () => clearInterval(interval);
+  };
   }, []);
   
   const renderIndicator = () => {
@@ -51,7 +52,7 @@ export const AITypingIndicator: React.FC<AITypingIndicatorProps> = ({
                 className="wave-bar" 
                 style={{ 
                   animationDelay: `${i * 100}ms`,
-                  backgroundColor: color 
+                  backgroundColor: color ;
                 }}
               />
             ))}

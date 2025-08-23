@@ -85,7 +85,7 @@ export const ModerationDashboardView: React.FC = () => {
         }
     }
 
-    const renderContentTab = () => (
+    const renderContentTab = () => (;
         reportedDilemmas.length > 0 ? (
             <ul className="posts-list">
                 {reportedDilemmas.map(d => 
@@ -106,7 +106,7 @@ export const ModerationDashboardView: React.FC = () => {
         )
     );
 
-    const renderUsersTab = () => (
+    const renderUsersTab = () => (;
         <>
             <Card>
                 <form onSubmit={handleUserSearch}>

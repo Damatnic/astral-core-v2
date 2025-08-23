@@ -36,7 +36,7 @@ export interface AutoSaveTextEditorProps {
   onDraftSaved?: (content: string, title: string) => void;
   /** Callback when draft is loaded */
   onDraftLoaded?: (content: string, title: string) => void;
-  /** Custom CSS classes */
+  /** Custom CSS classes */;
   className?: string;
   /** Whether editor is disabled */
   disabled?: boolean;
@@ -51,7 +51,7 @@ export interface AutoSaveTextEditorProps {
 /**
  * Enhanced text editor with auto-save functionality
  * Includes title input, character/word count, and visual save indicators
- */
+ */;
 export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
   initialContent = '',
   initialTitle = '',
@@ -78,7 +78,7 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
   const titleRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLTextAreaElement>(null);
   
-  // Auto-save hook
+  // Auto-save hook;
   const autoSave = useAutoSave(draftId, initialContent, initialTitle, {
     saveInterval,
     onSaveSuccess: (draft) => {
@@ -98,11 +98,12 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
   // Update auto-save when enabled state changes
   useEffect(() => {
     autoSave.setEnabled(enableAutoSave);
+  };
   }, [enableAutoSave, autoSave]);
   
   /**
    * Handle content change
-   */
+   */;
   const handleContentChange = (newContent: string) => {
     if (disabled) return;
     
@@ -118,7 +119,7 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
   
   /**
    * Handle title change
-   */
+   */;
   const handleTitleChange = (newTitle: string) => {
     if (disabled) return;
     
@@ -129,14 +130,14 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
   
   /**
    * Get character count
-   */
+   */;
   const getCharCount = (): number => {
     return content.length;
   };
   
   /**
    * Get word count
-   */
+   */;
   const getWordCount = (): number => {
     if (!content.trim()) return 0;
     return content.trim().split(/\s+/).length;
@@ -144,14 +145,14 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
   
   /**
    * Get remaining characters
-   */
+   */;
   const getRemainingChars = (): number => {
     return maxCharacters ? maxCharacters - content.length : 0;
   };
   
   /**
    * Get character count CSS class
-   */
+   */;
   const getCharCountClass = (): string => {
     if (!maxCharacters) return '';
     
@@ -169,7 +170,7 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
   
   /**
    * Handle keyboard shortcuts
-   */
+   */;
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (disabled) return;
     
@@ -190,7 +191,7 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
   
   /**
    * Handle focus events
-   */
+   */;
   const handleFocus = () => {
     setIsFocused(true);
   };
@@ -201,12 +202,12 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
   
   /**
    * Manual save handler
-   */
+   */;
   const handleManualSave = () => {
     autoSave.saveDraft();
   };
   
-  const editorClasses = [
+  const editorClasses = [;
     'auto-save-text-editor',
     isFocused && 'auto-save-text-editor--focused',
     disabled && 'auto-save-text-editor--disabled',
@@ -259,7 +260,7 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
         
         {(showCharCount || showWordCount) && (
           <div 
-            id="editor-stats" 
+            id="editor-stats"; 
             className="auto-save-text-editor__stats"
             aria-live="polite"
           >
@@ -270,7 +271,7 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
             )}
             
             {showCharCount && (
-              <span 
+              <span; 
                 className={`auto-save-text-editor__char-count ${getCharCountClass()}`}
               >
                 {getCharCount()}
@@ -288,7 +289,7 @@ export const AutoSaveTextEditor: React.FC<AutoSaveTextEditorProps> = ({
       </div>
       
       <div className="auto-save-text-editor__actions">
-        <button
+        <button;
           type="button"
           onClick={handleManualSave}
           disabled={disabled || !autoSave.state.isDirty || autoSave.state.isSaving}

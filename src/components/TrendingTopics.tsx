@@ -45,7 +45,7 @@ export const TrendingTopics: React.FC<TrendingTopicsProps> = ({ topics, onTopicC
             style={{
               animationDelay: `${index * 0.1}s`,
               background: `linear-gradient(135deg, ${topic.color}20 0%, ${topic.color}10 100%)`,
-              borderColor: topic.color
+              borderColor: topic.color;
             }}
           >
             <div className="topic-content">

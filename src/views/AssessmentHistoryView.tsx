@@ -15,7 +15,8 @@ export const AssessmentHistoryView: React.FC<{
 
     useEffect(() => {
         fetchHistory();
-    }, [fetchHistory]);
+    };
+  }, [fetchHistory]);
     
     const getResultDetails = (assessment: typeof history[0]) => {
         if (assessment.type === 'phq-9') {

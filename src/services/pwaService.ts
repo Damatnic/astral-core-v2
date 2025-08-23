@@ -3,11 +3,11 @@
  * 
  * Manages app installation prompts, offline detection, mobile optimizations,
  * and enhanced app-like experience features
- */
+ */;
 
 interface InstallPromptEvent extends Event {
   prompt(): Promise<void>
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
 interface PWAStatus {
@@ -15,7 +15,7 @@ interface PWAStatus {
   isInstalled: boolean
   isOffline: boolean
   isStandalone: boolean
-  supportsPWA: boolean
+  supportsPWA: boolean;
 }
 
 class PWAService {
@@ -52,8 +52,8 @@ class PWAService {
     // Listen for visibility changes (app focus/blur)
     document.addEventListener("visibilitychange", () => {
       if(document.visibilityState === "visible") {
-        this.handleAppFocus()
-      } else {
+        this.handleAppFocus();
+  } else {
 this.handleAppBlur()
       }
     })
@@ -110,7 +110,7 @@ this.handleAppBlur()
    * Handle mobile viewport optimizations
    */
       private handleMobileViewport(): void {
-      // Mobile viewport handling
+      // Mobile viewport handling;
       const viewport = document.querySelector('meta[name="viewport"]');
       if(!viewport) {
         const meta = document.createElement('meta');
@@ -151,8 +151,8 @@ this.handleAppBlur()
 // Handle online/offline status changes
     if(isOnline) {
 // Handle online state
-      this.syncPendingData()
-    } else {
+      this.syncPendingData();
+  } else {
 // Handle offline state
       this.enableOfflineMode()
     }
@@ -182,7 +182,7 @@ this.handleAppBlur()
       isInstalled: this.isStandalone(),
       isOffline: this.isOffline,
       isStandalone: this.isStandalone(),
-      supportsPWA: this.supportsPWA()
+      supportsPWA: this.supportsPWA();
      };
    }
 
@@ -253,10 +253,11 @@ this.handleAppBlur()
       try {
         callback(status);
       } catch(error) {}
-    });
+    };
+  };
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const pwaService = new PWAService();
 export default pwaService;

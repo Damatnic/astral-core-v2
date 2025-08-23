@@ -12,7 +12,7 @@
  * - Personalized reminder content based on user's safety plan
  * - Progressive reminder escalation for missed check-ins
  * - Cultural and accessibility-aware notifications
- */
+ */;
 
 import { MoodAnalysis } from './moodAnalysisService';
 import { crisisDetectionIntegrationService } from './crisisDetectionIntegrationService';
@@ -58,8 +58,8 @@ export interface SafetyPlanReminder {
     missedCount: number;
     escalationLevel: number;
     automaticTrigger: boolean;
-  }
-
+  };
+}
 export interface ReminderScheduleConfig {
   riskLevel: RiskLevel;
   intervals: {
@@ -79,8 +79,8 @@ export interface ReminderScheduleConfig {
     safetyPlanPrompts: string[];
     copingStrategyReminders: string[];
     supportContactPrompts: string[];
-  }
-
+  };
+}
 export interface ReminderResponse {
   reminderId: string;
   userId: string;
@@ -101,13 +101,13 @@ class SafetyPlanRemindersService {
         moodCheck: 48, // Every 2 days
         safetyPlanReview: 14, // Every 2 weeks
         wellnessCheck: 72, // Every 3 days
-        emergencyReminder: 0 // No emergency reminders for low risk
+        emergencyReminder: 0 // No emergency reminders for low risk;
       },
       triggers: {
         moodDeclineThreshold: 2.0, // Mood drop of 2 points
         missedCheckInEscalation: 72, // 3 days
         consecutiveLowMoods: 3,
-        crisisHistoryWindow: 30
+        crisisHistoryWindow: 30;
       },
       content: {
         moodCheckQuestions: [
@@ -138,13 +138,13 @@ class SafetyPlanRemindersService {
         moodCheck: 24, // Daily mood checks
         safetyPlanReview: 7, // Weekly reviews
         wellnessCheck: 36, // Every 1.5 days
-        emergencyReminder: 0
+        emergencyReminder: 0;
       },
       triggers: {
         moodDeclineThreshold: 1.5,
         missedCheckInEscalation: 48, // 2 days
         consecutiveLowMoods: 2,
-        crisisHistoryWindow: 21
+        crisisHistoryWindow: 21;
       },
       content: {
         moodCheckQuestions: [
@@ -175,13 +175,13 @@ class SafetyPlanRemindersService {
         moodCheck: 12, // Twice daily
         safetyPlanReview: 3, // Every 3 days
         wellnessCheck: 18, // Every 18 hours
-        emergencyReminder: 120 // Every 2 hours if needed
+        emergencyReminder: 120 // Every 2 hours if needed;
       },
       triggers: {
         moodDeclineThreshold: 1.0,
         missedCheckInEscalation: 24, // 1 day
         consecutiveLowMoods: 2,
-        crisisHistoryWindow: 14
+        crisisHistoryWindow: 14;
       },
       content: {
         moodCheckQuestions: [
@@ -213,13 +213,13 @@ class SafetyPlanRemindersService {
         moodCheck: 6, // Every 6 hours
         safetyPlanReview: 1, // Daily
         wellnessCheck: 8, // Every 8 hours
-        emergencyReminder: 30 // Every 30 minutes
+        emergencyReminder: 30 // Every 30 minutes;
       },
       triggers: {
         moodDeclineThreshold: 0.5,
         missedCheckInEscalation: 12, // 12 hours
         consecutiveLowMoods: 1,
-        crisisHistoryWindow: 7
+        crisisHistoryWindow: 7;
       },
       content: {
         moodCheckQuestions: [
@@ -284,7 +284,7 @@ class SafetyPlanRemindersService {
       userId: planData.userId || 'default_user',
       ...planData,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date();
     };
     
     // Initialize reminders for this safety plan
@@ -292,7 +292,7 @@ class SafetyPlanRemindersService {
       await this.initializeUserReminders(planData.userId, planData.riskLevel || 'medium', {
         languageCode: planData.languageCode || 'en',
         timeZone: planData.timeZone || 'UTC',
-        preferredContactMethod: planData.preferredContactMethod || 'notification'
+        preferredContactMethod: planData.preferredContactMethod || 'notification';
       });
     }
     
@@ -342,13 +342,13 @@ class SafetyPlanRemindersService {
           previousEscalations: 0,
           languageCode: 'en',
           timeZone: 'UTC',
-          preferredContactMethod: 'notification' as ContactMethod
+          preferredContactMethod: 'notification' as ContactMethod;
         },
         metadata: {
           createdAt: new Date(),
           missedCount: 0,
           escalationLevel: 0,
-          automaticTrigger: true
+          automaticTrigger: true;
         }
       }
     ];
@@ -372,13 +372,13 @@ class SafetyPlanRemindersService {
       type: 'adaptive',
       patterns: userPatterns,
       adaptations: this.generateAdaptations(userPatterns),
-      createdAt: new Date()
+      createdAt: new Date();
     };
 
     await this.initializeUserReminders(userId, 'medium', {
       languageCode: 'en',
       timeZone: 'UTC', 
-      preferredContactMethod: 'notification' as ContactMethod
+      preferredContactMethod: 'notification' as ContactMethod;
     });
 
     return adaptivePlan;
@@ -392,7 +392,7 @@ class SafetyPlanRemindersService {
       eventId: crisisEvent.id,
       severity: crisisEvent.severity,
       actionsTriggered: ['emergency_contacts_notified', 'crisis_reminders_escalated'],
-      timestamp: new Date()
+      timestamp: new Date();
     };
 
     // Trigger escalation through crisis detection service
@@ -431,13 +431,13 @@ class SafetyPlanRemindersService {
           previousEscalations: 1,
           languageCode: 'en',
           timeZone: 'UTC',
-          preferredContactMethod: 'notification' as ContactMethod
+          preferredContactMethod: 'notification' as ContactMethod;
         },
         metadata: {
           createdAt: new Date(),
           missedCount: 0,
           escalationLevel: 1,
-          automaticTrigger: true
+          automaticTrigger: true;
         }
       }
     ];
@@ -458,7 +458,7 @@ class SafetyPlanRemindersService {
       scheduledTime: new Date(),
       triggerReason: 'interactive_request',
       reminderContent: {
-        checkInQuestions: reminderData.questions || []
+        checkInQuestions: reminderData.questions || [];
       },
       userContext: {
         riskLevel: 'medium' as RiskLevel,
@@ -466,13 +466,13 @@ class SafetyPlanRemindersService {
         previousEscalations: 0,
         languageCode: 'en',
         timeZone: 'UTC',
-        preferredContactMethod: 'notification' as ContactMethod
+        preferredContactMethod: 'notification' as ContactMethod;
       },
       metadata: {
         createdAt: new Date(),
         missedCount: 0,
         escalationLevel: 0,
-        automaticTrigger: false
+        automaticTrigger: false;
       }
     }
 
@@ -493,7 +493,7 @@ class SafetyPlanRemindersService {
       responseRate: 0.87,
       averageResponseTime: 300, // 5 minutes
       effectivenessScore: 0.82,
-      lastInteraction: new Date(Date.now() - 2 * 60 * 60 * 1000) // 2 hours ago
+      lastInteraction: new Date(Date.now() - 2 * 60 * 60 * 1000) // 2 hours ago;
      }
 
   /**
@@ -512,7 +512,7 @@ class SafetyPlanRemindersService {
       triggerReason: 'quick_access_request',
       reminderContent: {
         specificActions: ['breathing_exercise', 'emergency_contacts', 'safe_place_visualization'],
-        resources: reminderData.resources || []
+        resources: reminderData.resources || [];
       },
       userContext: {
         riskLevel: 'medium' as RiskLevel,
@@ -520,13 +520,13 @@ class SafetyPlanRemindersService {
         previousEscalations: 0,
         languageCode: 'en',
         timeZone: 'UTC',
-        preferredContactMethod: 'notification' as ContactMethod
+        preferredContactMethod: 'notification' as ContactMethod;
       },
       metadata: {
         createdAt: new Date(),
         missedCount: 0,
         escalationLevel: 0,
-        automaticTrigger: false
+        automaticTrigger: false;
       }
     }
 
@@ -552,7 +552,7 @@ class SafetyPlanRemindersService {
       effectivenessMetrics: {
         crisisPreventionRate: 0.95,
         userSatisfaction: 4.2,
-        interventionSuccess: 0.88
+        interventionSuccess: 0.88;
       },
       insights: [
         'User responds well to morning check-ins',
@@ -577,12 +577,12 @@ class SafetyPlanRemindersService {
         timeOfDay: {
           morning: 0.35,
           afternoon: 0.25,
-          evening: 0.40
+          evening: 0.40;
         },
         triggers: {
           stress: 0.60,
           isolation: 0.25,
-          conflicts: 0.15
+          conflicts: 0.15;
         },
         effectiveStrategies: [
           'mindfulness_breathing',
@@ -610,16 +610,17 @@ class SafetyPlanRemindersService {
         language: preferences.language || 'en',
         culturalAdaptations: preferences.culturalContext || {},
         communicationStyle: preferences.communicationStyle || 'direct',
-        preferredContacts: preferences.preferredContacts || []
+        preferredContacts: preferences.preferredContacts || [];
       },
-      createdAt: new Date()
+      createdAt: new Date();
     };
 
     await this.initializeUserReminders(userId, 'medium', {
       languageCode: preferences.language || 'en',
       timeZone: 'UTC',
-      preferredContactMethod: 'notification' as ContactMethod
-    });
+      preferredContactMethod: 'notification' as ContactMethod;
+    };
+  };
 
     return plan;
   }
@@ -646,7 +647,7 @@ class SafetyPlanRemindersService {
       },
       baseAnalysis: analysis,
       expectedImprovement: 0.15,
-      implementedAt: new Date()
+      implementedAt: new Date();
     }
 
   /**
@@ -673,15 +674,15 @@ class SafetyPlanRemindersService {
       protocolId: `emergency_${Date.now()}`,
       activatedAt: new Date(),
       actions: ['immediate_contacts_notified', 'crisis_resources_provided', 'emergency_services_alerted'],
-      status: 'active'
+      status: 'active';
     };
 
     await crisisDetectionIntegrationService.processEmergencyEscalation(
       userId,
       'critical',
       'Emergency protocol activated',
-      { source: 'safety_plan_emergency' }
-    );
+      { source: 'safety_plan_emergency' };
+  };
 
     return protocol;
   }
@@ -703,7 +704,7 @@ class SafetyPlanRemindersService {
       recipients: shareOptions.recipients || [],
       accessLevel: shareOptions.accessLevel || 'view',
       expiresAt: shareOptions.expiresAt || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-      createdAt: new Date()
+      createdAt: new Date();
     }
 
   /**
@@ -714,7 +715,7 @@ class SafetyPlanRemindersService {
       updates,
       version: 2,
       updatedAt: new Date(),
-      changelog: Object.keys(updates)
+      changelog: Object.keys(updates);
      }
 
   /**
@@ -725,7 +726,7 @@ class SafetyPlanRemindersService {
       lastSynced: new Date(Date.now() - 5 * 60 * 1000), // 5 minutes ago
       syncStatus: 'up_to_date',
       pendingChanges: 0,
-      conflicts: []
+      conflicts: [];
      }
 
   /**
@@ -736,7 +737,7 @@ class SafetyPlanRemindersService {
       reviewStatus: 'current',
       lastReviewed: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000), // 14 days ago
       nextReviewDue: new Date(Date.now() + 16 * 24 * 60 * 60 * 1000), // 16 days from now
-      reviewRequired: false
+      reviewRequired: false;
      }
 
   /**
@@ -749,14 +750,14 @@ class SafetyPlanRemindersService {
         version: 2,
         changedAt: new Date(),
         changes: ['updated_contacts', 'added_coping_strategy'],
-        changedBy: 'user'
+        changedBy: 'user';
       },
       {
         planId,
         version: 1,
         changedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
         changes: ['initial_creation'],
-        changedBy: 'user'
+        changedBy: 'user';
       }
     ];
   }
@@ -768,7 +769,7 @@ class SafetyPlanRemindersService {
     return {
       schedulingAdaptations: patterns.timePreferences || {},
       contentAdaptations: patterns.preferredStrategies || [],
-      communicationAdaptations: patterns.communicationStyle || 'standard'
+      communicationAdaptations: patterns.communicationStyle || 'standard';
     }
 
   /**
@@ -784,7 +785,7 @@ class SafetyPlanRemindersService {
     } = {}
   ): Promise<void> {
     try {
-      // Set user's reminder schedule based on risk level
+      // Set user's reminder schedule based on risk level;
       const scheduleConfig = { ...this.DEFAULT_SCHEDULE_CONFIGS[riskLevel] };
       this.userSchedules.set(userId, scheduleConfig);
 
@@ -815,7 +816,7 @@ class SafetyPlanRemindersService {
         return triggeredReminders;
       }
 
-      // Analyze mood patterns
+      // Analyze mood patterns;
       const moodTrend = this.analyzeMoodTrend(recentMoodData);
       const riskFactors = await this.assessCurrentRiskFactors(userId, recentMoodData, userContext);
 
@@ -865,16 +866,16 @@ class SafetyPlanRemindersService {
         throw new Error(`Reminder ${reminderId} not found`);
       }
 
-      // Create complete response
+      // Create complete response;
       const fullResponse: ReminderResponse = {
         ...response,
         reminderId,
         timestamp: new Date(),
         followUpNeeded: false,
-        escalationTriggered: false
+        escalationTriggered: false;
       };
 
-      // Analyze response and determine next actions
+      // Analyze response and determine next actions;
       const analysis = await this.analyzeReminderResponse(reminder, fullResponse);
       
       // Update reminder metadata
@@ -899,7 +900,7 @@ class SafetyPlanRemindersService {
       return {
         followUpNeeded: fullResponse.followUpNeeded,
         escalationTriggered: fullResponse.escalationTriggered,
-        nextActions: analysis.recommendedActions
+        nextActions: analysis.recommendedActions;
       } catch (error) {
       console.error('Failed to process reminder response:', error);
       throw error;
@@ -920,8 +921,8 @@ class SafetyPlanRemindersService {
 
       // Check if escalation is needed based on missed count and risk level
       if (this.shouldEscalateMissedReminder(reminder, scheduleConfig)) {
-        await this.escalateMissedReminder(reminder);
-      } else {
+        await this.escalateMissedReminder(reminder);;
+  } else {
         // Schedule a follow-up reminder
         await this.scheduleFollowUpForMissed(reminder);
       }
@@ -967,11 +968,11 @@ class SafetyPlanRemindersService {
     if (moodData.length === 0) {
       return { trend: 'stable', averageIntensity: 0.5, volatility: 0, consecutiveLowMoods: 0 }
 
-    // Calculate trend, intensity, volatility, and consecutive low moods
+    // Calculate trend, intensity, volatility, and consecutive low moods;
     const intensities = moodData.map(m => m.intensity);
     const averageIntensity = intensities.reduce((sum, i) => sum + i, 0) / intensities.length;
     
-    // Simple trend calculation (could be more sophisticated)
+    // Simple trend calculation (could be more sophisticated);
     const recent = intensities.slice(-3);
     const older = intensities.slice(-6, -3);
     const recentAvg = recent.reduce((sum, i) => sum + i, 0) / recent.length;
@@ -983,7 +984,7 @@ class SafetyPlanRemindersService {
     else if (recentAvg < olderAvg - 0.1) trend = 'declining';
     else trend = 'stable';
 
-    // Calculate volatility and consecutive low moods
+    // Calculate volatility and consecutive low moods;
     const volatility = this.calculateVolatility(intensities);
     const consecutiveLowMoods = this.countConsecutiveLowMoods(moodData);
 
@@ -1001,8 +1002,8 @@ class SafetyPlanRemindersService {
     let count = 0;
     for (let i = moodData.length - 1; i >= 0; i--) {
       if (moodData[i].intensity < 0.4) { // Threshold for "low" mood
-        count++;
-      } else {
+        count++;;
+  } else {
         break;
       }
     }
@@ -1015,7 +1016,7 @@ class SafetyPlanRemindersService {
     recommendations: string[];
   }> {
     // This would integrate with crisis detection service
-    // For now, a simplified implementation
+    // For now, a simplified implementation;
     const moodTrend = this.analyzeMoodTrend(moodData);
     
     let riskLevel: 'low' | 'medium' | 'high' | 'critical' = 'low';
@@ -1025,12 +1026,12 @@ class SafetyPlanRemindersService {
     if (moodTrend.trend === 'critical' || moodTrend.averageIntensity < 0.3) {
       riskLevel = 'critical';
       factors.push('Critically low mood detected');
-      recommendations.push('Immediate professional support recommended');
-    } else if (moodTrend.trend === 'declining' && moodTrend.consecutiveLowMoods > 2) {
+      recommendations.push('Immediate professional support recommended');;
+  } else if (moodTrend.trend === 'declining' && moodTrend.consecutiveLowMoods > 2) {
       riskLevel = 'high';
       factors.push('Declining mood trend', `${moodTrend.consecutiveLowMoods} consecutive low moods`);
-      recommendations.push('Increase check-in frequency', 'Review safety plan');
-    } else if (moodTrend.volatility > 0.3) {
+      recommendations.push('Increase check-in frequency', 'Review safety plan');;
+  } else if (moodTrend.volatility > 0.3) {
       riskLevel = 'medium';
       factors.push('High mood volatility');
       recommendations.push('Focus on mood stabilization techniques');
@@ -1084,13 +1085,13 @@ class SafetyPlanRemindersService {
         previousEscalations: userContext.previousEscalations || 0,
         languageCode: userContext.languageCode || 'en',
         timeZone: userContext.timeZone || 'UTC',
-        preferredContactMethod: userContext.preferredContactMethod || 'notification'
+        preferredContactMethod: userContext.preferredContactMethod || 'notification';
       },
       metadata: {
         createdAt: new Date(),
         missedCount: 0,
         escalationLevel: 0,
-        automaticTrigger: true
+        automaticTrigger: true;
       }
     }
 
@@ -1122,13 +1123,13 @@ class SafetyPlanRemindersService {
         previousEscalations: userContext.previousEscalations || 0,
         languageCode: userContext.languageCode || 'en',
         timeZone: userContext.timeZone || 'UTC',
-        preferredContactMethod: userContext.preferredContactMethod || 'notification'
+        preferredContactMethod: userContext.preferredContactMethod || 'notification';
       },
       metadata: {
         createdAt: new Date(),
         missedCount: 0,
         escalationLevel: 0,
-        automaticTrigger: true
+        automaticTrigger: true;
       }
     }
 
@@ -1160,13 +1161,13 @@ class SafetyPlanRemindersService {
         previousEscalations: userContext.previousEscalations || 0,
         languageCode: userContext.languageCode || 'en',
         timeZone: userContext.timeZone || 'UTC',
-        preferredContactMethod: userContext.preferredContactMethod || 'notification'
+        preferredContactMethod: userContext.preferredContactMethod || 'notification';
       },
       metadata: {
         createdAt: new Date(),
         missedCount: 0,
         escalationLevel: 0,
-        automaticTrigger: true
+        automaticTrigger: true;
       }
     }
 
@@ -1177,7 +1178,7 @@ class SafetyPlanRemindersService {
       
       reminder.metadata.deliveredAt = new Date();
       
-      // Set up timer for missed reminder handling
+      // Set up timer for missed reminder handling;
       const timeoutMs = this.getMissedReminderTimeout(reminder);
       const timer = setTimeout(() => {
         this.handleMissedReminder(reminder.id);
@@ -1214,11 +1215,11 @@ class SafetyPlanRemindersService {
     followUpNeeded: boolean;
     recommendedActions: string[];
   }> {
-    const escalationNeeded = response.responseType === 'crisis' || 
+    const escalationNeeded = response.responseType === 'crisis' || ;
                             response.responseType === 'needs-help' ||
                             (response.moodRating !== undefined && response.moodRating <= 3);
     
-    const followUpNeeded = response.responseType === 'needs-help' || 
+    const followUpNeeded = response.responseType === 'needs-help' || ;
                           (response.moodRating !== undefined && response.moodRating <= 5);
 
     const recommendedActions: string[] = [];
@@ -1237,7 +1238,7 @@ class SafetyPlanRemindersService {
 
   private async triggerEscalationForResponse(reminder: SafetyPlanReminder, response: ReminderResponse): Promise<void> {
     try {
-      // Map mood trend to crisis detection service format
+      // Map mood trend to crisis detection service format;
       const mapMoodTrend = (trend: MoodTrend): 'increasing' | 'stable' | 'decreasing' => {
         switch (trend) {
           case 'improving': return 'increasing';
@@ -1248,7 +1249,7 @@ class SafetyPlanRemindersService {
         }
       };
 
-      // Map contact method to crisis detection service format
+      // Map contact method to crisis detection service format;
       const mapContactMethod = (method: ContactMethod): 'phone' | 'text' | 'chat' | 'video' => {
         switch (method) {
           case 'notification': return 'chat';
@@ -1259,7 +1260,7 @@ class SafetyPlanRemindersService {
         }
       };
 
-      // Use crisis detection integration service for escalation
+      // Use crisis detection integration service for escalation;
       const escalationContext = {
         userId: reminder.userId,
         conversationId: `reminder-${reminder.id}`,
@@ -1267,16 +1268,16 @@ class SafetyPlanRemindersService {
           messagesSent: 1,
           sessionDuration: 0,
           previousEscalations: reminder.userContext.previousEscalations,
-          riskTrend: mapMoodTrend(reminder.userContext.recentMoodTrend)
+          riskTrend: mapMoodTrend(reminder.userContext.recentMoodTrend);
         },
         userContext: {
           languageCode: reminder.userContext.languageCode,
           preferredContactMethod: mapContactMethod(reminder.userContext.preferredContactMethod),
-          timeZone: reminder.userContext.timeZone
+          timeZone: reminder.userContext.timeZone;
         }
       };
 
-      const escalationText = response.responseType === 'crisis' 
+      const escalationText = response.responseType === 'crisis' ;
         ? 'User responded to safety plan reminder indicating crisis state'
         : `User needs help: mood rating ${response.moodRating}/10, notes: ${response.additionalNotes}`;
 
@@ -1289,13 +1290,13 @@ class SafetyPlanRemindersService {
   }
 
   private async scheduleFollowUpReminder(reminder: SafetyPlanReminder, _response: ReminderResponse): Promise<void> {
-    // Schedule a follow-up reminder based on the response
+    // Schedule a follow-up reminder based on the response;
     const followUpTime = new Date(Date.now() + 4 * 60 * 60 * 1000); // 4 hours later
     console.log(`Scheduled follow-up reminder for user ${reminder.userId} at ${followUpTime}`);
   }
 
   private async adjustReminderSchedule(userId: string, response: ReminderResponse): Promise<void> {
-    // Adjust reminder frequency based on user's response patterns
+    // Adjust reminder frequency based on user's response patterns;
     const config = this.userSchedules.get(userId);
     if (!config) return;
 
@@ -1331,6 +1332,6 @@ class SafetyPlanRemindersService {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const safetyPlanRemindersService = new SafetyPlanRemindersService();
 export default safetyPlanRemindersService;

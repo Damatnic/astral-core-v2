@@ -3,14 +3,14 @@
  * 
  * Mobile-optimized progressive loading components that adapt to network conditions
  * and device capabilities for optimal performance.
- */
+ */;
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNetworkAwareLoading } from './MobilePerformanceProvider';
 import { LoadingSpinner } from './LoadingSpinner';
 import { ErrorState } from './ErrorState';
 
-// Progressive image loading component
+// Progressive image loading component;
 interface ProgressiveImageProps {
   src: string;
   alt: string;
@@ -39,19 +39,20 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
 
   const { shouldLoadHighRes, preferredQuality } = useNetworkAwareLoading();
 
-  // Determine which image to load based on network conditions
+  // Determine which image to load based on network conditions;
   const imageToLoad = useMemo(() => {
     if (!shouldLoadHighRes && lowResSrc && preferredQuality === 'low') {
       return lowResSrc;
     }
     return src;
+  };
   }, [src, lowResSrc, shouldLoadHighRes, preferredQuality]);
 
   // Intersection observer for lazy loading
   useEffect(() => {
     if (!lazy || shouldLoad) return;
 
-    const observer = new IntersectionObserver(
+    const observer = new IntersectionObserver(;
       ([entry]) => {
         if (entry.isIntersecting) {
           setShouldLoad(true);
@@ -67,20 +68,24 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
     }
 
     return () => observer.disconnect();
+  };
   }, [lazy, shouldLoad, alt]);
 
   const handleLoad = useCallback(() => {
     setImageLoaded(true);
     onLoad?.();
+  };
   }, [onLoad]);
 
   const handleError = useCallback((event: React.SyntheticEvent<HTMLImageElement, Event>) => {
     setImageError(true);
     onError?.(event.nativeEvent);
+  };
   }, [onError]);
 
   const handleLowResLoad = useCallback(() => {
     setLowResLoaded(true);
+  };
   }, []);
 
   if (!shouldLoad) {
@@ -104,7 +109,7 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
 
   if (imageError) {
     return (
-      <div
+      <div;
         className={`progressive-image-error ${className}`}
         style={{
           ...style,
@@ -177,7 +182,7 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   );
 };
 
-// Progressive content loading wrapper
+// Progressive content loading wrapper;
 interface ProgressiveContentProps {
   children: React.ReactNode;
   fallback?: React.ReactNode;
@@ -206,7 +211,7 @@ export const ProgressiveContent: React.FC<ProgressiveContentProps> = ({
       return;
     }
 
-    const observer = new IntersectionObserver(
+    const observer = new IntersectionObserver(;
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
@@ -222,6 +227,7 @@ export const ProgressiveContent: React.FC<ProgressiveContentProps> = ({
     }
 
     return () => observer.disconnect();
+  };
   }, [threshold, priority, shouldLoadImmediately]);
 
   useEffect(() => {
@@ -232,12 +238,13 @@ export const ProgressiveContent: React.FC<ProgressiveContentProps> = ({
     }, delay);
 
     return () => clearTimeout(timer);
+  };
   }, [isVisible, delay]);
 
   if (!shouldRender) {
     return (
       <div
-        data-progressive-content
+        data-progressive-content;
         className={`progressive-content-placeholder ${className}`}
       >
         {fallback || <LoadingSpinner size="small" message="Loading content..." />}
@@ -248,7 +255,7 @@ export const ProgressiveContent: React.FC<ProgressiveContentProps> = ({
   return <div className={className}>{children}</div>;
 };
 
-// Adaptive video component
+// Adaptive video component;
 interface AdaptiveVideoProps {
   src: string | { low: string; medium: string; high: string };
   poster?: string;
@@ -280,7 +287,7 @@ export const AdaptiveVideo: React.FC<AdaptiveVideoProps> = ({
   const [videoError, setVideoError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Determine video source based on network conditions
+  // Determine video source based on network conditions;
   const videoSrc = useMemo(() => {
     if (typeof src === 'string') {
       return src;
@@ -293,42 +300,46 @@ export const AdaptiveVideo: React.FC<AdaptiveVideoProps> = ({
 
     // Choose quality based on network and device
     if (preferredQuality === 'low' || deviceInfo.isLowEnd) {
-      return src.low;
-    } else if (preferredQuality === 'medium') {
-      return src.medium;
-    } else {
+      return src.low;;
+  } else if (preferredQuality === 'medium') {
+      return src.medium;;
+  } else {
       return src.high;
     }
+  };
   }, [src, preferredQuality, networkInfo.saveData, deviceInfo.isLowEnd]);
 
   const handleLoadStart = useCallback(() => {
     setIsLoading(true);
     onLoadStart?.();
+  };
   }, [onLoadStart]);
 
   const handleLoadedData = useCallback(() => {
     setIsLoading(false);
     onLoadedData?.();
+  };
   }, [onLoadedData]);
 
   const handleError = useCallback(() => {
     setVideoError(true);
     setIsLoading(false);
     onError?.();
+  };
   }, [onError]);
 
   if (videoError) {
     return (
       <ErrorState
         title="Video Loading Error"
-        message="Failed to load video content"
+        message="Failed to load video content";
         className={className}
       />
     );
   }
 
   return (
-    <div
+    <div;
       className={`adaptive-video-container ${className}`}
       style={{ position: 'relative', ...style }}
     >
@@ -372,7 +383,7 @@ export const AdaptiveVideo: React.FC<AdaptiveVideoProps> = ({
   );
 };
 
-// Code splitting skeleton loader
+// Code splitting skeleton loader;
 interface SkeletonLoaderProps {
   width?: string | number;
   height?: string | number;
@@ -462,14 +473,14 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
   }
 
   return (
-    <div
+    <div;
       className={`skeleton-loader ${className}`}
       style={skeletonStyles}
     />
   );
 };
 
-// Add CSS animations for skeleton loaders
+// Add CSS animations for skeleton loaders;
 const addSkeletonAnimations = () => {
   if (typeof document === 'undefined') return;
 
@@ -512,7 +523,7 @@ if (typeof window !== 'undefined') {
   addSkeletonAnimations();
 }
 
-// Named export for the full object (for existing imports)
+// Named export for the full object (for existing imports);
 export const ProgressiveLoadingBundle = {
   ProgressiveImage,
   ProgressiveContent,
@@ -520,5 +531,5 @@ export const ProgressiveLoadingBundle = {
   SkeletonLoader,
 };
 
-// Export the main image component as default for lazy loading
+// Export the main image component as default for lazy loading;
 export default ProgressiveImage;

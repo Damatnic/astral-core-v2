@@ -71,18 +71,18 @@ describe('assessmentStore', () => {
           'Authorization': 'Bearer user123',
           'Content-Type': 'application/json'
         },
-        body: expect.stringMatching(/"type":"phq-9"/)
+        body: expect.stringMatching(/"type":"phq-9"/);
       })
     );
     
-    // Verify the body contains the expected data
+    // Verify the body contains the expected data;
     const callArgs = mockedFetch.mock.calls[0];
     const bodyData = JSON.parse(callArgs[1].body);
     expect(bodyData).toEqual({
       type: 'phq-9',
       score,
       answers,
-      timestamp: expect.any(String)
+      timestamp: expect.any(String);
     });
     expect(mockedFetch).toHaveBeenCalledTimes(2); // Submit + refresh
   });
@@ -114,18 +114,18 @@ describe('assessmentStore', () => {
           'Authorization': 'Bearer user123',
           'Content-Type': 'application/json'
         },
-        body: expect.stringMatching(/"type":"gad-7"/)
+        body: expect.stringMatching(/"type":"gad-7"/);
       })
     );
     
-    // Verify the body contains the expected data
+    // Verify the body contains the expected data;
     const callArgs = mockedFetch.mock.calls[0];
     const bodyData = JSON.parse(callArgs[1].body);
     expect(bodyData).toEqual({
       type: 'gad-7',
       score,
       answers,
-      timestamp: expect.any(String)
+      timestamp: expect.any(String);
     });
     expect(mockedFetch).toHaveBeenCalledTimes(2); // Submit + refresh
   });

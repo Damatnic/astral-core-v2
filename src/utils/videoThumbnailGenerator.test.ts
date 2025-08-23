@@ -1,7 +1,7 @@
 /**
  * Video Thumbnail Generator Test Suite
  * Tests video thumbnail generation, caching, and optimization
- */
+ */;
 
 import {
   VideoThumbnailGenerator,
@@ -10,7 +10,7 @@ import {
   GeneratedThumbnail,
 } from './videoThumbnailGenerator';
 
-// Mock HTML video and canvas APIs
+// Mock HTML video and canvas APIs;
 const mockVideoElement = {
   crossOrigin: '',
   preload: '',
@@ -50,7 +50,7 @@ const mockCanvas = {
   toDataURL: jest.fn(() => 'data:image/jpeg;base64,mockImageData'),
 };
 
-// Mock document.createElement
+// Mock document.createElement;
 const originalCreateElement = document.createElement;
 Object.defineProperty(document, 'createElement', {
   value: jest.fn((tagName: string) => {
@@ -63,7 +63,8 @@ Object.defineProperty(document, 'createElement', {
     return originalCreateElement.call(document, tagName);
   }),
   writable: true,
-});
+};
+  };
 
 // localStorage is already mocked globally in setupTests.ts
 
@@ -82,7 +83,7 @@ describe('VideoThumbnailGenerator', () => {
     // Store the original localStorage mock
     originalLocalStorage = window.localStorage;
     
-    // Create a fresh localStorage mock for each test
+    // Create a fresh localStorage mock for each test;
     const localStorageStore: Record<string, string> = {};
     const freshLocalStorageMock = {
       getItem: jest.fn((key: string) => localStorageStore[key] || null),
@@ -107,7 +108,7 @@ describe('VideoThumbnailGenerator', () => {
     Object.defineProperty(window, 'localStorage', {
       value: freshLocalStorageMock,
       writable: true,
-      configurable: true
+      configurable: true;
     });
     
     generator = new VideoThumbnailGenerator();
@@ -123,7 +124,7 @@ describe('VideoThumbnailGenerator', () => {
     Object.defineProperty(window, 'localStorage', {
       value: originalLocalStorage,
       writable: true,
-      configurable: true
+      configurable: true;
     });
   });
 
@@ -140,7 +141,7 @@ describe('VideoThumbnailGenerator', () => {
     it('should generate thumbnails with default options', async () => {
       const videoPromise = generator.generateThumbnails(mockVideoSrc);
       
-      // Simulate video loading
+      // Simulate video loading;
       const createdVideo = (document.createElement as jest.Mock).mock.results[1].value;
       createdVideo.onloadedmetadata();
       
@@ -170,7 +171,7 @@ describe('VideoThumbnailGenerator', () => {
 
       const videoPromise = generator.generateThumbnails(mockVideoSrc, options);
       
-      // Get the most recently created video element
+      // Get the most recently created video element;
       const allResults = (document.createElement as jest.Mock).mock.results;
       const videoResults = allResults.filter(r => r.value && r.value.onloadedmetadata);
       const createdVideo = videoResults[videoResults.length - 1].value;
@@ -192,7 +193,7 @@ describe('VideoThumbnailGenerator', () => {
     it('should handle video loading errors', async () => {
       const videoPromise = generator.generateThumbnails(mockVideoSrc);
       
-      // Get the most recently created video element
+      // Get the most recently created video element;
       const allResults = (document.createElement as jest.Mock).mock.results;
       const videoResults = allResults.filter(r => r.value && r.value.onerror);
       const createdVideo = videoResults[videoResults.length - 1].value;
@@ -205,7 +206,7 @@ describe('VideoThumbnailGenerator', () => {
     it('should set correct video currentTime based on frameTime and duration', async () => {
       const videoPromise = generator.generateThumbnails(mockVideoSrc, { frameTime: 150 });
       
-      // Get the most recently created video element
+      // Get the most recently created video element;
       const allResults = (document.createElement as jest.Mock).mock.results;
       const videoResults = allResults.filter(r => r.value && r.value.onloadedmetadata);
       const createdVideo = videoResults[videoResults.length - 1].value;
@@ -270,21 +271,21 @@ describe('VideoThumbnailGenerator', () => {
 
   describe('generateBatchThumbnails', () => {
     it('should generate thumbnails for multiple videos in batches', async () => {
-      jest.useRealTimers(); // Use real timers for this async test
+      jest.useRealTimers(); // Use real timers for this async test;
       
-      const videoSources = [
+      const videoSources = [;
         'video1.mp4',
         'video2.mp4', 
         'video3.mp4',
         'video4.mp4'
       ];
 
-      const generateSpy = jest.spyOn(generator, 'generateThumbnails')
+      const generateSpy = jest.spyOn(generator, 'generateThumbnails');
         .mockResolvedValue({
           original: 'test.mp4',
           sizes: { medium: 'data:image/jpeg;base64,test' },
           aspectRatio: 16/9,
-          duration: 60
+          duration: 60;
         });
 
       const results = await generator.generateBatchThumbnails(videoSources);
@@ -296,16 +297,16 @@ describe('VideoThumbnailGenerator', () => {
     });
 
     it('should handle individual video failures gracefully', async () => {
-      jest.useRealTimers(); // Use real timers for this async test
+      jest.useRealTimers(); // Use real timers for this async test;
       
       const videoSources = ['video1.mp4', 'video2.mp4'];
       
-      const generateSpy = jest.spyOn(generator, 'generateThumbnails')
+      const generateSpy = jest.spyOn(generator, 'generateThumbnails');
         .mockResolvedValueOnce({
           original: 'video1.mp4',
           sizes: { medium: 'data:image/jpeg;base64,test' },
           aspectRatio: 16/9,
-          duration: 60
+          duration: 60;
         })
         .mockRejectedValueOnce(new Error('Failed to load video'));
 
@@ -331,14 +332,14 @@ describe('VideoThumbnailGenerator', () => {
         original: 'video1.mp4',
         sizes: { medium: 'data:image/jpeg;base64,test1' },
         aspectRatio: 16/9,
-        duration: 60
+        duration: 60;
       },
       {
         original: 'video2.mp4', 
         sizes: { medium: 'data:image/jpeg;base64,test2' },
         placeholder: 'data:image/jpeg;base64,placeholder',
         aspectRatio: 16/9,
-        duration: 120
+        duration: 120;
       }
     ];
 
@@ -379,7 +380,7 @@ describe('VideoThumbnailGenerator', () => {
             sizes: thumb.sizes,
             placeholder: thumb.placeholder,
             aspectRatio: thumb.aspectRatio,
-            duration: thumb.duration
+            duration: thumb.duration;
           }))
         };
         
@@ -394,7 +395,7 @@ describe('VideoThumbnailGenerator', () => {
       it('should return empty array for expired cache', () => {
         const expiredCacheData = {
           timestamp: Date.now() - 25 * 60 * 60 * 1000, // 25 hours ago
-          thumbnails: []
+          thumbnails: [];
         };
         
         (localStorage.getItem as jest.Mock).mockReturnValueOnce(JSON.stringify(expiredCacheData));
@@ -446,7 +447,7 @@ describe('VideoThumbnailGenerator', () => {
         xl: 'data:image/jpeg;base64,xl'
       },
       aspectRatio: 16/9,
-      duration: 60
+      duration: 60;
     };
 
     it('should return URL for preferred size when available', () => {
@@ -537,7 +538,7 @@ describe('VideoThumbnailGenerator', () => {
         width: 0,
         height: 0,
         getContext: jest.fn(() => null),
-        toDataURL: jest.fn()
+        toDataURL: jest.fn();
       };
       
       const originalCreateElement = document.createElement;
@@ -585,7 +586,7 @@ describe('VideoThumbnailGenerator', () => {
 
   describe('performance considerations', () => {
     it('should limit batch processing to prevent browser blocking', async () => {
-      jest.useRealTimers(); // Use real timers for async operations
+      jest.useRealTimers(); // Use real timers for async operations;
       
       const manyVideos = Array.from({ length: 10 }, (_, i) => `video${i}.mp4`);
       
@@ -593,7 +594,7 @@ describe('VideoThumbnailGenerator', () => {
         original: 'test.mp4',
         sizes: { medium: 'data:image/jpeg;base64,test' },
         aspectRatio: 16/9,
-        duration: 60
+        duration: 60;
       });
       
       const promise = generator.generateBatchThumbnails(manyVideos);
@@ -609,7 +610,7 @@ describe('VideoThumbnailGenerator', () => {
         original: `video${i}.mp4`,
         sizes: { medium: `data:image/jpeg;base64,test${i}` },
         aspectRatio: 16/9,
-        duration: 60 + i
+        duration: 60 + i;
       }));
       
       const startTime = performance.now();

@@ -1,7 +1,7 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- */
+ */;
 
 import React, { useState } from 'react';
 import { useI18n } from '../i18n/hooks';
@@ -58,12 +58,12 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       await changeLanguage(newLanguage);
       onLanguageChange?.(newLanguage);
       
-      // Announce language change for accessibility
+      // Announce language change for accessibility;
       const announcement = t('accessibility.language_changed', { 
-        language: SUPPORTED_LANGUAGES.find(l => l.code === newLanguage)?.nativeName || newLanguage 
+        language: SUPPORTED_LANGUAGES.find(l => l.code === newLanguage)?.nativeName || newLanguage ;
       });
       
-      // Create screen reader announcement
+      // Create screen reader announcement;
       const srElement = document.createElement('div');
       srElement.setAttribute('aria-live', 'polite');
       srElement.setAttribute('aria-atomic', 'true');
@@ -83,7 +83,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
     }
   };
 
-  const renderLanguageOption = (lang: LanguageOption, isSelected: boolean = false) => (
+  const renderLanguageOption = (lang: LanguageOption, isSelected: boolean = false) => (;
     <div 
       key={lang.code}
       className={`language-option ${isSelected ? 'selected' : ''} ${lang.rtl ? 'rtl' : ''}`}
@@ -121,7 +121,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   if (variant === 'modal') {
     return (
       <>
-        <button
+        <button;
           className={`language-trigger ${className}`}
           onClick={() => setIsOpen(true)}
           aria-label={t('settings.change_language', { defaultValue: 'Change language' })}
@@ -134,7 +134,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
         
         {isOpen && (
           <div className="language-modal-overlay" onClick={() => setIsOpen(false)}>
-            <div 
+            <div; 
               className={`language-modal ${isRTL ? 'rtl' : ''}`}
               onClick={e => e.stopPropagation()}
               role="dialog"
@@ -147,7 +147,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
               <div className="language-modal-content">
                 {SUPPORTED_LANGUAGES.map(lang => renderLanguageOption(lang, lang.code === language))}
               </div>
-              <button 
+              <button; 
                 className="language-modal-close"
                 onClick={() => setIsOpen(false)}
                 aria-label={t('common.close', { defaultValue: 'Close' })}
@@ -164,7 +164,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   // Default dropdown variant
   return (
     <div className={`language-selector ${className} ${isRTL ? 'rtl' : ''} ${isOpen ? 'open' : ''}`}>
-      <button
+      <button;
         className="language-trigger"
         onClick={() => setIsOpen(!isOpen)}
         onKeyDown={(e) => {
@@ -185,7 +185,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       </button>
       
       {isOpen && (
-        <div 
+        <div; 
           className="language-dropdown"
           role="listbox"
           aria-label={t('settings.available_languages', { defaultValue: 'Available languages' })}

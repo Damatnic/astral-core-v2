@@ -1,9 +1,9 @@
 /**
  * Production-safe logging utility
  * Replaces console.log with environment-aware logging
- */
+ */;
 
-type LogLevel = "debug" | "info" | "warn" | "error"
+type LogLevel = "debug" | "info" | "warn" | "error";
 interface LogEntry {
   level: LogLevel;
   message: string;
@@ -49,7 +49,7 @@ class Logger {
   }
 
   debug(message: string, data?: any, source?: string): void {
-    if (!this.shouldLog("debug")) return
+    if (!this.shouldLog("debug")) return;
     const entry: LogEntry = {
       level: "debug",
       message,
@@ -64,7 +64,7 @@ class Logger {
   }
 
   info(message: string, data?: any, source?: string): void {
-    if (!this.shouldLog("info")) return
+    if (!this.shouldLog("info")) return;
     const entry: LogEntry = {
       level: "info",
       message,
@@ -79,7 +79,7 @@ class Logger {
   }
 
   warn(message: string, data?: any, source?: string): void {
-    if (!this.shouldLog("warn")) return
+    if (!this.shouldLog("warn")) return;
     const entry: LogEntry = {
       level: "warn",
       message,
@@ -105,7 +105,7 @@ class Logger {
     if(!this.isDevelopment && window.Sentry) {
       window.Sentry.captureException(error || new Error(message), {
         tags: { source },
-        level: "error"
+        level: "error";
       });
     }
   }
@@ -121,10 +121,10 @@ class Logger {
     this.logBuffer = [];
   }
 }
-// Export singleton instance
+// Export singleton instance;
 export const logger = new Logger();
 
-// Helper functions for migration from console.log
+// Helper functions for migration from console.log;
 export const log = logger.debug.bind(logger);
 export const logInfo = logger.info.bind(logger);
 export const logWarn = logger.warn.bind(logger);

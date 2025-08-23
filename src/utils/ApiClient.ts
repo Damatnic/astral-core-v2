@@ -11,7 +11,7 @@ import { demoDataService } from '../services/demoDataService';
 
 /**
  * Check if Netlify Functions are available
- */
+ */;
 let netlifyFunctionsAvailable: boolean | null = null;
 
 const checkNetlifyFunctions = async (): Promise<boolean> => {
@@ -26,14 +26,14 @@ const checkNetlifyFunctions = async (): Promise<boolean> => {
     }
     
     // In development, check if we're running through Netlify Dev (port 8888)
-    // This avoids making requests that cause 404 errors
+    // This avoids making requests that cause 404 errors;
     const currentPort = window.location.port;
     const isNetlifyDev = currentPort === '8888';
     
     if (isNetlifyDev) {
         netlifyFunctionsAvailable = true;
-        console.info('✓ Running through Netlify Dev - API functions available');
-    } else {
+        console.info('✓ Running through Netlify Dev - API functions available');;
+  } else {
         netlifyFunctionsAvailable = false;
         console.info('✓ Running in demo mode on port', currentPort || '80');
     }
@@ -43,7 +43,7 @@ const checkNetlifyFunctions = async (): Promise<boolean> => {
 
 /**
  * Check if we're in demo mode and return demo data if applicable
- */
+ */;
 const isInDemoMode = () => {
     // Force demo mode in development if Netlify Functions aren't available
     if (process.env.NODE_ENV === 'development' && netlifyFunctionsAvailable === false) {
@@ -65,7 +65,7 @@ const getDemoUserType = (): 'user' | 'helper' | 'admin' | null => {
 
 /**
  * Get demo data for the current user type, fallback to API call
- */
+ */;
 const getDemoDataOrCallApi = async <T>(demoDataKey: string, apiCall: () => Promise<T>): Promise<T> => {
     if (isInDemoMode()) {
         const userType = getDemoUserType();
@@ -84,12 +84,12 @@ const getDemoDataOrCallApi = async <T>(demoDataKey: string, apiCall: () => Promi
  * The single source of truth for all backend API calls.
  * @param endpoint The API endpoint to call (e.g., '/dilemmas')
  * @param options Standard fetch options (method, body, etc.)
- */
+ */;
 const _callApi = async (endpoint: string, options: RequestInit = {}) => {
     // Check if Netlify Functions are available first
     await checkNetlifyFunctions();
     
-    // In development mode, check if we should use demo data
+    // In development mode, check if we should use demo data;
     const isDevelopment = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost';
     
     // If in development and Netlify Functions aren't available, skip the API call entirely
@@ -99,13 +99,13 @@ const _callApi = async (endpoint: string, options: RequestInit = {}) => {
         throw devError;
     }
     
-    // In a real app, the access token would be retrieved from a secure context.
+    // In a real app, the access token would be retrieved from a secure context.;
     const token = sessionStorage.getItem('accessToken');
     
-    // Get anonymous ID for anonymous users
+    // Get anonymous ID for anonymous users;
     const anonymousId = !token ? localStorage.getItem('astral_core_anonymous_id') : null;
     
-    // Use Netlify Functions in development
+    // Use Netlify Functions in development;
     const baseUrl = process.env.VITE_API_URL || '/.netlify/functions';
 
     const response = await fetch(`${baseUrl}${endpoint}`, {
@@ -126,7 +126,7 @@ const _callApi = async (endpoint: string, options: RequestInit = {}) => {
     }
 
     if (!response.ok) {
-        // Check if response is HTML (common in development when Netlify functions aren't running)
+        // Check if response is HTML (common in development when Netlify functions aren't running);
         const contentType = response.headers.get('content-type');
         let errorData;
         
@@ -135,12 +135,12 @@ const _callApi = async (endpoint: string, options: RequestInit = {}) => {
             if (process.env.NODE_ENV === 'development') {
                 errorData = { 
                     message: 'API endpoint not available in development mode. Using demo data fallback.',
-                    isDevelopmentError: true 
-                };
-            } else {
+                    isDevelopmentError: true ;
+                };;
+  } else {
                 errorData = { message: 'Server returned an unexpected response format.' };
-            }
-        } else {
+            };
+  } else {
             errorData = await response.json().catch(() => ({ message: 'An unknown API error occurred.' }));
         }
         
@@ -152,7 +152,7 @@ const _callApi = async (endpoint: string, options: RequestInit = {}) => {
         return; // No content to parse
     }
     
-    // Check for HTML response even on successful requests (development fallback)
+    // Check for HTML response even on successful requests (development fallback);
     const contentType = response.headers.get('content-type');
     if (contentType && contentType.includes('text/html')) {
         if (process.env.NODE_ENV === 'development') {
@@ -167,7 +167,7 @@ const _callApi = async (endpoint: string, options: RequestInit = {}) => {
 // Initialize API client - check if Netlify Functions are available
 checkNetlifyFunctions();
 
-// --- Centralized API Client ---
+// --- Centralized API Client ---;
 export const ApiClient = {
     // Initialize the API client (checks for Netlify Functions availability)
     initialize: async () => {
@@ -309,7 +309,7 @@ export const ApiClient = {
             } catch (error) {
                 const err = error as { isDevelopmentError?: boolean; message?: string };
                 if (err.isDevelopmentError || err.message?.includes('Demo mode')) {
-                    // Return demo data in development
+                    // Return demo data in development;
                     const userType = getDemoUserType() || 'user';
                     const demoData = demoDataService.getDemoData(userType);
                     return demoData.allDilemmas || demoData.dilemmas || [];
@@ -504,7 +504,7 @@ export const ApiClient = {
                 }
         },
         sendMessageToAI: async (messages: AIChatMessage[]): Promise<string> => {
-            // Legacy compatibility - convert to new format
+            // Legacy compatibility - convert to new format;
             const result = await ApiClient.ai.chat(messages);
             return result.response;
         },
@@ -512,7 +512,8 @@ export const ApiClient = {
             return _callApi('/api-ai/clear', { 
                 method: 'POST',
                 body: JSON.stringify({ userId })
-            });
+            };
+  };
         },
         saveChatHistory: async (userId: string, messages: AIChatMessage[]): Promise<void> => {
             return _callApi('/api-ai/history', { 
@@ -538,10 +539,11 @@ export const ApiClient = {
                 return await _callApi('/api-ai/providers');
             } catch (error) {
                 console.error('Failed to get AI providers:', error);
-                return { providers: [], default: null }
-        },
+                return { providers: [], default: null };
+  },
         draftPostFromChat: async (messages: AIChatMessage[]): Promise<{ postContent: string, category: string }> => {
-            return _callApi('/ai/draft-post', { method: 'POST', body: JSON.stringify({ messages }) });
+            return _callApi('/ai/draft-post', { method: 'POST', body: JSON.stringify({ messages }) };
+  };
         },
         getHelperGuidance: async (text: string): Promise<HelperGuidance> => {
             return _callApi('/ai/guidance', { method: 'POST', body: JSON.stringify({ text }) });

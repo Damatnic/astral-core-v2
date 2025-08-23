@@ -220,7 +220,7 @@ describe('notificationService', () => {
     });
 
     it.skip('should handle real-world usage pattern', () => {
-      // Simulate setting up the service
+      // Simulate setting up the service;
       const realToastFunction = jest.fn();
       notificationService.setToastFunction(realToastFunction);
       

@@ -18,7 +18,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     password: '',
     confirmPassword: '',
     name: '',
-    role: 'seeker' as 'seeker' | 'helper'
+    role: 'seeker' as 'seeker' | 'helper';
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -56,7 +56,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     e.preventDefault();
     setError('');
 
-    // Validate form
+    // Validate form;
     const validationError = validateForm();
     if (validationError) {
       setError(validationError);
@@ -66,7 +66,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     setIsLoading(true);
 
     try {
-      const response = await simpleAuthService.register(
+      const response = await simpleAuthService.register(;
         formData.email, 
         formData.password, 
         formData.name, 
@@ -80,16 +80,16 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           password: '',
           confirmPassword: '',
           name: '',
-          role: 'seeker'
+          role: 'seeker';
         });
         
         // Call success callback or navigate
         if (onSuccess) {
-          onSuccess();
-        } else {
+          onSuccess();;
+  } else {
           navigate('/dashboard');
-        }
-      } else {
+        };
+  } else {
         setError(response.error || 'Registration failed');
       }
     } catch (err) {
@@ -115,10 +115,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           <label htmlFor="name" className="form-label">
             Full Name
           </label>
-          <input
+          <input;
             type="text"
             id="name"
-            name="name"
+            name="name";
             className="form-input glass-input smooth-transition"
             value={formData.name}
             onChange={handleChange}
@@ -133,10 +133,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           <label htmlFor="email" className="form-label">
             Email Address
           </label>
-          <input
+          <input;
             type="email"
             id="email"
-            name="email"
+            name="email";
             className="form-input glass-input smooth-transition"
             value={formData.email}
             onChange={handleChange}
@@ -153,7 +153,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           </label>
           <select
             id="role"
-            name="role"
+            name="role";
             className="form-input glass-input smooth-transition"
             value={formData.role}
             onChange={handleChange}
@@ -168,10 +168,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           <label htmlFor="password" className="form-label">
             Password
           </label>
-          <input
+          <input;
             type="password"
             id="password"
-            name="password"
+            name="password";
             className="form-input glass-input smooth-transition"
             value={formData.password}
             onChange={handleChange}
@@ -187,10 +187,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           <label htmlFor="confirmPassword" className="form-label">
             Confirm Password
           </label>
-          <input
+          <input;
             type="password"
             id="confirmPassword"
-            name="confirmPassword"
+            name="confirmPassword";
             className="form-input glass-input smooth-transition"
             value={formData.confirmPassword}
             onChange={handleChange}
@@ -203,8 +203,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         </div>
 
         <div className="form-actions">
-          <button
-            type="submit"
+          <button;
+            type="submit";
             className="glass-button btn-primary-therapeutic smooth-transition ripple-button animate-glow"
             disabled={isLoading}
           >
@@ -221,8 +221,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         <div className="auth-form-footer">
           <p>
             Already have an account?{' '}
-            <button
-              type="button"
+            <button;
+              type="button";
               className="link-button smooth-transition gradient-text"
               onClick={onSwitchToLogin}
               disabled={isLoading}

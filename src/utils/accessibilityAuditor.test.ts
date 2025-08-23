@@ -1,6 +1,6 @@
 /**
  * @jest-environment jsdom
- */
+ */;
 
 import {
   MobileAccessibilityAuditor,
@@ -67,9 +67,10 @@ describe('accessibilityAuditor', () => {
       }
 
       return defaultStyle as CSSStyleDeclaration;
-    });
+    };
+  };
 
-    // Mock canvas for color parsing
+    // Mock canvas for color parsing;
     const mockCanvas = document.createElement('canvas');
     const mockContext = {
       fillStyle: '',
@@ -168,7 +169,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<img src="test.jpg">';
 
       const result = auditor.auditPage();
-      const imageIssues = result.issues.filter(issue => 
+      const imageIssues = result.issues.filter(issue => ;
         issue.description.includes('Image missing alternative text')
       );
 
@@ -181,7 +182,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<img src="test.jpg" alt="A beautiful sunset">';
 
       const result = auditor.auditPage();
-      const imageIssues = result.issues.filter(issue => 
+      const imageIssues = result.issues.filter(issue => ;
         issue.description.includes('Image missing alternative text')
       );
 
@@ -196,7 +197,7 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const imageIssues = result.issues.filter(issue => 
+      const imageIssues = result.issues.filter(issue => ;
         issue.description.includes('Image missing alternative text')
       );
 
@@ -207,7 +208,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<img src="test.jpg" alt="Image of a sunset">';
 
       const result = auditor.auditPage();
-      const redundantIssues = result.issues.filter(issue => 
+      const redundantIssues = result.issues.filter(issue => ;
         issue.description.includes('redundant words')
       );
 
@@ -226,7 +227,7 @@ describe('accessibilityAuditor', () => {
       } as any));
 
       const result = auditor.auditPage();
-      const bgImageIssues = result.issues.filter(issue => 
+      const bgImageIssues = result.issues.filter(issue => ;
         issue.description.includes('Background image may convey information')
       );
 
@@ -239,7 +240,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<input type="text" name="email">';
 
       const result = auditor.auditPage();
-      const labelIssues = result.issues.filter(issue => 
+      const labelIssues = result.issues.filter(issue => ;
         issue.description.includes('Form control missing accessible name')
       );
 
@@ -261,7 +262,7 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const labelIssues = result.issues.filter(issue => 
+      const labelIssues = result.issues.filter(issue => ;
         issue.description.includes('Form control missing accessible name')
       );
 
@@ -272,7 +273,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<input type="text" placeholder="Enter your email">';
 
       const result = auditor.auditPage();
-      const placeholderIssues = result.issues.filter(issue => 
+      const placeholderIssues = result.issues.filter(issue => ;
         issue.description.includes('Using placeholder as label')
       );
 
@@ -286,7 +287,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<p>Content without any headings</p>';
 
       const result = auditor.auditPage();
-      const headingIssues = result.issues.filter(issue => 
+      const headingIssues = result.issues.filter(issue => ;
         issue.description.includes('No headings found')
       );
 
@@ -300,7 +301,7 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const h1Issues = result.issues.filter(issue => 
+      const h1Issues = result.issues.filter(issue => ;
         issue.description.includes('No H1 heading found')
       );
 
@@ -314,7 +315,7 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const multipleH1Issues = result.issues.filter(issue => 
+      const multipleH1Issues = result.issues.filter(issue => ;
         issue.description.includes('Multiple H1 headings found')
       );
 
@@ -328,7 +329,7 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const jumpIssues = result.issues.filter(issue => 
+      const jumpIssues = result.issues.filter(issue => ;
         issue.description.includes('Heading level jumps')
       );
 
@@ -339,7 +340,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<h1></h1>';
 
       const result = auditor.auditPage();
-      const emptyIssues = result.issues.filter(issue => 
+      const emptyIssues = result.issues.filter(issue => ;
         issue.description.includes('Empty heading found')
       );
 
@@ -356,7 +357,7 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const hierarchyIssues = result.issues.filter(issue => 
+      const hierarchyIssues = result.issues.filter(issue => ;
         issue.description.includes('Heading level jumps')
       );
 
@@ -376,7 +377,7 @@ describe('accessibilityAuditor', () => {
         fontWeight: '400',
       } as any));
 
-      // Mock canvas context for color parsing
+      // Mock canvas context for color parsing;
       const mockContext = {
         fillStyle: '',
         fillRect: jest.fn(),
@@ -394,7 +395,8 @@ describe('accessibilityAuditor', () => {
           } as any;
         }
         return document.createElement.call(document, tagName);
-      });
+      };
+  };
 
       const result = auditor.auditPage();
       
@@ -436,7 +438,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<button>Test Button</button>';
 
       const result = auditor.auditPage();
-      const focusIssues = result.issues.filter(issue => 
+      const focusIssues = result.issues.filter(issue => ;
         issue.description.includes('No global focus styles detected')
       );
 
@@ -466,7 +468,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<div tabindex="5">Positive tabindex</div>';
 
       const result = auditor.auditPage();
-      const tabindexIssues = result.issues.filter(issue => 
+      const tabindexIssues = result.issues.filter(issue => ;
         issue.description.includes('Positive tabindex found')
       );
 
@@ -478,7 +480,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<div onclick="doSomething()">Clickable div</div>';
 
       const result = auditor.auditPage();
-      const keyboardIssues = result.issues.filter(issue => 
+      const keyboardIssues = result.issues.filter(issue => ;
         issue.description.includes('Click handler without keyboard support')
       );
 
@@ -494,7 +496,7 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const keyboardIssues = result.issues.filter(issue => 
+      const keyboardIssues = result.issues.filter(issue => ;
         issue.description.includes('Click handler without keyboard support')
       );
 
@@ -508,7 +510,7 @@ describe('accessibilityAuditor', () => {
       
       document.body.innerHTML = '<button>Small Button</button>';
       
-      // Mock small button dimensions
+      // Mock small button dimensions;
       const mockButton = document.querySelector('button');
       mockButton!.getBoundingClientRect = jest.fn(() => ({
         width: 20,
@@ -527,7 +529,7 @@ describe('accessibilityAuditor', () => {
       } as any));
 
       const result = mobileAuditor.auditPage();
-      const touchTargetIssues = result.issues.filter(issue => 
+      const touchTargetIssues = result.issues.filter(issue => ;
         issue.description.includes('Touch target too small')
       );
 
@@ -540,7 +542,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<button>Small Button</button>';
 
       const result = desktopAuditor.auditPage();
-      const touchTargetIssues = result.issues.filter(issue => 
+      const touchTargetIssues = result.issues.filter(issue => ;
         issue.description.includes('Touch target too small')
       );
 
@@ -570,7 +572,7 @@ describe('accessibilityAuditor', () => {
       } as any));
 
       const result = mobileAuditor.auditPage();
-      const touchTargetIssues = result.issues.filter(issue => 
+      const touchTargetIssues = result.issues.filter(issue => ;
         issue.description.includes('Touch target too small')
       );
 
@@ -583,7 +585,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<div>Content without main landmark</div>';
 
       const result = auditor.auditPage();
-      const mainIssues = result.issues.filter(issue => 
+      const mainIssues = result.issues.filter(issue => ;
         issue.description.includes('Missing main landmark')
       );
 
@@ -598,7 +600,7 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const multipleMainIssues = result.issues.filter(issue => 
+      const multipleMainIssues = result.issues.filter(issue => ;
         issue.description.includes('Multiple main landmarks found')
       );
 
@@ -615,7 +617,7 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const landmarkIssues = result.issues.filter(issue => 
+      const landmarkIssues = result.issues.filter(issue => ;
         issue.description.includes('Missing main landmark')
       );
 
@@ -626,7 +628,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<main>Content without navigation</main>';
 
       const result = auditor.auditPage();
-      const navIssues = result.issues.filter(issue => 
+      const navIssues = result.issues.filter(issue => ;
         issue.description.includes('No navigation landmark found')
       );
 
@@ -640,7 +642,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<button aria-label="">Button</button>';
 
       const result = auditor.auditPage();
-      const ariaIssues = result.issues.filter(issue => 
+      const ariaIssues = result.issues.filter(issue => ;
         issue.description.includes('Empty aria-label attribute')
       );
 
@@ -651,7 +653,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<button aria-labelledby="nonexistent">Button</button>';
 
       const result = auditor.auditPage();
-      const labelledbyIssues = result.issues.filter(issue => 
+      const labelledbyIssues = result.issues.filter(issue => ;
         issue.description.includes('aria-labelledby references non-existent ID')
       );
 
@@ -663,7 +665,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<button aria-describedby="missing">Button</button>';
 
       const result = auditor.auditPage();
-      const describedbyIssues = result.issues.filter(issue => 
+      const describedbyIssues = result.issues.filter(issue => ;
         issue.description.includes('aria-describedby references non-existent ID')
       );
 
@@ -678,7 +680,7 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const ariaIssues = result.issues.filter(issue => 
+      const ariaIssues = result.issues.filter(issue => ;
         issue.description.includes('references non-existent ID')
       );
 
@@ -691,7 +693,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<svg><rect width="100" height="100"/></svg>';
 
       const result = auditor.auditPage();
-      const svgIssues = result.issues.filter(issue => 
+      const svgIssues = result.issues.filter(issue => ;
         issue.description.includes('SVG missing accessible name')
       );
 
@@ -706,7 +708,7 @@ describe('accessibilityAuditor', () => {
       `;
 
       const result = auditor.auditPage();
-      const svgIssues = result.issues.filter(issue => 
+      const svgIssues = result.issues.filter(issue => ;
         issue.description.includes('SVG missing accessible name')
       );
 
@@ -717,7 +719,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<canvas width="100" height="100"></canvas>';
 
       const result = auditor.auditPage();
-      const canvasIssues = result.issues.filter(issue => 
+      const canvasIssues = result.issues.filter(issue => ;
         issue.description.includes('Canvas missing alternative content')
       );
 
@@ -734,7 +736,7 @@ describe('accessibilityAuditor', () => {
       });
 
       const result = auditor.auditPage();
-      const langIssues = result.issues.filter(issue => 
+      const langIssues = result.issues.filter(issue => ;
         issue.description.includes('Page missing language declaration')
       );
 
@@ -749,7 +751,7 @@ describe('accessibilityAuditor', () => {
       });
 
       const result = auditor.auditPage();
-      const langIssues = result.issues.filter(issue => 
+      const langIssues = result.issues.filter(issue => ;
         issue.description.includes('Page missing language declaration')
       );
 
@@ -766,7 +768,7 @@ describe('accessibilityAuditor', () => {
 
     test.skip('should detect missing viewport meta tag', () => {
       const result = mobileAuditor.auditPage();
-      const viewportIssues = result.issues.filter(issue => 
+      const viewportIssues = result.issues.filter(issue => ;
         issue.description.includes('Missing viewport meta tag')
       );
 
@@ -780,7 +782,7 @@ describe('accessibilityAuditor', () => {
       document.head.appendChild(meta);
 
       const result = mobileAuditor.auditPage();
-      const zoomIssues = result.issues.filter(issue => 
+      const zoomIssues = result.issues.filter(issue => ;
         issue.description.includes('Viewport prevents zooming')
       );
 
@@ -795,7 +797,7 @@ describe('accessibilityAuditor', () => {
       document.head.appendChild(meta);
 
       const result = mobileAuditor.auditPage();
-      const viewportIssues = result.issues.filter(issue => 
+      const viewportIssues = result.issues.filter(issue => ;
         issue.description.includes('viewport')
       );
 
@@ -808,7 +810,7 @@ describe('accessibilityAuditor', () => {
       Object.defineProperty(window, 'innerWidth', { value: 800, writable: true });
 
       const result = mobileAuditor.auditPage();
-      const scrollIssues = result.issues.filter(issue => 
+      const scrollIssues = result.issues.filter(issue => ;
         issue.description.includes('horizontal scrolling')
       );
 
@@ -834,7 +836,7 @@ describe('accessibilityAuditor', () => {
       document.body.innerHTML = '<div>Test content</div>';
 
       const result = customAuditor.auditPage();
-      const customIssues = result.issues.filter(issue => 
+      const customIssues = result.issues.filter(issue => ;
         issue.description === 'Custom test rule'
       );
 
@@ -874,7 +876,7 @@ describe('accessibilityAuditor', () => {
         checkLevel: 'AAA',
       });
 
-      // This would affect color contrast calculations
+      // This would affect color contrast calculations;
       const result = aaaAuditor.auditPage();
       expect(result).toBeDefined();
     });
@@ -949,7 +951,7 @@ describe('accessibilityAuditor', () => {
 
   describe('Error Handling', () => {
     test.skip('should handle malformed DOM gracefully', () => {
-      // Mock querySelector to throw error
+      // Mock querySelector to throw error;
       const originalQuerySelector = document.querySelector;
       document.querySelector = jest.fn(() => {
         throw new Error('DOM error');
@@ -996,7 +998,8 @@ describe('accessibilityAuditor', () => {
           } as any;
         }
         return document.createElement.call(document, tagName);
-      });
+      };
+  };
 
       expect(() => {
         auditor.auditPage();
@@ -1006,7 +1009,7 @@ describe('accessibilityAuditor', () => {
 
   describe('Performance', () => {
     test.skip('should complete audit in reasonable time', () => {
-      // Create a complex page
+      // Create a complex page;
       const complexHTML = Array.from({ length: 100 }, (_, i) => `
         <div>
           <h${(i % 6) + 1}>Heading ${i}</h${(i % 6) + 1}>

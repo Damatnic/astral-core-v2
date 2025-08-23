@@ -10,7 +10,7 @@
  * - Intelligent caching strategies
  * - Performance optimization
  * - Privacy protection
- */
+ */;
 
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching';
 import { registerRoute, NavigationRoute } from 'workbox-routing';
@@ -19,12 +19,12 @@ import { BackgroundSync } from 'workbox-background-sync';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 
-// Service Worker Version and Configuration
+// Service Worker Version and Configuration;
 const SW_VERSION = '1.0.0';
 const CACHE_PREFIX = 'astral-core';
 const CRISIS_MODE_ENABLED = true;
 
-// Cache Names
+// Cache Names;
 const CACHE_NAMES = {
   CRITICAL: `${CACHE_PREFIX}-critical-v1`,
   API: `${CACHE_PREFIX}-api-v1`, 
@@ -34,8 +34,8 @@ const CACHE_NAMES = {
   FONTS: `${CACHE_PREFIX}-fonts-v1`
 };
 
-// Crisis Resources (Always Available Offline)
-const CRISIS_RESOURCES = [
+// Crisis Resources (Always Available Offline);
+const CRISIS_RESOURCES = [;
   '/crisis',
   '/emergency',
   '/safety-plan',
@@ -44,16 +44,16 @@ const CRISIS_RESOURCES = [
   '/emergency-contacts.json'
 ];
 
-// Background Sync Queues
+// Background Sync Queues;
 const bgSyncQueues = {
   crisis: new BackgroundSync('crisis-reports', {
-    maxRetentionTime: 24 * 60 // 24 hours
+    maxRetentionTime: 24 * 60 // 24 hours;
   }),
   wellness: new BackgroundSync('wellness-data', {
-    maxRetentionTime: 7 * 24 * 60 // 7 days
+    maxRetentionTime: 7 * 24 * 60 // 7 days;
   }),
   community: new BackgroundSync('community-actions', {
-    maxRetentionTime: 3 * 24 * 60 // 3 days
+    maxRetentionTime: 3 * 24 * 60 // 3 days;
   })
 };
 
@@ -74,7 +74,7 @@ self.addEventListener('install', (event) => {
       // Precache critical crisis resources
       caches.open(CACHE_NAMES.CRISIS).then(cache => {
         return cache.addAll(CRISIS_RESOURCES.map(url => new Request(url, {
-          cache: 'reload' // Always fetch fresh copies
+          cache: 'reload' // Always fetch fresh copies;
         })));
       }),
       
@@ -116,7 +116,7 @@ self.addEventListener('activate', (event) => {
 
 async function cleanupOldCaches() {
   const cacheNames = await caches.keys();
-  const oldCaches = cacheNames.filter(name => 
+  const oldCaches = cacheNames.filter(name => ;
     name.startsWith(CACHE_PREFIX) && !Object.values(CACHE_NAMES).includes(name)
   );
   
@@ -128,7 +128,7 @@ async function cleanupOldCaches() {
 async function initializeCrisisMode() {
   if (!CRISIS_MODE_ENABLED) return;
   
-  // Ensure crisis cache is always available
+  // Ensure crisis cache is always available;
   const crisisCache = await caches.open(CACHE_NAMES.CRISIS);
   const cachedRequests = await crisisCache.keys();
   
@@ -142,7 +142,7 @@ async function updateCrisisResources() {
   try {
     const crisisCache = await caches.open(CACHE_NAMES.CRISIS);
     
-    // Update crisis resources daily
+    // Update crisis resources daily;
     const promises = CRISIS_RESOURCES.map(async (url) => {
       try {
         const response = await fetch(url, { cache: 'reload' });
@@ -175,7 +175,7 @@ registerRoute(
         new ExpirationPlugin({
           maxEntries: 100,
           maxAgeSeconds: 5 * 60, // 5 minutes
-          purgeOnQuotaError: true
+          purgeOnQuotaError: true;
         }),
         new CacheableResponsePlugin({
           statuses: [0, 200]
@@ -191,7 +191,7 @@ registerRoute(
       // Handle failed API calls with background sync
       await handleFailedApiCall(request, event);
       
-      // Return cached response or offline fallback
+      // Return cached response or offline fallback;
       const cachedResponse = await getCachedApiResponse(request);
       return cachedResponse || createOfflineApiResponse(request);
     }
@@ -234,7 +234,7 @@ registerRoute(
       new ExpirationPlugin({
         maxEntries: 100,
         maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
-        purgeOnQuotaError: true
+        purgeOnQuotaError: true;
       }),
       new CacheableResponsePlugin({
         statuses: [0, 200]
@@ -243,8 +243,8 @@ registerRoute(
   })
 );
 
-// Navigation Fallback
-const navigationRoute = new NavigationRoute(
+// Navigation Fallback;
+const navigationRoute = new NavigationRoute(;
   async ({ event }) => {
     const request = event.request;
     
@@ -279,12 +279,12 @@ async function handleFailedApiCall(request, event) {
   const url = new URL(request.url);
   const functionName = url.pathname.split('/').pop();
   
-  // Determine sync queue based on function type
+  // Determine sync queue based on function type;
   let queue;
   if (functionName.includes('crisis') || functionName.includes('emergency')) {
-    queue = bgSyncQueues.crisis;
+    queue = bgSyncQueues.crisis;;
   } else if (functionName.includes('wellness') || functionName.includes('mood')) {
-    queue = bgSyncQueues.wellness;
+    queue = bgSyncQueues.wellness;;
   } else {
     queue = bgSyncQueues.community;
   }
@@ -298,10 +298,10 @@ async function handleFailedApiCall(request, event) {
           url: request.url,
           method: request.method,
           headers: Object.fromEntries(request.headers.entries()),
-          body: JSON.stringify(requestData)
+          body: JSON.stringify(requestData);
         },
         timestamp: Date.now(),
-        retryCount: 0
+        retryCount: 0;
       });
     } catch (error) {
       console.error('[SW] Failed to queue request for background sync', error);
@@ -323,7 +323,7 @@ function createOfflineApiResponse(request) {
       success: false,
       offline: true,
       message: 'Your data will be synced when you\'re back online',
-      timestamp: Date.now()
+      timestamp: Date.now();
     }), {
       status: 202,
       headers: { 'Content-Type': 'application/json' }
@@ -332,7 +332,7 @@ function createOfflineApiResponse(request) {
   
   return new Response(JSON.stringify({
     error: 'Offline - data will sync when connection is restored',
-    offline: true
+    offline: true;
   }), {
     status: 503,
     headers: { 'Content-Type': 'application/json' }
@@ -405,7 +405,7 @@ async function getCacheStatus() {
       const keys = await cache.keys();
       status[name] = {
         count: keys.length,
-        size: await calculateCacheSize(cache)
+        size: await calculateCacheSize(cache);
       };
     }
   }
@@ -480,7 +480,7 @@ self.addEventListener('error', (event) => {
       client.postMessage({
         type: 'SW_ERROR',
         error: event.error.message,
-        timestamp: Date.now()
+        timestamp: Date.now();
       });
     });
   });
@@ -500,7 +500,7 @@ setInterval(() => {
       client.postMessage({
         type: 'SW_HEARTBEAT',
         version: SW_VERSION,
-        timestamp: Date.now()
+        timestamp: Date.now();
       });
     });
   });

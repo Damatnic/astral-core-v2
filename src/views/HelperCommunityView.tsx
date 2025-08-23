@@ -10,19 +10,19 @@ export const HelperCommunityView: React.FC = () => {
     const { helperProfile } = useAuth();
     const [activeTab, setActiveTab] = useState<'forum' | 'proposals'>('forum');
     
-    // Forum State
+    // Forum State;
     const [threads, setThreads] = useState<ForumThread[]>([]);
     const [posts, setPosts] = useState<ForumPost[]>([]);
     const [selectedThread, setSelectedThread] = useState<ForumThread | null>(null);
     const [newThreadTitle, setNewThreadTitle] = useState('');
     const [newPostContent, setNewPostContent] = useState('');
     
-    // Proposal State
+    // Proposal State;
     const [proposals, setProposals] = useState<CommunityProposal[]>([]);
     const [newProposalTitle, setNewProposalTitle] = useState('');
     const [newProposalDescription, setNewProposalDescription] = useState('');
     
-    // Common State
+    // Common State;
     const [isLoading, setIsLoading] = useState(true);
     const [isPosting, setIsPosting] = useState(false);
 
@@ -34,14 +34,15 @@ export const HelperCommunityView: React.FC = () => {
             ApiClient.helperCommunity.getThreads().then(data => {
                 setThreads(data);
                 setIsLoading(false);
-            });
-        } else if (activeTab === 'proposals') {
+            });;
+  } else if (activeTab === 'proposals') {
             ApiClient.helperCommunity.getProposals().then(data => {
                 setProposals(data);
                 setIsLoading(false);
             });
         }
-    }, [activeTab]);
+    };
+  }, [activeTab]);
 
     useEffect(() => {
         if (selectedThread) {
@@ -51,13 +52,14 @@ export const HelperCommunityView: React.FC = () => {
                 setIsLoading(false);
             });
         }
-    }, [selectedThread]);
+    };
+  }, [selectedThread]);
 
     const handleCreateThread = async () => {
         if (!newThreadTitle.trim() || !newPostContent.trim() || !helperProfile) return;
         setIsPosting(true);
         try {
-            const newThread = await ApiClient.helperCommunity.createThread(
+            const newThread = await ApiClient.helperCommunity.createThread(;
                 { title: newThreadTitle.trim(), authorId: helperProfile.id, authorName: helperProfile.displayName },
                 newPostContent.trim()
             );
@@ -80,7 +82,7 @@ export const HelperCommunityView: React.FC = () => {
                 threadId: selectedThread.id,
                 authorId: helperProfile.id,
                 authorName: helperProfile.displayName,
-                content: newPostContent.trim()
+                content: newPostContent.trim();
             });
             setPosts(prev => [...prev, newPost]);
             setNewPostContent('');
@@ -173,7 +175,7 @@ export const HelperCommunityView: React.FC = () => {
         )
     };
 
-    const renderProposals = () => (
+    const renderProposals = () => (;
         <>
             {isCouncilMember && (
                  <div className="card">

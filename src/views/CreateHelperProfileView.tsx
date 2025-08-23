@@ -6,7 +6,7 @@ import { AppInput, AppTextArea } from '../components/AppInput';
 import { View } from '../types';
 import { isError } from '../types/common';
 
-const EXPERTISE_OPTIONS = [
+const EXPERTISE_OPTIONS = [;
     'Anxiety & Stress',
     'Depression',
     'Grief & Loss',
@@ -90,20 +90,20 @@ export const CreateHelperProfileView: React.FC<{
         } catch (err) {
             console.error("Profile creation error:", err);
             
-            // Provide specific error messages based on error type
+            // Provide specific error messages based on error type;
             let errorMessage = 'An error occurred while creating your profile.';
             
             if (isError(err)) {
                 if (err.message?.includes('duplicate') || err.message?.includes('exists')) {
                     errorMessage = 'This display name is already taken. Please choose a different one.';
-                    document.getElementById('displayName')?.focus();
-                } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
-                    errorMessage = 'Network error. Please check your connection and try again.';
-                } else if (err.message?.includes('unauthorized') || err.message?.includes('401')) {
-                    errorMessage = 'Your session has expired. Please log in again.';
-                } else if (err.message?.includes('rate') || err.message?.includes('429')) {
-                    errorMessage = 'Too many attempts. Please wait a moment and try again.';
-                } else if (err.message) {
+                    document.getElementById('displayName')?.focus();;
+  } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
+                    errorMessage = 'Network error. Please check your connection and try again.';;
+  } else if (err.message?.includes('unauthorized') || err.message?.includes('401')) {
+                    errorMessage = 'Your session has expired. Please log in again.';;
+  } else if (err.message?.includes('rate') || err.message?.includes('429')) {
+                    errorMessage = 'Too many attempts. Please wait a moment and try again.';;
+  } else if (err.message) {
                     errorMessage = err.message;
                 }
             }
@@ -132,7 +132,7 @@ export const CreateHelperProfileView: React.FC<{
                     
                     <AppInput
                         label="Public Display Name (Pseudonym)"
-                        id="displayName"
+                        id="displayName";
                         type="text"
                         value={displayName}
                         onChange={(e) => setDisplayName(e.target.value)}
@@ -156,7 +156,7 @@ export const CreateHelperProfileView: React.FC<{
                         <div className="expertise-options" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
                             {EXPERTISE_OPTIONS.map(option => (
                                 <div key={option} className="radio-group">
-                                    <input
+                                    <input;
                                         type="checkbox"
                                         id={`expertise-${option}`}
                                         name="expertise"
@@ -171,7 +171,7 @@ export const CreateHelperProfileView: React.FC<{
                     </div>
 
                     <div className="form-group-checkbox">
-                        <input
+                        <input;
                             type="checkbox"
                             id="agree-terms"
                             checked={agreedToTerms}

@@ -6,7 +6,7 @@
  * - Crisis-priority resource management
  * - Adaptive cache strategies
  * - Performance-aware resource loading
- */
+ */;
 
 export interface CacheStrategy {
   name: string;
@@ -37,8 +37,8 @@ export interface UserBehaviorMetrics {
     memory: number;
     connection: string;
     isLowEnd: boolean;
-  }
-
+  };
+}
 export class IntelligentCachingManager {
   private userMetrics: UserBehaviorMetrics;
   private prefetchQueue: string[] = [];
@@ -67,7 +67,7 @@ export class IntelligentCachingManager {
       deviceCapabilities: {
         memory: (navigator as any).deviceMemory || 4,
         connection: (navigator as any).connection?.effectiveType || '4g',
-        isLowEnd: (navigator as any).deviceMemory < 2
+        isLowEnd: (navigator as any).deviceMemory < 2;
       }
     };
 
@@ -89,11 +89,11 @@ export class IntelligentCachingManager {
           expiration: {
             maxEntries: 50,
             maxAgeSeconds: 60 * 60 * 24 * 180, // 6 months
-            purgeOnQuotaError: false
+            purgeOnQuotaError: false;
           },
-          plugins: [this.createCrisisPlugin()]
+          plugins: [this.createCrisisPlugin()];
         },
-        priority: 'crisis'
+        priority: 'crisis';
       },
 
       // MENTAL HEALTH CORE - High Priority
@@ -106,11 +106,11 @@ export class IntelligentCachingManager {
           expiration: {
             maxEntries: 100,
             maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-            purgeOnQuotaError: false
+            purgeOnQuotaError: false;
           },
-          plugins: [this.createPerformancePlugin()]
+          plugins: [this.createPerformancePlugin()];
         },
-        priority: 'high'
+        priority: 'high';
       },
 
       // API RESPONSES - Intelligent caching based on content type
@@ -123,12 +123,12 @@ export class IntelligentCachingManager {
           expiration: {
             maxEntries: 200,
             maxAgeSeconds: 60 * 60 * 6, // 6 hours
-            purgeOnQuotaError: true
+            purgeOnQuotaError: true;
           },
           networkTimeoutSeconds: this.getAdaptiveTimeout(),
-          plugins: [this.createAPIPlugin()]
+          plugins: [this.createAPIPlugin()];
         },
-        priority: 'high'
+        priority: 'high';
       },
 
       // USER-SPECIFIC DATA - Based on behavior patterns
@@ -141,11 +141,11 @@ export class IntelligentCachingManager {
           expiration: {
             maxEntries: 50,
             maxAgeSeconds: 60 * 60 * 24, // 24 hours
-            purgeOnQuotaError: true
+            purgeOnQuotaError: true;
           },
-          plugins: [this.createUserDataPlugin()]
+          plugins: [this.createUserDataPlugin()];
         },
-        priority: 'high'
+        priority: 'high';
       },
 
       // STATIC ASSETS - Optimized for device capabilities
@@ -158,11 +158,11 @@ export class IntelligentCachingManager {
           expiration: {
             maxEntries: this.userMetrics.deviceCapabilities.isLowEnd ? 50 : 150,
             maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-            purgeOnQuotaError: true
+            purgeOnQuotaError: true;
           },
-          plugins: [this.createAssetPlugin()]
+          plugins: [this.createAssetPlugin()];
         },
-        priority: 'medium'
+        priority: 'medium';
       },
 
       // IMAGES - Progressive loading with format optimization
@@ -175,11 +175,11 @@ export class IntelligentCachingManager {
           expiration: {
             maxEntries: this.userMetrics.deviceCapabilities.isLowEnd ? 75 : 200,
             maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-            purgeOnQuotaError: true
+            purgeOnQuotaError: true;
           },
-          plugins: [this.createImagePlugin()]
+          plugins: [this.createImagePlugin()];
         },
-        priority: 'medium'
+        priority: 'medium';
       },
 
       // PREFETCHED CONTENT - Based on user behavior
@@ -192,10 +192,10 @@ export class IntelligentCachingManager {
           expiration: {
             maxEntries: 30,
             maxAgeSeconds: 60 * 60 * 2, // 2 hours
-            purgeOnQuotaError: true
+            purgeOnQuotaError: true;
           }
         },
-        priority: 'low'
+        priority: 'low';
       }
     ];
   }
@@ -207,8 +207,8 @@ export class IntelligentCachingManager {
     const { networkCondition, deviceCapabilities } = this.userMetrics;
     
     if (networkCondition === 'slow' || deviceCapabilities.isLowEnd) {
-      return 30; // 30 seconds for slow networks/devices
-    } else if (networkCondition === 'fast') {
+      return 30; // 30 seconds for slow networks/devices;
+  } else if (networkCondition === 'fast') {
       return 8; // 8 seconds for fast networks
     }
     return 15; // 15 seconds default
@@ -244,7 +244,8 @@ export class IntelligentCachingManager {
     return {
       requestWillFetch: async ({ request }: { request: Request }) => {
         const startTime = performance.now();
-        this.analyticsCache.set(request.url, { startTime });
+        this.analyticsCache.set(request.url, { startTime };
+  };
         return request;
       },
       
@@ -278,7 +279,7 @@ export class IntelligentCachingManager {
             return response;
           }
           
-          // Don't cache large payloads on low-end devices
+          // Don't cache large payloads on low-end devices;
           const contentLength = response.headers.get('content-length');
           if (this.userMetrics.deviceCapabilities.isLowEnd && 
               contentLength && parseInt(contentLength) > 100000) {
@@ -297,7 +298,7 @@ export class IntelligentCachingManager {
   private createUserDataPlugin() {
     return {
       cacheWillUpdate: async ({ response }: { response: Response }) => {
-        // Only cache user data if user is active
+        // Only cache user data if user is active;
         const timeSinceActive = Date.now() - this.userMetrics.lastActiveTime;
         const isRecentlyActive = timeSinceActive < 60 * 60 * 1000; // 1 hour
         
@@ -357,8 +358,9 @@ export class IntelligentCachingManager {
             credentials: request.credentials,
             cache: request.cache,
             redirect: request.redirect,
-            referrer: request.referrer
-          });
+            referrer: request.referrer;
+          };
+  };
         }
         
         return request;
@@ -394,18 +396,18 @@ export class IntelligentCachingManager {
       );
     }
 
-    // Route-based predictions
-    const frequentRoutes = Object.entries(timeSpentOnRoutes)
+    // Route-based predictions;
+    const frequentRoutes = Object.entries(timeSpentOnRoutes);
       .sort(([,a], [,b]) => b - a)
       .slice(0, 3)
       .map(([route]) => route);
 
     for (const route of frequentRoutes) {
       if (route.includes('mood-tracker')) {
-        predictions.push('/mood-data.json', '/mood-insights.json');
-      } else if (route.includes('journal')) {
-        predictions.push('/journal-prompts.json', '/reflection-templates.json');
-      } else if (route.includes('helpers')) {
+        predictions.push('/mood-data.json', '/mood-insights.json');;
+  } else if (route.includes('journal')) {
+        predictions.push('/journal-prompts.json', '/reflection-templates.json');;
+  } else if (route.includes('helpers')) {
         predictions.push('/helper-availability.json', '/chat-templates.json');
       }
     }
@@ -471,7 +473,7 @@ export class IntelligentCachingManager {
     } catch (error) {
       console.warn(`[Intelligent Cache] Prefetch failed for ${resourceUrl}:`, error);
     } finally {
-      // Remove from queue
+      // Remove from queue;
       const index = this.prefetchQueue.indexOf(resourceUrl);
       if (index > -1) {
         this.prefetchQueue.splice(index, 1);
@@ -484,8 +486,8 @@ export class IntelligentCachingManager {
    */
   private getPrefetchPriority(resourceUrl: string): string {
     if (resourceUrl.includes('crisis') || resourceUrl.includes('emergency')) {
-      return 'high';
-    } else if (resourceUrl.includes('mood') || resourceUrl.includes('journal')) {
+      return 'high';;
+  } else if (resourceUrl.includes('mood') || resourceUrl.includes('journal')) {
       return 'medium';
     }
     return 'low';
@@ -543,10 +545,10 @@ export class IntelligentCachingManager {
       url,
       loadTime,
       timestamp: Date.now(),
-      networkCondition: this.userMetrics.networkCondition
+      networkCondition: this.userMetrics.networkCondition;
     };
 
-    // Store performance data for analysis
+    // Store performance data for analysis;
     const perfHistory = JSON.parse(localStorage.getItem('astral-performance') || '[]');
     perfHistory.push(perfData);
     
@@ -593,10 +595,10 @@ export class IntelligentCachingManager {
         
         let networkCondition: 'fast' | 'slow' | 'offline';
         if (effectiveType === '4g') {
-          networkCondition = 'fast';
-        } else if (effectiveType === 'slow-2g') {
-          networkCondition = 'slow';
-        } else {
+          networkCondition = 'fast';;
+  } else if (effectiveType === 'slow-2g') {
+          networkCondition = 'slow';;
+  } else {
           networkCondition = 'fast';
         }
         
@@ -645,10 +647,11 @@ export class IntelligentCachingManager {
             keys.slice(10).map(request => prefetchCache.delete(request))
           );
         }
-      });
+      };
+  };
     }
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const intelligentCaching = new IntelligentCachingManager();

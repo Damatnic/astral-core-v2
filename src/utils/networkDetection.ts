@@ -4,13 +4,13 @@
  * Optimizes mobile performance based on network conditions
  */
 
-// Network connection types
+// Network connection types;
 export type ConnectionType = '2g' | '3g' | '4g' | '5g' | 'wifi' | 'unknown';
 
-// Network quality levels
+// Network quality levels;
 export type NetworkQuality = 'poor' | 'good' | 'excellent';
 
-// Adaptive loading configuration
+// Adaptive loading configuration;
 export interface AdaptiveLoadingConfig {
   connectionType: ConnectionType;
   quality: NetworkQuality;
@@ -25,7 +25,7 @@ export interface AdaptiveLoadingConfig {
 
 /**
  * Detects network connection type from navigator.connection
- */
+ */;
 export const getConnectionType = (): ConnectionType => {
   const navigatorWithConnection = navigator as any & {
     connection?: {
@@ -58,7 +58,7 @@ export const getConnectionType = (): ConnectionType => {
 
 /**
  * Determines network quality based on downlink and RTT
- */
+ */;
 export const getNetworkQuality = (): NetworkQuality => {
   const navigatorWithConnection = navigator as any & {
     connection?: {
@@ -89,7 +89,7 @@ export const getNetworkQuality = (): NetworkQuality => {
 
 /**
  * Gets comprehensive adaptive loading configuration
- */
+ */;
 export const getAdaptiveLoadingConfig = (): AdaptiveLoadingConfig => {
   const connectionType = getConnectionType();
   const quality = getNetworkQuality();
@@ -107,7 +107,7 @@ export const getAdaptiveLoadingConfig = (): AdaptiveLoadingConfig => {
   const rtt = connection?.rtt || 300;
   const saveData = connection?.saveData || false;
 
-  // Determine loading strategies based on network conditions
+  // Determine loading strategies based on network conditions;
   const shouldPreloadImages = quality !== 'poor' && !saveData;
   const shouldPreloadVideos = quality === 'excellent' && !saveData && connectionType !== '2g';
   
@@ -149,14 +149,14 @@ export const getAdaptiveLoadingConfig = (): AdaptiveLoadingConfig => {
 
 /**
  * React hook for adaptive loading configuration
- */
+ */;
 export const useAdaptiveLoading = () => {
   const [config, setConfig] = React.useState<AdaptiveLoadingConfig>(
     getAdaptiveLoadingConfig()
   );
 
   React.useEffect(() => {
-    // Update config when connection changes
+    // Update config when connection changes;
     const updateConfig = () => {
       setConfig(getAdaptiveLoadingConfig());
     };
@@ -173,6 +173,7 @@ export const useAdaptiveLoading = () => {
       return () => {
         connection.removeEventListener('change', updateConfig);
       }
+  };
   }, []);
 
   return config;
@@ -180,7 +181,7 @@ export const useAdaptiveLoading = () => {
 
 /**
  * Utility to determine if feature should be enabled based on network
- */
+ */;
 export const shouldEnableFeature = (
   feature: 'auto-play' | 'high-res-images' | 'video-preload' | 'background-sync',
   config?: AdaptiveLoadingConfig
@@ -207,7 +208,7 @@ export const shouldEnableFeature = (
 
 /**
  * Log network information for debugging
- */
+ */;
 export const logNetworkInfo = (): void => {
   const config = getAdaptiveLoadingConfig();
   
@@ -222,5 +223,5 @@ export const logNetworkInfo = (): void => {
   console.groupEnd();
 };
 
-// Export React import for the hook
+// Export React import for the hook;
 import React from 'react';

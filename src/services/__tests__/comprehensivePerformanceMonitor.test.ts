@@ -1,6 +1,6 @@
 /**
  * @jest-environment jsdom
- */
+ */;
 
 import ComprehensivePerformanceMonitor, { comprehensivePerformanceMonitor } from '../comprehensivePerformanceMonitor';
 import type {
@@ -9,7 +9,7 @@ import type {
   PerformanceBottleneck,
 } from '../comprehensivePerformanceMonitor';
 
-// Mock dependencies
+// Mock dependencies;
 const mockAnalyticsService = {
   track: jest.fn(),
 };
@@ -18,7 +18,7 @@ jest.mock('../analyticsService', () => ({
   getAnalyticsService: () => mockAnalyticsService,
 }));
 
-// Mock performance APIs
+// Mock performance APIs;
 const mockPerformanceObserver = {
   observe: jest.fn(),
   disconnect: jest.fn(),
@@ -419,7 +419,7 @@ describe('ComprehensivePerformanceMonitor', () => {
       (monitor as any).checkPerformanceBudgets(mockMetrics);
       
       const alerts = (monitor as any).activeAlerts;
-      const highSeverityAlerts = alerts.filter((alert: PerformanceAlert) => 
+      const highSeverityAlerts = alerts.filter((alert: PerformanceAlert) => ;
         alert.severity === 'critical' || alert.severity === 'high'
       );
       expect(highSeverityAlerts.length).toBe(0);
@@ -456,7 +456,7 @@ describe('ComprehensivePerformanceMonitor', () => {
 
       const bottlenecks = (monitor as any).detectBottlenecks(mockMetrics);
       
-      const bundleBottleneck = bottlenecks.find((b: PerformanceBottleneck) => 
+      const bundleBottleneck = bottlenecks.find((b: PerformanceBottleneck) => ;
         b.metric === 'bundleSize'
       );
       expect(bundleBottleneck).toBeDefined();
@@ -493,7 +493,7 @@ describe('ComprehensivePerformanceMonitor', () => {
 
       const bottlenecks = (monitor as any).detectBottlenecks(mockMetrics);
       
-      const memoryBottleneck = bottlenecks.find((b: PerformanceBottleneck) => 
+      const memoryBottleneck = bottlenecks.find((b: PerformanceBottleneck) => ;
         b.metric === 'memoryUsage'
       );
       expect(memoryBottleneck).toBeDefined();
@@ -530,7 +530,7 @@ describe('ComprehensivePerformanceMonitor', () => {
 
       const bottlenecks = (monitor as any).detectBottlenecks(mockMetrics);
       
-      const crisisBottleneck = bottlenecks.find((b: PerformanceBottleneck) => 
+      const crisisBottleneck = bottlenecks.find((b: PerformanceBottleneck) => ;
         b.component === 'Crisis Detection System'
       );
       expect(crisisBottleneck).toBeDefined();
@@ -687,7 +687,7 @@ describe('ComprehensivePerformanceMonitor', () => {
       // First recommendation should be critical priority
       expect(recommendations[0].priority).toBe('critical');
       
-      // Should be sorted by priority (critical > high > medium > low)
+      // Should be sorted by priority (critical > high > medium > low);
       const priorities = recommendations.map(r => r.priority);
       const criticalIndex = priorities.indexOf('critical');
       const highIndex = priorities.indexOf('high');
@@ -805,7 +805,7 @@ describe('ComprehensivePerformanceMonitor', () => {
         timestamp: Date.now(),
       };
 
-      // Add a resolved alert
+      // Add a resolved alert;
       const alert: PerformanceAlert = {
         id: 'resolved-alert',
         type: 'budget_violation',
@@ -1053,7 +1053,7 @@ describe('ComprehensivePerformanceMonitor', () => {
     });
 
     test.skip('should cleanup old data', () => {
-      const oldTimestamp = Date.now() - 40 * 24 * 60 * 60 * 1000; // 40 days ago
+      const oldTimestamp = Date.now() - 40 * 24 * 60 * 60 * 1000; // 40 days ago;
       const mockMetrics: EnhancedPerformanceMetrics = {
         firstContentfulPaint: 1500,
         largestContentfulPaint: 2500,

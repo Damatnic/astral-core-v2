@@ -1,5 +1,5 @@
-import React from "react"
-import { Helper, ActiveView, View } from "../types"
+import React from "react";
+import { Helper, ActiveView, View } from "../types";
 import {
   DashboardIcon,
   LogoutIcon,
@@ -10,9 +10,9 @@ import {
   UsersIcon,
   GuidelinesIcon,
   LegalIcon
-} from './icons.dynamic'
-import i18n from "../i18n"
-import { AnimatedNumber } from "./AnimatedNumber"
+} from './icons.dynamic';
+import i18n from "../i18n";
+import { AnimatedNumber } from "./AnimatedNumber";
 interface NavItemProps {
   view: string,
   icon: React.ReactNode,
@@ -59,7 +59,7 @@ const NavItem: React.FC<NavItemProps> = ({
         </span>
         <span className="nav-label">{label}</span>
         {hasNotification && (
-          <output
+          <output;
             className="notification-dot"
                           aria-label="Has new notifications"
           />
@@ -69,7 +69,7 @@ const NavItem: React.FC<NavItemProps> = ({
     );
 };
 
-NavItem.displayName = "NavItem"
+NavItem.displayName = "NavItem";
 export interface HelperSidebarProps {
   activeView: ActiveView;
   setActiveView: (view: ActiveView) => void;
@@ -103,7 +103,7 @@ const HelperSidebar: React.FC<HelperSidebarProps> = ({
     }
   };
 
-  const createNavItem = (props: Omit<NavItemProps, 'activeView' | 'setActiveView' | 'isMobile'>) => (
+  const createNavItem = (props: Omit<NavItemProps, 'activeView' | 'setActiveView' | 'isMobile'>) => (;
     <NavItem
       {...props}
       activeView={activeView}
@@ -124,7 +124,7 @@ const HelperSidebar: React.FC<HelperSidebarProps> = ({
         </div>
       </div>
 
-      <nav
+      <nav;
         className="sidebar-nav-container"
         role="navigation"
         aria-label="Helper navigation"
@@ -138,31 +138,31 @@ const HelperSidebar: React.FC<HelperSidebarProps> = ({
           {createNavItem({
             view: "constellation-guide-dashboard",
             icon: <DashboardIcon />,
-            label: i18n.t("dashboard")
+            label: i18n.t("dashboard");
           })}
 
           {createNavItem({
             view: "helper-chats",
             icon: <ChatIcon />,
-            label: "Active Chats"
+            label: "Active Chats";
           })}
 
           {createNavItem({
             view: "helper-posts",
             icon: <PostsIcon />,
-            label: "Community Posts"
+            label: "Community Posts";
           })}
 
           {createNavItem({
             view: "helper-application",
             icon: <CertifiedIcon />,
-            label: "Certification"
+            label: "Certification";
           })}
 
           {createNavItem({
             view: "helper-community",
             icon: <UsersIcon />,
-            label: "Helper Community"
+            label: "Helper Community";
           })}
           
           {/* Role-based Moderation Access */}
@@ -170,7 +170,7 @@ const HelperSidebar: React.FC<HelperSidebarProps> = ({
             createNavItem({
               view: "moderation-dashboard",
               icon: <LegalIcon />,
-              label: "Moderation Dashboard"
+              label: "Moderation Dashboard";
             })
           )}
           {/* Admin-only Access */}
@@ -178,7 +178,7 @@ const HelperSidebar: React.FC<HelperSidebarProps> = ({
             createNavItem({
               view: "admin-dashboard",
               icon: <SettingsIcon />,
-              label: "Admin Panel"
+              label: "Admin Panel";
             })
           )}
           
@@ -186,7 +186,7 @@ const HelperSidebar: React.FC<HelperSidebarProps> = ({
           {createNavItem({
             view: "workflow-demo",
             icon: <PostsIcon />,
-            label: "Workflow Demo"
+            label: "Workflow Demo";
           })}
           {/* Settings Section */}
           <li className="nav-separator" aria-hidden="true"></li>
@@ -194,19 +194,19 @@ const HelperSidebar: React.FC<HelperSidebarProps> = ({
           {createNavItem({
             view: "guidelines",
             icon: <GuidelinesIcon />,
-            label: i18n.t("guidelines")
+            label: i18n.t("guidelines");
           })}
 
           {createNavItem({
             view: "legal",
             icon: <LegalIcon />,
-            label: i18n.t("legal")
+            label: i18n.t("legal");
           })}
 
           {createNavItem({
             view: "settings",
             icon: <SettingsIcon />,
-            label: i18n.t("settings")
+            label: i18n.t("settings");
           })}
           <li className="nav-item">
             <button

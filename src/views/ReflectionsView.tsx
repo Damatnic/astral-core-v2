@@ -11,7 +11,7 @@ import { useReflectionStore } from '../stores/reflectionStore';
 import { useAuth } from '../contexts/AuthContext';
 
 
-// Sample reflections for demo purposes
+// Sample reflections for demo purposes;
 const sampleReflections: Reflection[] = [
     {
         id: 'sample-1',
@@ -19,7 +19,7 @@ const sampleReflections: Reflection[] = [
         timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
         reactions: { heart: 42, star: 18, lightbulb: 7 },
         myReaction: undefined,
-        userToken: 'anon-token-001'
+        userToken: 'anon-token-001';
     },
     {
         id: 'sample-2',
@@ -27,7 +27,7 @@ const sampleReflections: Reflection[] = [
         timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
         reactions: { heart: 67, star: 23, lightbulb: 15 },
         myReaction: 'heart',
-        userToken: 'anon-token-002'
+        userToken: 'anon-token-002';
     },
     {
         id: 'sample-3',
@@ -35,7 +35,7 @@ const sampleReflections: Reflection[] = [
         timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
         reactions: { heart: 89, star: 31, lightbulb: 22 },
         myReaction: undefined,
-        userToken: 'anon-token-003'
+        userToken: 'anon-token-003';
     },
     {
         id: 'sample-4',
@@ -43,7 +43,7 @@ const sampleReflections: Reflection[] = [
         timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
         reactions: { heart: 124, star: 45, lightbulb: 28 },
         myReaction: 'star',
-        userToken: 'anon-token-004'
+        userToken: 'anon-token-004';
     },
     {
         id: 'sample-5',
@@ -51,7 +51,7 @@ const sampleReflections: Reflection[] = [
         timestamp: new Date(Date.now() - 36 * 60 * 60 * 1000).toISOString(),
         reactions: { heart: 156, star: 52, lightbulb: 34 },
         myReaction: undefined,
-        userToken: 'anon-token-005'
+        userToken: 'anon-token-005';
     },
     {
         id: 'sample-6',
@@ -59,7 +59,7 @@ const sampleReflections: Reflection[] = [
         timestamp: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
         reactions: { heart: 203, star: 71, lightbulb: 48 },
         myReaction: 'lightbulb',
-        userToken: 'anon-token-006'
+        userToken: 'anon-token-006';
     },
     {
         id: 'sample-7',
@@ -67,7 +67,7 @@ const sampleReflections: Reflection[] = [
         timestamp: new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString(),
         reactions: { heart: 178, star: 59, lightbulb: 41 },
         myReaction: undefined,
-        userToken: 'anon-token-007'
+        userToken: 'anon-token-007';
     },
     {
         id: 'sample-8',
@@ -75,11 +75,11 @@ const sampleReflections: Reflection[] = [
         timestamp: new Date(Date.now() - 96 * 60 * 60 * 1000).toISOString(),
         reactions: { heart: 145, star: 67, lightbulb: 19 },
         myReaction: 'heart',
-        userToken: 'anon-token-008'
+        userToken: 'anon-token-008';
     }
 ];
 
-const inspirationalPrompts = [
+const inspirationalPrompts = [;
     "What made you smile today?",
     "Share a moment of peace you experienced",
     "What are you grateful for right now?",
@@ -101,7 +101,7 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
     const [currentPrompt, setCurrentPrompt] = useState(inspirationalPrompts[0]);
     const MAX_REFLECTION_LENGTH = 280;
     
-    // Update store whenever reflections change
+    // Update store whenever reflections change;
     const { setReflections: updateStore } = useReflectionStore();
 
     useEffect(() => {
@@ -119,7 +119,8 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                 updateStore(sampleReflections); // Update the store
             })
             .finally(() => setIsLoading(false));
-    }, []);
+    };
+  }, []);
 
     // Rotate through prompts
     useEffect(() => {
@@ -130,7 +131,8 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
             });
         }, 10000); // Change every 10 seconds
         return () => clearInterval(interval);
-    }, []);
+    };
+  }, []);
 
     const getFilteredReflections = () => {
         let filtered = [...reflections];
@@ -182,7 +184,8 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                 };
             }
             return r;
-        }));
+        };
+  });
 
         ApiClient.reflections.addReaction(reflectionId, reactionType, userToken)
             .catch(err => {
@@ -197,7 +200,8 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                     };
                 }
                 return r;
-            }));
+            };
+  });
             });
     }
 
@@ -584,7 +588,7 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                             </span>
                         </div>
                         <div className="form-actions" style={{justifyContent: 'flex-end'}}>
-                            <AppButton 
+                            <AppButton; 
                                 type="submit" 
                                 onClick={() => {}} 
                                 isLoading={isSubmitting} 
@@ -600,21 +604,21 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                 </div>
 
                 <div className="filter-tabs">
-                    <button 
+                    <button; 
                         className={activeFilter === 'all' ? 'filter-tab active' : 'filter-tab'}
                         onClick={() => setActiveFilter('all')}
                     >
                         <StarIcon />
                         All Reflections
                     </button>
-                    <button 
+                    <button; 
                         className={activeFilter === 'popular' ? 'filter-tab active' : 'filter-tab'}
                         onClick={() => setActiveFilter('popular')}
                     >
                         <HeartIcon />
                         Most Loved
                     </button>
-                    <button 
+                    <button; 
                         className={activeFilter === 'recent' ? 'filter-tab active' : 'filter-tab'}
                         onClick={() => setActiveFilter('recent')}
                     >
@@ -641,25 +645,25 @@ export const ReflectionsView: React.FC<{ userToken?: string | null; }> = ({ user
                                             month: 'short',
                                             day: 'numeric',
                                             hour: '2-digit',
-                                            minute: '2-digit'
+                                            minute: '2-digit';
                                         })}
                                     </span>
                                     <div className="reaction-buttons">
-                                        <button 
+                                        <button; 
                                             className={reflection.myReaction === 'heart' ? 'reaction-btn active' : 'reaction-btn'}
                                             onClick={() => handleReact(reflection.id, 'heart')}
                                         >
                                             <span className="reaction-icon">❤️</span>
                                             <span className="reaction-count">{reflection.reactions.heart || 0}</span>
                                         </button>
-                                        <button 
+                                        <button; 
                                             className={reflection.myReaction === 'star' ? 'reaction-btn active' : 'reaction-btn'}
                                             onClick={() => handleReact(reflection.id, 'star')}
                                         >
                                             <span className="reaction-icon">⭐</span>
                                             <span className="reaction-count">{reflection.reactions.star || 0}</span>
                                         </button>
-                                        <button 
+                                        <button; 
                                             className={reflection.myReaction === 'lightbulb' ? 'reaction-btn active' : 'reaction-btn'}
                                             onClick={() => handleReact(reflection.id, 'lightbulb')}
                                         >

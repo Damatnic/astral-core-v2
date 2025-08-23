@@ -6,7 +6,7 @@
  * to family involvement in mental health crises.
  * 
  * @license Apache-2.0
- */
+ */;
 
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -35,12 +35,12 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
   const [showAddMemberModal, setShowAddMemberModal] = useState(false);
   const [showSetupModal, setShowSetupModal] = useState(false);
   
-  // Form states
+  // Form states;
   const [familyStructure, setFamilyStructure] = useState<FamilySupport['familyStructure']>('nuclear');
   const [supportLevel, setSupportLevel] = useState<FamilySupport['supportLevel']>('family_aware');
   const [emergencyProtocolEnabled, setEmergencyProtocolEnabled] = useState(false);
 
-  // New member form state
+  // New member form state;
   const [newMember, setNewMember] = useState<Partial<FamilyMember>>({
     name: '',
     relationship: 'parent',
@@ -54,20 +54,21 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
       dailyWellness: false,
       crisisAlerts: true,
       progressUpdates: false,
-      emergencyOnly: false
+      emergencyOnly: false;
     },
     culturalConsiderations: {
-      preferredCommunicationStyle: 'respectful'
+      preferredCommunicationStyle: 'respectful';
     }
   });
 
   useEffect(() => {
     loadFamilySupport();
+  };
   }, [userId]);
 
   /**
    * Load existing family support configuration
-   */
+   */;
   const loadFamilySupport = async () => {
     try {
       setLoading(true);
@@ -76,8 +77,8 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
         setFamilySupport(existingSupport);
         setFamilyStructure(existingSupport.familyStructure);
         setSupportLevel(existingSupport.supportLevel);
-        setEmergencyProtocolEnabled(existingSupport.emergencyProtocol.enabled);
-      } else {
+        setEmergencyProtocolEnabled(existingSupport.emergencyProtocol.enabled);;
+  } else {
         setShowSetupModal(true);
       }
     } catch (error) {
@@ -89,13 +90,13 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
 
   /**
    * Create initial family support configuration
-   */
+   */;
   const createFamilySupport = async () => {
     try {
       setLoading(true);
       const culturalContext = culturalContextService.getCulturalContext(currentLanguage);
       
-      const newSupport = await culturalFamilySupportService.createFamilySupport(
+      const newSupport = await culturalFamilySupportService.createFamilySupport(;
         userId,
         culturalContext,
         currentLanguage,
@@ -122,7 +123,7 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
 
   /**
    * Add new family member
-   */
+   */;
   const addFamilyMember = async () => {
     if (!familySupport || !newMember.name || !newMember.relationship) {
       return;
@@ -132,7 +133,7 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
       setLoading(true);
       await culturalFamilySupportService.addFamilyMember(userId, newMember as Omit<FamilyMember, 'id'>);
       
-      // Refresh family support data
+      // Refresh family support data;
       const updatedSupport = culturalFamilySupportService.getFamilySupport(userId);
       if (updatedSupport) {
         setFamilySupport(updatedSupport);
@@ -152,10 +153,10 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
           dailyWellness: false,
           crisisAlerts: true,
           progressUpdates: false,
-          emergencyOnly: false
+          emergencyOnly: false;
         },
         culturalConsiderations: {
-          preferredCommunicationStyle: 'respectful'
+          preferredCommunicationStyle: 'respectful';
         }
       });
       
@@ -169,7 +170,7 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
 
   /**
    * Get cultural guidance for current context
-   */
+   */;
   const getCulturalGuidance = () => {
     if (!familySupport) return null;
     return culturalFamilySupportService.getCulturalGuidance(familySupport.culturalContext.region);
@@ -177,9 +178,9 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
 
   /**
    * Get relationship options based on cultural context
-   */
+   */;
   const getRelationshipOptions = () => {
-    const baseOptions = [
+    const baseOptions = [;
       { value: 'parent', label: t('family.relationships.parent', 'Parent') },
       { value: 'sibling', label: t('family.relationships.sibling', 'Sibling') },
       { value: 'spouse', label: t('family.relationships.spouse', 'Spouse/Partner') },
@@ -196,7 +197,7 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
 
   /**
    * Get cultural role options based on context
-   */
+   */;
   const getCulturalRoleOptions = () => {
     return [
       { value: 'primary_decision_maker', label: t('family.roles.primary_decision_maker', 'Primary Decision Maker') },
@@ -273,7 +274,7 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
           </div>
 
           <div className="flex items-center space-x-2">
-            <input
+            <input;
               type="checkbox"
               id="emergency-protocol"
               checked={emergencyProtocolEnabled}
@@ -358,7 +359,7 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
             <h4 className="font-medium">{t('family.addMember.notifications', 'Notification Preferences')}</h4>
             
             <div className="flex items-center space-x-2">
-              <input
+              <input;
                 type="checkbox"
                 id="crisis-alerts"
                 checked={newMember.notificationPreferences?.crisisAlerts || false}
@@ -366,7 +367,7 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
                   ...prev,
                   notificationPreferences: {
                     ...prev.notificationPreferences!,
-                    crisisAlerts: e.target.checked
+                    crisisAlerts: e.target.checked;
                   }
                 }))}
                 className="rounded"
@@ -377,7 +378,7 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
             </div>
 
             <div className="flex items-center space-x-2">
-              <input
+              <input;
                 type="checkbox"
                 id="emergency-contact"
                 checked={newMember.emergencyContact || false}
@@ -390,7 +391,7 @@ export const FamilySupportManagement: React.FC<FamilySupportManagementProps> = (
             </div>
 
             <div className="flex items-center space-x-2">
-              <input
+              <input;
                 type="checkbox"
                 id="consent-given"
                 checked={newMember.consentGiven || false}

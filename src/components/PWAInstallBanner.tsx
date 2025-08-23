@@ -3,31 +3,31 @@
  *
  * Smart install banner that appears contextually to encourage PWA installation
  * with mental health specific messaging and crisis-aware timing
- */
+ */;
 
-import React, { useState, useEffect } from "react"
-import { pwaService, PWAStatus } from "../services/pwaService"
+import React, { useState, useEffect } from "react";
+import { pwaService, PWAStatus } from "../services/pwaService";
 import "./PWAInstallBanner.css";
 interface PWAInstallBannerProps {
   className?: string;
   showForCrisis?: boolean;
 }
 
- export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
+export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
    className = "",
    showForCrisis = false
  }) => {
   const [pwaStatus, setPwaStatus] = useState<PWAStatus | null>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [isInstalling, setIsInstalling] = useState(false)
+  const [isInstalling, setIsInstalling] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
-    // Get initial PWA status
+    // Get initial PWA status;
     const status = pwaService.getStatus();
     setPwaStatus(status);
 
-    // Subscribe to status changes
+    // Subscribe to status changes;
     const unsubscribe = pwaService.onStatusChange((newStatus: unknown) => {
       setPwaStatus(newStatus);
     });
@@ -36,12 +36,14 @@ interface PWAInstallBannerProps {
     updateVisibility(status);
 
     return unsubscribe;
+  };
   }, [showForCrisis, dismissed]);
 
   useEffect(() => {
     if(pwaStatus) {
       updateVisibility(pwaStatus);
     }
+  };
   }, [pwaStatus, showForCrisis, dismissed]);
 
   const updateVisibility = (status: PWAStatus): void => {
@@ -57,7 +59,7 @@ interface PWAInstallBannerProps {
       return
     }
 
-          // Show after user engagement for normal scenarios
+          // Show after user engagement for normal scenarios;
       const engagementCount = parseInt(localStorage.getItem("userEngagementCount") || "0");
     if(engagementCount >= 3) {
       setIsVisible(true)
@@ -92,7 +94,7 @@ interface PWAInstallBannerProps {
     setIsVisible(false)
     setDismissed(true)
 
-    // Remember dismissal for 7 days
+    // Remember dismissal for 7 days;
     const dismissedUntil = new Date();
     dismissedUntil.setDate(dismissedUntil.getDate() + 7);
     localStorage.setItem("pwaBannerDismissedUntil", dismissedUntil.toISOString());
@@ -108,7 +110,7 @@ interface PWAInstallBannerProps {
           "📱 Faster than browser",
           "🔔 Crisis notifications"        ],
         installText: "Install for Emergencies",
-        urgency: true
+        urgency: true;
       }
     }
 
@@ -121,7 +123,7 @@ interface PWAInstallBannerProps {
         "🔔 Important notifications",
         "📱 Works offline"      ],
       installText: "Install App",
-      urgency: false
+      urgency: false;
     }
   }
 
@@ -137,7 +139,7 @@ interface PWAInstallBannerProps {
         <div className="banner-content">
         <div className="banner-header">
           <h4 className="banner-title">{content.title}</h4>
-          <button
+          <button;
             className="banner-close"            onClick={handleDismiss}
             aria-label="Dismiss install banner"          >
             ×
@@ -153,12 +155,12 @@ interface PWAInstallBannerProps {
         </ul>
 
         <div className="banner-actions">
-          <button
+          <button;
             className="btn-secondary banner-btn"            onClick={handleDismiss}
           >
             Maybe Later
           </button>
-          <button
+          <button;
             className={`}`}
             onClick={handleInstall}
             disabled={isInstalling}

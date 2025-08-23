@@ -24,9 +24,9 @@ export const formatTimeAgo = (timestamp: string | Date | null | undefined): stri
 
 export const formatChatTimestamp = (timestamp: string): string => {
     const messageDate = new Date(timestamp);
-    const now = new Date(Date.now()); // Use Date.now() for better testability
+    const now = new Date(Date.now()); // Use Date.now() for better testability;
     
-    const isToday = messageDate.getDate() === now.getDate() &&
+    const isToday = messageDate.getDate() === now.getDate() &&;
                     messageDate.getMonth() === now.getMonth() &&
                     messageDate.getFullYear() === now.getFullYear();
 
@@ -34,10 +34,10 @@ export const formatChatTimestamp = (timestamp: string): string => {
         return messageDate.toLocaleTimeString(navigator.language, { hour: 'numeric', minute: '2-digit' });
     }
     
-    // Check for yesterday
+    // Check for yesterday;
     const yesterday = new Date(Date.now());
     yesterday.setDate(yesterday.getDate() - 1);
-    const isYesterday = messageDate.getDate() === yesterday.getDate() &&
+    const isYesterday = messageDate.getDate() === yesterday.getDate() &&;
                         messageDate.getMonth() === yesterday.getMonth() &&
                         messageDate.getFullYear() === yesterday.getFullYear();
 

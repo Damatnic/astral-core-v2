@@ -1,7 +1,7 @@
 /**
  * Test Suite for EmergencyContactsWidget Component
  * Tests emergency contact display and quick access functionality
- */
+ */;
 
 import React from 'react';
 import '@testing-library/jest-dom';
@@ -12,10 +12,10 @@ jest.mock('../../icons.dynamic', () => ({
   PhoneIcon: () => null,
   ChatIcon: () => null,
   CloseIcon: () => null,
-  PlusIcon: () => null
+  PlusIcon: () => null;
 }));
 
-// Mock contacts data
+// Mock contacts data;
 const mockContacts: EmergencyContactWidget[] = [
   {
     id: '1',
@@ -23,7 +23,7 @@ const mockContacts: EmergencyContactWidget[] = [
     phone: '988',
     type: 'hotline' as const,
     available: '24/7',
-    priority: 1
+    priority: 1;
   },
   {
     id: '2',
@@ -31,7 +31,7 @@ const mockContacts: EmergencyContactWidget[] = [
     phone: '555-0100',
     type: 'professional' as const,
     available: 'Mon-Fri 9-5',
-    priority: 2
+    priority: 2;
   },
   {
     id: '3',
@@ -39,7 +39,7 @@ const mockContacts: EmergencyContactWidget[] = [
     phone: '555-0200',
     type: 'personal' as const,
     available: 'Anytime',
-    priority: 3
+    priority: 3;
   }
 ];
 
@@ -70,7 +70,7 @@ describe('EmergencyContactsWidget', () => {
         onContactUsed: jest.fn(),
         onAddContact: jest.fn(),
         onRemoveContact: jest.fn(),
-        onReorder: jest.fn()
+        onReorder: jest.fn();
       });
       
       expect(element).toBeDefined();
@@ -91,7 +91,7 @@ describe('EmergencyContactsWidget', () => {
 
   describe('Contact Sorting', () => {
     it('should sort contacts by priority', () => {
-      const unsortedContacts = [
+      const unsortedContacts = [;
         { ...mockContacts[2], priority: 1 },
         { ...mockContacts[0], priority: 3 },
         { ...mockContacts[1], priority: 2 }
@@ -149,7 +149,7 @@ describe('EmergencyContactsWidget', () => {
 
   describe('Display Logic', () => {
     it('should determine displayed contacts based on expansion state', () => {
-      const getDisplayedContacts = (
+      const getDisplayedContacts = (;
         contacts: EmergencyContactWidget[],
         isExpanded: boolean,
         collapsible: boolean,
@@ -203,7 +203,7 @@ describe('EmergencyContactsWidget', () => {
       const { EmergencyContactsWidget } = require('../EmergencyContactsWidget');
       
       const element = React.createElement(EmergencyContactsWidget, {
-        contacts: []
+        contacts: [];
       });
       
       expect(element).toBeDefined();
@@ -216,7 +216,7 @@ describe('EmergencyContactsWidget', () => {
       const { EmergencyContactsWidget } = require('../EmergencyContactsWidget');
       
       const element = React.createElement(EmergencyContactsWidget, {
-        loading: true
+        loading: true;
       });
       
       expect(element).toBeDefined();

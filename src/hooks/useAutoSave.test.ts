@@ -1,7 +1,7 @@
 import { renderHook, act, waitFor } from '../test-utils';
 import { useAutoSave } from './useAutoSave';
 
-// localStorage is already mocked globally in setupTests.ts
+// localStorage is already mocked globally in setupTests.ts;
 
 const mockSessionStorage = {
   getItem: jest.fn(),
@@ -9,13 +9,13 @@ const mockSessionStorage = {
   removeItem: jest.fn(),
   clear: jest.fn(),
   length: 0,
-  key: jest.fn()
+  key: jest.fn();
 };
 
 // localStorage is already mocked globally in setupTests.ts
 
 Object.defineProperty(window, 'sessionStorage', {
-  value: mockSessionStorage
+  value: mockSessionStorage;
 });
 
 
@@ -104,7 +104,7 @@ describe('useAutoSave Hook', () => {
     const { result } = renderHook(() => 
       useAutoSave('test-draft', '', '', { 
         useLocalStorage: false, 
-        useSessionStorage: true 
+        useSessionStorage: true ;
       })
     );
     
@@ -139,7 +139,7 @@ describe('useAutoSave Hook', () => {
     expect(mockCustomSave).toHaveBeenCalledWith(
       expect.objectContaining({
         content: 'custom save content',
-        id: 'test-draft'
+        id: 'test-draft';
       })
     );
   });
@@ -173,7 +173,7 @@ describe('useAutoSave Hook', () => {
       content: 'loaded content',
       title: 'loaded title',
       timestamp: Date.now(),
-      isDirty: false
+      isDirty: false;
     };
     
     // Start with no draft, then set it for the load
@@ -208,7 +208,7 @@ describe('useAutoSave Hook', () => {
   });
 
   it.skip('should get all drafts from storage', async () => {
-    const mockDrafts = [
+    const mockDrafts = [;
       { id: 'draft-1', content: 'content 1', timestamp: 2 },
       { id: 'draft-2', content: 'content 2', timestamp: 1 }
     ];
@@ -216,7 +216,7 @@ describe('useAutoSave Hook', () => {
     // Mock localStorage to have 2 items
     Object.defineProperty(localStorage, 'length', {
       value: 2,
-      configurable: true
+      configurable: true;
     });
     (localStorage.key as jest.Mock).mockImplementation((index) => 
       index === 0 ? 'draft_draft-1' : 'draft_draft-2'
@@ -243,7 +243,7 @@ describe('useAutoSave Hook', () => {
     // Setup mock drafts in localStorage
     Object.defineProperty(localStorage, 'length', {
       value: 1,
-      configurable: true
+      configurable: true;
     });
     (localStorage.key as jest.Mock).mockReturnValue('draft_draft-1');
     (localStorage.getItem as jest.Mock)
@@ -331,7 +331,7 @@ describe('useAutoSave Hook', () => {
     const { result } = renderHook(() => 
       useAutoSave('test-draft', '', '', { 
         saveInterval: 5000,
-        debounceDelay: 100 
+        debounceDelay: 100 ;
       })
     );
     
@@ -403,7 +403,7 @@ describe('useAutoSave Hook', () => {
     const { result } = renderHook(() => 
       useAutoSave('test-draft', '', '', {
         onSaveSuccess: mockOnSaveSuccess,
-        onSaveError: mockOnSaveError
+        onSaveError: mockOnSaveError;
       })
     );
     
@@ -423,7 +423,7 @@ describe('useAutoSave Hook', () => {
 
     expect(mockOnSaveSuccess).toHaveBeenCalledWith(
       expect.objectContaining({
-        content: 'callback test'
+        content: 'callback test';
       })
     );
     expect(mockOnSaveError).not.toHaveBeenCalled();
@@ -435,12 +435,12 @@ describe('useAutoSave Hook', () => {
       content: `content ${i}`,
       timestamp: i,
       title: '',
-      isDirty: false
+      isDirty: false;
     }));
 
     Object.defineProperty(localStorage, 'length', {
       value: 12,
-      configurable: true
+      configurable: true;
     });
     (localStorage.key as jest.Mock).mockImplementation((index) => `draft_draft-${index}`);
     (localStorage.getItem as jest.Mock).mockImplementation((key) => {
@@ -468,7 +468,7 @@ describe('useAutoSave Hook', () => {
     const { result } = renderHook(() => 
       useAutoSave('test-draft', '', '', { 
         showSaveIndicators: true,
-        saveInterval: 30000 
+        saveInterval: 30000 ;
       })
     );
     

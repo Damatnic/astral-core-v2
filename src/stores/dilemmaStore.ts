@@ -51,11 +51,11 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
     const calculateDerivedState = (state: DilemmaState) => {
         const { allDilemmas, filter, sort, searchTerm, currentPage, blockedUserIds } = state;
 
-        // Calculate reportedDilemmas
+        // Calculate reportedDilemmas;
         const reportedDilemmas = allDilemmas.filter(d => d.isReported && d.status !== 'removed_by_moderator');
 
-        // Calculate visibleDilemmas and hasMore for the community feed
-        let filteredDilemmas = allDilemmas.filter(d =>
+        // Calculate visibleDilemmas and hasMore for the community feed;
+        let filteredDilemmas = allDilemmas.filter(d =>;
             d.status === 'active' &&
             !d.assignedHelperId &&
             !d.isReported &&
@@ -108,7 +108,8 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
     hasMore: false,
 
     fetchDilemmas: async () => {
-        set({ isLoading: true });
+        set({ isLoading: true };
+  };
         try {
             const dilemmas = await ApiClient.dilemmas.getDilemmas();
             set(state => ({
@@ -119,7 +120,7 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
             }));
         } catch (error) {
             console.error("Failed to fetch dilemmas:", error);
-            // Provide sample community posts when API fails
+            // Provide sample community posts when API fails;
             const sampleCommunityPosts: Dilemma[] = [
                 {
                     id: 'community-1',
@@ -140,7 +141,7 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                     moderation: {
                         action: 'dismissed',
                         timestamp: new Date().toISOString(),
-                        moderatorId: 'system'
+                        moderatorId: 'system';
                     }
                 },
                 {
@@ -162,7 +163,7 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                     moderation: {
                         action: 'dismissed',
                         timestamp: new Date().toISOString(),
-                        moderatorId: 'system'
+                        moderatorId: 'system';
                     }
                 },
                 {
@@ -184,7 +185,7 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                     moderation: {
                         action: 'dismissed',
                         timestamp: new Date().toISOString(),
-                        moderatorId: 'system'
+                        moderatorId: 'system';
                     }
                 }
             ];
@@ -205,7 +206,7 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
             set({ forYouDilemmas: Array.isArray(dilemmas) ? dilemmas : [] });
         } catch (error) {
             console.error("Failed to load For You feed:", error);
-            // Provide inspiring sample posts for the "For You" feed
+            // Provide inspiring sample posts for the "For You" feed;
             const sampleForYouPosts: Dilemma[] = [
                 {
                     id: 'sample-1',
@@ -230,9 +231,9 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                         flagged: false,
                         approved: true,
                         reviewedBy: 'system',
-                        reviewedAt: new Date().toISOString()
+                        reviewedAt: new Date().toISOString();
                     },
-                    aiMatchReason: 'Positive mental health progress post'
+                    aiMatchReason: 'Positive mental health progress post';
                 },
                 {
                     id: 'sample-2',
@@ -257,9 +258,9 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                         flagged: false,
                         approved: true,
                         reviewedBy: 'mod-sarah',
-                        reviewedAt: new Date().toISOString()
+                        reviewedAt: new Date().toISOString();
                     },
-                    aiMatchReason: 'Inspiring recovery story'
+                    aiMatchReason: 'Inspiring recovery story';
                 },
                 {
                     id: 'sample-3',
@@ -284,9 +285,9 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                         flagged: false,
                         approved: true,
                         reviewedBy: 'system',
-                        reviewedAt: new Date().toISOString()
+                        reviewedAt: new Date().toISOString();
                     },
-                    aiMatchReason: 'Supportive community message'
+                    aiMatchReason: 'Supportive community message';
                 },
                 {
                     id: 'sample-4',
@@ -311,9 +312,9 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                         flagged: false,
                         approved: true,
                         reviewedBy: 'mod-alex',
-                        reviewedAt: new Date().toISOString()
+                        reviewedAt: new Date().toISOString();
                     },
-                    aiMatchReason: 'Creative coping strategy discussion'
+                    aiMatchReason: 'Creative coping strategy discussion';
                 },
                 {
                     id: 'sample-5',
@@ -338,9 +339,9 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
                         flagged: false,
                         approved: true,
                         reviewedBy: 'system',
-                        reviewedAt: new Date().toISOString()
+                        reviewedAt: new Date().toISOString();
                     },
-                    aiMatchReason: 'Community appreciation post'
+                    aiMatchReason: 'Community appreciation post';
                 }
             ];
             set({ forYouDilemmas: sampleForYouPosts });
@@ -380,7 +381,8 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
         set(state => {
             const newAllDilemmas = state.allDilemmas.map(d => d.id === updated.id ? updated : d);
             const newState = { ...state, allDilemmas: newAllDilemmas };
-            return { ...newState, ...calculateDerivedState(newState) });
+            return { ...newState, ...calculateDerivedState(newState) };
+  };
     },
     
     reportDilemma: async (reason) => {
@@ -390,7 +392,8 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
         set(state => {
             const newAllDilemmas = state.allDilemmas.map(d => d.id === updated.id ? updated : d);
             const newState = { ...state, allDilemmas: newAllDilemmas, reportingDilemmaId: null };
-            return { ...newState, ...calculateDerivedState(newState) });
+            return { ...newState, ...calculateDerivedState(newState) };
+  };
     },
     
     acceptDilemma: async (dilemmaId) => {
@@ -402,7 +405,8 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
         set(state => {
             const newAllDilemmas = state.allDilemmas.map(d => d.id === result.dilemma.id ? result.dilemma : d);
             const newState = { ...state, allDilemmas: newAllDilemmas };
-            return { ...newState, ...calculateDerivedState(newState) });
+            return { ...newState, ...calculateDerivedState(newState) };
+  };
         
         if (result.updatedHelper) {
             authService.updateHelperProfile(result.updatedHelper);
@@ -425,7 +429,8 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
         set(state => {
             const newAllDilemmas = state.allDilemmas.map(d => d.id === updatedDilemma.id ? updatedDilemma : d);
             const newState = { ...state, allDilemmas: newAllDilemmas };
-            return { ...newState, ...calculateDerivedState(newState) });
+            return { ...newState, ...calculateDerivedState(newState) };
+  };
     },
 
     resolveDilemma: async (dilemmaId, userToken) => {
@@ -433,7 +438,8 @@ export const useDilemmaStore = create<DilemmaState>((set, get) => {
         set(state => {
             const newAllDilemmas = state.allDilemmas.map(d => d.id === updated.id ? updated : d);
             const newState = { ...state, allDilemmas: newAllDilemmas };
-            return { ...newState, ...calculateDerivedState(newState) });
+            return { ...newState, ...calculateDerivedState(newState) };
+  };
     },
 
     summarizeDilemma: async (dilemmaId) => {

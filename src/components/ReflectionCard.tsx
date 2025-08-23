@@ -26,7 +26,7 @@ const ReflectionCard: React.FC<ReflectionCardProps> = ({
   };
 
   return (
-    <div
+    <div;
       className={classes}
       style={style}
       onClick={onClick}

@@ -11,7 +11,7 @@ import {
   useReducedMotion
 } from './useAnimations';
 
-// Mock IntersectionObserver
+// Mock IntersectionObserver;
 const mockIntersectionObserver = jest.fn();
 const mockObserve = jest.fn();
 const mockUnobserve = jest.fn();
@@ -40,7 +40,7 @@ Object.defineProperty(window, 'matchMedia', {
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
   })),
-  writable: true
+  writable: true;
 });
 
 
@@ -70,15 +70,16 @@ describe('useScrollAnimation Hook', () => {
     let callback: (entries: unknown[]) => void;
     mockIntersectionObserver.mockImplementation((cb) => {
       callback = cb;
-      return { observe: mockObserve, unobserve: mockUnobserve });
+      return { observe: mockObserve, unobserve: mockUnobserve };
+  };
 
     const { result } = renderHook(() => useScrollAnimation());
     
-    // Mock element ref
+    // Mock element ref;
     const mockElement = document.createElement('div');
     Object.defineProperty(result.current.elementRef, 'current', {
       writable: true,
-      value: mockElement
+      value: mockElement;
     });
 
     // Simulate intersection
@@ -200,7 +201,7 @@ describe('useRippleEffect Hook', () => {
         getBoundingClientRect: () => ({ left: 10, top: 20 })
       },
       clientX: 50,
-      clientY: 80
+      clientY: 80;
     } as React.MouseEvent<HTMLElement, MouseEvent>;
 
     act(() => {
@@ -211,7 +212,7 @@ describe('useRippleEffect Hook', () => {
     expect(result.current.ripples[0]).toEqual({
       x: 40, // clientX - rect.left
       y: 60, // clientY - rect.top
-      id: expect.any(Number)
+      id: expect.any(Number);
     });
   });
 
@@ -223,7 +224,7 @@ describe('useRippleEffect Hook', () => {
         getBoundingClientRect: () => ({ left: 0, top: 0 })
       },
       clientX: 0,
-      clientY: 0
+      clientY: 0;
     } as React.MouseEvent<HTMLElement, MouseEvent>;
 
     act(() => {
@@ -248,7 +249,7 @@ describe('useRippleEffect Hook', () => {
         getBoundingClientRect: () => ({ left: 0, top: 0 })
       },
       clientX: 0,
-      clientY: 0
+      clientY: 0;
     } as React.MouseEvent<HTMLElement, MouseEvent>;
 
     act(() => {
@@ -647,7 +648,7 @@ describe('useReducedMotion Hook', () => {
     
     Object.defineProperty(window, 'matchMedia', {
       value: mockMatchMedia,
-      writable: true
+      writable: true;
     });
 
     const { result } = renderHook(() => useReducedMotion());
@@ -670,7 +671,7 @@ describe('useReducedMotion Hook', () => {
     
     Object.defineProperty(window, 'matchMedia', {
       value: mockMatchMedia,
-      writable: true
+      writable: true;
     });
 
     const { result } = renderHook(() => useReducedMotion());
@@ -695,7 +696,7 @@ describe('useReducedMotion Hook', () => {
     
     Object.defineProperty(window, 'matchMedia', {
       value: mockMatchMedia,
-      writable: true
+      writable: true;
     });
 
     const { unmount } = renderHook(() => useReducedMotion());

@@ -3,7 +3,7 @@
  * 
  * Comprehensive testing of prediction algorithms, user behavior tracking,
  * and performance optimization features
- */
+ */;
 
 import { IntelligentPreloadingEngine } from '../intelligentPreloading';
 
@@ -73,7 +73,7 @@ describe('IntelligentPreloadingEngine', () => {
       await engine.trackRouteNavigation('/emergency-contacts', 300, [], 'distressed');
 
       const predictions = await engine.generatePredictions();
-      const crisisPredictions = predictions.filter(p => 
+      const crisisPredictions = predictions.filter(p => ;
         p.resource.includes('crisis') || p.priority === 'immediate'
       );
 
@@ -97,7 +97,7 @@ describe('IntelligentPreloadingEngine', () => {
       await engine.trackRouteNavigation('/breathing-exercises', 1500);
 
       const predictions = await engine.generatePredictions();
-      const resourcePredictions = predictions.filter(p => 
+      const resourcePredictions = predictions.filter(p => ;
         p.resource.includes('.mp4') || p.resource.includes('.json')
       );
 
@@ -109,8 +109,8 @@ describe('IntelligentPreloadingEngine', () => {
     it.skip('should consider time of day for predictions', async () => {
       const predictions = await engine.generatePredictions();
       
-      // Should have some time-based predictions
-      const timeBasedPredictions = predictions.filter(p => 
+      // Should have some time-based predictions;
+      const timeBasedPredictions = predictions.filter(p => ;
         p.reason.includes('time') || p.reason.includes('schedule')
       );
 
@@ -124,7 +124,7 @@ describe('IntelligentPreloadingEngine', () => {
       await engine.trackRouteNavigation('/guided-meditation', 1500, [], 'maintenance');
 
       const predictions = await engine.generatePredictions();
-      const emotionalPredictions = predictions.filter(p => 
+      const emotionalPredictions = predictions.filter(p => ;
         p.reason.includes('emotional') || p.reason.includes('mood')
       );
 
@@ -192,8 +192,8 @@ describe('IntelligentPreloadingEngine', () => {
 
       const predictions = await engine.generatePredictions();
       
-      // Should predict resources relevant to mental health journey
-      const mentalHealthPredictions = predictions.filter(p => 
+      // Should predict resources relevant to mental health journey;
+      const mentalHealthPredictions = predictions.filter(p => ;
         p.resource.includes('coping') || 
         p.resource.includes('assessment') || 
         p.resource.includes('progress')
@@ -206,7 +206,7 @@ describe('IntelligentPreloadingEngine', () => {
       await engine.trackRouteNavigation('/get-help', 1000, [], 'seeking-help');
 
       const predictions = await engine.generatePredictions();
-      const helpResourcePredictions = predictions.filter(p => 
+      const helpResourcePredictions = predictions.filter(p => ;
         p.resource.includes('help') || p.resource.includes('support')
       );
 

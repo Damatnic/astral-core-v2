@@ -1,7 +1,7 @@
 /**
  * Test Suite for Encryption Service
  * Tests data encryption, decryption, and security features
- */
+ */;
 
 import { getEncryptionService } from '../encryptionService';
 
@@ -42,12 +42,12 @@ describe('EncryptionService', () => {
           preferences: ['privacy', 'security'],
           metadata: {
             lastLogin: new Date().toISOString(),
-            sessions: 5
+            sessions: 5;
           }
         },
         sensitive: {
           ssn: '123-45-6789',
-          creditCard: '4111111111111111'
+          creditCard: '4111111111111111';
         }
       };
       
@@ -107,7 +107,7 @@ describe('EncryptionService', () => {
       
       const stored = localStorage.getItem(key);
       expect(stored).toBeDefined();
-      expect(stored).not.toContain('John Doe'); // Should be encrypted
+      expect(stored).not.toContain('John Doe'); // Should be encrypted;
       
       const retrieved = await getEncryptionService().secureGetItem(key);
       const parsedRetrieved = retrieved ? JSON.parse(retrieved) : null;

@@ -1,6 +1,6 @@
 /**
  * @jest-environment jsdom
- */
+ */;
 
 import {
   initMobileViewport,
@@ -140,8 +140,8 @@ describe('mobileUtils', () => {
 
       expect(mockAddEventListener).toHaveBeenCalledWith('orientationchange', expect.any(Function));
 
-      // Test orientation change handler
-      const orientationHandler = mockAddEventListener.mock.calls.find(
+      // Test orientation change handler;
+      const orientationHandler = mockAddEventListener.mock.calls.find(;
         call => call[0] === 'orientationchange'
       )[1];
 
@@ -436,7 +436,7 @@ describe('mobileUtils', () => {
     });
 
     test('should detect various mobile user agents', () => {
-      const mobileUserAgents = [
+      const mobileUserAgents = [;
         'Mozilla/5.0 (webOS/1.4.0; U; en-US) AppleWebKit/532.2',
         'Mozilla/5.0 (compatible; MSIE 10.0; Windows Phone 8.0; Trident/6.0; IEMobile/10.0)',
         'Opera/9.80 (BlackBerry; Opera Mini/6.5.27452/28.2725; U; en) Presto/2.8.119',
@@ -539,13 +539,13 @@ describe('mobileUtils', () => {
       
       element.addEventListener = jest.fn((event, handler) => {
         if (event === 'touchstart') {
-          touchStartHandler = handler as () => void;
-        } else if (event === 'touchend') {
+          touchStartHandler = handler as () => void;;
+  } else if (event === 'touchend') {
           touchEndHandler = handler as () => void;
         }
       });
 
-      // Mock Date.now for consistent timing
+      // Mock Date.now for consistent timing;
       const originalDateNow = Date.now;
       let currentTime = 1000;
       Date.now = jest.fn(() => currentTime);
@@ -571,13 +571,13 @@ describe('mobileUtils', () => {
       
       element.addEventListener = jest.fn((event, handler) => {
         if (event === 'touchstart') {
-          touchStartHandler = handler as () => void;
-        } else if (event === 'touchend') {
+          touchStartHandler = handler as () => void;;
+  } else if (event === 'touchend') {
           touchEndHandler = handler as () => void;
         }
       });
 
-      // Mock Date.now for consistent timing
+      // Mock Date.now for consistent timing;
       const originalDateNow = Date.now;
       let currentTime = 1000;
       Date.now = jest.fn(() => currentTime);
@@ -659,7 +659,7 @@ describe('mobileUtils', () => {
         writable: true,
       });
 
-      // Add some inputs and buttons for testing
+      // Add some inputs and buttons for testing;
       const input = document.createElement('input');
       const button = document.createElement('button');
       document.body.appendChild(input);
@@ -728,7 +728,7 @@ describe('mobileUtils', () => {
         writable: true,
       });
 
-      // Create a non-HTML element mock
+      // Create a non-HTML element mock;
       const mockElement = {};
       document.body.appendChild = jest.fn();
       document.querySelectorAll = jest.fn().mockReturnValue([mockElement]);
@@ -783,7 +783,7 @@ describe('mobileUtils', () => {
     });
 
     test('should handle missing document gracefully', () => {
-      // Mock missing document
+      // Mock missing document;
       const originalDocument = global.document;
       (global as any).document = undefined;
 
@@ -897,8 +897,8 @@ describe('mobileUtils', () => {
       
       input.addEventListener = jest.fn((event, handler) => {
         if (event === 'focus') {
-          focusHandler = handler as (event: FocusEvent) => void;
-        } else if (event === 'blur') {
+          focusHandler = handler as (event: FocusEvent) => void;;
+  } else if (event === 'blur') {
           blurHandler = handler as (event: FocusEvent) => void;
         }
       });
@@ -913,8 +913,8 @@ describe('mobileUtils', () => {
           focusHandler({ target: input } as unknown as FocusEvent);
           blurHandler({ target: input } as unknown as FocusEvent);
         }
-        expect(input.classList.contains('mobile-input-focused')).toBe(false);
-      } else {
+        expect(input.classList.contains('mobile-input-focused')).toBe(false);;
+  } else {
         // If handlers weren't assigned, the element was skipped (valid behavior)
         expect(true).toBe(true);
       }

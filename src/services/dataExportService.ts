@@ -1,4 +1,4 @@
-// Data export service for GDPR compliance and user data portability
+// Data export service for GDPR compliance and user data portability;
 
 import React from 'react';
 
@@ -69,11 +69,11 @@ class DataExportService {
         exportDate: new Date().toISOString(),
         version: this.EXPORT_VERSION,
         format: options.format,
-        dataTypes: []
+        dataTypes: [];
       }
     };
 
-    // Add user ID if available
+    // Add user ID if available;
     const userId = localStorage.getItem('userId');
     if (userId && options.includePersonalData) {
       exportData.metadata.userId = userId;
@@ -84,7 +84,7 @@ class DataExportService {
       exportData.personalData = {
         preferences: this.getStoredData('userPreferences'),
         settings: this.getStoredData('userSettings'),
-        profile: this.getStoredData('userProfile')
+        profile: this.getStoredData('userProfile');
       };
       exportData.metadata.dataTypes.push('personal');
     }
@@ -97,7 +97,7 @@ class DataExportService {
       exportData.moodData = {
         analyses: filteredMoodData,
         patterns: this.calculateMoodPatterns(filteredMoodData),
-        trends: this.calculateMoodTrends(filteredMoodData)
+        trends: this.calculateMoodTrends(filteredMoodData);
       };
       exportData.metadata.dataTypes.push('mood');
     }
@@ -107,7 +107,7 @@ class DataExportService {
       exportData.activityData = {
         posts: this.getStoredData('userPosts') || [],
         interactions: this.getStoredData('userInteractions') || [],
-        gamification: this.getStoredData('userStats')
+        gamification: this.getStoredData('userStats');
       };
       exportData.metadata.dataTypes.push('activity');
     }
@@ -116,7 +116,7 @@ class DataExportService {
     if (options.includeChatHistory) {
       exportData.chatHistory = {
         aiSessions: this.getStoredData('aiChatHistory') || [],
-        peerChats: this.getStoredData('peerChatHistory') || []
+        peerChats: this.getStoredData('peerChatHistory') || [];
       };
       exportData.metadata.dataTypes.push('chat');
     }
@@ -164,11 +164,12 @@ class DataExportService {
       dominantMoods: Object.entries(moodCounts)
         .sort(([, a], [, b]) => b - a)
         .slice(0, 5)
-        .map(([mood, count]) => ({ mood, frequency: count / moodData.length })),
+        .map(([mood, count]) => ({ mood, frequency: count / moodData.length };
+  }),
       totalEntries: moodData.length,
       dateRange: {
         start: Math.min(...moodData.map(d => (d as any).timestamp)),
-        end: Math.max(...moodData.map(d => (d as any).timestamp))
+        end: Math.max(...moodData.map(d => (d as any).timestamp));
       }
     }
 
@@ -176,17 +177,17 @@ class DataExportService {
     if (moodData.length < 2) return null;
 
     const sortedData = [...moodData].sort((a, b) => (a as any).timestamp - (b as any).timestamp);
-    const recentData = sortedData.slice(-7); // Last 7 entries
-    const olderData = sortedData.slice(-14, -7); // Previous 7 entries
+    const recentData = sortedData.slice(-7); // Last 7 entries;
+    const olderData = sortedData.slice(-14, -7); // Previous 7 entries;
 
-    const getAverageIntensity = (data: unknown[]) => 
+    const getAverageIntensity = (data: unknown[]) => ;
       data.reduce((sum: number, item) => sum + ((item as any).intensity || 0), 0) / data.length;
 
     return {
       recentAverageIntensity: getAverageIntensity(recentData),
       previousAverageIntensity: olderData.length ? getAverageIntensity(olderData) : null,
       trendDirection: this.calculateTrendDirection(sortedData),
-      volatility: this.calculateVolatility(sortedData)
+      volatility: this.calculateVolatility(sortedData);
     }
 
   private calculateTrendDirection(data: unknown[]): 'improving' | 'declining' | 'stable' {
@@ -220,7 +221,8 @@ class DataExportService {
 
   private exportAsJSON(data: UserDataExport): Blob {
     const jsonString = JSON.stringify(data, null, 2);
-    return new Blob([jsonString], { type: 'application/json' });
+    return new Blob([jsonString], { type: 'application/json' };
+  };
   }
 
   private exportAsCSV(data: UserDataExport): Blob {
@@ -262,7 +264,7 @@ class DataExportService {
 
   private async exportAsPDF(data: UserDataExport): Promise<Blob> {
     // Create a simple PDF-like text format
-    // In production, you'd use a proper PDF library like jsPDF
+    // In production, you'd use a proper PDF library like jsPDF;
     let pdfContent = `ASTRAL CORE - DATA EXPORT REPORT\n`;
     pdfContent += `${'='.repeat(50)}\n\n`;
     pdfContent += `Export Date: ${new Date(data.metadata.exportDate).toLocaleDateString()}\n`;
@@ -322,7 +324,7 @@ class DataExportService {
       if (data.reflections.length > 0) {
         const dateRange = {
           start: new Date(Math.min(...data.reflections.map((r: any) => new Date(r.timestamp || r.date).getTime()))),
-          end: new Date(Math.max(...data.reflections.map((r: any) => new Date(r.timestamp || r.date).getTime())))
+          end: new Date(Math.max(...data.reflections.map((r: any) => new Date(r.timestamp || r.date).getTime())));
         };
         pdfContent += `Date Range: ${dateRange.start.toLocaleDateString()} - ${dateRange.end.toLocaleDateString()}\n`;
       }
@@ -355,7 +357,7 @@ class DataExportService {
   // Data deletion methods for GDPR compliance
   public deleteAllUserData(): Promise<void> {
     return new Promise((resolve) => {
-      const keysToDelete = [
+      const keysToDelete = [;
         'userPreferences',
         'userSettings',
         'userProfile',
@@ -413,7 +415,7 @@ class DataExportService {
   public getDataInventory(): Record<string, any> {
     const inventory: Record<string, any> = {};
     
-    const dataKeys = [
+    const dataKeys = [;
       'userPreferences',
       'userSettings', 
       'userProfile',
@@ -433,7 +435,7 @@ class DataExportService {
           type: typeof data,
           size: JSON.stringify(data).length,
           lastModified: data.lastModified || 'Unknown',
-          recordCount: Array.isArray(data) ? data.length : 1
+          recordCount: Array.isArray(data) ? data.length : 1;
         }
     });
 
@@ -453,7 +455,7 @@ class DataExportService {
     }
 }
 
-// React hooks
+// React hooks;
 export const useDataExport = () => {
   const [service] = React.useState(() => new DataExportService());
   const [isExporting, setIsExporting] = React.useState(false);
@@ -469,18 +471,23 @@ export const useDataExport = () => {
       return { success: false, error: error instanceof Error ? error.message : 'Unknown error' } finally {
       setIsExporting(false);
     }
+  };
   }, [service]);
 
   const deleteAllData = React.useCallback(async () => {
     await service.deleteAllUserData();
+  };
   }, [service]);
 
   const deleteDataType = React.useCallback(async (dataType: string) => {
     await service.deleteSpecificDataType(dataType);
+  };
   }, [service]);
 
   const getDataInventory = React.useCallback(() => {
     return service.getDataInventory();
+  };
+  };
   }, [service]);
 
   return {
@@ -492,7 +499,7 @@ export const useDataExport = () => {
     isExporting
   };
 
-// Singleton instance
+// Singleton instance;
 let dataExportServiceInstance: DataExportService | null = null;
 
 export const getDataExportService = () => {

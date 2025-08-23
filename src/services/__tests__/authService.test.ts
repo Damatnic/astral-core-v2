@@ -35,7 +35,7 @@ describe('authService', () => {
           id: 'achievement-1',
           name: 'First Week',
           description: 'Completed first week as helper',
-          icon: '🎉'
+          icon: '🎉';
         }
       ],
       xp: 500,
@@ -44,7 +44,7 @@ describe('authService', () => {
       applicationStatus: 'approved',
       applicationNotes: 'Great candidate',
       trainingCompleted: true,
-      quizScore: 95
+      quizScore: 95;
     };
 
     // Clear console.error mock before each test
@@ -135,7 +135,7 @@ describe('authService', () => {
         ...testHelper,
         id: 'helper-456',
         displayName: 'Jane',
-        reputation: 200
+        reputation: 200;
       };
 
       authService.updateHelperProfile(testHelper);
@@ -162,7 +162,7 @@ describe('authService', () => {
         level: 1,
         nextLevelXp: 100,
         applicationStatus: 'none',
-        trainingCompleted: false
+        trainingCompleted: false;
       };
 
       authService.setUpdater(mockUpdater);
@@ -185,7 +185,7 @@ describe('authService', () => {
             id: 'cert-1',
             name: 'Certified Helper',
             description: 'Completed certification process',
-            icon: '🏆'
+            icon: '🏆';
           }
         ]
       };
@@ -209,7 +209,7 @@ describe('authService', () => {
             id: 'mod-1',
             name: 'Moderator Badge',
             description: 'Community moderator',
-            icon: '🛡️'
+            icon: '🛡️';
           }
         ]
       };
@@ -226,7 +226,7 @@ describe('authService', () => {
         ...testHelper,
         applicationStatus: 'pending',
         applicationNotes: 'Application under review',
-        trainingCompleted: false
+        trainingCompleted: false;
       };
 
       authService.setUpdater(mockUpdater);
@@ -241,7 +241,7 @@ describe('authService', () => {
         ...testHelper,
         applicationStatus: 'rejected',
         applicationNotes: 'Does not meet requirements',
-        trainingCompleted: false
+        trainingCompleted: false;
       };
 
       authService.setUpdater(mockUpdater);
@@ -260,7 +260,7 @@ describe('authService', () => {
         averageRating: 4.8,
         profileImageUrl: 'https://example.com/full-profile.jpg',
         applicationNotes: 'Excellent candidate with great experience',
-        quizScore: 100
+        quizScore: 100;
       };
 
       authService.setUpdater(mockUpdater);

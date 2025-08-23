@@ -2,7 +2,7 @@ import React from 'react';
 import { HeartIcon, MessageCircleIcon, ShieldIcon, BookIcon } from '../components/icons.dynamic';
 
 const HelpView: React.FC = () => {
-  const helpSections = [
+  const helpSections = [;
     {
       title: 'Getting Started',
       icon: HeartIcon,

@@ -1,6 +1,6 @@
 /**
  * Mock for Crisis Stress Testing System
- */
+ */;
 
 export const CRISIS_TEST_SCENARIOS = [
   {
@@ -12,7 +12,7 @@ export const CRISIS_TEST_SCENARIOS = [
     targetComponents: ['emergency-button'],
     expectedOutcome: 'All tests pass',
     failureConditions: [],
-    recoveryTime: 500
+    recoveryTime: 500;
   },
   {
     id: 'scenario-2', 
@@ -23,14 +23,14 @@ export const CRISIS_TEST_SCENARIOS = [
     targetComponents: ['crisis-chat'],
     expectedOutcome: 'All tests pass',
     failureConditions: [],
-    recoveryTime: 500
+    recoveryTime: 500;
   }
 ];
 
 export const crisisStressTestingSystem = {
   runCrisisStressTests: jest.fn().mockResolvedValue([]),
   runEmergencyFailoverTests: jest.fn().mockResolvedValue([]),
-  scenarios: CRISIS_TEST_SCENARIOS
+  scenarios: CRISIS_TEST_SCENARIOS;
 };
 
 export interface CrisisTestResult {
@@ -42,8 +42,8 @@ export interface CrisisTestResult {
   timestamp: number;
   impactAssessment: {
     safetyImpact: 'none' | 'low' | 'moderate' | 'severe' | 'life-threatening';
-  }
-
+  };
+}
 export interface EmergencyFailoverTest {
   id: string;
   systemComponent: string;

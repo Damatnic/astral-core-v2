@@ -3,7 +3,7 @@
  * 
  * Comprehensive crisis intervention system that orchestrates multi-step
  * intervention protocols based on crisis severity and user needs.
- */
+ */;
 
 import { type CrisisAnalysisResult } from './crisisDetectionService';
 import { type EnhancedCrisisDetectionResult } from './enhancedCrisisKeywordDetectionService';
@@ -137,7 +137,7 @@ class CrisisInterventionWorkflowService {
             'Evaluate consciousness and responsiveness'
           ],
           requiredConfirmation: true,
-          automaticTrigger: true
+          automaticTrigger: true;
         },
         {
           id: 'emergency-2',
@@ -152,7 +152,7 @@ class CrisisInterventionWorkflowService {
             'Stay on line until help arrives',
             'Keep person engaged and safe'
           ],
-          requiredConfirmation: true
+          requiredConfirmation: true;
         },
         {
           id: 'emergency-3',
@@ -167,7 +167,7 @@ class CrisisInterventionWorkflowService {
             'Activate emergency protocols',
             'Document incident details'
           ],
-          automaticTrigger: true
+          automaticTrigger: true;
         },
         {
           id: 'emergency-4',
@@ -187,7 +187,7 @@ class CrisisInterventionWorkflowService {
       resources: this.getEmergencyResources(),
       escalationPath: this.getEmergencyEscalationPath(),
       timeline: this.getEmergencyTimeline(),
-      outcomes: []
+      outcomes: [];
     });
 
     // Critical workflow template
@@ -211,7 +211,7 @@ class CrisisInterventionWorkflowService {
             'Review risk factors',
             'Determine intervention urgency'
           ],
-          requiredConfirmation: true
+          requiredConfirmation: true;
         },
         {
           id: 'critical-2',
@@ -260,7 +260,7 @@ class CrisisInterventionWorkflowService {
       resources: this.getCriticalResources(),
       escalationPath: this.getCriticalEscalationPath(),
       timeline: this.getCriticalTimeline(),
-      outcomes: []
+      outcomes: [];
     });
 
     // High-risk workflow template
@@ -317,7 +317,7 @@ class CrisisInterventionWorkflowService {
       resources: this.getHighRiskResources(),
       escalationPath: this.getHighRiskEscalationPath(),
       timeline: this.getHighRiskTimeline(),
-      outcomes: []
+      outcomes: [];
     });
 
     // Medium-risk workflow template
@@ -360,7 +360,7 @@ class CrisisInterventionWorkflowService {
       resources: this.getMediumRiskResources(),
       escalationPath: this.getMediumRiskEscalationPath(),
       timeline: this.getMediumRiskTimeline(),
-      outcomes: []
+      outcomes: [];
     });
   }
 
@@ -372,16 +372,16 @@ class CrisisInterventionWorkflowService {
     trigger: WorkflowTrigger
   ): Promise<InterventionWorkflow> {
     try {
-      // Determine severity level from trigger data
+      // Determine severity level from trigger data;
       const severityLevel = this.determineSeverityLevel(trigger);
       
-      // Get appropriate workflow template
+      // Get appropriate workflow template;
       const template = this.workflowTemplates.get(severityLevel);
       if (!template) {
         throw new Error(`No workflow template found for severity: ${severityLevel}`);
       }
 
-      // Create personalized workflow from template
+      // Create personalized workflow from template;
       const workflow: InterventionWorkflow = {
         ...template,
         id: `workflow-${userId}-${Date.now()}`,
@@ -392,7 +392,7 @@ class CrisisInterventionWorkflowService {
         resources: [...template.resources],
         escalationPath: [...template.escalationPath],
         timeline: { ...template.timeline },
-        outcomes: []
+        outcomes: [];
       };
 
       // Store active workflow
@@ -468,17 +468,17 @@ class CrisisInterventionWorkflowService {
       throw new Error(`Workflow ${workflowId} not found`);
     }
 
-    // Determine new severity level
+    // Determine new severity level;
     const newSeverity = this.getEscalatedSeverity(workflow.severityLevel);
     
-    // Get escalated template
+    // Get escalated template;
     const escalatedTemplate = this.workflowTemplates.get(newSeverity);
     if (!escalatedTemplate) {
       throw new Error(`No template for escalated severity: ${newSeverity}`);
     }
 
-    // Merge escalated steps
-    const newSteps = escalatedTemplate.interventionSteps.filter(
+    // Merge escalated steps;
+    const newSteps = escalatedTemplate.interventionSteps.filter(;
       step => !workflow.interventionSteps.some(ws => ws.type === step.type)
     );
     workflow.interventionSteps.push(...newSteps);
@@ -493,7 +493,7 @@ class CrisisInterventionWorkflowService {
       type: 'concerning',
       description: `Escalated to ${newSeverity}: ${reason}`,
       reportedBy: escalatorId,
-      followUpRequired: true
+      followUpRequired: true;
     });
 
     // Send escalation notifications
@@ -516,7 +516,7 @@ class CrisisInterventionWorkflowService {
 
     workflow.outcomes.push({
       ...outcome,
-      timestamp: new Date()
+      timestamp: new Date();
     });
 
     // Check if workflow can be resolved
@@ -540,8 +540,8 @@ class CrisisInterventionWorkflowService {
    */
   private determineSeverityLevel(trigger: WorkflowTrigger): string {
     if ('overallSeverity' in trigger.data) {
-      return trigger.data.overallSeverity;
-    } else if ('severityLevel' in trigger.data) {
+      return trigger.data.overallSeverity;;
+  } else if ('severityLevel' in trigger.data) {
       return trigger.data.severityLevel;
     }
     
@@ -555,7 +555,7 @@ class CrisisInterventionWorkflowService {
   }
 
   private async executeAutomaticSteps(workflow: InterventionWorkflow): Promise<void> {
-    const automaticSteps = workflow.interventionSteps.filter(
+    const automaticSteps = workflow.interventionSteps.filter(;
       step => step.automaticTrigger && step.status === 'pending'
     );
 
@@ -603,14 +603,14 @@ class CrisisInterventionWorkflowService {
       await astralCoreNotificationService.show({
         title: 'Emergency Support Activated',
         body: 'Emergency services have been notified. Help is on the way.',
-        priority: NotificationPriority.URGENT
+        priority: NotificationPriority.URGENT;
       });
     }
   }
 
   private async provideResources(workflow: InterventionWorkflow, _step: InterventionStep): Promise<void> {
-    // Send relevant resources to user
-    const resources = workflow.resources.filter(r => 
+    // Send relevant resources to user;
+    const resources = workflow.resources.filter(r => ;
       r.availability === '24/7' || r.type === 'emergency'
     );
     
@@ -618,7 +618,7 @@ class CrisisInterventionWorkflowService {
     await astralCoreNotificationService.show({
       title: 'Crisis Resources Available',
       body: `${resources.length} crisis resources are available to help you.`,
-      priority: NotificationPriority.HIGH
+      priority: NotificationPriority.HIGH;
     });
   }
 
@@ -631,7 +631,7 @@ class CrisisInterventionWorkflowService {
       workflowId: workflow.id,
       userId: workflow.userId,
       severity: workflow.severityLevel,
-      timestamp: new Date()
+      timestamp: new Date();
     });
   }
 
@@ -639,7 +639,7 @@ class CrisisInterventionWorkflowService {
     // Set up monitoring schedule
     workflow.status = 'monitoring';
     
-    // Schedule check-ins based on severity
+    // Schedule check-ins based on severity;
     const checkInInterval = this.getCheckInInterval(workflow.severityLevel);
     console.log(`[Crisis Workflow] Monitoring setup with ${checkInInterval} minute intervals`);
   }
@@ -663,7 +663,7 @@ class CrisisInterventionWorkflowService {
       await astralCoreNotificationService.show({
         title: 'Crisis Support Activated',
         body: 'We\'re here to help. Emergency support has been activated.',
-        priority: NotificationPriority.URGENT
+        priority: NotificationPriority.URGENT;
       });
     }
   }
@@ -673,12 +673,12 @@ class CrisisInterventionWorkflowService {
     await astralCoreNotificationService.show({
       title: 'Support Level Increased',
       body: `Your support has been escalated to ensure you get the help you need. Reason: ${reason}`,
-      priority: NotificationPriority.HIGH
+      priority: NotificationPriority.HIGH;
     });
   }
 
   private startWorkflowMonitoring(workflow: InterventionWorkflow): void {
-    // Start monitoring timer
+    // Start monitoring timer;
     const checkInterval = this.getCheckInInterval(workflow.severityLevel) * 60 * 1000;
     
     const monitoringTimer = setInterval(() => {
@@ -690,8 +690,8 @@ class CrisisInterventionWorkflowService {
   }
 
   private checkWorkflowStatus(workflow: InterventionWorkflow): void {
-    // Check if all steps are completed
-    const pendingSteps = workflow.interventionSteps.filter(
+    // Check if all steps are completed;
+    const pendingSteps = workflow.interventionSteps.filter(;
       step => step.status === 'pending' || step.status === 'in-progress'
     );
     
@@ -702,8 +702,8 @@ class CrisisInterventionWorkflowService {
   }
 
   private async checkEscalationTriggers(workflow: InterventionWorkflow): Promise<void> {
-    // Check if escalation is needed based on outcomes
-    const concerningOutcomes = workflow.outcomes.filter(
+    // Check if escalation is needed based on outcomes;
+    const concerningOutcomes = workflow.outcomes.filter(;
       o => o.type === 'concerning' || o.type === 'emergency'
     );
     
@@ -718,7 +718,7 @@ class CrisisInterventionWorkflowService {
   }
 
   private updateWorkflowStatus(workflow: InterventionWorkflow): void {
-    const completedSteps = workflow.interventionSteps.filter(
+    const completedSteps = workflow.interventionSteps.filter(;
       step => step.status === 'completed'
     );
     
@@ -729,7 +729,7 @@ class CrisisInterventionWorkflowService {
 
   private checkWorkflowResolution(workflow: InterventionWorkflow): void {
     const positiveOutcomes = workflow.outcomes.filter(o => o.type === 'positive');
-    const recentConcerning = workflow.outcomes.filter(
+    const recentConcerning = workflow.outcomes.filter(;
       o => o.type === 'concerning' && 
       (new Date().getTime() - o.timestamp.getTime()) < 24 * 60 * 60 * 1000
     );
@@ -782,7 +782,7 @@ class CrisisInterventionWorkflowService {
         contactInfo: { 
           phone: '988',
           text: '988',
-          web: 'https://988lifeline.org'
+          web: 'https://988lifeline.org';
         },
         description: 'Free, confidential crisis support',
         languages: ['en', 'es'],
@@ -801,7 +801,7 @@ class CrisisInterventionWorkflowService {
         availability: '24/7',
         contactInfo: { 
           text: 'HOME to 741741',
-          web: 'https://www.crisistextline.org'
+          web: 'https://www.crisistextline.org';
         },
         description: 'Text-based crisis support',
         languages: ['en', 'es'],
@@ -911,13 +911,13 @@ class CrisisInterventionWorkflowService {
           action: 'Contact emergency services',
           timeframe: 'Within 5 minutes',
           responsible: 'System/Crisis Team',
-          status: 'scheduled'
+          status: 'scheduled';
         },
         {
           action: 'Ensure immediate safety',
           timeframe: 'Immediate',
           responsible: 'First Responder',
-          status: 'scheduled'
+          status: 'scheduled';
         }
       ],
       shortTermActions: [
@@ -925,13 +925,13 @@ class CrisisInterventionWorkflowService {
           action: 'Medical evaluation',
           timeframe: 'Within 2 hours',
           responsible: 'Medical Team',
-          status: 'scheduled'
+          status: 'scheduled';
         },
         {
           action: 'Crisis stabilization',
           timeframe: 'Within 24 hours',
           responsible: 'Crisis Team',
-          status: 'scheduled'
+          status: 'scheduled';
         }
       ],
       followUpActions: [
@@ -939,7 +939,7 @@ class CrisisInterventionWorkflowService {
           action: 'Safety plan review',
           timeframe: 'Within 48 hours',
           responsible: 'Therapist',
-          status: 'scheduled'
+          status: 'scheduled';
         }
       ],
       longTermSupport: [
@@ -947,7 +947,7 @@ class CrisisInterventionWorkflowService {
           action: 'Ongoing therapy',
           timeframe: 'Weekly for 3 months',
           responsible: 'Therapist',
-          status: 'scheduled'
+          status: 'scheduled';
         }
       ]
     }
@@ -959,7 +959,7 @@ class CrisisInterventionWorkflowService {
           action: 'Crisis counselor connection',
           timeframe: 'Within 15 minutes',
           responsible: 'Crisis Team',
-          status: 'scheduled'
+          status: 'scheduled';
         }
       ],
       shortTermActions: [
@@ -967,7 +967,7 @@ class CrisisInterventionWorkflowService {
           action: 'Safety planning session',
           timeframe: 'Within 4 hours',
           responsible: 'Crisis Counselor',
-          status: 'scheduled'
+          status: 'scheduled';
         }
       ],
       followUpActions: [
@@ -975,7 +975,7 @@ class CrisisInterventionWorkflowService {
           action: 'Daily check-ins',
           timeframe: 'Next 7 days',
           responsible: 'Support Team',
-          status: 'scheduled'
+          status: 'scheduled';
         }
       ],
       longTermSupport: [
@@ -983,7 +983,7 @@ class CrisisInterventionWorkflowService {
           action: 'Weekly therapy sessions',
           timeframe: 'Ongoing',
           responsible: 'Therapist',
-          status: 'scheduled'
+          status: 'scheduled';
         }
       ]
     }
@@ -995,7 +995,7 @@ class CrisisInterventionWorkflowService {
           action: 'Initial assessment',
           timeframe: 'Within 1 hour',
           responsible: 'Support Team',
-          status: 'scheduled'
+          status: 'scheduled';
         }
       ],
       shortTermActions: [
@@ -1003,7 +1003,7 @@ class CrisisInterventionWorkflowService {
           action: 'Support session',
           timeframe: 'Within 24 hours',
           responsible: 'Peer Supporter',
-          status: 'scheduled'
+          status: 'scheduled';
         }
       ],
       followUpActions: [
@@ -1011,7 +1011,7 @@ class CrisisInterventionWorkflowService {
           action: 'Check-in calls',
           timeframe: 'Every 3 days',
           responsible: 'Support Team',
-          status: 'scheduled'
+          status: 'scheduled';
         }
       ],
       longTermSupport: [
@@ -1019,7 +1019,7 @@ class CrisisInterventionWorkflowService {
           action: 'Resource access',
           timeframe: 'Ongoing',
           responsible: 'User/Platform',
-          status: 'scheduled'
+          status: 'scheduled';
         }
       ]
     }
@@ -1032,7 +1032,7 @@ class CrisisInterventionWorkflowService {
           action: 'Resource provision',
           timeframe: 'Within 2 hours',
           responsible: 'System',
-          status: 'scheduled'
+          status: 'scheduled';
         }
       ],
       followUpActions: [
@@ -1040,7 +1040,7 @@ class CrisisInterventionWorkflowService {
           action: 'Optional check-in',
           timeframe: 'Within 7 days',
           responsible: 'Peer Supporter',
-          status: 'scheduled'
+          status: 'scheduled';
         }
       ],
       longTermSupport: [
@@ -1048,13 +1048,13 @@ class CrisisInterventionWorkflowService {
           action: 'Self-guided support',
           timeframe: 'Ongoing',
           responsible: 'User',
-          status: 'scheduled'
+          status: 'scheduled';
         }
       ]
     }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const crisisInterventionWorkflowService = new CrisisInterventionWorkflowService();
 export default crisisInterventionWorkflowService;
 

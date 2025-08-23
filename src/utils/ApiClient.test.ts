@@ -1,6 +1,6 @@
 /**
  * @jest-environment jsdom
- */
+ */;
 
 import { ApiClient } from './ApiClient';
 import { setupProductionEnvironment, setupDevelopmentEnvironment } from './apiClientTestHelper';
@@ -31,7 +31,7 @@ describe('ApiClient', () => {
     mockFetch = jest.fn() as jest.MockedFunction<typeof fetch>;
     global.fetch = mockFetch;
 
-    // Mock sessionStorage
+    // Mock sessionStorage;
     const sessionStorageMock = {
       getItem: jest.fn(),
       setItem: jest.fn(),
@@ -124,7 +124,7 @@ describe('ApiClient', () => {
           protocol: 'http:',
           pathname: '/',
           search: '',
-          hash: ''
+          hash: '';
         },
         writable: true,
         configurable: true,
@@ -133,7 +133,7 @@ describe('ApiClient', () => {
       // Reset the flag and re-initialize
       (global as any).netlifyFunctionsAvailable = null;
       
-      // Spy on console to verify the right message
+      // Spy on console to verify the right message;
       const consoleSpy = jest.spyOn(console, 'info').mockImplementation();
       
       await ApiClient.initialize();
@@ -148,7 +148,7 @@ describe('ApiClient', () => {
         json: jest.fn().mockResolvedValue([]),
       } as any);
       
-      // This should work without throwing a demo mode error
+      // This should work without throwing a demo mode error;
       const result = await ApiClient.resources.getResources();
       expect(result).toEqual([]);
       
@@ -200,7 +200,7 @@ describe('ApiClient', () => {
         json: jest.fn().mockResolvedValue(mockAssessment),
       } as any);
 
-      const result = await ApiClient.assessments.submitPhq9Result(
+      const result = await ApiClient.assessments.submitPhq9Result(;
         'user123',
         10,
         [1, 2, 1, 2, 0, 1, 1, 0, 0]
@@ -232,7 +232,7 @@ describe('ApiClient', () => {
         json: jest.fn().mockResolvedValue(mockAssessment),
       } as any);
 
-      const result = await ApiClient.assessments.submitGad7Result(
+      const result = await ApiClient.assessments.submitGad7Result(;
         'user123',
         8,
         [2, 1, 1, 2, 0, 1, 1]
@@ -256,7 +256,7 @@ describe('ApiClient', () => {
     test('should get assessment history', async () => {
       setupProductionEnvironment();
       
-      const mockHistory = [
+      const mockHistory = [;
         { id: '1', score: 10, type: 'phq-9' },
         { id: '2', score: 8, type: 'gad-7' },
       ];
@@ -336,7 +336,7 @@ describe('ApiClient', () => {
         json: jest.fn().mockResolvedValue(mockCompletion),
       } as any);
 
-      const result = await ApiClient.habits.logCompletion(
+      const result = await ApiClient.habits.logCompletion(;
         'user123',
         'habit456',
         '2024-01-15'
@@ -398,7 +398,7 @@ describe('ApiClient', () => {
     test('should get mood history', async () => {
       setupProductionEnvironment();
       
-      const mockHistory = [
+      const mockHistory = [;
         { id: 'checkin1', mood: 7, timestamp: new Date() },
         { id: 'checkin2', mood: 8, timestamp: new Date() },
       ];
@@ -450,7 +450,7 @@ describe('ApiClient', () => {
         json: jest.fn().mockResolvedValue(mockEntry),
       } as any);
 
-      const result = await ApiClient.journal.postEntry(
+      const result = await ApiClient.journal.postEntry(;
         'Today was a good day',
         'user123'
       );
@@ -473,7 +473,7 @@ describe('ApiClient', () => {
     test('should get wellness videos', async () => {
       setupProductionEnvironment();
       
-      const mockVideos = [
+      const mockVideos = [;
         { id: 'video1', title: 'Meditation Guide' },
         { id: 'video2', title: 'Breathing Exercise' },
       ];
@@ -529,7 +529,7 @@ describe('ApiClient', () => {
         json: jest.fn().mockResolvedValue(mockVideo),
       } as any);
 
-      const result = await ApiClient.videos.uploadVideo(
+      const result = await ApiClient.videos.uploadVideo(;
         mockFile,
         'Test video description',
         'user123'
@@ -867,7 +867,7 @@ describe('ApiClient', () => {
       } as any);
       
       // In production with demo_token, it should still make the API call
-      // (demo_token check happens in isInDemoMode)
+      // (demo_token check happens in isInDemoMode);
       const result = await ApiClient.journal.getEntries('user123');
       
       // Should return the response
@@ -920,7 +920,7 @@ describe('ApiClient', () => {
         json: jest.fn().mockResolvedValue(mockDilemma),
       } as any);
 
-      const result = await ApiClient.dilemmas.postDilemma(
+      const result = await ApiClient.dilemmas.postDilemma(;
         dilemmaData as any,
         'user123'
       );
@@ -987,7 +987,7 @@ describe('ApiClient', () => {
     test('should handle chat request', async () => {
       setupProductionEnvironment();
       
-      const messages = [
+      const messages = [;
         { id: '1', sender: 'user' as const, text: 'Hello', timestamp: '2023-01-01T00:00:00Z' },
         { id: '2', sender: 'ai' as const, text: 'Hi there!', timestamp: '2023-01-01T00:00:01Z' },
       ];
@@ -1023,7 +1023,7 @@ describe('ApiClient', () => {
         json: jest.fn().mockResolvedValue({}), // API returns empty object
       } as any);
 
-      // The AI chat returns whatever the API returns
+      // The AI chat returns whatever the API returns;
       const result = await ApiClient.ai.chat([], 'Be helpful');
       expect(result).toEqual({});
     });
@@ -1124,7 +1124,7 @@ describe('ApiClient', () => {
         } as any);
       }
 
-      const promises = [
+      const promises = [;
         ApiClient.resources.getResources(),
         ApiClient.videos.getVideos(),
         ApiClient.habits.getPredefinedHabits(),
@@ -1151,7 +1151,7 @@ describe('ApiClient', () => {
         json: jest.fn().mockResolvedValue([]),
       } as any);
 
-      const promises = [
+      const promises = [;
         ApiClient.resources.getResources().catch(e => e.message),
         ApiClient.videos.getVideos(),
       ];

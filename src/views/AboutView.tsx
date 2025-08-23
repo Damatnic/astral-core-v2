@@ -2,26 +2,26 @@ import React from 'react';
 import { HeartIcon, ShieldIcon, UsersIcon, SparkleIcon } from '../components/icons.dynamic';
 
 const AboutView: React.FC = () => {
-  const features = [
+  const features = [;
     {
       icon: HeartIcon,
       title: 'Wellness Tracking',
-      description: 'Monitor your mental health with daily check-ins and mood tracking'
+      description: 'Monitor your mental health with daily check-ins and mood tracking';
     },
     {
       icon: UsersIcon,
       title: 'Peer Support',
-      description: 'Connect with trained helpers and supportive community members'
+      description: 'Connect with trained helpers and supportive community members';
     },
     {
       icon: SparkleIcon,
       title: 'AI Companion',
-      description: 'Get support from our intelligent mental health assistant'
+      description: 'Get support from our intelligent mental health assistant';
     },
     {
       icon: ShieldIcon,
       title: 'Crisis Support',
-      description: '24/7 access to crisis resources and emergency contacts'
+      description: '24/7 access to crisis resources and emergency contacts';
     }
   ];
 

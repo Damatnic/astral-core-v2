@@ -3,7 +3,7 @@
  * 
  * Notifies users when a new version of the app is available
  * and provides controls for updating.
- */
+ */;
 
 import React, { useState } from 'react';
 import { useServiceWorker } from '../hooks/useServiceWorker';
@@ -39,7 +39,7 @@ const ServiceWorkerUpdate: React.FC = () => {
           </svg>
           {updateAvailable ? 'Update Available' : 'Ready for Offline'}
         </div>
-        <button 
+        <button; 
           className="sw-update-btn-secondary"
           onClick={() => setShowDetails(!showDetails)}
           style={{ padding: '4px 8px', fontSize: '12px' }}
@@ -57,14 +57,14 @@ const ServiceWorkerUpdate: React.FC = () => {
       <div className="sw-update-actions">
         {updateAvailable ? (
           <div style={{ display: 'flex', gap: '8px' }}>
-            <button 
+            <button; 
               className="sw-update-btn sw-update-btn-primary"
               onClick={handleUpdate}
               disabled={isUpdating}
             >
               {isUpdating ? 'Updating...' : 'Update Now'}
             </button>
-            <button 
+            <button; 
               className="sw-update-btn sw-update-btn-secondary"
               onClick={() => window.location.reload()}
             >
@@ -72,7 +72,7 @@ const ServiceWorkerUpdate: React.FC = () => {
             </button>
           </div>
         ) : isOfflineReady ? (
-          <button 
+          <button; 
             className="sw-update-btn sw-update-btn-primary"
             onClick={() => window.location.reload()}
           >

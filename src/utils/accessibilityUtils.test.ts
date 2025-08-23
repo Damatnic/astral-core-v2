@@ -1,11 +1,11 @@
 /**
  * Accessibility Utils Test Suite
  * Tests accessibility utility functions for DOM manipulation and analysis
- */
+ */;
 
 import { AccessibilityUtils } from './accessibilityUtils';
 
-// Mock DOM methods
+// Mock DOM methods;
 const mockQuerySelectorAll = jest.fn();
 const mockGetComputedStyle = jest.fn();
 // const mockClosest = jest.fn();
@@ -296,7 +296,7 @@ describe('AccessibilityUtils', () => {
 
   describe('getFocusableElements', () => {
     it('should return focusable elements that are visible', () => {
-      const mockElements = [
+      const mockElements = [;
         { tagName: 'A', getAttribute: jest.fn().mockReturnValue('#'), tabIndex: 0 },
         { tagName: 'BUTTON', getAttribute: jest.fn(), tabIndex: 0 },
         { tagName: 'INPUT', getAttribute: jest.fn(), tabIndex: 0 },
@@ -323,7 +323,7 @@ describe('AccessibilityUtils', () => {
       mockQuerySelectorAll.mockReturnValue(mockElements);
       jest.spyOn(AccessibilityUtils, 'isVisible')
         .mockReturnValueOnce(true)  // visible
-        .mockReturnValueOnce(false); // invisible
+        .mockReturnValueOnce(false); // invisible;
 
       const result = AccessibilityUtils.getFocusableElements();
 
@@ -483,7 +483,7 @@ describe('AccessibilityUtils', () => {
     });
 
     it('should handle data-crisis attribute with different values', () => {
-      const testCases = [
+      const testCases = [;
         { value: 'true', expected: true },
         { value: 'false', expected: false },
         { value: 'yes', expected: false },
@@ -564,8 +564,8 @@ describe('AccessibilityUtils', () => {
 
   describe('findComplexText', () => {
     beforeEach(() => {
-      // Mock document.querySelectorAll for text elements
-      const mockTextElements = [
+      // Mock document.querySelectorAll for text elements;
+      const mockTextElements = [;
         {
           textContent: 'This is a very long sentence that contains more than twenty words and should be flagged as complex text for accessibility purposes.',
         },
@@ -803,8 +803,8 @@ describe('AccessibilityUtils', () => {
 
   describe('integration scenarios', () => {
     it('should work with real-like DOM structures', () => {
-      // Mock a realistic DOM structure
-      const focusableElements = [
+      // Mock a realistic DOM structure;
+      const focusableElements = [;
         {
           tagName: 'A',
           getAttribute: jest.fn().mockReturnValue('#home'),
@@ -846,7 +846,7 @@ describe('AccessibilityUtils', () => {
         closest: jest.fn().mockReturnValue(null),
       } as unknown as Element;
 
-      // Test complete workflow
+      // Test complete workflow;
       const attributes = AccessibilityUtils.getElementAttributes(mockElement);
       const selector = AccessibilityUtils.getElementSelector(mockElement);
       const hasText = AccessibilityUtils.hasTextContent(mockElement);

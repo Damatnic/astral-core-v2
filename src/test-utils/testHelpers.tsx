@@ -1,12 +1,12 @@
 /**
  * Common test helpers for handling async operations and state updates
- */
+ */;
 
 import { act, waitFor } from '@testing-library/react';
 
 /**
  * Wraps an async function with act() to handle React state updates properly
- */
+ */;
 export const actAsync = async (fn: () => Promise<void> | void) => {
   await act(async () => {
     await fn();
@@ -15,7 +15,7 @@ export const actAsync = async (fn: () => Promise<void> | void) => {
 
 /**
  * Waits for a condition with proper act() wrapping
- */
+ */;
 export const waitForWithAct = async (
   callback: () => boolean | Promise<boolean>,
   options?: { timeout?: number; interval?: number }
@@ -33,7 +33,7 @@ export const waitForWithAct = async (
 
 /**
  * Flushes all pending promises and timers
- */
+ */;
 export const flushPromises = () => {
   return new Promise((resolve) => {
     setTimeout(resolve, 0);
@@ -42,12 +42,12 @@ export const flushPromises = () => {
 
 /**
  * Advances timers and flushes promises with act() wrapping
- */
+ */;
 export const advanceTimersWithAct = async (ms?: number) => {
   await act(async () => {
     if (ms) {
-      jest.advanceTimersByTime(ms);
-    } else {
+      jest.advanceTimersByTime(ms);;
+  } else {
       jest.runAllTimers();
     }
     await flushPromises();
@@ -56,7 +56,7 @@ export const advanceTimersWithAct = async (ms?: number) => {
 
 /**
  * Helper to wait for next tick with act() wrapping
- */
+ */;
 export const nextTick = async () => {
   await act(async () => {
     await new Promise(resolve => process.nextTick(resolve));
@@ -65,7 +65,7 @@ export const nextTick = async () => {
 
 /**
  * Helper to simulate user interaction with proper act() wrapping
- */
+ */;
 export const simulateUserAction = async (
   _element: HTMLElement,
   action: () => void
@@ -78,7 +78,7 @@ export const simulateUserAction = async (
 
 /**
  * Helper to wait for component to be ready after mount
- */
+ */;
 export const waitForComponentReady = async (timeout = 1000) => {
   await act(async () => {
     await new Promise(resolve => setTimeout(resolve, 0));
@@ -88,7 +88,7 @@ export const waitForComponentReady = async (timeout = 1000) => {
 
 /**
  * Helper to handle async state updates in hooks
- */
+ */;
 export const updateHookState = async <T,>(
   hookResult: { current: T },
   updater: (current: T) => void | Promise<void>
@@ -101,7 +101,7 @@ export const updateHookState = async <T,>(
 
 /**
  * Helper to mock and wait for API calls
- */
+ */;
 export const mockApiCall = async <T,>(
   mockFn: jest.Mock,
   returnValue: T,
@@ -124,7 +124,7 @@ export const mockApiCall = async <T,>(
 
 /**
  * Helper to setup and cleanup fake timers
- */
+ */;
 export const useFakeTimers = () => {
   beforeEach(() => {
     jest.useFakeTimers();
@@ -138,24 +138,25 @@ export const useFakeTimers = () => {
   return {
     advance: (ms: number) => advanceTimersWithAct(ms),
     runAll: () => advanceTimersWithAct(),
-    flush: () => flushPromises()
+    flush: () => flushPromises();
   };
 
 /**
  * Helper to mock console methods for cleaner test output
- */
+ */;
 export const mockConsole = () => {
   const originalConsole = {
     error: console.error,
     warn: console.warn,
-    log: console.log
+    log: console.log;
   };
 
   beforeEach(() => {
     console.error = jest.fn();
     console.warn = jest.fn();
     console.log = jest.fn();
-  });
+  };
+  };
 
   afterEach(() => {
     console.error = originalConsole.error;
@@ -174,8 +175,8 @@ export const mockConsole = () => {
       if (message) {
         expect(console.error).toHaveBeenCalledWith(
           expect.stringContaining(message)
-        );
-      } else {
+        );;
+  } else {
         expect(console.error).toHaveBeenCalled();
       }
     }
@@ -183,20 +184,19 @@ export const mockConsole = () => {
 
 /**
  * Helper to create a test wrapper with providers
- */
+ */;
 export const createTestWrapper = (
   providers: React.ComponentType<{ children: React.ReactNode }>[]
 ) => {
   return ({ children }: { children: React.ReactNode }) => {
     return providers.reduceRight(
-      (acc, Provider) => <Provider>{acc}</Provider>,
-      <>{children}</>
+      (acc, Provider) => <Provider>{acc}</Provider><>{children}</>
     );
   };
 
 /**
  * Helper to wait for loading state to complete
- */
+ */;
 export const waitForLoadingComplete = async (
   getByTestId: (id: string) => HTMLElement,
   loadingTestId = 'loading-spinner',
@@ -206,13 +206,13 @@ export const waitForLoadingComplete = async (
     () => {
       expect(() => getByTestId(loadingTestId)).toThrow();
     },
-    { timeout }
-  );
+    { timeout };
+  };
 };
 
 /**
  * Helper to test error boundaries
- */
+ */;
 export const testErrorBoundary = async (
   renderFn: () => any,
   expectedError: string | RegExp
@@ -230,7 +230,7 @@ export const testErrorBoundary = async (
 
 /**
  * Helper to clean up after tests
- */
+ */;
 export const cleanupTest = async () => {
   await act(async () => {
     // Clear all mocks

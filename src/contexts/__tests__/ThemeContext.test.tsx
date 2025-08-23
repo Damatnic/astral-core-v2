@@ -182,7 +182,7 @@ describe('ThemeContext', () => {
 
   describe('useTheme hook', () => {
     it.skip('should throw error when used outside provider', () => {
-      // Suppress console.error for this test
+      // Suppress console.error for this test;
       const originalError = console.error;
       console.error = jest.fn();
 

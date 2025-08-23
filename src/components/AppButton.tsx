@@ -38,7 +38,7 @@ export const AppButton: React.FC<AppButtonProps> = ({
   ripple = true,
   'aria-label': ariaLabel,
 }) => {
-  // Determine base class based on variant
+  // Determine base class based on variant;
   let baseClass = 'btn';
   let variantClass = '';
   
@@ -72,27 +72,27 @@ export const AppButton: React.FC<AppButtonProps> = ({
       default:
         baseClass = 'glass-button';
         variantClass = variant;
-    }
+    };
   } else {
     variantClass = `btn-${variant}`;
   }
   
-  // Size classes
+  // Size classes;
   const sizeClass = size !== 'md' ? `btn-${size}` : '';
   
-  // Icon-only button handling
+  // Icon-only button handling;
   const iconOnlyClass = iconOnly ? 'btn-icon-only' : '';
   
-  // Animation classes
+  // Animation classes;
   const animationClass = animate !== 'none' ? `animate-${animate}` : '';
   
-  // Ripple effect
+  // Ripple effect;
   const rippleClass = ripple ? 'ripple-button' : '';
   
-  // Touch and transition classes
+  // Touch and transition classes;
   const touchClasses = 'touch-optimized touch-feedback smooth-transition';
   
-  const classes = [
+  const classes = [;
     baseClass,
     variantClass,
     sizeClass,
@@ -103,7 +103,7 @@ export const AppButton: React.FC<AppButtonProps> = ({
     className
   ].filter(Boolean).join(' ');
 
-  // Ensure WCAG 2.1 AA compliance for touch targets
+  // Ensure WCAG 2.1 AA compliance for touch targets;
   const touchTargetStyle = {
     minHeight: '44px', // WCAG 2.1 AA touch target requirement
     minWidth: iconOnly ? '44px' : 'auto',
@@ -115,7 +115,7 @@ export const AppButton: React.FC<AppButtonProps> = ({
   };
 
   return (
-    <button
+    <button;
       type={type}
       className={classes}
       onClick={onClick}

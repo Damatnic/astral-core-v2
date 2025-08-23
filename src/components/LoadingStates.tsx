@@ -1,12 +1,12 @@
 /**
  * Loading States Components
  * Comprehensive loading indicators for all async operations
- */
+ */;
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { useAccessibility } from './AccessibilityProvider';
 
-// Loading Spinner Component
+// Loading Spinner Component;
 export const LoadingSpinner: React.FC<{
   size?: 'small' | 'medium' | 'large';
   color?: string;
@@ -22,6 +22,7 @@ export const LoadingSpinner: React.FC<{
   
   useEffect(() => {
     announce(label, 'polite');
+  };
   }, [label, announce]);
 
   const sizeClasses = {
@@ -30,20 +31,20 @@ export const LoadingSpinner: React.FC<{
     large: 'w-12 h-12',
   };
 
-  const spinner = (
-    <div
+  const spinner = (;
+    <div;
       className={`loading-spinner ${sizeClasses[size]}`}
       role="status"
       aria-label={label}
     >
-      <svg
+      <svg;
         className="animate-spin"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         style={{ color }}
       >
-        <circle
+        <circle;
           className="opacity-25"
           cx="12"
           cy="12"
@@ -51,7 +52,7 @@ export const LoadingSpinner: React.FC<{
           stroke="currentColor"
           strokeWidth="4"
         />
-        <path
+        <path;
           className="opacity-75"
           fill="currentColor"
           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
@@ -75,7 +76,7 @@ export const LoadingSpinner: React.FC<{
   return spinner;
 };
 
-// Skeleton Loader Component
+// Skeleton Loader Component;
 export const SkeletonLoader: React.FC<{
   width?: string | number;
   height?: string | number;
@@ -102,7 +103,7 @@ export const SkeletonLoader: React.FC<{
   };
 
   return (
-    <div
+    <div;
       className={`skeleton-loader ${variantClasses[variant]} ${animationClasses[animation]} ${className}`}
       style={{
         width: typeof width === 'number' ? `${width}px` : width,
@@ -113,7 +114,7 @@ export const SkeletonLoader: React.FC<{
   );
 };
 
-// Progress Bar Component
+// Progress Bar Component;
 export const ProgressBar: React.FC<{
   value: number;
   max?: number;
@@ -138,6 +139,7 @@ export const ProgressBar: React.FC<{
     if (!indeterminate && percentage % 25 === 0) {
       announce(`${percentage}% complete`);
     }
+  };
   }, [percentage, indeterminate, announce]);
 
   const sizeClasses = {
@@ -153,7 +155,7 @@ export const ProgressBar: React.FC<{
          aria-valuemax={max}
          aria-label={label}>
       <div className={`progress-bar ${sizeClasses[size]}`}>
-        <div
+        <div;
           className={indeterminate ? 'progress-fill progress-indeterminate' : 'progress-fill'}
           style={{
             width: indeterminate ? '30%' : `${percentage}%`,
@@ -168,7 +170,7 @@ export const ProgressBar: React.FC<{
   );
 };
 
-// Loading Button Component
+// Loading Button Component;
 export const LoadingButton: React.FC<{
   loading: boolean;
   disabled?: boolean;
@@ -206,7 +208,7 @@ export const LoadingButton: React.FC<{
   );
 };
 
-// Content Loader Component
+// Content Loader Component;
 export const ContentLoader: React.FC<{
   loading: boolean;
   error?: Error | null;
@@ -230,10 +232,11 @@ export const ContentLoader: React.FC<{
 
   useEffect(() => {
     if (error) {
-      announce(errorMessage, 'assertive');
-    } else if (empty) {
+      announce(errorMessage, 'assertive');;
+  } else if (empty) {
       announce(emptyMessage, 'polite');
     }
+  };
   }, [error, empty, errorMessage, emptyMessage, announce]);
 
   if (loading) {
@@ -270,7 +273,7 @@ export const ContentLoader: React.FC<{
   return <>{children}</>;
 };
 
-// Lazy Load Wrapper Component
+// Lazy Load Wrapper Component;
 export const LazyLoadWrapper: React.FC<{
   children: React.ReactNode;
   placeholder?: React.ReactNode;
@@ -285,6 +288,7 @@ export const LazyLoadWrapper: React.FC<{
       }, delay);
       return () => clearTimeout(timer);
     }
+  };
   }, [delay]);
 
   if (!showContent) {
@@ -294,7 +298,7 @@ export const LazyLoadWrapper: React.FC<{
   return <>{children}</>;
 };
 
-// Infinite Scroll Loader Component
+// Infinite Scroll Loader Component;
 export const InfiniteScrollLoader: React.FC<{
   loading: boolean;
   hasMore: boolean;
@@ -313,7 +317,7 @@ export const InfiniteScrollLoader: React.FC<{
   useEffect(() => {
     if (!loaderRef || !hasMore || loading) return;
 
-    const observer = new IntersectionObserver(
+    const observer = new IntersectionObserver(;
       (entries) => {
         if (entries[0].isIntersecting) {
           onLoadMore();
@@ -328,7 +332,8 @@ export const InfiniteScrollLoader: React.FC<{
       if (loaderRef) {
         observer.unobserve(loaderRef);
       }
-    }, [loaderRef, hasMore, loading, onLoadMore, threshold]);
+    };
+  }, [loaderRef, hasMore, loading, onLoadMore, threshold]);
 
   return (
     <>
@@ -342,7 +347,7 @@ export const InfiniteScrollLoader: React.FC<{
   );
 };
 
-// Async Data Hook
+// Async Data Hook;
 export const useAsyncData = <T,>(
   asyncFunction: () => Promise<T>,
   dependencies: React.DependencyList = []
@@ -366,11 +371,13 @@ export const useAsyncData = <T,>(
 
   useEffect(() => {
     execute();
+  };
+  };
   }, [execute]);
 
   return { data, loading, error, retry: execute };
 
-// Loading Dots Component
+// Loading Dots Component;
 export const LoadingDots: React.FC<{
   color?: string;
   size?: 'small' | 'medium' | 'large';
@@ -390,7 +397,7 @@ export const LoadingDots: React.FC<{
   );
 };
 
-// Typing Indicator Component
+// Typing Indicator Component;
 export const TypingIndicator: React.FC<{
   user?: string;
 }> = ({ user }) => {
@@ -399,6 +406,7 @@ export const TypingIndicator: React.FC<{
 
   useEffect(() => {
     announce(message, 'polite');
+  };
   }, [message, announce]);
 
   return (
@@ -424,5 +432,5 @@ export default {
   useAsyncData,
 };
 
-// Export Spinner as an alias to LoadingSpinner for backward compatibility
+// Export Spinner as an alias to LoadingSpinner for backward compatibility;
 export { LoadingSpinner as Spinner };

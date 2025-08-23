@@ -3,7 +3,7 @@
  * 
  * Coordinates intelligent caching strategies with existing Workbox configuration
  * Provides enhanced cache management for crisis-focused mental health platform
- */
+ */;
 
 import { intelligentCache, CachePriority, ResourceType } from './intelligentCachingService';
 
@@ -98,7 +98,7 @@ export class CacheStrategyCoordinator {
         plugins: [
           {
             cacheKeyWillBeUsed: async ({ request }) => {
-              // Normalize cache keys and remove sensitive data
+              // Normalize cache keys and remove sensitive data;
               const url = new URL(request.url);
               url.searchParams.delete('auth');
               url.searchParams.delete('token');
@@ -134,7 +134,7 @@ export class CacheStrategyCoordinator {
         plugins: [
           {
             cacheWillUpdate: async ({ request: _request, response }) => {
-              // Don't cache user data if response indicates privacy concerns
+              // Don't cache user data if response indicates privacy concerns;
               const privacyHeader = response.headers.get('X-Privacy-Level');
               if (privacyHeader === 'sensitive') {
                 return false;
@@ -172,7 +172,7 @@ export class CacheStrategyCoordinator {
         plugins: [
           {
             cacheWillUpdate: async ({ response }) => {
-              // Check response size and don't cache if too large
+              // Check response size and don't cache if too large;
               const contentLength = response.headers.get('content-length');
               if (contentLength && parseInt(contentLength) > 100 * 1024) {
                 console.warn('[CacheCoordinator] Chat response too large for cache:', contentLength);
@@ -200,7 +200,7 @@ export class CacheStrategyCoordinator {
         plugins: [
           {
             cacheKeyWillBeUsed: async ({ request }) => {
-              // Normalize community URLs for better cache hits
+              // Normalize community URLs for better cache hits;
               const url = new URL(request.url);
               url.searchParams.sort();
               // Remove pagination params for better cache efficiency
@@ -228,7 +228,7 @@ export class CacheStrategyCoordinator {
         plugins: [
           {
             requestWillFetch: async ({ request }) => {
-              // Check storage quota before caching large assets
+              // Check storage quota before caching large assets;
               const quota = await navigator.storage.estimate();
               const usagePercentage = (quota.usage || 0) / (quota.quota || 1);
               
@@ -265,7 +265,7 @@ export class CacheStrategyCoordinator {
         plugins: [
           {
             cacheWillUpdate: async ({ request: _request, response }) => {
-              // Only cache videos if sufficient storage and good network
+              // Only cache videos if sufficient storage and good network;
               const quota = await navigator.storage.estimate();
               const usagePercentage = (quota.usage || 0) / (quota.quota || 1);
               
@@ -310,8 +310,8 @@ export class CacheStrategyCoordinator {
       if (pattern instanceof RegExp) {
         if (pattern.test(url)) {
           return strategy;
-        }
-      } else if (typeof pattern === 'string') {
+        };
+  } else if (typeof pattern === 'string') {
         if (url.includes(pattern)) {
           return strategy;
         }
@@ -333,7 +333,7 @@ export class CacheStrategyCoordinator {
       // Warm critical caches first
       await intelligentCache.warmCriticalCaches();
       
-      // Warm strategy-specific caches
+      // Warm strategy-specific caches;
       const warmingPromises: Promise<void>[] = [];
       
       for (const [_name, strategy] of this.strategies) {
@@ -378,7 +378,7 @@ export class CacheStrategyCoordinator {
    * Warm crisis resources cache
    */
   private async warmCrisisResources(cache: Cache): Promise<void> {
-    const crisisUrls = [
+    const crisisUrls = [;
       '/crisis-resources.json',
       '/emergency-contacts.json',
       '/988-crisis-protocol.json',
@@ -406,8 +406,8 @@ export class CacheStrategyCoordinator {
    * Warm critical API endpoints cache
    */
   private async warmCriticalApiEndpoints(cache: Cache): Promise<void> {
-    // These would be endpoints that should be immediately available
-    const criticalEndpoints = [
+    // These would be endpoints that should be immediately available;
+    const criticalEndpoints = [;
       '/.netlify/functions/crisis',
       '/.netlify/functions/emergency-contacts',
       '/.netlify/functions/wellness' // For immediate mood check access
@@ -441,7 +441,7 @@ export class CacheStrategyCoordinator {
     console.log('[CacheCoordinator] Starting cache cleanup...');
     
     try {
-      // Clean up expired entries in intelligent cache
+      // Clean up expired entries in intelligent cache;
       const expiredCount = await intelligentCache.cleanupExpiredEntries();
       
       // Perform strategy-specific cleanup
@@ -513,7 +513,7 @@ export class CacheStrategyCoordinator {
           name,
           entryCount,
           priority: strategy.priority,
-          resourceType: strategy.resourceType
+          resourceType: strategy.resourceType;
         });
         
         totalEntries += entryCount;
@@ -554,12 +554,13 @@ export class CacheStrategyCoordinator {
   private async applyStrategy(strategy: CacheStrategy, request: Request): Promise<Response> {
     const cache = await caches.open(strategy.options.cacheName);
     
-    // Apply plugins if available
+    // Apply plugins if available;
     let processedRequest = request;
     if (strategy.options.plugins) {
       for (const plugin of strategy.options.plugins) {
         if (plugin.requestWillFetch) {
-          processedRequest = await plugin.requestWillFetch({ request: processedRequest });
+          processedRequest = await plugin.requestWillFetch({ request: processedRequest };
+  };
         }
       }
     }
@@ -604,7 +605,7 @@ export class CacheStrategyCoordinator {
   private async networkFirstStrategy(cache: Cache, request: Request, options: CacheOptions): Promise<Response> {
     try {
       const networkResponse = await fetch(request, {
-        signal: AbortSignal.timeout(options.networkTimeoutSeconds ? options.networkTimeoutSeconds * 1000 : 10000)
+        signal: AbortSignal.timeout(options.networkTimeoutSeconds ? options.networkTimeoutSeconds * 1000 : 10000);
       });
       
       if (networkResponse.ok) {
@@ -619,8 +620,9 @@ export class CacheStrategyCoordinator {
       if (cachedResponse) {
         return cachedResponse;
       }
-      
-      throw error;
+  }
+
+  throw error;
     }
   }
 
@@ -630,7 +632,7 @@ export class CacheStrategyCoordinator {
   private async staleWhileRevalidateStrategy(cache: Cache, request: Request, _options: CacheOptions): Promise<Response> {
     const cachedResponse = await cache.match(request);
     
-    // Start network request in background
+    // Start network request in background;
     const networkResponsePromise = fetch(request).then(async (response) => {
       if (response.ok) {
         await cache.put(request, response.clone());
@@ -650,7 +652,7 @@ export class CacheStrategyCoordinator {
       return cachedResponse;
     }
     
-    // If no cache, wait for network
+    // If no cache, wait for network;
     const networkResponse = await networkResponsePromise;
     if (networkResponse) {
       return networkResponse;
@@ -660,5 +662,5 @@ export class CacheStrategyCoordinator {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const cacheCoordinator = new CacheStrategyCoordinator();

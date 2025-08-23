@@ -1,7 +1,7 @@
 /**
  * Higher-Order Component for Mobile Responsiveness
  * Ensures wrapped components are properly responsive across all devices
- */
+ */;
 
 import React, { ComponentType, useEffect, useState } from 'react';
 import { 
@@ -53,7 +53,7 @@ export interface ResponsiveProps {
 
 /**
  * HOC that provides responsive props to wrapped component
- */
+ */;
 export function withMobileResponsive<P extends object>(
   Component: ComponentType<P & ResponsiveProps>
 ): ComponentType<P> {
@@ -111,7 +111,7 @@ export function withMobileResponsive<P extends object>(
         });
       };
 
-      // Set up resize listener
+      // Set up resize listener;
       const cleanup = onResponsiveResize(updateResponsiveState);
       
       // Also listen to orientation changes
@@ -120,7 +120,9 @@ export function withMobileResponsive<P extends object>(
       return () => {
         cleanup();
         window.removeEventListener('orientationchange', updateResponsiveState);
-      }, []);
+      };
+  };
+  }, []);
 
     return <Component {...props} {...responsiveState} />;
   };
@@ -132,7 +134,7 @@ export function withMobileResponsive<P extends object>(
 
 /**
  * Hook version for functional components
- */
+ */;
 export const useResponsive = (): ResponsiveProps => {
   const [responsiveState, setResponsiveState] = useState<ResponsiveProps>(() => ({
     breakpoint: getCurrentBreakpoint(),
@@ -193,14 +195,16 @@ export const useResponsive = (): ResponsiveProps => {
     return () => {
       cleanup();
       window.removeEventListener('orientationchange', updateResponsiveState);
-    }, []);
+    };
+  };
+  }, []);
 
   return responsiveState;
 };
 
 /**
  * Responsive container component
- */
+ */;
 export const ResponsiveContainer: React.FC<{
   children: React.ReactNode;
   className?: string;
@@ -218,7 +222,7 @@ export const ResponsiveContainer: React.FC<{
   };
   
   return (
-    <div
+    <div;
       className={`
         ${getResponsiveClass('container')}
         ${maxWidthClasses[maxWidth]}
@@ -237,7 +241,7 @@ export const ResponsiveContainer: React.FC<{
 
 /**
  * Responsive grid component
- */
+ */;
 export const ResponsiveGrid: React.FC<{
   children: React.ReactNode;
   className?: string;
@@ -265,7 +269,7 @@ export const ResponsiveGrid: React.FC<{
   const colCount = cols[breakpoint] ?? defaultCols[breakpoint] ?? 1;
   
   return (
-    <div
+    <div;
       className={`grid ${className}`}
       style={{
         gridTemplateColumns: `repeat(${colCount}, 1fr)`,
@@ -279,7 +283,7 @@ export const ResponsiveGrid: React.FC<{
 
 /**
  * Mobile-only wrapper component
- */
+ */;
 export const MobileOnly: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isMobile } = useResponsive();
   return isMobile ? <>{children}</> : null;
@@ -287,7 +291,7 @@ export const MobileOnly: React.FC<{ children: React.ReactNode }> = ({ children }
 
 /**
  * Tablet-only wrapper component
- */
+ */;
 export const TabletOnly: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isTablet } = useResponsive();
   return isTablet ? <>{children}</> : null;
@@ -295,7 +299,7 @@ export const TabletOnly: React.FC<{ children: React.ReactNode }> = ({ children }
 
 /**
  * Desktop-only wrapper component
- */
+ */;
 export const DesktopOnly: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isDesktop } = useResponsive();
   return isDesktop ? <>{children}</> : null;
@@ -303,7 +307,7 @@ export const DesktopOnly: React.FC<{ children: React.ReactNode }> = ({ children 
 
 /**
  * Touch-device-only wrapper component
- */
+ */;
 export const TouchOnly: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isTouchDevice } = useResponsive();
   return isTouchDevice ? <>{children}</> : null;

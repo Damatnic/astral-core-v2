@@ -1,6 +1,6 @@
 /**
  * @jest-environment jsdom
- */
+ */;
 
 import {
   ImageFormat,
@@ -37,7 +37,7 @@ describe('imageOptimization', () => {
       toDataURL: jest.fn(() => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD//2Q=='),
     } as any;
 
-    // Mock document.createElement for canvas
+    // Mock document.createElement for canvas;
     const originalCreateElement = document.createElement.bind(document);
     document.createElement = jest.fn((tagName: string) => {
       if (tagName === 'canvas') {
@@ -218,13 +218,13 @@ describe('imageOptimization', () => {
         
         // Manually trigger the same logic that the handler would do
         // Since the handler might lose 'this' context when called directly,
-        // we'll simulate what it does
+        // we'll simulate what it does;
         const downlink = mockConnection.downlink || 1;
         if (downlink < 1) { // slow threshold
-          (optimizer as any).connectionType = 'slow';
-        } else if (downlink < 2) { // medium threshold  
-          (optimizer as any).connectionType = 'medium';
-        } else {
+          (optimizer as any).connectionType = 'slow';;
+  } else if (downlink < 2) { // medium threshold  
+          (optimizer as any).connectionType = 'medium';;
+  } else {
           (optimizer as any).connectionType = 'fast';
         }
         
@@ -259,11 +259,11 @@ describe('imageOptimization', () => {
 
         expect(result.formats).toHaveLength(8); // 4 breakpoints × 2 formats each
         
-        // Check WebP formats
+        // Check WebP formats;
         const webpFormats = result.formats.filter(f => f.format === 'webp');
         expect(webpFormats).toHaveLength(4);
         
-        // Check JPEG formats
+        // Check JPEG formats;
         const jpegFormats = result.formats.filter(f => f.format === 'jpeg');
         expect(jpegFormats).toHaveLength(4);
       });
@@ -379,7 +379,7 @@ describe('imageOptimization', () => {
 
     describe('preloadCriticalImages', () => {
       test('should preload high priority images', () => {
-        const images = [
+        const images = [;
           optimizer.generateOptimizedImages('https://example.com/image1.jpg', {
             alt: 'Image 1',
             priority: 9,
@@ -465,7 +465,7 @@ describe('imageOptimization', () => {
           writable: true,
           configurable: true,
         });
-        const loadOptimizedImageSpy = jest.spyOn(
+        const loadOptimizedImageSpy = jest.spyOn(;
           optimizer,
           'loadOptimizedImage' as any
         );
@@ -572,7 +572,7 @@ describe('imageOptimization', () => {
         // Add to cache with known ID
         (optimizer as any).cache.set('test-id', optimizedImage);
 
-        // Mock Image constructor
+        // Mock Image constructor;
         const mockImage = {
           onload: null as any,
           onerror: null as any,
@@ -799,7 +799,7 @@ describe('imageOptimization', () => {
 
   describe('Real-world Integration', () => {
     test('should work with typical image component pattern', () => {
-      // Simulate typical usage
+      // Simulate typical usage;
       const imageUrl = 'https://cdn.example.com/photos/beach-sunset.jpg';
       const optimizedImage = imageOptimizer.generateOptimizedImages(imageUrl, {
         alt: 'Beautiful beach sunset with orange and pink sky',
@@ -812,7 +812,7 @@ describe('imageOptimization', () => {
       expect(optimizedImage.loading).toBe('eager');
       expect(optimizedImage.formats.length).toBeGreaterThan(0);
 
-      // Generate responsive attributes
+      // Generate responsive attributes;
       const webpSrcSet = imageOptimizer.generateSrcSet(optimizedImage, 'webp');
       const jpegSrcSet = imageOptimizer.generateSrcSet(optimizedImage, 'jpeg');
       const sizes = imageOptimizer.generateSizes();
@@ -821,7 +821,7 @@ describe('imageOptimization', () => {
       expect(jpegSrcSet).toBeTruthy();
       expect(sizes).toBeTruthy();
 
-      // Get optimal format
+      // Get optimal format;
       const optimalFormat = imageOptimizer.getOptimalFormat(optimizedImage);
       expect(optimalFormat).toBeTruthy();
       expect(optimalFormat.url).toContain(imageUrl);
@@ -838,10 +838,10 @@ describe('imageOptimization', () => {
       expect(optimizedImage.aspectRatio).toBe(16 / 9); // Video aspect ratio
       expect(optimizedImage.formats).toHaveLength(8); // All breakpoints and formats
       
-      // Should have proper video-optimized dimensions
+      // Should have proper video-optimized dimensions;
       const thumbnailFormats = optimizedImage.formats.filter(f => f.width === 320);
       expect(thumbnailFormats.length).toBe(2); // WebP and JPEG
-      expect(thumbnailFormats[0].height).toBe(180); // 16:9 ratio
+      expect(thumbnailFormats[0].height).toBe(180); // 16:9 ratio;
     });
   });
 });

@@ -14,38 +14,38 @@ const DEMOGRAPHIC_RESOURCES = {
     'Youth & Students': {
         icon: UserIcon,
         color: '#3B82F6',
-        description: 'Specialized support for young people and students'
+        description: 'Specialized support for young people and students';
     },
     'Veterans': {
         icon: HomeIcon,
         color: '#10B981',
-        description: 'Resources specifically for military veterans'
+        description: 'Resources specifically for military veterans';
     },
     'LGBTQ+': {
         icon: HeartIcon,
         color: '#F59E0B',
-        description: 'Safe spaces and support for LGBTQ+ individuals'
+        description: 'Safe spaces and support for LGBTQ+ individuals';
     }
 };
 
-const EMERGENCY_NUMBERS = [
+const EMERGENCY_NUMBERS = [;
     {
         name: 'National Suicide Prevention Lifeline',
         number: '988',
         description: '24/7 free and confidential support',
-        type: 'crisis'
+        type: 'crisis';
     },
     {
         name: 'Crisis Text Line',
         number: '741741',
         description: 'Text HOME for immediate support',
-        type: 'text'
+        type: 'text';
     },
     {
         name: 'Emergency Services',
         number: '911',
         description: 'Life-threatening emergencies',
-        type: 'emergency'
+        type: 'emergency';
     }
 ];
 
@@ -59,13 +59,13 @@ const EmergencyNumberCard: React.FC<{ emergency: typeof EMERGENCY_NUMBERS[0] }> 
             </div>
         </div>
         <div className="emergency-actions">
-            <AppButton
-                variant="primary"
+            <AppButton;
+                variant="primary";
                 className="call-button"
                 onClick={() => {
                     if (emergency.type === 'text') {
-                        window.open(`sms:${emergency.number}?body=HOME`, '_blank');
-                    } else {
+                        window.open(`sms:${emergency.number}?body=HOME`, '_blank');;
+  } else {
                         window.open(`tel:${emergency.number}`, '_blank');
                     }
                 }}
@@ -95,7 +95,7 @@ const ResourceCard: React.FC<{ resource: Resource; priority?: boolean }> = ({ re
                     <div className="contact-info">
                         <PhoneIcon />
                         <strong>{resource.contact}</strong>
-                        <AppButton
+                        <AppButton;
                             variant="secondary"
                             size="sm"
                             onClick={() => {
@@ -110,7 +110,7 @@ const ResourceCard: React.FC<{ resource: Resource; priority?: boolean }> = ({ re
                         </AppButton>
                     </div>
                 ) : (
-                    <AppButton 
+                    <AppButton; 
                         variant="secondary" 
                         onClick={() => window.open(resource.link, '_blank')} 
                         className="resource-button"
@@ -133,14 +133,14 @@ const SafetyPlanAccess: React.FC = () => (
             </div>
         </div>
         <div className="safety-plan-actions">
-            <AppButton
+            <AppButton;
                 variant="primary"
                 onClick={() => window.location.href = '#/safety-plan'}
                 className="safety-plan-btn"
             >
                 View My Safety Plan
             </AppButton>
-            <AppButton
+            <AppButton;
                 variant="secondary"
                 onClick={() => window.location.href = '#/create-safety-plan'}
                 className="create-safety-plan-btn"
@@ -167,7 +167,7 @@ export const CrisisResourcesView = () => {
             })
             .catch(error => {
                 console.error('Failed to load resources:', error);
-                // Enhanced fallback crisis resources with demographic categories
+                // Enhanced fallback crisis resources with demographic categories;
                 const fallbackResources: Resource[] = [
                     // Emergency Help
                     {
@@ -176,7 +176,7 @@ export const CrisisResourcesView = () => {
                         description: '24/7 free and confidential support for people in distress and prevention resources.',
                         category: 'Emergency Help',
                         contact: '988',
-                        link: 'https://suicidepreventionlifeline.org'
+                        link: 'https://suicidepreventionlifeline.org';
                     },
                     {
                         id: 'crisis-2',
@@ -184,7 +184,7 @@ export const CrisisResourcesView = () => {
                         description: 'For immediate life-threatening emergencies requiring police, fire, or medical response.',
                         category: 'Emergency Help',
                         contact: '911',
-                        link: ''
+                        link: '';
                     },
                     {
                         id: 'crisis-3',
@@ -192,7 +192,7 @@ export const CrisisResourcesView = () => {
                         description: 'Treatment referral and information service for mental health and substance use disorders.',
                         category: 'Emergency Help',
                         contact: '1-800-662-4357',
-                        link: 'https://samhsa.gov'
+                        link: 'https://samhsa.gov';
                     },
                     // Text Support
                     {
@@ -201,7 +201,7 @@ export const CrisisResourcesView = () => {
                         description: 'Free, 24/7 crisis support via text message. Trained counselors available immediately.',
                         category: 'Text Support',
                         contact: 'Text HOME to 741741',
-                        link: 'https://crisistextline.org'
+                        link: 'https://crisistextline.org';
                     },
                     {
                         id: 'text-2',
@@ -209,7 +209,7 @@ export const CrisisResourcesView = () => {
                         description: 'Text support specifically for teenagers, by trained teen volunteers.',
                         category: 'Text Support',
                         contact: 'Text TEEN to 839863',
-                        link: 'https://teenlineonline.org'
+                        link: 'https://teenlineonline.org';
                     },
                     // Youth & Students
                     {
@@ -218,7 +218,7 @@ export const CrisisResourcesView = () => {
                         description: 'Specialized support for young people experiencing suicidal thoughts.',
                         category: 'Youth & Students',
                         contact: '988',
-                        link: 'https://suicidepreventionlifeline.org'
+                        link: 'https://suicidepreventionlifeline.org';
                     },
                     {
                         id: 'youth-2',
@@ -226,7 +226,7 @@ export const CrisisResourcesView = () => {
                         description: 'Mental health resources and support specifically designed for college students.',
                         category: 'Youth & Students',
                         contact: '',
-                        link: 'https://jedcampus.org'
+                        link: 'https://jedcampus.org';
                     },
                     // Veterans
                     {
@@ -235,7 +235,7 @@ export const CrisisResourcesView = () => {
                         description: '24/7 confidential support for Veterans and their families, even if not enrolled in VA.',
                         category: 'Veterans',
                         contact: '1-800-273-8255 Press 1',
-                        link: 'https://veteranscrisisline.net'
+                        link: 'https://veteranscrisisline.net';
                     },
                     {
                         id: 'veterans-2',
@@ -243,7 +243,7 @@ export const CrisisResourcesView = () => {
                         description: 'Text support for Veterans experiencing crisis or emotional distress.',
                         category: 'Veterans',
                         contact: 'Text 838255',
-                        link: 'https://veteranscrisisline.net'
+                        link: 'https://veteranscrisisline.net';
                     },
                     // LGBTQ+
                     {
@@ -252,7 +252,7 @@ export const CrisisResourcesView = () => {
                         description: '24/7 crisis support services to LGBTQ young people under 25.',
                         category: 'LGBTQ+',
                         contact: '1-866-488-7386',
-                        link: 'https://thetrevorproject.org'
+                        link: 'https://thetrevorproject.org';
                     },
                     {
                         id: 'lgbtq-2',
@@ -260,7 +260,7 @@ export const CrisisResourcesView = () => {
                         description: 'Crisis hotline staffed by transgender people for transgender people.',
                         category: 'LGBTQ+',
                         contact: '877-565-8860',
-                        link: 'https://translifeline.org'
+                        link: 'https://translifeline.org';
                     },
                     // Coping Strategies
                     {
@@ -269,7 +269,7 @@ export const CrisisResourcesView = () => {
                         description: 'Learn the 4-7-8 breathing technique and box breathing to manage anxiety attacks.',
                         category: 'Coping Strategies',
                         contact: '',
-                        link: '#/quiet-space'
+                        link: '#/quiet-space';
                     },
                     {
                         id: 'coping-2',
@@ -277,7 +277,7 @@ export const CrisisResourcesView = () => {
                         description: 'Use your senses to ground yourself: 5 things you see, 4 you touch, 3 you hear, 2 you smell, 1 you taste.',
                         category: 'Coping Strategies',
                         contact: '',
-                        link: '#/quiet-space'
+                        link: '#/quiet-space';
                     },
                     {
                         id: 'coping-3',
@@ -285,7 +285,7 @@ export const CrisisResourcesView = () => {
                         description: 'Systematic tensing and relaxing of muscle groups to reduce physical tension.',
                         category: 'Coping Strategies',
                         contact: '',
-                        link: '#/quiet-space'
+                        link: '#/quiet-space';
                     },
                     {
                         id: 'coping-4',
@@ -293,14 +293,15 @@ export const CrisisResourcesView = () => {
                         description: 'Simple mindfulness exercises to help center yourself in the present moment.',
                         category: 'Coping Strategies',
                         contact: '',
-                        link: '#/quiet-space'
+                        link: '#/quiet-space';
                     }
                 ];
                 setResources(fallbackResources);
                 setFilteredResources(fallbackResources);
             })
             .finally(() => setIsLoading(false));
-    }, []);
+    };
+  }, []);
 
     useEffect(() => {
         let results = resources;
@@ -315,7 +316,8 @@ export const CrisisResourcesView = () => {
             );
         }
         setFilteredResources(results);
-    }, [activeCategory, searchTerm, resources]);
+    };
+  }, [activeCategory, searchTerm, resources]);
 
     return (
         <div className="crisis-resources-container">
@@ -343,7 +345,7 @@ export const CrisisResourcesView = () => {
             {/* Quick Access Buttons */}
             <div className="quick-access-section">
                 <div className="quick-access-grid">
-                    <AppButton
+                    <AppButton;
                         variant="primary"
                         size="lg"
                         onClick={() => window.location.href = '#/quiet-space'}
@@ -352,7 +354,7 @@ export const CrisisResourcesView = () => {
                         <HeartIcon />
                         <span>Quiet Space & Breathing</span>
                     </AppButton>
-                    <AppButton
+                    <AppButton;
                         variant="secondary"
                         size="lg"
                         onClick={() => window.location.href = '#/crisis-chat'}
@@ -361,7 +363,7 @@ export const CrisisResourcesView = () => {
                         <ShieldIcon />
                         <span>Crisis Chat Support</span>
                     </AppButton>
-                    <AppButton
+                    <AppButton;
                         variant="secondary"
                         size="lg"
                         onClick={() => window.location.href = '#/safety-plan'}
@@ -385,9 +387,9 @@ export const CrisisResourcesView = () => {
             <div className="search-section">
                 <div className="search-wrapper">
                     <SearchIcon className="search-icon" />
-                    <input
+                    <input;
                         type="search"
-                        placeholder="Search for specific topics or resources..."
+                        placeholder="Search for specific topics or resources...";
                         className="search-input"
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
@@ -436,7 +438,7 @@ export const CrisisResourcesView = () => {
                             <HeartIcon className="empty-icon" />
                             <h3>No resources found</h3>
                             <p>Try adjusting your search or filters to find what you're looking for.</p>
-                            <AppButton
+                            <AppButton;
                                 variant="secondary"
                                 onClick={() => {
                                     setSearchTerm('');

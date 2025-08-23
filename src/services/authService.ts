@@ -8,8 +8,8 @@ export const authService = {
     },
     updateHelperProfile(profile: Helper) {
         if (_updateHelperProfile) {
-            _updateHelperProfile(profile);
-        } else {
+            _updateHelperProfile(profile);;
+  } else {
             console.error("AuthService updater not set. Cannot update helper profile.");
         }
     }

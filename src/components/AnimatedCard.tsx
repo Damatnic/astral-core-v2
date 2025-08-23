@@ -23,7 +23,7 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
   const { elementRef, isVisible } = useScrollAnimation(0.1);
   const { isHovered, handleMouseEnter, handleMouseLeave } = useDelayedHover(50, 150);
 
-  const animationClasses = [
+  const animationClasses = [;
     'card',
     isVisible ? `${animationType} fade-in-scroll visible` : 'fade-in-scroll',
     hoverEffect && isHovered ? 'card-hover' : '',

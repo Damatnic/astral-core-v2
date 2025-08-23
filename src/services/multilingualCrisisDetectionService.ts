@@ -1,7 +1,7 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- */
+ */;
 
 import { getCulturalContext, getCrisisTranslation } from '../i18n/index';
 
@@ -22,7 +22,7 @@ interface LanguageCrisisPatterns {
 /**
  * Multilingual AI Crisis Detection Service
  * Detects crisis indicators across multiple languages with cultural context awareness
- */
+ */;
 class MultilingualCrisisDetectionService {
   private crisisPatterns: Map<string, LanguageCrisisPatterns> = new Map();
   private initialized = false;
@@ -354,19 +354,19 @@ class MultilingualCrisisDetectionService {
       }
     });
 
-    // Determine risk level
+    // Determine risk level;
     let riskLevel: 'low' | 'moderate' | 'high' | 'urgent';
     if (totalScore >= 10) {
-      riskLevel = 'urgent';
-    } else if (totalScore >= 7) {
-      riskLevel = 'high';
-    } else if (totalScore >= 4) {
-      riskLevel = 'moderate';
-    } else {
+      riskLevel = 'urgent';;
+  } else if (totalScore >= 7) {
+      riskLevel = 'high';;
+  } else if (totalScore >= 4) {
+      riskLevel = 'moderate';;
+  } else {
       riskLevel = 'low';
     }
 
-    // Get culturally appropriate response
+    // Get culturally appropriate response;
     const recommendedResponse = this.getRecommendedResponse(riskLevel, language, culturalContext);
 
     return {
@@ -387,11 +387,11 @@ class MultilingualCrisisDetectionService {
     // Use cultural context to select appropriate response
     if (culturalContext.crisisEscalationPreference === 'family') {
       return getCrisisTranslation(`${baseKey}_family_context`) || 
-             getCrisisTranslation(baseKey);
-    } else if (culturalContext.crisisEscalationPreference === 'community') {
+             getCrisisTranslation(baseKey);;
+  } else if (culturalContext.crisisEscalationPreference === 'community') {
       return getCrisisTranslation(`${baseKey}_community_context`) || 
-             getCrisisTranslation(baseKey);
-    } else {
+             getCrisisTranslation(baseKey);;
+  } else {
       return getCrisisTranslation(`${baseKey}_professional_context`) || 
              getCrisisTranslation(baseKey);
     }
@@ -406,13 +406,14 @@ class MultilingualCrisisDetectionService {
       urgent_keywords: [],
       moderate_keywords: [],
       cultural_expressions: [],
-      help_seeking_phrases: []
+      help_seeking_phrases: [];
     };
 
     this.crisisPatterns.set(language, {
       ...existing,
       ...patterns
-    });
+    };
+  };
   }
 
   /**
@@ -436,7 +437,7 @@ class MultilingualCrisisDetectionService {
     const detectedLanguage = language || await this.detectLanguage(text);
     const result = this.analyzeCrisisRisk(text, detectedLanguage);
     
-    // Calculate confidence ensuring minimum value for non-empty text
+    // Calculate confidence ensuring minimum value for non-empty text;
     let confidence = result.score / 10; // Normalize score to 0-1
     if (text.trim().length > 0 && confidence === 0) {
       // If we have text but no keywords detected, still assign a minimal confidence
@@ -448,7 +449,7 @@ class MultilingualCrisisDetectionService {
       triggers: result.detectedKeywords,
       culturalRecommendations: [result.recommendedResponse],
       detectedLanguage,
-      languageConfidence: 0.9 // Simplified for now
+      languageConfidence: 0.9 // Simplified for now;
      }
 
   /**

@@ -1,7 +1,7 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- */
+ */;
 
 import { useTranslation } from "react-i18next";
 import {
@@ -13,7 +13,7 @@ import {
 } from './index';
 /**
  * Enhanced hook for translations with cultural context awareness
- */
+ */;
 export const useI18n = () => {
   const { t, i18n } = useTranslation();
   
@@ -60,7 +60,7 @@ export const useI18n = () => {
 
 /**
  * Hook specifically for crisis-related translations and cultural context
- */
+ */;
 export const useCrisisI18n = () => {
   const { t, i18n } = useTranslation("crisis");
   const culturalContext = getCulturalContext(i18n.language);
@@ -92,13 +92,13 @@ export const useCrisisI18n = () => {
     // Communication style adaptations
     needsIndirectCommunication: culturalContext.preferredCommunicationStyle === "indirect",
     prefersFormalCommunication: culturalContext.preferredCommunicationStyle === "formal",
-    respondsToBrotherlyApproach: culturalContext.preferredCommunicationStyle === "familial"
+    respondsToBrotherlyApproach: culturalContext.preferredCommunicationStyle === "familial";
   };
 }
 
 /**
  * Hook for accessibility-aware translations
- */
+ */;
 export const useAccessibilityI18n = () => {
   const { t, i18n } = useTranslation();
   const culturalContext = getCulturalContext(i18n.language);
@@ -109,7 +109,7 @@ export const useAccessibilityI18n = () => {
     
     // Screen reader announcements with cultural context
     announceWithContext: (message: string) => {
-      const culturalPrefix = culturalContext.preferredCommunicationStyle === "formal"
+      const culturalPrefix = culturalContext.preferredCommunicationStyle === "formal";
         ? t("accessibility.formal_announcement_prefix", { defaultValue: "" })
         : "";
       return culturalPrefix + message;
@@ -125,8 +125,9 @@ export const useAccessibilityI18n = () => {
     announceCrisis: (key: string) => {
       const message = getCrisisTranslation(key);
       const urgencyPrefix = t("accessibility.crisis_announcement_prefix", {
-        defaultValue: "Important"
-      });
+        defaultValue: "Important";
+      };
+  };
       return urgencyPrefix + message;
     }
   };

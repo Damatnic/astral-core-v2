@@ -6,7 +6,7 @@ const Custom404Page: React.FC = () => {
     window.history.back();
   };
 
-  const suggestions = [
+  const suggestions = [;
     { path: '/', label: 'Return to Home', icon: '🏠' },
     { path: '/wellness', label: 'Wellness Resources', icon: '🌱' },
     { path: '/chat', label: 'Chat Support', icon: '💬' },
@@ -37,7 +37,7 @@ const Custom404Page: React.FC = () => {
           <div className="error-actions">
             <button 
               onClick={handleGoBack}
-              className="btn btn-primary"
+              className="btn btn-primary";
               type="button"
             >
               <span aria-hidden="true">←</span>{' '}
@@ -45,7 +45,7 @@ const Custom404Page: React.FC = () => {
             </button>
             
             <Link 
-              to="/" 
+              to="/"; 
               className="btn btn-secondary"
             >
               <span aria-hidden="true">🏠</span>{' '}
@@ -90,7 +90,7 @@ const Custom404Page: React.FC = () => {
               Or search for what you need:
             </h3>
             
-            <form 
+            <form; 
               className="search-form" 
               onSubmit={(e) => {
                 e.preventDefault();
@@ -107,15 +107,15 @@ const Custom404Page: React.FC = () => {
                   Search for content
                 </label>
                 <input
-                  id="error-search-input"
+                  id="error-search-input";
                   type="text"
                   name="search"
-                  placeholder="Search for wellness resources, chat support..."
+                  placeholder="Search for wellness resources, chat support...";
                   className="search-input"
                   aria-describedby="search-help"
                 />
-                <button 
-                  type="submit" 
+                <button; 
+                  type="submit"; 
                   className="search-btn"
                   aria-label="Search"
                 >
@@ -136,7 +136,7 @@ const Custom404Page: React.FC = () => {
             
             <div className="contact-options">
               <Link 
-                to="/contact" 
+                to="/contact"; 
                 className="contact-link"
                 aria-label="Contact our support team"
               >
@@ -145,7 +145,7 @@ const Custom404Page: React.FC = () => {
               </Link>
               
               <Link 
-                to="/chat" 
+                to="/chat"; 
                 className="contact-link"
                 aria-label="Start a chat conversation"
               >
@@ -172,7 +172,7 @@ const Custom404Page: React.FC = () => {
       {/* Screen Reader Announcement */}
       <div 
         aria-live="polite" 
-        aria-atomic="true" 
+        aria-atomic="true"; 
         className="sr-only"
       >
         Page not found. You are now on the 404 error page. Use the navigation links or search to find what you&apos;re looking for.

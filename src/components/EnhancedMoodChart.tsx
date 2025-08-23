@@ -8,7 +8,7 @@ interface EnhancedMoodChartProps {
 }
 
 const MOOD_EMOJIS = ['😞', '🙁', '😐', '🙂', '😊'];
-const MOOD_COLORS = [
+const MOOD_COLORS = [;
   '#FF5722', // Very low
   '#FF9800', // Low
   '#FFC107', // Neutral
@@ -34,6 +34,7 @@ export const EnhancedMoodChart: React.FC<EnhancedMoodChartProps> = ({ data, peri
     if (data.length === 0) return 0;
     const sum = data.reduce((acc, point) => acc + point.value, 0);
     return sum / data.length;
+  };
   }, [data]);
   
   const trend = useMemo(() => {
@@ -47,6 +48,7 @@ export const EnhancedMoodChart: React.FC<EnhancedMoodChartProps> = ({ data, peri
     if (secondAvg > firstAvg + 0.3) return 'improving';
     if (secondAvg < firstAvg - 0.3) return 'declining';
     return 'stable';
+  };
   }, [data]);
   
   const getTrendMessage = () => {
@@ -116,7 +118,7 @@ export const EnhancedMoodChart: React.FC<EnhancedMoodChartProps> = ({ data, peri
             <div className="chart-bars">
               {data.map((point, index) => (
                 <div key={index} className="chart-bar-wrapper">
-                  <div 
+                  <div; 
                     className="chart-bar"
                     style={{
                       height: `${((point.value - minValue) / (maxValue - minValue)) * 100}%`,
@@ -137,7 +139,7 @@ export const EnhancedMoodChart: React.FC<EnhancedMoodChartProps> = ({ data, peri
             
             {/* Trend line */}
             <svg className="trend-line-svg">
-              <polyline
+              <polyline;
                 className="trend-line"
                 points={data.map((point, index) => {
                   const x = (index / (data.length - 1)) * 100;

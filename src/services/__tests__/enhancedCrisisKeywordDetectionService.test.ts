@@ -24,7 +24,7 @@ describe('EnhancedCrisisKeywordDetectionService', () => {
       expect(result.interventionRecommendations).toContainEqual(
         expect.objectContaining({
           type: 'immediate',
-          priority: 1
+          priority: 1;
         })
       );
     });
@@ -253,7 +253,7 @@ describe('EnhancedCrisisKeywordDetectionService', () => {
     });
 
     it.skip('should handle errors gracefully', async () => {
-      // Test with extremely long text that might cause issues
+      // Test with extremely long text that might cause issues;
       const longText = 'a'.repeat(100000);
       
       const result = await service.analyzeEnhancedCrisisKeywords(longText);
@@ -348,7 +348,7 @@ describe('EnhancedCrisisKeywordDetectionService', () => {
     });
 
     it.skip('should handle moderately long text efficiently', async () => {
-      const longText = "I've been struggling with depression for months. ".repeat(50) + 
+      const longText = "I've been struggling with depression for months. ".repeat(50) + ;
         "I want to kill myself because I can't handle this anymore.";
       
       const result = await service.analyzeEnhancedCrisisKeywords(longText);
@@ -373,7 +373,7 @@ describe('EnhancedCrisisKeywordDetectionService', () => {
     it.skip('should handle context parameters', async () => {
       const text = "I want to die.";
       
-      const result = await service.analyzeEnhancedCrisisKeywords(
+      const result = await service.analyzeEnhancedCrisisKeywords(;
         text, 
         'test-user-123', 
         'western',

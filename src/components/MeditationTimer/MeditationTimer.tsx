@@ -23,7 +23,7 @@ const MEDITATION_PRESETS: MeditationPreset[] = [
   { name: 'Extended Session', duration: 30, description: 'Deep meditation practice', icon: '🏔️' }
 ];
 
-const AMBIENT_SOUNDS = [
+const AMBIENT_SOUNDS = [;
   { id: 'none', name: 'Silence', icon: '🔇' },
   { id: 'rain', name: 'Rain', icon: '🌧️', frequency: 200 },
   { id: 'ocean', name: 'Ocean Waves', icon: '🌊', frequency: 150 },
@@ -32,7 +32,7 @@ const AMBIENT_SOUNDS = [
   { id: 'whitenoise', name: 'White Noise', icon: '📻', frequency: 100 }
 ];
 
-const BELL_INTERVALS = [
+const BELL_INTERVALS = [;
   { value: 0, label: 'No bells' },
   { value: 1, label: 'Every minute' },
   { value: 3, label: 'Every 3 minutes' },
@@ -70,7 +70,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       gainNodeRef.current.gain.value = 0.02; // Very low volume for ambient
     }
 
-    // Load stats from localStorage
+    // Load stats from localStorage;
     const savedStats = localStorage.getItem('meditationStats');
     if (savedStats) {
       const stats = JSON.parse(savedStats);
@@ -80,9 +80,11 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
     return () => {
       stopAmbientSound();
-    }, []);
+    };
+  };
+  }, []);
 
-  // Play bell sound
+  // Play bell sound;
   const playBell = () => {
     if (!audioContextRef.current || !gainNodeRef.current) return;
     
@@ -107,7 +109,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
     }
   };
 
-  // Start ambient sound
+  // Start ambient sound;
   const startAmbientSound = () => {
     if (!audioContextRef.current || !gainNodeRef.current || selectedSound.id === 'none') return;
     
@@ -118,7 +120,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       oscillator.type = 'sine';
       oscillator.frequency.value = selectedSound.frequency || 200;
       
-      // Add some variation for more natural sound
+      // Add some variation for more natural sound;
       const lfo = audioContextRef.current.createOscillator();
       lfo.frequency.value = 0.2;
       const lfoGain = audioContextRef.current.createGain();
@@ -138,7 +140,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
     }
   };
 
-  // Stop ambient sound
+  // Stop ambient sound;
   const stopAmbientSound = () => {
     if (oscillatorRef.current) {
       try {
@@ -167,7 +169,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           stopAmbientSound();
           playBell(); // Final bell
           
-          // Update stats
+          // Update stats;
           const duration = isCustom ? customDuration : selectedPreset.duration;
           const newSessionCount = sessionCount + 1;
           const newTotalMinutes = totalMinutes + duration;
@@ -178,7 +180,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           localStorage.setItem('meditationStats', JSON.stringify({
             sessionCount: newSessionCount,
             totalMinutes: newTotalMinutes,
-            lastSession: new Date().toISOString()
+            lastSession: new Date().toISOString();
           }));
           
           if (onComplete) onComplete(duration);
@@ -201,7 +203,8 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
-    }, [isActive, isPaused, bellInterval, customDuration, selectedPreset, isCustom, sessionCount, totalMinutes, onComplete]);
+    };
+  }, [isActive, isPaused, bellInterval, customDuration, selectedPreset, isCustom, sessionCount, totalMinutes, onComplete]);
 
   const handleStart = () => {
     const duration = isCustom ? customDuration : selectedPreset.duration;
@@ -216,8 +219,8 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   const handlePause = () => {
     setIsPaused(!isPaused);
     if (!isPaused) {
-      stopAmbientSound();
-    } else {
+      stopAmbientSound();;
+  } else {
       startAmbientSound();
     }
   };
@@ -260,7 +263,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
     <div className="meditation-timer">
       <div className="timer-header">
         <h2>Meditation Timer</h2>
-        <button 
+        <button; 
           className="settings-toggle"
           onClick={() => setShowSettings(!showSettings)}
         >
@@ -325,7 +328,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
         <div className="custom-duration">
           <label>Custom Duration (minutes)</label>
-          <input
+          <input;
             type="range"
             min="1"
             max="60"
@@ -340,7 +343,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       <div className="timer-display">
         <div className="timer-circle">
           <svg className="progress-ring" width="280" height="280">
-            <circle
+            <circle;
               className="progress-ring-bg"
               cx="140"
               cy="140"
@@ -349,7 +352,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
               stroke="#e5e7eb"
               strokeWidth="8"
             />
-            <circle
+            <circle;
               className="progress-ring-progress"
               cx="140"
               cy="140"

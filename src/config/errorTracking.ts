@@ -2,12 +2,12 @@
  * Sentry Configuration for Astral Core
  * 
  * Environment variables and initialization setup
- */
+ */;
 
 import { initializeSentry, ErrorTrackingService } from '../services/errorTrackingService';
 import { logger } from '../utils/logger';
 
-// Environment variables configuration
+// Environment variables configuration;
 export const sentryConfig = {
   // Get DSN from environment variables
   dsn: process.env.VITE_SENTRY_DSN,
@@ -19,12 +19,12 @@ export const sentryConfig = {
   release: process.env.VITE_APP_VERSION || '1.0.0',
   
   // Environment name
-  environment: process.env.NODE_ENV || 'development'
+  environment: process.env.NODE_ENV || 'development';
 };
 
 /**
  * Initialize error tracking for the application
- */
+ */;
 export const initializeErrorTracking = () => {
   // Only initialize if DSN is provided
   if (!sentryConfig.dsn) {
@@ -43,7 +43,7 @@ export const initializeErrorTracking = () => {
       'info',
       {
         environment: sentryConfig.environment,
-        release: sentryConfig.release
+        release: sentryConfig.release;
       }
     );
 
@@ -57,14 +57,14 @@ export const initializeErrorTracking = () => {
 
 /**
  * Set user context for error tracking
- */
+ */;
 export const setUserErrorContext = (user: {
   id?: string;
   userType: 'seeker' | 'helper' | 'admin';
   isAuthenticated: boolean;
   sessionStart?: Date;
 }) => {
-  const sessionDuration = user.sessionStart 
+  const sessionDuration = user.sessionStart ;
     ? Math.floor((Date.now() - user.sessionStart.getTime()) / 1000)
     : undefined;
 
@@ -81,14 +81,14 @@ export const setUserErrorContext = (user: {
     'info',
     {
       user_type: user.userType,
-      authenticated: user.isAuthenticated
+      authenticated: user.isAuthenticated;
     }
   );
 };
 
 /**
  * Clear user context on logout
- */
+ */;
 export const clearUserErrorContext = () => {
   ErrorTrackingService.clearUserContext();
   
@@ -101,7 +101,7 @@ export const clearUserErrorContext = () => {
 
 /**
  * Track navigation events
- */
+ */;
 export const trackNavigation = (from: string, to: string, userType?: string) => {
   ErrorTrackingService.addBreadcrumb(
     `Navigation: ${from} → ${to}`,
@@ -110,14 +110,14 @@ export const trackNavigation = (from: string, to: string, userType?: string) => 
     {
       from_path: from,
       to_path: to,
-      user_type: userType
+      user_type: userType;
     }
   );
 };
 
 /**
  * Track feature usage
- */
+ */;
 export const trackFeatureUsage = (
   feature: string, 
   action: string, 
@@ -139,7 +139,7 @@ export const trackFeatureUsage = (
 
 /**
  * Track crisis events (with high priority)
- */
+ */;
 export const trackCrisisEvent = (
   event: string,
   severity: 'low' | 'medium' | 'high' | 'critical',
@@ -160,7 +160,7 @@ export const trackCrisisEvent = (
       severity,
       userType,
       feature: 'crisis-detection',
-      privacyLevel: 'sensitive'
+      privacyLevel: 'sensitive';
     },
     {
       event_type: event,

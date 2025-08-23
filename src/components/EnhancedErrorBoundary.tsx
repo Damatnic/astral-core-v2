@@ -1,15 +1,13 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- */
+ */;
 
-import React, { Component, ErrorInfo, ReactNode } from 'react'
-import { useGlobalStore } from '../stores/globalStore'
-
-// Error severity levels
+import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { useGlobalStore } from '../stores/globalStore';// Error severity levels;
 export type ErrorSeverity = 'low' | 'medium' | 'high' | 'critical'
 
-// Error categories
+// Error categories;
 export type ErrorCategory = 'network'
    | 'authentication'
    | 'validation'
@@ -19,7 +17,7 @@ export type ErrorCategory = 'network'
    | 'service-integration'
    | 'unknown'
 
-// Error boundary state
+// Error boundary state;
 interface ErrorBoundaryState {
   hasError: boolean;
   error: Error | null;
@@ -32,7 +30,7 @@ interface ErrorBoundaryState {
   timestamp: string | null;
 }
 
-// Error boundary props
+// Error boundary props;
 interface ErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode;
@@ -55,15 +53,15 @@ class EnhancedErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryS
       category: 'unknown',
       canRecover: true,
       retryCount: 0,
-      timestamp: null
+      timestamp: null;
     }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
     const errorId = `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)};
     const timestamp = new Date().toISOString();
 
-    // Simple error analysis
-    const severity: ErrorSeverity = error.message.includes('crisis') ? 'critical' : 'medium'
+    // Simple error analysis;
+    const severity: ErrorSeverity = error.message.includes('crisis') ? 'critical' : 'medium';
     const category: ErrorCategory = error.message.includes('network') ? 'network' : 'unknown';
 
     return {
@@ -78,7 +76,8 @@ class EnhancedErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryS
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Update state with error info
-    this.setState({ errorInfo });
+    this.setState({ errorInfo };
+  };
 
     // Call custom error handler if provided
     if(this.props.onError) {
@@ -100,7 +99,7 @@ class EnhancedErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryS
         hasError: false,
         error: null,
         errorInfo: null,
-        retryCount: prevState.retryCount + 1
+        retryCount: prevState.retryCount + 1;
       }));
     }
   };
@@ -115,7 +114,7 @@ class EnhancedErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryS
       category: 'unknown',
       canRecover: true,
       retryCount: 0,
-      timestamp: null
+      timestamp: null;
     });
   };
 
@@ -145,7 +144,7 @@ class EnhancedErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryS
                 
                 <button 
                   onClick={this.handleReset}
-"
+";
                   className="reset-button"                >
                   Reset
                 </button>

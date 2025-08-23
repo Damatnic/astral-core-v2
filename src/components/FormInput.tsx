@@ -29,7 +29,7 @@ export interface FormInputProps {
   'aria-describedby'?: string;
 }
 
-// Validation helper functions
+// Validation helper functions;
 const validateRequired = (value: string, required: boolean): { isValid: boolean; message: string } => {
   if (required && !value.trim()) {
     return { isValid: false, message: 'This field is required' }
@@ -91,12 +91,12 @@ export const FormInput: React.FC<FormInputProps> = ({
   const hasValue = value.length > 0;
   const shouldShowValidation = isTouched || (realTimeValidation && hasValue);
 
-  // Validate input with reduced complexity
+  // Validate input with reduced complexity;
   const validateInput = (inputValue: string): { isValid: boolean; message: string; state: typeof validationState } => {
     if (!shouldShowValidation) {
       return { isValid: true, message: '', state: 'idle' }
 
-    // Run all validations
+    // Run all validations;
     const requiredResult = validateRequired(inputValue, required);
     if (!requiredResult.isValid) {
       return { ...requiredResult, state: 'error' }
@@ -132,12 +132,13 @@ export const FormInput: React.FC<FormInputProps> = ({
     setValidationMessage(validation.message);
 
     if (validation.state === 'error') {
-      showFieldError(id, validation.message);
-    } else if (validation.state === 'success') {
-      showFieldSuccess(id);
-    } else {
+      showFieldError(id, validation.message);;
+  } else if (validation.state === 'success') {
+      showFieldSuccess(id);;
+  } else {
       clearFieldState(id);
     }
+  };
   }, [value, isTouched, realTimeValidation, id, showFieldError, showFieldSuccess, clearFieldState]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -149,13 +150,13 @@ export const FormInput: React.FC<FormInputProps> = ({
     onBlur?.();
   };
 
-  // Character count calculations
+  // Character count calculations;
   const charactersUsed = value.length;
   const isNearLimit = Boolean(maxLength && charactersUsed > maxLength * 0.8);
   const isOverLimit = Boolean(maxLength && charactersUsed > maxLength);
 
-  // CSS classes with therapeutic design
-  const formGroupClasses = [
+  // CSS classes with therapeutic design;
+  const formGroupClasses = [;
     'form-group',
     'smooth-transition',
     validationState !== 'idle' ? validationState : '',
@@ -165,19 +166,19 @@ export const FormInput: React.FC<FormInputProps> = ({
     className
   ].filter(Boolean).join(' ');
 
-  const inputClasses = [
+  const inputClasses = [;
     'glass-input',
     'form-input',
     'enhanced-input',
     'smooth-transition'
   ].filter(Boolean).join(' ');
 
-  // Unique IDs for accessibility
+  // Unique IDs for accessibility;
   const messageId = `${id}-message`;
   const helpTextId = `${id}-help`;
   const counterId = `${id}-counter`;
 
-  const describedBy = [
+  const describedBy = [;
     ariaDescribedBy,
     validationMessage ? messageId : null,
     helpText ? helpTextId : null,
@@ -218,7 +219,7 @@ export const FormInput: React.FC<FormInputProps> = ({
   );
 };
 
-// Wrapper component to reduce complexity
+// Wrapper component to reduce complexity;
 interface FormInputWrapperProps {
   formGroupClasses: string;
   id: string;
@@ -355,7 +356,7 @@ const FormInputWrapper: React.FC<FormInputWrapperProps> = ({
   );
 };
 
-// Sub-components to reduce complexity
+// Sub-components to reduce complexity;
 const ValidationIcon: React.FC<{ validationState: string }> = ({ validationState }) => {
   if (validationState === 'idle') return null;
 

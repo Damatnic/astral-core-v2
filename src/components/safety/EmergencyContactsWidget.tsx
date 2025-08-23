@@ -1,7 +1,7 @@
 /**
  * EmergencyContactsWidget Component
  * Displays emergency contact list with quick access functionality
- */
+ */;
 
 import React, { useState, useEffect } from 'react';
 import { PhoneIcon, ChatIcon, CloseIcon, PlusIcon } from '../icons.dynamic';
@@ -46,21 +46,22 @@ export const EmergencyContactsWidget: React.FC<EmergencyContactsWidgetProps> = (
   const [displayedContacts, setDisplayedContacts] = useState<EmergencyContactWidget[]>([]);
   const [copiedPhone, setCopiedPhone] = useState<string | null>(null);
 
-  // Sort contacts by priority
+  // Sort contacts by priority;
   const sortedContacts = [...contacts].sort((a, b) => a.priority - b.priority);
 
   useEffect(() => {
     const shouldLimitDisplay = collapsible && !isExpanded;
-    const limitedContacts = shouldLimitDisplay 
+    const limitedContacts = shouldLimitDisplay ;
       ? sortedContacts.slice(0, initialDisplay)
       : sortedContacts;
     setDisplayedContacts(limitedContacts);
+  };
   }, [contacts, isExpanded, collapsible, initialDisplay, sortedContacts]);
 
   const handleCall = (contact: EmergencyContactWidget) => {
     try {
       if (!contact.phone || contact.phone === 'invalid') {
-        // Show error message
+        // Show error message;
         const errorDiv = document.createElement('div');
         errorDiv.textContent = 'Unable to initiate call';
         errorDiv.style.position = 'fixed';
@@ -80,7 +81,7 @@ export const EmergencyContactsWidget: React.FC<EmergencyContactsWidgetProps> = (
       onContactUsed?.({
         contactId: contact.id,
         action: 'call',
-        timestamp: Date.now()
+        timestamp: Date.now();
       });
     } catch (error) {
       console.error('Failed to initiate call:', error);
@@ -93,7 +94,7 @@ export const EmergencyContactsWidget: React.FC<EmergencyContactsWidgetProps> = (
       onContactUsed?.({
         contactId: contact.id,
         action: 'text',
-        timestamp: Date.now()
+        timestamp: Date.now();
       });
     } catch (error) {
       console.error('Failed to initiate text:', error);
@@ -160,7 +161,7 @@ export const EmergencyContactsWidget: React.FC<EmergencyContactsWidgetProps> = (
   }
 
   return (
-    <section 
+    <section; 
       className={`emergency-contacts-widget ${compact ? 'compact' : ''} ${window.innerWidth <= 768 ? 'mobile-layout' : ''}`}
       data-testid="emergency-contacts-widget"
       aria-label="Emergency contacts"

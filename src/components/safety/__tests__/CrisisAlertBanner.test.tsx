@@ -1,7 +1,7 @@
 /**
  * Test Suite for CrisisAlertBanner Component
  * Tests crisis alert display with appropriate resources
- */
+ */;
 
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '../../../test-utils';
@@ -16,7 +16,7 @@ jest.mock('../../../utils/crisisDetection', () => ({
     name: '988 Suicide & Crisis Lifeline',
     number: '988',
     text: 'Text HOME to 741741',
-    url: 'https://988lifeline.org'
+    url: 'https://988lifeline.org';
   })
 }));
 
@@ -118,7 +118,7 @@ describe('CrisisAlertBanner', () => {
         </RouterWrapper>
       );
 
-      // The component shows 988 as the main crisis line
+      // The component shows 988 as the main crisis line;
       const phoneLink = container.querySelector('a[href="tel:988"]');
       expect(phoneLink).toBeInTheDocument();
     });
@@ -166,7 +166,7 @@ describe('CrisisAlertBanner', () => {
         </RouterWrapper>
       );
 
-      // Look for the "Get Help Now" link which opens in new window
+      // Look for the "Get Help Now" link which opens in new window;
       const helpLink = screen.getByText('Get Help Now');
       expect(helpLink).toHaveAttribute('target', '_blank');
       expect(helpLink).toHaveAttribute('rel', 'noopener noreferrer');
@@ -240,7 +240,7 @@ describe('CrisisAlertBanner', () => {
         </RouterWrapper>
       );
 
-      // The component always allows dismissal if onClose is provided
+      // The component always allows dismissal if onClose is provided;
       const dismissButton = screen.getByLabelText('Close crisis alert');
       expect(dismissButton).toBeInTheDocument();
       
@@ -289,7 +289,7 @@ describe('CrisisAlertBanner', () => {
         </RouterWrapper>
       );
 
-      // High severity should have urgent class
+      // High severity should have urgent class;
       const banner = container.querySelector('.crisis-alert-banner--urgent');
       expect(banner).toBeInTheDocument();
     });
@@ -323,11 +323,11 @@ describe('CrisisAlertBanner', () => {
         </RouterWrapper>
       );
 
-      // Component has data-testid for testing
+      // Component has data-testid for testing;
       const banner = screen.getByTestId('crisis-alert-banner');
       expect(banner).toBeInTheDocument();
       
-      // Check for close button accessibility
+      // Check for close button accessibility;
       const closeButton = screen.getByLabelText('Close crisis alert');
       expect(closeButton).toBeInTheDocument();
     });
@@ -343,7 +343,7 @@ describe('CrisisAlertBanner', () => {
         </RouterWrapper>
       );
 
-      // Check that interactive elements are present
+      // Check that interactive elements are present;
       const phoneLink = container.querySelector('a[href="tel:988"]');
       const helpLink = screen.getByText('Get Help Now');
 
@@ -362,7 +362,7 @@ describe('CrisisAlertBanner', () => {
         </RouterWrapper>
       );
 
-      // Component should be visible for screen readers
+      // Component should be visible for screen readers;
       const banner = screen.getByTestId('crisis-alert-banner');
       expect(banner).toBeInTheDocument();
     });
@@ -428,7 +428,7 @@ describe('CrisisAlertBanner', () => {
         </RouterWrapper>
       );
 
-      // The component has "Get Help Now" link that opens in new window
+      // The component has "Get Help Now" link that opens in new window;
       const helpLink = screen.getByText('Get Help Now');
       expect(helpLink).toHaveAttribute('target', '_blank');
     });
@@ -498,7 +498,7 @@ describe('CrisisAlertBanner', () => {
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
         configurable: true,
-        value: 400
+        value: 400;
       });
 
       render(
@@ -519,7 +519,7 @@ describe('CrisisAlertBanner', () => {
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
         configurable: true,
-        value: 320
+        value: 320;
       });
 
       const { container } = render(

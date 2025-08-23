@@ -1,6 +1,6 @@
 /**
  * @jest-environment jsdom
- */
+ */;
 
 import CulturalContextService, { culturalContextService } from '../culturalContextService';
 import type { CulturalContext } from '../culturalContextService';
@@ -16,7 +16,7 @@ describe('CulturalContextService', () => {
     test.skip('should have complete cultural contexts for all supported languages', () => {
       const contexts = (service as any).culturalContexts;
       
-      // Check that all expected languages are present
+      // Check that all expected languages are present;
       const expectedLanguages = ['en', 'es', 'pt-BR', 'pt', 'ar', 'zh', 'vi', 'tl'];
       expectedLanguages.forEach(lang => {
         expect(contexts).toHaveProperty(lang);
@@ -194,7 +194,7 @@ describe('CulturalContextService', () => {
     test.skip('should not have any low stigma cultures in current configuration', () => {
       const allContexts = service.getAllCulturalContexts();
       
-      const lowStigmaCultures = Object.values(allContexts).filter(
+      const lowStigmaCultures = Object.values(allContexts).filter(;
         context => context.mentalHealthStigma === 'low'
       );
       
@@ -224,7 +224,7 @@ describe('CulturalContextService', () => {
     test.skip('should not have community-based cultures in current configuration', () => {
       const allContexts = service.getAllCulturalContexts();
       
-      const communityBasedCultures = Object.values(allContexts).filter(
+      const communityBasedCultures = Object.values(allContexts).filter(;
         context => context.familyInvolvement === 'community-based'
       );
       
@@ -312,7 +312,7 @@ describe('CulturalContextService', () => {
       // Modify returned object
       allContexts.en.mentalHealthStigma = 'high';
       
-      // Original should be unchanged
+      // Original should be unchanged;
       const currentEnContext = service.getCulturalContext('en');
       expect(currentEnContext.mentalHealthStigma).toBe(originalEnContext.mentalHealthStigma);
     });
@@ -331,7 +331,7 @@ describe('CulturalContextService', () => {
       expect(regions).toContain('Vietnamese');
       expect(regions).toContain('Filipino');
       
-      // Should be unique
+      // Should be unique;
       const uniqueRegions = [...new Set(regions)];
       expect(regions).toEqual(uniqueRegions);
     });
@@ -401,7 +401,7 @@ describe('CulturalContextService', () => {
 
   describe('Regional Cultural Characteristics', () => {
     test.skip('should have culturally appropriate high-context communication styles', () => {
-      // High-context cultures typically use indirect/contextual communication
+      // High-context cultures typically use indirect/contextual communication;
       const highContextLanguages = ['ar', 'zh', 'vi', 'es', 'tl'];
       
       highContextLanguages.forEach(lang => {
@@ -411,7 +411,7 @@ describe('CulturalContextService', () => {
     });
 
     test.skip('should have culturally appropriate collectivist family involvement', () => {
-      // Most non-Western cultures tend to be more collectivist
+      // Most non-Western cultures tend to be more collectivist;
       const collectivistLanguages = ['es', 'ar', 'zh', 'vi', 'tl', 'pt-BR', 'pt'];
       
       collectivistLanguages.forEach(lang => {
@@ -421,7 +421,7 @@ describe('CulturalContextService', () => {
     });
 
     test.skip('should reflect research-based mental health stigma levels', () => {
-      // Based on research, these cultures typically have higher mental health stigma
+      // Based on research, these cultures typically have higher mental health stigma;
       const highStigmaLanguages = ['ar', 'zh', 'vi', 'es', 'tl'];
       
       highStigmaLanguages.forEach(lang => {
@@ -454,14 +454,14 @@ describe('CulturalContextService', () => {
     test.skip('should not modify internal data when returning contexts', () => {
       const originalContexts = JSON.parse(JSON.stringify((service as any).culturalContexts));
       
-      // Get contexts multiple times and try to modify them
+      // Get contexts multiple times and try to modify them;
       const context1 = service.getCulturalContext('es');
       const context2 = service.getAllCulturalContexts();
       
       context1.mentalHealthStigma = 'low' as any;
       context2.ar.communicationStyle = 'direct' as any;
       
-      // Internal data should remain unchanged
+      // Internal data should remain unchanged;
       const currentContexts = (service as any).culturalContexts;
       expect(currentContexts).toEqual(originalContexts);
     });

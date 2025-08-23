@@ -1,7 +1,7 @@
 /**
  * Test Suite for Enhanced Crisis Detection Integration Service
  * Tests advanced integration of multiple crisis detection systems
- */
+ */;
 
 import { enhancedCrisisDetectionIntegrationService } from '../enhancedCrisisDetectionIntegrationService';
 

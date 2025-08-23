@@ -41,15 +41,17 @@ export const MobileSidebarNav: React.FC<MobileSidebarNavProps> = React.memo(({
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
+  };
   }, [isSidebarOpen, closeSidebar]);
 
   // Focus management for accessibility
   useEffect(() => {
     if (isSidebarOpen) {
-      // Focus first interactive element in sidebar
+      // Focus first interactive element in sidebar;
       const firstButton = sidebarRef.current?.querySelector('button');
       firstButton?.focus();
     }
+  };
   }, [isSidebarOpen]);
 
   // Prevent body scroll when sidebar is open
@@ -57,8 +59,8 @@ export const MobileSidebarNav: React.FC<MobileSidebarNavProps> = React.memo(({
     if (isSidebarOpen) {
       document.body.style.overflow = 'hidden';
       document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-    } else {
+      document.body.style.width = '100%';;
+  } else {
       document.body.style.overflow = '';
       document.body.style.position = '';
       document.body.style.width = '';
@@ -68,7 +70,9 @@ export const MobileSidebarNav: React.FC<MobileSidebarNavProps> = React.memo(({
       document.body.style.overflow = '';
       document.body.style.position = '';
       document.body.style.width = '';
-    }, [isSidebarOpen]);
+    };
+  };
+  }, [isSidebarOpen]);
 
   const handleSidebarNavigation = () => {
     closeSidebar();
@@ -93,7 +97,7 @@ export const MobileSidebarNav: React.FC<MobileSidebarNavProps> = React.memo(({
           onClick={openSidebar}
           aria-label="Open navigation menu"
           aria-expanded={isSidebarOpen}
-          aria-controls="mobile-sidebar"
+          aria-controls="mobile-sidebar";
           type="button"
         >
           <MenuIcon aria-hidden="true" />
@@ -130,7 +134,7 @@ export const MobileSidebarNav: React.FC<MobileSidebarNavProps> = React.memo(({
               handleOverlayClick();
             }
           }}
-          aria-label="Close navigation menu"
+          aria-label="Close navigation menu";
           type="button"
         />
       )}
@@ -138,7 +142,7 @@ export const MobileSidebarNav: React.FC<MobileSidebarNavProps> = React.memo(({
       {/* Mobile Sidebar Panel */}
       <nav 
         ref={sidebarRef}
-        id="mobile-sidebar"
+        id="mobile-sidebar";
         className={`mobile-sidebar ${isSidebarOpen ? 'mobile-sidebar-open' : ''}`}
         aria-hidden={!isSidebarOpen}
         role="navigation"
@@ -149,13 +153,13 @@ export const MobileSidebarNav: React.FC<MobileSidebarNavProps> = React.memo(({
             <h2>Navigation</h2>
             <span className="mobile-sidebar-subtitle">Peer Support</span>
           </div>
-          <button 
+          <button; 
             className="mobile-sidebar-close touch-optimized"
             onClick={() => {
               closeSidebar();
               hamburgerRef.current?.focus();
             }}
-            aria-label="Close navigation menu"
+            aria-label="Close navigation menu";
             type="button"
           >
             <CloseIcon aria-hidden="true" />

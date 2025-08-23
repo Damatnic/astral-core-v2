@@ -5,11 +5,11 @@
  * and other locale-specific data
  * 
  * @license Apache-2.0
- */
+ */;
 
 import i18n from '../i18n';
 
-// Supported locales with their specific configurations
+// Supported locales with their specific configurations;
 const localeConfigs = {
   'en': {
     dateFormat: 'MM/DD/YYYY',
@@ -18,7 +18,7 @@ const localeConfigs = {
     numberThousands: ',',
     currency: 'USD',
     firstDayOfWeek: 0, // Sunday
-    calendar: 'gregorian'
+    calendar: 'gregorian';
   },
   'es': {
     dateFormat: 'DD/MM/YYYY',
@@ -27,7 +27,7 @@ const localeConfigs = {
     numberThousands: '.',
     currency: 'EUR',
     firstDayOfWeek: 1, // Monday
-    calendar: 'gregorian'
+    calendar: 'gregorian';
   },
   'pt-BR': {
     dateFormat: 'DD/MM/YYYY',
@@ -36,7 +36,7 @@ const localeConfigs = {
     numberThousands: '.',
     currency: 'BRL',
     firstDayOfWeek: 0, // Sunday
-    calendar: 'gregorian'
+    calendar: 'gregorian';
   },
   'pt-PT': {
     dateFormat: 'DD/MM/YYYY',
@@ -45,7 +45,7 @@ const localeConfigs = {
     numberThousands: ' ',
     currency: 'EUR',
     firstDayOfWeek: 1, // Monday
-    calendar: 'gregorian'
+    calendar: 'gregorian';
   },
   'ar': {
     dateFormat: 'DD/MM/YYYY',
@@ -55,7 +55,7 @@ const localeConfigs = {
     currency: 'SAR',
     firstDayOfWeek: 6, // Saturday
     calendar: 'islamic-umalqura',
-    numerals: 'arab'
+    numerals: 'arab';
   },
   'zh': {
     dateFormat: 'YYYY/MM/DD',
@@ -64,7 +64,7 @@ const localeConfigs = {
     numberThousands: ',',
     currency: 'CNY',
     firstDayOfWeek: 1, // Monday
-    calendar: 'gregorian'
+    calendar: 'gregorian';
   },
   'vi': {
     dateFormat: 'DD/MM/YYYY',
@@ -73,7 +73,7 @@ const localeConfigs = {
     numberThousands: '.',
     currency: 'VND',
     firstDayOfWeek: 1, // Monday
-    calendar: 'gregorian'
+    calendar: 'gregorian';
   },
   'tl': {
     dateFormat: 'MM/DD/YYYY',
@@ -82,13 +82,13 @@ const localeConfigs = {
     numberThousands: ',',
     currency: 'PHP',
     firstDayOfWeek: 0, // Sunday
-    calendar: 'gregorian'
+    calendar: 'gregorian';
   }
 };
 
 /**
  * Get locale configuration
- */
+ */;
 function getLocaleConfig(locale?: string) {
   const currentLocale = locale || i18n.language || 'en';
   const baseLocale = currentLocale.split('-')[0];
@@ -99,7 +99,7 @@ function getLocaleConfig(locale?: string) {
 
 /**
  * Format date according to locale
- */
+ */;
 export function formatDate(
   date: Date | string | number,
   format: 'short' | 'medium' | 'long' | 'full' = 'medium',
@@ -108,7 +108,7 @@ export function formatDate(
   const d = new Date(date);
   const currentLocale = locale || i18n.language || 'en';
   
-  // Use Intl.DateTimeFormat for proper locale formatting
+  // Use Intl.DateTimeFormat for proper locale formatting;
   const formatOptions: Record<string, Intl.DateTimeFormatOptions> = {
     short: { year: '2-digit', month: '2-digit', day: '2-digit' },
     medium: { year: 'numeric', month: 'short', day: 'numeric' },
@@ -128,7 +128,7 @@ export function formatDate(
 
 /**
  * Format time according to locale
- */
+ */;
 export function formatTime(
   date: Date | string | number,
   format: 'short' | 'medium' | 'long' = 'short',
@@ -142,20 +142,20 @@ export function formatTime(
     short: { 
       hour: 'numeric', 
       minute: '2-digit',
-      hour12: config.timeFormat === '12h'
+      hour12: config.timeFormat === '12h';
     },
     medium: { 
       hour: 'numeric', 
       minute: '2-digit', 
       second: '2-digit',
-      hour12: config.timeFormat === '12h'
+      hour12: config.timeFormat === '12h';
     },
     long: { 
       hour: 'numeric', 
       minute: '2-digit', 
       second: '2-digit',
       timeZoneName: 'short',
-      hour12: config.timeFormat === '12h'
+      hour12: config.timeFormat === '12h';
     }
   };
   
@@ -166,7 +166,7 @@ export function formatTime(
 
 /**
  * Format date and time together
- */
+ */;
 export function formatDateTime(
   date: Date | string | number,
   dateFormat: 'short' | 'medium' | 'long' = 'medium',
@@ -178,7 +178,7 @@ export function formatDateTime(
   
   const currentLocale = locale || i18n.language || 'en';
   
-  // Different separators for different locales
+  // Different separators for different locales;
   const separator = ['zh', 'ja', 'ko'].includes(currentLocale) ? ' ' : ', ';
   
   return `${formattedDate}${separator}${formattedTime}`;
@@ -186,7 +186,7 @@ export function formatDateTime(
 
 /**
  * Format relative time (e.g., "2 hours ago", "in 3 days")
- */
+ */;
 export function formatRelativeTime(
   date: Date | string | number,
   locale?: string
@@ -207,17 +207,17 @@ export function formatRelativeTime(
   const rtf = new Intl.RelativeTimeFormat(currentLocale, { numeric: 'auto' });
   
   if (Math.abs(diffSec) < 60) {
-    return rtf.format(diffSec, 'second');
+    return rtf.format(diffSec, 'second');;
   } else if (Math.abs(diffMin) < 60) {
-    return rtf.format(diffMin, 'minute');
+    return rtf.format(diffMin, 'minute');;
   } else if (Math.abs(diffHour) < 24) {
-    return rtf.format(diffHour, 'hour');
+    return rtf.format(diffHour, 'hour');;
   } else if (Math.abs(diffDay) < 7) {
-    return rtf.format(diffDay, 'day');
+    return rtf.format(diffDay, 'day');;
   } else if (Math.abs(diffWeek) < 4) {
-    return rtf.format(diffWeek, 'week');
+    return rtf.format(diffWeek, 'week');;
   } else if (Math.abs(diffMonth) < 12) {
-    return rtf.format(diffMonth, 'month');
+    return rtf.format(diffMonth, 'month');;
   } else {
     return rtf.format(diffYear, 'year');
   }
@@ -225,7 +225,7 @@ export function formatRelativeTime(
 
 /**
  * Format number according to locale
- */
+ */;
 export function formatNumber(
   value: number,
   options?: {
@@ -245,7 +245,7 @@ export function formatNumber(
     maximumFractionDigits: options?.maximumFractionDigits,
     style: options?.style || 'decimal',
     currency: options?.currency || config.currency,
-    notation: options?.notation
+    notation: options?.notation;
   };
   
   // Special handling for Arabic numerals
@@ -258,7 +258,7 @@ export function formatNumber(
 
 /**
  * Format currency according to locale
- */
+ */;
 export function formatCurrency(
   value: number,
   currency?: string,
@@ -273,7 +273,7 @@ export function formatCurrency(
       style: 'currency',
       currency: currency || config.currency,
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2;
     },
     currentLocale
   );
@@ -281,7 +281,7 @@ export function formatCurrency(
 
 /**
  * Format percentage according to locale
- */
+ */;
 export function formatPercent(
   value: number,
   decimals = 0,
@@ -292,7 +292,7 @@ export function formatPercent(
     {
       style: 'percent',
       minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals
+      maximumFractionDigits: decimals;
     },
     locale
   );
@@ -300,14 +300,14 @@ export function formatPercent(
 
 /**
  * Format phone number according to locale
- */
+ */;
 export function formatPhoneNumber(
   phoneNumber: string,
   locale?: string
 ): string {
   const currentLocale = locale || i18n.language || 'en';
   
-  // Remove all non-numeric characters
+  // Remove all non-numeric characters;
   const cleaned = phoneNumber.replace(/\D/g, '');
   
   // Format based on locale
@@ -315,8 +315,8 @@ export function formatPhoneNumber(
     case 'en':
       // US format: (XXX) XXX-XXXX
       if (cleaned.length === 10) {
-        return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;
-      } else if (cleaned.length === 11 && cleaned[0] === '1') {
+        return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;;
+  } else if (cleaned.length === 11 && cleaned[0] === '1') {
         return `+1 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7)}`;
       }
       break;
@@ -370,7 +370,7 @@ export function formatPhoneNumber(
 
 /**
  * Format duration in human-readable format
- */
+ */;
 export function formatDuration(
   seconds: number,
   format: 'short' | 'long' = 'short',
@@ -388,9 +388,9 @@ export function formatDuration(
     if (hours > 0) parts.push(`${hours}h`);
     if (minutes > 0) parts.push(`${minutes}m`);
     if (secs > 0 || parts.length === 0) parts.push(`${secs}s`);
-    return parts.join(' ');
+    return parts.join(' ');;
   } else {
-    // Use Intl for proper plural forms
+    // Use Intl for proper plural forms;
     const rtf = new Intl.RelativeTimeFormat(currentLocale, { numeric: 'always' });
     
     if (hours > 0) {
@@ -422,7 +422,7 @@ export function formatDuration(
 
 /**
  * Format list of items according to locale
- */
+ */;
 export function formatList(
   items: string[],
   style: 'long' | 'short' | 'narrow' = 'long',
@@ -445,10 +445,10 @@ export function formatList(
   } catch (error) {
     // Fallback for unsupported locales
     if (type === 'conjunction') {
-      return items.join(', ');
-    } else if (type === 'disjunction') {
-      return items.join(' or ');
-    } else {
+      return items.join(', ');;
+  } else if (type === 'disjunction') {
+      return items.join(' or ');;
+  } else {
       return items.join(', ');
     }
   }
@@ -456,7 +456,7 @@ export function formatList(
 
 /**
  * Format name according to cultural preferences
- */
+ */;
 export function formatName(
   firstName: string,
   lastName: string,
@@ -487,7 +487,7 @@ export function formatName(
 
 /**
  * Format address according to locale
- */
+ */;
 export function formatAddress(
   address: {
     street?: string;
@@ -509,10 +509,10 @@ export function formatAddress(
       if (address.street) parts.push(address.street);
       if (address.city) parts.push(address.city);
       if (address.state && address.postalCode) {
-        parts.push(`${address.state} ${address.postalCode}`);
-      } else if (address.state) {
-        parts.push(address.state);
-      } else if (address.postalCode) {
+        parts.push(`${address.state} ${address.postalCode}`);;
+  } else if (address.state) {
+        parts.push(address.state);;
+  } else if (address.postalCode) {
         parts.push(address.postalCode);
       }
       if (address.country) parts.push(address.country);
@@ -533,8 +533,8 @@ export function formatAddress(
       // European/Latin American format
       if (address.street) parts.push(address.street);
       if (address.postalCode && address.city) {
-        parts.push(`${address.postalCode} ${address.city}`);
-      } else if (address.city) {
+        parts.push(`${address.postalCode} ${address.city}`);;
+  } else if (address.city) {
         parts.push(address.city);
       }
       if (address.state) parts.push(address.state);
@@ -547,7 +547,7 @@ export function formatAddress(
 
 /**
  * Get calendar week start day for locale
- */
+ */;
 export function getWeekStartDay(locale?: string): number {
   const currentLocale = locale || i18n.language || 'en';
   const config = getLocaleConfig(currentLocale);
@@ -556,7 +556,7 @@ export function getWeekStartDay(locale?: string): number {
 
 /**
  * Check if locale uses RTL
- */
+ */;
 export function isRTL(locale?: string): boolean {
   const currentLocale = locale || i18n.language || 'en';
   return currentLocale === 'ar' || currentLocale === 'he' || currentLocale === 'fa';
@@ -564,7 +564,7 @@ export function isRTL(locale?: string): boolean {
 
 /**
  * Get appropriate date picker format
- */
+ */;
 export function getDatePickerFormat(locale?: string): string {
   const config = getLocaleConfig(locale);
   return config.dateFormat.toLowerCase();
@@ -572,7 +572,7 @@ export function getDatePickerFormat(locale?: string): string {
 
 /**
  * Format file size
- */
+ */;
 export function formatFileSize(bytes: number, locale?: string): string {
   const currentLocale = locale || i18n.language || 'en';
   
@@ -590,7 +590,7 @@ export function formatFileSize(bytes: number, locale?: string): string {
 
 /**
  * Format temperature
- */
+ */;
 export function formatTemperature(
   value: number,
   unit: 'celsius' | 'fahrenheit' = 'celsius',
@@ -600,7 +600,7 @@ export function formatTemperature(
   
   // US uses Fahrenheit
   if (currentLocale === 'en' && unit === 'celsius') {
-    // Convert to Fahrenheit for US locale
+    // Convert to Fahrenheit for US locale;
     const fahrenheit = (value * 9/5) + 32;
     return `${formatNumber(fahrenheit, { maximumFractionDigits: 1 }, currentLocale)}°F`;
   }
@@ -609,7 +609,7 @@ export function formatTemperature(
   return `${formatNumber(value, { maximumFractionDigits: 1 }, currentLocale)}${symbol}`;
 }
 
-// Export all functions
+// Export all functions;
 export default {
   formatDate,
   formatTime,

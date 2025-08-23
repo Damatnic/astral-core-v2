@@ -1,6 +1,6 @@
 /**
  * @jest-environment jsdom
- */
+ */;
 
 import { enhancedOfflineService } from '../enhancedOfflineService';
 
@@ -17,7 +17,7 @@ jest.mock('../enhancedAiCrisisDetectionService', () => ({
   }
 }));
 
-// Mock IndexedDB
+// Mock IndexedDB;
 const mockIndexedDB = {
   open: jest.fn(() => ({
     onsuccess: null,
@@ -42,7 +42,7 @@ const mockIndexedDB = {
 
 Object.defineProperty(window, 'indexedDB', {
   value: mockIndexedDB,
-  writable: true
+  writable: true;
 });
 
 describe('EnhancedOfflineService', () => {
@@ -114,7 +114,7 @@ describe('EnhancedOfflineService', () => {
 
   describe('Crisis Detection', () => {
     it.skip('should detect crisis offline', async () => {
-      const result = await enhancedOfflineService.detectCrisisOffline(
+      const result = await enhancedOfflineService.detectCrisisOffline(;
         'I am feeling very stressed',
         'en',
         'western'
@@ -127,7 +127,7 @@ describe('EnhancedOfflineService', () => {
     });
 
     it.skip('should handle different languages in crisis detection', async () => {
-      const result = await enhancedOfflineService.detectCrisisOffline(
+      const result = await enhancedOfflineService.detectCrisisOffline(;
         'Me siento muy mal',
         'es',
         'hispanic'
@@ -138,7 +138,7 @@ describe('EnhancedOfflineService', () => {
     });
 
     it.skip('should provide appropriate recommendations', async () => {
-      const result = await enhancedOfflineService.detectCrisisOffline(
+      const result = await enhancedOfflineService.detectCrisisOffline(;
         'I need help urgently',
         'en',
         'western'
@@ -158,21 +158,21 @@ describe('EnhancedOfflineService', () => {
         priority: 2,
         endpoint: '/api/sync',
         language: 'en',
-        culturalContext: 'western'
+        culturalContext: 'western';
       };
 
       await expect(enhancedOfflineService.addToSyncQueue(syncItem)).resolves.not.toThrow();
     });
 
     it.skip('should handle different sync item types', async () => {
-      const syncItems = [
+      const syncItems = [;
         {
           type: 'crisis-event' as const,
           data: { severity: 'high' },
           priority: 1,
           endpoint: '/api/crisis',
           language: 'en',
-          culturalContext: 'western'
+          culturalContext: 'western';
         },
         {
           type: 'analytics' as const,
@@ -180,7 +180,7 @@ describe('EnhancedOfflineService', () => {
           priority: 3,
           endpoint: '/api/analytics',
           language: 'en',
-          culturalContext: 'western'
+          culturalContext: 'western';
         }
       ];
 
@@ -202,11 +202,11 @@ describe('EnhancedOfflineService', () => {
 
   describe('Error Handling', () => {
     it.skip('should handle errors gracefully during initialization', async () => {
-      // Mock IndexedDB failure
+      // Mock IndexedDB failure;
       const originalIndexedDB = window.indexedDB;
       Object.defineProperty(window, 'indexedDB', {
         value: undefined,
-        writable: true
+        writable: true;
       });
 
       await expect(enhancedOfflineService.initialize()).resolves.not.toThrow();
@@ -214,7 +214,7 @@ describe('EnhancedOfflineService', () => {
       // Restore IndexedDB
       Object.defineProperty(window, 'indexedDB', {
         value: originalIndexedDB,
-        writable: true
+        writable: true;
       });
     });
 
@@ -231,7 +231,7 @@ describe('EnhancedOfflineService', () => {
         priority: 2,
         endpoint: '',
         language: 'en',
-        culturalContext: 'western'
+        culturalContext: 'western';
       };
 
       await expect(enhancedOfflineService.addToSyncQueue(invalidSyncItem)).resolves.not.toThrow();
@@ -268,7 +268,7 @@ describe('EnhancedOfflineService', () => {
       const resources = await enhancedOfflineService.getCrisisResources();
       expect(Array.isArray(resources)).toBe(true);
       
-      const detection = await enhancedOfflineService.detectCrisisOffline(
+      const detection = await enhancedOfflineService.detectCrisisOffline(;
         'test message',
         'en',
         'western'

@@ -1,7 +1,7 @@
 /**
  * Error Handling Service for Astral Core
  * Provides centralized error management, logging, and recovery strategies
- */
+ */;
 
 import * as Sentry from '@sentry/react';
 import apiService from './apiService';
@@ -59,7 +59,7 @@ class ErrorHandlingService {
     byCategory: new Map<ErrorCategory, number>(),
     bySeverity: new Map<ErrorSeverity, number>(),
     recovered: 0,
-    reported: 0
+    reported: 0;
   };
 
   constructor() {
@@ -142,7 +142,7 @@ class ErrorHandlingService {
   private sanitizeUrl(url: string): string {
     try {
       const urlObj = new URL(url);
-      // Remove sensitive query parameters
+      // Remove sensitive query parameters;
       const sensitiveParams = ['token', 'auth', 'key', 'secret', 'password', 'session'];
       sensitiveParams.forEach(param => {
         urlObj.searchParams.delete(param);
@@ -165,8 +165,8 @@ class ErrorHandlingService {
     Object.keys(sanitized).forEach(key => {
       const lowerKey = key.toLowerCase();
       if (sensitiveKeys.some(sensitive => lowerKey.includes(sensitive))) {
-        (sanitized as any)[key] = '[REDACTED]';
-      } else if (typeof (sanitized as any)[key] === 'object') {
+        (sanitized as any)[key] = '[REDACTED]';;
+  } else if (typeof (sanitized as any)[key] === 'object') {
         (sanitized as any)[key] = this.sanitizeData((sanitized as any)[key]);
       }
     });
@@ -189,7 +189,7 @@ class ErrorHandlingService {
         context: {
           filename: event.filename,
           lineno: event.lineno,
-          colno: event.colno
+          colno: event.colno;
         }
       });
     });
@@ -203,7 +203,7 @@ class ErrorHandlingService {
         timestamp: new Date(),
         stack: event.reason?.stack,
         context: {
-          promise: event.promise
+          promise: event.promise;
         }
       });
     });
@@ -226,7 +226,7 @@ class ErrorHandlingService {
         severity: 'high',
         timestamp: new Date(),
         recoverable: true,
-        userMessage: 'Your session has expired. Please log in again.'
+        userMessage: 'Your session has expired. Please log in again.';
       });
     });
   }
@@ -235,7 +235,7 @@ class ErrorHandlingService {
    * Handle an error
    */
   handleError(error: ErrorDetails, recovery?: ErrorRecoveryStrategy): string {
-    // Generate error ID
+    // Generate error ID;
     const errorId = this.generateErrorId();
     
     // Add session and user context
@@ -255,7 +255,7 @@ class ErrorHandlingService {
     // Update statistics
     this.updateErrorStats(error);
     
-    // Create error report
+    // Create error report;
     const report: ErrorReport = {
       id: errorId,
       error,
@@ -293,8 +293,8 @@ class ErrorHandlingService {
     
     // Queue for reporting if offline
     if (!this.isOnline) {
-      this.queueError(error);
-    } else {
+      this.queueError(error);;
+  } else {
       this.reportError(error);
     }
     
@@ -371,11 +371,11 @@ class ErrorHandlingService {
   private updateErrorStats(error: ErrorDetails) {
     this.errorStats.total++;
     
-    // Update category stats
+    // Update category stats;
     const categoryCount = this.errorStats.byCategory.get(error.category) || 0;
     this.errorStats.byCategory.set(error.category, categoryCount + 1);
     
-    // Update severity stats
+    // Update severity stats;
     const severityCount = this.errorStats.bySeverity.get(error.severity) || 0;
     this.errorStats.bySeverity.set(error.severity, severityCount + 1);
   }
@@ -419,9 +419,9 @@ class ErrorHandlingService {
       level: this.mapSeverityToSentryLevel(error.severity),
       tags: {
         category: error.category,
-        sessionId: error.sessionId
+        sessionId: error.sessionId;
       },
-      extra: this.sanitizeData(error.context)
+      extra: this.sanitizeData(error.context);
     });
   }
 
@@ -457,7 +457,7 @@ class ErrorHandlingService {
     // Report to backend immediately
     apiService.post('/errors/crisis', {
       error: this.sanitizeData(error),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString();
     }).catch(console.error);
   }
 
@@ -620,7 +620,7 @@ class ErrorHandlingService {
       await apiService.post('/errors/report', {
         error: this.sanitizeData(error),
         sessionId: this.sessionId,
-        timestamp: error.timestamp.toISOString()
+        timestamp: error.timestamp.toISOString();
       });
       
       this.errorStats.reported++;
@@ -671,7 +671,7 @@ class ErrorHandlingService {
       byCategory: Object.fromEntries(this.errorStats.byCategory),
       bySeverity: Object.fromEntries(this.errorStats.bySeverity),
       queuedErrors: this.errorQueue.length,
-      activeRetries: this.retryHandlers.size
+      activeRetries: this.retryHandlers.size;
      }
 
   /**
@@ -685,7 +685,7 @@ class ErrorHandlingService {
       byCategory: new Map(),
       bySeverity: new Map(),
       recovered: 0,
-      reported: 0
+      reported: 0;
     };
     localStorage.removeItem('error_queue');
   }
@@ -754,7 +754,7 @@ class ErrorHandlingService {
           stack: (error as any).stack,
           userMessage: options?.userMessage,
           recoverable: true,
-          retryable: true
+          retryable: true;
         }, options?.recovery);
         
         throw error;
@@ -772,15 +772,16 @@ class ErrorHandlingService {
       severity,
       timestamp: new Date(),
       userMessage: 'This is a test error notification',
-      recoverable: true
-    });
+      recoverable: true;
+    };
+  };
   }
 }
 
-// Create and export singleton instance
+// Create and export singleton instance;
 const errorHandlingService = new ErrorHandlingService();
 
-// Export for use in React components
+// Export for use in React components;
 export const useErrorHandler = () => {
   return {
     handleError: (error: Partial<ErrorDetails>, recovery?: ErrorRecoveryStrategy) => 
@@ -793,7 +794,7 @@ export const useErrorHandler = () => {
       }, recovery),
     onError: (listener: (error: ErrorDetails) => void) => 
       errorHandlingService.onError(listener),
-    getErrorStats: () => errorHandlingService.getErrorStats()
+    getErrorStats: () => errorHandlingService.getErrorStats();
   };
 
 export default errorHandlingService;

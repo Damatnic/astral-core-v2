@@ -1,4 +1,4 @@
-// Web-compatible authentication service replacing expo-auth-session
+// Web-compatible authentication service replacing expo-auth-session;
 
   interface AuthResponse {
     type: "success" | "error";
@@ -23,7 +23,7 @@ export const WebAuthSession={
 
   ResponseType: {
     Token: process.env.REACT_APP_TOKEN || "token",
-    Code: "code"
+    Code: "code";
   },
 
   useAuthRequest: (config: Record<string, unknown>, discovery: boolean): [{ url: string }, AuthResponse | null, () => Promise<void>] => {
@@ -34,8 +34,9 @@ export const WebAuthSession={
         response_type: config.responseType,
         scope: config.scopes.join(" "),
         audience: config.extraParams?.audience || "",
-        state: Math.random().toString(36).substring(7)
-      });
+        state: Math.random().toString(36).substring(7);
+      };
+  };
       
       return `${discovery.authorizationEndpoint}?${params.toString()}`;
     };
@@ -45,8 +46,8 @@ export const WebAuthSession={
       window.location.href = authUrl;
     };
     
-    // Check for auth response in URL
-    const urlParams = window.location.hash ? 
+    // Check for auth response in URL;
+    const urlParams = window.location.hash ? ;
       Object.fromEntries(new URLSearchParams(window.location.hash.substring(1))) : {};
     
     let response = null;
@@ -57,11 +58,11 @@ export const WebAuthSession={
           params: urlParams,
           error: { message: urlParams.error_description || urlParams.error }
         };
-      } else if(urlParams.access_token) {
+      } else if (urlParams.access_token) {
         response = {
           type: "success" as const,
           params: urlParams,
-          error: null
+          error: null;
         };
       }
     }

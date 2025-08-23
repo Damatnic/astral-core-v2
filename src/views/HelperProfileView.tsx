@@ -7,7 +7,7 @@ import { View } from '../types';
 import { Card } from '../components/Card';
 import { isError } from '../types/common';
 
-const EXPERTISE_OPTIONS = [
+const EXPERTISE_OPTIONS = [;
     'Anxiety & Stress',
     'Depression',
     'Grief & Loss',
@@ -36,7 +36,8 @@ export const HelperProfileView: React.FC<{
             setExpertise(helperProfile.expertise || []);
             setBio(helperProfile.bio || '');
         }
-    }, [helperProfile]);
+    };
+  }, [helperProfile]);
 
     const handleExpertiseChange = (option: string) => {
         setExpertise(prev =>
@@ -110,7 +111,7 @@ export const HelperProfileView: React.FC<{
                 <form>
                     <AppInput
                         label="Public Display Name"
-                        id="displayName"
+                        id="displayName";
                         type="text"
                         value={displayName}
                         onChange={(e) => setDisplayName(e.target.value)}
@@ -132,7 +133,7 @@ export const HelperProfileView: React.FC<{
                         <div className="expertise-options" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
                             {EXPERTISE_OPTIONS.map(option => (
                                 <div key={option} className="radio-group">
-                                    <input
+                                    <input;
                                         type="checkbox"
                                         id={`expertise-edit-${option}`}
                                         name="expertise"

@@ -3,7 +3,7 @@
  * 
  * Provides loading placeholders for PostCard components with proper
  * accessibility support and smooth animations.
- */
+ */;
 
 import React from 'react';
 import './PostCardSkeleton.css';
@@ -92,7 +92,7 @@ export const PostCardSkeleton: React.FC<PostCardSkeletonProps> = ({
 
 /**
  * Inline skeleton for when PostCard is loading within existing layout
- */
+ */;
 export const InlinePostCardSkeleton: React.FC = () => (
   <output className="post-card-skeleton inline animate" aria-label="Loading...">
     <div className="skeleton-card">
@@ -107,7 +107,7 @@ export const InlinePostCardSkeleton: React.FC = () => (
 
 /**
  * Skeleton for empty state when no posts are available
- */
+ */;
 export const EmptyPostsSkeleton: React.FC = () => (
   <output className="empty-posts-skeleton" aria-label="No posts available">
     <div className="empty-skeleton-icon"></div>

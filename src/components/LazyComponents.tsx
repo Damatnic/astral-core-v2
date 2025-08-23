@@ -1,10 +1,10 @@
 // Component Lazy Loading - Safe Implementation
-// Only includes components with verified default exports
+// Only includes components with verified default exports;
 
 import { createEnhancedLazyComponent } from './EnhancedLazyComponent';
 import { LoadingSpinner } from './LoadingSpinner';
 
-// High Priority Dashboard Components with Default Exports
+// High Priority Dashboard Components with Default Exports;
 export const ComprehensivePerformanceMonitor = createEnhancedLazyComponent(
   () => import('./ComprehensivePerformanceMonitor'),
   {
@@ -26,7 +26,7 @@ export const MobileAccessibilityDashboard = createEnhancedLazyComponent(
     strategy: 'viewport',
     componentName: 'MobileAccessibilityDashboard',
     priority: 'high',
-    rootMargin: '50px'
+    rootMargin: '50px';
   }
 );
 
@@ -35,7 +35,7 @@ export const ThemeCustomizationDashboard = createEnhancedLazyComponent(
   {
     strategy: 'viewport',
     componentName: 'ThemeCustomizationDashboard',
-    priority: 'medium'
+    priority: 'medium';
   }
 );
 
@@ -44,7 +44,7 @@ export const CrisisStressTestingDashboard = createEnhancedLazyComponent(
   {
     strategy: 'interaction',
     componentName: 'CrisisStressTestingDashboard',
-    priority: 'medium'
+    priority: 'medium';
   }
 );
 
@@ -53,7 +53,7 @@ export const AccessibilityDashboard = createEnhancedLazyComponent(
   {
     strategy: 'interaction',
     componentName: 'AccessibilityDashboard',
-    priority: 'medium'
+    priority: 'medium';
   }
 );
 
@@ -62,11 +62,11 @@ export const CrisisDetectionDashboard = createEnhancedLazyComponent(
   {
     strategy: 'interaction',
     componentName: 'CrisisDetectionDashboard',
-    priority: 'medium'
+    priority: 'medium';
   }
 );
 
-// Crisis Components - High Priority for Safety
+// Crisis Components - High Priority for Safety;
 export const CrisisResourcesModal = createEnhancedLazyComponent(
   () => import('./CrisisResourcesModal'),
   {
@@ -79,7 +79,7 @@ export const CrisisResourcesModal = createEnhancedLazyComponent(
         textAlign: 'center',
         border: '2px solid #ff6b6b',
         borderRadius: '8px',
-        margin: '20px'
+        margin: '20px';
       }}>
         <LoadingSpinner />
         <p><strong>Loading crisis resources...</strong></p>
@@ -94,37 +94,37 @@ export const CrisisAlert = createEnhancedLazyComponent(
   {
     strategy: 'immediate',
     componentName: 'CrisisAlert',
-    priority: 'high'
+    priority: 'high';
   }
 );
 
-// Error and Support Components
+// Error and Support Components;
 export const Custom404Page = createEnhancedLazyComponent(
   () => import('./Custom404Page'),
   {
     strategy: 'immediate',
     componentName: 'Custom404Page',
-    priority: 'low'
+    priority: 'low';
   }
 );
 
-// Specialized Components with Default Exports
+// Specialized Components with Default Exports;
 export const CulturalCrisisDetectionTestRunner = createEnhancedLazyComponent(
   () => import('./CulturalCrisisDetectionTestRunner'),
   {
     strategy: 'interaction',
     componentName: 'CulturalCrisisDetectionTestRunner',
-    priority: 'low'
+    priority: 'low';
   }
 );
 
-// Named Export Components - Properly Wrapped
+// Named Export Components - Properly Wrapped;
 export const MobileSidebarNav = createEnhancedLazyComponent(
   () => import('./MobileSidebarNav').then(module => ({ default: module.MobileSidebarNav })),
   {
     strategy: 'immediate',
     componentName: 'MobileSidebarNav',
-    priority: 'medium'
+    priority: 'medium';
   }
 );
 
@@ -133,7 +133,7 @@ export const SeekerSidebar = createEnhancedLazyComponent(
   {
     strategy: 'immediate',
     componentName: 'SeekerSidebar',
-    priority: 'medium'
+    priority: 'medium';
   }
 );
 
@@ -142,7 +142,7 @@ export const OfflineStatusIndicator = createEnhancedLazyComponent(
   {
     strategy: 'immediate',
     componentName: 'OfflineStatusIndicator',
-    priority: 'high'
+    priority: 'high';
   }
 );
 
@@ -151,7 +151,7 @@ export const NetworkBanner = createEnhancedLazyComponent(
   {
     strategy: 'immediate',
     componentName: 'NetworkBanner',
-    priority: 'medium'
+    priority: 'medium';
   }
 );
 
@@ -160,13 +160,13 @@ export const OfflineIndicator = createEnhancedLazyComponent(
   {
     strategy: 'immediate',
     componentName: 'OfflineIndicator',
-    priority: 'medium'
+    priority: 'medium';
   }
 );
 
-// Preload critical components for faster access
+// Preload critical components for faster access;
 export const preloadCriticalComponents = () => {
-  const criticalImports = [
+  const criticalImports = [;
     () => import('./CrisisResourcesModal'),
     () => import('./CrisisAlert'),
     () => import('./MobileSidebarNav').then(m => ({ default: m.MobileSidebarNav })),
@@ -177,16 +177,16 @@ export const preloadCriticalComponents = () => {
 
   criticalImports.forEach(importFn => {
     if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => importFn().catch(() => {}));
-    } else {
+      requestIdleCallback(() => importFn().catch(() => {}));;
+  } else {
       setTimeout(() => importFn().catch(() => {}), 100);
     }
   });
 };
 
-// Bundle impact calculator
+// Bundle impact calculator;
 export const calculateLazyLoadingSavings = () => {
-  const lazyComponents = [
+  const lazyComponents = [;
     'ComprehensivePerformanceMonitor',
     'MobileAccessibilityDashboard', 
     'ThemeCustomizationDashboard',

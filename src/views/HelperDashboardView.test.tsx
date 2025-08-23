@@ -21,7 +21,7 @@ const mockedChatStore = useChatStore as jest.Mocked<any>;
 const mockedUseAuth = useAuth as jest.Mock;
 
 describe('HelperDashboardView user flow', () => {
-  const mockDilemmas = [
+  const mockDilemmas = [;
     { id: 'd1', status: 'active', content: 'Available Dilemma 1' },
     { id: 'd2', status: 'direct_request', requestedHelperId: 'helper1', content: 'Direct Request' },
   ];
@@ -51,14 +51,14 @@ describe('HelperDashboardView user flow', () => {
   test.skip('helper can view and accept an available dilemma', async () => {
     render(<HelperDashboardView setActiveView={() => {}} />);
 
-    // 1. User sees the dashboard and clicks on the "Available" tab
+    // 1. User sees the dashboard and clicks on the "Available" tab;
     const availableTab = screen.getByText(/Available/);
     await userEvent.click(availableTab);
     
     // 2. The available dilemma is displayed
     expect(await screen.findByText('Available Dilemma 1')).toBeTruthy();
     
-    // 3. User clicks "Accept Dilemma"
+    // 3. User clicks "Accept Dilemma";
     const acceptButton = screen.getByRole('button', { name: /Accept Dilemma/i });
     await userEvent.click(acceptButton);
     

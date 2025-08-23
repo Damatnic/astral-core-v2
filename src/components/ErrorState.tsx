@@ -1,6 +1,6 @@
 import React from 'react';
 
-// Simple alert triangle icon component
+// Simple alert triangle icon component;
 const AlertTriangleIcon: React.FC = () => (
   <svg
     width="24"
@@ -44,7 +44,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
       <p className="error-state-message">{message}</p>
       {showRetry && onRetry && (
         <div className="error-state-actions">
-          <button 
+          <button; 
             className="retry-button"
             onClick={onRetry}
             disabled={isRetrying}

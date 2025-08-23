@@ -6,7 +6,7 @@
  * involvement in mental health crises.
  * 
  * @license Apache-2.0
- */
+ */;
 
 import { CulturalContext } from './culturalContextService';
 import { enhancedOfflineService } from './enhancedOfflineService';
@@ -348,17 +348,17 @@ class CulturalFamilySupportService {
       familyMembers: [],
       emergencyProtocol: {
         enabled: false,
-        escalationLevels: this.getDefaultEscalationLevels(culturalContext)
+        escalationLevels: this.getDefaultEscalationLevels(culturalContext);
       },
       communicationGuidelines: this.getDefaultCommunicationGuidelines(culturalContext),
       privacySettings: {
         shareWithFamily: supportLevel !== 'individual_only',
         shareProgressReports: supportLevel === 'family_involved' || supportLevel === 'community_centered',
         shareEmergencyAlerts: true,
-        culturalPrivacyPreferences: []
+        culturalPrivacyPreferences: [];
       },
       createdAt: new Date().toISOString(),
-      lastUpdated: new Date().toISOString()
+      lastUpdated: new Date().toISOString();
     };
 
     this.familySupports.set(userId, familySupport);
@@ -373,7 +373,7 @@ class CulturalFamilySupportService {
       initialRiskLevel: 0.5,
       finalRiskLevel: 0.3,
       sessionDuration: 15,
-      feedback: 4
+      feedback: 4;
     }).catch(error => {
       console.warn('Failed to record family support analytics:', error);
     });
@@ -425,8 +425,8 @@ class CulturalFamilySupportService {
       case 'individual':
         if (crisisLevel === 'immediate_danger') {
           contactsToNotify = familyMembers.filter(m => m.emergencyContact);
-          escalationOrder = ['emergency_services', 'immediate_family'];
-        } else if (crisisLevel === 'high_risk') {
+          escalationOrder = ['emergency_services', 'immediate_family'];;
+  } else if (crisisLevel === 'high_risk') {
           contactsToNotify = familyMembers.filter(m => 
             m.culturalRole === 'primary_decision_maker' || m.emergencyContact
           );
@@ -438,8 +438,8 @@ class CulturalFamilySupportService {
         if (crisisLevel === 'mild_concern') {
           contactsToNotify = familyMembers.filter(m => 
             m.culturalRole === 'emotional_support' || m.culturalRole === 'primary_decision_maker'
-          );
-        } else {
+          );;
+  } else {
           contactsToNotify = familyMembers.filter(m => 
             m.culturalRole !== 'backup_contact'
           );
@@ -476,7 +476,7 @@ class CulturalFamilySupportService {
     }
 
     const strategy = this.getCrisisNotificationStrategy(familySupport, crisisType);
-    // Get guidance for message generation
+    // Get guidance for message generation;
     const guidance = this.culturalGuidance[familySupport.culturalContext.region];
 
     const notification: CrisisNotification = {
@@ -487,7 +487,7 @@ class CulturalFamilySupportService {
       notificationsSent: [],
       culturalProtocolsActivated: strategy.culturalProtocols,
       emergencyServicesAlerted: crisisType === 'immediate_danger',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString();
     };
 
     // Send notifications based on cultural approach
@@ -496,7 +496,7 @@ class CulturalFamilySupportService {
         continue;
       }
 
-      const culturalMessage = this.generateCulturalMessage(
+      const culturalMessage = this.generateCulturalMessage(;
         member,
         crisisType,
         crisisDetails,
@@ -512,14 +512,15 @@ class CulturalFamilySupportService {
           method: member.contactMethod,
           timestamp: new Date().toISOString(),
           culturalMessage,
-          responseStatus: 'sent'
-        });
+          responseStatus: 'sent';
+        };
+  };
       } catch (error) {
         console.error(`Failed to send crisis notification to ${member.id}:`, error);
       }
     }
 
-    // Store notification
+    // Store notification;
     const userNotifications = this.crisisNotifications.get(userId) || [];
     userNotifications.push(notification);
     this.crisisNotifications.set(userId, userNotifications);
@@ -534,7 +535,7 @@ class CulturalFamilySupportService {
         data: { userId, notifications: userNotifications },
         priority: 1,
         culturalContext: familySupport.culturalContext.region,
-        language: familySupport.primaryLanguage
+        language: familySupport.primaryLanguage;
       });
     }
   }
@@ -551,7 +552,7 @@ class CulturalFamilySupportService {
   ): string {
     const templates = guidance?.communicationTemplates || {};
     
-    // Get the appropriate template based on crisis type
+    // Get the appropriate template based on crisis type;
     let template = templates[crisisType] || templates['crisis_alert'] || templates['mild_concern'];
     
     // Default template if none found
@@ -560,27 +561,27 @@ class CulturalFamilySupportService {
         subject: 'Family Support Notification',
         body: `We are reaching out regarding [name] who may need family support during this time.`,
         tone: 'caring' as const,
-        culturalElements: []
+        culturalElements: [];
       }
 
-    // Customize message based on cultural considerations
+    // Customize message based on cultural considerations;
     let message = template.body;
     
     // Add cultural greetings and respect markers
     if (culturalContext.region === 'Arabic') {
-      message = 'السلام عليكم ورحمة الله وبركاته\n\n' + message;
-    } else if (culturalContext.region === 'Chinese') {
-      message = '尊敬的家人，\n\n' + message;
-    } else if (culturalContext.region === 'Hispanic/Latino') {
+      message = 'السلام عليكم ورحمة الله وبركاته\n\n' + message;;
+  } else if (culturalContext.region === 'Chinese') {
+      message = '尊敬的家人，\n\n' + message;;
+  } else if (culturalContext.region === 'Hispanic/Latino') {
       message = 'Estimado/a familia,\n\n' + message;
     }
 
     // Add role-specific instructions
     if (member.culturalRole === 'primary_decision_maker') {
-      message += '\n\nAs the family decision maker, your guidance is especially important during this time.';
-    } else if (member.culturalRole === 'spiritual_guide') {
-      message += '\n\nYour spiritual guidance and prayers are deeply needed.';
-    } else if (member.culturalRole === 'emotional_support') {
+      message += '\n\nAs the family decision maker, your guidance is especially important during this time.';;
+  } else if (member.culturalRole === 'spiritual_guide') {
+      message += '\n\nYour spiritual guidance and prayers are deeply needed.';;
+  } else if (member.culturalRole === 'emotional_support') {
       message += '\n\nYour emotional support and presence would be very meaningful.';
     }
 
@@ -616,14 +617,14 @@ class CulturalFamilySupportService {
         supportEngagement: 0,
         familyResponseRate: 0,
         crisisResolutionTime: 0,
-        culturalProtocolsUsed: []
+        culturalProtocolsUsed: [];
       }
 
     const consentingMembers = familySupport.familyMembers.filter(m => m.consentGiven).length;
     const totalMembers = familySupport.familyMembers.length;
     const supportEngagement = totalMembers > 0 ? consentingMembers / totalMembers : 0;
 
-    // Calculate response rate from notifications
+    // Calculate response rate from notifications;
     const notifications = this.crisisNotifications.get(userId) || [];
     let totalSent = 0;
     let totalResponded = 0;
@@ -634,17 +635,18 @@ class CulturalFamilySupportService {
         if (sent.responseStatus === 'responded') {
           totalResponded++;
         }
-      });
+      };
+  };
     });
 
     const familyResponseRate = totalSent > 0 ? totalResponded / totalSent : 0;
 
     // Average resolution time (placeholder - would need actual tracking)
-    // Default to 24 hours if there are family members but no crisis events yet
+    // Default to 24 hours if there are family members but no crisis events yet;
     const crisisResolutionTime = familySupport.familyMembers.length > 0 && notifications.length === 0 ? 24 : 0;
 
-    // Get unique cultural protocols used
-    const culturalProtocolsUsed = [...new Set(
+    // Get unique cultural protocols used;
+    const culturalProtocolsUsed = [...new Set(;
       notifications.flatMap(n => n.culturalProtocolsActivated)
     )];
 
@@ -658,34 +660,34 @@ class CulturalFamilySupportService {
    * Get default escalation levels based on cultural context
    */
   private getDefaultEscalationLevels(culturalContext: CulturalContext): FamilySupport['emergencyProtocol']['escalationLevels'] {
-    const escalationLevels = [
+    const escalationLevels = [;
       {
         level: 1,
         triggerConditions: ['Mild depression indicators', 'Initial anxiety symptoms'],
         actions: ['Monitor closely', 'Encourage self-care'],
         contactsToNotify: [],
-        culturalProtocols: []
+        culturalProtocols: [];
       },
       {
         level: 2,
         triggerConditions: ['Moderate distress', 'Consistent symptoms'],
         actions: ['Professional consultation', 'Family awareness'],
         contactsToNotify: ['emotional_support'],
-        culturalProtocols: culturalContext.crisisEscalation === 'gradual' ? ['extended_family_consultation'] : []
+        culturalProtocols: culturalContext.crisisEscalation === 'gradual' ? ['extended_family_consultation'] : [];
       },
       {
         level: 3,
         triggerConditions: ['High risk indicators', 'Crisis escalation'],
         actions: ['Crisis intervention', 'Family involvement'],
         contactsToNotify: ['primary_decision_maker', 'emergency_contact'],
-        culturalProtocols: culturalContext.crisisEscalation === 'authority-based' ? ['elder_decision_making'] : ['community_support']
+        culturalProtocols: culturalContext.crisisEscalation === 'authority-based' ? ['elder_decision_making'] : ['community_support'];
       },
       {
         level: 4,
         triggerConditions: ['Immediate danger', 'Severe crisis'],
         actions: ['Emergency services', 'Full family alert'],
         contactsToNotify: ['all'],
-        culturalProtocols: culturalContext.crisisEscalation === 'authority-based' ? ['religious_guidance'] : ['immediate_intervention']
+        culturalProtocols: culturalContext.crisisEscalation === 'authority-based' ? ['religious_guidance'] : ['immediate_intervention'];
       }
     ];
 
@@ -703,8 +705,8 @@ class CulturalFamilySupportService {
     if (culturalContext.familyInvolvement === 'family-centered') {
       familyMeetingFormat = culturalContext.communicationStyle === 'indirect' ? 'elder_mediated' : 'group_sessions';
       crisisDisclosureProtocol = 'extended_family';
-      decisionMakingProcess = 'family_consensus';
-    } else if (culturalContext.familyInvolvement === 'community-based') {
+      decisionMakingProcess = 'family_consensus';;
+  } else if (culturalContext.familyInvolvement === 'community-based') {
       familyMeetingFormat = 'elder_mediated';
       crisisDisclosureProtocol = 'community_elders';
       decisionMakingProcess = 'community_input';
@@ -746,8 +748,9 @@ class CulturalFamilySupportService {
         },
         priority: 2,
         culturalContext: 'global',
-        language: member.languages[0] || 'en'
-      });
+        language: member.languages[0] || 'en';
+      };
+  };
     }
   }
 
@@ -755,7 +758,7 @@ class CulturalFamilySupportService {
    * Get default escalation levels based on cultural context
    */
   private getDefaultEscalationLevels(culturalContext: CulturalContext): FamilySupport['emergencyProtocol']['escalationLevels'] {
-    const baseEscalation = [
+    const baseEscalation = [;
       {
         level: 1,
         triggerConditions: ['Mild depression indicators', 'Stress signals'],
@@ -812,7 +815,7 @@ class CulturalFamilySupportService {
     let guidelines: FamilySupport['communicationGuidelines'] = {
       familyMeetingFormat: 'individual_sessions',
       crisisDisclosureProtocol: 'immediate_family',
-      decisionMakingProcess: 'individual'
+      decisionMakingProcess: 'individual';
     };
 
     switch (culturalContext.familyInvolvement) {
@@ -820,14 +823,14 @@ class CulturalFamilySupportService {
         guidelines = {
           familyMeetingFormat: 'group_sessions',
           crisisDisclosureProtocol: 'extended_family',
-          decisionMakingProcess: 'family_consensus'
+          decisionMakingProcess: 'family_consensus';
         };
         break;
       case 'community-based':
         guidelines = {
           familyMeetingFormat: 'elder_mediated',
           crisisDisclosureProtocol: 'community_elders',
-          decisionMakingProcess: 'community_input'
+          decisionMakingProcess: 'community_input';
         };
         break;
     }
@@ -898,18 +901,18 @@ class CulturalFamilySupportService {
         supportEngagement: 0,
         familyResponseRate: 0,
         crisisResolutionTime: 0,
-        culturalProtocolsUsed: []
+        culturalProtocolsUsed: [];
       }
 
     const totalNotifications = notifications.reduce((sum, n) => sum + n.notificationsSent.length, 0);
-    const responsiveNotifications = notifications.reduce((sum, n) => 
+    const responsiveNotifications = notifications.reduce((sum, n) => ;
       sum + n.notificationsSent.filter(ns => ns.responseStatus === 'responded').length, 0
     );
 
     return { supportEngagement: familySupport.familyMembers.filter(m => m.consentGiven).length / Math.max(familySupport.familyMembers.length, 1),
       familyResponseRate: totalNotifications > 0 ? responsiveNotifications / totalNotifications : 0,
       crisisResolutionTime: notifications.length > 0 ? this.calculateAverageResolutionTime(notifications) : 0,
-      culturalProtocolsUsed: [...new Set(notifications.flatMap(n => n.culturalProtocolsActivated))]
+      culturalProtocolsUsed: [...new Set(notifications.flatMap(n => n.culturalProtocolsActivated))];
      }
 
   /**

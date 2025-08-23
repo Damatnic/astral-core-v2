@@ -4,7 +4,7 @@
  * Comprehensive performance monitoring for Largest Contentful Paint (LCP),
  * First Input Delay (FID), Cumulative Layout Shift (CLS), and other performance metrics.
  * Critical for mental health platform where fast response times can be crucial during crisis situations.
- */
+ */;
 
 type DeviceType = 'mobile' | 'tablet' | 'desktop';
 type PerformanceRating = 'good' | 'needs-improvement' | 'poor';
@@ -81,7 +81,7 @@ class CoreWebVitalsService {
     this.reportingEndpoint = reportingEndpoint || null;
 
     try {
-      // Dynamic import to avoid bundling if not supported
+      // Dynamic import to avoid bundling if not supported;
       const { onCLS, onINP, onFCP, onLCP, onTTFB } = await import('web-vitals');
 
       // Monitor Core Web Vitals
@@ -123,7 +123,7 @@ class CoreWebVitalsService {
       route: window.location.pathname,
       userAgent: navigator.userAgent,
       connectionType: this.connectionType,
-      isCrisisSituation: this.isCrisisRoute()
+      isCrisisSituation: this.isCrisisRoute();
     };
 
     this.metrics.push(webVitalMetric);
@@ -163,7 +163,7 @@ class CoreWebVitalsService {
                 value: inpValue,
                 delta: inpValue,
                 id: `inp-${Date.now()}`,
-                navigationType: 'navigate'
+                navigationType: 'navigate';
               });
             }
           }
@@ -172,7 +172,7 @@ class CoreWebVitalsService {
 
       this.performanceObserver.observe({ 
         type: 'event', 
-        buffered: true 
+        buffered: true ;
       });
     } catch (error) {
       console.warn('INP monitoring not supported:', error);
@@ -220,7 +220,7 @@ class CoreWebVitalsService {
             id: `crisis-resource-${Date.now()}`,
             timestamp: Date.now(),
             route: window.location.pathname,
-            isCrisisSituation: true
+            isCrisisSituation: true;
           };
 
           this.metrics.push(crisisMetric);
@@ -264,7 +264,7 @@ class CoreWebVitalsService {
             id: `emergency-response-${Date.now()}`,
             timestamp: Date.now(),
             route: window.location.pathname,
-            isCrisisSituation: true
+            isCrisisSituation: true;
           };
 
           this.metrics.push(emergencyMetric);
@@ -303,7 +303,7 @@ class CoreWebVitalsService {
       id: `network-${status}-${Date.now()}`,
       timestamp: Date.now(),
       route: window.location.pathname,
-      isCrisisSituation: this.isCrisisRoute()
+      isCrisisSituation: this.isCrisisRoute();
     };
 
     this.metrics.push(networkMetric);
@@ -329,14 +329,14 @@ class CoreWebVitalsService {
    * Handle performance metrics specifically for crisis situations
    */
   private handleCrisisPerformanceMetric(metric: WebVitalMetric): void {
-    // Log crisis performance separately for analysis
+    // Log crisis performance separately for analysis;
     const crisisData = {
       metric,
       timestamp: Date.now(),
       route: window.location.pathname,
       sessionId: this.sessionId,
       deviceType: this.deviceType,
-      connectionType: this.connectionType
+      connectionType: this.connectionType;
     };
 
     // Store crisis metrics locally for analysis
@@ -406,7 +406,7 @@ class CoreWebVitalsService {
     // Track initial route
     this.userJourney.push(window.location.pathname);
 
-    // Listen for route changes (for SPA)
+    // Listen for route changes (for SPA);
     const originalPushState = history.pushState;
     history.pushState = (...args) => {
       originalPushState.apply(history, args);
@@ -444,10 +444,10 @@ class CoreWebVitalsService {
       connectionType: this.connectionType,
       timestamp: Date.now(),
       route: window.location.pathname,
-      userJourney: [...this.userJourney]
+      userJourney: [...this.userJourney];
     };
 
-    // Add crisis-specific metrics if applicable
+    // Add crisis-specific metrics if applicable;
     const crisisMetrics = this.calculateCrisisMetrics();
     if (crisisMetrics) {
       report.crisisMetrics = crisisMetrics;
@@ -498,8 +498,9 @@ class CoreWebVitalsService {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(report)
-      });
+        body: JSON.stringify(report);
+      };
+  };
     } catch (error) {
       console.warn('Failed to send Web Vitals report:', error);
     }
@@ -524,7 +525,7 @@ class CoreWebVitalsService {
       crisisMetrics: this.metrics.filter(m => m.isCrisisSituation).length,
       deviceType: this.deviceType,
       connectionType: this.connectionType,
-      sessionId: this.sessionId
+      sessionId: this.sessionId;
      }
 
   /**
@@ -541,6 +542,6 @@ class CoreWebVitalsService {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const coreWebVitalsService = new CoreWebVitalsService();
 export default coreWebVitalsService;

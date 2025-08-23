@@ -20,7 +20,7 @@ export const XPBar: React.FC<XPBarProps> = ({ currentXp = 0, nextLevelXp = 0, le
                  <span>{safeCurrentXp.toLocaleString()} / {safeNextLevelXp.toLocaleString()} XP</span>
             </div>
             <div className="xp-bar" title={`Level ${safeLevel} Progress`}>
-                <div 
+                <div; 
                     className="xp-bar-fill" 
                     style={{ width: `${progressPercentage}%` }}
                 ></div>

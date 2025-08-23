@@ -4,7 +4,7 @@
  * Bidirectional crisis support feature that creates meaningful digital presence 
  * between users during difficult moments. Provides synchronized haptic feedback,
  * breathing guides, and real-time connection management.
- */
+ */;
 
 import { getWebSocketService } from './webSocketService';
 import { notificationService } from './notificationService';
@@ -74,7 +74,7 @@ export interface TetherProfile {
   availability: {
     days: number[]; // 0-6 (Sunday-Saturday)
     startTime: string; // HH:MM
-    endTime: string; // HH:MM
+    endTime: string; // HH:MM;
   };
   trustedConnections: string[]; // userIds of trusted friends
   lastActiveTimestamp?: number;
@@ -205,12 +205,12 @@ class AstralTetherService {
   }
 
   private initializePanicButton() {
-    // Listen for triple-tap or specific key combination
+    // Listen for triple-tap or specific key combination;
     let tapCount = 0;
     let tapTimer: NodeJS.Timeout;
 
     document.addEventListener('click', (event) => {
-      // Check if click is in tether area
+      // Check if click is in tether area;
       const target = event.target as HTMLElement;
       if (target.closest('.tether-view')) {
         tapCount++;
@@ -258,7 +258,7 @@ class AstralTetherService {
       this.hapticController.vibrate([200, 100, 200, 100, 200]);
     }
 
-    // Send emergency tether to all trusted connections
+    // Send emergency tether to all trusted connections;
     const profile = this.userProfiles.get(this.currentUserId || 'default-user');
     if (profile && profile.trustedConnections.length > 0) {
       const emergencyRequest = {
@@ -268,7 +268,7 @@ class AstralTetherService {
         urgency: 'critical' as const,
         tetherType: 'emergency' as const,
         preferredDuration: 60,
-        location: await this.getCurrentLocation()
+        location: await this.getCurrentLocation();
       };
 
       try {
@@ -284,8 +284,8 @@ class AstralTetherService {
         console.error('Failed to send emergency tether:', error);
         // Fallback to direct emergency services
         window.location.href = 'tel:911';
-      }
-    } else {
+      };
+  } else {
       // No trusted connections - go straight to emergency services
       window.location.href = 'tel:911';
     }
@@ -296,13 +296,13 @@ class AstralTetherService {
       const position = await new Promise<GeolocationPosition>((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject, {
           timeout: 5000,
-          enableHighAccuracy: true
+          enableHighAccuracy: true;
         });
       });
       
       return {
         lat: position.coords.latitude,
-        lng: position.coords.longitude
+        lng: position.coords.longitude;
       } catch (error) {
       console.error('Failed to get location:', error);
       return undefined;
@@ -313,8 +313,8 @@ class AstralTetherService {
     try {
       const settingsData = await this.secureStorage.getItem('tether-settings');
       if (settingsData) {
-        this.userSettings = JSON.parse(settingsData);
-      } else {
+        this.userSettings = JSON.parse(settingsData);;
+  } else {
         this.userSettings = this.getDefaultSettings();
         await this.saveUserSettings();
       }
@@ -330,9 +330,9 @@ class AstralTetherService {
       const profileData = await this.secureStorage.getItem(`tether-profile-${userId}`);
       if (profileData) {
         const profile = JSON.parse(profileData);
-        this.userProfiles.set(userId, profile);
-      } else {
-        // Create default profile with friend code
+        this.userProfiles.set(userId, profile);;
+  } else {
+        // Create default profile with friend code;
         const newProfile: TetherProfile = {
           userId,
           displayName: userId,
@@ -350,10 +350,10 @@ class AstralTetherService {
           availability: {
             days: [0, 1, 2, 3, 4, 5, 6],
             startTime: '00:00',
-            endTime: '23:59'
+            endTime: '23:59';
           },
           trustedConnections: [],
-          lastActiveTimestamp: Date.now()
+          lastActiveTimestamp: Date.now();
         };
         this.userProfiles.set(userId, newProfile);
         await this.saveUserProfile(newProfile);
@@ -373,7 +373,7 @@ class AstralTetherService {
       emergencyContacts: [],
       professionalHandoffEnabled: true,
       privacyLevel: 'friends',
-      autoAcceptFromCircle: false
+      autoAcceptFromCircle: false;
     }
 
   private async saveUserSettings() {
@@ -406,7 +406,7 @@ class AstralTetherService {
 
   async addTrustedConnection(friendCode: string): Promise<boolean> {
     try {
-      // Find user by friend code
+      // Find user by friend code;
       const profiles = Array.from(this.userProfiles.values());
       const friendProfile = profiles.find(p => p.friendCode === friendCode);
       
@@ -443,8 +443,9 @@ class AstralTetherService {
       this.websocketService.send('tether-status-update', {
         userId: profile.userId,
         status,
-        timestamp: Date.now()
-      });
+        timestamp: Date.now();
+      };
+  };
     }
   }
 
@@ -467,7 +468,7 @@ class AstralTetherService {
       ...request,
       id: `tether-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       timestamp: Date.now(),
-      expiresAt: Date.now() + (minutes * 60 * 1000)
+      expiresAt: Date.now() + (minutes * 60 * 1000);
     };
 
     // Handle anonymous requests
@@ -505,8 +506,9 @@ class AstralTetherService {
       this.offlineQueue.push(tetherRequest);
       throw error;
     }
+  }
 
-    this.emit('tether-request-sent', tetherRequest);
+  this.emit('tether-request-sent', tetherRequest);
     return tetherRequest.id;
   }
 
@@ -532,11 +534,11 @@ class AstralTetherService {
         sessionId
       });
       this.emit('tether-session-created', sessionId);
-      return sessionId;
-    } else {
+      return sessionId;;
+  } else {
       this.websocketService.send('tether-response', {
         requestId,
-        accepted: false
+        accepted: false;
       });
       this.pendingRequests.delete(requestId);
       return null;
@@ -560,7 +562,7 @@ class AstralTetherService {
         sessionQuality: 0,
         completionRate: 0,
         averageResponseTime: 0,
-        effectivenessScore: 0
+        effectivenessScore: 0;
       }
     };
 
@@ -641,7 +643,7 @@ class AstralTetherService {
     this.websocketService.send('tether-pressure', {
       sessionId,
       pressure: normalizedPressure,
-      timestamp: Date.now()
+      timestamp: Date.now();
     });
 
     if (session.hapticSync && this.hapticController) {
@@ -654,7 +656,7 @@ class AstralTetherService {
     }
     session.metrics.pressureReadings.push({
       timestamp: Date.now(),
-      pressure: normalizedPressure
+      pressure: normalizedPressure;
     });
 
     this.emit('pressure-update', { sessionId, pressure: normalizedPressure });
@@ -673,7 +675,7 @@ class AstralTetherService {
       this.websocketService.send('tether-heartbeat', {
         sessionId,
         timestamp: Date.now(),
-        isActive: true
+        isActive: true;
       });
     }, 5000);
   }
@@ -691,7 +693,7 @@ class AstralTetherService {
     this.websocketService.send('tether-end', {
       sessionId,
       endTime: session.endTime,
-      metrics: session.metrics
+      metrics: session.metrics;
     });
 
     if (this.breathingInterval) {
@@ -730,7 +732,7 @@ class AstralTetherService {
     try {
       const sessionData = {
         ...session,
-        storedAt: Date.now()
+        storedAt: Date.now();
       };
       await this.secureStorage.setItem(`session-${session.id}`, JSON.stringify(sessionData));
     } catch (error) {
@@ -756,8 +758,8 @@ class AstralTetherService {
     if (!request) return;
 
     if (response.accepted && response.sessionId) {
-      this.emit('tether-request-accepted', { request, sessionId: response.sessionId });
-    } else {
+      this.emit('tether-request-accepted', { request, sessionId: response.sessionId });;
+  } else {
       this.emit('tether-request-declined', request);
     }
 
@@ -817,7 +819,7 @@ class AstralTetherService {
   private handleDeviceMotion(event: DeviceMotionEvent): void {
     const acceleration = event.acceleration;
     if (acceleration) {
-      const pressure = Math.sqrt(
+      const pressure = Math.sqrt(;
         (acceleration.x || 0) ** 2 + 
         (acceleration.y || 0) ** 2 + 
         (acceleration.z || 0) ** 2
@@ -841,7 +843,7 @@ class AstralTetherService {
       timestamp: Date.now(),
       participants: session.participants,
       urgency: 'critical',
-      sessionMetrics: session.metrics
+      sessionMetrics: session.metrics;
     };
 
     this.websocketService.send('tether-emergency', escalationData);
@@ -864,10 +866,10 @@ class AstralTetherService {
         duration: Date.now() - session.startTime,
         tetherType: session.tetherType,
         participants: session.participants,
-        metrics: session.metrics
+        metrics: session.metrics;
       },
       preferredContact,
-      urgency: 'high'
+      urgency: 'high';
     };
 
     console.log('Professional handoff requested:', handoffRequest);
@@ -948,7 +950,7 @@ class AstralTetherService {
   }
 }
 
-// Singleton instance
+// Singleton instance;
 let astralTetherServiceInstance: AstralTetherService | null = null;
 
 export const getAstralTetherService = (): AstralTetherService => {

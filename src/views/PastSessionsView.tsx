@@ -62,8 +62,8 @@ export const PastSessionsView: React.FC = () => {
                                     </AppButton>
                                 )}
                                 {session.endedAt && (
-                                    <AppButton
-                                        variant="secondary"
+                                    <AppButton;
+                                        variant="secondary";
                                         className="btn-sm"
                                         onClick={() => sendKudos(session.id)}
                                         disabled={session.kudosGiven}
@@ -72,8 +72,8 @@ export const PastSessionsView: React.FC = () => {
                                         icon={<KudosIcon />}
                                     />
                                 )}
-                                <AppButton 
-                                    variant="ghost" 
+                                <AppButton; 
+                                    variant="ghost"; 
                                     className={`btn-sm btn-support ${session.isFavorited ? 'supported' : ''}`}
                                     onClick={() => toggleFavorite(session.id)}
                                     aria-label={session.isFavorited ? 'Unfavorite this helper' : 'Favorite this helper'}

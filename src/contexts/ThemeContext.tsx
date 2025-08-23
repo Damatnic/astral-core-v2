@@ -87,10 +87,12 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
+  };
   }, [theme]);
 
   const toggleTheme = useCallback(() => {
     setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+  };
   }, []);
 
   const themeConfig = useMemo(() => (theme === 'light' ? lightTheme : darkTheme), [theme]);

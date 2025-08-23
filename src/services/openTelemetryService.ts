@@ -3,7 +3,7 @@
  * 
  * This is a stub implementation while OpenTelemetry packages are not installed
  * Replace this with the actual implementation when packages are added
- */
+ */;
 
 class OpenTelemetryServiceStub {
   async initialize(): Promise<void> {

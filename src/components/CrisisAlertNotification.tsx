@@ -27,7 +27,7 @@ export const CrisisAlertNotification: React.FC = () => {
     alertThreshold: 'high',
     contacts: [],
     alertMessage: "I'm experiencing a mental health crisis and need support.",
-    locationSharing: false
+    locationSharing: false;
   });
   
   const [isInCrisis, setIsInCrisis] = useState(false);
@@ -38,6 +38,7 @@ export const CrisisAlertNotification: React.FC = () => {
   useEffect(() => {
     loadConfiguration();
     setupCrisisDetection();
+  };
   }, []);
 
   const loadConfiguration = () => {
@@ -84,8 +85,8 @@ export const CrisisAlertNotification: React.FC = () => {
       const shouldAlert = checkAlertThreshold(severity, confidence);
       if (shouldAlert) {
         triggerCrisisAlert('auto', indicators);
-      }
-    } else if (config.enabled) {
+      };
+  } else if (config.enabled) {
       // Show manual trigger option
       setIsInCrisis(true);
     }
@@ -154,13 +155,13 @@ export const CrisisAlertNotification: React.FC = () => {
       urgency: 'high',
       triggerType,
       indicators,
-      timestamp: Date.now()
+      timestamp: Date.now();
     };
     
     // Send to support team
     await pushNotificationService.sendCrisisNotification(userId, notification);
     
-    // Also send to user for confirmation
+    // Also send to user for confirmation;
     const registration = await navigator.serviceWorker.getRegistration();
     if (registration) {
       await registration.showNotification('Crisis Alert Sent', {
@@ -168,7 +169,7 @@ export const CrisisAlertNotification: React.FC = () => {
         icon: '/icon-192.png',
         badge: '/icon-192.png',
         tag: 'crisis-alert-confirmation',
-        requireInteraction: false
+        requireInteraction: false;
       });
     }
   };
@@ -181,7 +182,7 @@ export const CrisisAlertNotification: React.FC = () => {
     
     const location = config.locationSharing ? await getCurrentLocation() : null;
     
-    // Send SMS via backend API
+    // Send SMS via backend API;
     const response = await fetch('/.netlify/functions/api-safety', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -209,7 +210,7 @@ export const CrisisAlertNotification: React.FC = () => {
         (position) => {
           resolve({
             latitude: position.coords.latitude,
-            longitude: position.coords.longitude
+            longitude: position.coords.longitude;
           });
         },
         () => resolve(null),
@@ -225,10 +226,10 @@ export const CrisisAlertNotification: React.FC = () => {
       indicators,
       timestamp: Date.now(),
       alertSent: true,
-      contactsNotified: config.contacts.length
+      contactsNotified: config.contacts.length;
     };
     
-    // Store in local storage for history
+    // Store in local storage for history;
     const history = JSON.parse(localStorage.getItem('crisis_history') || '[]');
     history.push(event);
     localStorage.setItem('crisis_history', JSON.stringify(history.slice(-50))); // Keep last 50 events
@@ -245,7 +246,7 @@ export const CrisisAlertNotification: React.FC = () => {
       name: '',
       phone: '',
       relationship: '',
-      isPrimary: config.contacts.length === 0
+      isPrimary: config.contacts.length === 0;
     };
     
     setConfig(prev => ({
@@ -266,7 +267,7 @@ export const CrisisAlertNotification: React.FC = () => {
   const removeContact = (id: string) => {
     setConfig(prev => ({
       ...prev,
-      contacts: prev.contacts.filter(contact => contact.id !== id)
+      contacts: prev.contacts.filter(contact => contact.id !== id);
     }));
   };
 
@@ -279,7 +280,7 @@ export const CrisisAlertNotification: React.FC = () => {
       await pushNotificationService.sendCrisisNotification(userId, {
         type: 'test',
         message: 'This is a test crisis alert. No action needed.',
-        urgency: 'low'
+        urgency: 'low';
       });
       
       alert('Test crisis alert sent successfully!');
@@ -294,7 +295,7 @@ export const CrisisAlertNotification: React.FC = () => {
   return (
     <>
       {/* Crisis Alert Button (Always Visible) */}
-      <button
+      <button;
         className={`crisis-alert-button ${isInCrisis ? 'active' : ''}`}
         onClick={() => setShowConfig(!showConfig)}
         aria-label="Crisis Alert Settings"
@@ -311,7 +312,7 @@ export const CrisisAlertNotification: React.FC = () => {
               <AlertIcon />
               Crisis Alert System
             </h2>
-            <button 
+            <button; 
               className="close-btn"
               onClick={() => setShowConfig(false)}
             >
@@ -322,7 +323,7 @@ export const CrisisAlertNotification: React.FC = () => {
           {/* Quick Actions */}
           {config.enabled && !alertSent && (
             <div className="quick-actions">
-              <button
+              <button;
                 className="btn-crisis-now"
                 onClick={() => triggerCrisisAlert('manual')}
                 disabled={loading}
@@ -359,7 +360,7 @@ export const CrisisAlertNotification: React.FC = () => {
             
             <div className="config-item">
               <label>
-                <input
+                <input;
                   type="checkbox"
                   checked={config.enabled}
                   onChange={(e) => setConfig(prev => ({ ...prev, enabled: e.target.checked }))}
@@ -370,7 +371,7 @@ export const CrisisAlertNotification: React.FC = () => {
 
             <div className="config-item">
               <label>
-                <input
+                <input;
                   type="checkbox"
                   checked={config.autoAlert}
                   onChange={(e) => setConfig(prev => ({ ...prev, autoAlert: e.target.checked }))}
@@ -386,7 +387,7 @@ export const CrisisAlertNotification: React.FC = () => {
                 value={config.alertThreshold}
                 onChange={(e) => setConfig(prev => ({ 
                   ...prev, 
-                  alertThreshold: e.target.value as 'low' | 'medium' | 'high'
+                  alertThreshold: e.target.value as 'low' | 'medium' | 'high';
                 }))}
                 disabled={!config.enabled || !config.autoAlert}
               >
@@ -398,7 +399,7 @@ export const CrisisAlertNotification: React.FC = () => {
 
             <div className="config-item">
               <label>
-                <input
+                <input;
                   type="checkbox"
                   checked={config.locationSharing}
                   onChange={(e) => setConfig(prev => ({ ...prev, locationSharing: e.target.checked }))}
@@ -422,7 +423,7 @@ export const CrisisAlertNotification: React.FC = () => {
             <div className="emergency-contacts">
               <div className="contacts-header">
                 <h4>Emergency Contacts</h4>
-                <button 
+                <button; 
                   className="btn-add-contact"
                   onClick={addEmergencyContact}
                   disabled={!config.enabled}
@@ -433,21 +434,21 @@ export const CrisisAlertNotification: React.FC = () => {
               
               {config.contacts.map(contact => (
                 <div key={contact.id} className="contact-item">
-                  <input
+                  <input;
                     type="text"
                     placeholder="Name"
                     value={contact.name}
                     onChange={(e) => updateContact(contact.id, 'name', e.target.value)}
                     disabled={!config.enabled}
                   />
-                  <input
+                  <input;
                     type="tel"
                     placeholder="Phone"
                     value={contact.phone}
                     onChange={(e) => updateContact(contact.id, 'phone', e.target.value)}
                     disabled={!config.enabled}
                   />
-                  <input
+                  <input;
                     type="text"
                     placeholder="Relationship"
                     value={contact.relationship}
@@ -455,7 +456,7 @@ export const CrisisAlertNotification: React.FC = () => {
                     disabled={!config.enabled}
                   />
                   <label>
-                    <input
+                    <input;
                       type="checkbox"
                       checked={contact.isPrimary}
                       onChange={(e) => updateContact(contact.id, 'isPrimary', e.target.checked)}
@@ -463,7 +464,7 @@ export const CrisisAlertNotification: React.FC = () => {
                     />
                     Primary
                   </label>
-                  <button
+                  <button;
                     className="btn-remove-contact"
                     onClick={() => removeContact(contact.id)}
                     disabled={!config.enabled}
@@ -476,13 +477,13 @@ export const CrisisAlertNotification: React.FC = () => {
 
             {/* Save and Test */}
             <div className="config-actions">
-              <button 
+              <button; 
                 className="btn-save"
                 onClick={saveConfiguration}
               >
                 Save Configuration
               </button>
-              <button 
+              <button; 
                 className="btn-test"
                 onClick={testCrisisAlert}
                 disabled={!config.enabled || loading}

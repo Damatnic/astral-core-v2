@@ -1,7 +1,7 @@
 /**
  * Comprehensive Security Configuration for CoreV2 Mental Health Platform
  * HIPAA Compliant | Zero-Trust Architecture | Mental Health Focused
- */
+ */;
 
 export interface HIPAASecurityConfig {
   // HIPAA Minimum Necessary Rule
@@ -33,8 +33,8 @@ export interface HIPAASecurityConfig {
     auditControls: boolean;
     integrity: boolean;
     transmission: boolean;
-  }
-
+  };
+}
 export interface CrisisSecurityConfig {
   emergencyOverrides: {
     enabled: boolean;
@@ -48,8 +48,8 @@ export interface CrisisSecurityConfig {
     encryptCrisisNotes: boolean;
     anonymizeAfterResolution: number; // hours
     auditAllAccess: boolean;
-  }
-
+  };
+}
 export interface ZeroTrustConfig {
   verifyExplicitly: {
     enabled: boolean;
@@ -70,8 +70,8 @@ export interface ZeroTrustConfig {
     networkSegmentation: boolean;
     encryptEverything: boolean;
     minimizeBlastRadius: boolean;
-  }
-
+  };
+}
 export interface EncryptionConfig {
   atRest: {
     algorithm: string;
@@ -92,8 +92,8 @@ export interface EncryptionConfig {
     keyExchangeAlgorithm: string;
     messageEncryption: string;
     fileEncryption: boolean;
-  }
-
+  };
+}
 export interface CSPConfig {
   directives: {
     defaultSrc: string[];
@@ -154,8 +154,8 @@ export interface SecurityHeadersConfig {
   permissionsPolicy: {
     enabled: boolean;
     directives: Record<string, string[]>;
-  }
-
+  };
+}
 export interface SessionConfig {
   jwt: {
     secret: string;
@@ -181,8 +181,8 @@ export interface SessionConfig {
     deviceRemembering: boolean;
     concurrentSessionLimit: number;
     sessionTimeout: number;
-  }
-
+  };
+}
 export interface APISecurityConfig {
   authentication: {
     required: boolean;
@@ -209,8 +209,8 @@ export interface APISecurityConfig {
     errorLogging: boolean;
     securityEventLogging: boolean;
     performanceLogging: boolean;
-  }
-
+  };
+}
 export interface SecurityConfig {
   // Environment
   environment: 'development' | 'staging' | 'production';
@@ -291,7 +291,7 @@ export interface SecurityConfig {
     geoBlocking: string[];
   }
 
-// Default Security Configuration
+// Default Security Configuration;
 export const defaultSecurityConfig: SecurityConfig = {
   environment: 'production',
   
@@ -590,7 +590,7 @@ export const defaultSecurityConfig: SecurityConfig = {
   },
 };
 
-// Environment-specific overrides
+// Environment-specific overrides;
 export const getSecurityConfigForEnvironment = (env: 'development' | 'staging' | 'production'): SecurityConfig => {
   const config = { ...defaultSecurityConfig };
   config.environment = env;
@@ -622,7 +622,7 @@ export const getSecurityConfigForEnvironment = (env: 'development' | 'staging' |
   return config;
 };
 
-// Utility functions
+// Utility functions;
 export const validateSecurityConfig = (config: SecurityConfig): { valid: boolean; errors: string[] } => {
   const errors: string[] = [];
   

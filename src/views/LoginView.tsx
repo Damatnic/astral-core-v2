@@ -19,15 +19,15 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
         login();
     };
 
-    // Demo login functions for testing different user types
+    // Demo login functions for testing different user types;
     const handleDemoLogin = (userType: 'user' | 'helper' | 'admin') => {
-        // Create mock user data based on type
+        // Create mock user data based on type;
         const mockUsers = {
             user: {
                 sub: 'demo-user-001',
                 email: 'demo.starkeeper@astralcore.com',
                 name: 'Demo Starkeeper',
-                userType: 'seeker'
+                userType: 'seeker';
             },
             helper: {
                 sub: 'demo-helper-001', 
@@ -41,7 +41,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                     specializations: ['anxiety', 'depression'],
                     bio: 'Demo constellation guide for testing purposes',
                     isVerified: true,
-                    isAvailable: true
+                    isAvailable: true;
                 }
             },
             admin: {
@@ -57,12 +57,12 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                     specializations: ['administration'],
                     bio: 'Demo astral admin for testing purposes',
                     isVerified: true,
-                    isAvailable: true
+                    isAvailable: true;
                 }
             }
         };
 
-        // Store mock user data in localStorage for demo purposes
+        // Store mock user data in localStorage for demo purposes;
         const mockUser = mockUsers[userType];
         localStorage.setItem('demo_user', JSON.stringify(mockUser));
         localStorage.setItem('demo_token', `demo-token-${userType}-${Date.now()}`);
@@ -382,21 +382,21 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                     <div className="demo-login-buttons">
                         <AppButton
                             onClick={() => handleDemoLogin('user')}
-                            variant="secondary"
+                            variant="secondary";
                             className="demo-login-btn starkeeper"
                         >
                             ⭐ Login as Starkeeper
                         </AppButton>
                         <AppButton
                             onClick={() => handleDemoLogin('helper')}
-                            variant="secondary"
+                            variant="secondary";
                             className="demo-login-btn guide"
                         >
                             🌌 Login as Constellation Guide
                         </AppButton>
                         <AppButton
                             onClick={() => handleDemoLogin('admin')}
-                            variant="secondary"
+                            variant="secondary";
                             className="demo-login-btn admin"
                         >
                             ✨ Login as Astral Admin
@@ -407,7 +407,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                         <div style={{ textAlign: 'center', marginTop: '20px' }}>
                             <AppButton
                                 onClick={() => setActiveView({ view: 'workflow-demo' })}
-                                variant="secondary"
+                                variant="secondary";
                                 className="workflow-demo-btn"
                             >
                                 🔄 View Platform Workflow Demo
@@ -451,7 +451,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                 marginTop: '2rem',
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 color: 'white',
-                border: 'none'
+                border: 'none';
             }}>
                 <h3 style={{marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
                     <span>🎭</span> Demo Accounts Available
@@ -468,7 +468,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                         background: 'rgba(255, 255, 255, 0.1)',
                         padding: '1rem',
                         borderRadius: '0.5rem',
-                        backdropFilter: 'blur(10px)'
+                        backdropFilter: 'blur(10px)';
                     }}>
                         <strong style={{display: 'block', marginBottom: '0.5rem'}}>
                             👤 Regular User
@@ -482,7 +482,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                         background: 'rgba(255, 255, 255, 0.1)',
                         padding: '1rem',
                         borderRadius: '0.5rem',
-                        backdropFilter: 'blur(10px)'
+                        backdropFilter: 'blur(10px)';
                     }}>
                         <strong style={{display: 'block', marginBottom: '0.5rem'}}>
                             💚 Helper
@@ -496,7 +496,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ setActiveView }) => {
                         background: 'rgba(255, 255, 255, 0.1)',
                         padding: '1rem',
                         borderRadius: '0.5rem',
-                        backdropFilter: 'blur(10px)'
+                        backdropFilter: 'blur(10px)';
                     }}>
                         <strong style={{display: 'block', marginBottom: '0.5rem'}}>
                             ⚙️ Admin

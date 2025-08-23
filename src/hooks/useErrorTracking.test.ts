@@ -12,7 +12,7 @@ jest.mock('../services/errorTracking', () => ({
     captureUserActionError: jest.fn(),
     captureNetworkError: jest.fn(),
     capturePerformanceIssue: jest.fn(),
-    captureMessage: jest.fn()
+    captureMessage: jest.fn();
   }
 }));
 
@@ -32,7 +32,7 @@ describe('useErrorTracking Hook', () => {
     renderHook(() => useErrorTracking({
       userType: 'seeker',
       feature: 'mood-tracker',
-      autoTrackMount: true
+      autoTrackMount: true;
     }));
     
     expect(ErrorTrackingService.addBreadcrumb).toHaveBeenCalledWith(
@@ -46,7 +46,7 @@ describe('useErrorTracking Hook', () => {
   it.skip('should not auto-track mount without feature', () => {
     renderHook(() => useErrorTracking({
       userType: 'seeker',
-      autoTrackMount: true
+      autoTrackMount: true;
     }));
     
     expect(ErrorTrackingService.addBreadcrumb).not.toHaveBeenCalled();
@@ -55,7 +55,7 @@ describe('useErrorTracking Hook', () => {
   it.skip('should track errors with proper context', () => {
     const { result } = renderHook(() => useErrorTracking({
       userType: 'helper',
-      feature: 'chat'
+      feature: 'chat';
     }));
     
     const error = new Error('Test error');
@@ -71,7 +71,7 @@ describe('useErrorTracking Hook', () => {
         severity: 'high',
         privacyLevel: 'private',
         userType: 'helper',
-        feature: 'chat'
+        feature: 'chat';
       },
       extra
     );
@@ -80,7 +80,7 @@ describe('useErrorTracking Hook', () => {
   it.skip('should track errors with default context when none provided', () => {
     const { result } = renderHook(() => useErrorTracking({
       userType: 'seeker',
-      feature: 'assessment'
+      feature: 'assessment';
     }));
     
     const error = new Error('Default context error');
@@ -94,19 +94,19 @@ describe('useErrorTracking Hook', () => {
         severity: 'medium',
         privacyLevel: 'private',
         userType: 'seeker',
-        feature: 'assessment'
+        feature: 'assessment';
       });
   });
 
   it.skip('should track crisis errors for seekers', () => {
     const { result } = renderHook(() => useErrorTracking({
-      userType: 'seeker'
+      userType: 'seeker';
     }));
     
     const error = new Error('Crisis error');
     const crisisContext = {
       detectionResult: { hasCrisisIndicators: true },
-      escalationLevel: 'high' as const
+      escalationLevel: 'high' as const;
     };
     const extra = { sessionId: 'abc123' };
 
@@ -117,7 +117,7 @@ describe('useErrorTracking Hook', () => {
       {
         userType: 'seeker',
         detectionResult: { hasCrisisIndicators: true },
-        escalationLevel: 'high'
+        escalationLevel: 'high';
       },
       extra
     );
@@ -125,7 +125,7 @@ describe('useErrorTracking Hook', () => {
 
   it.skip('should track crisis errors for helpers', () => {
     const { result } = renderHook(() => useErrorTracking({
-      userType: 'helper'
+      userType: 'helper';
     }));
     
     const error = new Error('Helper crisis error');
@@ -141,7 +141,7 @@ describe('useErrorTracking Hook', () => {
     const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
     
     const { result } = renderHook(() => useErrorTracking({
-      userType: 'admin'
+      userType: 'admin';
     }));
     
     const error = new Error('Invalid user type crisis error');
@@ -176,7 +176,7 @@ describe('useErrorTracking Hook', () => {
   it.skip('should track user actions with errors for valid user types', () => {
     const { result } = renderHook(() => useErrorTracking({
       userType: 'seeker',
-      feature: 'profile'
+      feature: 'profile';
     }));
     
     const error = new Error('Action error');
@@ -196,7 +196,7 @@ describe('useErrorTracking Hook', () => {
   it.skip('should add breadcrumb for user actions without errors', () => {
     const { result } = renderHook(() => useErrorTracking({
       userType: 'helper',
-      feature: 'chat'
+      feature: 'chat';
     }));
     
     const extra = { messageId: 'msg123' };
@@ -214,7 +214,7 @@ describe('useErrorTracking Hook', () => {
   it.skip('should add breadcrumb when user action has error but invalid user type', () => {
     const { result } = renderHook(() => useErrorTracking({
       userType: 'admin',
-      feature: 'dashboard'
+      feature: 'dashboard';
     }));
     
     const error = new Error('Admin error');
@@ -233,7 +233,7 @@ describe('useErrorTracking Hook', () => {
   it.skip('should track network errors with all parameters', () => {
     const { result } = renderHook(() => useErrorTracking({
       userType: 'seeker',
-      feature: 'api'
+      feature: 'api';
     }));
     
     const error = new Error('Network error');
@@ -252,7 +252,7 @@ describe('useErrorTracking Hook', () => {
 
   it.skip('should track network errors without status code', () => {
     const { result } = renderHook(() => useErrorTracking({
-      userType: 'helper'
+      userType: 'helper';
     }));
     
     const error = new Error('Network timeout');
@@ -271,7 +271,7 @@ describe('useErrorTracking Hook', () => {
   it.skip('should track performance issues with default threshold', () => {
     const { result } = renderHook(() => useErrorTracking({
       userType: 'seeker',
-      feature: 'mood-tracker'
+      feature: 'mood-tracker';
     }));
     
     result.current.trackPerformance('mood-analysis', 1500);
@@ -287,7 +287,7 @@ describe('useErrorTracking Hook', () => {
   it.skip('should track performance issues with custom threshold', () => {
     const { result } = renderHook(() => useErrorTracking({
       userType: 'helper',
-      feature: 'chat'
+      feature: 'chat';
     }));
     
     const context = { messageCount: 50 };
@@ -305,7 +305,7 @@ describe('useErrorTracking Hook', () => {
   it.skip('should add breadcrumb with default parameters', () => {
     const { result } = renderHook(() => useErrorTracking({
       userType: 'seeker',
-      feature: 'assessment'
+      feature: 'assessment';
     }));
     
     result.current.addBreadcrumb('User navigated to step 2');
@@ -320,7 +320,7 @@ describe('useErrorTracking Hook', () => {
 
   it.skip('should add breadcrumb with custom parameters', () => {
     const { result } = renderHook(() => useErrorTracking({
-      userType: 'helper'
+      userType: 'helper';
     }));
     
     const data = { stepId: 'step-2', previousStep: 'step-1' };
@@ -338,7 +338,7 @@ describe('useErrorTracking Hook', () => {
   it.skip('should track custom messages with default context', () => {
     const { result } = renderHook(() => useErrorTracking({
       userType: 'seeker',
-      feature: 'community'
+      feature: 'community';
     }));
     
     result.current.trackMessage('User joined community');
@@ -351,19 +351,19 @@ describe('useErrorTracking Hook', () => {
         severity: 'low',
         privacyLevel: 'public',
         userType: 'seeker',
-        feature: 'community'
+        feature: 'community';
       });
   });
 
   it.skip('should track custom messages with custom context and level', () => {
     const { result } = renderHook(() => useErrorTracking({
       userType: 'helper',
-      feature: 'moderation'
+      feature: 'moderation';
     }));
     
     const context = { 
       severity: 'critical' as const,
-      privacyLevel: 'private' as const 
+      privacyLevel: 'private' as const ;
     };
     const extra = { postId: 'post123', reason: 'inappropriate' };
 
@@ -377,7 +377,7 @@ describe('useErrorTracking Hook', () => {
         severity: 'critical',
         privacyLevel: 'private',
         userType: 'helper',
-        feature: 'moderation'
+        feature: 'moderation';
       },
       extra
     );
@@ -400,7 +400,7 @@ describe('useErrorTracking Hook', () => {
       error,
       expect.objectContaining({
         userType: 'seeker',
-        feature: 'chat'
+        feature: 'chat';
       }));
 
     // Change props
@@ -412,7 +412,7 @@ describe('useErrorTracking Hook', () => {
       error,
       expect.objectContaining({
         userType: 'seeker',
-        feature: 'community'
+        feature: 'community';
       }));
   });
 

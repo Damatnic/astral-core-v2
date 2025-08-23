@@ -195,7 +195,7 @@ describe('LoadingSkeleton', () => {
     it('should generate unique keys for multiple skeletons', () => {
       const { container } = render(<LoadingSkeleton count={3} />);
       
-      // Each skeleton should be wrapped in a div with a unique key
+      // Each skeleton should be wrapped in a div with a unique key;
       const wrapperDivs = container.querySelectorAll('div > .loading-skeleton');
       expect(wrapperDivs).toHaveLength(3);
     });
@@ -215,7 +215,7 @@ describe('LoadingSkeleton', () => {
         post: 'Loading post',
         comment: 'Loading comment',
         profile: 'Loading profile',
-        chat: 'Loading chat message'
+        chat: 'Loading chat message';
       };
       
       Object.entries(variantLabels).forEach(([variant, label]) => {
@@ -232,7 +232,7 @@ describe('LoadingSkeleton', () => {
         post: 'Loading post content...',
         comment: 'Loading comment...',
         profile: 'Loading profile information...',
-        chat: 'Loading chat message...'
+        chat: 'Loading chat message...';
       };
       
       Object.entries(screenReaderTexts).forEach(([variant, text]) => {
@@ -314,7 +314,7 @@ describe('LoadingSkeleton', () => {
 
     it('should handle undefined props gracefully', () => {
       const { container } = render(
-        <LoadingSkeleton 
+        <LoadingSkeleton; 
           variant={undefined as 'post' | 'comment' | 'profile' | 'chat' | undefined} 
           count={undefined as number | undefined} 
           className={undefined as string | undefined}
@@ -354,7 +354,7 @@ describe('LoadingSkeleton', () => {
         // Each variant should have its specific class
         expect(skeleton).toHaveClass(`${variant}-skeleton`);
         
-        // Each should have screen reader text
+        // Each should have screen reader text;
         const srText = container.querySelector('.sr-only');
         expect(srText).toBeInTheDocument();
         

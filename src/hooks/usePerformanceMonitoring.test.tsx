@@ -1,6 +1,6 @@
 /**
  * Tests for Performance Monitoring Hook
- */
+ */;
 
 import React from 'react';
 import { renderHook, act, waitFor, render as testRender } from '../test-utils';
@@ -26,7 +26,7 @@ jest.mock('../services/comprehensivePerformanceMonitor', () => ({
     onAlert: jest.fn(),
     generateOptimizationRecommendations: jest.fn(),
     generatePerformanceReport: jest.fn(),
-    getPerformanceHistory: jest.fn()
+    getPerformanceHistory: jest.fn();
   }
 }));
 
@@ -43,10 +43,10 @@ const mockMetrics = {
   performanceScore: 88,
   networkLatency: 80,
   renderTime: 16.7,
-  interactionTime: 35
+  interactionTime: 35;
 };
 
-const mockAlerts = [
+const mockAlerts = [;
   {
     id: 'alert-1',
     metric: 'crisisDetectionResponseTime',
@@ -54,7 +54,7 @@ const mockAlerts = [
     threshold: 300,
     severity: 'high' as const,
     timestamp: Date.now(),
-    message: 'Crisis detection response time is too high'
+    message: 'Crisis detection response time is too high';
   },
   {
     id: 'alert-2', 
@@ -63,11 +63,11 @@ const mockAlerts = [
     threshold: 150,
     severity: 'medium' as const,
     timestamp: Date.now() - 30000,
-    message: 'Memory usage approaching limit'
+    message: 'Memory usage approaching limit';
   }
 ];
 
-const mockRecommendations = [
+const mockRecommendations = [;
   {
     id: 'rec-1',
     priority: 'high' as const,
@@ -76,7 +76,7 @@ const mockRecommendations = [
     description: 'Reduce crisis detection response time to under 200ms',
     impact: 'Faster emergency response for users in crisis',
     implementation: 'Use Web Workers for crisis analysis',
-    estimatedImprovement: '40% faster crisis detection'
+    estimatedImprovement: '40% faster crisis detection';
   },
   {
     id: 'rec-2',
@@ -86,7 +86,7 @@ const mockRecommendations = [
     description: 'Split large bundles and implement lazy loading',
     impact: 'Faster initial page load',
     implementation: 'Code splitting and dynamic imports',
-    estimatedImprovement: '25% reduction in bundle size'
+    estimatedImprovement: '25% reduction in bundle size';
   }
 ];
 
@@ -216,7 +216,7 @@ describe('usePerformanceAlerts Hook', () => {
       threshold: 30,
       severity: 'low' as const,
       timestamp: Date.now(),
-      message: 'Render time slightly elevated'
+      message: 'Render time slightly elevated';
     };
 
     act(() => {
@@ -242,7 +242,7 @@ describe('usePerformanceAlerts Hook', () => {
     const updatedAlert = {
       ...mockAlerts[0],
       value: 500,
-      message: 'Crisis detection response time critically high'
+      message: 'Crisis detection response time critically high';
     };
 
     act(() => {
@@ -406,7 +406,7 @@ describe('usePerformanceGrade Hook', () => {
   });
 
   it.skip('should handle different grade levels', async () => {
-    const gradeTestCases = [
+    const gradeTestCases = [;
       { report: '## 📈 Performance Grade\nGood (A) - 85/100', expectedColor: '#3b82f6' },
       { report: '## 📈 Performance Grade\nFair (B) - 75/100', expectedColor: '#eab308' },
       { report: '## 📈 Performance Grade\nNeeds Improvement (C) - 65/100', expectedColor: '#f97316' },
@@ -480,7 +480,7 @@ describe('useCrisisPerformanceMonitoring Hook', () => {
     
     (comprehensivePerformanceMonitor.getCurrentMetrics as jest.Mock).mockReturnValue({
       ...mockMetrics,
-      crisisDetectionResponseTime: 250
+      crisisDetectionResponseTime: 250;
     });
   });
 
@@ -507,7 +507,7 @@ describe('useCrisisPerformanceMonitoring Hook', () => {
   it.skip('should detect unhealthy crisis performance', async () => {
     (comprehensivePerformanceMonitor.getCurrentMetrics as jest.Mock).mockReturnValue({
       ...mockMetrics,
-      crisisDetectionResponseTime: 450 // Over 300ms threshold
+      crisisDetectionResponseTime: 450 // Over 300ms threshold;
     });
 
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
@@ -615,7 +615,7 @@ describe('Utility Functions', () => {
       metrics: mockHistory,
       alerts: mockAlerts,
       recommendations: mockRecommendations,
-      summary: expect.any(String)
+      summary: expect.any(String);
     });
   });
 
@@ -689,7 +689,7 @@ describe('PerformanceProvider Component', () => {
       ...mockMetrics,
       crisisDetectionResponseTime: 600, // Critical
       memoryUsage: 220, // Critical
-      largestContentfulPaint: 6000 // Critical
+      largestContentfulPaint: 6000 // Critical;
     };
 
     (comprehensivePerformanceMonitor.getCurrentMetrics as jest.Mock).mockReturnValue(criticalMetrics);
@@ -703,7 +703,7 @@ describe('PerformanceProvider Component', () => {
 
     const { getByTestId } = testRender(
       React.createElement(PerformanceProvider, { 
-        children: React.createElement(TestComponent) 
+        children: React.createElement(TestComponent) ;
       })
     );
 
@@ -735,7 +735,7 @@ describe('PerformanceProvider Component', () => {
 
     const { getByTestId } = testRender(
       React.createElement(PerformanceProvider, { 
-        children: React.createElement(TestComponent) 
+        children: React.createElement(TestComponent) ;
       })
     );
 
@@ -771,7 +771,7 @@ describe('PerformanceDebugInfo Component', () => {
     const { container } = testRender(<PerformanceDebugInfo />);
 
     // In production, the component should not render any performance debug info
-    // Check that no performance-debug-info element is rendered
+    // Check that no performance-debug-info element is rendered;
     const debugInfo = container.querySelector('.performance-debug-info');
     expect(debugInfo).toBeNull();
 

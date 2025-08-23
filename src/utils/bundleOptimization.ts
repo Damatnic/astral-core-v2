@@ -3,11 +3,11 @@
  * 
  * Advanced bundle analysis and optimization utilities for mobile performance.
  * Provides runtime bundle monitoring, chunk loading optimization, and memory management.
- */
+ */;
 
 import { ComponentPreloader } from '../components/EnhancedLazyComponent';
 
-// Bundle metrics interface
+// Bundle metrics interface;
 interface BundleMetrics {
   totalSize: number;
   loadTime: number;
@@ -18,10 +18,10 @@ interface BundleMetrics {
   memoryImpact: number;
 }
 
-// Chunk loading strategy
+// Chunk loading strategy;
 type ChunkLoadingStrategy = 'eager' | 'lazy' | 'prefetch' | 'preload';
 
-// Bundle analyzer class
+// Bundle analyzer class;
 export class BundleAnalyzer {
   private static metrics: BundleMetrics = {
     totalSize: 0,
@@ -121,7 +121,7 @@ export class BundleAnalyzer {
       // Continue to fallback
     }
     
-    // Fallback for non-webpack environments
+    // Fallback for non-webpack environments;
     const scripts = Array.from(document.scripts);
     return scripts
       .filter(script => script.src.includes('chunk') || script.src.includes('bundle'))
@@ -131,7 +131,7 @@ export class BundleAnalyzer {
   // Estimate chunk size
   private static async getChunkSize(chunkName: string): Promise<number> {
     try {
-      // Try to fetch chunk headers to get size
+      // Try to fetch chunk headers to get size;
       const response = await fetch(chunkName, { method: 'HEAD' });
       const contentLength = response.headers.get('content-length');
       return contentLength ? parseInt(contentLength, 10) : 0;
@@ -143,7 +143,7 @@ export class BundleAnalyzer {
 
   // Estimate chunk size based on script content
   private static estimateChunkSize(chunkName: string): number {
-    const script = Array.from(document.scripts).find(s => 
+    const script = Array.from(document.scripts).find(s => ;
       s.src.includes(chunkName) || s.src.endsWith(chunkName)
     );
     
@@ -159,9 +159,9 @@ export class BundleAnalyzer {
     // This is a simplified implementation
     // In a real app, you'd analyze webpack module registry
 
-    // Analyze global objects that might indicate duplicates
+    // Analyze global objects that might indicate duplicates;
     const globalKeys = Object.keys(window);
-    const potentialDuplicates = globalKeys.filter(key => 
+    const potentialDuplicates = globalKeys.filter(key => ;
       key.includes('react') || 
       key.includes('lodash') || 
       key.includes('moment')
@@ -246,7 +246,8 @@ export class BundleAnalyzer {
       loading: true,
       size: 0,
       loadTime: startTime,
-    });
+    };
+  };
   }
 
   // Mark chunk as loaded
@@ -274,7 +275,7 @@ export class BundleAnalyzer {
   }
 }
 
-// Chunk loading optimizer
+// Chunk loading optimizer;
 export class ChunkLoadingOptimizer {
   private static strategy: ChunkLoadingStrategy = 'lazy';
   private static priorityQueue: Array<{ chunk: string; priority: number }> = [];
@@ -300,7 +301,7 @@ export class ChunkLoadingOptimizer {
 
   // Preload critical chunks
   private static preloadCriticalChunks(): void {
-    const criticalChunks = [
+    const criticalChunks = [;
       'vendors', // Third-party libraries
       'common',  // Shared code
       'runtime', // Webpack runtime
@@ -331,7 +332,7 @@ export class ChunkLoadingOptimizer {
 
   // Get likely chunks based on navigation patterns
   private static getLikelyChunks(currentPath: string): string[] {
-    // Simple heuristics for likely chunks
+    // Simple heuristics for likely chunks;
     const chunkMap: Record<string, string[]> = {
       '/': ['feed', 'chat', 'dashboard'],
       '/chat': ['messages', 'user-profile'],
@@ -410,7 +411,7 @@ export class ChunkLoadingOptimizer {
     }
 }
 
-// Memory optimizer for mobile devices
+// Memory optimizer for mobile devices;
 export class MobileMemoryOptimizer {
   private static memoryThreshold = 50; // MB
   private static cleanupInterval: NodeJS.Timeout | null = null;
@@ -456,7 +457,7 @@ export class MobileMemoryOptimizer {
     // Clear component preloader cache
     ComponentPreloader.clearCache();
     
-    // Force garbage collection if available
+    // Force garbage collection if available;
     const windowWithGC = window as any & { gc?: () => void };
     if ('gc' in windowWithGC && windowWithGC.gc) {
       windowWithGC.gc();
@@ -472,13 +473,14 @@ export class MobileMemoryOptimizer {
 
   // Clear image caches
   private static clearImageCaches(): void {
-    // Remove unused images from DOM
+    // Remove unused images from DOM;
     const images = document.querySelectorAll('img[data-cached="true"]');
     images.forEach(img => {
       if (!this.isElementInViewport(img as HTMLElement)) {
         img.remove();
       }
-    });
+    };
+  };
   }
 
   // Check if element is in viewport
@@ -501,7 +503,7 @@ export class MobileMemoryOptimizer {
     }
 }
 
-// Initialize optimizers
+// Initialize optimizers;
 export const initializeBundleOptimization = () => {
   // Start memory monitoring on mobile devices
   if (window.innerWidth <= 768) {

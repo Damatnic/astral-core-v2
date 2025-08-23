@@ -1,12 +1,12 @@
 /**
  * Lazy Markdown Component - Mobile Optimized
  * Reduces initial bundle size by loading markdown processing on-demand
- */
+ */;
 
 import React, { Suspense, lazy, useState } from 'react';
 import { safeMarkdownToHtml } from '../utils/sanitizeHtml';
 
-// Lazy load the heavy markdown dependencies
+// Lazy load the heavy markdown dependencies;
 const ReactMarkdown = lazy(() => import('react-markdown'));
 
 interface LazyMarkdownProps {
@@ -16,7 +16,7 @@ interface LazyMarkdownProps {
   autoLoad?: boolean;
 }
 
-// Move components outside to avoid re-creation
+// Move components outside to avoid re-creation;
 const OptimizedImage: React.FC<React.ImgHTMLAttributes<HTMLImageElement>> = (props) => (
   <img 
     {...props} 
@@ -41,7 +41,7 @@ export const LazyMarkdown: React.FC<LazyMarkdownProps> = ({
   const [shouldLoad, setShouldLoad] = useState(autoLoad);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Use safe markdown rendering
+  // Use safe markdown rendering;
   const renderSimpleMarkdown = (text: string) => {
     return safeMarkdownToHtml(text);
   };
@@ -63,7 +63,7 @@ export const LazyMarkdown: React.FC<LazyMarkdownProps> = ({
               border: 'none',
               padding: '0',
               textAlign: 'left',
-              width: '100%'
+              width: '100%';
             }}
             aria-label="Load full markdown content"
           >
@@ -72,7 +72,7 @@ export const LazyMarkdown: React.FC<LazyMarkdownProps> = ({
                 __html: renderSimpleMarkdown(children.substring(0, 200) + (children.length > 200 ? '...' : '')) 
               }} 
             />
-            <div
+            <div;
               className="load-markdown-btn"
               style={{
                 marginTop: '8px',
@@ -83,7 +83,7 @@ export const LazyMarkdown: React.FC<LazyMarkdownProps> = ({
                 borderRadius: '4px',
                 fontSize: '12px',
                 cursor: 'pointer',
-                display: 'inline-block'
+                display: 'inline-block';
               }}
             >
               Load Full Content
@@ -110,17 +110,17 @@ export const LazyMarkdown: React.FC<LazyMarkdownProps> = ({
   );
 };
 
-// Separate component for the actual markdown rendering
+// Separate component for the actual markdown rendering;
 const MarkdownRenderer: React.FC<{ children: string; className: string }> = ({ 
   children, 
   className 
 }) => {
   return (
-    <ReactMarkdown 
+    <ReactMarkdown; 
       className={className}
       components={{
         img: OptimizedImage,
-        a: OptimizedLink
+        a: OptimizedLink;
       }}
     >
       {children}
@@ -128,7 +128,7 @@ const MarkdownRenderer: React.FC<{ children: string; className: string }> = ({
   );
 };
 
-// Hook for markdown loading
+// Hook for markdown loading;
 export const useMarkdownLoader = (content: string, autoLoad = false) => {
   const [isLoaded, setIsLoaded] = useState(autoLoad);
   const [isLoading, setIsLoading] = useState(false);

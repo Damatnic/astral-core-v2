@@ -1,13 +1,13 @@
 /**
  * Crisis Resource Cache Service for Astral Core
  * Manages offline-first caching of critical crisis resources for immediate access
- */
+ */;
 
 import { apiClient } from './apiClient';
 import { astralCoreErrorService } from './astralCoreErrorService';
 import { astralCoreAnalytics } from './analyticsService';
 
-// Resource Types
+// Resource Types;
 export interface CrisisResource {
   id: string;
   type: ResourceType;
@@ -87,7 +87,7 @@ export interface CacheStats {
 
 /**
  * Astral Core Crisis Resource Cache Service
- */
+ */;
 class AstralCoreCrisisResourceCache {
   private cache: Map<string, CrisisResource>;
   private config: CacheConfig;
@@ -289,7 +289,7 @@ class AstralCoreCrisisResourceCache {
   async cacheResource(resource: CrisisResource): Promise<void> {
     // Set appropriate TTL based on priority
     if (!resource.expiresAt) {
-      const ttl = resource.priority === ResourcePriority.CRITICAL
+      const ttl = resource.priority === ResourcePriority.CRITICAL;
         ? this.config.criticalResourcesTTL
         : this.config.ttl;
       resource.expiresAt = new Date(Date.now() + ttl);
@@ -337,8 +337,8 @@ class AstralCoreCrisisResourceCache {
       const resource = this.cache.get(id)!;
       if (!this.isExpired(resource)) {
         this.stats.hitRate++;
-        return resource;
-      } else {
+        return resource;;
+  } else {
         // Remove expired resource
         this.cache.delete(id);
         await this.removeFromDB(id);
@@ -357,8 +357,9 @@ class AstralCoreCrisisResourceCache {
     } catch (error) {
       console.error('Astral Core Crisis Cache: Failed to fetch resource', error);
     }
+  }
 
-    return null;
+  return null;
   }
 
   /**
@@ -652,7 +653,8 @@ class AstralCoreCrisisResourceCache {
       astralCoreErrorService.handle(error as Error, {
         notify: true,
         log: true,
-      });
+      };
+  };
     }
   }
 
@@ -671,7 +673,7 @@ class AstralCoreCrisisResourceCache {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const astralCoreCrisisResourceCache = new AstralCoreCrisisResourceCache();
 
 // Auto-preload critical resources on initialization

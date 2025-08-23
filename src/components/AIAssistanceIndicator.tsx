@@ -19,7 +19,7 @@ export const AIAssistanceIndicator: React.FC<AIAssistanceIndicatorProps> = ({
   const variantClass = variant !== 'default' ? `ai-assistance-indicator-${variant}` : '';
   const activeClass = isActive ? 'ai-assistance-active' : 'ai-assistance-inactive';
 
-  const classes = [
+  const classes = [;
     baseClass,
     variantClass,
     activeClass,
@@ -27,7 +27,7 @@ export const AIAssistanceIndicator: React.FC<AIAssistanceIndicatorProps> = ({
   ].filter(Boolean).join(' ');
 
   return (
-    <div
+    <div;
       className={classes}
       style={style}
       role="status"

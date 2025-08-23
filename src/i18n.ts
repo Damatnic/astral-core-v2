@@ -4,12 +4,12 @@
  * 
  * Legacy i18n file - functionality moved to src/i18n/index.ts
  * This file is kept for backward compatibility
- */
+ */;
 
 import { useI18n } from './i18n/hooks';
 export { useI18n };
 
-// Re-export main functions for backward compatibility
+// Re-export main functions for backward compatibility;
 import i18nInstance, { 
   changeLanguage as changeLanguageFunction,
   getCulturalContext,
@@ -30,10 +30,10 @@ export {
 
 export { changeLanguageFunction as changeLanguage };
 
-// Default export for backward compatibility
+// Default export for backward compatibility;
 export default i18nInstance;
 
-// Legacy translation objects for backward compatibility
+// Legacy translation objects for backward compatibility;
 export const en = {
   share: 'Share',
   my_activity: 'My Activity',
@@ -70,7 +70,7 @@ export const es = {
   donate: 'Donar'
 };
 
-// Legacy locale setter function
+// Legacy locale setter function;
 export const setLocale = (locale: string) => {
   changeLanguageFunction(locale);
 };

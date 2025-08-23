@@ -31,7 +31,7 @@ export const VideoChatView: React.FC<{
     };
 
     const setupPeerConnection = (stream: MediaStream) => {
-      // In a real app, you would get STUN/TURN server URLs from a service
+      // In a real app, you would get STUN/TURN server URLs from a service;
       const servers = {
         iceServers: [
           { urls: 'stun:stun.l.google.com:19302' },
@@ -83,7 +83,8 @@ export const VideoChatView: React.FC<{
       if (peerConnectionRef.current) {
         peerConnectionRef.current.close();
       }
-    }, [onClose]);
+    };
+  }, [onClose]);
 
   const toggleMic = () => {
     if (localStreamRef.current) {

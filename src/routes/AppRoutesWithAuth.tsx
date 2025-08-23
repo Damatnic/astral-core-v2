@@ -1,17 +1,17 @@
 /**
  * Updated App Routes with Simple Auth Support
  * Includes login/register routes
- */
+ */;
 
 import React, { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { useSimpleAuth } from '../contexts/SimpleAuthContext';
 
-// Auth Page
+// Auth Page;
 const AuthPage = lazy(() => import('../views/AuthPage'));
 
-// Lazy load all views for better performance
+// Lazy load all views for better performance;
 const DashboardView = lazy(() => import('../views/DashboardView'));
 const WellnessDashboard = lazy(() => import('../views/WellnessView'));
 const ProfileView = lazy(() => import('../views/ProfileView'));
@@ -34,19 +34,19 @@ const PeerSupportView = lazy(() => import('../views/PeerSupportView'));
 const TetherView = lazy(() => import('../views/TetherView'));
 const WellnessVideosView = lazy(() => import('../views/WellnessVideosView'));
 
-// Helper-specific views
+// Helper-specific views;
 const HelperDashboardRoute = lazy(() => import('./HelperDashboardRoute'));
 const HelperProfileRoute = lazy(() => import('./HelperProfileRoute'));
 const HelperTrainingRoute = lazy(() => import('./HelperTrainingRoute'));
 const HelperApplicationRoute = lazy(() => import('./HelperApplicationRoute'));
 const HelperCommunityView = lazy(() => import('../views/HelperCommunityView'));
 
-// Admin views
+// Admin views;
 const AdminDashboardRoute = lazy(() => import('./AdminDashboardRoute'));
 const ModerationView = lazy(() => import('../views/ModerationView'));
 const AnalyticsView = lazy(() => import('../views/AnalyticsView'));
 
-// Loading fallback component
+// Loading fallback component;
 const RouteLoading: React.FC = () => (
   <div className="route-loading">
     <LoadingSpinner />
@@ -54,7 +54,7 @@ const RouteLoading: React.FC = () => (
   </div>
 );
 
-// Simple Auth Guard Component
+// Simple Auth Guard Component;
 const SimpleAuthGuard: React.FC<{ 
   children: React.ReactNode;
   requireRoles?: string[];

@@ -8,12 +8,12 @@ jest.mock('../enhancedCrisisKeywordDetectionService', () => ({
       overallSeverity: 'low',
       riskAssessment: {
         immediateRisk: 0.2,
-        confidenceScore: 50
+        confidenceScore: 50;
       },
       keywordMatches: [],
       interventionRecommendations: [],
       escalationRequired: false,
-      emergencyServicesRequired: false
+      emergencyServicesRequired: false;
     })
   }
 }));
@@ -22,7 +22,7 @@ jest.mock('../crisisEscalationWorkflowService', () => ({
   crisisEscalationWorkflowService: {
     initiateEscalation: jest.fn().mockResolvedValue({
       escalated: false,
-      level: 'none'
+      level: 'none';
     })
   }
 }));
@@ -31,7 +31,7 @@ jest.mock('../crisisEscalationWorkflowService', () => ({
 jest.mock('@tensorflow/tfjs-core', () => ({
   ready: jest.fn().mockResolvedValue(undefined),
   tensor: jest.fn(),
-  dispose: jest.fn()
+  dispose: jest.fn();
 }));
 
 // Mock window.requestIdleCallback
@@ -42,14 +42,14 @@ global.requestIdleCallback = jest.fn((callback) => {
 
 // Mock Response for caching tests
 global.Response = jest.fn((body: any) => ({
-  json: () => Promise.resolve(JSON.parse(body))
+  json: () => Promise.resolve(JSON.parse(body));
 })) as any;
 
 // Mock caches API
 global.caches = {
   open: jest.fn().mockResolvedValue({
     put: jest.fn().mockResolvedValue(undefined),
-    match: jest.fn().mockResolvedValue(null)
+    match: jest.fn().mockResolvedValue(null);
   })
 } as any;
 
@@ -76,12 +76,12 @@ describe('AIServiceManager', () => {
         overallSeverity: 'high',
         riskAssessment: {
           immediateRisk: 0.9,
-          confidenceScore: 90
+          confidenceScore: 90;
         },
         keywordMatches: ['suicide', 'end it'],
         interventionRecommendations: ['Immediate intervention required'],
         escalationRequired: true,
-        emergencyServicesRequired: false
+        emergencyServicesRequired: false;
       });
 
       const crisisService = await service.getCrisisDetectionService(true);
@@ -123,7 +123,7 @@ describe('AIServiceManager', () => {
 
   describe('getAdvancedAIService', () => {
     it.skip('should throw error when device does not support advanced AI', async () => {
-      // Import progressiveAIEnhancement and mock it
+      // Import progressiveAIEnhancement and mock it;
       const { progressiveAIEnhancement } = require('../optimizedAIService');
       const originalShouldEnableAI = progressiveAIEnhancement.shouldEnableAI;
       progressiveAIEnhancement.shouldEnableAI = jest.fn().mockReturnValue(false);
@@ -135,20 +135,20 @@ describe('AIServiceManager', () => {
     });
 
     it.skip('should return advanced AI service when available', async () => {
-      // Import progressiveAIEnhancement and mock it
+      // Import progressiveAIEnhancement and mock it;
       const { progressiveAIEnhancement } = require('../optimizedAIService');
       const originalShouldEnableAI = progressiveAIEnhancement.shouldEnableAI;
       progressiveAIEnhancement.shouldEnableAI = jest.fn().mockReturnValue(true);
 
-      // Mock TensorFlow ready
+      // Mock TensorFlow ready;
       const tfMock = require('@tensorflow/tfjs-core');
       tfMock.ready.mockResolvedValue(undefined);
       tfMock.tensor1d = jest.fn().mockReturnValue({
-        dispose: jest.fn()
+        dispose: jest.fn();
       });
       tfMock.div = jest.fn().mockReturnValue({
         data: jest.fn().mockResolvedValue([1, 2, 3]),
-        dispose: jest.fn()
+        dispose: jest.fn();
       });
       tfMock.max = jest.fn().mockReturnValue(3);
 
@@ -268,13 +268,13 @@ describe('AIServiceManager', () => {
     });
 
     it.skip('should maintain state across method calls', async () => {
-      // First call should create the service
+      // First call should create the service;
       const result1 = await service.getCrisisDetectionService(true);
       
-      // Mock the internal services to verify caching
+      // Mock the internal services to verify caching;
       const originalServices = (service as any).services;
       
-      // Second call should return cached service
+      // Second call should return cached service;
       const result2 = await service.getCrisisDetectionService(true);
       
       // Both should be defined

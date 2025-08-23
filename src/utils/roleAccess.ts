@@ -16,7 +16,7 @@ export interface RolePermissions {
     canParticipateInCommunity: boolean;
   }
 
-// Define comprehensive role permissions
+// Define comprehensive role permissions;
 export const ROLE_PERMISSIONS: Record<UserRole, RolePermissions> = {
   Starkeeper: {
     role: 'Starkeeper',
@@ -62,7 +62,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, RolePermissions> = {
       canManageUsers: false,
       canViewAnalytics: false,
       canCreateContent: true,
-      canParticipateInCommunity: true
+      canParticipateInCommunity: true;
     }
   },
   Community: {
@@ -92,7 +92,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, RolePermissions> = {
       canManageUsers: false,
       canViewAnalytics: false,
       canCreateContent: true,
-      canParticipateInCommunity: true
+      canParticipateInCommunity: true;
     }
   },
   Certified: {
@@ -122,7 +122,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, RolePermissions> = {
       canManageUsers: false,
       canViewAnalytics: false,
       canCreateContent: true,
-      canParticipateInCommunity: true
+      canParticipateInCommunity: true;
     }
   },
   Moderator: {
@@ -152,7 +152,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, RolePermissions> = {
       canManageUsers: true,
       canViewAnalytics: true,
       canCreateContent: true,
-      canParticipateInCommunity: true
+      canParticipateInCommunity: true;
     }
   },
   Admin: {
@@ -182,14 +182,14 @@ export const ROLE_PERMISSIONS: Record<UserRole, RolePermissions> = {
       canManageUsers: true,
       canViewAnalytics: true,
       canCreateContent: true,
-      canParticipateInCommunity: true
+      canParticipateInCommunity: true;
     }
   }
 };
 
-// Helper functions for role-based access control
+// Helper functions for role-based access control;
 export const getRolePermissions = (role: UserRole): RolePermissions => {
-  // Return a deep clone to ensure immutability
+  // Return a deep clone to ensure immutability;
   const permissions = ROLE_PERMISSIONS[role];
   return {
     ...permissions,

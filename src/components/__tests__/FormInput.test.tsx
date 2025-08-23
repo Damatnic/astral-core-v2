@@ -4,12 +4,12 @@ import userEvent from '@testing-library/user-event';
 import { FormInput } from '../FormInput';
 import { createMockFormInputProps, mockUseFormAnimations } from '../../test-utils';
 
-// Create a shared mock instance
+// Create a shared mock instance;
 const mockAnimations = mockUseFormAnimations();
 
 // Mock the useFormAnimations hook
 jest.mock('../../hooks/useAnimations', () => ({
-  useFormAnimations: () => mockAnimations
+  useFormAnimations: () => mockAnimations;
 }));
 
 describe('FormInput', () => {
@@ -57,7 +57,7 @@ describe('FormInput', () => {
     it('should render floating label correctly', () => {
       const props = createMockFormInputProps({
         label: 'Floating Label',
-        floatingLabel: true
+        floatingLabel: true;
       });
       const { container } = render(<FormInput {...props} />);
       
@@ -77,7 +77,7 @@ describe('FormInput', () => {
       const props = createMockFormInputProps({
         showCharacterCount: true,
         maxLength: 100,
-        value: 'Test'
+        value: 'Test';
       });
       render(<FormInput {...props} />);
       
@@ -102,7 +102,7 @@ describe('FormInput', () => {
         const props = createMockFormInputProps({ type });
         render(<FormInput {...props} />);
         
-        const input = type === 'password' ? screen.getByLabelText('Test Input') :
+        const input = type === 'password' ? screen.getByLabelText('Test Input') :;
                       type === 'number' ? screen.getByRole('spinbutton') :
                       screen.getByRole('textbox');
         expect(input).toHaveAttribute('type', type);
@@ -200,7 +200,7 @@ describe('FormInput', () => {
       
       const input = screen.getByRole('textbox');
       
-      // Simulate rapid typing
+      // Simulate rapid typing;
       const text = 'RapidTyping';
       let accumulated = '';
       for (const char of text) {
@@ -362,7 +362,7 @@ describe('FormInput', () => {
     it('should validate custom rules', async () => {
       const validationRules = [{
         test: (value: string) => value.includes('test'),
-        message: 'Value must contain "test"'
+        message: 'Value must contain "test"';
       }];
       
       const TestWrapper = () => {
@@ -423,7 +423,7 @@ describe('FormInput', () => {
       const props = createMockFormInputProps({
         realTimeValidation: true,
         required: true,
-        value: 'Valid'
+        value: 'Valid';
       });
       render(<FormInput {...props} />);
       
@@ -436,7 +436,7 @@ describe('FormInput', () => {
       const props = createMockFormInputProps({
         realTimeValidation: false,
         required: true,
-        value: '' // Empty required field
+        value: '' // Empty required field;
       });
       render(<FormInput {...props} />);
       
@@ -450,7 +450,7 @@ describe('FormInput', () => {
       const props = createMockFormInputProps({
         showCharacterCount: true,
         maxLength: 100,
-        value: 'Hello world'
+        value: 'Hello world';
       });
       render(<FormInput {...props} />);
       
@@ -486,7 +486,7 @@ describe('FormInput', () => {
       const props = createMockFormInputProps({
         showCharacterCount: false,
         maxLength: 100,
-        value: 'Hello world'
+        value: 'Hello world';
       });
       render(<FormInput {...props} />);
       
@@ -500,7 +500,7 @@ describe('FormInput', () => {
         id: 'test-input',
         label: 'Test Label',
         helpText: 'Help text',
-        required: true
+        required: true;
       });
       render(<FormInput {...props} />);
       
@@ -513,7 +513,7 @@ describe('FormInput', () => {
     it('should associate label with input', () => {
       const props = createMockFormInputProps({
         id: 'test-input',
-        label: 'Test Label'
+        label: 'Test Label';
       });
       render(<FormInput {...props} />);
       
@@ -572,7 +572,7 @@ describe('FormInput', () => {
         floatingLabel: true,
         value: 'Has value',
         label: 'Test Label',
-        className: 'custom-class'
+        className: 'custom-class';
       });
       const { container } = render(<FormInput {...props} />);
       
@@ -653,7 +653,7 @@ describe('FormInput', () => {
       const props = createMockFormInputProps({
         disabled: true,
         required: true,
-        value: ''
+        value: '';
       });
       render(<FormInput {...props} />);
       
@@ -684,7 +684,7 @@ describe('FormInput', () => {
       const props = createMockFormInputProps({
         maxLength: 10,
         showCharacterCount: false,
-        value: 'test'
+        value: 'test';
       });
       render(<FormInput {...props} />);
       
@@ -697,7 +697,7 @@ describe('FormInput', () => {
       const props = createMockFormInputProps({
         floatingLabel: true,
         placeholder: undefined,
-        label: 'Floating Label'
+        label: 'Floating Label';
       });
       render(<FormInput {...props} />);
       
@@ -719,18 +719,18 @@ describe('FormInput', () => {
     });
 
     it('should handle complex validation rules', async () => {
-      const complexRules = [
+      const complexRules = [;
         {
           test: (value: string) => value.length >= 3,
-          message: 'Minimum 3 characters'
+          message: 'Minimum 3 characters';
         },
         {
           test: (value: string) => /[A-Z]/.test(value),
-          message: 'Must contain uppercase letter'
+          message: 'Must contain uppercase letter';
         },
         {
           test: (value: string) => /\d/.test(value),
-          message: 'Must contain number'
+          message: 'Must contain number';
         }
       ];
       

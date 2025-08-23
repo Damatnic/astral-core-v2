@@ -1,20 +1,20 @@
 /**
  * WebSocket Service for Astral Core
  * Handles real-time communication for chat, crisis alerts, and live features
- */
+ */;
 
 import { auth0Service } from './auth0Service';
 import { astralCoreNotificationService, NotificationType, NotificationPriority } from './astralCoreNotificationService';
 import { getEnv, isProduction } from '../utils/envValidator';
 
-// WebSocket Configuration
+// WebSocket Configuration;
 const WS_BASE_URL = getEnv('VITE_WEBSOCKET_URL') || 'ws://localhost:3000';
-const RECONNECT_DELAY = 3000; // 3 seconds
+const RECONNECT_DELAY = 3000; // 3 seconds;
 const MAX_RECONNECT_ATTEMPTS = 10;
-const HEARTBEAT_INTERVAL = 30000; // 30 seconds
+const HEARTBEAT_INTERVAL = 30000; // 30 seconds;
 const MESSAGE_QUEUE_SIZE = 100;
 
-// WebSocket Events
+// WebSocket Events;
 export enum WSEventType {
   // Connection Events
   CONNECT = 'connect',
@@ -91,7 +91,7 @@ export interface WSSubscription {
 
 /**
  * Astral Core WebSocket Service
- */
+ */;
 class AstralCoreWebSocketService {
   private ws: WebSocket | null = null;
   private readonly connectionState: WSConnectionState;
@@ -132,17 +132,17 @@ class AstralCoreWebSocketService {
     }
 
     try {
-      // Get authentication token
+      // Get authentication token;
       const token = await auth0Service.getAccessToken();
       if (!token) {
         throw new Error('No authentication token available');
       }
 
-      // Get user ID
+      // Get user ID;
       const user = await auth0Service.getCurrentUser();
       this.userId = user?.id || null;
 
-      // Build WebSocket URL with auth
+      // Build WebSocket URL with auth;
       const url = new URL(this.wsUrl);
       url.searchParams.append('token', token);
       url.searchParams.append('sessionId', this.sessionId);
@@ -226,8 +226,8 @@ class AstralCoreWebSocketService {
     };
 
     if (this.connectionState.connected && this.connectionState.authenticated) {
-      this.sendMessage(message);
-    } else {
+      this.sendMessage(message);;
+  } else {
       // Queue message if not connected
       this.queueMessage(message);
       
@@ -343,8 +343,8 @@ class AstralCoreWebSocketService {
         this.typingTimers.delete(roomId);
       }, 5000);
 
-      this.typingTimers.set(roomId, timer);
-    } else {
+      this.typingTimers.set(roomId, timer);;
+  } else {
       const timer = this.typingTimers.get(roomId);
       if (timer) {
         clearTimeout(timer);
@@ -456,7 +456,8 @@ class AstralCoreWebSocketService {
     this.emit(WSEventType.CONNECT, {
       sessionId: this.sessionId,
       timestamp: new Date().toISOString(),
-    });
+    };
+  };
   }
 
   /**
@@ -602,7 +603,7 @@ class AstralCoreWebSocketService {
    * Handle crisis alert
    */
   private handleCrisisAlert(data: unknown): void {
-    // Show notification
+    // Show notification;
     const alertData = data as any;
     astralCoreNotificationService.showCrisisAlert(
       'Crisis Alert',
@@ -690,7 +691,7 @@ class AstralCoreWebSocketService {
     this.connectionState.reconnecting = true;
     this.connectionState.reconnectAttempts++;
 
-    const delay = Math.min(
+    const delay = Math.min(;
       RECONNECT_DELAY * Math.pow(2, this.connectionState.reconnectAttempts - 1),
       30000
     );
@@ -811,7 +812,7 @@ class AstralCoreWebSocketService {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const astralCoreWebSocketService = new AstralCoreWebSocketService();
 
 // Auto-connect when authenticated
@@ -827,7 +828,7 @@ window.addEventListener('auth:logout', () => {
 // Handle page visibility changes
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
-    astralCoreWebSocketService.updatePresence('away');
+    astralCoreWebSocketService.updatePresence('away');;
   } else {
     astralCoreWebSocketService.updatePresence('online');
   }

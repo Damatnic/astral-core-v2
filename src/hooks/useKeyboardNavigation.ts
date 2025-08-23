@@ -64,13 +64,14 @@ export const useKeyboardNavigation = (
       const isDisabled = (el as HTMLInputElement | HTMLButtonElement | HTMLSelectElement | HTMLTextAreaElement).disabled;
       return !isDisabled && el.offsetParent !== null;
     }) as HTMLElement[];
+  };
   }, [containerRef, selector]);
 
   const focusElement = useCallback((index: number) => {
     const elements = getFocusableElements();
     if (elements.length === 0) return;
 
-    const targetIndex = wrap 
+    const targetIndex = wrap ;
       ? ((index % elements.length) + elements.length) % elements.length
       : Math.max(0, Math.min(index, elements.length - 1));
 
@@ -80,6 +81,7 @@ export const useKeyboardNavigation = (
       currentIndexRef.current = targetIndex;
       onNavigate?.(targetIndex, element);
     }
+  };
   }, [getFocusableElements, wrap, onNavigate]);
 
   const activateElement = useCallback((index: number) => {
@@ -87,10 +89,10 @@ export const useKeyboardNavigation = (
     const element = elements[index];
     if (element) {
       if (element.tagName === 'BUTTON' || element.getAttribute('role') === 'button') {
-        element.click();
-      } else if (element.tagName === 'A') {
-        element.click();
-      } else if (element.tagName === 'INPUT') {
+        element.click();;
+  } else if (element.tagName === 'A') {
+        element.click();;
+  } else if (element.tagName === 'INPUT') {
         const input = element as HTMLInputElement;
         if (input.type === 'checkbox' || input.type === 'radio') {
           input.click();
@@ -98,6 +100,7 @@ export const useKeyboardNavigation = (
       }
       onActivate?.(index, element);
     }
+  };
   }, [getFocusableElements, onActivate]);
 
   const handleArrowKeys = useCallback((event: KeyboardEvent, currentIndex: number): { handled: boolean; newIndex: number } => {
@@ -126,7 +129,8 @@ export const useKeyboardNavigation = (
         break;
     }
     
-    return { handled: false, newIndex: currentIndex }, [enableArrowKeys, orientation]);
+    return { handled: false, newIndex: currentIndex };
+  }, [enableArrowKeys, orientation]);
 
   const handleHomeEndKeys = useCallback((event: KeyboardEvent, currentIndex: number, elementsLength: number): { handled: boolean; newIndex: number } => {
     if (!enableHomeEnd) return { handled: false, newIndex: currentIndex };
@@ -139,7 +143,8 @@ export const useKeyboardNavigation = (
         event.preventDefault();
         return { handled: true, newIndex: elementsLength - 1 }
     
-    return { handled: false, newIndex: currentIndex }, [enableHomeEnd]);
+    return { handled: false, newIndex: currentIndex };
+  }, [enableHomeEnd]);
 
   const handleActivationKeys = useCallback((event: KeyboardEvent, currentIndex: number, currentElement: HTMLElement, elements: HTMLElement[]): boolean => {
     if (!enableEnterSpace) return false;
@@ -151,6 +156,7 @@ export const useKeyboardNavigation = (
     }
     
     return false;
+  };
   }, [enableEnterSpace, activateElement]);
 
   const handleEscapeKey = useCallback((event: KeyboardEvent): boolean => {
@@ -160,6 +166,7 @@ export const useKeyboardNavigation = (
       return true;
     }
     return false;
+  };
   }, [enableEscape, onEscape]);
 
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
@@ -172,14 +179,14 @@ export const useKeyboardNavigation = (
     const currentIndex = elements.indexOf(currentElement);
     currentIndexRef.current = Math.max(0, currentIndex);
 
-    // Handle arrow keys
+    // Handle arrow keys;
     const arrowResult = handleArrowKeys(event, currentIndex);
     if (arrowResult.handled) {
       focusElement(arrowResult.newIndex);
       return;
     }
 
-    // Handle home/end keys
+    // Handle home/end keys;
     const homeEndResult = handleHomeEndKeys(event, currentIndex, elements.length);
     if (homeEndResult.handled) {
       focusElement(homeEndResult.newIndex);
@@ -193,6 +200,7 @@ export const useKeyboardNavigation = (
 
     // Handle escape key
     handleEscapeKey(event);
+  };
   }, [
     containerRef,
     getFocusableElements,
@@ -206,6 +214,7 @@ export const useKeyboardNavigation = (
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
+  };
   }, [handleKeyDown]);
 
   useEffect(() => {
@@ -215,6 +224,8 @@ export const useKeyboardNavigation = (
         elements[0].focus();
       }
     }
+  };
+  };
   }, [autoFocus, containerRef, getFocusableElements]);
 
   return {
@@ -228,7 +239,7 @@ export const useKeyboardNavigation = (
     }
   };
 
-// Hook for managing focus traps (modal dialogs, etc.)
+// Hook for managing focus traps (modal dialogs, etc.);
 export const useFocusTrap = (
   containerRef: React.RefObject<HTMLElement>,
   isActive: boolean = true,
@@ -256,6 +267,7 @@ export const useFocusTrap = (
       const el = element as HTMLElement;
       return el.offsetParent !== null;
     }) as HTMLElement[];
+  };
   }, [containerRef]);
 
   const handleTabKey = useCallback((event: KeyboardEvent) => {
@@ -273,13 +285,14 @@ export const useFocusTrap = (
         if (document.activeElement === firstElement) {
           event.preventDefault();
           lastElement.focus();
-        }
-      } else if (document.activeElement === lastElement) {
+        };
+  } else if (document.activeElement === lastElement) {
         // Tab
         event.preventDefault();
         firstElement.focus();
       }
     }
+  };
   }, [isActive, containerRef, getFocusableElements]);
 
   useEffect(() => {
@@ -291,13 +304,13 @@ export const useFocusTrap = (
       if (autoFocus && containerRef.current) {
         const focusableElements = getFocusableElements();
         if (focusableElements.length > 0) {
-          focusableElements[0].focus();
-        } else {
-          // Fallback: focus the container or a specific element
+          focusableElements[0].focus();;
+  } else {
+          // Fallback: focus the container or a specific element;
           const fallback = containerRef.current.querySelector(fallbackFocus) as HTMLElement;
           if (fallback) {
-            fallback.focus();
-          } else {
+            fallback.focus();;
+  } else {
             containerRef.current.focus();
           }
         }
@@ -313,6 +326,8 @@ export const useFocusTrap = (
           lastFocusedElement.current.focus();
         }
       }
+  };
+  };
   }, [isActive, autoFocus, restoreFocus, fallbackFocus, containerRef, getFocusableElements, handleTabKey]);
 
   return {
@@ -326,15 +341,16 @@ export const useFocusTrap = (
     }
   };
 
-// Hook for skip navigation links
+// Hook for skip navigation links;
 export const useSkipNavigation = () => {
   const skipToMain = useCallback(() => {
     const main = document.querySelector('main, [role="main"], #main-content') as HTMLElement;
     if (main) {
       main.focus();
-      main.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      main.scrollIntoView({ behavior: 'smooth', block: 'start' };
+  };
       
-      // Announce to screen readers
+      // Announce to screen readers;
       const announcement = document.createElement('div');
       announcement.setAttribute('aria-live', 'assertive');
       announcement.className = 'sr-only';
@@ -342,6 +358,7 @@ export const useSkipNavigation = () => {
       document.body.appendChild(announcement);
       setTimeout(() => document.body.removeChild(announcement), 1000);
     }
+  };
   }, []);
 
   const skipToNavigation = useCallback(() => {
@@ -352,7 +369,7 @@ export const useSkipNavigation = () => {
         firstLink.focus();
         firstLink.scrollIntoView({ behavior: 'smooth', block: 'start' });
         
-        // Announce to screen readers
+        // Announce to screen readers;
         const announcement = document.createElement('div');
         announcement.setAttribute('aria-live', 'assertive');
         announcement.className = 'sr-only';
@@ -361,11 +378,12 @@ export const useSkipNavigation = () => {
         setTimeout(() => document.body.removeChild(announcement), 1000);
       }
     }
+  };
   }, []);
 
   return { skipToMain, skipToNavigation };
 
-// Hook for roving tabindex pattern (for toolbars, menus, etc.)
+// Hook for roving tabindex pattern (for toolbars, menus, etc.);
 export const useRovingTabindex = (
   containerRef: React.RefObject<HTMLElement>,
   options: {
@@ -387,40 +405,44 @@ export const useRovingTabindex = (
   const updateTabindexes = useCallback(() => {
     if (!containerRef.current) return;
 
-    const elements = Array.from(
+    const elements = Array.from(;
       containerRef.current.querySelectorAll(selector)
     );
 
     elements.forEach((element, index) => {
       const htmlElement = element as HTMLElement;
       if (index === currentIndexRef.current) {
-        htmlElement.setAttribute('tabindex', '0');
-      } else {
+        htmlElement.setAttribute('tabindex', '0');;
+  } else {
         htmlElement.setAttribute('tabindex', '-1');
       }
-    });
+    };
+  };
+  };
   }, [containerRef, selector]);
 
   const setActiveIndex = useCallback((index: number) => {
     if (!containerRef.current) return;
 
-    const elements = Array.from(
+    const elements = Array.from(;
       containerRef.current.querySelectorAll(selector)
     );
 
     if (elements.length === 0) return;
 
-    const newIndex = wrap
+    const newIndex = wrap;
       ? ((index % elements.length) + elements.length) % elements.length
       : Math.max(0, Math.min(index, elements.length - 1));
 
     currentIndexRef.current = newIndex;
     updateTabindexes();
     (elements[newIndex] as HTMLElement)?.focus();
+  };
   }, [containerRef, selector, wrap, updateTabindexes]);
 
   useEffect(() => {
     updateTabindexes();
+  };
   }, [updateTabindexes]);
 
   const navigationOptions = {
@@ -441,10 +463,10 @@ export const useRovingTabindex = (
 
   return {
     setActiveIndex,
-    getCurrentIndex: () => currentIndexRef.current
+    getCurrentIndex: () => currentIndexRef.current;
   };
 
-// Utility for announcing keyboard shortcuts
+// Utility for announcing keyboard shortcuts;
 export const announceKeyboardShortcut = (shortcut: string, action: string) => {
   const announcement = document.createElement('div');
   announcement.setAttribute('aria-live', 'polite');
@@ -454,11 +476,11 @@ export const announceKeyboardShortcut = (shortcut: string, action: string) => {
   setTimeout(() => document.body.removeChild(announcement), 2000);
 };
 
-// Global keyboard shortcuts manager
+// Global keyboard shortcuts manager;
 export const useGlobalKeyboardShortcuts = (shortcuts: Record<string, () => void>) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const key = [
+      const key = [;
         event.ctrlKey && 'ctrl',
         event.altKey && 'alt',
         event.shiftKey && 'shift',
@@ -474,6 +496,7 @@ export const useGlobalKeyboardShortcuts = (shortcuts: Record<string, () => void>
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
+  };
   }, [shortcuts]);
 };
 

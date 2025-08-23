@@ -20,11 +20,13 @@ export const BlockedUsersView: React.FC<{ userId: string | null; }> = ({ userId 
         } finally {
             setIsLoading(false);
         }
-    }, [userId]);
+    };
+  }, [userId]);
 
     useEffect(() => {
         fetchBlockedUsers();
-    }, [fetchBlockedUsers]);
+    };
+  }, [fetchBlockedUsers]);
 
     const handleUnblock = async (blockedId: string) => {
         if (!userId) return;

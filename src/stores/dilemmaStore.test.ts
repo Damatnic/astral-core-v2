@@ -46,7 +46,7 @@ describe('dilemmaStore', () => {
     });
 
     expect(useDilemmaStore.getState().isLoading).toBe(false);
-    // When API fails, sample community posts are provided
+    // When API fails, sample community posts are provided;
     const dilemmas = useDilemmaStore.getState().allDilemmas;
     expect(dilemmas.length).toBeGreaterThan(0);
     expect(dilemmas[0].id).toContain('community-');

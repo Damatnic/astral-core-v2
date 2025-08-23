@@ -54,30 +54,31 @@ const EnhancedDashboardView: React.FC = () => {
       setTimeout(() => setAnimateCards(true), 100);
     }, 1000);
 
-    // Get time of day greeting
+    // Get time of day greeting;
     const hour = new Date().getHours();
     if (hour < 12) {
-      setTimeOfDay('Good morning');
-    } else if (hour < 17) {
-      setTimeOfDay('Good afternoon');
-    } else if (hour < 22) {
-      setTimeOfDay('Good evening');
-    } else {
+      setTimeOfDay('Good morning');;
+  } else if (hour < 17) {
+      setTimeOfDay('Good afternoon');;
+  } else if (hour < 22) {
+      setTimeOfDay('Good evening');;
+  } else {
       setTimeOfDay('Good night');
     }
 
-    // Get current date
+    // Get current date;
     const options: Intl.DateTimeFormatOptions = { 
       weekday: 'long', 
       year: 'numeric', 
       month: 'long', 
-      day: 'numeric' 
+      day: 'numeric' ;
     };
     setCurrentDate(new Date().toLocaleDateString(undefined, options));
 
-    // Get user name from auth/storage
+    // Get user name from auth/storage;
     const storedName = localStorage.getItem('userName');
     if (storedName) setUserName(storedName);
+  };
   }, []);
 
   const wellnessStats: WellnessStat[] = [
@@ -86,28 +87,28 @@ const EnhancedDashboardView: React.FC = () => {
       value: '82%',
       change: 5,
       trend: 'up',
-      color: 'var(--gradient-wellness)'
+      color: 'var(--gradient-wellness)';
     },
     {
       label: 'Check-ins This Week',
       value: 5,
       change: 2,
       trend: 'up',
-      color: 'var(--gradient-calm)'
+      color: 'var(--gradient-calm)';
     },
     {
       label: 'Mood Average',
       value: '7.2/10',
       change: 0,
       trend: 'stable',
-      color: 'var(--gradient-peaceful)'
+      color: 'var(--gradient-peaceful)';
     },
     {
       label: 'Active Streak',
       value: '12 days',
       change: 1,
       trend: 'up',
-      color: 'var(--gradient-sunset)'
+      color: 'var(--gradient-sunset)';
     }
   ];
 
@@ -118,7 +119,7 @@ const EnhancedDashboardView: React.FC = () => {
       description: 'Get immediate help when you need it most',
       icon: ShieldIcon,
       gradient: 'linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%)',
-      delay: 0
+      delay: 0;
     },
     {
       id: 'peer-support',
@@ -126,7 +127,7 @@ const EnhancedDashboardView: React.FC = () => {
       description: 'Connect with others who understand',
       icon: UsersIcon,
       gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      delay: 100
+      delay: 100;
     },
     {
       id: 'mood-tracker',
@@ -134,7 +135,7 @@ const EnhancedDashboardView: React.FC = () => {
       description: 'Record how you\'re feeling today',
       icon: HeartIcon,
       gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-      delay: 200
+      delay: 200;
     },
     {
       id: 'ai-companion',
@@ -142,7 +143,7 @@ const EnhancedDashboardView: React.FC = () => {
       description: 'Chat with your supportive AI friend',
       icon: SparkleIcon,
       gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-      delay: 300
+      delay: 300;
     },
     {
       id: 'reflections',
@@ -150,7 +151,7 @@ const EnhancedDashboardView: React.FC = () => {
       description: 'Write your thoughts and reflections',
       icon: BookIcon,
       gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-      delay: 400
+      delay: 400;
     },
     {
       id: 'insights',
@@ -158,7 +159,7 @@ const EnhancedDashboardView: React.FC = () => {
       description: 'View your wellness journey',
       icon: TrendingUpIcon,
       gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-      delay: 500
+      delay: 500;
     }
   ];
 
@@ -218,7 +219,7 @@ const EnhancedDashboardView: React.FC = () => {
                     onClick={() => setSelectedMood(mood.mood)}
                     className={`mood-option ${selectedMood === mood.mood ? 'selected' : ''}`}
                     style={{
-                      background: selectedMood === mood.mood ? mood.gradient : undefined
+                      background: selectedMood === mood.mood ? mood.gradient : undefined;
                     }}
                   >
                     <span className="text-2xl">{mood.emoji}</span>
@@ -237,7 +238,7 @@ const EnhancedDashboardView: React.FC = () => {
               className={`wellness-stat-card ${animateCards ? 'animate-slideIn' : 'opacity-0'}`}
               style={{
                 animationDelay: `${index * 100}ms`,
-                background: 'white'
+                background: 'white';
               }}
             >
               <div className="flex justify-between items-start mb-3">
@@ -245,7 +246,7 @@ const EnhancedDashboardView: React.FC = () => {
                   <p className="text-sm text-gray-600 mb-1">{stat.label}</p>
                   <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
                 </div>
-                <div
+                <div;
                   className="w-12 h-12 rounded-full flex items-center justify-center"
                   style={{ background: stat.color }}
                 >
@@ -272,13 +273,13 @@ const EnhancedDashboardView: React.FC = () => {
               
               {/* Progress bar */}
               <div className="wellness-progress mt-4">
-                <div 
+                <div; 
                   className="wellness-progress-bar"
                   style={{ 
                     width: typeof stat.value === 'string' && stat.value.includes('%') 
                       ? stat.value 
                       : '70%',
-                    background: stat.color
+                    background: stat.color;
                   }}
                 />
               </div>
@@ -306,7 +307,7 @@ const EnhancedDashboardView: React.FC = () => {
                   onClick={() => console.log(`Navigate to ${action.id}`)}
                 >
                   <div className="flex items-start gap-4">
-                    <div
+                    <div;
                       className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:animate-breathe"
                       style={{ background: action.gradient }}
                     >
@@ -322,7 +323,7 @@ const EnhancedDashboardView: React.FC = () => {
                       </p>
                     </div>
                     
-                    <svg 
+                    <svg; 
                       className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transform group-hover:translate-x-1 transition-all"
                       fill="none" 
                       viewBox="0 0 24 24" 

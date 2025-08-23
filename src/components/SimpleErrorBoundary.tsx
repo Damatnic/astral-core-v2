@@ -3,7 +3,7 @@
  * 
  * Lightweight error boundary for handling component failures
  * in the Astral Core mental health platform.
- */
+ */;
 
 import { Component, ReactNode, ErrorInfo } from 'react';
 
@@ -54,7 +54,8 @@ export class SimpleErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoun
     }
     
     this.resetTimeoutId = window.setTimeout(() => {
-      this.setState({ hasError: false, error: undefined });
+      this.setState({ hasError: false, error: undefined };
+  };
     }, 100);
   };
 

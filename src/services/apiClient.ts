@@ -1,18 +1,18 @@
 /**
  * API Client Service for Astral Core
  * Centralized HTTP client with authentication, error handling, and retry logic
- */
+ */;
 
 import { auth0Service } from './auth0Service';
 import { getEnv } from '../utils/envValidator';
 
-// API Configuration
+// API Configuration;
 const API_BASE_URL = getEnv('VITE_API_BASE_URL') || 'http://localhost:3847/api';
-const API_TIMEOUT = 30000; // 30 seconds
+const API_TIMEOUT = 30000; // 30 seconds;
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000; // 1 second
 
-// Request/Response Types
+// Request/Response Types;
 type ApiParamValue = string | number | boolean;
 
 export interface ApiRequestConfig {
@@ -41,7 +41,7 @@ export interface ApiError {
   timestamp: string;
 }
 
-// Custom API Error
+// Custom API Error;
 export class AstralCoreApiError extends Error {
   status?: number;
   code?: string;
@@ -60,7 +60,7 @@ export class AstralCoreApiError extends Error {
 
 /**
  * Astral Core API Client
- */
+ */;
 class ApiClient {
   private readonly baseURL: string;
   private readonly defaultHeaders: Record<string, string>;
@@ -94,25 +94,25 @@ class ApiClient {
       signal,
     } = config;
 
-    // Build URL with query params
+    // Build URL with query params;
     const url = this.buildURL(endpoint, params);
 
-    // Prepare headers
+    // Prepare headers;
     const requestHeaders = await this.prepareHeaders(headers, withAuth);
 
-    // Create abort controller for timeout
+    // Create abort controller for timeout;
     const abortController = new AbortController();
     const requestId = this.generateRequestId();
     this.abortControllers.set(requestId, abortController);
 
-    // Set timeout
+    // Set timeout;
     const timeoutId = setTimeout(() => {
       abortController.abort();
     }, timeout);
 
     try {
-      // Make request with retry logic
-      const response = await this.fetchWithRetry(
+      // Make request with retry logic;
+      const response = await this.fetchWithRetry(;
         url,
         {
           method,
@@ -127,7 +127,7 @@ class ApiClient {
       clearTimeout(timeoutId);
       this.abortControllers.delete(requestId);
 
-      // Parse response
+      // Parse response;
       const data = await this.parseResponse<T>(response);
 
       return {
@@ -154,7 +154,8 @@ class ApiClient {
       ...config,
       method: 'GET',
       params,
-    });
+    };
+  };
     return response.data;
   }
 
@@ -239,7 +240,7 @@ class ApiClient {
       });
     }
 
-    // Get auth token
+    // Get auth token;
     const token = await auth0Service.getAccessToken();
     
     // Make request with XMLHttpRequest for progress tracking
@@ -265,8 +266,8 @@ class ApiClient {
           } catch (parseError) {
             console.error('JSON parse error:', parseError);
             reject(new Error('Failed to parse response'));
-          }
-        } else {
+          };
+  } else {
           reject(this.handleError(new Error(xhr.statusText)));
         }
       });
@@ -301,10 +302,10 @@ class ApiClient {
       },
     });
 
-    // Create blob from response
+    // Create blob from response;
     const blob = new Blob([response.data]);
     
-    // Create download link
+    // Create download link;
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
@@ -379,7 +380,7 @@ class ApiClient {
     // Add request ID for tracking
     headers['X-Request-ID'] = this.generateRequestId();
 
-    // Add crisis mode header if active
+    // Add crisis mode header if active;
     const crisisMode = this.checkCrisisMode();
     if (crisisMode) {
       headers['X-Crisis-Override'] = 'true';
@@ -417,18 +418,18 @@ class ApiClient {
             if (token) {
               options.headers.set('Authorization', `Bearer ${token}`);
             }
-          }
-        } else if (response.status === 429) {
-          // Rate limited - wait before retry
+          };
+  } else if (response.status === 429) {
+          // Rate limited - wait before retry;
           const retryAfter = response.headers.get('Retry-After');
           const delay = retryAfter ? parseInt(retryAfter) * 1000 : RETRY_DELAY * (i + 1);
-          await this.delay(delay);
-        } else if (response.status >= 500) {
+          await this.delay(delay);;
+  } else if (response.status >= 500) {
           // Server error - retry with exponential backoff
           if (i < retries) {
             await this.delay(RETRY_DELAY * Math.pow(2, i));
-          }
-        } else {
+          };
+  } else {
           // Client error - don't retry
           return response;
         }
@@ -452,10 +453,10 @@ class ApiClient {
     const contentType = response.headers.get('content-type');
 
     if (contentType?.includes('application/json')) {
-      return await response.json();
-    } else if (contentType?.includes('text/')) {
-      return await response.text() as unknown as T;
-    } else {
+      return await response.json();;
+  } else if (contentType?.includes('text/')) {
+      return await response.text() as unknown as T;;
+  } else {
       return await response.blob() as unknown as T;
     }
   }
@@ -485,7 +486,7 @@ class ApiClient {
       }
     }
 
-    // API error response with type guard
+    // API error response with type guard;
     const errorWithResponse = error as any;
     if (errorWithResponse?.response) {
       return new AstralCoreApiError({
@@ -497,8 +498,8 @@ class ApiClient {
       });
     }
 
-    // Generic error
-    const errorMessage = error instanceof Error ? error.message : 
+    // Generic error;
+    const errorMessage = error instanceof Error ? error.message : ;
                         (typeof error === 'string' ? error : 'An unexpected error occurred');
     
     return new AstralCoreApiError({
@@ -532,10 +533,10 @@ class ApiClient {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const apiClient = new ApiClient();
 
-// Export convenience methods
+// Export convenience methods;
 export const api = {
   get: apiClient.get.bind(apiClient),
   post: apiClient.post.bind(apiClient),

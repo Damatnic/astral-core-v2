@@ -54,7 +54,7 @@ export const FavoriteHelpersView: React.FC<{
                             level: 5,
                             nextLevelXp: 3000,
                             applicationStatus: 'approved',
-                            trainingCompleted: true
+                            trainingCompleted: true;
                         },
                         {
                             id: 'helper-2',
@@ -74,7 +74,7 @@ export const FavoriteHelpersView: React.FC<{
                             level: 6,
                             nextLevelXp: 4000,
                             applicationStatus: 'approved',
-                            trainingCompleted: true
+                            trainingCompleted: true;
                         },
                         {
                             id: 'helper-3',
@@ -94,13 +94,14 @@ export const FavoriteHelpersView: React.FC<{
                             level: 4,
                             nextLevelXp: 2500,
                             applicationStatus: 'approved',
-                            trainingCompleted: true
+                            trainingCompleted: true;
                         }
                     ]);
                 })
                 .finally(() => setIsLoading(false));
         }
-    }, [userToken, helpSessions]);
+    };
+  }, [userToken, helpSessions]);
 
     const handleRequestClick = (helper: Helper) => {
         setSelectedHelper(helper);

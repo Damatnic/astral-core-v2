@@ -20,14 +20,14 @@ jest.mock('../services/serviceWorkerManager', () => ({
     cacheCrisisResource: jest.fn(),
     precacheCrisisResources: jest.fn(),
     forceReload: jest.fn(),
-    getNetworkStatus: jest.fn()
+    getNetworkStatus: jest.fn();
   }
 }));
 
 // Mock navigator
 Object.defineProperty(global.navigator, 'onLine', {
   value: true,
-  writable: true
+  writable: true;
 });
 
 
@@ -41,10 +41,10 @@ describe('useServiceWorker Hook', () => {
     (serviceWorkerManager.getCacheStatus as jest.Mock).mockResolvedValue({
       totalSize: 1024,
       itemCount: 10,
-      lastUpdated: Date.now()
+      lastUpdated: Date.now();
     });
     (serviceWorkerManager.getNetworkStatus as jest.Mock).mockReturnValue({
-      isOnline: true
+      isOnline: true;
     });
   });
 
@@ -156,7 +156,7 @@ describe('useServiceWorker Hook', () => {
     const mockCacheStatus = {
       totalSize: 2048,
       itemCount: 20,
-      lastUpdated: Date.now()
+      lastUpdated: Date.now();
     };
     
     (serviceWorkerManager.getCacheStatus as jest.Mock).mockResolvedValue(mockCacheStatus);
@@ -341,7 +341,7 @@ describe('useServiceWorker Hook', () => {
 
   it.skip('should sync with service worker manager network status', async () => {
     (serviceWorkerManager.getNetworkStatus as jest.Mock).mockReturnValue({
-      isOnline: false
+      isOnline: false;
     });
 
     const { result } = renderHook(() => useServiceWorker());
@@ -419,7 +419,7 @@ describe('useCacheManager Hook', () => {
     (serviceWorkerManager.getCacheStatus as jest.Mock).mockResolvedValue({
       totalSize: 1024,
       itemCount: 10,
-      lastUpdated: Date.now()
+      lastUpdated: Date.now();
     });
   });
 
@@ -435,7 +435,7 @@ describe('useCacheManager Hook', () => {
     const mockStatus = {
       totalSize: 2048,
       itemCount: 20,
-      lastUpdated: Date.now()
+      lastUpdated: Date.now();
     };
     
     (serviceWorkerManager.getCacheStatus as jest.Mock).mockResolvedValue(mockStatus);

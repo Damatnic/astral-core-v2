@@ -3,7 +3,7 @@
  * 
  * Advanced crisis keyword detection with contextual analysis, sentiment patterns,
  * escalation workflows, and integration with professional services.
- */
+ */;
 
 interface CrisisIndicator {
   keyword: string;
@@ -146,7 +146,7 @@ class EnhancedCrisisDetectionService {
           triggeredKeywords: [],
           sentimentScore: 0,
           contextualFactors: [],
-          urgencyLevel: 0
+          urgencyLevel: 0;
         }
       }
 
@@ -182,7 +182,7 @@ class EnhancedCrisisDetectionService {
       }
     }
 
-    // Analyze sentiment and context
+    // Analyze sentiment and context;
     const sentimentScore = this.analyzeSentiment(normalizedText);
     const contextualFactors = this.analyzeContextualFactors(normalizedText);
     const riskFactors = this.identifyRiskFactors(normalizedText);
@@ -199,7 +199,7 @@ class EnhancedCrisisDetectionService {
     
     // Check if this is a past recovery story - should not flag as crisis
     if (identifiedProtectiveFactors.includes('past_recovery')) {
-      // Past recovery stories should not trigger crisis unless there's new immediate danger
+      // Past recovery stories should not trigger crisis unless there's new immediate danger;
       const hasImmediateDanger = triggeredKeywords.some(k => k.immediateAction || k.severity === 'critical');
       if (!hasImmediateDanger) {
         // Clear crisis indicators for past recovery stories
@@ -217,12 +217,12 @@ class EnhancedCrisisDetectionService {
             triggeredKeywords: [],
             sentimentScore,
             contextualFactors,
-            urgencyLevel: 0
+            urgencyLevel: 0;
           }
         }
     }
     
-    // Apply protective factors to reduce severity (if not emergency)
+    // Apply protective factors to reduce severity (if not emergency);
     const protectiveScore = this.calculateProtectiveFactorScore(identifiedProtectiveFactors);
     if (protectiveScore > 0 && maxSeverity !== 'critical' && !emergencyServices) {
       // Reduce urgency based on protective factors
@@ -245,24 +245,25 @@ class EnhancedCrisisDetectionService {
       }
     }
 
-    // Generate recommended actions (now accounting for protective factors)
+    // Generate recommended actions (now accounting for protective factors);
     const recommendedActions = this.generateRecommendedActions({
       severityLevel: maxSeverity,
       categories: Array.from(detectedCategories),
       urgencyLevel,
       emergencyServices,
       escalationRequired,
-      protectiveFactors: identifiedProtectiveFactors
-    });
+      protectiveFactors: identifiedProtectiveFactors;
+    };
+  };
 
-    // Calculate confidence score (now includes protective factors)
+    // Calculate confidence score (now includes protective factors);
     const confidence = this.calculateConfidence({
       triggeredKeywords: triggeredKeywords.length,
       severityLevel: maxSeverity,
       urgencyLevel,
       sentimentScore,
       contextualFactors: contextualFactors.length,
-      protectiveFactors: identifiedProtectiveFactors.length
+      protectiveFactors: identifiedProtectiveFactors.length;
     });
 
     return {
@@ -287,12 +288,12 @@ class EnhancedCrisisDetectionService {
    * Check if text matches a crisis indicator with context awareness
    */
   private matchesIndicator(text: string, indicator: CrisisIndicator): boolean {
-    // Handle special characters and variations in the keyword
+    // Handle special characters and variations in the keyword;
     const normalizedKeyword = indicator.keyword.replace(/[!.,;?]/g, '').toLowerCase();
     const normalizedText = text.replace(/[!.,;?#]/g, '').toLowerCase();
     
-    // Check for keyword match (handle k!ll -> kill type variations)
-    const keywordVariations = [
+    // Check for keyword match (handle k!ll -> kill type variations);
+    const keywordVariations = [;
       normalizedKeyword,
       normalizedKeyword.replace(/!/g, 'i'),
       normalizedKeyword.replace(/0/g, 'o'),
@@ -326,8 +327,8 @@ class EnhancedCrisisDetectionService {
       return true;
     }
 
-    // Check if any context words appear near the keyword
-    const surroundingText = normalizedText.substring(
+    // Check if any context words appear near the keyword;
+    const surroundingText = normalizedText.substring(;
       Math.max(0, keywordIndex - 50),
       Math.min(normalizedText.length, keywordIndex + normalizedKeyword.length + 50)
     );
@@ -349,7 +350,7 @@ class EnhancedCrisisDetectionService {
       case 'low': urgency += 1; break;
     }
 
-    // Check for urgency modifiers
+    // Check for urgency modifiers;
     const urgencyWords = this.urgencyModifiers.filter(modifier => text.includes(modifier));
     urgency += urgencyWords.length * 2;
 
@@ -372,7 +373,8 @@ class EnhancedCrisisDetectionService {
     
     positiveWords.forEach(word => {
       if (text.includes(word)) sentiment += 1;
-    });
+    };
+  };
     
     negativeWords.forEach(word => {
       if (text.includes(word)) sentiment -= 1;
@@ -442,8 +444,8 @@ class EnhancedCrisisDetectionService {
     const factors: string[] = [];
     const normalizedText = text.toLowerCase();
     
-    // Check for past tense recovery FIRST - this should negate crisis indicators
-    const pastTensePatterns = [
+    // Check for past tense recovery FIRST - this should negate crisis indicators;
+    const pastTensePatterns = [;
       /used to (have|feel|think about) suicidal/,
       /had suicidal thoughts (years|long) ago/,
       /(overcame|overcome|recovered from) (suicidal|self-harm|depression)/,
@@ -488,7 +490,7 @@ class EnhancedCrisisDetectionService {
   private calculateProtectiveFactorScore(protectiveFactors: string[]): number {
     if (protectiveFactors.length === 0) return 0;
     
-    // Weight different protective factors
+    // Weight different protective factors;
     const weights: Record<string, number> = {
       professional_support: 0.25,  // Already getting help is very protective
       help_seeking: 0.20,          // Wanting help is protective
@@ -498,7 +500,7 @@ class EnhancedCrisisDetectionService {
       coping_strategies: 0.10,     // Having ways to cope
       reasons_for_living: 0.15,    // Having meaning/purpose
       ambivalence: 0.10,          // Uncertainty about harming self
-      past_recovery: 0.75         // Past tense strongly indicates recovery - should mostly negate current crisis
+      past_recovery: 0.75         // Past tense strongly indicates recovery - should mostly negate current crisis;
     };
     
     let totalScore = 0;
@@ -591,7 +593,7 @@ class EnhancedCrisisDetectionService {
     // Base confidence from keyword matches
     confidence += Math.min(params.triggeredKeywords * 20, 60);
 
-    // Severity level contribution
+    // Severity level contribution;
     const severityWeights = { 'critical': 30, 'high': 20, 'medium': 15, 'low': 10, 'none': 0 };
     confidence += severityWeights[params.severityLevel as keyof typeof severityWeights] || 0;
 
@@ -660,7 +662,7 @@ class EnhancedCrisisDetectionService {
         description: 'Contact emergency services immediately - active suicide attempt or imminent danger',
         contacts: ['911', '988 Suicide & Crisis Lifeline', 'Local emergency services'],
         resources: ['Crisis intervention team', 'Emergency psychiatric services', 'Mobile crisis unit'],
-        timeline: 'Within 5 minutes'
+        timeline: 'Within 5 minutes';
       });
     }
 
@@ -670,7 +672,7 @@ class EnhancedCrisisDetectionService {
         description: 'Escalate to crisis counselor - high risk situation requiring immediate professional intervention',
         contacts: ['Crisis hotline counselor', 'Platform crisis team', 'Mental health professionals'],
         resources: ['Suicide risk assessment', 'Safety planning', 'Crisis counseling'],
-        timeline: 'Within 15 minutes'
+        timeline: 'Within 15 minutes';
       });
     }
 
@@ -680,7 +682,7 @@ class EnhancedCrisisDetectionService {
         description: 'Implement enhanced monitoring and support protocols',
         contacts: ['Peer support team', 'Regular check-in coordinator', 'Mental health navigator'],
         resources: ['Increased check-ins', 'Safety plan review', 'Additional coping resources'],
-        timeline: 'Within 1 hour'
+        timeline: 'Within 1 hour';
       });
     }
 
@@ -690,7 +692,7 @@ class EnhancedCrisisDetectionService {
         description: 'Provide immediate emotional support and resource connection',
         contacts: ['Peer supporters', 'Crisis chat volunteers', 'Mental health advocates'],
         resources: ['Crisis chat', 'Emotional support', 'Resource navigation', 'Coping strategies'],
-        timeline: 'Immediately available'
+        timeline: 'Immediately available';
       });
     }
 
@@ -784,12 +786,12 @@ class EnhancedCrisisDetectionService {
     }
 }
 
-// Create singleton instance
+// Create singleton instance;
 class AstralCoreCrisisDetectionService extends EnhancedCrisisDetectionService {}
 
-// Singleton instance for Astral Core
+// Singleton instance for Astral Core;
 export const astralCoreCrisisDetection = new AstralCoreCrisisDetectionService();
-export const crisisDetectionService = astralCoreCrisisDetection; // Backward compatibility
-export const enhancedCrisisDetectionService = astralCoreCrisisDetection; // Alias for components using this name
+export const crisisDetectionService = astralCoreCrisisDetection; // Backward compatibility;
+export const enhancedCrisisDetectionService = astralCoreCrisisDetection; // Alias for components using this name;
 export default astralCoreCrisisDetection;
 export type { CrisisAnalysisResult, CrisisIndicator, CrisisEscalationAction };

@@ -19,8 +19,8 @@ export const calculateStreaks = (
     yesterday.setDate(today.getDate() - 1);
 
     return trackedHabits.map(habit => {
-        // Get unique completion dates for this habit (deduplicate same day completions)
-        const habitCompletions = completions
+        // Get unique completion dates for this habit (deduplicate same day completions);
+        const habitCompletions = completions;
             .filter(c => c.habitId === habit.id)
             .map(c => {
                 const date = new Date(c.completedAt);
@@ -28,8 +28,8 @@ export const calculateStreaks = (
                 return date;
             });
 
-        // Remove duplicate dates
-        const uniqueDates = Array.from(new Set(habitCompletions.map(d => d.getTime())))
+        // Remove duplicate dates;
+        const uniqueDates = Array.from(new Set(habitCompletions.map(d => d.getTime())));
             .map(time => new Date(time))
             .sort((a, b) => b.getTime() - a.getTime()); // Sort descending (most recent first)
 
@@ -49,7 +49,7 @@ export const calculateStreaks = (
         let longestStreak = 0;
         let tempStreak = 0;
 
-        // Calculate current streak starting from most recent completion
+        // Calculate current streak starting from most recent completion;
         const mostRecent = uniqueDates[0];
         
         // Current streak only counts if completed today or yesterday
@@ -62,8 +62,8 @@ export const calculateStreaks = (
             for (const completionDate of uniqueDates) {
                 if (isSameDay(completionDate, expectedDate)) {
                     currentStreak++;
-                    expectedDate.setDate(expectedDate.getDate() - 1);
-                } else {
+                    expectedDate.setDate(expectedDate.getDate() - 1);;
+  } else {
                     break;
                 }
             }
@@ -72,15 +72,15 @@ export const calculateStreaks = (
         // Calculate longest streak by checking all consecutive sequences
         for (let i = 0; i < uniqueDates.length; i++) {
             if (i === 0) {
-                tempStreak = 1;
-            } else {
+                tempStreak = 1;;
+  } else {
                 const current = uniqueDates[i];
                 const previous = uniqueDates[i - 1];
                 const daysBetween = Math.round((previous.getTime() - current.getTime()) / (1000 * 60 * 60 * 24));
                 
                 if (daysBetween === 1) {
-                    tempStreak++;
-                } else {
+                    tempStreak++;;
+  } else {
                     longestStreak = Math.max(longestStreak, tempStreak);
                     tempStreak = 1;
                 }
@@ -95,5 +95,6 @@ export const calculateStreaks = (
             currentStreak,
             longestStreak,
             isCompletedToday,
-        });
+        };
+  };
 };

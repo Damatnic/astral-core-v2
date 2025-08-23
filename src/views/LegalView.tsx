@@ -37,6 +37,6 @@ export const LegalView: React.FC = () => (
             </section>
         </Card>
     </>
-)
+);
 
 export default LegalView;

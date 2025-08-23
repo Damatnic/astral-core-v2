@@ -1,7 +1,7 @@
 /**
  * Simplified browser-compatible crisis detection service
  * Temporary stub to avoid natural.js dependency issues
- */
+ */;
 
 export interface MLCrisisAnalysisResult {
   crisisLevel: number;
@@ -42,8 +42,8 @@ export interface MLCrisisAnalysisResult {
 
 class EnhancedAICrisisDetectionService {
   async analyzeCrisisWithML(text: string, context?: any): Promise<MLCrisisAnalysisResult> {
-    // Simple keyword-based crisis detection for browser compatibility
-    const crisisKeywords = [
+    // Simple keyword-based crisis detection for browser compatibility;
+    const crisisKeywords = [;
       'suicide', 'suicidal', 'kill myself', 'end it all', 'can\'t go on', 'hopeless', 'worthless',
       'want to die', 'better off dead', 'no reason to live', 'end my life', 'overdose',
       'cutting', 'self-harm', 'hurt myself', 'hurting myself', 'drunk', 'drinking heavily',
@@ -67,12 +67,12 @@ class EnhancedAICrisisDetectionService {
       psychologicalAssessment: {
         depressionIndicators: crisisLevel * 0.8,
         anxietyIndicators: crisisLevel * 0.6,
-        suicidalIdeation: crisisLevel * 0.9
+        suicidalIdeation: crisisLevel * 0.9;
       },
       behavioralPattern: {
         communicationStyle: crisisLevel > 0.5 ? 'distressed' : 'normal',
         helpSeekingBehavior: crisisLevel > 0.3 ? 'active' : 'passive',
-        escalationTriggers: matchedKeywords
+        escalationTriggers: matchedKeywords;
       },
       realTimeRisk: {
         immediateRisk: crisisLevel * 100, // Convert to 0-100 scale
@@ -90,7 +90,7 @@ class EnhancedAICrisisDetectionService {
         valence: -crisisLevel,
         arousal: crisisLevel * 0.8,
         dominance: -crisisLevel * 0.5,
-        timestamp: Date.now()
+        timestamp: Date.now();
       }
     }
 
@@ -98,7 +98,7 @@ class EnhancedAICrisisDetectionService {
     const analysis = await this.analyzeCrisisWithML(text);
     return {
       isCrisis: analysis.crisisLevel > 0.3,
-      severity: analysis.crisisLevel
+      severity: analysis.crisisLevel;
     }
 }
 

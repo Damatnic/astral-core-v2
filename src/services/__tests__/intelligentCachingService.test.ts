@@ -1,6 +1,6 @@
 import { IntelligentCachingService, intelligentCache } from '../intelligentCachingService';
 
-// Mock IndexedDB
+// Mock IndexedDB;
 const mockDatabase = {
   transaction: jest.fn(),
   objectStoreNames: ['cacheEntries', 'analytics'],
@@ -33,7 +33,7 @@ jest.mock('idb', () => ({
   openDB: jest.fn(),
 }));
 
-// Mock Cache API
+// Mock Cache API;
 const mockCache = {
   match: jest.fn(),
   add: jest.fn(),
@@ -61,7 +61,7 @@ Object.defineProperty(navigator, 'connection', {
     downlink: 10,
     rtt: 50,
     saveData: false,
-    type: 'cellular'
+    type: 'cellular';
   },
   writable: true,
 });
@@ -72,20 +72,20 @@ if (!navigator.storage) {
     value: {
       estimate: jest.fn().mockResolvedValue({
         quota: 1000000000, // 1GB
-        usage: 100000000   // 100MB
+        usage: 100000000   // 100MB;
       }),
       getDirectory: jest.fn(),
-      persist: jest.fn()
+      persist: jest.fn();
     },
     writable: true,
-    configurable: true
-  });
-} else {
+    configurable: true;
+  });;
+  } else {
   // If storage exists, just mock the estimate method
   if (navigator.storage && !navigator.storage.estimate) {
     navigator.storage.estimate = jest.fn().mockResolvedValue({
       quota: 1000000000, // 1GB
-      usage: 100000000   // 100MB
+      usage: 100000000   // 100MB;
     });
   }
 }
@@ -133,7 +133,7 @@ describe('IntelligentCachingService', () => {
         'intelligent-cache',
         1,
         expect.objectContaining({
-          upgrade: expect.any(Function)
+          upgrade: expect.any(Function);
         })
       );
     });
@@ -141,7 +141,7 @@ describe('IntelligentCachingService', () => {
     it.skip('should set up database schema during upgrade', async () => {
       const mockDb = {
         createObjectStore: jest.fn().mockReturnValue({
-          createIndex: jest.fn()
+          createIndex: jest.fn();
         })
       };
       
@@ -223,10 +223,10 @@ describe('IntelligentCachingService', () => {
         value: {
           estimate: jest.fn().mockResolvedValue({
             quota: 1000000,
-            usage: 500000
+            usage: 500000;
           })
         },
-        writable: true
+        writable: true;
       });
       
       mockDatabase.getAll.mockResolvedValue([{}, {}, {}]);
@@ -237,7 +237,7 @@ describe('IntelligentCachingService', () => {
         usage: 500000,
         quota: 1000000,
         usagePercentage: 0.5,
-        cacheEntries: 3
+        cacheEntries: 3;
       });
     });
 
@@ -249,7 +249,7 @@ describe('IntelligentCachingService', () => {
           url: '/old-resource',
           priority: 'low',
           timestamp: oldTimestamp,
-          resourceType: 'static-asset'
+          resourceType: 'static-asset';
         }
       ]);
       
@@ -270,7 +270,7 @@ describe('IntelligentCachingService', () => {
           averageLoadTime: 100,
           cacheRetrievalTime: 50,
           networkFallbackTime: 200,
-          offlineRequestCount: 10
+          offlineRequestCount: 10;
         }
       };
       
@@ -281,7 +281,7 @@ describe('IntelligentCachingService', () => {
       expect(analytics).toEqual(expect.objectContaining({
         hitRate: mockAnalytics.hitRate,
         missRate: mockAnalytics.missRate,
-        evictionCount: mockAnalytics.evictionCount
+        evictionCount: mockAnalytics.evictionCount;
       }));
     });
   });
@@ -298,10 +298,10 @@ describe('IntelligentCachingService', () => {
         value: {
           estimate: jest.fn().mockResolvedValue({
             quota: 1000000,
-            usage: 850000 // 85% usage
+            usage: 850000 // 85% usage;
           })
         },
-        writable: true
+        writable: true;
       });
       
       mockDatabase.getAll.mockResolvedValue([
@@ -311,7 +311,7 @@ describe('IntelligentCachingService', () => {
           timestamp: Date.now() - 1000,
           lastAccessed: Date.now() - 5000,
           hitCount: 1,
-          resourceType: 'static-asset'
+          resourceType: 'static-asset';
         }
       ]);
 
@@ -326,10 +326,10 @@ describe('IntelligentCachingService', () => {
         value: {
           estimate: jest.fn().mockResolvedValue({
             quota: 1000000,
-            usage: 850000 // 85% usage
+            usage: 850000 // 85% usage;
           })
         },
-        writable: true
+        writable: true;
       });
       
       mockDatabase.getAll.mockResolvedValue([
@@ -339,7 +339,7 @@ describe('IntelligentCachingService', () => {
           timestamp: Date.now() - (30 * 24 * 60 * 60 * 1000),
           lastAccessed: Date.now() - (30 * 24 * 60 * 60 * 1000),
           hitCount: 100,
-          resourceType: 'crisis-resource'
+          resourceType: 'crisis-resource';
         }
       ]);
 
@@ -356,13 +356,13 @@ describe('IntelligentCachingService', () => {
           url: '/old-low-priority',
           priority: 'low',
           timestamp: now - (4 * 24 * 60 * 60 * 1000), // 4 days old (exceeds 3 day retention)
-          resourceType: 'static-asset'
+          resourceType: 'static-asset';
         },
         {
           url: '/recent-high-priority',
           priority: 'high',
           timestamp: now - (1 * 24 * 60 * 60 * 1000), // 1 day old (within 30 day retention)
-          resourceType: 'user-data'
+          resourceType: 'user-data';
         }
       ]);
 
@@ -385,10 +385,10 @@ describe('IntelligentCachingService', () => {
         value: {
           estimate: jest.fn().mockResolvedValue({
             quota: 2000000,
-            usage: 1000000
+            usage: 1000000;
           })
         },
-        writable: true
+        writable: true;
       });
       
       mockDatabase.getAll.mockResolvedValue([{}, {}, {}, {}]);
@@ -399,7 +399,7 @@ describe('IntelligentCachingService', () => {
         usage: 1000000,
         quota: 2000000,
         usagePercentage: 0.5,
-        cacheEntries: 4
+        cacheEntries: 4;
       });
     });
 
@@ -409,16 +409,16 @@ describe('IntelligentCachingService', () => {
         value: {
           estimate: jest.fn().mockResolvedValue({
             quota: 1000000,
-            usage: 910000 // 91% usage - critical
+            usage: 910000 // 91% usage - critical;
           })
         },
-        writable: true
+        writable: true;
       });
       
       // Trigger a manual check by getting storage info
       await service.getStorageInfo();
       
-      // The monitoring interval will handle warnings, but we can check the storage state
+      // The monitoring interval will handle warnings, but we can check the storage state;
       const info = await service.getStorageInfo();
       expect(info.usagePercentage).toBeGreaterThan(0.9);
     });
@@ -474,7 +474,7 @@ describe('IntelligentCachingService', () => {
           averageLoadTime: 150,
           cacheRetrievalTime: 75,
           networkFallbackTime: 250,
-          offlineRequestCount: 5
+          offlineRequestCount: 5;
         }
       };
       
@@ -557,21 +557,21 @@ describe('IntelligentCachingService', () => {
           url: '/old-low',
           priority: 'low',
           timestamp: now - (5 * 24 * 60 * 60 * 1000),
-          resourceType: 'static-asset'
+          resourceType: 'static-asset';
         },
         // Should NOT be deleted - within 30 day retention for high priority
         {
           url: '/old-high',
           priority: 'high',
           timestamp: now - (20 * 24 * 60 * 60 * 1000),
-          resourceType: 'user-data'
+          resourceType: 'user-data';
         },
         // Should NOT be deleted - critical resources have 90 day retention
         {
           url: '/old-critical',
           priority: 'critical',
           timestamp: now - (60 * 24 * 60 * 60 * 1000),
-          resourceType: 'crisis-resource'
+          resourceType: 'crisis-resource';
         }
       ]);
       
@@ -591,7 +591,7 @@ describe('IntelligentCachingService', () => {
     });
 
     it.skip('should handle cache operations when DB is not initialized', async () => {
-      // Create a service instance but mock DB to be null
+      // Create a service instance but mock DB to be null;
       const testService = new IntelligentCachingService();
       (testService as any).db = null;
       
@@ -608,9 +608,9 @@ describe('IntelligentCachingService', () => {
       
       Object.defineProperty(navigator, 'storage', {
         value: {
-          estimate: jest.fn().mockRejectedValue(new Error('Storage API error'))
+          estimate: jest.fn().mockRejectedValue(new Error('Storage API error'));
         },
-        writable: true
+        writable: true;
       });
       
       const info = await service.getStorageInfo();
@@ -619,7 +619,7 @@ describe('IntelligentCachingService', () => {
         usage: 0,
         quota: 0,
         usagePercentage: 0,
-        cacheEntries: 0
+        cacheEntries: 0;
       });
       
       expect(testConsoleSpy).toHaveBeenCalled();

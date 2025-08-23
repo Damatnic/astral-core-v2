@@ -1,6 +1,6 @@
 /**
  * Tests for Performance Monitor Hook
- */
+ */;
 
 import { renderHook, act, waitFor } from '../test-utils';
 import { usePerformanceMonitor } from './usePerformanceMonitor';
@@ -12,18 +12,18 @@ jest.mock('../services/coreWebVitalsService', () => ({
   coreWebVitalsService: {
     initialize: jest.fn(),
     generateReport: jest.fn(),
-    getPerformanceSummary: jest.fn()
+    getPerformanceSummary: jest.fn();
   }
 }));
 
-// Setup performance mocks
+// Setup performance mocks;
 const performanceMocks = setupPerformanceMocks();
 
-// Mock performance entry
+// Mock performance entry;
 const mockPerformanceEntry = {
   name: 'navigation',
   duration: 1500,
-  startTime: 0
+  startTime: 0;
 };
 
 const mockWebVitalsReport = {
@@ -35,11 +35,11 @@ const mockWebVitalsReport = {
     cls: 0.05,
     fcp: 800,
     ttfb: 200,
-    inp: 120
+    inp: 120;
   },
   score: 95,
   grade: 'A',
-  recommendations: []
+  recommendations: [];
 };
 
 
@@ -57,15 +57,15 @@ describe('usePerformanceMonitor Hook', () => {
         pathname: '/test',
         search: '',
         hash: '',
-        href: 'http://localhost/test'
+        href: 'http://localhost/test';
       },
-      writable: true
+      writable: true;
     });
 
     // Mock window dimensions
     Object.defineProperty(window, 'innerWidth', {
       value: 1024,
-      writable: true
+      writable: true;
     });
 
     // Mock console methods
@@ -79,7 +79,7 @@ describe('usePerformanceMonitor Hook', () => {
       lcp: 1200,
       fid: 80,
       cls: 0.05,
-      performanceScore: 95
+      performanceScore: 95;
     });
   });
 
@@ -109,7 +109,7 @@ describe('usePerformanceMonitor Hook', () => {
       enableRealTimeAlerts: false,
       enableCrisisOptimization: false,
       enableAutomaticReporting: false,
-      reportingInterval: 60000
+      reportingInterval: 60000;
     };
 
     const { result } = renderHook(() => usePerformanceMonitor(options));
@@ -122,7 +122,7 @@ describe('usePerformanceMonitor Hook', () => {
     // Test crisis route
     Object.defineProperty(window, 'location', {
       value: { pathname: '/crisis/help' },
-      writable: true
+      writable: true;
     });
 
     const { result } = renderHook(() => usePerformanceMonitor());
@@ -133,7 +133,7 @@ describe('usePerformanceMonitor Hook', () => {
   it.skip('should identify non-crisis routes correctly', async () => {
     Object.defineProperty(window, 'location', {
       value: { pathname: '/mood-tracker' },
-      writable: true
+      writable: true;
     });
 
     const { result } = renderHook(() => usePerformanceMonitor());
@@ -144,7 +144,7 @@ describe('usePerformanceMonitor Hook', () => {
   it.skip('should detect mobile devices correctly', async () => {
     Object.defineProperty(window, 'innerWidth', {
       value: 500,
-      writable: true
+      writable: true;
     });
 
     const { result } = renderHook(() => usePerformanceMonitor());
@@ -155,7 +155,7 @@ describe('usePerformanceMonitor Hook', () => {
   it.skip('should detect desktop devices correctly', async () => {
     Object.defineProperty(window, 'innerWidth', {
       value: 1200,
-      writable: true
+      writable: true;
     });
 
     const { result } = renderHook(() => usePerformanceMonitor());
@@ -180,7 +180,7 @@ describe('usePerformanceMonitor Hook', () => {
   it.skip('should apply crisis-specific performance thresholds', async () => {
     Object.defineProperty(window, 'location', {
       value: { pathname: '/crisis' },
-      writable: true
+      writable: true;
     });
 
     const { result } = renderHook(() => usePerformanceMonitor());
@@ -209,7 +209,7 @@ describe('usePerformanceMonitor Hook', () => {
   it.skip('should generate crisis-specific recommendations', async () => {
     Object.defineProperty(window, 'location', {
       value: { pathname: '/emergency' },
-      writable: true
+      writable: true;
     });
 
     const { result } = renderHook(() => usePerformanceMonitor());
@@ -239,7 +239,7 @@ describe('usePerformanceMonitor Hook', () => {
     (window.performance.now as jest.Mock).mockClear();
 
     await act(async () => {
-      // Simulate click on emergency button
+      // Simulate click on emergency button;
       const clickEvent = new MouseEvent('click', { bubbles: true });
       Object.defineProperty(clickEvent, 'target', { value: mockButton });
       
@@ -255,7 +255,7 @@ describe('usePerformanceMonitor Hook', () => {
   it.skip('should detect critical performance issues in crisis scenarios', async () => {
     Object.defineProperty(window, 'location', {
       value: { pathname: '/crisis' },
-      writable: true
+      writable: true;
     });
 
     const consoleSpy = jest.spyOn(console, 'warn');
@@ -293,7 +293,7 @@ describe('usePerformanceMonitor Hook', () => {
   it.skip('should identify critical performance conditions', async () => {
     Object.defineProperty(window, 'location', {
       value: { pathname: '/crisis' },
-      writable: true
+      writable: true;
     });
 
     const { result } = renderHook(() => usePerformanceMonitor());
@@ -320,7 +320,7 @@ describe('usePerformanceMonitor Hook', () => {
   it.skip('should handle mobile-specific performance considerations', async () => {
     Object.defineProperty(window, 'innerWidth', {
       value: 400,
-      writable: true
+      writable: true;
     });
 
     const { result } = renderHook(() => usePerformanceMonitor());
@@ -346,7 +346,7 @@ describe('usePerformanceMonitor Hook', () => {
     // Simulate route change
     Object.defineProperty(window, 'location', {
       value: { pathname: '/new-route' },
-      writable: true
+      writable: true;
     });
 
     rerender();
@@ -358,7 +358,7 @@ describe('usePerformanceMonitor Hook', () => {
   it.skip('should enable crisis optimization features', async () => {
     Object.defineProperty(window, 'location', {
       value: { pathname: '/crisis' },
-      writable: true
+      writable: true;
     });
 
     renderHook(() => usePerformanceMonitor({ enableCrisisOptimization: true }));
@@ -367,8 +367,8 @@ describe('usePerformanceMonitor Hook', () => {
       expect(document.head.children.length).toBeGreaterThan(0);
     });
 
-    // Should prefetch crisis resources
-    const linkElements = Array.from(document.head.children).filter(
+    // Should prefetch crisis resources;
+    const linkElements = Array.from(document.head.children).filter(;
       child => child.tagName === 'LINK' && (child as HTMLLinkElement).href.includes('offline-crisis.html')
     );
     
@@ -396,7 +396,7 @@ describe('usePerformanceMonitor Hook', () => {
 
     renderHook(() => usePerformanceMonitor({ 
       enableAutomaticReporting: true, 
-      reportingInterval: 10000 
+      reportingInterval: 10000 ;
     }));
 
     // Wait for initialization to complete
@@ -428,7 +428,7 @@ describe('usePerformanceMonitor Hook', () => {
 
     renderHook(() => usePerformanceMonitor({ 
       enableAutomaticReporting: true, 
-      reportingInterval: 10000 
+      reportingInterval: 10000 ;
     }));
 
     act(() => {
@@ -450,7 +450,7 @@ describe('usePerformanceMonitor Hook', () => {
     jest.useFakeTimers('modern');
     const { advanceTimersAndFlushPromises } = setupFakeTimersWithPromises();
 
-    // Create spy and override to throw errors
+    // Create spy and override to throw errors;
     const getItemSpy = jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { 
       throw new Error('Storage quota exceeded'); 
     });
@@ -462,7 +462,7 @@ describe('usePerformanceMonitor Hook', () => {
 
     renderHook(() => usePerformanceMonitor({ 
       enableAutomaticReporting: true, 
-      reportingInterval: 10000 
+      reportingInterval: 10000 ;
     }));
 
     // Wait for initialization
@@ -498,7 +498,7 @@ describe('usePerformanceMonitor Hook', () => {
 
     const { unmount, rerender } = renderHook(() => usePerformanceMonitor({ 
       enableAutomaticReporting: true,
-      enableRealTimeAlerts: true
+      enableRealTimeAlerts: true;
     }));
 
     // Force a rerender to ensure effects have run
@@ -514,7 +514,7 @@ describe('usePerformanceMonitor Hook', () => {
       await new Promise(resolve => setTimeout(resolve, 100));
     });
 
-    // Check if event listeners were added (may not happen in test environment)
+    // Check if event listeners were added (may not happen in test environment);
     const wasListenerAdded = addEventListenerSpy.mock.calls.length > 0;
 
     unmount();

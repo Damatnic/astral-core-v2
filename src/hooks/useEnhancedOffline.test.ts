@@ -7,7 +7,7 @@ jest.mock('../services/enhancedOfflineService');
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     i18n: {
-      language: 'en'
+      language: 'en';
     }
   })
 }));
@@ -20,7 +20,7 @@ import { enhancedOfflineService } from '../services/enhancedOfflineService';
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     i18n: {
-      language: 'en'
+      language: 'en';
     }
   })
 }));
@@ -35,7 +35,7 @@ jest.mock('../services/enhancedOfflineService', () => ({
     detectCrisisOffline: jest.fn(),
     addToSyncQueue: jest.fn(),
     clearOfflineData: jest.fn(),
-    updateOfflineResources: jest.fn()
+    updateOfflineResources: jest.fn();
   }
 }));
 
@@ -46,10 +46,10 @@ const mockOfflineCapabilities = {
   hasServiceWorker: true,
   estimatedStorage: 1024 * 1024 * 100, // 100MB
   usedStorage: 1024 * 1024 * 10, // 10MB
-  supportsPWA: true
+  supportsPWA: true;
 };
 
-const mockCrisisResources = [
+const mockCrisisResources = [;
   {
     id: 'resource-1',
     type: 'hotline',
@@ -59,7 +59,7 @@ const mockCrisisResources = [
     language: 'en',
     culturalContext: 'western',
     priority: 1,
-    offline: true
+    offline: true;
   },
   {
     id: 'resource-2',
@@ -70,7 +70,7 @@ const mockCrisisResources = [
     language: 'en',
     culturalContext: 'western',
     priority: 2,
-    offline: true
+    offline: true;
   }
 ];
 
@@ -79,23 +79,23 @@ const mockCrisisDetectionResult = {
   severity: 'high' as const,
   keywords: ['hopeless', 'end it all'],
   recommendations: mockCrisisResources,
-  confidence: 0.85
+  confidence: 0.85;
 };
 
-// Mock navigator properties
+// Mock navigator properties;
 const mockNavigator = {
   onLine: true,
   storage: {
     estimate: jest.fn().mockResolvedValue({
       usage: 10 * 1024 * 1024, // 10MB
-      quota: 100 * 1024 * 1024  // 100MB
+      quota: 100 * 1024 * 1024  // 100MB;
     })
   }
 };
 
 Object.defineProperty(global, 'navigator', {
   value: mockNavigator,
-  writable: true
+  writable: true;
 });
 
 
@@ -106,7 +106,7 @@ describe('useEnhancedOffline Hook', () => {
     // Reset navigator.onLine
     Object.defineProperty(navigator, 'onLine', {
       writable: true,
-      value: true
+      value: true;
     });
 
     // Default successful initialization
@@ -309,7 +309,7 @@ describe('useEnhancedOffline Hook', () => {
       severity: 'low',
       keywords: [],
       recommendations: [],
-      confidence: 0
+      confidence: 0;
     });
     expect(result.current.error).toBe('Offline detection unavailable');
     expect(consoleSpy).toHaveBeenCalled();
@@ -329,7 +329,7 @@ describe('useEnhancedOffline Hook', () => {
       data: { riskLevel: 75, timestamp: Date.now() },
       priority: 5,
       culturalContext: 'western',
-      language: 'en'
+      language: 'en';
     };
 
     await act(async () => {
@@ -339,7 +339,7 @@ describe('useEnhancedOffline Hook', () => {
     expect(enhancedOfflineService.addToSyncQueue).toHaveBeenCalledWith({
       ...syncItem,
       language: 'en',
-      culturalContext: 'western'
+      culturalContext: 'western';
     });
     expect(result.current.syncQueueSize).toBe(1);
     expect(result.current.error).toBeNull();
@@ -362,7 +362,7 @@ describe('useEnhancedOffline Hook', () => {
       data: { test: true },
       priority: 3,
       culturalContext: 'western',
-      language: 'en'
+      language: 'en';
     };
 
     await act(async () => {
@@ -470,7 +470,7 @@ describe('useEnhancedOffline Hook', () => {
   });
 
   it.skip('should determine offline support correctly', async () => {
-    // Test with full support
+    // Test with full support;
     const { result: result1 } = renderHook(() => useEnhancedOffline());
 
     await waitFor(() => {
@@ -481,7 +481,7 @@ describe('useEnhancedOffline Hook', () => {
     (enhancedOfflineService.getOfflineCapabilities as jest.Mock).mockResolvedValue({
       ...mockOfflineCapabilities,
       hasIndexedDB: false,
-      hasStorage: false
+      hasStorage: false;
     });
 
     const { result: result2 } = renderHook(() => useEnhancedOffline());
@@ -492,7 +492,7 @@ describe('useEnhancedOffline Hook', () => {
   });
 
   it.skip('should handle storage estimation errors gracefully', async () => {
-    // Mock storage.estimate to throw error
+    // Mock storage.estimate to throw error;
     const storageError = new Error('Storage API unavailable');
     (navigator.storage.estimate as jest.Mock).mockRejectedValue(storageError);
 
@@ -516,7 +516,7 @@ describe('useEnhancedOffline Hook', () => {
   });
 
   it.skip('should handle browsers without storage API', async () => {
-    // Mock navigator without storage API
+    // Mock navigator without storage API;
     const originalStorage = navigator.storage;
     delete (navigator as any).storage;
 
@@ -569,7 +569,7 @@ describe('useEnhancedOffline Hook', () => {
 
     const updatedStatus = {
       ...mockOfflineCapabilities,
-      isOnline: false
+      isOnline: false;
     };
 
     act(() => {

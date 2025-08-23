@@ -11,7 +11,7 @@ export interface AutoSaveIndicatorProps {
   showCountdown?: boolean;
   /** Custom position for the indicator */
   position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'inline';
-  /** Custom CSS classes */
+  /** Custom CSS classes */;
   className?: string;
   /** Whether to show icons */
   showIcons?: boolean;
@@ -31,13 +31,13 @@ const DEFAULT_LABELS = {
   saved: 'Saved',
   error: 'Save failed',
   idle: 'Draft ready',
-  nextSave: 'Next save in'
+  nextSave: 'Next save in';
 };
 
 /**
  * Visual indicator component for auto-save status
  * Provides user feedback on draft saving state
- */
+ */;
 export const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
   state,
   showDetailedStatus = true,
@@ -105,7 +105,7 @@ export const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
     return null;
   }
 
-  const containerClasses = [
+  const containerClasses = [;
     'auto-save-indicator',
     `auto-save-indicator--${position}`,
     `auto-save-indicator--${state.saveStatus}`,

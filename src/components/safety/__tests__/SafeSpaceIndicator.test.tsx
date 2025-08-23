@@ -1,7 +1,7 @@
 /**
  * Test Suite for SafeSpaceIndicator Component
  * Tests privacy mode indicator with session type display
- */
+ */;
 
 import React from 'react';
 import '@testing-library/jest-dom';
@@ -26,7 +26,7 @@ describe('SafeSpaceIndicator', () => {
     it('should accept all expected props', () => {
       const { SafeSpaceIndicator } = require('../SafeSpaceIndicator');
       
-      // Test that component can be created with various props
+      // Test that component can be created with various props;
       const element = React.createElement(SafeSpaceIndicator, {
         isPrivateMode: true,
         userName: 'Test User',
@@ -54,7 +54,7 @@ describe('SafeSpaceIndicator', () => {
 
   describe('Session Type Logic', () => {
     it('should determine correct text for different session types', () => {
-      // Test the logic without rendering
+      // Test the logic without rendering;
       const getIndicatorText = (sessionType: string, isPrivateMode: boolean) => {
         if (isPrivateMode || sessionType === 'private') {
           return '🔒 Private & Safe';
@@ -74,7 +74,7 @@ describe('SafeSpaceIndicator', () => {
 
   describe('Color Logic', () => {
     it('should determine correct colors for different session types', () => {
-      // Test the color logic
+      // Test the color logic;
       const getIndicatorColor = (sessionType: string) => {
         switch(sessionType) {
           case 'private': return 'var(--safe-accent-cool)';
@@ -143,7 +143,7 @@ describe('SafeSpaceIndicator', () => {
       expect(SafeSpaceIndicator).toBeDefined();
       expect(typeof SafeSpaceIndicator).toBe('function');
       
-      // Verify it can accept children
+      // Verify it can accept children;
       const withChildren = React.createElement(SafeSpaceIndicator, {
         children: React.createElement('div', {}, 'Test')
       });

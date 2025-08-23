@@ -23,7 +23,7 @@ export const AdminDashboardView: React.FC<{
     const fetchAdminData = useCallback(async () => {
         setIsLoading(true);
         try {
-            // Get demo data for admin role
+            // Get demo data for admin role;
             const demoData = demoDataService.getDemoData('admin');
             setAdminData(demoData);
             setApplications(demoData.helperApplications || []);
@@ -34,11 +34,13 @@ export const AdminDashboardView: React.FC<{
         } finally {
             setIsLoading(false);
         }
-    }, []);
+    };
+  }, []);
 
     useEffect(() => {
         fetchAdminData();
-    }, [fetchAdminData]);
+    };
+  }, [fetchAdminData]);
 
     const handleViewApplicant = async (applicant: Helper) => {
         setSelectedApplicant(applicant);
@@ -59,13 +61,13 @@ export const AdminDashboardView: React.FC<{
             onUpdateApplicationStatus(selectedApplicant.id, 'rejected', rejectionNotes);
             setIsModalOpen(false);
             setRejectionNotes('');
-            fetchAdminData();
-        } else {
+            fetchAdminData();;
+  } else {
             alert("Please provide rejection notes.");
         }
     };
 
-    const renderOverviewTab = () => (
+    const renderOverviewTab = () => (;
         <div className="admin-overview">
             {adminData?.profile && (
                 <Card className="admin-profile-card">
@@ -131,7 +133,7 @@ export const AdminDashboardView: React.FC<{
         </div>
     );
 
-    const renderApplicationsTab = () => (
+    const renderApplicationsTab = () => (;
         <Card>
             <h3>Helper Applications Review</h3>
             {isLoading ? <div className="loading-spinner" /> : adminData?.profile?.helperApplications?.length > 0 ? (
@@ -184,7 +186,7 @@ export const AdminDashboardView: React.FC<{
         </Card>
     );
 
-    const renderModerationTab = () => (
+    const renderModerationTab = () => (;
         <div className="moderation-section">
             {adminData?.profile?.escalatedCases && (
                 <Card>
@@ -245,7 +247,7 @@ export const AdminDashboardView: React.FC<{
         </div>
     );
     
-    const renderAnalyticsTab = () => (
+    const renderAnalyticsTab = () => (;
         adminData?.analytics ? (
             <div className="analytics-section">
                 <Card>
@@ -350,7 +352,7 @@ export const AdminDashboardView: React.FC<{
         )
     );
 
-    const renderSystemTab = () => (
+    const renderSystemTab = () => (;
         <div className="system-section">
             {adminData?.analytics?.platformHealth && (
                 <Card>

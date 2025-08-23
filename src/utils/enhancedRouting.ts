@@ -3,17 +3,17 @@
  * 
  * Builds upon existing index.tsx lazy loading with intelligent route optimization,
  * predictive loading, and mobile-specific performance enhancements.
- */
+ */;
 
 import React, { ComponentType, lazy, useEffect } from 'react';
 import { createEnhancedLazyComponent, ComponentPreloader } from '../components/EnhancedLazyComponent';
 import { initializeBundleOptimization } from './bundleOptimization';
 
-// Type aliases
+// Type aliases;
 type Priority = 'low' | 'medium' | 'high';
 type PrefetchTrigger = 'hover' | 'viewport' | 'immediate' | 'interaction';
 
-// Route configuration interface
+// Route configuration interface;
 interface RouteConfig {
   path: string;
   component: ComponentType<any>;
@@ -24,7 +24,7 @@ interface RouteConfig {
   prefetchTrigger?: PrefetchTrigger;
 }
 
-// Navigation patterns for predictive loading
+// Navigation patterns for predictive loading;
 interface NavigationPattern {
   from: string;
   to: string;
@@ -32,7 +32,7 @@ interface NavigationPattern {
   timestamp: number;
 }
 
-// Enhanced route manager
+// Enhanced route manager;
 export class EnhancedRouteManager {
   private static routes = new Map<string, RouteConfig>();
   private static navigationHistory: NavigationPattern[] = [];
@@ -69,8 +69,8 @@ export class EnhancedRouteManager {
     
     this.routes.set(path, config);
 
-    // Create enhanced lazy component
-    const EnhancedComponent = createEnhancedLazyComponent(
+    // Create enhanced lazy component;
+    const EnhancedComponent = createEnhancedLazyComponent(;
       () => Promise.resolve({ default: component }),
       {
         strategy: 'network-aware',
@@ -92,7 +92,7 @@ export class EnhancedRouteManager {
   }
 
   // Enhanced version of existing lazy route creation
-  static createLazyRoute(
+  static createLazyRoute(;
     importFn: () => Promise<{ default: ComponentType<any> }>,
     routePath: string,
     options: Partial<RouteConfig> = {}
@@ -109,8 +109,8 @@ export class EnhancedRouteManager {
 
     this.routes.set(routePath, config);
 
-    // Create enhanced lazy component with import function
-    const EnhancedComponent = createEnhancedLazyComponent(
+    // Create enhanced lazy component with import function;
+    const EnhancedComponent = createEnhancedLazyComponent(;
       importFn,
       {
         strategy: 'network-aware',
@@ -133,7 +133,7 @@ export class EnhancedRouteManager {
   private static setupNavigationMonitoring(): void {
     let lastPath = window.location.pathname;
 
-    // Monitor history changes
+    // Monitor history changes;
     const originalPushState = history.pushState;
     const originalReplaceState = history.replaceState;
 
@@ -194,7 +194,7 @@ export class EnhancedRouteManager {
       existing.count += 1;
       patterns.set(key, existing);
 
-      // Count total navigations from 'from' route
+      // Count total navigations from 'from' route;
       const fromKey = `${from}->*`;
       const fromTotal = patterns.get(fromKey) || { count: 0, total: 0 };
       fromTotal.total += 1;
@@ -238,10 +238,10 @@ export class EnhancedRouteManager {
   private static getLikelyNextRoutes(currentPath: string): Array<{ route: string; probability: number }> {
     const routes: Array<{ route: string; probability: number }> = [];
     
-    // Find patterns starting from current path
+    // Find patterns starting from current path;
     const relevantPatterns = this.navigationHistory.filter(p => p.from === currentPath);
     
-    // Group by destination and sum probabilities
+    // Group by destination and sum probabilities;
     const routeProbabilities = new Map<string, number>();
     relevantPatterns.forEach(pattern => {
       const existing = routeProbabilities.get(pattern.to) || 0;
@@ -351,7 +351,7 @@ export class EnhancedRouteManager {
       entries.forEach(entry => handleIntersection(entry, observer));
     }, { rootMargin: '100px' });
 
-    // Handle added nodes
+    // Handle added nodes;
     const handleAddedNodes = (node: Node) => {
       if (node.nodeType === Node.ELEMENT_NODE) {
         const element = node as HTMLElement;
@@ -360,7 +360,7 @@ export class EnhancedRouteManager {
       }
     };
 
-    // Observe links as they appear
+    // Observe links as they appear;
     const linkObserver = new MutationObserver((mutations) => {
       mutations.forEach(mutation => {
         mutation.addedNodes.forEach(handleAddedNodes);
@@ -372,7 +372,7 @@ export class EnhancedRouteManager {
 
   // Preload critical routes immediately
   private static preloadCriticalRoutes(): void {
-    const criticalRoutes = [
+    const criticalRoutes = [;
       '/',
       '/chat',
       '/dashboard',
@@ -430,10 +430,11 @@ export class EnhancedRouteManager {
     }
 }
 
-// Hook for using enhanced routing
+// Hook for using enhanced routing;
 export const useEnhancedRouting = () => {
   useEffect(() => {
     EnhancedRouteManager.initialize();
+  };
   }, []);
 
   return {
@@ -442,7 +443,7 @@ export const useEnhancedRouting = () => {
     getRouteMetrics: EnhancedRouteManager.getRouteMetrics,
   };
 
-// HOC for route performance tracking
+// HOC for route performance tracking;
 export const withRouteTracking = <P extends object>(
   Component: ComponentType<P>,
   routePath: string
@@ -458,7 +459,8 @@ export const withRouteTracking = <P extends object>(
         if (process.env.NODE_ENV === 'development') {
           console.log(`📊 Route ${routePath} render time: ${renderTime.toFixed(2)}ms`);
         }
-      }, []);
+      };
+  }, []);
 
     return React.createElement(Component, props);
   };

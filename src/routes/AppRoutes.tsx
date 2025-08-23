@@ -1,7 +1,7 @@
 /**
  * Centralized Route Configuration for CoreV2
  * All application routes with lazy loading
- */
+ */;
 
 import React, { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { LoadingSpinner } from '../components/LoadingSpinner';
 // import { AuthGuard } from '../components/auth/AuthGuard';
 // import { UserRole } from '../services/auth0Service';
 
-// Lazy load all views for better performance
+// Lazy load all views for better performance;
 const DashboardView = lazy(() => import('../views/DashboardView'));
 const ProfileView = lazy(() => import('../views/ProfileView'));
 const SettingsView = lazy(() => import('../views/SettingsView'));
@@ -32,19 +32,19 @@ const PeerSupportView = lazy(() => import('../views/PeerSupportView'));
 const TetherView = lazy(() => import('../views/TetherView'));
 const WellnessVideosView = lazy(() => import('../views/WellnessVideosView'));
 
-// Helper-specific views
+// Helper-specific views;
 const HelperDashboardRoute = lazy(() => import('./HelperDashboardRoute'));
 const HelperProfileRoute = lazy(() => import('./HelperProfileRoute'));
 const HelperTrainingRoute = lazy(() => import('./HelperTrainingRoute'));
 const HelperApplicationRoute = lazy(() => import('./HelperApplicationRoute'));
 const HelperCommunityView = lazy(() => import('../views/HelperCommunityView'));
 
-// Admin views
+// Admin views;
 const AdminDashboardRoute = lazy(() => import('./AdminDashboardRoute'));
 const ModerationView = lazy(() => import('../views/ModerationView'));
 const AnalyticsView = lazy(() => import('../views/AnalyticsView'));
 
-// Loading fallback component
+// Loading fallback component;
 const RouteLoading: React.FC = () => (
   <div className="route-loading">
     <LoadingSpinner />

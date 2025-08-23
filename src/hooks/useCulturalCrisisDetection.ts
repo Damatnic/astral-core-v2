@@ -5,7 +5,7 @@
  * cultural bias mitigation, and culturally-appropriate intervention recommendations.
  * 
  * @license Apache-2.0
- */
+ */;
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { 
@@ -85,7 +85,7 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
     culturalMetrics: {
       totalAnalyses: 0,
       biasReductionRate: 0.20,
-      culturalAccuracy: 0.85
+      culturalAccuracy: 0.85;
     }
   });
 
@@ -99,9 +99,9 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
       immediate: [],
       cultural: [],
       familyBased: [],
-      communityBased: []
+      communityBased: [];
     },
-    emergencyMode: false
+    emergencyMode: false;
   });
 
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
@@ -109,8 +109,8 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
 
   /**
    * Analyze text with cultural context awareness
-   */
-  const analyzeCulturalCrisis = useCallback(async (
+   */;
+  const analyzeCulturalCrisis = useCallback(async (;
     text: string, 
     options: { 
       immediate?: boolean; 
@@ -130,7 +130,7 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
     setState(prev => ({ ...prev, isAnalyzing: true }));
 
     try {
-      const analysis = await culturalCrisisDetectionService.analyzeCrisisWithCulturalContext(
+      const analysis = await culturalCrisisDetectionService.analyzeCrisisWithCulturalContext(;
         text,
         userId,
         languageCode,
@@ -139,7 +139,7 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
 
       // Update state with new analysis
       setState(prev => {
-        const newHistory = options.trackHistory 
+        const newHistory = options.trackHistory ;
           ? [...prev.analysisHistory, analysis].slice(-maxHistorySize)
           : prev.analysisHistory;
 
@@ -152,9 +152,10 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
           analysisHistory: newHistory,
           culturalMetrics: {
             ...prev.culturalMetrics,
-            totalAnalyses: prev.culturalMetrics.totalAnalyses + 1
+            totalAnalyses: prev.culturalMetrics.totalAnalyses + 1;
           }
-        });
+        };
+  };
 
       // Update cultural alert
       updateCulturalAlert(analysis);
@@ -181,6 +182,7 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
     } finally {
       setState(prev => ({ ...prev, isAnalyzing: false }));
     }
+  };
   }, [
     minAnalysisLength, 
     userId, 
@@ -194,7 +196,7 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
 
   /**
    * Debounced analysis for real-time text input
-   */
+   */;
   const analyzeWithDebounce = useCallback((text: string) => {
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
@@ -205,11 +207,12 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
         analyzeCulturalCrisis(text, { trackHistory: true });
       }
     }, debounceMs);
+  };
   }, [analyzeCulturalCrisis, autoAnalyze, debounceMs]);
 
   /**
    * Update cultural alert based on analysis result
-   */
+   */;
   const updateCulturalAlert = useCallback((analysis: CulturalCrisisAnalysisResult) => {
     const riskLevel = analysis.culturallyAdjustedRisk?.adjustedRisk || 0;
     let severity: CulturalCrisisAlert['severity'] = 'none';
@@ -219,25 +222,25 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
     if (riskLevel >= 80) {
       severity = 'critical';
       message = 'Critical crisis indicators detected with cultural adaptations applied';
-      emergencyMode = true;
-    } else if (riskLevel >= 60) {
+      emergencyMode = true;;
+  } else if (riskLevel >= 60) {
       severity = 'high';
-      message = 'High-risk crisis patterns identified across cultural contexts';
-    } else if (riskLevel >= 40) {
+      message = 'High-risk crisis patterns identified across cultural contexts';;
+  } else if (riskLevel >= 40) {
       severity = 'medium';
-      message = 'Moderate crisis indicators with cultural considerations';
-    } else if (riskLevel >= 20) {
+      message = 'Moderate crisis indicators with cultural considerations';;
+  } else if (riskLevel >= 20) {
       severity = 'low';
       message = 'Low-level concern detected with cultural sensitivity';
     }
 
-    // Extract cultural factors
-    const culturalFactors = [
+    // Extract cultural factors;
+    const culturalFactors = [;
       ...analysis.culturalBiasAdjustments.map(adj => adj.factor),
       ...analysis.culturalIndicators.map(ind => `${ind.culturalRegions.join(', ')} expression pattern`)
     ];
 
-    // Generate intervention recommendations
+    // Generate intervention recommendations;
     const interventions = {
       immediate: analysis.realTimeRisk?.recommendedInterventions
         ?.filter((i: any) => i.priority <= 2)
@@ -260,11 +263,12 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
       interventions,
       emergencyMode
     });
+  };
   }, []);
 
   /**
    * Get cultural-specific interventions
-   */
+   */;
   const getCulturalInterventions = useCallback((_culturalRegion?: string): string[] => {
     if (!state.lastAnalysis) return [];
     
@@ -294,12 +298,13 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
     }
 
     return culturalSupport;
+  };
   }, [state.lastAnalysis]);
 
   /**
    * Update cultural patterns based on feedback
-   */
-  const provideCulturalFeedback = useCallback(async (
+   */;
+  const provideCulturalFeedback = useCallback(async (;
     text: string,
     actualRisk: number,
     culturallyAppropriate: boolean
@@ -315,11 +320,12 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
     });
 
     console.log('[Cultural Crisis Detection] Feedback provided for cultural improvement');
+  };
   }, [state.lastAnalysis]);
 
   /**
    * Get cultural metrics
-   */
+   */;
   const getCulturalMetrics = useCallback(async () => {
     try {
       const metrics = await culturalCrisisDetectionService.getCulturalMetrics(culturalContext);
@@ -328,7 +334,7 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
         culturalMetrics: {
           totalAnalyses: metrics.totalAnalyses,
           biasReductionRate: metrics.biasReductionRate,
-          culturalAccuracy: metrics.culturalAccuracy
+          culturalAccuracy: metrics.culturalAccuracy;
         }
       }));
       return metrics;
@@ -336,18 +342,20 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
       console.error('[Cultural Crisis Detection] Failed to get metrics:', error);
       return null;
     }
+  };
   }, [culturalContext]);
 
   /**
    * Dismiss cultural alert
-   */
+   */;
   const dismissCulturalAlert = useCallback(() => {
     setCulturalAlert(prev => ({ ...prev, show: false }));
+  };
   }, []);
 
   /**
    * Clear analysis history
-   */
+   */;
   const clearAnalysisHistory = useCallback(() => {
     setState(prev => ({
       ...prev,
@@ -355,9 +363,10 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
       lastAnalysis: null,
       culturallyAdjustedRisk: 0,
       biasAdjustments: [],
-      culturalInterventions: null
+      culturalInterventions: null;
     }));
     lastAnalysisRef.current = '';
+  };
   }, []);
 
   // Cleanup debounce on unmount
@@ -366,11 +375,14 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
       }
-    }, []);
+    };
+  }, []);
 
   // Load cultural metrics on mount
   useEffect(() => {
     getCulturalMetrics();
+  };
+  };
   }, [getCulturalMetrics]);
 
   return {
@@ -398,7 +410,7 @@ export function useCulturalCrisisDetection(options: CulturalCrisisDetectionOptio
     requiresFamilyInvolvement: state.culturalInterventions?.familyInvolvement === 'high',
     needsCommunitySupport: state.culturalInterventions?.communityApproach || false,
     includesReligiousSupport: state.culturalInterventions?.religiousConsideration || false,
-    currentCulturalContext: state.lastAnalysis?.culturalContext || culturalContext || 'Western'
+    currentCulturalContext: state.lastAnalysis?.culturalContext || culturalContext || 'Western';
   }
 
 export default useCulturalCrisisDetection;

@@ -1,6 +1,6 @@
 /**
  * @jest-environment jsdom
- */
+ */;
 
 import {
   AssessmentQuestion,
@@ -46,7 +46,7 @@ describe('assessmentUtils', () => {
     });
 
     test('should have valid PHQ-9 question content', () => {
-      const expectedQuestionContent = [
+      const expectedQuestionContent = [;
         'Little interest or pleasure in doing things',
         'Feeling down, depressed, or hopeless',
         'Trouble falling or staying asleep, or sleeping too much',
@@ -104,7 +104,7 @@ describe('assessmentUtils', () => {
     });
 
     test('should have valid GAD-7 question content', () => {
-      const expectedQuestionContent = [
+      const expectedQuestionContent = [;
         'Feeling nervous, anxious, or on edge',
         'Not being able to stop or control worrying',
         'Worrying too much about different things',
@@ -199,7 +199,7 @@ describe('assessmentUtils', () => {
     });
 
     test('should handle boundary cases correctly', () => {
-      const boundaryTests = [
+      const boundaryTests = [;
         { score: 4, expectedSeverity: 'Minimal Depression' },
         { score: 5, expectedSeverity: 'Mild Depression' },
         { score: 9, expectedSeverity: 'Mild Depression' },
@@ -218,17 +218,17 @@ describe('assessmentUtils', () => {
     });
 
     test('should handle edge cases and invalid inputs', () => {
-      // Negative scores (though shouldn't happen in real use)
+      // Negative scores (though shouldn't happen in real use);
       const negativeResult = getPhq9Result(-1);
       expect(negativeResult.severity).toBe('Minimal Depression');
       expect(negativeResult.score).toBe(-1);
 
-      // Very high scores
+      // Very high scores;
       const highResult = getPhq9Result(100);
       expect(highResult.severity).toBe('Severe Depression');
       expect(highResult.score).toBe(100);
 
-      // Zero score
+      // Zero score;
       const zeroResult = getPhq9Result(0);
       expect(zeroResult.severity).toBe('Minimal Depression');
       expect(zeroResult.score).toBe(0);
@@ -310,7 +310,7 @@ describe('assessmentUtils', () => {
     });
 
     test('should handle boundary cases correctly', () => {
-      const boundaryTests = [
+      const boundaryTests = [;
         { score: 4, expectedSeverity: 'Minimal Anxiety' },
         { score: 5, expectedSeverity: 'Mild Anxiety' },
         { score: 9, expectedSeverity: 'Mild Anxiety' },
@@ -327,17 +327,17 @@ describe('assessmentUtils', () => {
     });
 
     test('should handle edge cases and invalid inputs', () => {
-      // Negative scores
+      // Negative scores;
       const negativeResult = getGad7Result(-1);
       expect(negativeResult.severity).toBe('Minimal Anxiety');
       expect(negativeResult.score).toBe(-1);
 
-      // Very high scores
+      // Very high scores;
       const highResult = getGad7Result(100);
       expect(highResult.severity).toBe('Severe Anxiety');
       expect(highResult.score).toBe(100);
 
-      // Zero score
+      // Zero score;
       const zeroResult = getGad7Result(0);
       expect(zeroResult.severity).toBe('Minimal Anxiety');
       expect(zeroResult.score).toBe(0);
@@ -361,11 +361,11 @@ describe('assessmentUtils', () => {
 
   describe('Assessment scoring calculation', () => {
     test('should have correct maximum possible scores', () => {
-      // PHQ-9 has 9 questions, each with max score of 3
+      // PHQ-9 has 9 questions, each with max score of 3;
       const maxPhq9Score = phq9Questions.length * 3;
       expect(maxPhq9Score).toBe(27);
 
-      // GAD-7 has 7 questions, each with max score of 3
+      // GAD-7 has 7 questions, each with max score of 3;
       const maxGad7Score = gad7Questions.length * 3;
       expect(maxGad7Score).toBe(21);
     });
@@ -387,16 +387,16 @@ describe('assessmentUtils', () => {
     });
 
     test('should calculate actual assessment scores from answers', () => {
-      // Test PHQ-9 scoring
-      const phq9Answers = [0, 1, 2, 3, 0, 1, 2, 3, 1]; // Sum = 13
+      // Test PHQ-9 scoring;
+      const phq9Answers = [0, 1, 2, 3, 0, 1, 2, 3, 1]; // Sum = 13;
       const phq9Score = phq9Answers.reduce((sum, answer) => sum + answer, 0);
       expect(phq9Score).toBe(13);
 
       const phq9Result = getPhq9Result(phq9Score);
       expect(phq9Result.severity).toBe('Moderate Depression');
 
-      // Test GAD-7 scoring
-      const gad7Answers = [2, 2, 1, 3, 0, 1, 2]; // Sum = 11
+      // Test GAD-7 scoring;
+      const gad7Answers = [2, 2, 1, 3, 0, 1, 2]; // Sum = 11;
       const gad7Score = gad7Answers.reduce((sum, answer) => sum + answer, 0);
       expect(gad7Score).toBe(11);
 
@@ -407,7 +407,7 @@ describe('assessmentUtils', () => {
 
   describe('Assessment question validation', () => {
     test('should have proper TypeScript interfaces', () => {
-      // Test AssessmentQuestion interface compliance
+      // Test AssessmentQuestion interface compliance;
       const sampleQuestion: AssessmentQuestion = phq9Questions[0];
       expect(typeof sampleQuestion.id).toBe('string');
       expect(typeof sampleQuestion.text).toBe('string');
@@ -443,8 +443,8 @@ describe('assessmentUtils', () => {
 
   describe('Clinical validity and guidelines', () => {
     test('should follow PHQ-9 clinical scoring guidelines', () => {
-      // Based on standard PHQ-9 interpretation guidelines
-      const clinicalCategories = [
+      // Based on standard PHQ-9 interpretation guidelines;
+      const clinicalCategories = [;
         { range: [0, 4], severity: 'Minimal Depression', description: 'no significant depression' },
         { range: [5, 9], severity: 'Mild Depression', description: 'mild depression symptoms' },
         { range: [10, 14], severity: 'Moderate Depression', description: 'moderate depression requiring intervention' },
@@ -459,15 +459,15 @@ describe('assessmentUtils', () => {
         expect(getPhq9Result(min).severity).toBe(severity);
         expect(getPhq9Result(max).severity).toBe(severity);
         
-        // Test middle values
+        // Test middle values;
         const mid = Math.floor((min + max) / 2);
         expect(getPhq9Result(mid).severity).toBe(severity);
       });
     });
 
     test('should follow GAD-7 clinical scoring guidelines', () => {
-      // Based on standard GAD-7 interpretation guidelines
-      const clinicalCategories = [
+      // Based on standard GAD-7 interpretation guidelines;
+      const clinicalCategories = [;
         { range: [0, 4], severity: 'Minimal Anxiety', description: 'no significant anxiety' },
         { range: [5, 9], severity: 'Mild Anxiety', description: 'mild anxiety symptoms' },
         { range: [10, 14], severity: 'Moderate Anxiety', description: 'moderate anxiety requiring intervention' },
@@ -481,7 +481,7 @@ describe('assessmentUtils', () => {
         expect(getGad7Result(min).severity).toBe(severity);
         expect(getGad7Result(max).severity).toBe(severity);
         
-        // Test middle values
+        // Test middle values;
         const mid = Math.floor((min + max) / 2);
         expect(getGad7Result(mid).severity).toBe(severity);
       });
@@ -508,8 +508,8 @@ describe('assessmentUtils', () => {
 
   describe('Integration and usage scenarios', () => {
     test('should handle typical assessment workflow', () => {
-      // Simulate user taking PHQ-9 assessment
-      const userAnswers = [1, 2, 1, 2, 0, 1, 1, 0, 0]; // Total: 8
+      // Simulate user taking PHQ-9 assessment;
+      const userAnswers = [1, 2, 1, 2, 0, 1, 1, 0, 0]; // Total: 8;
       const totalScore = userAnswers.reduce((sum, answer) => sum + answer, 0);
       
       expect(totalScore).toBe(8);
@@ -518,14 +518,14 @@ describe('assessmentUtils', () => {
       expect(result.severity).toBe('Mild Depression');
       expect(result.recommendation).toContain('mild depression');
       
-      // Verify the assessment can be stored/serialized
+      // Verify the assessment can be stored/serialized;
       const serialized = JSON.stringify(result);
       const deserialized = JSON.parse(serialized);
       expect(deserialized).toEqual(result);
     });
 
     test('should handle assessment comparison over time', () => {
-      const assessmentHistory = [
+      const assessmentHistory = [;
         { date: '2024-01-01', score: 15 },
         { date: '2024-01-15', score: 12 },
         { date: '2024-02-01', score: 8 },
@@ -534,7 +534,7 @@ describe('assessmentUtils', () => {
 
       const results = assessmentHistory.map(assessment => ({
         ...assessment,
-        result: getPhq9Result(assessment.score)
+        result: getPhq9Result(assessment.score);
       }));
 
       // Should show improvement over time
@@ -550,7 +550,7 @@ describe('assessmentUtils', () => {
     });
 
     test('should support both assessment types in same system', () => {
-      const userScenarios = [
+      const userScenarios = [;
         { phq9Score: 6, gad7Score: 12, expectedPhq9: 'Mild Depression', expectedGad7: 'Moderate Anxiety' },
         { phq9Score: 16, gad7Score: 7, expectedPhq9: 'Moderately Severe Depression', expectedGad7: 'Mild Anxiety' },
         { phq9Score: 3, gad7Score: 2, expectedPhq9: 'Minimal Depression', expectedGad7: 'Minimal Anxiety' },
@@ -576,7 +576,7 @@ describe('assessmentUtils', () => {
 
       // Simulate many rapid assessments
       for (let i = 0; i <= 1000; i++) {
-        const phq9Score = i % 28; // 0-27
+        const phq9Score = i % 28; // 0-27;
         const gad7Score = i % 22; // 0-21
         
         getPhq9Result(phq9Score);

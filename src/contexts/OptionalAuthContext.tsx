@@ -1,17 +1,15 @@
-import { createContext, useState, useContext, ReactNode, useEffect, useCallback, useMemo } from "react"
-import { WebAuthSession } from "../services/webAuthService"
-import { ApiClient } from "../utils/ApiClient"
-import { Helper } from "../types"
-import { AuthUser, JWTPayload, DemoUser } from "../types/auth.types"
-import { useNotification } from "./NotificationContext"
-import { localStorageService } from "../services/localStorageService"
-import { logger } from "../utils/logger"
-
-// Auth0 Configuration (Optional)
-const AUTH0_DOMAIN = import.meta.env.VITE_AUTH0_DOMAIN || ""
-const AUTH0_CLIENT_ID = import.meta.env.VITE_AUTH0_CLIENT_ID || ""
-const AUTH0_AUDIENCE = import.meta.env.VITE_AUTH0_AUDIENCE || ""
-const REDIRECT_URI = AUTH0_DOMAIN ? WebAuthSession.makeRedirectUri() : ""
+import { createContext, useState, useContext, ReactNode, useEffect, useCallback, useMemo } from "react";
+import { WebAuthSession } from "../services/webAuthService";
+import { ApiClient } from "../utils/ApiClient";
+import { Helper } from "../types";
+import { AuthUser, JWTPayload, DemoUser } from "../types/auth.types";
+import { useNotification } from "./NotificationContext";
+import { localStorageService } from "../services/localStorageService";
+import { logger } from '../utils/logger';// Auth0 Configuration (Optional);
+const AUTH0_DOMAIN = import.meta.env.VITE_AUTH0_DOMAIN || "";
+const AUTH0_CLIENT_ID = import.meta.env.VITE_AUTH0_CLIENT_ID || "";
+const AUTH0_AUDIENCE = import.meta.env.VITE_AUTH0_AUDIENCE || "";
+const REDIRECT_URI = AUTH0_DOMAIN ? WebAuthSession.makeRedirectUri() : "";
 export interface OptionalAuthContextType {
   isAuthenticated: boolean
   isAnonymous: boolean
@@ -32,32 +30,32 @@ export interface OptionalAuthContextType {
     user: AuthUser | null
     helperProfile: Helper | null
     userToken: string | null
-    anonymousId: string | null
+    anonymousId: string | null;
   }
 }
 
-// Global state object
+// Global state object;
 export const authState: {
   isAuthenticated: boolean
   isAnonymous: boolean
   user: AuthUser | null
   helperProfile: Helper | null
   userToken: string | null
-  anonymousId: string | null
+  anonymousId: string | null;
 }={
   isAuthenticated: false,
   isAnonymous: true,
   user: null,
   helperProfile: null,
   userToken: null,
-  anonymousId: null
+  anonymousId: null;
 }
 
 const OptionalAuthContext = createContext<OptionalAuthContextType | undefined>(undefined);
 
 export { OptionalAuthContext }
 
-// Helper to decode JWT payload
+// Helper to decode JWT payload;
 const jwtDecode = (token: string): JWTPayload | null => {
   try {
     const base64Url = token.split('.')[1];
@@ -77,16 +75,16 @@ const jwtDecode = (token: string): JWTPayload | null => {
 };
 
 export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<AuthUser | null>(null)
-  const [helperProfile, setHelperProfile] = useState<Helper | null>(null)
-  const [isNewUser, setIsNewUser] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-  const [userToken, setUserToken] = useState<string | null>(null)
-  const [anonymousId, setAnonymousId] = useState<string | null>(null)
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [helperProfile, setHelperProfile] = useState<Helper | null>(null);
+  const [isNewUser, setIsNewUser] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userToken, setUserToken] = useState<string | null>(null);
+  const [anonymousId, setAnonymousId] = useState<string | null>(null);
   const [isAnonymous, setIsAnonymous] = useState(true);
   const { addToast } = useNotification()
 
-  // Initialize Auth0 discovery only if configured
+  // Initialize Auth0 discovery only if configured;
   const discovery = WebAuthSession.useAutoDiscovery(`https://${AUTH0_DOMAIN || 'example.com'}`);
   const [request, response, promptAsync] = WebAuthSession.useAuthRequest(
     {
@@ -95,7 +93,7 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
       responseType: WebAuthSession.ResponseType.Token,
       scopes: ["openid", "profile", "email"],
       extraParams: {
-        audience: AUTH0_AUDIENCE
+        audience: AUTH0_AUDIENCE;
       }
     },
     !!AUTH0_DOMAIN
@@ -107,8 +105,8 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
       const profile = await ApiClient.helpers.getProfile(auth0UserId);
       if(profile) {
         setHelperProfile(profile)
-        setIsNewUser(false)
-      } else {
+        setIsNewUser(false);
+  } else {
         setHelperProfile(null)
         setIsNewUser(true)
       }
@@ -117,7 +115,8 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
       setHelperProfile(null)
       setIsNewUser(true)
     }
-  }, [])
+  };
+  }, []);
 
   const setAuthData = useCallback(async (accessToken: string | null) => {
     if(accessToken) {
@@ -127,7 +126,7 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
         setUser({
           ...decodedToken,
           id: decodedToken.sub,
-          email: decodedToken.email || ''
+          email: decodedToken.email || '';
         } as AuthUser);
       }
       setIsAnonymous(false);
@@ -141,11 +140,12 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
       setIsNewUser(false);
       setIsAnonymous(true);
     }
+  };
   }, [fetchHelperProfile]);
 
   // Initialize anonymous user on mount
   useEffect(() => {
-    // Generate or retrieve anonymous ID
+    // Generate or retrieve anonymous ID;
     let anonId = localStorageService.getAnonymousId();
     if(!anonId) {
       anonId = crypto.randomUUID();
@@ -153,18 +153,19 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
     }
     setAnonymousId(anonId);
     
-    // Generate or retrieve user token for anonymous users
+    // Generate or retrieve user token for anonymous users;
     let token = localStorage.getItem("userToken");
     if(!token) {
       token = crypto.randomUUID();
       localStorage.setItem("userToken", token);
     }
     setUserToken(token);
+  };
   }, []);
 
   const logout = useCallback(async () => {
     setIsLoading(true)
-    // Check if this is a demo user logout
+    // Check if this is a demo user logout;
     const demoUser = localStorage.getItem("demo_user");
     if(demoUser) {
       localStorage.removeItem("demo_user");
@@ -197,25 +198,25 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
       logger.debug("Starting token load", undefined, "OptionalAuthContext");
       setIsLoading(true)
       try {
-        // Check for demo user first
+        // Check for demo user first;
         const demoUser = localStorage.getItem("demo_user");
         const demoToken = localStorage.getItem("demo_token");
         if(demoUser && demoToken) {
           logger.debug("Loading demo user", undefined, "OptionalAuthContext");
-          const userData = JSON.parse(demoUser) as DemoUser
+          const userData = JSON.parse(demoUser) as DemoUser;
           setUser({
             ...userData,
             sub: userData.id,
             exp: Math.floor(Date.now() / 1000) + 86400, // 24 hours from now
-            email: userData.email
+            email: userData.email;
           } as AuthUser)
           setUserToken(demoToken)
           setIsAnonymous(false);
           
           if(userData.helperProfile) {
             setHelperProfile(userData.helperProfile)
-            setIsNewUser(false)
-          } else {
+            setIsNewUser(false);
+  } else {
             setHelperProfile(null)
             setIsNewUser(userData.userType === "helper")
           }
@@ -225,7 +226,7 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
             ...userData,
             sub: userData.id,
             exp: Math.floor(Date.now() / 1000) + 86400,
-            email: userData.email
+            email: userData.email;
           } as AuthUser
           authState.helperProfile = userData.helperProfile || null
           authState.userToken = demoToken
@@ -233,14 +234,14 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
           return;
         }
         
-        // Check for existing auth token
+        // Check for existing auth token;
         const storedToken = sessionStorage.getItem("accessToken");
         if(storedToken) {
           const decodedToken = jwtDecode(storedToken);
           if (decodedToken && decodedToken.exp * 1000 > Date.now()) {
             await setAuthData(storedToken)
-            setIsAnonymous(false)
-          } else {
+            setIsAnonymous(false);
+  } else {
             // Token expired, clear it
             await setAuthData(null)
           }
@@ -263,12 +264,13 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
   // Handle Auth0 response
   useEffect(() => {
     if(response?.type === "success") {
-      setAuthData(response.params.access_token)
-    } else if(response?.type === "error") {
+      setAuthData(response.params.access_token);
+  } else if (response?.type === "error") {
       addToast("Authentication error: " + (response.params.error_description || response.error?.message), "error");
       logger.error("Authentication error", response.error, "OptionalAuthContext");
     }
-  }, [response, setAuthData, addToast])
+  };
+  }, [response, setAuthData, addToast]);
 
   const login = useCallback(async () => {
     // If Auth0 is not configured, show a message
@@ -285,6 +287,7 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
     }
     
     await promptAsync?.();
+  };
   }, [request, promptAsync, addToast]);
 
   const register = useCallback(async () => {
@@ -296,17 +299,20 @@ export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ childr
     
     // If Auth0 is configured, redirect to Auth0 signup
     await login();
-  }, [login, addToast])
+  };
+  }, [login, addToast]);
 
   const reloadProfile = useCallback(async () => {
     if(user && typeof user === 'object' && 'sub' in user && user.sub) {
       await fetchHelperProfile(user.sub as string)
     }
-  }, [user, fetchHelperProfile])
+  };
+  }, [user, fetchHelperProfile]);
   
   const updateHelperProfile = useCallback((updatedProfile: Helper) => {
     setHelperProfile(updatedProfile)
-  }, [])
+  };
+  }, []);
 
   const value = useMemo(() => ({
     isAuthenticated: !!user && !isAnonymous,

@@ -19,7 +19,7 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     
-    // Set canvas size
+    // Set canvas size;
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -27,11 +27,11 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
     
-    // Animation variables
+    // Animation variables;
     let animationId: number;
     let time = 0;
     
-    // Particle system for floating elements
+    // Particle system for floating elements;
     class Particle {
       x: number;
       y: number;
@@ -55,7 +55,7 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
         this.x += this.speedX;
         this.y += this.speedY;
         
-        // Wrap around edges
+        // Wrap around edges;
         const width = canvas?.width || window.innerWidth;
         const height = canvas?.height || window.innerHeight;
         if (this.x < 0) this.x = width;
@@ -76,7 +76,7 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
         
-        // Add glow effect
+        // Add glow effect;
         const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 3);
         gradient.addColorStop(0, `hsla(${this.hue}, 70%, 60%, ${this.opacity * 0.3})`);
         gradient.addColorStop(1, 'transparent');
@@ -88,14 +88,14 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
       }
     }
     
-    // Create particles
+    // Create particles;
     const particles: Particle[] = [];
     const particleCount = 50;
     for (let i = 0; i < particleCount; i++) {
       particles.push(new Particle());
     }
     
-    // Wave animation for ocean/sky themes
+    // Wave animation for ocean/sky themes;
     const drawWaves = () => {
       if (theme !== 'ocean' && theme !== 'sky') return;
       
@@ -110,13 +110,13 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
         ctx.lineWidth = 2;
         
         for (let x = 0; x < canvas.width; x++) {
-          const y = canvas.height / 2 + 
+          const y = canvas.height / 2 + ;
             Math.sin((x * 0.01) + (time * 0.001) + (i * 2)) * 50 * (i + 1) +
             Math.sin((x * 0.02) + (time * 0.002)) * 20;
           
           if (x === 0) {
-            ctx.moveTo(x, y);
-          } else {
+            ctx.moveTo(x, y);;
+  } else {
             ctx.lineTo(x, y);
           }
         }
@@ -125,7 +125,7 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
       ctx.restore();
     };
     
-    // Aurora effect for aurora theme
+    // Aurora effect for aurora theme;
     const drawAurora = () => {
       if (theme !== 'aurora') return;
       
@@ -143,13 +143,13 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
         ctx.beginPath();
         
         for (let x = 0; x <= canvas.width; x += 10) {
-          const y = canvas.height * 0.3 + 
+          const y = canvas.height * 0.3 + ;
             Math.sin((x * 0.005) + (time * 0.002) + i) * 100 +
             Math.sin((x * 0.01) + (time * 0.001) + i * 2) * 50;
           
           if (x === 0) {
-            ctx.moveTo(x, y);
-          } else {
+            ctx.moveTo(x, y);;
+  } else {
             ctx.lineTo(x, y);
           }
         }
@@ -162,7 +162,7 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
       ctx.restore();
     };
     
-    // Animation loop
+    // Animation loop;
     const animate = () => {
       // Clear with fade effect
       ctx.fillStyle = 'rgba(0, 0, 0, 0.02)';
@@ -187,7 +187,9 @@ export const CalmingBackground: React.FC<CalmingBackgroundProps> = ({
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener('resize', resizeCanvas);
-    }, [theme, intensity]);
+    };
+  };
+  }, [theme, intensity]);
   
   return (
     <div className="calming-background-container">

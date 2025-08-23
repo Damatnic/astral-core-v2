@@ -1,9 +1,9 @@
 /**
  * Mock environment configuration for testing
- */
+ */;
 
 export function getEnvVar(key: string, defaultValue: string = ''): string {
-  // Return test defaults
+  // Return test defaults;
   const testEnv: Record<string, string> = {
     VITE_API_BASE_URL: 'http://localhost:3847/api',
     VITE_AUTH0_DOMAIN: 'test.auth0.com',

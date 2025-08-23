@@ -1,7 +1,7 @@
 /**
  * Test Suite for BreathingExerciseOverlay Component
  * Tests interactive breathing exercises with visual guide
- */
+ */;
 
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
@@ -12,7 +12,7 @@ jest.mock('../../../styles/safe-ui-system.css', () => ({}));
 
 import { BreathingExerciseOverlay } from '../BreathingExerciseOverlay';
 
-// Custom render function for this test file
+// Custom render function for this test file;
 const renderComponent = (component: React.ReactElement) => {
   const root = document.getElementById('root') || document.createElement('div');
   if (!root.parentNode) {
@@ -331,7 +331,7 @@ describe('BreathingExerciseOverlay', () => {
         name: 'Custom Breathing',
         inhale: 5,
         hold: 5,
-        exhale: 5
+        exhale: 5;
       };
       
       renderComponent(
@@ -381,7 +381,7 @@ describe('BreathingExerciseOverlay', () => {
       // Verify the exercise started
       expect(screen.getByRole('status')).toHaveTextContent(/Breathe In/i);
       
-      // Verify pause button is now available and has proper ARIA attributes
+      // Verify pause button is now available and has proper ARIA attributes;
       const pauseButton = screen.getByRole('button', { name: /pause/i });
       expect(pauseButton).toBeInTheDocument();
       expect(pauseButton).toHaveAttribute('aria-label');
@@ -400,7 +400,7 @@ describe('BreathingExerciseOverlay', () => {
         jest.advanceTimersByTime(100);
       });
       
-      // Check for phase message with aria-live region
+      // Check for phase message with aria-live region;
       const statusElement = screen.getByRole('status');
       expect(statusElement).toBeInTheDocument();
       expect(screen.getByRole('status')).toHaveTextContent(/Breathe In/i);
@@ -489,7 +489,7 @@ describe('BreathingExerciseOverlay', () => {
       
       expect(onComplete).toHaveBeenCalledWith(expect.objectContaining({
         cycles: 1,
-        exercise: '478'
+        exercise: '478';
       }));
     });
 

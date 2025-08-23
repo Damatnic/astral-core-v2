@@ -1,7 +1,7 @@
 /**
  * Test Suite for Multilingual Crisis Detection Service
  * Tests crisis detection across multiple languages and dialects
- */
+ */;
 
 import { multilingualCrisisDetectionService } from '../multilingualCrisisDetectionService';
 
@@ -18,7 +18,7 @@ describe('MultilingualCrisisDetectionService', () => {
         es: 'Quiero terminar con mi vida',
         fr: 'Je veux mourir',
         zh: '我想结束生命',
-        ar: 'أريد أن أنهي حياتي'
+        ar: 'أريد أن أنهي حياتي';
       };
 
       for (const [lang, text] of Object.entries(texts)) {
@@ -43,11 +43,11 @@ describe('MultilingualCrisisDetectionService', () => {
       const brazilianText = 'Não aguento mais, quero morrer';
       const europeanText = 'Não aguento mais, quero morrer';
       
-      const brResult = await multilingualCrisisDetectionService.detectCrisis(
+      const brResult = await multilingualCrisisDetectionService.detectCrisis(;
         brazilianText,
         'pt'
       );
-      const ptResult = await multilingualCrisisDetectionService.detectCrisis(
+      const ptResult = await multilingualCrisisDetectionService.detectCrisis(;
         europeanText,
         'pt'
       );
@@ -122,7 +122,7 @@ describe('MultilingualCrisisDetectionService', () => {
     });
 
     it.skip('should handle untranslatable expressions', async () => {
-      const text = 'Tengo el mal de vivir'; // French expression in Spanish
+      const text = 'Tengo el mal de vivir'; // French expression in Spanish;
       
       const result = await multilingualCrisisDetectionService.detectCrisis(text, 'es');
       
@@ -241,7 +241,7 @@ describe('MultilingualCrisisDetectionService', () => {
     });
 
     it.skip('should handle low-resource languages', async () => {
-      const text = 'Crisis text in Swahili'; // Simulated
+      const text = 'Crisis text in Swahili'; // Simulated;
       
       const result = await multilingualCrisisDetectionService.detectCrisis(text, 'sw');
       
@@ -291,12 +291,12 @@ describe('MultilingualCrisisDetectionService', () => {
     it.skip('should cache language models efficiently', async () => {
       const text = 'Test crisis text';
       
-      // First call - loads model
+      // First call - loads model;
       const firstStart = Date.now();
       await multilingualCrisisDetectionService.detectCrisis(text, 'es');
       const firstDuration = Date.now() - firstStart;
       
-      // Second call - uses cached model
+      // Second call - uses cached model;
       const secondStart = Date.now();
       await multilingualCrisisDetectionService.detectCrisis(text, 'es');
       const secondDuration = Date.now() - secondStart;

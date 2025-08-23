@@ -3,7 +3,7 @@
  * 
  * Manages scheduled push notifications for medication reminders,
  * mood check-ins, therapy sessions, and custom reminders.
- */
+ */;
 
 import { pushNotificationService } from './pushNotificationService';
 
@@ -100,7 +100,7 @@ class NotificationScheduler {
     const schedule: ScheduledNotification = {
       ...notification,
       id,
-      nextScheduled: this.calculateNextScheduledTime(notification)
+      nextScheduled: this.calculateNextScheduledTime(notification);
     };
     
     this.schedules.set(id, schedule);
@@ -121,14 +121,14 @@ class NotificationScheduler {
     const schedule = this.schedules.get(id);
     if (!schedule) return false;
     
-    // Clear existing timer
+    // Clear existing timer;
     const existingTimer = this.timers.get(id);
     if (existingTimer) {
       clearTimeout(existingTimer);
       this.timers.delete(id);
     }
     
-    // Update schedule
+    // Update schedule;
     const updatedSchedule = {
       ...schedule,
       ...updates,
@@ -154,7 +154,7 @@ class NotificationScheduler {
     const schedule = this.schedules.get(id);
     if (!schedule) return false;
     
-    // Clear timer
+    // Clear timer;
     const timer = this.timers.get(id);
     if (timer) {
       clearTimeout(timer);
@@ -239,7 +239,7 @@ class NotificationScheduler {
       time,
       days,
       enabled: true,
-      repeatInterval: 'daily'
+      repeatInterval: 'daily';
     });
   }
 
@@ -285,13 +285,13 @@ class NotificationScheduler {
       return;
     }
     
-    // Clear existing timer
+    // Clear existing timer;
     const existingTimer = this.timers.get(schedule.id);
     if (existingTimer) {
       clearTimeout(existingTimer);
     }
     
-    // Set new timer
+    // Set new timer;
     const timer = setTimeout(() => {
       this.sendNotification(schedule);
     }, delay);
@@ -341,7 +341,7 @@ class NotificationScheduler {
    */
   private async sendNotification(schedule: ScheduledNotification): Promise<void> {
     try {
-      // Check if notifications are enabled and user has permission
+      // Check if notifications are enabled and user has permission;
       const status = pushNotificationService.getStatus();
       if (!status.hasPermission || !status.isSubscribed) {
         console.log('[Scheduler] Cannot send notification - no permission or not subscribed');
@@ -349,9 +349,9 @@ class NotificationScheduler {
         return;
       }
       
-      // Check quiet hours
+      // Check quiet hours;
       const userId = localStorage.getItem('userId') || 'default';
-      const shouldSend = await pushNotificationService.shouldSendNotification(
+      const shouldSend = await pushNotificationService.shouldSendNotification(;
         userId,
         schedule.type === 'medication' ? 'urgent' : 'non_urgent'
       );
@@ -365,7 +365,7 @@ class NotificationScheduler {
         return;
       }
       
-      // Send the notification
+      // Send the notification;
       const registration = await navigator.serviceWorker.getRegistration();
       if (!registration) {
         console.warn('[Scheduler] No service worker registration');
@@ -382,7 +382,7 @@ class NotificationScheduler {
           type: schedule.type,
           scheduleId: schedule.id,
           metadata: schedule.metadata,
-          timestamp: Date.now()
+          timestamp: Date.now();
         },
         requireInteraction: schedule.type === 'medication'
         // Note: actions property not supported in NotificationOptions
@@ -495,7 +495,7 @@ class NotificationScheduler {
       id: this.generateId(),
       scheduledFor,
       notification: schedule,
-      status: 'pending'
+      status: 'pending';
     });
     
     // Keep queue size manageable (last 100 items)
@@ -558,8 +558,8 @@ class NotificationScheduler {
   }
 }
 
-// Create singleton instance
+// Create singleton instance;
 export const notificationScheduler = new NotificationScheduler();
 
-// Export types
+// Export types;
 export type { ScheduledNotification, NotificationQueue };

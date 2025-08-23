@@ -8,7 +8,7 @@
  * 
  * This file demonstrates how to integrate the enhanced AI crisis detection
  * into various components throughout the AstralCore application.
- */
+ */;
 
 import React, { useState } from 'react';
 import { useEnhancedCrisisDetection } from '../hooks/useEnhancedCrisisDetection';
@@ -16,7 +16,7 @@ import { CrisisDetectionDashboard } from '../components/CrisisDetectionDashboard
 import { AppButton } from '../components/AppButton';
 import { Card } from '../components/Card';
 
-// Example: Integrating enhanced crisis detection into a chat component
+// Example: Integrating enhanced crisis detection into a chat component;
 export const EnhancedChatWithCrisisDetection: React.FC<{
   userId?: string;
   languageCode?: string;
@@ -55,10 +55,10 @@ export const EnhancedChatWithCrisisDetection: React.FC<{
     // Add message to chat
     setChatHistory(prev => [...prev, message]);
 
-    // Analyze message for crisis indicators
+    // Analyze message for crisis indicators;
     const analysis = await analyzeText(message, { 
       immediate: true, 
-      trackHistory: true 
+      trackHistory: true ;
     });
 
     if (analysis?.hasCrisisIndicators) {
@@ -160,7 +160,7 @@ export const EnhancedChatWithCrisisDetection: React.FC<{
   );
 };
 
-// Example: Crisis Detection Dashboard Integration
+// Example: Crisis Detection Dashboard Integration;
 export const CrisisMonitoringView: React.FC<{
   userId?: string;
   languageCode?: string;
@@ -184,7 +184,7 @@ export const CrisisMonitoringView: React.FC<{
   );
 };
 
-// Example: Text analysis utility for posts
+// Example: Text analysis utility for posts;
 export const analyzePostForCrisis = async (
   postText: string,
   userId: string,
@@ -193,7 +193,7 @@ export const analyzePostForCrisis = async (
   const { enhancedAICrisisDetectionService } = await import('../services/enhancedAiCrisisDetectionService');
   
   try {
-    const analysis = await enhancedAICrisisDetectionService.analyzeCrisisWithML(
+    const analysis = await enhancedAICrisisDetectionService.analyzeCrisisWithML(;
       postText,
       { userId, languageCode }
     );
@@ -205,7 +205,7 @@ export const analyzePostForCrisis = async (
       emotionalState: analysis.emotionalState,
       recommendations: analysis.realTimeRisk?.recommendedInterventions || [],
       culturallyAdapted: (analysis.biasAdjustments?.length || 0) > 0,
-      confidence: analysis.mlConfidence
+      confidence: analysis.mlConfidence;
     } catch (error) {
     console.error('Crisis analysis failed:', error);
     return {
@@ -215,11 +215,11 @@ export const analyzePostForCrisis = async (
       emotionalState: null,
       recommendations: [],
       culturallyAdapted: false,
-      confidence: 0
+      confidence: 0;
     }
 };
 
-// Example: Helper function for crisis intervention workflow
+// Example: Helper function for crisis intervention workflow;
 export const triggerCrisisIntervention = async (
   analysis: any,
   _userContext: {
@@ -277,7 +277,7 @@ export const triggerCrisisIntervention = async (
         action: 'none',
         message: 'No immediate intervention required',
         contacts: [],
-        nextSteps: ['Continue monitoring']
+        nextSteps: ['Continue monitoring'];
       }
 };
 

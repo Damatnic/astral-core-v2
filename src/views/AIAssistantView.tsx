@@ -22,6 +22,7 @@ const AIAssistantView: React.FC = () => {
 
   useEffect(() => {
     scrollToBottom();
+  };
   }, [messages]);
 
   useEffect(() => {
@@ -31,9 +32,10 @@ const AIAssistantView: React.FC = () => {
         id: '1',
         text: "Hi there! I'm your AI companion. I'm here to listen, provide support, and help you explore your thoughts and feelings. How are you doing today?",
         sender: 'ai',
-        timestamp: new Date()
+        timestamp: new Date();
       }
     ]);
+  };
   }, []);
 
   const handleSendMessage = async () => {
@@ -43,16 +45,16 @@ const AIAssistantView: React.FC = () => {
       id: Date.now().toString(),
       text: inputText,
       sender: 'user',
-      timestamp: new Date()
+      timestamp: new Date();
     };
 
     setMessages(prev => [...prev, userMessage]);
     setInputText('');
     setIsTyping(true);
 
-    // Simple crisis detection (in real app, this would be more sophisticated)
+    // Simple crisis detection (in real app, this would be more sophisticated);
     const crisisKeywords = ['suicide', 'kill myself', 'end it all', 'hurt myself', 'hopeless'];
-    const containsCrisisKeywords = crisisKeywords.some(keyword => 
+    const containsCrisisKeywords = crisisKeywords.some(keyword => ;
       inputText.toLowerCase().includes(keyword)
     );
 
@@ -65,14 +67,14 @@ const AIAssistantView: React.FC = () => {
       let aiResponse = '';
       
       if (containsCrisisKeywords) {
-        aiResponse = "I'm really concerned about what you've shared. It sounds like you're going through an incredibly difficult time. Please know that you don't have to face this alone. Would you like me to connect you with a crisis counselor who can provide immediate support? You can also call 988 for the Suicide & Crisis Lifeline.";
-      } else if (inputText.toLowerCase().includes('anxious') || inputText.toLowerCase().includes('anxiety')) {
-        aiResponse = "I hear that you're feeling anxious. That's a very common experience, and it's brave of you to acknowledge it. Can you tell me more about what's been triggering your anxiety? Sometimes talking through specific situations can help us understand them better.";
-      } else if (inputText.toLowerCase().includes('sad') || inputText.toLowerCase().includes('depressed')) {
-        aiResponse = "Thank you for sharing that with me. Feeling sad is a natural human emotion, though I know it can be very difficult to experience. What's been on your mind lately? Sometimes it helps to explore what might be contributing to these feelings.";
-      } else if (inputText.toLowerCase().includes('stress')) {
-        aiResponse = "Stress can be really overwhelming. It sounds like you have a lot on your plate right now. What's been the most challenging part of your day? Let's break it down together and see if we can find some ways to manage it.";
-      } else {
+        aiResponse = "I'm really concerned about what you've shared. It sounds like you're going through an incredibly difficult time. Please know that you don't have to face this alone. Would you like me to connect you with a crisis counselor who can provide immediate support? You can also call 988 for the Suicide & Crisis Lifeline.";;
+  } else if (inputText.toLowerCase().includes('anxious') || inputText.toLowerCase().includes('anxiety')) {
+        aiResponse = "I hear that you're feeling anxious. That's a very common experience, and it's brave of you to acknowledge it. Can you tell me more about what's been triggering your anxiety? Sometimes talking through specific situations can help us understand them better.";;
+  } else if (inputText.toLowerCase().includes('sad') || inputText.toLowerCase().includes('depressed')) {
+        aiResponse = "Thank you for sharing that with me. Feeling sad is a natural human emotion, though I know it can be very difficult to experience. What's been on your mind lately? Sometimes it helps to explore what might be contributing to these feelings.";;
+  } else if (inputText.toLowerCase().includes('stress')) {
+        aiResponse = "Stress can be really overwhelming. It sounds like you have a lot on your plate right now. What's been the most challenging part of your day? Let's break it down together and see if we can find some ways to manage it.";;
+  } else {
         aiResponse = "I appreciate you sharing that with me. It's important to express your thoughts and feelings. Can you tell me more about what's been on your mind? I'm here to listen and support you.";
       }
 
@@ -80,7 +82,7 @@ const AIAssistantView: React.FC = () => {
         id: (Date.now() + 1).toString(),
         text: aiResponse,
         sender: 'ai',
-        timestamp: new Date()
+        timestamp: new Date();
       };
 
       setMessages(prev => [...prev, aiMessage]);
@@ -160,17 +162,17 @@ const AIAssistantView: React.FC = () => {
                 <div className={`rounded-lg px-4 py-2 ${
                   message.sender === 'user'
                     ? 'bg-blue-600 text-white'
-                    : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700'
+                    : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700';
                 }`}>
                   <p className="text-sm leading-relaxed">{message.text}</p>
                   <p className={`text-xs mt-1 ${
                     message.sender === 'user' 
                       ? 'text-blue-100' 
-                      : 'text-gray-500 dark:text-gray-400'
+                      : 'text-gray-500 dark:text-gray-400';
                   }`}>
                     {message.timestamp.toLocaleTimeString([], { 
                       hour: '2-digit', 
-                      minute: '2-digit' 
+                      minute: '2-digit' ;
                     })}
                   </p>
                 </div>
@@ -209,7 +211,7 @@ const AIAssistantView: React.FC = () => {
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyDown={handleKeyPress}
-                placeholder="Share what's on your mind..."
+                placeholder="Share what's on your mind...";
                 className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 rows={2}
                 disabled={isTyping}

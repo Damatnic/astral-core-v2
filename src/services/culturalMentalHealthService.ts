@@ -5,7 +5,7 @@
  * tailored to each supported locale
  * 
  * @license Apache-2.0
- */
+ */;
 
 import { getCulturalContext } from '../i18n';
 
@@ -88,7 +88,7 @@ class CulturalMentalHealthService {
         familyInvolvement: 'medium',
         communitySupport: 'medium',
         religiousContext: 'mixed',
-        preferredApproach: 'professional'
+        preferredApproach: 'professional';
       },
       copingStrategies: [
         {
@@ -169,7 +169,7 @@ class CulturalMentalHealthService {
           type: 'professional',
           description: 'Professional mental health counseling',
           availability: 'By appointment, covered by many insurance plans',
-          culturallyPreferred: true
+          culturallyPreferred: true;
         },
         {
           id: 'en-support-group',
@@ -177,7 +177,7 @@ class CulturalMentalHealthService {
           type: 'peer',
           description: 'Peer-led groups for shared experiences',
           availability: 'Weekly meetings, online and in-person options',
-          culturallyPreferred: true
+          culturallyPreferred: true;
         }
       ],
       communicationGuidelines: [
@@ -202,7 +202,7 @@ class CulturalMentalHealthService {
         familyInvolvement: 'high',
         communitySupport: 'high',
         religiousContext: 'christian',
-        preferredApproach: 'family'
+        preferredApproach: 'family';
       },
       copingStrategies: [
         {
@@ -286,7 +286,7 @@ class CulturalMentalHealthService {
           type: 'religious',
           description: 'Orientación espiritual y emocional',
           availability: 'Disponible en la iglesia local',
-          culturallyPreferred: true
+          culturallyPreferred: true;
         },
         {
           id: 'es-comadre',
@@ -294,7 +294,7 @@ class CulturalMentalHealthService {
           type: 'community',
           description: 'Red de apoyo comunitario tradicional',
           availability: 'Red social establecida',
-          culturallyPreferred: true
+          culturallyPreferred: true;
         }
       ],
       communicationGuidelines: [
@@ -319,7 +319,7 @@ class CulturalMentalHealthService {
         familyInvolvement: 'high',
         communitySupport: 'high',
         religiousContext: 'christian',
-        preferredApproach: 'community'
+        preferredApproach: 'community';
       },
       copingStrategies: [
         {
@@ -371,7 +371,7 @@ class CulturalMentalHealthService {
             'Ligar para o CVV (188)',
             'Envolver família se apropriado'
           ],
-          whenToUse: 'Quando precisar de apoio emocional imediato ou estiver em crise'
+          whenToUse: 'Quando precisar de apoio emocional imediato ou estiver em crise';
         }
       ],
       culturalConsiderations: [
@@ -388,7 +388,7 @@ class CulturalMentalHealthService {
           type: 'professional',
           description: 'Serviço público de saúde mental',
           availability: 'Gratuito pelo SUS',
-          culturallyPreferred: true
+          culturallyPreferred: true;
         }
       ],
       communicationGuidelines: [
@@ -413,7 +413,7 @@ class CulturalMentalHealthService {
         familyInvolvement: 'high',
         communitySupport: 'high',
         religiousContext: 'islamic',
-        preferredApproach: 'family'
+        preferredApproach: 'family';
       },
       copingStrategies: [
         {
@@ -480,7 +480,7 @@ class CulturalMentalHealthService {
             'زيارة طبيب إذا نصحت العائلة',
             'الحفاظ على السرية العائلية'
           ],
-          whenToUse: 'عند الشعور بالضيق الشديد أو الأفكار السلبية المستمرة'
+          whenToUse: 'عند الشعور بالضيق الشديد أو الأفكار السلبية المستمرة';
         }
       ],
       culturalConsiderations: [
@@ -497,7 +497,7 @@ class CulturalMentalHealthService {
           type: 'religious',
           description: 'الإرشاد الديني والروحي',
           availability: 'متاح في المسجد المحلي',
-          culturallyPreferred: true
+          culturallyPreferred: true;
         },
         {
           id: 'ar-family-elder',
@@ -505,7 +505,7 @@ class CulturalMentalHealthService {
           type: 'family',
           description: 'الحكمة والتوجيه من كبار السن',
           availability: 'داخل العائلة',
-          culturallyPreferred: true
+          culturallyPreferred: true;
         }
       ],
       communicationGuidelines: [
@@ -530,7 +530,7 @@ class CulturalMentalHealthService {
         familyInvolvement: 'high',
         communitySupport: 'medium',
         religiousContext: 'mixed',
-        preferredApproach: 'family'
+        preferredApproach: 'family';
       },
       copingStrategies: [
         {
@@ -598,7 +598,7 @@ class CulturalMentalHealthService {
             '使用在线匿名咨询',
             '必要时家人陪同就医'
           ],
-          whenToUse: '当感到极度压力、失眠严重或有自我伤害念头时'
+          whenToUse: '当感到极度压力、失眠严重或有自我伤害念头时';
         }
       ],
       culturalConsiderations: [
@@ -615,7 +615,7 @@ class CulturalMentalHealthService {
           type: 'professional',
           description: '通过中医方法调理身心',
           availability: '预约就诊',
-          culturallyPreferred: true
+          culturallyPreferred: true;
         },
         {
           id: 'zh-online-anon',
@@ -623,7 +623,7 @@ class CulturalMentalHealthService {
           type: 'professional',
           description: '保护隐私的专业咨询',
           availability: '24小时在线',
-          culturallyPreferred: true
+          culturallyPreferred: true;
         }
       ],
       communicationGuidelines: [
@@ -648,7 +648,7 @@ class CulturalMentalHealthService {
         familyInvolvement: 'high',
         communitySupport: 'high',
         religiousContext: 'buddhist',
-        preferredApproach: 'community'
+        preferredApproach: 'community';
       },
       copingStrategies: [
         {
@@ -701,7 +701,7 @@ class CulturalMentalHealthService {
             'Tìm bác sĩ Đông y hoặc châm cứu',
             'Cân nhắc đi bệnh viện nếu cần'
           ],
-          whenToUse: 'Khi cảm thấy tuyệt vọng hoặc không thể tự xử lý'
+          whenToUse: 'Khi cảm thấy tuyệt vọng hoặc không thể tự xử lý';
         }
       ],
       culturalConsiderations: [
@@ -718,7 +718,7 @@ class CulturalMentalHealthService {
           type: 'religious',
           description: 'Tư vấn tâm linh và hướng dẫn thiền',
           availability: 'Tại chùa địa phương',
-          culturallyPreferred: true
+          culturallyPreferred: true;
         }
       ],
       communicationGuidelines: [
@@ -743,7 +743,7 @@ class CulturalMentalHealthService {
         familyInvolvement: 'high',
         communitySupport: 'high',
         religiousContext: 'christian',
-        preferredApproach: 'family'
+        preferredApproach: 'family';
       },
       copingStrategies: [
         {
@@ -810,7 +810,7 @@ class CulturalMentalHealthService {
             'Kumunsulta sa pari kung kailangan',
             'Magpatingin sa doktor kung payagan'
           ],
-          whenToUse: 'Kapag hindi na kaya ng sarili at kailangan ng tulong'
+          whenToUse: 'Kapag hindi na kaya ng sarili at kailangan ng tulong';
         }
       ],
       culturalConsiderations: [
@@ -827,7 +827,7 @@ class CulturalMentalHealthService {
           type: 'religious',
           description: 'Espirituwal na gabay at counseling',
           availability: 'Sa lokal na simbahan',
-          culturallyPreferred: true
+          culturallyPreferred: true;
         },
         {
           id: 'tl-albularyo',
@@ -835,7 +835,7 @@ class CulturalMentalHealthService {
           type: 'community',
           description: 'Tradisyonal na healing',
           availability: 'Sa komunidad',
-          culturallyPreferred: true
+          culturallyPreferred: true;
         }
       ],
       communicationGuidelines: [
@@ -968,7 +968,7 @@ class CulturalMentalHealthService {
     if (!content) return message;
 
     // This would involve complex NLP and cultural adaptation
-    // For now, return guidelines on how to communicate
+    // For now, return guidelines on how to communicate;
     const guidelines = content.communicationGuidelines;
     if (guidelines.length > 0) {
       const examples = guidelines[0].examples;
@@ -988,7 +988,7 @@ class CulturalMentalHealthService {
 
   /**
    * Export content for offline storage
-   */
+   */;
   exportForOfflineStorage(): Record<string, CulturalMentalHealthContent> {
     const exported: Record<string, CulturalMentalHealthContent> = {};
     this.contentCache.forEach((content, locale) => {
@@ -998,10 +998,10 @@ class CulturalMentalHealthService {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const culturalMentalHealthService = CulturalMentalHealthService.getInstance();
 
-// Export types
+// Export types;
 export type {
   CopingStrategy,
   CrisisApproach,

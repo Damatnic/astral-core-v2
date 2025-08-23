@@ -1,10 +1,9 @@
 /**
  * Environment Variable Validator for CoreV2
  * Ensures all required environment variables are present and valid
- */
+ */;
 
-import { z } from "zod"
-// Define environment variable schemas
+import { z } from 'zod';// Define environment variable schemas;
 const envSchema = z.object({
   // Environment
   NODE_ENV: z.enum(["development", "staging", "production"]),
@@ -124,10 +123,10 @@ const envSchema = z.object({
   // File Upload
   MAX_FILE_SIZE: z.string().regex(/^\d+$/).optional(),
   ALLOWED_FILE_TYPES: z.string().optional(),
-  UPLOAD_PATH: z.string().optional()
+  UPLOAD_PATH: z.string().optional();
 });
 
-// Define required variables by environment
+// Define required variables by environment;
 const requiredByEnvironment={
   development: [
     "NODE_ENV",
@@ -169,7 +168,7 @@ const requiredByEnvironment={
   ]
 };
 
-// Security validation rules
+// Security validation rules;
 const securityRules={
   JWT_SECRET: (value: string) => {
     if (
@@ -214,17 +213,17 @@ export interface ValidationResult {
 }
 /**
  * Validate environment variables
- */
+ */;
 export function validateEnvironment(env: Record<string, string | undefined>, environment: string): ValidationResult {
   const result: ValidationResult={
     valid: true,
     missing: [],
     errors: [],
     warnings: [],
-    security: []
+    security: [];
   };
 
-  // Check required variables for environment
+  // Check required variables for environment;
   const required = requiredByEnvironment[environment as keyof typeof requiredByEnvironment];
   required.forEach((key: string) => {
     if(!env[key]) {
@@ -235,7 +234,7 @@ export function validateEnvironment(env: Record<string, string | undefined>, env
 
   // Validate schema (skip empty PWA colors as they have defaults)
   try {
-    // Filter out empty PWA color values before validation
+    // Filter out empty PWA color values before validation;
     const envToValidate={ ...env };
     if(envToValidate.VITE_PWA_THEME_COLOR === "") {
       delete envToValidate.VITE_PWA_THEME_COLOR;
@@ -248,8 +247,8 @@ export function validateEnvironment(env: Record<string, string | undefined>, env
     if(error instanceof z.ZodError) {
       error.issues.forEach((err) => {
         if (err.message.includes("Required")) {
-          result.missing.push(err.path.join("."));
-        } else {
+          result.missing.push(err.path.join("."));;
+  } else {
           result.errors.push(`${err.path.join('.')}: ${err.message}`);
         }
       });
@@ -290,7 +289,7 @@ export function validateEnvironment(env: Record<string, string | undefined>, env
       result.warnings.push("Database SSL is not enabled in production");
     }
   }
-  // Check for sensitive data in public variables
+  // Check for sensitive data in public variables;
   const publicVars = Object.keys(env).filter((key: string) => key.startsWith("VITE_"));
   publicVars.forEach((key: string) => {
     const value = env[key];
@@ -314,7 +313,7 @@ export function validateEnvironment(env: Record<string, string | undefined>, env
 }
 /**
  * Display validation results
- */
+ */;
 export function displayValidationResults(result: ValidationResult): void {
   if(result.missing.length > 0) {
 
@@ -329,7 +328,7 @@ export function displayValidationResults(result: ValidationResult): void {
     result.security.forEach((issue) => console.error(`  - ${issue}`));
   }
   if(!result.valid) {
-    if(
+    if(;
       typeof process !== "undefined" &&
       process.env?.NODE_ENV === "production"
     ) {
@@ -346,7 +345,7 @@ export function displayValidationResults(result: ValidationResult): void {
 }
 /**
  * Load and validate environment variables
- */
+ */;
 export function loadAndValidateEnv(): ValidationResult {
   const environment = getEnvironment();
   const env = typeof process !== "undefined" ? process.env : {};
@@ -358,7 +357,7 @@ export function loadAndValidateEnv(): ValidationResult {
 }
 /**
  * Get environment variable with optional default
- */
+ */;
 export function getEnv(key: string, defaultValue?: string): string | undefined {
   if(typeof process !== "undefined") {
     return process.env[key] || defaultValue;
@@ -367,13 +366,13 @@ export function getEnv(key: string, defaultValue?: string): string | undefined {
 }
 /**
  * Check if environment variable exists
- */
+ */;
 export function hasEnv(key: string): boolean {
   return typeof process !== "undefined" && !!process.env[key];
 }
 /**
  * Get environment type
- */
+ */;
 export function getEnvironment(): "development" | "staging" | "production" {
   if(typeof process !== "undefined" && process.env?.NODE_ENV) {
     return process.env.NODE_ENV as "development" | "staging" | "production";
@@ -382,19 +381,19 @@ export function getEnvironment(): "development" | "staging" | "production" {
 }
 /**
  * Check if in production
- */
+ */;
 export function isProduction(): boolean {
   return getEnvironment() === "production";
 }
 /**
  * Check if in development
- */
+ */;
 export function isDevelopment(): boolean {
   return getEnvironment() === "development";
 }
 /**
  * Check if in staging
- */
+ */;
 export function isStaging(): boolean {
   return getEnvironment() === "staging";
 }

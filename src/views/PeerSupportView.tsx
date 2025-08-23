@@ -28,12 +28,13 @@ export const PeerSupportView: React.FC<{ userToken?: string | null }> = ({ userT
 
   useEffect(() => {
     loadMatches();
+  };
   }, []);
 
   const loadMatches = async () => {
     try {
       setIsLoading(true);
-      // For now, using mock data
+      // For now, using mock data;
       const mockMatches: PeerMatch[] = [
         {
           id: '1',
@@ -43,7 +44,7 @@ export const PeerSupportView: React.FC<{ userToken?: string | null }> = ({ userT
           interests: ['Anxiety', 'Stress', 'Mindfulness'],
           matchScore: 0.95,
           isOnline: true,
-          lastActive: new Date().toISOString()
+          lastActive: new Date().toISOString();
         },
         {
           id: '2',
@@ -53,7 +54,7 @@ export const PeerSupportView: React.FC<{ userToken?: string | null }> = ({ userT
           interests: ['Depression', 'Recovery', 'Self-care'],
           matchScore: 0.87,
           isOnline: false,
-          lastActive: new Date(Date.now() - 3600000).toISOString()
+          lastActive: new Date(Date.now() - 3600000).toISOString();
         },
         {
           id: '3',
@@ -63,7 +64,7 @@ export const PeerSupportView: React.FC<{ userToken?: string | null }> = ({ userT
           interests: ['Mental Health', 'Support Groups', 'Wellness'],
           matchScore: 0.82,
           isOnline: true,
-          lastActive: new Date().toISOString()
+          lastActive: new Date().toISOString();
         }
       ];
       setMatches(mockMatches);
@@ -79,7 +80,7 @@ export const PeerSupportView: React.FC<{ userToken?: string | null }> = ({ userT
     try {
       addToast(`Connecting with ${peer.displayName}...`, 'info');
       
-      // Send connection request to the peer
+      // Send connection request to the peer;
       const response = await fetch('/api/peer-support/connect', {
         method: 'POST',
         headers: {
@@ -101,9 +102,9 @@ export const PeerSupportView: React.FC<{ userToken?: string | null }> = ({ userT
         sessionStorage.setItem('activePeerConnection', JSON.stringify({
           peer,
           connectionId: data.connectionId,
-          timestamp: new Date().toISOString()
-        }));
-      } else {
+          timestamp: new Date().toISOString();
+        }));;
+  } else {
         throw new Error('Connection request failed');
       }
     } catch (error) {
@@ -195,7 +196,7 @@ export const PeerSupportView: React.FC<{ userToken?: string | null }> = ({ userT
                       <MessageCircleIcon />
                       {peer.isOnline ? 'Connect Now' : 'Offline'}
                     </AppButton>
-                    <AppButton
+                    <AppButton;
                       variant="secondary"
                       size="sm"
                       onClick={() => console.log('Saving peer:', peer.id)}

@@ -43,7 +43,7 @@ export const PresenceIndicator: React.FC<PresenceIndicatorProps> = ({
     }
   };
 
-  // Removed unused getStatusIcon function
+  // Removed unused getStatusIcon function;
 
   const getMoodEmoji = (mood?: string) => {
     if (!mood) return null;
@@ -58,19 +58,19 @@ export const PresenceIndicator: React.FC<PresenceIndicatorProps> = ({
       grateful: '🙏',
       hopeful: '🌟',
       tired: '😴',
-      energetic: '⚡'
+      energetic: '⚡';
     };
 
     return moodMap[mood.toLowerCase()] || '💭';
   };
 
   const sortedMembers = [...members].sort((a, b) => {
-    // Sort by status priority: online > away > busy > offline
+    // Sort by status priority: online > away > busy > offline;
     const statusPriority: Record<string, number> = {
       online: 0,
       away: 1,
       busy: 2,
-      offline: 3
+      offline: 3;
     };
 
     return statusPriority[a.status] - statusPriority[b.status];
@@ -111,7 +111,7 @@ export const PresenceIndicator: React.FC<PresenceIndicatorProps> = ({
                   {member.username.charAt(0).toUpperCase()}
                 </div>
               )}
-              <div 
+              <div; 
                 className="presence-status-dot"
                 style={{ backgroundColor: getStatusColor(member.status) }}
                 title={member.status}
@@ -150,7 +150,7 @@ export const PresenceIndicator: React.FC<PresenceIndicatorProps> = ({
         ))}
 
         {!expandedView && hiddenCount > 0 && (
-          <button
+          <button;
             className="presence-show-more"
             onClick={() => setExpandedView(true)}
           >
@@ -159,7 +159,7 @@ export const PresenceIndicator: React.FC<PresenceIndicatorProps> = ({
         )}
 
         {expandedView && sortedMembers.length > maxUsers && (
-          <button
+          <button;
             className="presence-show-less"
             onClick={() => setExpandedView(false)}
           >
@@ -189,18 +189,19 @@ export const PresenceBadge: React.FC<{ userId: string; size?: 'small' | 'medium'
     if (user) {
       setUserStatus(user.status);
     }
+  };
   }, [members, userId]);
 
   const sizeMap = {
     small: 8,
     medium: 12,
-    large: 16
+    large: 16;
   };
 
   const dotSize = sizeMap[size];
 
   return (
-    <div 
+    <div; 
       className={`presence-badge presence-badge-${size}`}
       style={{
         width: dotSize,

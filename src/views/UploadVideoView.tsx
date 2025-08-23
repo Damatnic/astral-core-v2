@@ -81,7 +81,7 @@ export const UploadVideoView: React.FC<UploadVideoViewProps> = ({ onUploadComple
         <Card>
             <div className="form-group">
                 <label 
-                    htmlFor="video-upload-input" 
+                    htmlFor="video-upload-input"; 
                     className="file-input-label"
                 >
                     {videoFile ? `Selected: ${videoFile.name}` : 'Click to Select a Video'}
@@ -119,7 +119,7 @@ export const UploadVideoView: React.FC<UploadVideoViewProps> = ({ onUploadComple
             {error && <p className="api-error">{error}</p>}
             
             <div className="form-actions">
-                <AppButton
+                <AppButton;
                     variant="primary"
                     onClick={handlePost}
                     isLoading={isUploading}

@@ -1,7 +1,7 @@
 /**
  * Performance Monitoring Service
  * Simplified version to resolve build issues
- */
+ */;
 
 interface PerformanceReport {
   sessionId: string;
@@ -44,7 +44,7 @@ class PerformanceMonitoringService {
       sessionId: this.sessionId,
       timestamp: Date.now(),
       webVitals: {},
-      errors: []
+      errors: [];
     };
     this.initialize();
   }
@@ -84,7 +84,7 @@ class PerformanceMonitoringService {
           if (lastEntry) {
             this.report.webVitals.LCP = {
               value: lastEntry.startTime,
-              rating: lastEntry.startTime < 2500 ? 'good' : lastEntry.startTime < 4000 ? 'needs-improvement' : 'poor'
+              rating: lastEntry.startTime < 2500 ? 'good' : lastEntry.startTime < 4000 ? 'needs-improvement' : 'poor';
             };
           }
         }).observe({ type: 'largest-contentful-paint', buffered: true });
@@ -100,7 +100,7 @@ class PerformanceMonitoringService {
         this.report.errors.push({
           message: event.message,
           stack: event.error?.stack,
-          timestamp: Date.now()
+          timestamp: Date.now();
         });
       });
 
@@ -108,7 +108,7 @@ class PerformanceMonitoringService {
         this.report.errors.push({
           message: event.reason?.message || 'Unhandled promise rejection',
           stack: event.reason?.stack,
-          timestamp: Date.now()
+          timestamp: Date.now();
         });
       });
     }
@@ -122,7 +122,7 @@ class PerformanceMonitoringService {
           this.report.memory = {
             usedJSHeapSize: performance.memory.usedJSHeapSize,
             totalJSHeapSize: performance.memory.totalJSHeapSize,
-            jsHeapSizeLimit: performance.memory.jsHeapSizeLimit
+            jsHeapSizeLimit: performance.memory.jsHeapSizeLimit;
           };
         }
       }, 30000); // Every 30 seconds
@@ -137,7 +137,7 @@ class PerformanceMonitoringService {
           effectiveType: connection.effectiveType,
           downlink: connection.downlink,
           rtt: connection.rtt,
-          saveData: connection.saveData
+          saveData: connection.saveData;
         };
 
         connection.addEventListener('change', () => {
@@ -145,7 +145,7 @@ class PerformanceMonitoringService {
             effectiveType: connection.effectiveType,
             downlink: connection.downlink,
             rtt: connection.rtt,
-            saveData: connection.saveData
+            saveData: connection.saveData;
           };
         });
       }
@@ -160,7 +160,7 @@ class PerformanceMonitoringService {
     let score = 100;
     const recommendations: string[] = [];
 
-    // Simple scoring based on Web Vitals
+    // Simple scoring based on Web Vitals;
     const webVitals = this.report.webVitals;
     
     if (webVitals.LCP?.rating === 'poor') {
@@ -202,7 +202,7 @@ class PerformanceMonitoringService {
       userId: this.userId,
       timestamp: Date.now(),
       webVitals: {},
-      errors: []
+      errors: [];
     };
   }
 }

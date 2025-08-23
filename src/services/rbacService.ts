@@ -1,11 +1,11 @@
 /**
  * Role-Based Access Control (RBAC) Service
  * Manages permissions and access control for CoreV2
- */
+ */;
 
 import { UserRole } from './auth0Service';
 
-// Permission types
+// Permission types;
 export enum Permission {
   // User permissions
   VIEW_PROFILE = 'view_profile',
@@ -72,7 +72,7 @@ export enum Permission {
   VIEW_API_LOGS = 'view_api_logs',
 }
 
-// Resource types
+// Resource types;
 export enum Resource {
   PROFILE = 'profile',
   CONTENT = 'content',
@@ -85,7 +85,7 @@ export enum Resource {
   API = 'api',
 }
 
-// Action types
+// Action types;
 export enum Action {
   CREATE = 'create',
   READ = 'read',
@@ -95,8 +95,8 @@ export enum Action {
   MANAGE = 'manage',
 }
 
-// Role-Permission mapping
-const userPermissions = [
+// Role-Permission mapping;
+const userPermissions = [;
   Permission.VIEW_PROFILE,
   Permission.EDIT_PROFILE,
   Permission.VIEW_CONTENT,
@@ -109,7 +109,7 @@ const userPermissions = [
   Permission.ACCESS_API,
 ];
 
-const helperPermissions = [
+const helperPermissions = [;
   ...userPermissions,
   Permission.VIEW_HELPER_DASHBOARD,
   Permission.ACCEPT_HELP_REQUESTS,
@@ -119,7 +119,7 @@ const helperPermissions = [
   Permission.EDIT_CONTENT,
 ];
 
-const moderatorPermissions = [
+const moderatorPermissions = [;
   ...helperPermissions,
   Permission.VIEW_REPORTS,
   Permission.MODERATE_USERS,
@@ -129,7 +129,7 @@ const moderatorPermissions = [
   Permission.DELETE_CONTENT,
 ];
 
-const crisisResponderPermissions = [
+const crisisResponderPermissions = [;
   ...userPermissions,
   Permission.RESPOND_TO_CRISIS,
   Permission.MANAGE_CRISIS_RESOURCES,
@@ -193,13 +193,13 @@ class RBACService {
       return true;
     }
 
-    // Map resource-action to permissions
+    // Map resource-action to permissions;
     const requiredPermission = this.getRequiredPermission(resource, action);
     if (!requiredPermission) {
       return false;
     }
 
-    // Check if user has the required permission
+    // Check if user has the required permission;
     const hasPermission = this.userHasPermission(userRoles, requiredPermission);
     
     // Apply resource-specific conditions
@@ -334,7 +334,7 @@ class RBACService {
 
     // Default filtering based on common patterns
     return data.filter(item => {
-      // Type-safe property checks
+      // Type-safe property checks;
       const itemWithProps = item as any & {
         isPrivate?: boolean;
         currentUserId?: string;
@@ -384,7 +384,7 @@ class RBACService {
   validatePermissions(): { valid: boolean; errors: string[] } {
     const errors: string[] = [];
 
-    // Check for orphaned permissions
+    // Check for orphaned permissions;
     const allDefinedPermissions = new Set(Object.values(Permission));
     const allAssignedPermissions = new Set<Permission>();
     
@@ -398,8 +398,8 @@ class RBACService {
       }
     });
 
-    // Check for role hierarchy violations
-    const roleHierarchy = [
+    // Check for role hierarchy violations;
+    const roleHierarchy = [;
       UserRole.USER,
       UserRole.HELPER,
       UserRole.MODERATOR,
@@ -426,10 +426,10 @@ class RBACService {
     }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const rbacService = new RBACService();
 
-// Export helper functions
+// Export helper functions;
 export const hasPermission = (userRoles: UserRole[], permission: Permission): boolean => {
   return rbacService.userHasPermission(userRoles, permission);
 };

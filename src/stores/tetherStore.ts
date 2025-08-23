@@ -102,7 +102,7 @@ export const useTetherStore = create<TetherState>((set, get) => ({
       "You're safe",
       "This will pass"
     ],
-    breathingPattern: 'box'
+    breathingPattern: 'box';
   },
   sessionHistory: [],
   pendingRequests: [],
@@ -127,15 +127,15 @@ export const useTetherStore = create<TetherState>((set, get) => ({
       if (response.ok) {
         const data = await response.json();
         
-        // Set up WebSocket connection for real-time updates
+        // Set up WebSocket connection for real-time updates;
         const ws = new WebSocket(`wss://api.astralcore.app/tether/${data.sessionId}`);
         
         ws.onmessage = (event) => {
           try {
             const message = JSON.parse(event.data);
             if (message.type === 'strength_update') {
-              get().updateConnectionStrength(message.strength);
-            } else if (message.type === 'haptic') {
+              get().updateConnectionStrength(message.strength);;
+  } else if (message.type === 'haptic') {
               // Trigger haptic feedback
               if ('vibrate' in navigator && !get().silentMode) {
                 navigator.vibrate(message.pattern);
@@ -157,7 +157,7 @@ export const useTetherStore = create<TetherState>((set, get) => ({
             isInitiator: true,
             hapticEnabled: true,
             audioEnabled: !get().silentMode,
-            drawingEnabled: false
+            drawingEnabled: false;
           }
         });
 
@@ -205,9 +205,9 @@ export const useTetherStore = create<TetherState>((set, get) => ({
             isInitiator: false,
             hapticEnabled: true,
             audioEnabled: !get().silentMode,
-            drawingEnabled: false
+            drawingEnabled: false;
           },
-          pendingRequests: get().pendingRequests.filter(r => r.id !== requestId)
+          pendingRequests: get().pendingRequests.filter(r => r.id !== requestId);
         });
       }
     } catch (error) {
@@ -230,7 +230,7 @@ export const useTetherStore = create<TetherState>((set, get) => ({
     } finally {
       // Always remove from pending requests, even on error
       set({
-        pendingRequests: get().pendingRequests.filter(r => r.id !== requestId)
+        pendingRequests: get().pendingRequests.filter(r => r.id !== requestId);
       });
     }
   },
@@ -262,7 +262,7 @@ export const useTetherStore = create<TetherState>((set, get) => ({
         duration: Date.now() - current.startTime.getTime(),
         mode: current.mode,
         notes,
-        helpfulnessRating: rating
+        helpfulnessRating: rating;
       };
 
       set({
@@ -322,7 +322,7 @@ export const useTetherStore = create<TetherState>((set, get) => ({
     set({
       activeTether: {
         ...current,
-        drawingEnabled: !current.drawingEnabled
+        drawingEnabled: !current.drawingEnabled;
       }
     });
   },
@@ -341,7 +341,7 @@ export const useTetherStore = create<TetherState>((set, get) => ({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${sessionStorage.getItem('userToken')}`
       },
-      body: JSON.stringify(updated)
+      body: JSON.stringify(updated);
     });
   },
 
@@ -357,13 +357,13 @@ export const useTetherStore = create<TetherState>((set, get) => ({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${sessionStorage.getItem('userToken')}`
       },
-      body: JSON.stringify(member)
+      body: JSON.stringify(member);
     });
   },
 
   removeFromCircle: (memberId: string) => {
     set({
-      tetherCircle: get().tetherCircle.filter(m => m.id !== memberId)
+      tetherCircle: get().tetherCircle.filter(m => m.id !== memberId);
     });
 
     // Remove from backend

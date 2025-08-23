@@ -1,7 +1,7 @@
 /**
  * Test Suite for QuickExitButton Component
  * Tests emergency site exit functionality with keyboard shortcuts
- */
+ */;
 
 import React from 'react';
 import { screen, fireEvent, waitFor, act } from '@testing-library/react';
@@ -10,21 +10,21 @@ import '@testing-library/jest-dom';
 import QuickExitButton from '../QuickExitButton';
 import { BrowserRouter } from 'react-router-dom';
 
-// Mock window.location
+// Mock window.location;
 const mockLocation = {
   href: 'http://localhost:3000',
   replace: jest.fn(),
-  assign: jest.fn()
+  assign: jest.fn();
 };
 
 Object.defineProperty(window, 'location', {
   value: mockLocation,
   writable: true,
-  configurable: true
+  configurable: true;
 });
 
 // Use the existing sessionStorage mock from setupTests.ts
-// Just create references to the existing mock functions for easier testing
+// Just create references to the existing mock functions for easier testing;
 const mockSessionStorage = window.sessionStorage as {
   clear: jest.Mock;
   getItem: jest.Mock;
@@ -35,7 +35,7 @@ const mockSessionStorage = window.sessionStorage as {
 };
 
 // Use the existing localStorage mock from setupTests.ts
-// Just create references to the existing mock functions for easier testing
+// Just create references to the existing mock functions for easier testing;
 const mockLocalStorage = window.localStorage as {
   clear: jest.Mock;
   getItem: jest.Mock;
@@ -45,7 +45,7 @@ const mockLocalStorage = window.localStorage as {
   length: number;
 };
 
-// Custom render function that includes Router
+// Custom render function that includes Router;
 const render = (ui: React.ReactElement) => {
   return renderWithoutProviders(
     <BrowserRouter>
@@ -67,12 +67,12 @@ describe('QuickExitButton', () => {
       document.body = document.createElement('body');
     }
     
-    // Create a div container for React Testing Library
+    // Create a div container for React Testing Library;
     const root = document.createElement('div');
     root.id = 'root';
     document.body.appendChild(root);
     
-    // Setup CSS variables for testing
+    // Setup CSS variables for testing;
     const style = document.createElement('style');
     style.innerHTML = `
       :root {
@@ -91,7 +91,7 @@ describe('QuickExitButton', () => {
   
   afterEach(() => {
     cleanup();
-    // Clean up the root div
+    // Clean up the root div;
     const root = document.getElementById('root');
     if (root && root.parentNode) {
       root.parentNode.removeChild(root);
@@ -100,7 +100,7 @@ describe('QuickExitButton', () => {
 
   describe('Rendering', () => {
     it('should render the quick exit button', () => {
-      // Wrap in act to catch any errors during rendering
+      // Wrap in act to catch any errors during rendering;
       let renderResult;
       act(() => {
         try {
@@ -117,7 +117,7 @@ describe('QuickExitButton', () => {
       console.log('Container HTML:', container.innerHTML);
       console.log('Body HTML:', document.body.innerHTML);
 
-      // Try simpler queries first
+      // Try simpler queries first;
       const allButtons = screen.queryAllByRole('button');
       console.log('All buttons found:', allButtons.length);
       
@@ -358,7 +358,7 @@ describe('QuickExitButton', () => {
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
         configurable: true,
-        value: 400
+        value: 400;
       });
 
       render(<QuickExitButton />);
@@ -383,12 +383,12 @@ describe('QuickExitButton', () => {
     it('should clear history if possible', () => {
       const mockHistory = {
         pushState: jest.fn(),
-        replaceState: jest.fn()
+        replaceState: jest.fn();
       };
 
       Object.defineProperty(window, 'history', {
         value: mockHistory,
-        writable: true
+        writable: true;
       });
 
       render(<QuickExitButton clearHistory={true} />);
@@ -416,14 +416,14 @@ describe('QuickExitButton', () => {
     });
 
     it('should handle storage clearing errors', () => {
-      // Mock console.error to suppress error output
+      // Mock console.error to suppress error output;
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       
       // Reset mocks first
       mockLocation.replace.mockClear();
       mockLocation.href = 'http://localhost:3000';
       
-      // Save original implementation
+      // Save original implementation;
       const originalClear = mockSessionStorage.clear;
       let callCount = 0;
       

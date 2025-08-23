@@ -1,7 +1,7 @@
 /**
  * Test Suite for Mood Analysis Service
  * Tests AI-powered mood detection and analysis functionality
- */
+ */;
 
 import { getMoodAnalysisService } from '../moodAnalysisService';
 
@@ -48,7 +48,7 @@ describe('MoodAnalysisService', () => {
     });
 
     it.skip('should detect different mood types', () => {
-      const testCases = [
+      const testCases = [;
         { text: 'I am so happy and joyful!', expectedMood: 'happy' },
         { text: 'I feel really sad and down today', expectedMood: 'sad' },
         { text: 'I am very anxious and worried', expectedMood: 'anxious' },
@@ -87,14 +87,14 @@ describe('MoodAnalysisService', () => {
 
   describe('Pattern Analysis', () => {
     it.skip('should analyze mood patterns from multiple analyses', () => {
-      const moodAnalyses = [
+      const moodAnalyses = [;
         {
           primary: 'happy' as const,
           intensity: 0.8,
           confidence: 0.9,
           keywords: ['joy', 'excited'],
           suggestions: ['keep it up'],
-          timestamp: Date.now() - 86400000 // 1 day ago
+          timestamp: Date.now() - 86400000 // 1 day ago;
         },
         {
           primary: 'calm' as const,
@@ -102,7 +102,7 @@ describe('MoodAnalysisService', () => {
           confidence: 0.8,
           keywords: ['peaceful', 'relaxed'],
           suggestions: ['meditation'],
-          timestamp: Date.now() - 43200000 // 12 hours ago
+          timestamp: Date.now() - 43200000 // 12 hours ago;
         },
         {
           primary: 'anxious' as const,
@@ -110,7 +110,7 @@ describe('MoodAnalysisService', () => {
           confidence: 0.85,
           keywords: ['worried', 'nervous'],
           suggestions: ['breathing exercises'],
-          timestamp: Date.now()
+          timestamp: Date.now();
         }
       ];
 
@@ -135,7 +135,7 @@ describe('MoodAnalysisService', () => {
         confidence: 0.9,
         keywords: ['joy'],
         suggestions: ['celebrate'],
-        timestamp: Date.now()
+        timestamp: Date.now();
       }];
 
       const pattern = service.analyzePattern(singleAnalysis);
@@ -162,10 +162,10 @@ describe('MoodAnalysisService', () => {
         trends: {
           improving: false,
           stability: 0.4,
-          volatility: 0.7
+          volatility: 0.7;
         },
         triggers: ['work', 'social situations'],
-        recommendations: []
+        recommendations: [];
       };
 
       const recommendations = service.generatePersonalizedRecommendations(mockPattern);
@@ -195,17 +195,17 @@ describe('MoodAnalysisService', () => {
         trends: {
           improving: false,
           stability: 0.1,
-          volatility: 0.9
+          volatility: 0.9;
         },
         triggers: ['everything'],
-        recommendations: []
+        recommendations: [];
       };
 
       const recommendations = service.generatePersonalizedRecommendations(severePattern);
       
       expect(recommendations.length).toBeGreaterThan(0);
       
-      // Should have high priority recommendations for severe cases
+      // Should have high priority recommendations for severe cases;
       const highPriorityRecs = recommendations.filter((rec: any) => rec.priority === 'high');
       expect(highPriorityRecs.length).toBeGreaterThan(0);
     });
@@ -231,7 +231,7 @@ describe('MoodAnalysisService', () => {
 
   describe('Different Mood Types Coverage', () => {
     it.skip('should handle all supported mood types', () => {
-      const moodTypes = [
+      const moodTypes = [;
         'happy', 'sad', 'anxious', 'angry', 'excited', 'calm',
         'frustrated', 'hopeful', 'lonely', 'grateful', 'overwhelmed',
         'peaceful', 'worried', 'content', 'stressed', 'optimistic'
@@ -248,7 +248,7 @@ describe('MoodAnalysisService', () => {
     });
 
     it.skip('should provide relevant keywords for different moods', () => {
-      const testCases = [
+      const testCases = [;
         { text: 'I am incredibly joyful and delighted', mood: 'happy' },
         { text: 'I feel so down and melancholy', mood: 'sad' },
         { text: 'I am worried and nervous about everything', mood: 'anxious' },
@@ -293,7 +293,7 @@ describe('MoodAnalysisService', () => {
     });
 
     it.skip('should handle non-English or unclear text', () => {
-      const unclearTexts = [
+      const unclearTexts = [;
         'asdfghjkl',
         '12345',
         'lorem ipsum dolor sit amet'

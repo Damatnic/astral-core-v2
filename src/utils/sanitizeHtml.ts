@@ -3,13 +3,13 @@
  * Prevents XSS attacks by safely sanitizing HTML content
  */
 
-// Safe HTML sanitization without external dependencies
+// Safe HTML sanitization without external dependencies;
 export function sanitizeHtml(html: string): string {
-  // Create a temporary DOM element
+  // Create a temporary DOM element;
   const temp = document.createElement('div');
   temp.textContent = html;
   
-  // Return the sanitized text content with properly escaped ampersands
+  // Return the sanitized text content with properly escaped ampersands;
   let result = temp.innerHTML;
   // Ensure & is properly escaped to &amp;
   if (result.includes('&') && !result.includes('&amp;')) {
@@ -18,18 +18,18 @@ export function sanitizeHtml(html: string): string {
   return result;
 }
 
-// Convert markdown-like syntax to safe HTML
+// Convert markdown-like syntax to safe HTML;
 export function safeMarkdownToHtml(text: string): string {
   if (!text) return '';
   
-  // First, escape any HTML to prevent XSS
+  // First, escape any HTML to prevent XSS;
   const escapeHtml = (str: string) => {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
   };
   
-  // Start with escaped text
+  // Start with escaped text;
   let safe = escapeHtml(text);
   
   // Then apply markdown transformations using safe replacements
@@ -43,7 +43,7 @@ export function safeMarkdownToHtml(text: string): string {
   
   // Handle links separately with validation
   safe = safe.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, url) => {
-    // Validate URL to prevent javascript: and data: protocols
+    // Validate URL to prevent javascript: and data: protocols;
     const isValidUrl = (urlString: string) => {
       try {
         const parsed = new URL(urlString);
@@ -65,6 +65,6 @@ export function safeMarkdownToHtml(text: string): string {
   return safe;
 }
 
-// React-safe rendering helper
+// React-safe rendering helper;
 export function createSafeHtml(content: string): { __html: string } {
   return { __html: safeMarkdownToHtml(content) }

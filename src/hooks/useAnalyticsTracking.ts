@@ -5,11 +5,11 @@
  * Automatically handles privacy settings and consent
  * 
  * @license Apache-2.0
- */
+ */;
 
-import { useEffect, useCallback, useRef } from "react"
-import { useLocation, useNavigationType } from "react-router-dom"
-import analyticsService from "../services/analyticsService"
+import { useEffect, useCallback, useRef } from "react";
+import { useLocation, useNavigationType } from "react-router-dom";
+import analyticsService from "../services/analyticsService";
 interface TrackingOptions {
   category?: string;
       properties?: Record<string, any>;
@@ -31,9 +31,9 @@ export const useAnalyticsTracking = (options: UseAnalyticsTrackingOptions={}): v
     trackErrors = true,
     componentName,
     featureName
-  } = options
-  const location = useLocation()
-  const navigationType = useNavigationType()
+  } = options;
+  const location = useLocation();
+  const navigationType = useNavigationType();
   const previousPath = useRef<string>();
 
   // Track page views;
@@ -48,8 +48,8 @@ export const useAnalyticsTracking = (options: UseAnalyticsTrackingOptions={}): v
     analyticsService.trackPageView(currentPath, componentName || featureName)
   }, [location, navigationType, trackPageViews, componentName, featureName])
 
-  // Track custom events
-      const trackEvent = useCallback((
+  // Track custom events;
+      const trackEvent = useCallback((;
       eventName: string,
       options?: TrackingOptions
     ) => {
@@ -60,24 +60,24 @@ export const useAnalyticsTracking = (options: UseAnalyticsTrackingOptions={}): v
       featureName,
       path: location.pathname,
               category: options?.category || "user_action",
-        sensitivityLevel: options?.sensitivityLevel || "public"
+        sensitivityLevel: options?.sensitivityLevel || "public";
       } as unknown)
   }, [trackInteractions, componentName, featureName, location.pathname])
 
-  // Track feature usage
-  const trackFeatureUsage = useCallback((
+  // Track feature usage;
+  const trackFeatureUsage = useCallback((;
     feature: string,
     metadata?: Record<string, any>
   ) => {
     analyticsService.trackFeatureUsage(feature, "usage", {
       ...metadata,
       componentName,
-      path: location.pathname
+      path: location.pathname;
     })
   }, [componentName, location.pathname])
 
-  // Track user interaction
-      const trackInteraction = useCallback((
+  // Track user interaction;
+      const trackInteraction = useCallback((;
       element: string,
       action: string,
       value?: any
@@ -91,12 +91,12 @@ export const useAnalyticsTracking = (options: UseAnalyticsTrackingOptions={}): v
       featureName,
       path: location.pathname,
               category: "user_action",
-        sensitivityLevel: "public"
+        sensitivityLevel: "public";
       } as unknown)
   }, [trackInteractions, componentName, featureName, location.pathname])
 
-  // Track form submission
-  const trackFormSubmit = useCallback((
+  // Track form submission;
+  const trackFormSubmit = useCallback((;
     formName: string,
     success: boolean,
     metadata?: Record<string, any>
@@ -111,8 +111,8 @@ export const useAnalyticsTracking = (options: UseAnalyticsTrackingOptions={}): v
       sensitivityLevel: "private"    } as unknown)
   }, [componentName, location.pathname])
 
-  // Track crisis-related events
-      const trackCrisisEvent = useCallback((
+  // Track crisis-related events;
+      const trackCrisisEvent = useCallback((;
       eventType: "detection" | "intervention" | "resource_accessed" | "help_requested",
       metadata?: Record<string, any>
     ) => {
@@ -125,8 +125,8 @@ export const useAnalyticsTracking = (options: UseAnalyticsTrackingOptions={}): v
       sensitivityLevel: "crisis"    } as unknown)
   }, [componentName, location.pathname])
 
-  // Track wellness activities
-      const trackWellnessActivity = useCallback((
+  // Track wellness activities;
+      const trackWellnessActivity = useCallback((;
       activity: string,
       duration?: number,
       outcome?: "completed" | "abandoned" | "skipped"
@@ -141,8 +141,8 @@ export const useAnalyticsTracking = (options: UseAnalyticsTrackingOptions={}): v
       sensitivityLevel: "sensitive"    } as unknown)
   }, [componentName, location.pathname])
 
-  // Track performance metrics
-      const trackPerformance = useCallback((
+  // Track performance metrics;
+      const trackPerformance = useCallback((;
       metric: string,
       value: number,
       unit?: string
@@ -154,16 +154,16 @@ export const useAnalyticsTracking = (options: UseAnalyticsTrackingOptions={}): v
       componentName,
       path: location.pathname,
       category: "performance",
-      sensitivityLevel: "public"
+      sensitivityLevel: "public";
     } as unknown)
   }, [componentName, location.pathname])
 
-  // Track errors
-      const trackError = useCallback((
+  // Track errors;
+      const trackError = useCallback((;
       error: Error | string,
       context?: Record<string, any>
     ) => {
-    if (!trackErrors) return
+    if (!trackErrors) return;
 
           const errorMessage = error instanceof Error ? error.message : error;
       const errorStack = error instanceof Error ? error.stack : undefined;
@@ -178,8 +178,8 @@ export const useAnalyticsTracking = (options: UseAnalyticsTrackingOptions={}): v
       sensitivityLevel: "private"    } as unknown)
   }, [trackErrors, componentName, featureName, location.pathname])
 
-  // Track A/B test exposure
-      const trackExperiment = useCallback((
+  // Track A/B test exposure;
+      const trackExperiment = useCallback((;
       experimentName: string,
       variant: string
     ) => {
@@ -189,17 +189,17 @@ export const useAnalyticsTracking = (options: UseAnalyticsTrackingOptions={}): v
       componentName,
       path: location.pathname,
       category: "feature_usage",
-      sensitivityLevel: "public"
+      sensitivityLevel: "public";
     } as unknown)
   }, [componentName, location.pathname])
 
-  // Track search queries (privacy-safe)
-      const trackSearch = useCallback((
+  // Track search queries (privacy-safe);
+      const trackSearch = useCallback((;
       query: string,
       resultCount: number,
       clickedResult?: number
     ) => {
-          // Hash the query for privacy
+          // Hash the query for privacy;
       const hashedQuery = btoa(query).substring(0, 10);
           analyticsService.trackEvent("search", {
       queryHash: hashedQuery,
@@ -212,8 +212,8 @@ export const useAnalyticsTracking = (options: UseAnalyticsTrackingOptions={}): v
       sensitivityLevel: "private"    } as unknown)
   }, [componentName, location.pathname])
 
-  // Track session timing
-      const trackTiming = useCallback((
+  // Track session timing;
+      const trackTiming = useCallback((;
       category: string,
       variable: string,
       duration: number
@@ -224,7 +224,7 @@ export const useAnalyticsTracking = (options: UseAnalyticsTrackingOptions={}): v
       duration,
       componentName,
       path: location.pathname,
-      timestamp: new Date()
+      timestamp: new Date();
     } as unknown)
   }, [componentName, location.pathname])
 
@@ -243,9 +243,10 @@ export const useAnalyticsTracking = (options: UseAnalyticsTrackingOptions={}): v
   }
 }
 
-// Helper hook for tracking component mount/unmount
+// Helper hook for tracking component mount/unmount;
   export const useComponentTracking = (componentName: string): void => {
-    const { trackEvent, trackTiming } = useAnalyticsTracking({ componentName });
+    const { trackEvent, trackTiming } = useAnalyticsTracking({ componentName };
+  };
     const mountTime = useRef<number>(Date.now());
     
     useEffect(() => {
@@ -256,7 +257,7 @@ export const useAnalyticsTracking = (options: UseAnalyticsTrackingOptions={}): v
     })
 
     return () => {
-              // Track component unmount and session duration
+              // Track component unmount and session duration;
         const duration = Date.now() - mountTime.current;
         trackEvent("component_unmount", {
         category: "performance",
@@ -267,7 +268,7 @@ export const useAnalyticsTracking = (options: UseAnalyticsTrackingOptions={}): v
   }, [componentName, trackEvent, trackTiming])
 }
 
-// Helper hook for tracking feature adoption
+// Helper hook for tracking feature adoption;
   export const useFeatureAdoption = (featureName: string): Record<string, unknown> => {
     const { trackFeatureUsage } = useAnalyticsTracking({ featureName });
     const hasTrackedAdoption = useRef(false);
@@ -276,13 +277,13 @@ export const useAnalyticsTracking = (options: UseAnalyticsTrackingOptions={}): v
     if(!hasTrackedAdoption.current) {
       trackFeatureUsage(featureName, {
         firstUse: true,
-        timestamp: Date.now()
+        timestamp: Date.now();
       })
-      hasTrackedAdoption.current = true;
-    } else {
+      hasTrackedAdoption.current = true;;
+  } else {
       trackFeatureUsage(featureName, {
         firstUse: false,
-        timestamp: Date.now()
+        timestamp: Date.now();
       })
     }
   }, [featureName, trackFeatureUsage])
@@ -290,12 +291,12 @@ export const useAnalyticsTracking = (options: UseAnalyticsTrackingOptions={}): v
   return { trackAdoption }
 }
 
-  // Export common tracking functions
+  // Export common tracking functions;
   export const trackButtonClick = (buttonName: string, metadata?: Record<string, any>): void => {
     analyticsService.trackEvent("button_click", {
     buttonName,
     ...metadata,
-    timestamp: new Date()
+    timestamp: new Date();
   })
 }
 
@@ -304,7 +305,7 @@ export const trackLinkClick = (linkUrl: string, linkText?: string, isExternal?: 
     linkUrl,
     linkText,
     isExternal: isExternal ? "true" : ", false",
-    timestamp: new Date()
+    timestamp: new Date();
   })
 }
 
@@ -317,6 +318,6 @@ export const trackVideoInteraction = (
     videoId,
     action,
     currentTime,
-    timestamp: new Date()
+    timestamp: new Date();
   })
 }

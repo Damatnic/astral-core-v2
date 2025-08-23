@@ -4,7 +4,7 @@
  * @param maxLength - Maximum length before truncation
  * @param suffix - Suffix to add when truncated (default: '...')
  * @returns Truncated text with suffix if needed
- */
+ */;
 export const truncateText = (text: string, maxLength: number, suffix: string = '...'): string => {
   if (!text) return '';
   

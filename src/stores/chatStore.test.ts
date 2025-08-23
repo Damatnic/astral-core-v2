@@ -57,7 +57,7 @@ describe('chatStore', () => {
           messages: [], 
           perspective: 'seeker',
           unread: false,
-          isTyping: false
+          isTyping: false;
         } as any 
       }
     });
@@ -88,7 +88,7 @@ describe('chatStore', () => {
           messages: [],
           perspective: 'seeker',
           unread: false,
-          isTyping: false
+          isTyping: false;
         } as any 
       }
     });

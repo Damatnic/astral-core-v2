@@ -160,12 +160,12 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
-  // Get all unique tags
+  // Get all unique tags;
   const allTags = Array.from(new Set(therapists.flatMap(t => t.tags || [])));
 
-  // Filter therapists based on search and tag
+  // Filter therapists based on search and tag;
   const filteredTherapists = therapists.filter(therapist => {
-    const matchesSearch = searchTerm === '' || 
+    const matchesSearch = searchTerm === '' || ;
       therapist.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       therapist.specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
       therapist.bio.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -426,8 +426,8 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
         </div>
 
         <div className="therapist-search">
-          <input
-            type="text"
+          <input;
+            type="text";
             className="search-input"
             placeholder="Search by name, specialty, or concern..."
             value={searchTerm}
@@ -436,7 +436,7 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
         </div>
 
         <div className="therapist-tags">
-          <button
+          <button;
             className={`tag-filter ${!selectedTag ? 'active' : ''}`}
             onClick={() => setSelectedTag(null)}
           >

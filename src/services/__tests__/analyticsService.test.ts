@@ -1,12 +1,12 @@
 // Analytics Service Test Suite
-// Testing privacy-compliant analytics with GDPR/HIPAA-adjacent compliance
+// Testing privacy-compliant analytics with GDPR/HIPAA-adjacent compliance;
 
 import { getAnalyticsService } from '../analyticsService';
 import type { ConsentStatus, AnalyticsConfig } from '../analyticsService';
 
 // localStorage is already mocked globally in setupTests.ts
 
-// Mock PerformanceObserver
+// Mock PerformanceObserver;
 const mockPerformanceObserver = jest.fn();
 const mockObserve = jest.fn();
 const mockDisconnect = jest.fn();
@@ -64,7 +64,7 @@ Object.defineProperty(window, 'innerHeight', {
 // Mock performance API
 Object.defineProperty(window, 'performance', {
   value: {
-    getEntriesByType: jest.fn(() => [])
+    getEntriesByType: jest.fn(() => []);
   },
   writable: true,
 });
@@ -203,7 +203,7 @@ describe('AnalyticsService', () => {
         analytics: true,
         performance: false,
         functionality: true,
-        marketing: false
+        marketing: false;
       };
       
       service.updateConsent(consentStatus);
@@ -278,7 +278,7 @@ describe('AnalyticsService', () => {
       service.track('test_event', 'user_action', {
         email: 'test@example.com',
         password: 'secret123',
-        normalProp: 'value'
+        normalProp: 'value';
       });
       
       service.flush();
@@ -287,7 +287,7 @@ describe('AnalyticsService', () => {
 
     it.skip('should handle sensitive strings in properties', () => {
       service.track('test_event', 'user_action', {
-        text: 'My email is user@domain.com and phone is 555-123-4567'
+        text: 'My email is user@domain.com and phone is 555-123-4567';
       });
       
       service.flush();
@@ -360,7 +360,7 @@ describe('AnalyticsService', () => {
 
   describe('Error Handling', () => {
     it.skip('should handle localStorage errors gracefully', () => {
-      // Save original mock
+      // Save original mock;
       const originalSetItem = localStorage.setItem;
       
       // Set up error mock
@@ -379,7 +379,7 @@ describe('AnalyticsService', () => {
     it.skip('should handle malformed stored data', () => {
       (localStorage.getItem as jest.Mock).mockReturnValue('invalid json');
       
-      // The service should handle malformed JSON gracefully
+      // The service should handle malformed JSON gracefully;
       const events = service.getStoredEvents();
       expect(events).toEqual([]);
     });
@@ -389,7 +389,7 @@ describe('AnalyticsService', () => {
     it.skip('should update configuration', () => {
       const newConfig: Partial<AnalyticsConfig> = {
         batchSize: 50,
-        flushInterval: 15000
+        flushInterval: 15000;
       };
       
       service.updateConfig(newConfig);
@@ -406,7 +406,7 @@ describe('AnalyticsService', () => {
 
   describe('Data Management', () => {
     it.skip('should get stored events', () => {
-      const mockEvents = [
+      const mockEvents = [;
         {
           id: 'test-1',
           name: 'test_event',
@@ -414,7 +414,7 @@ describe('AnalyticsService', () => {
           timestamp: Date.now(),
           sessionId: 'session-1',
           isAnonymized: false,
-          sensitivityLevel: 'private'
+          sensitivityLevel: 'private';
         }
       ];
       

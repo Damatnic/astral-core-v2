@@ -63,7 +63,8 @@ export const HelperDashboardView: React.FC<{
                 .catch(err => console.error("Failed to load feedback count", err))
                 .finally(() => setIsLoadingFeedback(false));
         }
-    }, [helperId, activeTab]);
+    };
+  }, [helperId, activeTab]);
     
     useEffect(() => {
         if (helperId && activeTab === 'achievements') {
@@ -73,7 +74,8 @@ export const HelperDashboardView: React.FC<{
                 .catch(err => console.error("Failed to load achievements", err))
                 .finally(() => setIsLoadingAchievements(false));
         }
-    }, [helperId, activeTab]);
+    };
+  }, [helperId, activeTab]);
 
     const fetchMatchedDilemmas = useCallback(async () => {
         if (helperProfile && isAvailable) {
@@ -82,35 +84,37 @@ export const HelperDashboardView: React.FC<{
                 setMatchedDilemmas(matched);
             } catch (error) {
                 console.error("Failed to fetch matched dilemmas", error);
-            }
-        } else {
+            };
+  } else {
             setMatchedDilemmas([]);
         }
-    }, [helperProfile, isAvailable, allDilemmas]);
+    };
+  }, [helperProfile, isAvailable, allDilemmas]);
 
     useEffect(() => {
         if (activeTab === 'forYou') {
             fetchMatchedDilemmas();
         }
-    }, [activeTab, fetchMatchedDilemmas]);
+    };
+  }, [activeTab, fetchMatchedDilemmas]);
 
-    const directRequests = useMemo(() => 
+    const directRequests = useMemo(() => ;
         allDilemmas.filter(d => d.status === 'direct_request' && d.requestedHelperId === helperId).sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()), 
     [allDilemmas, helperId]);
 
-    const availableDilemmas = useMemo(() => 
+    const availableDilemmas = useMemo(() => ;
         allDilemmas.filter(d => d.status === 'active' && !d.isReported && !d.assignedHelperId).sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()), 
     [allDilemmas]);
     
-    const myDilemmas = useMemo(() => 
+    const myDilemmas = useMemo(() => ;
         allDilemmas.filter(d => d.assignedHelperId === helperId && d.status === 'in_progress').sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()), 
     [allDilemmas, helperId]);
     
-    const myPastSessions = useMemo(() =>
+    const myPastSessions = useMemo(() =>;
         helpSessions.filter(s => s.helperId === helperId && s.endedAt).sort((a,b) => new Date(b.endedAt!).getTime() - new Date(a.endedAt!).getTime()),
     [helpSessions, helperId]);
 
-    const supportedPostsCount = useMemo(() => 
+    const supportedPostsCount = useMemo(() => ;
         helpSessions.filter(s => s.helperId === helperId).length,
     [helpSessions, helperId]);
 

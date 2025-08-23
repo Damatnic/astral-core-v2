@@ -18,7 +18,8 @@ jest.mock('../../AppButton', () => {
         {children}
       </button>
     )
-  });
+  };
+  };
 
 jest.mock('../../Modal', () => {
   return {
@@ -30,7 +31,8 @@ jest.mock('../../Modal', () => {
           {children}
         </div>
       ) : null
-  });
+  };
+  };
 
 describe('ConsentBanner', () => {
   let mockAnalyticsServiceInstance: {
@@ -69,7 +71,7 @@ describe('ConsentBanner', () => {
         functionality: true,
         marketing: false,
         timestamp: Date.now(),
-        version: '1.0.0'
+        version: '1.0.0';
       });
       
       render(<ConsentBanner />);
@@ -103,7 +105,7 @@ describe('ConsentBanner', () => {
         functionality: true,
         marketing: true,
         timestamp: 123456789,
-        version: '1.0.0'
+        version: '1.0.0';
       });
       
       expect(mockOnConsentChange).toHaveBeenCalledWith({
@@ -112,7 +114,7 @@ describe('ConsentBanner', () => {
         functionality: true,
         marketing: true,
         timestamp: 123456789,
-        version: '1.0.0'
+        version: '1.0.0';
       });
       
       dateNowSpy.mockRestore();
@@ -146,7 +148,7 @@ describe('ConsentBanner', () => {
         functionality: true,
         marketing: false,
         timestamp: 987654321,
-        version: '1.0.0'
+        version: '1.0.0';
       });
       
       expect(mockOnConsentChange).toHaveBeenCalledWith({
@@ -155,7 +157,7 @@ describe('ConsentBanner', () => {
         functionality: true,
         marketing: false,
         timestamp: 987654321,
-        version: '1.0.0'
+        version: '1.0.0';
       });
       
       dateNowSpy.mockRestore();
@@ -258,7 +260,7 @@ describe('ConsentBanner', () => {
       
       fireEvent.click(screen.getByTestId('button-customize-preferences'));
       
-      // Toggle analytics on
+      // Toggle analytics on;
       const analyticsCheckbox = screen.getByLabelText(/Usage Analytics/);
       fireEvent.click(analyticsCheckbox);
       
@@ -270,7 +272,7 @@ describe('ConsentBanner', () => {
         functionality: true,
         marketing: false,
         timestamp: 555666777,
-        version: '1.0.0'
+        version: '1.0.0';
       });
       
       expect(mockOnConsentChange).toHaveBeenCalledWith({
@@ -279,7 +281,7 @@ describe('ConsentBanner', () => {
         functionality: true,
         marketing: false,
         timestamp: 555666777,
-        version: '1.0.0'
+        version: '1.0.0';
       });
       
       await waitFor(() => {
@@ -299,7 +301,7 @@ describe('ConsentBanner', () => {
         functionality: true,
         marketing: true,
         timestamp: Date.now(),
-        version: '1.0.0'
+        version: '1.0.0';
       };
       
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(existingConsent);
@@ -319,7 +321,7 @@ describe('ConsentBanner', () => {
         performance: true,
         functionality: true,
         marketing: false,
-        version: '1.0.0'
+        version: '1.0.0';
       };
       
       mockAnalyticsServiceInstance.getConsentStatus.mockReturnValue(incompleteConsent);
@@ -461,16 +463,16 @@ describe('ConsentBanner', () => {
       fireEvent.click(customizeButton);
       
       // Wait for modal to appear and check for content
-      // The modal might have different text, so let's be more flexible
-      const modalContent = screen.queryByText(/Privacy Preferences/i) || 
+      // The modal might have different text, so let's be more flexible;
+      const modalContent = screen.queryByText(/Privacy Preferences/i) || ;
                           screen.queryByText(/Customize/i);
       
       if (modalContent) {
         expect(modalContent).toBeInTheDocument();
       }
       
-      // Check for consent options - these should be present
-      const essentialOption = screen.queryByLabelText(/Essential/i) ||
+      // Check for consent options - these should be present;
+      const essentialOption = screen.queryByLabelText(/Essential/i) ||;
                               screen.queryByText(/Essential/i);
       
       if (essentialOption) {

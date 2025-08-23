@@ -9,7 +9,7 @@
  * Integrates enhanced crisis keyword detection with existing AI crisis detection
  * to provide comprehensive crisis analysis with improved accuracy and contextual understanding.
  * Now includes automatic crisis escalation workflow integration for severe cases.
- */
+ */;
 
 import { enhancedAICrisisDetectionService, MLCrisisAnalysisResult } from './enhancedAiCrisisDetectionService';
 import { enhancedCrisisKeywordDetectionService, EnhancedCrisisDetectionResult } from './enhancedCrisisKeywordDetectionService';
@@ -112,7 +112,7 @@ class EnhancedCrisisDetectionIntegrationService {
     } = options;
 
     try {
-      // Run all analysis methods in parallel for efficiency
+      // Run all analysis methods in parallel for efficiency;
       const [keywordAnalysis, aiAnalysis, culturalAnalysis] = await Promise.all([
         // Enhanced keyword analysis
         enhancedCrisisKeywordDetectionService.analyzeEnhancedCrisisKeywords(
@@ -131,8 +131,8 @@ class EnhancedCrisisDetectionIntegrationService {
           ) : Promise.resolve(null)
       ]);
 
-      // Consolidate analysis results
-      const consolidatedResult = await this.consolidateAnalysisResults(
+      // Consolidate analysis results;
+      const consolidatedResult = await this.consolidateAnalysisResults(;
         keywordAnalysis,
         aiAnalysis,
         culturalAnalysis,
@@ -166,15 +166,15 @@ class EnhancedCrisisDetectionIntegrationService {
     } = {}
   ): Promise<ComprehensiveCrisisAnalysisResult> {
     
-    // Calculate consolidated risk scores
-    const consolidatedRisk = this.calculateConsolidatedRisk(
+    // Calculate consolidated risk scores;
+    const consolidatedRisk = this.calculateConsolidatedRisk(;
       keywordAnalysis,
       aiAnalysis,
       culturalAnalysis,
       prioritizeMethod
     );
 
-    // Helper function to get severity level from AI analysis
+    // Helper function to get severity level from AI analysis;
     const getAISeverityLevel = (analysis: MLCrisisAnalysisResult): CrisisSeverityLevel => {
       if (!analysis.realTimeRisk) return 'none';
       const risk = analysis.realTimeRisk.immediateRisk;
@@ -186,10 +186,10 @@ class EnhancedCrisisDetectionIntegrationService {
       return 'none';
     };
 
-    // Helper function to get cultural severity level
+    // Helper function to get cultural severity level;
     const getCulturalSeverityLevel = (analysis: CulturalCrisisAnalysisResult | null): CrisisSeverityLevel => {
       if (!analysis?.realTimeRisk) return 'none';
-      // Use the adjusted risk if available, otherwise use immediate risk
+      // Use the adjusted risk if available, otherwise use immediate risk;
       const risk = analysis.culturallyAdjustedRisk?.adjustedRisk || analysis.realTimeRisk.immediateRisk;
       if (risk >= 90) return 'emergency';
       if (risk >= 80) return 'critical';
@@ -199,63 +199,63 @@ class EnhancedCrisisDetectionIntegrationService {
       return 'none';
     };
 
-    // Determine overall severity
-    const overallSeverity = this.determineOverallSeverity(
+    // Determine overall severity;
+    const overallSeverity = this.determineOverallSeverity(;
       keywordAnalysis.overallSeverity,
       getAISeverityLevel(aiAnalysis),
       getCulturalSeverityLevel(culturalAnalysis)
     );
 
-    // Calculate overall confidence
-    const confidenceBreakdown = this.calculateConfidenceBreakdown(
+    // Calculate overall confidence;
+    const confidenceBreakdown = this.calculateConfidenceBreakdown(;
       keywordAnalysis,
       aiAnalysis,
       culturalAnalysis
     );
 
-    // Consolidate intervention recommendations
-    const interventionRecommendations = this.consolidateInterventionRecommendations(
+    // Consolidate intervention recommendations;
+    const interventionRecommendations = this.consolidateInterventionRecommendations(;
       keywordAnalysis,
       aiAnalysis,
       culturalAnalysis
     );
 
-    // Determine escalation requirements
-    const escalationRequired = consolidatedRisk.immediateRisk >= 70 || 
+    // Determine escalation requirements;
+    const escalationRequired = consolidatedRisk.immediateRisk >= 70 || ;
       overallSeverity === 'critical' || overallSeverity === 'emergency';
     
-    const emergencyServicesRequired = consolidatedRisk.immediateRisk >= 90 || 
+    const emergencyServicesRequired = consolidatedRisk.immediateRisk >= 90 || ;
       overallSeverity === 'emergency' ||
       keywordAnalysis.emergencyServicesRequired ||
       (aiAnalysis.realTimeRisk?.immediateRisk || 0) >= 90;
 
-    // Extract comprehensive emotional profile
-    const emotionalProfile = this.consolidateEmotionalProfile(
+    // Extract comprehensive emotional profile;
+    const emotionalProfile = this.consolidateEmotionalProfile(;
       keywordAnalysis,
       aiAnalysis,
       culturalAnalysis
     );
 
-    // Gather all triggered indicators
-    const triggeredIndicators = this.consolidateTriggeredIndicators(
+    // Gather all triggered indicators;
+    const triggeredIndicators = this.consolidateTriggeredIndicators(;
       keywordAnalysis,
       aiAnalysis,
       culturalAnalysis
     );
 
-    // Consolidate risk and protective factors
+    // Consolidate risk and protective factors;
     const riskFactors = this.consolidateRiskFactors(keywordAnalysis, aiAnalysis, culturalAnalysis);
     const protectiveFactors = this.consolidateProtectiveFactors(keywordAnalysis, aiAnalysis, culturalAnalysis);
 
-    // Generate flagged concerns
-    const flaggedConcerns = this.generateFlaggedConcerns(
+    // Generate flagged concerns;
+    const flaggedConcerns = this.generateFlaggedConcerns(;
       keywordAnalysis,
       aiAnalysis,
       culturalAnalysis,
       consolidatedRisk
     );
 
-    // Initialize escalation workflow data
+    // Initialize escalation workflow data;
     let escalationWorkflow = undefined;
 
     // Handle crisis escalation workflow if needed
@@ -301,7 +301,7 @@ class EnhancedCrisisDetectionIntegrationService {
         processingTime: Date.now() - startTime,
         confidenceBreakdown,
         flaggedConcerns,
-        analysisVersion: this.analysisVersion
+        analysisVersion: this.analysisVersion;
       }
     }
 
@@ -320,33 +320,33 @@ class EnhancedCrisisDetectionIntegrationService {
     interventionUrgency: IntegratedInterventionUrgencyLevel;
   } {
     
-    // Weight factors based on prioritization method
+    // Weight factors based on prioritization method;
     const weights = this.getAnalysisWeights(prioritizeMethod);
     
-    // Calculate weighted immediate risk
+    // Calculate weighted immediate risk;
     let immediateRisk = 
-      (keywordAnalysis.riskAssessment.immediateRisk * weights.keyword) +
+      (keywordAnalysis.riskAssessment.immediateRisk * weights.keyword) +;
       ((aiAnalysis.realTimeRisk?.immediateRisk || 0) * weights.ai);
     
     if (culturalAnalysis && weights.cultural) {
       immediateRisk += (culturalAnalysis.culturallyAdjustedRisk?.adjustedRisk || 0) * weights.cultural;
     }
 
-    // Calculate short-term and long-term risk (using immediate risk as base since interface doesn't have these)
-    const shortTermRisk = Math.min(100, 
+    // Calculate short-term and long-term risk (using immediate risk as base since interface doesn't have these);
+    const shortTermRisk = Math.min(100, ;
       (keywordAnalysis.riskAssessment.shortTermRisk * weights.keyword) +
       ((aiAnalysis.realTimeRisk?.immediateRisk || 0) * weights.ai * 0.8) +
       (culturalAnalysis?.culturallyAdjustedRisk?.adjustedRisk || 0) * (weights.cultural || 0) * 0.8
     );
 
-    const longTermRisk = Math.min(100,
+    const longTermRisk = Math.min(100,;
       (keywordAnalysis.riskAssessment.longTermRisk * weights.keyword) +
       ((aiAnalysis.realTimeRisk?.immediateRisk || 0) * weights.ai * 0.6) +
       (culturalAnalysis?.culturallyAdjustedRisk?.adjustedRisk || 0) * (weights.cultural || 0) * 0.6
     );
 
-    // Determine intervention urgency based on highest urgency from any method
-    const interventionUrgency = this.determineInterventionUrgency(
+    // Determine intervention urgency based on highest urgency from any method;
+    const interventionUrgency = this.determineInterventionUrgency(;
       keywordAnalysis.riskAssessment.interventionUrgency,
       aiAnalysis.realTimeRisk?.interventionUrgency?.toString() || 'low',
       immediateRisk
@@ -417,10 +417,10 @@ class EnhancedCrisisDetectionIntegrationService {
     const aiConfidence = aiAnalysis.mlConfidence;
     const culturalConfidence = culturalAnalysis?.confidence || 0;
 
-    // Calculate weighted overall confidence
+    // Calculate weighted overall confidence;
     const weights = this.getAnalysisWeights('balanced');
     const safeAiConfidence = aiConfidence || 0;
-    const overall = (keywordConfidence * weights.keyword) + 
+    const overall = (keywordConfidence * weights.keyword) + ;
                    (safeAiConfidence * weights.ai) + 
                    (culturalConfidence * (weights.cultural || 0));
 
@@ -451,13 +451,14 @@ class EnhancedCrisisDetectionIntegrationService {
         timeframe: rec.timeframe,
         resources: rec.resources,
         culturalConsiderations: rec.culturalConsiderations,
-        source: 'keyword'
-      });
+        source: 'keyword';
+      };
+  };
     });
 
     // Add AI-based recommendations
     aiAnalysis.realTimeRisk?.recommendedInterventions?.forEach((rec: any) => {
-      // Map AI intervention types to consolidated types
+      // Map AI intervention types to consolidated types;
       let consolidatedType: 'immediate' | 'urgent' | 'supportive' | 'monitoring' | 'resources' | 'cultural';
       switch (rec.type) {
         case 'emergency':
@@ -486,7 +487,7 @@ class EnhancedCrisisDetectionIntegrationService {
         timeframe: rec.timeframe || 'immediate',
         resources: rec.resources || [],
         culturalConsiderations: rec.culturallyAdapted ? ['Culturally adapted'] : [],
-        source: 'ai'
+        source: 'ai';
       });
     });
 
@@ -501,7 +502,7 @@ class EnhancedCrisisDetectionIntegrationService {
         timeframe: 'As appropriate',
         resources: culturalAnalysis.culturalInterventions.culturalResources || [],
         culturalConsiderations: culturalAnalysis.culturalInterventions.languageSpecificResources || [],
-        source: 'cultural'
+        source: 'cultural';
       });
     }
 
@@ -525,7 +526,7 @@ class EnhancedCrisisDetectionIntegrationService {
     stability: number;
     crisisAlignment: number;
   } {
-    // Use AI analysis as primary source for emotional profile
+    // Use AI analysis as primary source for emotional profile;
     const aiEmotion = aiAnalysis.emotionalState;
     const keywordEmotion = keywordAnalysis.riskAssessment.emotionalProfile;
 
@@ -543,7 +544,7 @@ class EnhancedCrisisDetectionIntegrationService {
    * Calculate crisis alignment from AI emotional state
    */
   private calculateCrisisAlignmentFromAI(emotionalState: any): number {
-    // Map AI emotional states to crisis alignment scores
+    // Map AI emotional states to crisis alignment scores;
     const crisisEmotions = {
       'sadness': 0.8,
       'despair': 0.95,
@@ -570,7 +571,8 @@ class EnhancedCrisisDetectionIntegrationService {
     // Add keyword indicators
     keywordAnalysis.keywordMatches.forEach(match => {
       indicators.add(match.keyword);
-    });
+    };
+  };
 
     // Add AI indicators
     (aiAnalysis as any).analysisDetails?.triggeredKeywords?.forEach((keyword: any) => {
@@ -663,7 +665,7 @@ class EnhancedCrisisDetectionIntegrationService {
       'immediate': 4
     };
 
-    const maxUrgencyValue = Math.max(
+    const maxUrgencyValue = Math.max(;
       urgencyLevels[keywordUrgency as keyof typeof urgencyLevels] || 0,
       urgencyLevels[aiUrgency as keyof typeof urgencyLevels] || 0
     );
@@ -755,7 +757,7 @@ class EnhancedCrisisDetectionIntegrationService {
         primaryEmotion: 'neutral',
         intensity: 0,
         stability: 1,
-        crisisAlignment: 0
+        crisisAlignment: 0;
       },
       
       analysisMetadata: {
@@ -764,10 +766,10 @@ class EnhancedCrisisDetectionIntegrationService {
         confidenceBreakdown: {
           keyword: 0,
           ai: 0,
-          overall: 0
+          overall: 0;
         },
         flaggedConcerns: ['Analysis failed - using failsafe mode'],
-        analysisVersion: this.analysisVersion
+        analysisVersion: this.analysisVersion;
       }
     }
 
@@ -793,23 +795,23 @@ class EnhancedCrisisDetectionIntegrationService {
     escalationError?: string;
   }> {
     try {
-      // Determine appropriate escalation tier based on risk assessment
-      const recommendedTier = this.determineEscalationTier(
+      // Determine appropriate escalation tier based on risk assessment;
+      const recommendedTier = this.determineEscalationTier(;
         consolidatedRisk.immediateRisk,
         overallSeverity,
         keywordAnalysis,
         aiAnalysis
       );
 
-      // Determine trigger reason for escalation
-      const triggerReason = this.determineEscalationTrigger(
+      // Determine trigger reason for escalation;
+      const triggerReason = this.determineEscalationTrigger(;
         keywordAnalysis,
         aiAnalysis,
         consolidatedRisk.immediateRisk,
         overallSeverity
       );
 
-      // Create comprehensive crisis analysis result for escalation
+      // Create comprehensive crisis analysis result for escalation;
       const crisisAnalysisResult: ComprehensiveCrisisAnalysisResult = {
         hasCrisisIndicators: true,
         overallSeverity,
@@ -831,7 +833,7 @@ class EnhancedCrisisDetectionIntegrationService {
           primaryEmotion: 'distressed',
           intensity: consolidatedRisk.immediateRisk / 100,
           stability: 1 - (consolidatedRisk.immediateRisk / 100),
-          crisisAlignment: consolidatedRisk.immediateRisk / 100
+          crisisAlignment: consolidatedRisk.immediateRisk / 100;
         },
         analysisMetadata: {
           methodsUsed: ['keyword', 'ai'],
@@ -839,16 +841,16 @@ class EnhancedCrisisDetectionIntegrationService {
           confidenceBreakdown: {
             keyword: keywordAnalysis.analysisMetadata.confidence,
             ai: aiAnalysis.confidence,
-            overall: consolidatedRisk.confidenceScore || 0.8
+            overall: consolidatedRisk.confidenceScore || 0.8;
           },
           flaggedConcerns: [],
-          analysisVersion: this.analysisVersion
+          analysisVersion: this.analysisVersion;
         }
       };
 
       // Only initiate escalation if userId is provided and escalation is needed
       if (userId && (consolidatedRisk.immediateRisk >= 70 || overallSeverity === 'emergency' || overallSeverity === 'critical')) {
-        const escalationResponse = await crisisEscalationWorkflowService.initiateCrisisEscalation(
+        const escalationResponse = await crisisEscalationWorkflowService.initiateCrisisEscalation(;
           crisisAnalysisResult,
           userId,
           {
@@ -857,7 +859,7 @@ class EnhancedCrisisDetectionIntegrationService {
             timeZone: 'UTC', // Default timezone - could be enhanced with user data
             location: {
               country: 'US', // Default - could be enhanced with user data
-              hasGeolocation: false
+              hasGeolocation: false;
             }
           },
           {
@@ -865,21 +867,21 @@ class EnhancedCrisisDetectionIntegrationService {
             messagesSent: 1,
             sessionDuration: 0,
             previousEscalations: 0,
-            riskTrend: 'increasing'
-          }
-        );
+            riskTrend: 'increasing';
+          };
+  };
 
         return {
           escalationId: escalationResponse.escalationId,
           recommendedTier,
           triggerReason,
-          escalationInitiated: escalationResponse.status === 'initiated'
+          escalationInitiated: escalationResponse.status === 'initiated';
         } else {
         // Return escalation recommendation without initiating
         return {
           recommendedTier,
           triggerReason,
-          escalationInitiated: false
+          escalationInitiated: false;
         }
 
     } catch (error) {
@@ -888,7 +890,7 @@ class EnhancedCrisisDetectionIntegrationService {
         recommendedTier: 'crisis-counselor',
         triggerReason: 'high-risk-threshold',
         escalationInitiated: false,
-        escalationError: error instanceof Error ? error.message : 'Unknown escalation error'
+        escalationError: error instanceof Error ? error.message : 'Unknown escalation error';
       }
   }
 
@@ -930,16 +932,16 @@ class EnhancedCrisisDetectionIntegrationService {
     immediateRisk: number,
     overallSeverity: string
   ): EscalationTrigger {
-    // Check for specific crisis categories
-    const hasViolenceThreat = keywordAnalysis.keywordMatches.some(match => 
+    // Check for specific crisis categories;
+    const hasViolenceThreat = keywordAnalysis.keywordMatches.some(match => ;
       match.category === 'violence-threat');
-    const hasSuicidePlan = keywordAnalysis.keywordMatches.some(match => 
+    const hasSuicidePlan = keywordAnalysis.keywordMatches.some(match => ;
       match.category === 'suicide-plan');
-    const hasMedicalEmergency = keywordAnalysis.keywordMatches.some(match => 
+    const hasMedicalEmergency = keywordAnalysis.keywordMatches.some(match => ;
       match.category === 'medical-emergency');
-    const hasSubstanceCrisis = keywordAnalysis.keywordMatches.some(match => 
+    const hasSubstanceCrisis = keywordAnalysis.keywordMatches.some(match => ;
       match.category === 'substance-crisis');
-    const hasAbuseDisclosure = keywordAnalysis.keywordMatches.some(match => 
+    const hasAbuseDisclosure = keywordAnalysis.keywordMatches.some(match => ;
       match.category === 'abuse-disclosure');
     
     // Return specific trigger based on crisis type
@@ -956,6 +958,6 @@ class EnhancedCrisisDetectionIntegrationService {
 
 }
 
-// Singleton instance
+// Singleton instance;
 export const enhancedCrisisDetectionIntegrationService = new EnhancedCrisisDetectionIntegrationService();
 export default enhancedCrisisDetectionIntegrationService;

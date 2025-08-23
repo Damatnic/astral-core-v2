@@ -1,7 +1,7 @@
 /**
  * Lazy CSS Loading Hook for Mental Health Platform
  * Dynamically loads CSS based on user interactions and mental health journey patterns
- */
+ */;
 
 import React, { useEffect, useCallback, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -115,23 +115,23 @@ class CSSLoadingManager {
     events.forEach(event => {
       document.addEventListener(event, loadInteractionStyles, { 
         once: true, 
-        passive: true 
+        passive: true ;
       });
     });
   }
 }
 
-// Global CSS manager instance
+// Global CSS manager instance;
 const cssManager = new CSSLoadingManager();
 
 /**
  * Hook for lazy loading CSS styles
- */
+ */;
 export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
   const location = useLocation();
   const hasLoadedRef = useRef(false);
 
-  // Default strategy for mental health platform
+  // Default strategy for mental health platform;
   const defaultStrategy: LazyStylesStrategy = {
     immediate: [
       { href: '/assets/critical-components.css', priority: 'immediate' },
@@ -173,19 +173,19 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
         href: '/assets/mobile.css', 
         media: '(max-width: 767px)', 
         priority: 'high',
-        condition: () => window.innerWidth <= 767
+        condition: () => window.innerWidth <= 767;
       },
       { 
         href: '/assets/tablet.css', 
         media: '(min-width: 768px) and (max-width: 1023px)', 
         priority: 'medium',
-        condition: () => window.innerWidth >= 768 && window.innerWidth <= 1023
+        condition: () => window.innerWidth >= 768 && window.innerWidth <= 1023;
       },
       { 
         href: '/assets/desktop.css', 
         media: '(min-width: 1024px)', 
         priority: 'medium',
-        condition: () => window.innerWidth >= 1024
+        condition: () => window.innerWidth >= 1024;
       }
     ],
     emotional: {
@@ -217,7 +217,7 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
 
   /**
    * Load immediate styles
-   */
+   */;
   const loadImmediateStyles = useCallback(async () => {
     try {
       const promises = mergedStrategy.immediate.map(config => cssManager.loadCSS(config));
@@ -225,11 +225,12 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
     } catch (error) {
       console.warn('Failed to load some immediate styles:', error);
     }
+  };
   }, [mergedStrategy]);
 
   /**
    * Load route-specific styles
-   */
+   */;
   const loadRouteStyles = useCallback(async (pathname: string) => {
     for (const [route, configs] of Object.entries(mergedStrategy.routes)) {
       if (pathname.startsWith(route)) {
@@ -241,13 +242,14 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
         }
       }
     }
+  };
   }, [mergedStrategy]);
 
   /**
    * Load responsive styles based on viewport
-   */
+   */;
   const loadResponsiveStyles = useCallback(async () => {
-    const applicableStyles = mergedStrategy.responsive.filter(config => 
+    const applicableStyles = mergedStrategy.responsive.filter(config => ;
       !config.condition || config.condition()
     );
 
@@ -257,11 +259,12 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
     } catch (error) {
       console.warn('Failed to load some responsive styles:', error);
     }
+  };
   }, [mergedStrategy]);
 
   /**
    * Load emotional state specific styles
-   */
+   */;
   const loadEmotionalStyles = useCallback(async (emotionalState: string) => {
     const configs = mergedStrategy.emotional[emotionalState];
     if (configs) {
@@ -272,11 +275,12 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
         console.warn(`Failed to load emotional styles for ${emotionalState}:`, error);
       }
     }
+  };
   }, [mergedStrategy]);
 
   /**
    * Load crisis styles immediately
-   */
+   */;
   const loadCrisisStyles = useCallback(async () => {
     try {
       const promises = mergedStrategy.crisis.map(config => cssManager.loadCSS(config));
@@ -284,11 +288,12 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
     } catch (error) {
       console.warn('Failed to load crisis styles:', error);
     }
+  };
   }, [mergedStrategy]);
 
   /**
    * Preload likely next styles based on current route
-   */
+   */;
   const preloadLikelyStyles = useCallback(() => {
     const currentPath = location.pathname;
     const likelyRoutes = {
@@ -307,6 +312,7 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
         configs.forEach(config => cssManager.preloadCSS(config.href));
       }
     });
+  };
   }, [location.pathname, mergedStrategy]);
 
   // Initialize lazy loading on mount
@@ -323,13 +329,14 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
     // Setup interaction-based loading
     cssManager.setupInteractionLoading(mergedStrategy.interaction);
 
-    // Setup resize listener for responsive styles
+    // Setup resize listener for responsive styles;
     const handleResize = () => {
       loadResponsiveStyles();
     };
 
     window.addEventListener('resize', handleResize, { passive: true });
     return () => window.removeEventListener('resize', handleResize);
+  };
   }, [loadImmediateStyles, loadResponsiveStyles, mergedStrategy.interaction]);
 
   // Load route-specific styles when route changes
@@ -338,6 +345,8 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
     
     // Preload likely next styles
     setTimeout(preloadLikelyStyles, 1000);
+  };
+  };
   }, [location.pathname, loadRouteStyles, preloadLikelyStyles]);
 
   return {
@@ -350,7 +359,7 @@ export const useLazyStyles = (strategy?: Partial<LazyStylesStrategy>) => {
 
 /**
  * Higher-order component for components that need specific styles
- */
+ */;
 export const withLazyStyles = (styleConfigs: LazyStyleConfig[]) => {
   return function <P extends object>(Component: React.ComponentType<P>) {
     const WithLazyStylesComponent = (props: P) => {
@@ -358,7 +367,8 @@ export const withLazyStyles = (styleConfigs: LazyStyleConfig[]) => {
 
       useEffect(() => {
         styleConfigs.forEach(config => cssManager.loadCSS(config));
-      }, [cssManager]);
+      };
+  }, [cssManager]);
 
       return React.createElement(Component, props);
     };
@@ -369,7 +379,7 @@ export const withLazyStyles = (styleConfigs: LazyStyleConfig[]) => {
 
 /**
  * CSS optimization utilities
- */
+ */;
 export const cssOptimization = {
   /**
    * Mark critical CSS as loaded to hide loading screens
@@ -388,7 +398,8 @@ export const cssOptimization = {
           if (entry.name.includes('.css')) {
             console.log(`CSS loaded: ${entry.name} in ${entry.duration}ms`);
           }
-        });
+        };
+  };
       });
       
       observer.observe({ entryTypes: ['resource'] });

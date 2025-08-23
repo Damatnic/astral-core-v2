@@ -18,7 +18,8 @@ export const MyPostsView: React.FC<{
     const myDilemmas = useMemo(() => {
         if (!userToken) return [];
         return allDilemmas.filter(d => d.userToken === userToken).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-    }, [allDilemmas, userToken]);
+    };
+  }, [allDilemmas, userToken]);
 
     const handleResolve = (dilemmaId: string) => {
         if(userToken) {

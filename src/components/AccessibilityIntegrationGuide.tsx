@@ -3,18 +3,18 @@
  * 
  * Complete implementation guide for integrating mobile accessibility features
  * into the existing AstralCore application.
- */
+ */;
 
 import React, { useState } from 'react';
 import './AccessibilityIntegrationGuide.css';
 
-// Integration steps and examples
+// Integration steps and examples;
 export const AccessibilityIntegrationGuide = {
   
   // Step 1: Wrap your app with the accessibility provider
   setup: {
     example: `
-// In your main App.tsx or index.tsx
+// In your main App.tsx or index.tsx;
 import { MobileAccessibilityProvider } from './components/MobileAccessibilityProvider';
 import MobileAccessibilityDashboard from './components/MobileAccessibilityDashboard';
 
@@ -27,13 +27,13 @@ function App() {
   );
 }
 `,
-    description: 'The provider automatically detects user preferences and applies accessibility enhancements'
+    description: 'The provider automatically detects user preferences and applies accessibility enhancements';
   },
 
   // Step 2: Use the accessibility hook in components
   usage: {
     example: `
-// In any component
+// In any component;
 import { useMobileAccessibility } from './components/MobileAccessibilityProvider';
 
 function MyComponent() {
@@ -54,6 +54,7 @@ function MyComponent() {
       // Automatically optimize touch targets
       optimizeForTouch(button);
     }
+  };
   }, [optimizeForTouch]);
   
   return (
@@ -70,13 +71,13 @@ function MyComponent() {
   );
 }
 `,
-    description: 'Components automatically adapt to user accessibility preferences'
+    description: 'Components automatically adapt to user accessibility preferences';
   },
 
   // Step 3: Enhanced form accessibility
   forms: {
     example: `
-// Enhanced form with accessibility features
+// Enhanced form with accessibility features;
 import { useMobileAccessibility } from './components/MobileAccessibilityProvider';
 
 function AccessibleForm() {
@@ -89,6 +90,7 @@ function AccessibleForm() {
       setFocusTrap('form-container');
       return () => removeFocusTrap();
     }
+  };
   }, [isModal, setFocusTrap, removeFocusTrap]);
   
   const handleSubmit = (e) => {
@@ -102,7 +104,7 @@ function AccessibleForm() {
         \`Form has \${Object.keys(formErrors).length} errors. Please review and try again.\`,
         'assertive'
       );
-      // Focus first error field
+      // Focus first error field;
       const firstErrorField = document.querySelector('[aria-invalid="true"]');
       firstErrorField?.focus();
     }
@@ -116,7 +118,7 @@ function AccessibleForm() {
           <span aria-label="required"> *</span>
         </label>
         <input
-          id="email"
+          id="email";
           type="email"
           required
           aria-invalid={errors.email ? 'true' : 'false'}
@@ -141,7 +143,7 @@ function AccessibleForm() {
   // Step 4: Accessible navigation
   navigation: {
     example: `
-// Accessible navigation with skip links and landmarks
+// Accessible navigation with skip links and landmarks;
 function AccessibleNavigation() {
   const { announceToScreenReader } = useMobileAccessibility();
   const [activeView, setActiveView] = useState('home');
@@ -200,7 +202,7 @@ function AccessibleNavigation() {
   // Step 5: Accessible modals and overlays
   modals: {
     example: `
-// Accessible modal with focus management
+// Accessible modal with focus management;
 function AccessibleModal({ isOpen, onClose, title, children }) {
   const { 
     announceToScreenReader, 
@@ -231,6 +233,7 @@ function AccessibleModal({ isOpen, onClose, title, children }) {
         document.body.style.overflow = '';
         announceToScreenReader('Dialog closed', 'assertive');
       }
+  };
   }, [isOpen, title, setFocusTrap, removeFocusTrap, announceToScreenReader]);
   
   // Handle escape key
@@ -243,6 +246,7 @@ function AccessibleModal({ isOpen, onClose, title, children }) {
     
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
+  };
   }, [isOpen, onClose]);
   
   if (!isOpen) return null;
@@ -251,7 +255,7 @@ function AccessibleModal({ isOpen, onClose, title, children }) {
     <div className="modal-overlay" onClick={onClose}>
       <dialog
         ref={modalRef}
-        id="modal-content"
+        id="modal-content";
         className="modal"
         aria-labelledby="modal-title"
         aria-modal="true"
@@ -263,7 +267,7 @@ function AccessibleModal({ isOpen, onClose, title, children }) {
           <button
             ref={closeButtonRef}
             onClick={onClose}
-            aria-label="Close dialog"
+            aria-label="Close dialog";
             className="modal-close"
           >
             ×
@@ -288,7 +292,7 @@ function AccessibleModal({ isOpen, onClose, title, children }) {
   // Step 6: Accessible data visualization
   dataVisualization: {
     example: `
-// Accessible charts and data tables
+// Accessible charts and data tables;
 function AccessibleDataVisualization({ data, type = 'chart' }) {
   const { announceToScreenReader } = useMobileAccessibility();
   
@@ -366,26 +370,26 @@ function AccessibleDataVisualization({ data, type = 'chart' }) {
   );
 }
 `,
-    description: 'Charts and data with text alternatives and screen reader support'
+    description: 'Charts and data with text alternatives and screen reader support';
   },
 
   // Step 7: Testing and validation
   testing: {
     example: `
-// Accessibility testing utilities
+// Accessibility testing utilities;
 import { MobileAccessibilityAuditor } from './utils/accessibilityAuditor';
 
-// Component for testing accessibility
+// Component for testing accessibility;
 function AccessibilityTester() {
   const { checkWCAGCompliance } = useMobileAccessibility();
   const [auditResults, setAuditResults] = useState(null);
   
   const runFullAudit = async () => {
-    // Run comprehensive audit
+    // Run comprehensive audit;
     const results = MobileAccessibilityAuditor.comprehensiveAudit({
       mobileOptimized: true,
       includeWarnings: true,
-      checkLevel: 'AA'
+      checkLevel: 'AA';
     });
     
     setAuditResults(results);
@@ -397,7 +401,7 @@ function AccessibilityTester() {
   };
   
   const runQuickCheck = () => {
-    // Quick WCAG compliance check
+    // Quick WCAG compliance check;
     const results = checkWCAGCompliance();
     console.log('Quick WCAG Check:', results);
   };
@@ -408,6 +412,7 @@ function AccessibilityTester() {
       // Run audit when component mounts
       setTimeout(runQuickCheck, 1000);
     }
+  };
   }, []);
   
   return (
@@ -466,7 +471,7 @@ describe('Accessibility Tests', () => {
   });
 });
 `,
-    description: 'Comprehensive testing setup for accessibility validation'
+    description: 'Comprehensive testing setup for accessibility validation';
   },
 
   // CSS integration
@@ -628,11 +633,11 @@ textarea[aria-invalid="true"] {
   outline-offset: 2px;
 }
 `,
-    description: 'CSS integration for all accessibility features and responsive design'
+    description: 'CSS integration for all accessibility features and responsive design';
   }
 };
 
-// Complete setup instructions
+// Complete setup instructions;
 export const setupInstructions = `
 MOBILE ACCESSIBILITY IMPLEMENTATION GUIDE
 ========================================
@@ -640,7 +645,7 @@ MOBILE ACCESSIBILITY IMPLEMENTATION GUIDE
 ## Quick Start
 
 1. Install and setup the accessibility provider:
-   \`\`\`tsx
+   \`\`\`tsx;
    import { MobileAccessibilityProvider } from './components/MobileAccessibilityProvider';
    import MobileAccessibilityDashboard from './components/MobileAccessibilityDashboard';
    
@@ -655,7 +660,7 @@ MOBILE ACCESSIBILITY IMPLEMENTATION GUIDE
    \`\`\`
 
 2. Use the accessibility hook in components:
-   \`\`\`tsx
+   \`\`\`tsx;
    import { useMobileAccessibility } from './components/MobileAccessibilityProvider';
    
    function MyComponent() {
@@ -665,7 +670,7 @@ MOBILE ACCESSIBILITY IMPLEMENTATION GUIDE
    \`\`\`
 
 3. Run accessibility audits:
-   \`\`\`tsx
+   \`\`\`tsx;
    import { MobileAccessibilityAuditor } from './utils/accessibilityAuditor';
    
    const results = MobileAccessibilityAuditor.quickAudit(true);
@@ -753,7 +758,7 @@ export default AccessibilityIntegrationGuide;
 
 /**
  * React Component for displaying the Accessibility Integration Guide
- */
+ */;
 export const AccessibilityIntegrationGuideComponent: React.FC = () => {
   const [activeSection, setActiveSection] = useState('setup');
 

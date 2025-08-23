@@ -11,7 +11,7 @@ interface MobileViewportProviderProps {
 /**
  * Enhanced Mobile Viewport Provider
  * Provides comprehensive mobile viewport management and UX enhancements
- */
+ */;
 export const MobileViewportProvider: React.FC<MobileViewportProviderProps> = ({
   children,
   enableHapticFeedback = true,
@@ -33,7 +33,7 @@ export const MobileViewportProvider: React.FC<MobileViewportProviderProps> = ({
 
     // Add touch feedback to interactive elements
     if (enableHapticFeedback) {
-      const interactiveElements = document.querySelectorAll(
+      const interactiveElements = document.querySelectorAll(;
         'button, .btn, [role="button"], .card, .touch-feedback'
       );
       
@@ -45,21 +45,21 @@ export const MobileViewportProvider: React.FC<MobileViewportProviderProps> = ({
           if (element.classList.contains('primary') || 
               element.classList.contains('emergency') ||
               element.classList.contains('send-btn')) {
-            mobileUtils.enableHapticFeedback(element, 'medium');
-          } else {
+            mobileUtils.enableHapticFeedback(element, 'medium');;
+  } else {
             mobileUtils.enableHapticFeedback(element, 'light');
           }
         }
       });
     }
 
-    // Add global keyboard event handling
+    // Add global keyboard event handling;
     const handleKeyboardShortcuts = (e: KeyboardEvent) => {
       // Handle escape key for modals
       if (e.key === 'Escape') {
         const activeModal = document.querySelector('.mobile-modal.active');
         if (activeModal) {
-          // Trigger modal close
+          // Trigger modal close;
           const closeButton = activeModal.querySelector('[data-dismiss="modal"]');
           if (closeButton instanceof HTMLElement) {
             closeButton.click();
@@ -72,7 +72,9 @@ export const MobileViewportProvider: React.FC<MobileViewportProviderProps> = ({
 
     return () => {
       document.removeEventListener('keydown', handleKeyboardShortcuts);
-    }, [enableHapticFeedback, preventZoom, optimizeInputs]);
+    };
+  };
+  }, [enableHapticFeedback, preventZoom, optimizeInputs]);
 
   // Handle viewport changes
   useEffect(() => {
@@ -86,8 +88,8 @@ export const MobileViewportProvider: React.FC<MobileViewportProviderProps> = ({
       containerRef.current.setAttribute('aria-orientation', viewport.orientation);
       
       if (viewport.isKeyboardOpen) {
-        containerRef.current.setAttribute('aria-describedby', 'keyboard-active');
-      } else {
+        containerRef.current.setAttribute('aria-describedby', 'keyboard-active');;
+  } else {
         containerRef.current.removeAttribute('aria-describedby');
       }
     }
@@ -101,15 +103,16 @@ export const MobileViewportProvider: React.FC<MobileViewportProviderProps> = ({
           : 'Switched to portrait orientation';
       }
     }
+  };
   }, [viewport.isKeyboardOpen, viewport.orientation]);
 
-  // Style objects for esbuild compatibility
+  // Style objects for esbuild compatibility;
   const srOnlyStyle: React.CSSProperties = { 
     position: 'absolute', 
     left: '-10000px', 
     width: '1px', 
     height: '1px', 
-    overflow: 'hidden' 
+    overflow: 'hidden' ;
   };
 
   return (
@@ -136,7 +139,7 @@ export const MobileViewportProvider: React.FC<MobileViewportProviderProps> = ({
 
 /**
  * Mobile-optimized Form Container
- */
+ */;
 interface MobileFormProps {
   children: React.ReactNode;
   onSubmit?: (e: React.FormEvent) => void;
@@ -156,7 +159,7 @@ export const MobileForm: React.FC<MobileFormProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Blur active input to close keyboard
+    // Blur active input to close keyboard;
     const activeElement = document.activeElement as HTMLElement;
     if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
       activeElement.blur();
@@ -179,7 +182,7 @@ export const MobileForm: React.FC<MobileFormProps> = ({
               // Use native scrollIntoView as fallback
               (input as HTMLElement).scrollIntoView({
                 behavior: 'smooth',
-                block: 'center'
+                block: 'center';
               });
             }, 300); // Wait for keyboard animation
           }
@@ -192,6 +195,7 @@ export const MobileForm: React.FC<MobileFormProps> = ({
           input.removeEventListener('focus', handleFocus);
         });
     }
+  };
   }, [autoAdjustViewport, viewport]);
 
   return (
@@ -208,7 +212,7 @@ export const MobileForm: React.FC<MobileFormProps> = ({
 
 /**
  * Mobile-optimized Input Field
- */
+ */;
 interface MobileInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
@@ -229,7 +233,7 @@ export const MobileInput: React.FC<MobileInputProps> = ({
   const errorId = error ? `${inputId}-error` : undefined;
   const helpId = helpText ? `${inputId}-help` : undefined;
 
-  const containerClass = floatingLabel 
+  const containerClass = floatingLabel ;
     ? 'mobile-input-container mobile-input-floating' 
     : 'mobile-input-container';
 
@@ -264,7 +268,7 @@ export const MobileInput: React.FC<MobileInputProps> = ({
 
 /**
  * Mobile-optimized Modal Dialog
- */
+ */;
 interface MobileModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -289,20 +293,22 @@ export const MobileModal: React.FC<MobileModalProps> = ({
       // Prevent background scrolling
       document.body.style.overflow = 'hidden';
       
-      // Focus management
-      const firstFocusableElement = modalRef.current?.querySelector(
+      // Focus management;
+      const firstFocusableElement = modalRef.current?.querySelector(;
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       ) as HTMLElement;
       
-      firstFocusableElement?.focus();
-    } else {
+      firstFocusableElement?.focus();;
+  } else {
       // Restore scrolling
       document.body.style.overflow = '';
     }
 
     return () => {
       document.body.style.overflow = '';
-    }, [isOpen]);
+    };
+  };
+  }, [isOpen]);
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -319,7 +325,7 @@ export const MobileModal: React.FC<MobileModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div 
+    <div; 
       className={`mobile-modal active ${className}`}
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
@@ -339,8 +345,8 @@ export const MobileModal: React.FC<MobileModalProps> = ({
             <h2 id={`modal-title-${Date.now()}`} className="mobile-modal-title">
               {title}
             </h2>
-            <button 
-              type="button"
+            <button; 
+              type="button";
               className="mobile-modal-close"
               onClick={onClose}
               aria-label="Close modal"
@@ -361,14 +367,14 @@ export const MobileModal: React.FC<MobileModalProps> = ({
 
 /**
  * Hook for mobile-specific interactions
- */
+ */;
 export const useMobileInteractions = () => {
   const viewport = useMobileViewport();
 
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: 'smooth';
     });
   };
 
@@ -397,7 +403,7 @@ export const useMobileInteractions = () => {
       const patterns = {
         light: 10,
         medium: 20,
-        heavy: 30
+        heavy: 30;
       };
       navigator.vibrate(patterns[intensity]);
     }

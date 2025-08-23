@@ -5,11 +5,11 @@
  * Provides crisis-focused offline support for mental health platform
  */
 
-/// <reference lib="webworker" />
+/// <reference lib="webworker" />;
 
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching';
 
-// Import our intelligent caching services
+// Import our intelligent caching services;
 import { intelligentCache } from './services/intelligentCachingService';
 import { cacheCoordinator } from './services/cacheStrategyCoordinator';
 
@@ -54,7 +54,7 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     (async () => {
       try {
-        // Try intelligent cache coordinator first
+        // Try intelligent cache coordinator first;
         const coordinatorResponse = await cacheCoordinator.handleFetch(request);
         if (coordinatorResponse) {
           return coordinatorResponse;
@@ -113,7 +113,7 @@ async function handleSpecializedFetch(request: Request): Promise<Response> {
 async function handleCrisisResourceFetch(request: Request): Promise<Response> {
   const crisisCache = await caches.open('crisis-resources-enhanced');
   
-  // Always try cache first for crisis resources
+  // Always try cache first for crisis resources;
   const cachedResponse = await crisisCache.match(request);
   if (cachedResponse) {
     console.log('[Enhanced SW] Serving crisis resource from cache:', request.url);
@@ -121,12 +121,12 @@ async function handleCrisisResourceFetch(request: Request): Promise<Response> {
   }
   
   try {
-    // Network with extended timeout for crisis resources
+    // Network with extended timeout for crisis resources;
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 seconds
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 seconds;
     
     const networkResponse = await fetch(request, {
-      signal: controller.signal
+      signal: controller.signal;
     });
     
     clearTimeout(timeoutId);
@@ -141,7 +141,7 @@ async function handleCrisisResourceFetch(request: Request): Promise<Response> {
   } catch (error) {
     console.error('[Enhanced SW] Crisis resource fetch failed:', error);
     
-    // Return emergency offline crisis page
+    // Return emergency offline crisis page;
     const offlineResponse = await crisisCache.match('/offline-crisis.html');
     if (offlineResponse) {
       return offlineResponse;
@@ -153,11 +153,11 @@ async function handleCrisisResourceFetch(request: Request): Promise<Response> {
         emergency: '988',
         text: '988',
         international: '+1-741-741-741',
-        message: 'You are not alone. Help is available.'
+        message: 'You are not alone. Help is available.';
       }),
       {
         headers: { 'Content-Type': 'application/json' },
-        status: 200
+        status: 200;
       }
     );
   }
@@ -170,15 +170,15 @@ async function handleApiEndpointFetch(request: Request): Promise<Response> {
   const apiCache = await caches.open('api-cache-enhanced');
   const url = new URL(request.url);
   
-  // Check if this is a critical API endpoint
-  const isCriticalApi = url.pathname.includes('/crisis') || 
+  // Check if this is a critical API endpoint;
+  const isCriticalApi = url.pathname.includes('/crisis') || ;
                        url.pathname.includes('/emergency') ||
                        url.pathname.includes('/safety-plan');
   
   try {
-    // Network first for fresh data
+    // Network first for fresh data;
     const networkResponse = await fetch(request, {
-      signal: AbortSignal.timeout(isCriticalApi ? 20000 : 10000)
+      signal: AbortSignal.timeout(isCriticalApi ? 20000 : 10000);
     });
     
     if (networkResponse.ok) {
@@ -190,7 +190,7 @@ async function handleApiEndpointFetch(request: Request): Promise<Response> {
   } catch (error) {
     console.warn('[Enhanced SW] API network failed, trying cache:', error);
     
-    // Fallback to cache
+    // Fallback to cache;
     const cachedResponse = await apiCache.match(request);
     if (cachedResponse) {
       console.log('[Enhanced SW] Serving API response from cache:', request.url);
@@ -204,11 +204,11 @@ async function handleApiEndpointFetch(request: Request): Promise<Response> {
       return new Response(
         JSON.stringify({ 
           queued: true, 
-          message: 'Request queued for when connection is restored' 
+          message: 'Request queued for when connection is restored' ;
         }),
         {
           headers: { 'Content-Type': 'application/json' },
-          status: 202
+          status: 202;
         }
       );
     }
@@ -223,13 +223,13 @@ async function handleApiEndpointFetch(request: Request): Promise<Response> {
 async function handleVideoContentFetch(request: Request): Promise<Response> {
   const videoCache = await caches.open('video-cache-enhanced');
   
-  // Check cache first
+  // Check cache first;
   const cachedResponse = await videoCache.match(request);
   if (cachedResponse) {
     return cachedResponse;
   }
   
-  // Check storage availability before caching large videos
+  // Check storage availability before caching large videos;
   const quota = await navigator.storage.estimate();
   const usagePercentage = (quota.usage || 0) / (quota.quota || 1);
   
@@ -237,7 +237,7 @@ async function handleVideoContentFetch(request: Request): Promise<Response> {
   
   // Only cache videos if we have sufficient storage
   if (networkResponse.ok && usagePercentage < 0.7) {
-    // Check response size
+    // Check response size;
     const contentLength = networkResponse.headers.get('content-length');
     const responseSize = contentLength ? parseInt(contentLength, 10) : 0;
     
@@ -261,7 +261,7 @@ async function handleNavigationFetch(request: Request): Promise<Response> {
   } catch (error) {
     console.warn('[Enhanced SW] Navigation network failed:', error);
     
-    // Check if this is a crisis-related navigation
+    // Check if this is a crisis-related navigation;
     const url = new URL(request.url);
     if (url.pathname.includes('/crisis') || url.pathname.includes('/emergency')) {
       const crisisCache = await caches.open('crisis-resources-enhanced');
@@ -271,7 +271,7 @@ async function handleNavigationFetch(request: Request): Promise<Response> {
       }
     }
     
-    // Default offline page
+    // Default offline page;
     const mainCache = await caches.open('workbox-precache-v2-https://astralcore.netlify.app/');
     const offlinePage = await mainCache.match('/offline.html');
     if (offlinePage) {
@@ -306,7 +306,7 @@ async function handleNavigationFetch(request: Request): Promise<Response> {
       `,
       {
         headers: { 'Content-Type': 'text/html' },
-        status: 200
+        status: 200;
       }
     );
   }
@@ -316,7 +316,7 @@ async function handleNavigationFetch(request: Request): Promise<Response> {
  * Handle offline fallback responses
  */
 async function handleOfflineFallback(request: Request): Promise<Response> {
-  // Try to serve from any available cache
+  // Try to serve from any available cache;
   const cacheNames = await caches.keys();
   
   for (const cacheName of cacheNames) {
@@ -333,11 +333,11 @@ async function handleOfflineFallback(request: Request): Promise<Response> {
     return new Response(
       JSON.stringify({ 
         error: 'Offline', 
-        message: 'This feature requires an internet connection' 
+        message: 'This feature requires an internet connection' ;
       }),
       {
         headers: { 'Content-Type': 'application/json' },
-        status: 503
+        status: 503;
       }
     );
   }
@@ -347,7 +347,7 @@ async function handleOfflineFallback(request: Request): Promise<Response> {
     '<!DOCTYPE html><html><body><h1>Offline</h1><p>Check your connection</p></body></html>',
     {
       headers: { 'Content-Type': 'text/html' },
-      status: 503
+      status: 503;
     }
   );
 }
@@ -357,16 +357,16 @@ async function handleOfflineFallback(request: Request): Promise<Response> {
  */
 async function queueForBackgroundSync(request: Request): Promise<void> {
   try {
-    // Open IndexedDB for queue storage
+    // Open IndexedDB for queue storage;
     const db = await openSyncQueue();
     
-    // Store request for later sync
+    // Store request for later sync;
     const requestData = {
       url: request.url,
       method: request.method,
       headers: Object.fromEntries(request.headers.entries()),
       body: request.method !== 'GET' ? await request.text() : null,
-      timestamp: Date.now()
+      timestamp: Date.now();
     };
     
     const typedDb = db as IDBDatabase;
@@ -394,7 +394,7 @@ async function openSyncQueue(): Promise<unknown> {
       if (!db.objectStoreNames.contains('sync-queue')) {
         const store = db.createObjectStore('sync-queue', { 
           keyPath: 'id', 
-          autoIncrement: true 
+          autoIncrement: true ;
         });
         store.createIndex('timestamp', 'timestamp');
       }
@@ -403,7 +403,7 @@ async function openSyncQueue(): Promise<unknown> {
 
 /**
  * Helper functions to identify resource types
- */
+ */;
 function isCrisisResource(url: URL): boolean {
   return url.pathname.includes('/crisis') ||
          url.pathname.includes('/emergency') ||
@@ -439,7 +439,7 @@ async function handleBackgroundSync(): Promise<void> {
     const transaction = db.transaction(['sync-queue'], 'readwrite');
     const store = transaction.objectStore('sync-queue');
     
-    // Properly handle IDBRequest
+    // Properly handle IDBRequest;
     const getAllRequest = store.getAll();
     const requests = await new Promise<any[]>((resolve, reject) => {
       getAllRequest.onsuccess = () => resolve(getAllRequest.result || []);
@@ -453,7 +453,7 @@ async function handleBackgroundSync(): Promise<void> {
         const response = await fetch(requestData.url, {
           method: requestData.method,
           headers: requestData.headers,
-          body: requestData.body
+          body: requestData.body;
         });
         
         if (response.ok) {
@@ -478,7 +478,7 @@ self.addEventListener('message', (event) => {
         const analytics = await intelligentCache.getCacheAnalytics();
         const stats = await cacheCoordinator.getCacheStatistics();
         
-        // Send storage info back to client
+        // Send storage info back to client;
         const clients = await self.clients.matchAll();
         clients.forEach(client => {
           client.postMessage({
@@ -486,7 +486,7 @@ self.addEventListener('message', (event) => {
             data: {
               storage: storageInfo,
               analytics,
-              cacheStats: stats
+              cacheStats: stats;
             }
           });
         });

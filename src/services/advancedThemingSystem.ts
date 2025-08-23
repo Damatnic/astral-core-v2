@@ -4,11 +4,11 @@
  * This system provides therapeutic color environments designed to support
  * mental wellness through scientifically-backed color psychology principles.
  * Features user customization and accessibility compliance.
- */
+ */;
 
 import * as React from 'react'
 
-// Mental Health Color Psychology Themes
+// Mental Health Color Psychology Themes;
 export type TherapeuticTheme = 
   | 'calm-sanctuary'      // Cool blues and greens for anxiety relief
   | 'warm-embrace'        // Warm oranges and yellows for depression support
@@ -19,11 +19,11 @@ export type TherapeuticTheme =
   | 'crisis-safe'         // Emergency-optimized high visibility colors
   | 'custom'              // User-defined personalized theme
   | 'system'              // Follow system dark/light mode
-  | 'high-contrast';      // WCAG AAA accessibility compliance
+  | 'high-contrast';      // WCAG AAA accessibility compliance;
 
 export type ColorMode = "light" | "dark" | "auto";
-export type ColorIntensity = "subtle" | "balanced" | "vibrant"
-export type AccessibilityLevel = "AA" | "AAA"
+export type ColorIntensity = "subtle" | "balanced" | "vibrant";
+export type AccessibilityLevel = "AA" | "AAA";
 export interface ThemeColors {
   // Primary brand colors
   primary: string;
@@ -106,7 +106,7 @@ export interface UserThemePreferences {
   colorOverrides?: Partial<ThemeColors>;
   customAnimationDuration?: number;
       fontSize: "small" | "medium" | "large" | "extra-large";
-  spacing: "compact" | "comfortable" | "spacious"
+  spacing: "compact" | "comfortable" | "spacious";
 }
 
 export interface ThemeContextValue {
@@ -135,7 +135,7 @@ export interface ThemeContextValue {
   getTherapeuticRecommendations: (userProfile?: any) => TherapeuticTheme[];
 }
 
-// Default calm sanctuary theme for mental health support
+// Default calm sanctuary theme for mental health support;
 const defaultCalmTheme: ThemeColors={
       primary: "#2E7D8F",
   primaryLight: "#4A9FB0",
@@ -202,7 +202,7 @@ const defaultCalmThemeDark: ThemeColors={
     shadowHover: "rgba(0, 0, 0, 0.4)"
 };
 
-  // Crisis-safe theme for emergency situations
+  // Crisis-safe theme for emergency situations;
   const crisisSafeThemeLight: ThemeColors = {
     primary: "#C53030",
   primaryLight: "#E53E3E",
@@ -268,7 +268,7 @@ const crisisSafeThemeDark: ThemeColors={
       shadow: "rgba(0, 0, 0, 0.4)",
     shadowHover: "rgba(0, 0, 0, 0.6)"
 }
-// Therapeutic theme definitions based on color psychology research
+// Therapeutic theme definitions based on color psychology research;
   export const THERAPEUTIC_THEMES: Record<TherapeuticTheme, TherapeuticThemeConfig> = {
     'calm-sanctuary': {
       id: "calm-sanctuary",
@@ -287,17 +287,17 @@ const crisisSafeThemeDark: ThemeColors={
       "Sensory sensitivity"],
     colors: {
       light: defaultCalmTheme,
-      dark: defaultCalmThemeDark
+      dark: defaultCalmThemeDark;
     },
     accessibility: {
       contrastRatio: 7.2,
       level: "AAA",
-      colorBlindFriendly: true
+      colorBlindFriendly: true;
     },
     customization: {
       allowsIntensityAdjustment: true,
       allowsColorOverrides: true,
-      allowsAnimationControl: true
+      allowsAnimationControl: true;
     }
   },
       'warm-embrace': {
@@ -329,7 +329,7 @@ const crisisSafeThemeDark: ThemeColors={
         backgroundTertiary: "#FCF3CF",
         text: "#6E2C00",
         textSecondary: "#935116",
-                  textMuted: "#B7950B"
+                  textMuted: "#B7950B";
       },
       dark: {
         ...defaultCalmThemeDark,
@@ -341,18 +341,18 @@ const crisisSafeThemeDark: ThemeColors={
         secondaryDark: "#F1C40F",
         background: "#1C1408",
         backgroundSecondary: "#2C1E0A",
-        backgroundTertiary: "#3D280E"
+        backgroundTertiary: "#3D280E";
       }
     },
     accessibility: {
       contrastRatio: 6.8,
       level: "AA",
-      colorBlindFriendly: true
+      colorBlindFriendly: true;
     },
     customization: {
       allowsIntensityAdjustment: true,
       allowsColorOverrides: true,
-      allowsAnimationControl: true
+      allowsAnimationControl: true;
     }
   },
   
@@ -379,7 +379,7 @@ const crisisSafeThemeDark: ThemeColors={
         primaryDark: "#1E8449",
         secondary: "#8D6E63",
         secondaryLight: "#A1887F",
-        secondaryDark: "#6D4C41"
+        secondaryDark: "#6D4C41";
       },
       dark: {
         ...defaultCalmThemeDark,
@@ -388,18 +388,18 @@ const crisisSafeThemeDark: ThemeColors={
         primaryDark: "#27AE60",
         secondary: "#A1887F",
         secondaryLight: "#BCAAA4",
-        secondaryDark: "#8D6E63"
+        secondaryDark: "#8D6E63";
       }
     },
     accessibility: {
       contrastRatio: 7.5,
       level: "AAA",
-      colorBlindFriendly: true
+      colorBlindFriendly: true;
     },
     customization: {
       allowsIntensityAdjustment: true,
       allowsColorOverrides: true,
-      allowsAnimationControl: true
+      allowsAnimationControl: true;
     }
   },
   'gentle-focus': {
@@ -425,7 +425,7 @@ const crisisSafeThemeDark: ThemeColors={
         primaryDark: "#7B1FA2",
         secondary: "#C5A3FF",
         secondaryLight: "#D1C4E9",
-        secondaryDark: "#9575CD"
+        secondaryDark: "#9575CD";
       },
       dark: {
         ...defaultCalmThemeDark,
@@ -434,18 +434,18 @@ const crisisSafeThemeDark: ThemeColors={
         primaryDark: "#9C88B5",
         secondary: "#CE93D8",
         secondaryLight: "#E1BEE7",
-        secondaryDark: "#BA68C8"
+        secondaryDark: "#BA68C8";
       }
     },
     accessibility: {
       contrastRatio: 6.9,
       level: "AA",
-      colorBlindFriendly: true
+      colorBlindFriendly: true;
     },
     customization: {
       allowsIntensityAdjustment: true,
       allowsColorOverrides: true,
-      allowsAnimationControl: true
+      allowsAnimationControl: true;
     }
   },
       'energizing-hope': {
@@ -471,7 +471,7 @@ const crisisSafeThemeDark: ThemeColors={
         primaryDark: "#E91E63",
         secondary: "#4ECDC4",
         secondaryLight: "#80CBC4",
-                  secondaryDark: "#26A69A"
+                  secondaryDark: "#26A69A";
       },
       dark: {
         ...defaultCalmThemeDark,
@@ -480,18 +480,18 @@ const crisisSafeThemeDark: ThemeColors={
         primaryDark: "#FF6B9D",
         secondary: "#80CBC4",
         secondaryLight: "#B2DFDB",
-                  secondaryDark: "#4ECDC4"
+                  secondaryDark: "#4ECDC4";
       }
     },
     accessibility: {
       contrastRatio: 6.5,
       level: "AA",
-      colorBlindFriendly: false
+      colorBlindFriendly: false;
     },
     customization: {
       allowsIntensityAdjustment: true,
       allowsColorOverrides: true,
-      allowsAnimationControl: true
+      allowsAnimationControl: true;
     }
   },
       'minimal-zen': {
@@ -520,7 +520,7 @@ const crisisSafeThemeDark: ThemeColors={
         secondaryDark: "#4A5568",
         background: "#FFFFFF",
                   backgroundSecondary: "#F7FAFC",
-          backgroundTertiary: "#EDF2F7"
+          backgroundTertiary: "#EDF2F7";
         },
       dark: {
         ...defaultCalmThemeDark,
@@ -532,18 +532,18 @@ const crisisSafeThemeDark: ThemeColors={
         secondaryDark: "#718096",
         background: "#1A202C",
                   backgroundSecondary: "#2D3748",
-          backgroundTertiary: "#4A5568"
+          backgroundTertiary: "#4A5568";
         }
     },
     accessibility: {
       contrastRatio: 15.0,
       level: "AAA",
-      colorBlindFriendly: true
+      colorBlindFriendly: true;
     },
     customization: {
       allowsIntensityAdjustment: false,
       allowsColorOverrides: false,
-      allowsAnimationControl: true
+      allowsAnimationControl: true;
     }
   },
       'crisis-safe': {
@@ -563,17 +563,17 @@ const crisisSafeThemeDark: ThemeColors={
       "Professional crisis support"],
     colors: {
       light: crisisSafeThemeLight,
-      dark: crisisSafeThemeDark
+      dark: crisisSafeThemeDark;
     },
     accessibility: {
       contrastRatio: 12.0,
       level: "AAA",
-      colorBlindFriendly: true
+      colorBlindFriendly: true;
     },
     customization: {
       allowsIntensityAdjustment: false,
       allowsColorOverrides: false,
-      allowsAnimationControl: false
+      allowsAnimationControl: false;
     }
   },
       'high-contrast': {
@@ -604,7 +604,7 @@ const crisisSafeThemeDark: ThemeColors={
         text: "#000000",
         textSecondary: "#000000",
                   textMuted: "#666666",
-          border: "#000000"
+          border: "#000000";
         },
       dark: {
         ...defaultCalmThemeDark,
@@ -618,18 +618,18 @@ const crisisSafeThemeDark: ThemeColors={
         text: "#FFFFFF",
         textSecondary: "#FFFFFF",
                   textMuted: "#CCCCCC",
-          border: "#FFFFFF"
+          border: "#FFFFFF";
         }
     },
     accessibility: {
       contrastRatio: 21.0,
       level: "AAA",
-      colorBlindFriendly: true
+      colorBlindFriendly: true;
     },
     customization: {
       allowsIntensityAdjustment: false,
       allowsColorOverrides: false,
-      allowsAnimationControl: true
+      allowsAnimationControl: true;
     }
   },
       'custom': {
@@ -649,17 +649,17 @@ const crisisSafeThemeDark: ThemeColors={
       "Advanced users"],
     colors: {
       light: defaultCalmTheme,
-      dark: defaultCalmThemeDark
+      dark: defaultCalmThemeDark;
     },
     accessibility: {
       contrastRatio: 4.5,
       level: "AA",
-      colorBlindFriendly: true
+      colorBlindFriendly: true;
     },
     customization: {
       allowsIntensityAdjustment: true,
       allowsColorOverrides: true,
-      allowsAnimationControl: true
+      allowsAnimationControl: true;
     }
   },
       'system': {
@@ -679,25 +679,25 @@ const crisisSafeThemeDark: ThemeColors={
       "Default option"],
     colors: {
       light: defaultCalmTheme,
-      dark: defaultCalmThemeDark
+      dark: defaultCalmThemeDark;
     },
     accessibility: {
       contrastRatio: 7.0,
       level: "AAA",
-      colorBlindFriendly: true
+      colorBlindFriendly: true;
     },
     customization: {
       allowsIntensityAdjustment: true,
       allowsColorOverrides: true,
-      allowsAnimationControl: true
+      allowsAnimationControl: true;
     }
   }
 };
 
-// Create and export the theme context
+// Create and export the theme context;
 export const ThemeContext = React.createContext<ThemeContextValue | undefined>(undefined);
 
-// Hook to use the theme context
+// Hook to use the theme context;
 export const useTheme = (): void => {
   const context = React.useContext(ThemeContext);
   if(!context) {
@@ -706,5 +706,5 @@ export const useTheme = (): void => {
   return context;
 };
 
-  // Export default theme for initial load
+  // Export default theme for initial load;
   export const DEFAULT_THEME = THERAPEUTIC_THEMES['calm-sanctuary'];

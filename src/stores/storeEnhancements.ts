@@ -3,14 +3,14 @@
  * 
  * Provides standardized error handling, persistence, and optimization
  * utilities for all Zustand stores in the application.
- */
+ */;
 
 import { StateCreator } from 'zustand';
 import { persist, createJSONStorage, PersistOptions, PersistStorage, devtools, subscribeWithSelector } from 'zustand/middleware';
 
 /**
  * Standard error state interface for all stores
- */
+ */;
 export interface ErrorState {
   error: Error | null;
   errorCode?: string;
@@ -25,7 +25,7 @@ export interface ErrorState {
 
 /**
  * Standard loading state interface
- */
+ */;
 export interface LoadingState {
   isLoading: boolean;
   loadingMessage?: string;
@@ -35,7 +35,7 @@ export interface LoadingState {
 
 /**
  * Standard optimization state
- */
+ */;
 export interface OptimizationState {
   lastUpdated: Date | null;
   updateCount: number;
@@ -46,7 +46,7 @@ export interface OptimizationState {
 
 /**
  * Combined enhanced state interface
- */
+ */;
 export interface EnhancedState extends ErrorState, LoadingState, OptimizationState {
   // Version for migration support
   _version: number;
@@ -56,7 +56,7 @@ export interface EnhancedState extends ErrorState, LoadingState, OptimizationSta
 
 /**
  * Create standard error handling slice
- */
+ */;
 export const createErrorSlice = <T extends ErrorState>(
   set: (partial: Partial<T> | ((state: T) => Partial<T>)) => void
 ): ErrorState => ({
@@ -72,20 +72,20 @@ export const createErrorSlice = <T extends ErrorState>(
     errorCode: undefined,
     errorTimestamp: undefined,
     errorRetryCount: 0,
-    isRetrying: false
+    isRetrying: false;
   } as Partial<T>),
   
   setError: (error: Error | string, code?: string) => set({
     error: typeof error === 'string' ? new Error(error) : error,
     errorCode: code,
     errorTimestamp: new Date(),
-    isRetrying: false
+    isRetrying: false;
   } as Partial<T>)
 });
 
 /**
  * Create standard loading slice
- */
+ */;
 export const createLoadingSlice = <T extends LoadingState>(
   set: (partial: Partial<T> | ((state: T) => Partial<T>)) => void
 ): LoadingState => ({
@@ -96,13 +96,13 @@ export const createLoadingSlice = <T extends LoadingState>(
   setLoading: (loading: boolean, message?: string, progress?: number) => set({
     isLoading: loading,
     loadingMessage: message,
-    loadingProgress: progress
+    loadingProgress: progress;
   } as Partial<T>)
 });
 
 /**
  * Create optimization slice
- */
+ */;
 export const createOptimizationSlice = <T extends OptimizationState>(
   set: (partial: Partial<T> | ((state: T) => Partial<T>)) => void
 ): OptimizationState => ({
@@ -111,20 +111,20 @@ export const createOptimizationSlice = <T extends OptimizationState>(
   cacheValid: true,
   
   invalidateCache: () => set({
-    cacheValid: false
+    cacheValid: false;
   } as Partial<T>),
   
   updateMetrics: () => set((state: any) => ({
     ...state,
     lastUpdated: new Date(),
     updateCount: state.updateCount + 1,
-    cacheValid: true
+    cacheValid: true;
   }))
 });
 
 /**
  * Create enhanced state with all standard features
- */
+ */;
 export const createEnhancedSlice = <T extends EnhancedState>(
   set: (partial: Partial<T> | ((state: T) => Partial<T>)) => void
 ): Omit<EnhancedState, '_version' | '_hasHydrated' | 'setHasHydrated'> => ({
@@ -135,7 +135,7 @@ export const createEnhancedSlice = <T extends EnhancedState>(
 
 /**
  * Persistence configuration factory
- */
+ */;
 export interface PersistConfig<T> {
   name: string;
   version?: number;
@@ -147,11 +147,11 @@ export interface PersistConfig<T> {
 
 /**
  * Create persistence options with sensible defaults
- */
+ */;
 export const createPersistOptions = <T extends EnhancedState>(
   config: PersistConfig<T>
 ): PersistOptions<T, Partial<T>> => {
-  // Choose storage based on config
+  // Choose storage based on config;
   let storage: PersistStorage<Partial<T>> | undefined;
   switch (config.storage) {
     case 'sessionStorage':
@@ -204,7 +204,7 @@ export const createPersistOptions = <T extends EnhancedState>(
 
 /**
  * Retry logic wrapper for async actions
- */
+ */;
 export const withRetry = async <T>(
   action: () => Promise<T>,
   setError: (error: Error | string, code?: string) => void,
@@ -241,7 +241,7 @@ export const withRetry = async <T>(
 
 /**
  * Optimistic update wrapper
- */
+ */;
 export const withOptimisticUpdate = <R>(
   optimisticUpdate: () => void,
   actualUpdate: () => Promise<R>,
@@ -257,12 +257,13 @@ export const withOptimisticUpdate = <R>(
     rollback();
     setError(error as Error, 'OPTIMISTIC_UPDATE_FAILED');
     throw error;
-  });
+  };
+  };
 };
 
 /**
  * Debounced update wrapper
- */
+ */;
 export const createDebouncedUpdate = <T extends (...args: unknown[]) => any>(
   fn: T,
   delay: number = 500
@@ -277,7 +278,7 @@ export const createDebouncedUpdate = <T extends (...args: unknown[]) => any>(
 
 /**
  * Middleware composer for enhanced stores
- */
+ */;
 export const createEnhancedStore = <T extends EnhancedState>(
   storeCreator: StateCreator<T>,
   persistConfig?: PersistConfig<T>,
@@ -291,7 +292,7 @@ export const createEnhancedStore = <T extends EnhancedState>(
   // Add devtools in development
   if (enableDevtools) {
     enhancedCreator = devtools(enhancedCreator, {
-      name: persistConfig?.name || 'Store'
+      name: persistConfig?.name || 'Store';
     }) as StateCreator<T>;
   }
   
@@ -308,7 +309,7 @@ export const createEnhancedStore = <T extends EnhancedState>(
 
 /**
  * Cache management utilities
- */
+ */;
 export class StoreCache<T> {
   private readonly cache: Map<string, { data: T; timestamp: number }> = new Map();
   private readonly ttl: number;
@@ -320,7 +321,7 @@ export class StoreCache<T> {
   set(key: string, data: T): void {
     this.cache.set(key, {
       data,
-      timestamp: Date.now()
+      timestamp: Date.now();
     });
   }
   
@@ -347,7 +348,7 @@ export class StoreCache<T> {
 
 /**
  * Performance monitoring for stores
- */
+ */;
 export class StorePerformanceMonitor {
   private readonly metrics: Map<string, number[]> = new Map();
   
@@ -377,7 +378,7 @@ export class StorePerformanceMonitor {
       avg: measurements.reduce((a, b) => a + b, 0) / measurements.length,
       min: Math.min(...measurements),
       max: Math.max(...measurements),
-      count: measurements.length
+      count: measurements.length;
     }
   
   clearMetrics(): void {
@@ -387,7 +388,7 @@ export class StorePerformanceMonitor {
 
 /**
  * Subscription manager for cleanup
- */
+ */;
 export class SubscriptionManager {
   private subscriptions: (() => void)[] = [];
   
@@ -403,7 +404,7 @@ export class SubscriptionManager {
 
 /**
  * Export type helpers
- */
+ */;
 export type WithEnhancedState<T> = T & EnhancedState;
 export type StoreSelector<T, R> = (state: T) => R;
 export type StoreSubscriber<T> = (state: T, prevState: T) => void;

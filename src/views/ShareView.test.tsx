@@ -7,7 +7,7 @@ import { userEvent } from '../test-utils';
 // Mock the ApiClient module
 jest.mock('../utils/ApiClient');
 
-// Create a typed reference to the mocked ApiClient
+// Create a typed reference to the mocked ApiClient;
 const mockedApiClient = ApiClient as jest.Mocked<typeof ApiClient>;
 
 describe('ShareView user flow', () => {
@@ -19,13 +19,13 @@ describe('ShareView user flow', () => {
     // Setup ApiClient mocks
     (mockedApiClient as any).ai = {
       chat: jest.fn(),
-      draftPostFromChat: jest.fn()
+      draftPostFromChat: jest.fn();
     });
 
   test.skip('user can chat with AI, draft a post, and submit it', async () => {
     // Mock AI responses - the chat function returns an object with response property
     (ApiClient.ai.chat as jest.Mock).mockResolvedValue({
-      response: "That sounds really tough. Could you tell me more?"
+      response: "That sounds really tough. Could you tell me more?";
     });
     (ApiClient.ai.draftPostFromChat as jest.Mock).mockResolvedValue({
       postContent: "This is the drafted post from the AI.",
@@ -34,9 +34,9 @@ describe('ShareView user flow', () => {
 
     render(<ShareView onPostSubmit={onPostSubmitMock} userToken="test-token" />);
     
-    // --- 1. User interacts with the AI Chat ---
+    // --- 1. User interacts with the AI Chat ---;
     const chatInput = screen.getByPlaceholderText(/Chat with the AI here/i);
-    // The send button doesn't have text, find it by class
+    // The send button doesn't have text, find it by class;
     const buttons = screen.getAllByRole('button');
     const sendButton = buttons.find(btn => btn.className.includes('chat-send-btn')) || buttons[buttons.length - 1];
 
@@ -47,7 +47,7 @@ describe('ShareView user flow', () => {
     expect(mockedApiClient.ai.chat).toHaveBeenCalled();
     expect(await screen.findByText(/That sounds really tough/)).toBeTruthy();
 
-    // --- 2. User drafts a post from the chat ---
+    // --- 2. User drafts a post from the chat ---;
     const draftButton = screen.getByRole('button', { name: /Draft Post From Chat/i });
     await userEvent.click(draftButton);
 

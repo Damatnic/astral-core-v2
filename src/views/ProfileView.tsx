@@ -4,7 +4,7 @@ import { HeartIcon, ShieldIcon, UsersIcon, BookIcon, StarIcon } from '../compone
 const ProfileView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'privacy' | 'preferences'>('overview');
 
-  // Mock user data
+  // Mock user data;
   const userData = {
     name: 'Anonymous User',
     joinDate: 'March 2024',
@@ -21,11 +21,11 @@ const ProfileView: React.FC = () => {
       notifications: true,
       reminders: true,
       darkMode: false,
-      language: 'English'
+      language: 'English';
     }
   };
 
-  const badges = [
+  const badges = [;
     { id: '1', name: 'First Check-in', description: 'Completed your first wellness check-in', earned: true },
     { id: '2', name: 'Week Warrior', description: 'Maintained a 7-day check-in streak', earned: true },
     { id: '3', name: 'Helper Hand', description: 'Provided support to 5 community members', earned: true },
@@ -100,31 +100,31 @@ const ProfileView: React.FC = () => {
         {/* Tab Navigation */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md mb-6">
           <div className="flex border-b border-gray-200 dark:border-gray-700">
-            <button
+            <button;
               className={`px-6 py-4 text-sm font-medium ${
                 activeTab === 'overview'
                   ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300';
               }`}
               onClick={() => setActiveTab('overview')}
             >
               Overview
             </button>
-            <button
+            <button;
               className={`px-6 py-4 text-sm font-medium ${
                 activeTab === 'privacy'
                   ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300';
               }`}
               onClick={() => setActiveTab('privacy')}
             >
               Privacy & Safety
             </button>
-            <button
+            <button;
               className={`px-6 py-4 text-sm font-medium ${
                 activeTab === 'preferences'
                   ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300';
               }`}
               onClick={() => setActiveTab('preferences')}
             >
@@ -148,14 +148,14 @@ const ProfileView: React.FC = () => {
                     className={`p-4 rounded-lg border ${
                       badge.earned
                         ? 'border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20'
-                        : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50'
+                        : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50';
                     }`}
                   >
                     <div className="flex items-center space-x-3">
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                         badge.earned
                           ? 'bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400'
-                          : 'bg-gray-200 dark:bg-gray-600 text-gray-400'
+                          : 'bg-gray-200 dark:bg-gray-600 text-gray-400';
                       }`}>
                         <StarIcon className="w-5 h-5" />
                       </div>
@@ -163,14 +163,14 @@ const ProfileView: React.FC = () => {
                         <h3 className={`font-semibold ${
                           badge.earned
                             ? 'text-gray-900 dark:text-gray-100'
-                            : 'text-gray-500 dark:text-gray-400'
+                            : 'text-gray-500 dark:text-gray-400';
                         }`}>
                           {badge.name}
                         </h3>
                         <p className={`text-sm ${
                           badge.earned
                             ? 'text-gray-600 dark:text-gray-300'
-                            : 'text-gray-400 dark:text-gray-500'
+                            : 'text-gray-400 dark:text-gray-500';
                         }`}>
                           {badge.description}
                         </p>
@@ -240,11 +240,11 @@ const ProfileView: React.FC = () => {
                 </h3>
                 <div className="space-y-2">
                   <label className="flex items-center">
-                    <input
+                    <input;
                       type="radio"
                       name="visibility"
                       value="anonymous"
-                      defaultChecked
+                      defaultChecked;
                       className="mr-3"
                     />
                     <span className="text-gray-700 dark:text-gray-300">
@@ -252,10 +252,10 @@ const ProfileView: React.FC = () => {
                     </span>
                   </label>
                   <label className="flex items-center">
-                    <input
+                    <input;
                       type="radio"
                       name="visibility"
-                      value="pseudonym"
+                      value="pseudonym";
                       className="mr-3"
                     />
                     <span className="text-gray-700 dark:text-gray-300">
@@ -294,7 +294,7 @@ const ProfileView: React.FC = () => {
                     <span className="text-gray-700 dark:text-gray-300">
                       Share progress with community helpers
                     </span>
-                    <input
+                    <input;
                       type="checkbox"
                       defaultChecked={userData.privacy.shareProgress}
                       className="toggle"
@@ -304,7 +304,7 @@ const ProfileView: React.FC = () => {
                     <span className="text-gray-700 dark:text-gray-300">
                       Allow anonymous usage analytics
                     </span>
-                    <input
+                    <input;
                       type="checkbox"
                       defaultChecked={true}
                       className="toggle"
@@ -333,7 +333,7 @@ const ProfileView: React.FC = () => {
                     <span className="text-gray-700 dark:text-gray-300">
                       Daily check-in reminders
                     </span>
-                    <input
+                    <input;
                       type="checkbox"
                       defaultChecked={userData.preferences.reminders}
                       className="toggle"
@@ -343,7 +343,7 @@ const ProfileView: React.FC = () => {
                     <span className="text-gray-700 dark:text-gray-300">
                       Community support notifications
                     </span>
-                    <input
+                    <input;
                       type="checkbox"
                       defaultChecked={userData.preferences.notifications}
                       className="toggle"
@@ -353,7 +353,7 @@ const ProfileView: React.FC = () => {
                     <span className="text-gray-700 dark:text-gray-300">
                       Crisis alert notifications
                     </span>
-                    <input
+                    <input;
                       type="checkbox"
                       defaultChecked={true}
                       className="toggle"
@@ -371,7 +371,7 @@ const ProfileView: React.FC = () => {
                     <span className="text-gray-700 dark:text-gray-300">
                       Dark mode
                     </span>
-                    <input
+                    <input;
                       type="checkbox"
                       defaultChecked={userData.preferences.darkMode}
                       className="toggle"

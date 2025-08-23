@@ -3,11 +3,11 @@
  * 
  * Advanced caching strategies that build upon the existing robust Workbox foundation
  * with intelligent cache warming, analytics, and mobile optimization for crisis support
- */
+ */;
 
 import { openDB, DBSchema, IDBPDatabase } from 'idb';
 
-// Types for cache analytics and monitoring
+// Types for cache analytics and monitoring;
 interface CacheEntry {
   url: string;
   timestamp: number;
@@ -52,7 +52,7 @@ enum ResourceType {
   VIDEO = 'video'
 }
 
-// IndexedDB schema for cache management
+// IndexedDB schema for cache management;
 interface CacheDB extends DBSchema {
   cache_entries: {
     key: string;
@@ -74,8 +74,8 @@ interface CacheDB extends DBSchema {
       usage: number;
       timestamp: number;
       warningThreshold: number;
-    }
-
+    };
+}
 export class IntelligentCachingService {
   private db: IDBPDatabase<CacheDB> | null = null;
   private analytics: CacheAnalytics = {
@@ -87,7 +87,7 @@ export class IntelligentCachingService {
       averageLoadTime: 0,
       cacheRetrievalTime: 0,
       networkFallbackTime: 0,
-      offlineRequestCount: 0
+      offlineRequestCount: 0;
     }
   };
 
@@ -130,9 +130,9 @@ export class IntelligentCachingService {
     try {
       this.db = await openDB<CacheDB>('intelligent-cache', 1, {
         upgrade(db) {
-          // Cache entries store
+          // Cache entries store;
           const cacheStore = db.createObjectStore('cache_entries', {
-            keyPath: 'url'
+            keyPath: 'url';
           });
           cacheStore.createIndex('by-priority', 'priority');
           cacheStore.createIndex('by-type', 'resourceType');
@@ -141,12 +141,12 @@ export class IntelligentCachingService {
 
           // Analytics store
           db.createObjectStore('cache_analytics', {
-            keyPath: 'id'
+            keyPath: 'id';
           });
 
           // Storage quota tracking
           db.createObjectStore('storage_quota', {
-            keyPath: 'id'
+            keyPath: 'id';
           });
         }
       });
@@ -218,7 +218,7 @@ export class IntelligentCachingService {
   private async warmByPattern(cache: Cache, pattern: string, priority: CachePriority): Promise<void> {
     try {
       // For now, we'll handle specific known patterns
-      // In a real implementation, you might enumerate available resources
+      // In a real implementation, you might enumerate available resources;
       const knownUrls = await this.getUrlsMatchingPattern(pattern);
       
       for (const url of knownUrls) {
@@ -234,7 +234,7 @@ export class IntelligentCachingService {
    */
   public async invalidateCache(url: string, reason: 'expired' | 'updated' | 'manual' = 'manual'): Promise<void> {
     try {
-      // Remove from all cache instances
+      // Remove from all cache instances;
       const cacheNames = await caches.keys();
       const invalidationPromises = cacheNames.map(async (cacheName) => {
         const cache = await caches.open(cacheName);
@@ -266,7 +266,7 @@ export class IntelligentCachingService {
     try {
       console.log('[IntelligentCache] Performing intelligent eviction...');
 
-      // Get current storage usage
+      // Get current storage usage;
       const quota = await navigator.storage.estimate();
       const usagePercentage = (quota.usage || 0) / (quota.quota || 1);
 
@@ -275,13 +275,13 @@ export class IntelligentCachingService {
         return;
       }
 
-      // Get all cache entries sorted by eviction priority
+      // Get all cache entries sorted by eviction priority;
       const entries = await this.db.getAll('cache_entries');
-      const evictionCandidates = entries
+      const evictionCandidates = entries;
         .filter(entry => entry.priority !== CachePriority.CRITICAL)
         .sort((a, b) => this.calculateEvictionScore(a) - this.calculateEvictionScore(b));
 
-      // Evict lowest priority items until we're under 70% usage
+      // Evict lowest priority items until we're under 70% usage;
       let evictedCount = 0;
       for (const entry of evictionCandidates) {
         if (usagePercentage < 0.7) break;
@@ -340,14 +340,14 @@ export class IntelligentCachingService {
             quota,
             usage,
             timestamp: Date.now(),
-            warningThreshold: 0.8
+            warningThreshold: 0.8;
           });
         }
 
         // Emit storage warnings
         if (usagePercentage > 0.9) {
-          this.emitStorageWarning('critical', usagePercentage);
-        } else if (usagePercentage > 0.8) {
+          this.emitStorageWarning('critical', usagePercentage);;
+  } else if (usagePercentage > 0.8) {
           this.emitStorageWarning('warning', usagePercentage);
         }
 
@@ -401,7 +401,7 @@ export class IntelligentCachingService {
    */
   private async getUrlsMatchingPattern(pattern: string): Promise<string[]> {
     // This is a simplified implementation
-    // In practice, you might maintain a registry of available resources
+    // In practice, you might maintain a registry of available resources;
     const knownPatterns: Record<string, string[]> = {
       '/assets/index-*.css': ['/assets/index-main.css'],
       '/assets/index-*.js': ['/assets/index-main.js'],
@@ -544,7 +544,7 @@ export class IntelligentCachingService {
         usage: 0,
         quota: 0,
         usagePercentage: 0,
-        cacheEntries: 0
+        cacheEntries: 0;
       }
   }
 
@@ -594,10 +594,10 @@ export class IntelligentCachingService {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const intelligentCache = new IntelligentCachingService();
 
-// Export types for use in other modules
+// Export types for use in other modules;
 export {
   CachePriority,
   ResourceType,

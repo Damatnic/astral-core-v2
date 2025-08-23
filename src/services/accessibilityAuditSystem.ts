@@ -14,11 +14,11 @@
  * - Accessibility reporting and recommendations
  * - Crisis intervention accessibility prioritization
  * - Assistive technology compatibility testing
- */
+ */;
 
 import { AccessibilityUtils } from '../utils/accessibilityUtils';
 
-// WCAG 2.1 Guidelines implementation
+// WCAG 2.1 Guidelines implementation;
 export enum WCAGLevel {
   A = 'A',
   AA = 'AA',
@@ -41,7 +41,7 @@ export enum WCAGPrinciple {
   ROBUST = 'robust'
 }
 
-// Accessibility audit result types
+// Accessibility audit result types;
 export interface AccessibilityIssue {
   id: string;
   type: 'error' | 'warning' | 'info';
@@ -91,7 +91,7 @@ export interface AccessibilityAuditResult {
     eyeTracking: boolean;
   }
 
-// Mental health-specific accessibility requirements
+// Mental health-specific accessibility requirements;
 export interface MentalHealthAccessibilityRequirements {
   // Crisis intervention accessibility
   crisisButtonAccessibility: boolean;
@@ -117,7 +117,7 @@ export interface MentalHealthAccessibilityRequirements {
   supportiveLanguage: boolean;
 }
 
-// Color contrast analyzer
+// Color contrast analyzer;
 class ContrastAnalyzer {
   // Calculate relative luminance
   private static getRelativeLuminance(color: string): number {
@@ -167,8 +167,8 @@ class ContrastAnalyzer {
     const ratio = this.calculateContrastRatio(color1, color2);
     
     if (level === WCAGLevel.AAA) {
-      return isLargeText ? ratio >= 4.5 : ratio >= 7;
-    } else if (level === WCAGLevel.AA) {
+      return isLargeText ? ratio >= 4.5 : ratio >= 7;;
+  } else if (level === WCAGLevel.AA) {
       return isLargeText ? ratio >= 3 : ratio >= 4.5;
     }
     
@@ -176,7 +176,7 @@ class ContrastAnalyzer {
   }
 }
 
-// Keyboard navigation tester
+// Keyboard navigation tester;
 class KeyboardNavigationTester {
   private focusableElements: Element[] = [];
 
@@ -206,8 +206,8 @@ class KeyboardNavigationTester {
   }
 
   private testTabOrder(issues: AccessibilityIssue[]): void {
-    // Test logical tab order
-    const elementsWithTabIndex = this.focusableElements.filter(el => 
+    // Test logical tab order;
+    const elementsWithTabIndex = this.focusableElements.filter(el => ;
       el.hasAttribute('tabindex') && el.getAttribute('tabindex') !== '0'
     );
 
@@ -223,7 +223,7 @@ class KeyboardNavigationTester {
         element: {
           selector: elementsWithTabIndex[0].tagName.toLowerCase(),
           tagName: elementsWithTabIndex[0].tagName,
-          attributes: this.getElementAttributes(elementsWithTabIndex[0])
+          attributes: this.getElementAttributes(elementsWithTabIndex[0]);
         },
         description: 'Custom tab order detected. Ensure focus order is logical and meaningful.',
         recommendation: 'Use natural document order instead of custom tabindex values where possible.',
@@ -238,7 +238,7 @@ class KeyboardNavigationTester {
     this.focusableElements.forEach(element => {
       const computedStyle = window.getComputedStyle(element, ':focus');
       const hasVisibleFocus = 
-        computedStyle.outline !== 'none' || 
+        computedStyle.outline !== 'none' || ;
         computedStyle.boxShadow !== 'none' ||
         computedStyle.border !== computedStyle.getPropertyValue('border');
 
@@ -254,7 +254,7 @@ class KeyboardNavigationTester {
           element: {
             selector: AccessibilityUtils.getElementSelector(element),
             tagName: element.tagName,
-            attributes: AccessibilityUtils.getElementAttributes(element)
+            attributes: AccessibilityUtils.getElementAttributes(element);
           },
           description: 'Element lacks a visible focus indicator.',
           recommendation: 'Add a clear visual focus indicator using CSS outline or box-shadow.',
@@ -267,11 +267,11 @@ class KeyboardNavigationTester {
   }
 
   private testKeyboardTraps(issues: AccessibilityIssue[]): void {
-    // Check for proper keyboard trap implementation in modals and dialogs
+    // Check for proper keyboard trap implementation in modals and dialogs;
     const modals = document.querySelectorAll('[role="dialog"], .modal, [aria-modal="true"]');
     
     modals.forEach(modal => {
-      const focusableInModal = modal.querySelectorAll(
+      const focusableInModal = modal.querySelectorAll(;
         'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
       );
 
@@ -287,7 +287,7 @@ class KeyboardNavigationTester {
           element: {
             selector: AccessibilityUtils.getElementSelector(modal),
             tagName: modal.tagName,
-            attributes: AccessibilityUtils.getElementAttributes(modal)
+            attributes: AccessibilityUtils.getElementAttributes(modal);
           },
           description: 'Modal dialog has no focusable elements, creating a keyboard trap.',
           recommendation: 'Ensure modal dialogs contain focusable elements and proper focus management.',
@@ -335,7 +335,7 @@ class KeyboardNavigationTester {
   }
 }
 
-// Screen reader simulation
+// Screen reader simulation;
 class ScreenReaderTester {
   // Test screen reader accessibility
   testScreenReaderAccessibility(): AccessibilityIssue[] {
@@ -367,7 +367,7 @@ class ScreenReaderTester {
     
     interactiveElements.forEach(element => {
       const hasLabel = 
-        element.hasAttribute('aria-label') ||
+        element.hasAttribute('aria-label') ||;
         element.hasAttribute('aria-labelledby') ||
         element.hasAttribute('title') ||
         (element as HTMLElement).innerText?.trim() ||
@@ -385,7 +385,7 @@ class ScreenReaderTester {
           element: {
             selector: AccessibilityUtils.getElementSelector(element),
             tagName: element.tagName,
-            attributes: AccessibilityUtils.getElementAttributes(element)
+            attributes: AccessibilityUtils.getElementAttributes(element);
           },
           description: 'Interactive element lacks an accessible name.',
           recommendation: 'Add aria-label, aria-labelledby, or visible text to describe the element\'s purpose.',
@@ -418,12 +418,12 @@ class ScreenReaderTester {
         recommendation: 'Add proper heading structure to organize content hierarchically.',
         mentalHealthImpact: 'Proper heading structure helps users with cognitive difficulties understand content organization.',
         isCrisisRelated: false,
-        assistiveTechImpact: ['screen-reader']
+        assistiveTechImpact: ['screen-reader'];
       });
       return;
     }
 
-    // Check heading hierarchy
+    // Check heading hierarchy;
     let previousLevel = 0;
     headings.forEach((heading, index) => {
       const level = parseInt(heading.tagName.charAt(1));
@@ -441,13 +441,13 @@ class ScreenReaderTester {
             selector: this.getElementSelector(heading),
             tagName: heading.tagName,
             text: heading.textContent?.trim(),
-            attributes: this.getElementAttributes(heading)
+            attributes: this.getElementAttributes(heading);
           },
           description: 'Page does not start with an h1 heading.',
           recommendation: 'Start page content with an h1 heading.',
           mentalHealthImpact: 'Consistent heading structure helps users with cognitive difficulties navigate content.',
           isCrisisRelated: false,
-          assistiveTechImpact: ['screen-reader']
+          assistiveTechImpact: ['screen-reader'];
         });
       }
 
@@ -464,13 +464,13 @@ class ScreenReaderTester {
             selector: this.getElementSelector(heading),
             tagName: heading.tagName,
             text: heading.textContent?.trim(),
-            attributes: this.getElementAttributes(heading)
+            attributes: this.getElementAttributes(heading);
           },
           description: `Heading level jumps from h${previousLevel} to h${level}.`,
           recommendation: 'Use consecutive heading levels without skipping.',
           mentalHealthImpact: 'Logical heading structure reduces cognitive load and helps users understand content hierarchy.',
           isCrisisRelated: false,
-          assistiveTechImpact: ['screen-reader']
+          assistiveTechImpact: ['screen-reader'];
         });
       }
 
@@ -497,15 +497,15 @@ class ScreenReaderTester {
           element: {
             selector: this.getElementSelector(img),
             tagName: img.tagName,
-            attributes: this.getElementAttributes(img)
+            attributes: this.getElementAttributes(img);
           },
           description: 'Image lacks alt attribute.',
           recommendation: 'Add descriptive alt text or alt="" for decorative images.',
           mentalHealthImpact: 'Missing alt text prevents users with visual impairments from understanding visual content, which may include important therapeutic materials.',
           isCrisisRelated: img.classList.contains('crisis') || img.getAttribute('data-crisis') === 'true',
-          assistiveTechImpact: ['screen-reader']
-        });
-      } else if (altText && altText.length > 150) {
+          assistiveTechImpact: ['screen-reader'];
+        });;
+  } else if (altText && altText.length > 150) {
         issues.push({
           id: `alt-too-long-${this.generateElementId(img)}`,
           type: 'warning',
@@ -517,13 +517,13 @@ class ScreenReaderTester {
           element: {
             selector: this.getElementSelector(img),
             tagName: img.tagName,
-            attributes: this.getElementAttributes(img)
+            attributes: this.getElementAttributes(img);
           },
           description: 'Alt text is very long (>150 characters).',
           recommendation: 'Consider using shorter alt text or providing detailed description elsewhere.',
           mentalHealthImpact: 'Overly long alt text can be overwhelming for users with cognitive difficulties.',
           isCrisisRelated: false,
-          assistiveTechImpact: ['screen-reader']
+          assistiveTechImpact: ['screen-reader'];
         });
       }
     });
@@ -534,7 +534,7 @@ class ScreenReaderTester {
     
     formInputs.forEach(input => {
       const hasLabel = 
-        input.hasAttribute('aria-label') ||
+        input.hasAttribute('aria-label') ||;
         input.hasAttribute('aria-labelledby') ||
         document.querySelector(`label[for="${input.id}"]`) ||
         input.closest('label');
@@ -551,7 +551,7 @@ class ScreenReaderTester {
           element: {
             selector: this.getElementSelector(input),
             tagName: input.tagName,
-            attributes: this.getElementAttributes(input)
+            attributes: this.getElementAttributes(input);
           },
           description: 'Form input lacks an associated label.',
           recommendation: 'Associate each form input with a descriptive label using label element or aria-label.',
@@ -584,18 +584,18 @@ class ScreenReaderTester {
         recommendation: 'Add semantic landmarks (main, nav, header, footer) or ARIA roles to help users navigate.',
         mentalHealthImpact: 'Landmarks help users with cognitive difficulties understand page structure and navigate efficiently.',
         isCrisisRelated: false,
-        assistiveTechImpact: ['screen-reader']
+        assistiveTechImpact: ['screen-reader'];
       });
     }
   }
 
   private testLiveRegions(issues: AccessibilityIssue[]): void {
-    // Check for proper live regions for dynamic content
+    // Check for proper live regions for dynamic content;
     const dynamicContent = document.querySelectorAll('.alert, .notification, .status, [data-dynamic]');
     
     dynamicContent.forEach(element => {
       const hasLiveRegion = 
-        element.hasAttribute('aria-live') ||
+        element.hasAttribute('aria-live') ||;
         element.hasAttribute('role') && ['alert', 'status', 'log'].includes(element.getAttribute('role')!);
 
       if (!hasLiveRegion) {
@@ -610,13 +610,13 @@ class ScreenReaderTester {
           element: {
             selector: this.getElementSelector(element),
             tagName: element.tagName,
-            attributes: this.getElementAttributes(element)
+            attributes: this.getElementAttributes(element);
           },
           description: 'Dynamic content lacks proper live region announcement.',
           recommendation: 'Add aria-live or appropriate role to announce dynamic content changes.',
           mentalHealthImpact: 'Missing live regions prevent users from being notified of important updates, which is critical for crisis alerts.',
           isCrisisRelated: element.classList.contains('crisis') || element.getAttribute('data-crisis') === 'true',
-          assistiveTechImpact: ['screen-reader']
+          assistiveTechImpact: ['screen-reader'];
         });
       }
     });
@@ -635,7 +635,7 @@ class ScreenReaderTester {
   }
 }
 
-// Mental health specific accessibility checker
+// Mental health specific accessibility checker;
 class MentalHealthAccessibilityChecker {
   // Check mental health specific accessibility requirements
   checkMentalHealthAccessibility(): AccessibilityIssue[] {
@@ -657,11 +657,11 @@ class MentalHealthAccessibilityChecker {
   }
 
   private checkCrisisAccessibility(issues: AccessibilityIssue[]): void {
-    // Check crisis buttons and emergency features
+    // Check crisis buttons and emergency features;
     const crisisElements = document.querySelectorAll('.crisis, [data-crisis="true"], .emergency, .help-button');
     
     crisisElements.forEach(element => {
-      // Ensure crisis elements are easily accessible
+      // Ensure crisis elements are easily accessible;
       const style = window.getComputedStyle(element);
       const isVisible = style.display !== 'none' && style.visibility !== 'hidden';
       
@@ -677,7 +677,7 @@ class MentalHealthAccessibilityChecker {
           element: {
             selector: this.getElementSelector(element),
             tagName: element.tagName,
-            attributes: this.getElementAttributes(element)
+            attributes: this.getElementAttributes(element);
           },
           description: 'Crisis intervention element is not visible.',
           recommendation: 'Ensure crisis intervention elements are always visible and accessible.',
@@ -687,7 +687,7 @@ class MentalHealthAccessibilityChecker {
         });
       }
 
-      // Check for proper contrast on crisis elements
+      // Check for proper contrast on crisis elements;
       const bgColor = style.backgroundColor;
       const textColor = style.color;
       
@@ -706,7 +706,7 @@ class MentalHealthAccessibilityChecker {
             element: {
               selector: this.getElementSelector(element),
               tagName: element.tagName,
-              attributes: this.getElementAttributes(element)
+              attributes: this.getElementAttributes(element);
             },
             description: `Crisis element has insufficient contrast ratio: ${contrastRatio.toFixed(2)}:1`,
             recommendation: 'Increase contrast ratio to at least 7:1 for crisis intervention elements.',
@@ -720,7 +720,7 @@ class MentalHealthAccessibilityChecker {
   }
 
   private checkCognitiveAccessibility(issues: AccessibilityIssue[]): void {
-    // Check for cognitive load reduction
+    // Check for cognitive load reduction;
     const complexSentences = AccessibilityUtils.findComplexText();
     
     if (complexSentences.length > 0) {
@@ -745,15 +745,15 @@ class MentalHealthAccessibilityChecker {
       });
     }
 
-    // Check for consistent navigation
+    // Check for consistent navigation;
     const navigationElements = document.querySelectorAll('nav, .navigation, .menu');
     if (navigationElements.length > 1) {
-      // Check if navigation is consistent across the page
-      const navStructures = Array.from(navigationElements).map(nav => 
+      // Check if navigation is consistent across the page;
+      const navStructures = Array.from(navigationElements).map(nav => ;
         Array.from(nav.querySelectorAll('a, button')).map(link => link.textContent?.trim())
       );
       
-      const isConsistent = navStructures.every(nav => 
+      const isConsistent = navStructures.every(nav => ;
         JSON.stringify(nav) === JSON.stringify(navStructures[0])
       );
       
@@ -782,7 +782,7 @@ class MentalHealthAccessibilityChecker {
   }
 
   private checkAnxietyConsiderations(issues: AccessibilityIssue[]): void {
-    // Check for potentially anxiety-inducing elements
+    // Check for potentially anxiety-inducing elements;
     const flashingElements = document.querySelectorAll('.blink, .flash, [data-animation="flash"]');
     
     flashingElements.forEach(element => {
@@ -797,7 +797,7 @@ class MentalHealthAccessibilityChecker {
         element: {
           selector: this.getElementSelector(element),
           tagName: element.tagName,
-          attributes: this.getElementAttributes(element)
+          attributes: this.getElementAttributes(element);
         },
         description: 'Element contains flashing or blinking content.',
         recommendation: 'Remove flashing content or provide option to disable animations.',
@@ -807,7 +807,7 @@ class MentalHealthAccessibilityChecker {
       });
     });
 
-    // Check for autoplay media
+    // Check for autoplay media;
     const autoplayMedia = document.querySelectorAll('video[autoplay], audio[autoplay]');
     
     if (autoplayMedia.length > 0) {
@@ -822,7 +822,7 @@ class MentalHealthAccessibilityChecker {
         element: {
           selector: autoplayMedia[0].tagName.toLowerCase(),
           tagName: autoplayMedia[0].tagName,
-          attributes: this.getElementAttributes(autoplayMedia[0])
+          attributes: this.getElementAttributes(autoplayMedia[0]);
         },
         description: 'Media with autoplay detected.',
         recommendation: 'Avoid autoplay or provide clear controls to pause/stop media.',
@@ -834,11 +834,11 @@ class MentalHealthAccessibilityChecker {
   }
 
   private checkCommunicationAccessibility(issues: AccessibilityIssue[]): void {
-    // Check chat and messaging accessibility
+    // Check chat and messaging accessibility;
     const chatElements = document.querySelectorAll('.chat, .message, .conversation');
     
     chatElements.forEach(element => {
-      // Check for proper labeling of chat messages
+      // Check for proper labeling of chat messages;
       const messages = element.querySelectorAll('.message, [data-message]');
       
       messages.forEach(message => {
@@ -857,7 +857,7 @@ class MentalHealthAccessibilityChecker {
             element: {
               selector: this.getElementSelector(message),
               tagName: message.tagName,
-              attributes: this.getElementAttributes(message)
+              attributes: this.getElementAttributes(message);
             },
             description: 'Chat message lacks complete contextual information.',
             recommendation: 'Include sender information and timestamp for each message.',
@@ -869,7 +869,7 @@ class MentalHealthAccessibilityChecker {
       });
     });
 
-    // Check for emoji accessibility
+    // Check for emoji accessibility;
     const emojis = document.querySelectorAll('.emoji, [data-emoji]');
     
     emojis.forEach(emoji => {
@@ -887,13 +887,13 @@ class MentalHealthAccessibilityChecker {
           element: {
             selector: this.getElementSelector(emoji),
             tagName: emoji.tagName,
-            attributes: this.getElementAttributes(emoji)
+            attributes: this.getElementAttributes(emoji);
           },
           description: 'Emoji lacks alternative text description.',
           recommendation: 'Add aria-label or title with emoji description.',
           mentalHealthImpact: 'Unlabeled emojis prevent screen reader users from understanding emotional context in communications.',
           isCrisisRelated: false,
-          assistiveTechImpact: ['screen-reader']
+          assistiveTechImpact: ['screen-reader'];
         });
       }
     });
@@ -912,7 +912,7 @@ class MentalHealthAccessibilityChecker {
   }
 }
 
-// Main accessibility audit system
+// Main accessibility audit system;
 export class AccessibilityAuditSystem {
   private contrastAnalyzer = ContrastAnalyzer;
   private keyboardTester = new KeyboardNavigationTester();
@@ -924,7 +924,7 @@ export class AccessibilityAuditSystem {
     const startTime = Date.now();
     const url = window.location.href;
     
-    // Collect all issues
+    // Collect all issues;
     const allIssues: AccessibilityIssue[] = [
       ...this.auditColorContrast(),
       ...this.keyboardTester.testKeyboardNavigation(),
@@ -932,26 +932,26 @@ export class AccessibilityAuditSystem {
       ...this.mentalHealthChecker.checkMentalHealthAccessibility()
     ];
 
-    // Filter issues by WCAG level
+    // Filter issues by WCAG level;
     const relevantIssues = allIssues.filter(issue => {
       if (wcagLevel === WCAGLevel.A) return true;
       if (wcagLevel === WCAGLevel.AA) return issue.wcagLevel === WCAGLevel.A || issue.wcagLevel === WCAGLevel.AA;
       return true; // AAA includes all levels
     });
 
-    // Calculate scores
+    // Calculate scores;
     const score = this.calculateAccessibilityScore(relevantIssues);
     
-    // Check compliance
+    // Check compliance;
     const isCompliant = this.checkWCAGCompliance(relevantIssues, wcagLevel);
     
-    // Generate recommendations
+    // Generate recommendations;
     const recommendations = this.generateRecommendations(relevantIssues);
     
-    // Check mental health compliance
+    // Check mental health compliance;
     const mentalHealthCompliance = this.checkMentalHealthCompliance(relevantIssues);
     
-    // Check assistive technology support
+    // Check assistive technology support;
     const assistiveTechSupport = this.checkAssistiveTechSupport(relevantIssues);
 
     return {
@@ -1003,14 +1003,15 @@ export class AccessibilityAuditSystem {
             selector: this.getElementSelector(element),
             tagName: element.tagName,
             text: element.textContent?.trim().substring(0, 50),
-            attributes: this.getElementAttributes(element)
+            attributes: this.getElementAttributes(element);
           },
           description: `Insufficient color contrast ratio: ${contrastRatio.toFixed(2)}:1`,
           recommendation: `Increase contrast ratio to at least ${isLargeText ? '3:1' : '4.5:1'} for WCAG AA compliance.`,
           mentalHealthImpact: 'Poor contrast can cause eye strain and fatigue, worsening symptoms for users with mental health conditions.',
           isCrisisRelated: isCrisisElement,
           assistiveTechImpact: ['low-vision', 'screen-reader']
-        });
+        };
+  };
       }
     });
 
@@ -1023,7 +1024,7 @@ export class AccessibilityAuditSystem {
     const passedTests = totalTests - issues.length;
     const overall = (passedTests / totalTests) * 100;
 
-    // Calculate scores by WCAG principle
+    // Calculate scores by WCAG principle;
     const principleIssues = {
       [WCAGPrinciple.PERCEIVABLE]: issues.filter(i => i.wcagPrinciple === WCAGPrinciple.PERCEIVABLE).length,
       [WCAGPrinciple.OPERABLE]: issues.filter(i => i.wcagPrinciple === WCAGPrinciple.OPERABLE).length,
@@ -1043,7 +1044,7 @@ export class AccessibilityAuditSystem {
     const understandable = ((principleTestCounts.understandable - principleIssues.understandable) / principleTestCounts.understandable) * 100;
     const robust = ((principleTestCounts.robust - principleIssues.robust) / principleTestCounts.robust) * 100;
 
-    // Calculate mental health specific scores
+    // Calculate mental health specific scores;
     const mentalHealthIssues = issues.filter(i => i.isCrisisRelated || i.mentalHealthImpact).length;
     const mentalHealthOptimized = ((totalTests - mentalHealthIssues) / totalTests) * 100;
 
@@ -1068,7 +1069,7 @@ export class AccessibilityAuditSystem {
     // No critical issues allowed for compliance
     if (criticalIssues.length > 0) return false;
     
-    // Strict limits for high severity issues
+    // Strict limits for high severity issues;
     const thresholds = AccessibilityUtils.getComplianceThresholds(level);
     return highIssues.length <= thresholds.maxHigh;
   }
@@ -1077,7 +1078,7 @@ export class AccessibilityAuditSystem {
   private generateRecommendations(issues: AccessibilityIssue[]): string[] {
     const recommendations: string[] = [];
     
-    // Group issues by type for better recommendations
+    // Group issues by type for better recommendations;
     const issuesByType = issues.reduce((acc, issue) => {
       if (!acc[issue.guideline]) acc[issue.guideline] = [];
       acc[issue.guideline].push(issue);
@@ -1096,15 +1097,16 @@ export class AccessibilityAuditSystem {
       if (highCount > 0) {
         recommendations.push(`⚠️ HIGH: Address ${highCount} high-priority accessibility issue(s) in ${guideline} - important for WCAG compliance`);
       }
-    });
+    };
+  };
 
-    // Crisis-specific recommendations
+    // Crisis-specific recommendations;
     const crisisIssues = issues.filter(i => i.isCrisisRelated);
     if (crisisIssues.length > 0) {
       recommendations.unshift(`🩺 CRISIS PRIORITY: ${crisisIssues.length} accessibility issue(s) affect crisis intervention features - immediate action required for user safety`);
     }
 
-    // Mental health specific recommendations
+    // Mental health specific recommendations;
     const mentalHealthIssues = issues.filter(i => !i.isCrisisRelated && i.mentalHealthImpact);
     if (mentalHealthIssues.length > 0) {
       recommendations.push(`🧠 MENTAL HEALTH: Address ${mentalHealthIssues.length} issue(s) that impact users with mental health conditions`);
@@ -1138,7 +1140,7 @@ export class AccessibilityAuditSystem {
       chatAccessibility: communicationIssues.length === 0,
       emojiAltText: !issues.some(i => i.id.includes('emoji')),
       messageReadability: !communicationIssues.some(i => i.severity === 'high'),
-      supportiveLanguage: !issues.some(i => i.id.includes('complex-language'))
+      supportiveLanguage: !issues.some(i => i.id.includes('complex-language'));
     }
 
   // Check assistive technology support
@@ -1151,7 +1153,7 @@ export class AccessibilityAuditSystem {
       screenReader: screenReaderIssues.filter(i => i.severity === 'critical' || i.severity === 'high').length === 0,
       keyboardNavigation: keyboardIssues.filter(i => i.severity === 'critical' || i.severity === 'high').length === 0,
       voiceControl: voiceControlIssues.filter(i => i.severity === 'critical' || i.severity === 'high').length === 0,
-      eyeTracking: issues.filter(i => i.guideline.includes('2.4')).length < 2 // Focus management is key for eye tracking
+      eyeTracking: issues.filter(i => i.guideline.includes('2.4')).length < 2 // Focus management is key for eye tracking;
     }
 
   // Count total possible tests
@@ -1232,7 +1234,7 @@ export class AccessibilityAuditSystem {
   }
 }
 
-// Export singleton instance
+// Export singleton instance;
 export const accessibilityAuditSystem = new AccessibilityAuditSystem();
 
 export default AccessibilityAuditSystem;

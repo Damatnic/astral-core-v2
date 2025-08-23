@@ -6,7 +6,7 @@ interface GuidedExperience {
   id: string;
   name: string;
   description: string;
-  duration: number; // minutes
+  duration: number; // minutes;
   type: 'breathing' | 'grounding' | 'connection' | 'affirmation';
   icon: React.ReactNode;
   steps: ExperienceStep[];
@@ -114,8 +114,8 @@ export const GuidedTetherExperience: React.FC<GuidedTetherExperienceProps> = ({
           // Move to next step
           if (currentStepIndex < selectedExperience.steps.length - 1) {
             setCurrentStepIndex(currentStepIndex + 1);
-            return 0;
-          } else {
+            return 0;;
+  } else {
             // Experience complete
             completeExperience();
             return 100;
@@ -126,6 +126,7 @@ export const GuidedTetherExperience: React.FC<GuidedTetherExperienceProps> = ({
     }, 100);
     
     return () => clearInterval(progressInterval);
+  };
   }, [isActive, currentStepIndex, selectedExperience]);
   
   useEffect(() => {
@@ -136,6 +137,7 @@ export const GuidedTetherExperience: React.FC<GuidedTetherExperienceProps> = ({
     const currentStepCompletion = stepProgress / 100;
     
     setTotalProgress(((completedSteps + currentStepCompletion) / totalSteps) * 100);
+  };
   }, [currentStepIndex, stepProgress, selectedExperience]);
   
   const startExperience = (experience: GuidedExperience) => {
@@ -244,7 +246,7 @@ export const GuidedTetherExperience: React.FC<GuidedTetherExperienceProps> = ({
         <h3 className="player-title">{selectedExperience.name}</h3>
         <div className="player-progress">
           <div className="progress-bar">
-            <div 
+            <div; 
               className="progress-fill"
               style={{ width: `${totalProgress}%` }}
             />
@@ -275,7 +277,7 @@ export const GuidedTetherExperience: React.FC<GuidedTetherExperienceProps> = ({
         
         <div className="step-progress-container">
           <div className="step-progress-bar">
-            <div 
+            <div; 
               className="step-progress-fill"
               style={{ width: `${stepProgress}%` }}
             />

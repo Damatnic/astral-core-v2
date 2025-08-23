@@ -11,7 +11,7 @@ import { renderHook } from '@testing-library/react';
 jest.mock('react', () => ({
   ...jest.requireActual('react'),
   useState: jest.fn((initial) => [initial, jest.fn()]),
-  useEffect: jest.fn((fn) => fn())
+  useEffect: jest.fn((fn) => fn());
 }));
 
 // Setup DOM mocks before tests
@@ -26,7 +26,7 @@ beforeAll(() => {
           return {
             appendChild: jest.fn(),
             querySelectorAll: jest.fn(() => []),
-            querySelector: jest.fn()
+            querySelector: jest.fn();
           }
         if (tagName === 'input') {
           return {
@@ -34,26 +34,27 @@ beforeAll(() => {
             name: '',
             value: '',
             addEventListener: jest.fn(),
-            setCustomValidity: jest.fn()
+            setCustomValidity: jest.fn();
           }
         return {}),
       head: {
-        appendChild: jest.fn()
+        appendChild: jest.fn();
       },
-      addEventListener: jest.fn()
+      addEventListener: jest.fn();
     },
-    writable: true
-  });
+    writable: true;
+  };
+  };
 
   // Mock window
   Object.defineProperty(global, 'window', {
     value: {
       location: {
-        href: 'http://localhost:3000'
+        href: 'http://localhost:3000';
       },
-      document: global.document
+      document: global.document;
     },
-    writable: true
+    writable: true;
   });
 
   // Mock navigator
@@ -61,7 +62,7 @@ beforeAll(() => {
     value: {
       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
     },
-    writable: true
+    writable: true;
   });
 
   // localStorage is already mocked globally in setupTests.ts
@@ -72,9 +73,9 @@ beforeAll(() => {
       getItem: jest.fn(() => null),
       setItem: jest.fn(),
       removeItem: jest.fn(),
-      clear: jest.fn()
+      clear: jest.fn();
     },
-    writable: true
+    writable: true;
   });
 
   // Mock crypto
@@ -97,7 +98,7 @@ beforeAll(() => {
         })
       }
     },
-    writable: true
+    writable: true;
   });
 
   // Mock TextEncoder
@@ -111,7 +112,7 @@ beforeAll(() => {
         return new Uint8Array(bytes);
       }
     },
-    writable: true
+    writable: true;
   });
 
   // Mock timers
@@ -140,10 +141,10 @@ describe('SecurityService', () => {
         enableCSP: false,
         enableXSSProtection: false,
         enableRateLimit: false,
-        enableInputValidation: false
+        enableInputValidation: false;
       };
       // Note: SecurityService doesn't support custom config at runtime for singleton
-      // This test is disabled as it conflicts with singleton pattern
+      // This test is disabled as it conflicts with singleton pattern;
       const service = getSecurityService();
       expect(service).toBeDefined();
     });
@@ -208,7 +209,7 @@ describe('SecurityService', () => {
 
     it.skip('should validate custom rules', () => {
       const rules: ValidationRule = {
-        custom: (value) => value === 'valid' ? true : 'Must be valid'
+        custom: (value) => value === 'valid' ? true : 'Must be valid';
       };
       
       const result1 = service.validateInput('invalid', rules);
@@ -221,7 +222,7 @@ describe('SecurityService', () => {
 
     it.skip('should skip validation when disabled', () => {
       // Note: SecurityService doesn't support custom config at runtime for singleton
-      // Using default singleton instance
+      // Using default singleton instance;
       const service = getSecurityService();
       const rules: ValidationRule = { required: true };
       
@@ -239,7 +240,7 @@ describe('SecurityService', () => {
 
     it.skip('should skip sanitization when disabled', () => {
       // Note: SecurityService doesn't support custom config at runtime for singleton
-      // Using default singleton instance
+      // Using default singleton instance;
       const service = getSecurityService();
       expect(service.sanitizeInput('<script>')).toBe('<script>');
     });
@@ -343,7 +344,7 @@ describe('SecurityService', () => {
 
     it.skip('should skip rate limiting when disabled', () => {
       // Note: SecurityService doesn't support custom config at runtime for singleton
-      // Using default singleton instance
+      // Using default singleton instance;
       const service = getSecurityService();
       
       for (let i = 0; i < 200; i++) {
@@ -407,11 +408,11 @@ describe('SecurityService', () => {
       expect(result.isValid).toBe(false); // Only has 4/5 criteria, needs score >= 3 but the service validates differently
       expect(result.feedback).toContain('Add special characters');
       
-      // Test password without special characters but low score
+      // Test password without special characters but low score;
       const weakResult = service.validatePassword('pass');
       expect(weakResult.isValid).toBe(false); // Only has lowercase = score 1
       
-      // Test that a password with 3 criteria passes
+      // Test that a password with 3 criteria passes;
       const validResult = service.validatePassword('Password!');
       expect(validResult.isValid).toBe(false); // Has length, uppercase, lowercase, special chars but no numbers
     });
@@ -445,7 +446,7 @@ describe('SecurityService', () => {
     });
 
     it.skip('should produce different hashes for different passwords', async () => {
-      // Since our mock always returns the same hash, we need to mock it differently
+      // Since our mock always returns the same hash, we need to mock it differently;
       let callCount = 0;
       const mockDigest = jest.fn(() => {
         callCount++;
@@ -505,7 +506,7 @@ describe('SecurityService', () => {
 
   describe('CSRF protection', () => {
     it.skip('should generate and validate CSRF tokens', () => {
-      // Mock sessionStorage to return the token we set
+      // Mock sessionStorage to return the token we set;
       const mockSetItem = jest.fn();
       const mockGetItem = jest.fn();
       global.sessionStorage.setItem = mockSetItem;
@@ -558,7 +559,7 @@ describe('SecurityService', () => {
       expect(consoleWarnSpy).toHaveBeenCalled();
       expect(localStorage.setItem).toHaveBeenCalled();
       
-      // Check what was stored
+      // Check what was stored;
       const storedData = (localStorage.setItem as jest.Mock).mock.calls[0][1];
       const logs = JSON.parse(storedData);
       expect(logs).toHaveLength(1);
@@ -582,7 +583,7 @@ describe('SecurityService', () => {
         service.logSecurityEvent(`event_${i}`, {});
       }
       
-      // Check the last stored value
+      // Check the last stored value;
       const lastCall = (localStorage.setItem as jest.Mock).mock.calls[(localStorage.setItem as jest.Mock).mock.calls.length - 1];
       const logs = JSON.parse(lastCall[1]);
       expect(logs).toHaveLength(100);
@@ -597,7 +598,7 @@ describe('SecurityService', () => {
       const mockInput = {
         type: '',
         name: '',
-        value: ''
+        value: '';
       };
       
       const mockForm = {
@@ -615,7 +616,8 @@ describe('SecurityService', () => {
         if (tagName === 'input') {
           return mockInput;
         }
-        return {});
+        return {};
+  };
       
       global.document.createElement = mockCreateElement as any;
       
@@ -631,12 +633,12 @@ describe('SecurityService', () => {
       const mockAddEventListener = jest.fn();
       const mockInput = {
         name: 'test',
-        addEventListener: mockAddEventListener
+        addEventListener: mockAddEventListener;
       };
       
       const mockForm = {
         appendChild: jest.fn(),
-        querySelectorAll: jest.fn(() => [mockInput])
+        querySelectorAll: jest.fn(() => [mockInput]);
       };
       
       service.addFormProtection(mockForm as any);
@@ -649,7 +651,7 @@ describe('SecurityService', () => {
     it.skip('should clear expired rate limits', () => {
       jest.useFakeTimers();
       
-      // Create a fresh service instance
+      // Create a fresh service instance;
       const testService = getSecurityService();
       
       // Create some rate limits
@@ -661,7 +663,7 @@ describe('SecurityService', () => {
       
       testService.clearRateLimitStore();
       
-      // Should be able to make requests again
+      // Should be able to make requests again;
       const result = testService.checkRateLimit('api', 'user1');
       expect(result.allowed).toBe(true);
       expect(result.remaining).toBe(99);
@@ -704,10 +706,10 @@ describe('useSecurity hook', () => {
     Object.defineProperty(document, 'body', {
       value: {
         appendChild: jest.fn(),
-        removeChild: jest.fn()
+        removeChild: jest.fn();
       },
       writable: true,
-      configurable: true
+      configurable: true;
     });
   });
 
@@ -749,7 +751,7 @@ describe('ValidationRules', () => {
     expect(ValidationRules.email).toEqual({
       required: true,
       pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-      maxLength: 254
+      maxLength: 254;
     });
   });
 
@@ -757,7 +759,7 @@ describe('ValidationRules', () => {
     expect(ValidationRules.password).toEqual({
       required: true,
       minLength: 8,
-      maxLength: 128
+      maxLength: 128;
     });
   });
 
@@ -766,7 +768,7 @@ describe('ValidationRules', () => {
       required: true,
       minLength: 3,
       maxLength: 30,
-      pattern: /^\w+$/
+      pattern: /^\w+$/;
     });
   });
 });
@@ -807,7 +809,7 @@ describe('edge cases and error handling', () => {
     const service = getSecurityService();
     const mockForm = {
       appendChild: jest.fn(),
-      querySelectorAll: jest.fn(() => [])
+      querySelectorAll: jest.fn(() => []);
     };
     expect(() => service.addFormProtection(mockForm as any)).not.toThrow();
     expect(mockForm.appendChild).toHaveBeenCalled();
@@ -819,7 +821,7 @@ describe('edge cases and error handling', () => {
     global.crypto = {
       ...global.crypto,
       subtle: {
-        digest: mockDigest
+        digest: mockDigest;
       }
     } as any;
     

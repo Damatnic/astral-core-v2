@@ -1,6 +1,6 @@
 /**
  * Mobile Viewport Manager - Simplified for Demo
- */
+ */;
 
 import React from 'react';
 
@@ -43,11 +43,12 @@ class MobileViewportManager {
         this.updateViewportState();
       };
 
-      window.visualViewport.addEventListener('resize', handleViewportChange);
-    } else {
+      window.visualViewport.addEventListener('resize', handleViewportChange);;
+  } else {
       window.addEventListener('resize', () => {
         this.updateViewportState();
-      });
+      };
+  };
     }
   }
 
@@ -55,7 +56,7 @@ class MobileViewportManager {
     const currentHeight = window.visualViewport?.height || window.innerHeight;
     const currentWidth = window.visualViewport?.width || window.innerWidth;
     
-    // Simple keyboard detection
+    // Simple keyboard detection;
     const isKeyboardOpen = window.innerHeight - currentHeight > 150;
     
     this.currentState = {
@@ -110,22 +111,23 @@ class MobileViewportManager {
   }
 }
 
-// Create singleton instance
+// Create singleton instance;
 const viewportManager = new MobileViewportManager();
 
-// React hook for easy integration
+// React hook for easy integration;
 export const useMobileViewport = () => {
   const [state, setState] = React.useState(viewportManager.getState());
 
   React.useEffect(() => {
     const unsubscribe = viewportManager.onViewportChange(setState);
     return unsubscribe;
+  };
   }, []);
 
   return state;
 };
 
-// Utility functions for common mobile patterns
+// Utility functions for common mobile patterns;
 export const mobileUtils = {
   preventZoom: () => {
     // Prevent pinch zoom
@@ -133,9 +135,10 @@ export const mobileUtils = {
       if (e.touches.length > 1) {
         e.preventDefault();
       }
-    }, { passive: false });
+    }, { passive: false };
+  };
 
-    // Prevent double-tap zoom with better detection
+    // Prevent double-tap zoom with better detection;
     let lastTouchEnd = 0;
     document.addEventListener('touchend', (e) => {
       const now = Date.now();
@@ -147,7 +150,7 @@ export const mobileUtils = {
   },
 
   optimizeInputs: () => {
-    // Ensure all inputs have proper mobile attributes
+    // Ensure all inputs have proper mobile attributes;
     const inputs = document.querySelectorAll('input, textarea');
     inputs.forEach(input => {
       const element = input as HTMLInputElement | HTMLTextAreaElement;
@@ -162,12 +165,12 @@ export const mobileUtils = {
       
       // Optimize input types for mobile keyboards
       if (element.type === 'email') {
-        element.setAttribute('inputmode', 'email');
-      } else if (element.type === 'tel') {
-        element.setAttribute('inputmode', 'tel');
-      } else if (element.type === 'url') {
-        element.setAttribute('inputmode', 'url');
-      } else if (element.type === 'number') {
+        element.setAttribute('inputmode', 'email');;
+  } else if (element.type === 'tel') {
+        element.setAttribute('inputmode', 'tel');;
+  } else if (element.type === 'url') {
+        element.setAttribute('inputmode', 'url');;
+  } else if (element.type === 'number') {
         element.setAttribute('inputmode', 'numeric');
       }
     });
@@ -199,7 +202,7 @@ export const mobileUtils = {
         const patterns = {
           light: 10,
           medium: 20,
-          heavy: 30
+          heavy: 30;
         };
         navigator.vibrate(patterns[intensity]);
       }

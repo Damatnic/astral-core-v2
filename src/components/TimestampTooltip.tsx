@@ -10,7 +10,7 @@ export interface TimestampTooltipProps {
   showOnTouch?: boolean;
   /** Custom tooltip content */
   children?: React.ReactNode;
-  /** Additional CSS classes */
+  /** Additional CSS classes */;
   className?: string;
   /** Tooltip position */
   position?: 'top' | 'bottom' | 'left' | 'right' | 'auto';
@@ -56,7 +56,7 @@ const DEFAULT_RELATIVE_LABELS = {
   month: 'a month ago',
   months: 'months ago',
   year: 'a year ago',
-  years: 'years ago'
+  years: 'years ago';
 };
 
 const DEFAULT_DATE_FORMAT: Intl.DateTimeFormatOptions = {
@@ -64,7 +64,7 @@ const DEFAULT_DATE_FORMAT: Intl.DateTimeFormatOptions = {
   month: 'short',
   day: 'numeric',
   hour: '2-digit',
-  minute: '2-digit'
+  minute: '2-digit';
 };
 
 export const TimestampTooltip: React.FC<TimestampTooltipProps> = ({
@@ -92,56 +92,59 @@ export const TimestampTooltip: React.FC<TimestampTooltipProps> = ({
 
   /**
    * Convert timestamp to Date object
-   */
+   */;
   const getDate = useCallback((): Date => {
     if (timestamp instanceof Date) {
       return timestamp;
     }
     return new Date(timestamp);
+  };
   }, [timestamp]);
 
   /**
    * Format relative time
-   */
+   */;
   const formatRelativeTime = useCallback((date: Date): string => {
     const now = new Date();
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
     if (diffInSeconds < 30) {
-      return relativeLabels.now;
-    } else if (diffInSeconds < 60) {
-      return `${diffInSeconds} ${relativeLabels.seconds}`;
-    } else if (diffInSeconds < 3600) {
+      return relativeLabels.now;;
+  } else if (diffInSeconds < 60) {
+      return `${diffInSeconds} ${relativeLabels.seconds}`;;
+  } else if (diffInSeconds < 3600) {
       const minutes = Math.floor(diffInSeconds / 60);
-      return minutes === 1 ? relativeLabels.minute : `${minutes} ${relativeLabels.minutes}`;
-    } else if (diffInSeconds < 86400) {
+      return minutes === 1 ? relativeLabels.minute : `${minutes} ${relativeLabels.minutes}`;;
+  } else if (diffInSeconds < 86400) {
       const hours = Math.floor(diffInSeconds / 3600);
-      return hours === 1 ? relativeLabels.hour : `${hours} ${relativeLabels.hours}`;
-    } else if (diffInSeconds < 604800) {
+      return hours === 1 ? relativeLabels.hour : `${hours} ${relativeLabels.hours}`;;
+  } else if (diffInSeconds < 604800) {
       const days = Math.floor(diffInSeconds / 86400);
-      return days === 1 ? relativeLabels.day : `${days} ${relativeLabels.days}`;
-    } else if (diffInSeconds < 2629746) {
+      return days === 1 ? relativeLabels.day : `${days} ${relativeLabels.days}`;;
+  } else if (diffInSeconds < 2629746) {
       const weeks = Math.floor(diffInSeconds / 604800);
-      return weeks === 1 ? relativeLabels.week : `${weeks} ${relativeLabels.weeks}`;
-    } else if (diffInSeconds < 31556952) {
+      return weeks === 1 ? relativeLabels.week : `${weeks} ${relativeLabels.weeks}`;;
+  } else if (diffInSeconds < 31556952) {
       const months = Math.floor(diffInSeconds / 2629746);
-      return months === 1 ? relativeLabels.month : `${months} ${relativeLabels.months}`;
-    } else {
+      return months === 1 ? relativeLabels.month : `${months} ${relativeLabels.months}`;;
+  } else {
       const years = Math.floor(diffInSeconds / 31556952);
       return years === 1 ? relativeLabels.year : `${years} ${relativeLabels.years}`;
     }
+  };
   }, [relativeLabels]);
 
   /**
    * Format absolute time
-   */
+   */;
   const formatAbsoluteTime = useCallback((date: Date): string => {
     return date.toLocaleDateString(undefined, dateFormat);
+  };
   }, [dateFormat]);
 
   /**
    * Get tooltip content
-   */
+   */;
   const getTooltipContent = useCallback((): string => {
     const date = getDate();
     const relative = formatRelativeTime(date);
@@ -157,11 +160,12 @@ export const TimestampTooltip: React.FC<TimestampTooltipProps> = ({
       default:
         return relative;
     }
+  };
   }, [getDate, formatRelativeTime, formatAbsoluteTime, format]);
 
   /**
    * Update relative time display
-   */
+   */;
   const updateRelativeTime = useCallback(() => {
     if (liveUpdate) {
       setRelativeTime(getTooltipContent());
@@ -172,11 +176,12 @@ export const TimestampTooltip: React.FC<TimestampTooltipProps> = ({
       
       updateTimeoutRef.current = setTimeout(updateRelativeTime, updateInterval);
     }
+  };
   }, [liveUpdate, getTooltipContent, updateInterval]);
 
   /**
    * Calculate optimal tooltip position
-   */
+   */;
   const calculatePosition = useCallback((): 'top' | 'bottom' | 'left' | 'right' | 'auto' => {
     if (!triggerRef.current || position !== 'auto') {
       return position;
@@ -202,16 +207,17 @@ export const TimestampTooltip: React.FC<TimestampTooltipProps> = ({
     }
     
     return 'top';
+  };
   }, [position]);
 
   /**
    * Show tooltip
-   */
+   */;
   const showTooltip = useCallback(() => {
     setTooltipPosition(calculatePosition());
     setIsVisible(true);
     
-    // Announce to screen readers
+    // Announce to screen readers;
     const content = getTooltipContent();
     const announcement = document.createElement('div');
     announcement.setAttribute('aria-live', 'polite');
@@ -220,11 +226,12 @@ export const TimestampTooltip: React.FC<TimestampTooltipProps> = ({
     announcement.textContent = `Timestamp: ${content}`;
     document.body.appendChild(announcement);
     setTimeout(() => document.body.removeChild(announcement), 1000);
+  };
   }, [calculatePosition, getTooltipContent]);
 
   /**
    * Hide tooltip
-   */
+   */;
   const hideTooltip = useCallback(() => {
     setIsVisible(false);
     
@@ -232,29 +239,32 @@ export const TimestampTooltip: React.FC<TimestampTooltipProps> = ({
       clearTimeout(touchTimeoutRef.current);
       touchTimeoutRef.current = null;
     }
+  };
   }, []);
 
   /**
    * Handle mouse enter
-   */
+   */;
   const handleMouseEnter = useCallback(() => {
     if (!('ontouchstart' in window)) {
       showTooltip();
     }
+  };
   }, [showTooltip]);
 
   /**
    * Handle mouse leave
-   */
+   */;
   const handleMouseLeave = useCallback(() => {
     if (!('ontouchstart' in window)) {
       hideTooltip();
     }
+  };
   }, [hideTooltip]);
 
   /**
    * Handle touch start (mobile)
-   */
+   */;
   const handleTouchStart = useCallback((event: React.TouchEvent) => {
     if (!showOnTouch) return;
     
@@ -264,8 +274,8 @@ export const TimestampTooltip: React.FC<TimestampTooltipProps> = ({
       showTooltip();
       
       // Auto-hide after 3 seconds on mobile
-      touchTimeoutRef.current = setTimeout(hideTooltip, 3000);
-    } else {
+      touchTimeoutRef.current = setTimeout(hideTooltip, 3000);;
+  } else {
       // Long press detection
       touchTimeoutRef.current = setTimeout(() => {
         showTooltip();
@@ -274,46 +284,51 @@ export const TimestampTooltip: React.FC<TimestampTooltipProps> = ({
         setTimeout(hideTooltip, 3000);
       }, 500);
     }
+  };
   }, [showOnTouch, instantOnMobile, showTooltip, hideTooltip]);
 
   /**
    * Handle touch end
-   */
+   */;
   const handleTouchEnd = useCallback(() => {
     if (!instantOnMobile && touchTimeoutRef.current) {
       clearTimeout(touchTimeoutRef.current);
       touchTimeoutRef.current = null;
     }
+  };
   }, [instantOnMobile]);
 
   /**
    * Handle keyboard activation
-   */
+   */;
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       if (isVisible) {
-        hideTooltip();
-      } else {
+        hideTooltip();;
+  } else {
         showTooltip();
-      }
-    } else if (event.key === 'Escape' && isVisible) {
+      };
+  } else if (event.key === 'Escape' && isVisible) {
       hideTooltip();
     }
+  };
   }, [isVisible, showTooltip, hideTooltip]);
 
   /**
    * Handle focus
-   */
+   */;
   const handleFocus = useCallback(() => {
     showTooltip();
+  };
   }, [showTooltip]);
 
   /**
    * Handle blur
-   */
+   */;
   const handleBlur = useCallback(() => {
     hideTooltip();
+  };
   }, [hideTooltip]);
 
   /**
@@ -329,7 +344,8 @@ export const TimestampTooltip: React.FC<TimestampTooltipProps> = ({
       if (touchTimeoutRef.current) {
         clearTimeout(touchTimeoutRef.current);
       }
-    }, [updateRelativeTime]);
+    };
+  }, [updateRelativeTime]);
 
   /**
    * Handle click outside to close tooltip on mobile
@@ -355,20 +371,22 @@ export const TimestampTooltip: React.FC<TimestampTooltipProps> = ({
     return () => {
       document.removeEventListener('mousedown', handleOutsideInteraction);
       document.removeEventListener('touchstart', handleOutsideInteraction);
-    }, [isVisible, hideTooltip]);
+    };
+  };
+  }, [isVisible, hideTooltip]);
 
   const displayText = relativeTime || getTooltipContent();
-  const truncatedText = maxLength && displayText.length > maxLength 
+  const truncatedText = maxLength && displayText.length > maxLength ;
     ? `${displayText.substring(0, maxLength)}...` 
     : displayText;
 
-  const triggerClasses = [
+  const triggerClasses = [;
     'timestamp-tooltip-trigger',
     className,
     isVisible && 'timestamp-tooltip-trigger--active'
   ].filter(Boolean).join(' ');
 
-  const tooltipClasses = [
+  const tooltipClasses = [;
     'timestamp-tooltip',
     `timestamp-tooltip--${tooltipPosition}`,
     isVisible && 'timestamp-tooltip--visible'
@@ -397,7 +415,7 @@ export const TimestampTooltip: React.FC<TimestampTooltipProps> = ({
       {isVisible && (
         <div
           ref={tooltipRef}
-          id="timestamp-tooltip"
+          id="timestamp-tooltip";
           className={tooltipClasses}
           role="tooltip"
           aria-live="polite"

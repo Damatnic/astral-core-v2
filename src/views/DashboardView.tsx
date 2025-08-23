@@ -19,7 +19,7 @@ const DashboardView: React.FC = () => {
   const [timeOfDay, setTimeOfDay] = useState('');
 
   useEffect(() => {
-    // Get time of day greeting
+    // Get time of day greeting;
     const hour = new Date().getHours();
     if (hour < 12) setTimeOfDay('Good morning');
     else if (hour < 17) setTimeOfDay('Good afternoon');
@@ -27,6 +27,7 @@ const DashboardView: React.FC = () => {
 
     // Get user name (this would come from auth context in real app)
     setUserName('Friend');
+  };
   }, []);
 
   const dashboardCards: DashboardCard[] = [
@@ -39,7 +40,7 @@ const DashboardView: React.FC = () => {
       href: '/crisis',
       stats: {
         label: '24/7 Available',
-        value: 'Always'
+        value: 'Always';
       }
     },
     {
@@ -51,7 +52,7 @@ const DashboardView: React.FC = () => {
       href: '/peer-support',
       stats: {
         label: 'Active Helpers',
-        value: '200+'
+        value: '200+';
       }
     },
     {
@@ -63,7 +64,7 @@ const DashboardView: React.FC = () => {
       href: '/wellness',
       stats: {
         label: 'Current Streak',
-        value: '5 days'
+        value: '5 days';
       }
     },
     {
@@ -75,7 +76,7 @@ const DashboardView: React.FC = () => {
       href: '/ai-assistant',
       stats: {
         label: 'Conversations',
-        value: '12'
+        value: '12';
       }
     },
     {
@@ -87,7 +88,7 @@ const DashboardView: React.FC = () => {
       href: '/reflections',
       stats: {
         label: 'This Week',
-        value: '3 entries'
+        value: '3 entries';
       }
     },
     {
@@ -99,7 +100,7 @@ const DashboardView: React.FC = () => {
       href: '/analytics',
       stats: {
         label: 'Overall Trend',
-        value: '↗ Improving'
+        value: '↗ Improving';
       }
     }
   ];
@@ -111,7 +112,7 @@ const DashboardView: React.FC = () => {
       pink: 'gradient-wellness',
       purple: 'gradient-calm',
       green: 'gradient-forest',
-      indigo: 'gradient-aurora'
+      indigo: 'gradient-aurora';
     };
     return gradientMap[color] || 'gradient-ocean';
   };
@@ -261,7 +262,7 @@ const DashboardView: React.FC = () => {
                 Crisis support is available 24/7. You're not alone.
               </p>
             </div>
-            <button 
+            <button; 
               className="crisis-button smooth-transition ripple-button"
               onClick={() => console.log('Navigate to /crisis')}
             >

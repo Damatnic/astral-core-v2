@@ -28,24 +28,25 @@ export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
       
-      // Easing function for smooth animation
+      // Easing function for smooth animation;
       const easeOut = 1 - Math.pow(1 - progress, 3);
       const currentValue = Math.round(startValue + (difference * easeOut));
       
       setDisplayValue(currentValue);
       
       if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
+        requestAnimationFrame(animate);;
+  } else {
         setIsAnimating(false);
       }
     };
 
     requestAnimationFrame(animate);
+  };
   }, [value, duration, displayValue]);
 
   return (
-    <output 
+    <output; 
       className={`animated-number${isAnimating ? ' animating' : ''} ${className}`}
       aria-live="polite"
       aria-label={`Current value: ${formatter(displayValue)}`}

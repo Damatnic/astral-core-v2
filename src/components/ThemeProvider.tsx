@@ -3,10 +3,10 @@
  *
  * Provides comprehensive theming functionality with mental health-optimized
  * color psychology, user customization, and therapeutic environment support.
- */
+ */;
 
-import * as React from "react"
-const { useState, useEffect, useCallback, useMemo } = React
+import * as React from "react";
+const { useState, useEffect, useCallback, useMemo } = React;
 import {
   ThemeContext,
   TherapeuticTheme,
@@ -18,7 +18,7 @@ import {
   UserThemePreferences,
   ThemeContextValue,
   THERAPEUTIC_THEMES
-} from '../services/advancedThemingSystem'
+} from '../services/advancedThemingSystem';
 
 interface ThemeProviderProps {
   children: React.ReactNode;
@@ -35,7 +35,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   enableSystemDetection = true,
   enableColorPsychologyRecommendations = true
 }) => {
-  // Default user preferences
+  // Default user preferences;
   const defaultPreferences: UserThemePreferences = {
     therapeuticTheme: defaultTheme,
     colorMode: "auto",
@@ -44,9 +44,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     reduceMotion: false,
     highContrast: false,
     fontSize: "medium",
-    spacing: "comfortable"
+    spacing: "comfortable";
   };
-  const [preferences, setPreferences] = useState<UserThemePreferences>(defaultPreferences)
+  const [preferences, setPreferences] = useState<UserThemePreferences>(defaultPreferences);
   const [systemColorMode, setSystemColorMode] = useState<'light' | 'dark'>('light')
 
   // Helper functions (defined early to avoid hoisting issues);
@@ -55,20 +55,20 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       case 'subtle': return 0.7
       case 'balanced': return 1.0
       case 'vibrant': return 1.3
-      default: return 1.0
+      default: return 1.0;
     }
   }
 
   const applyIntensityToColors = (colors: ThemeColors, multiplier: number): ThemeColors => {
     if (multiplier === 1.0) return colors;
-    // Only adjust certain color types, preserve others for accessibility
+    // Only adjust certain color types, preserve others for accessibility;
     const adjustableKeys: (keyof ThemeColors)[] = ["primary", "primaryLight", "secondary", "secondaryLight", "calm", "hope", "support", "growth"];
 
     const adjustedColors={ ...colors };
     adjustableKeys.forEach(key => {
       const color = colors[key];
       if(color && typeof color === 'string') {
-        // Simple intensity adjustment - could be more sophisticated
+        // Simple intensity adjustment - could be more sophisticated;
         const hex = color.substring(1);
         const r = parseInt(hex.substring(0, 2), 16);
         const g = parseInt(hex.substring(2, 4), 16);
@@ -96,6 +96,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     } catch(error) {
 
     }
+  };
   }, [storageKey]);
 
   // Save preferences to localStorage when they change
@@ -105,6 +106,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     } catch(error) {
 
     }
+  };
   }, [preferences, storageKey]);
 
   // Detect system color mode changes
@@ -117,6 +119,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     setSystemColorMode(mediaQuery.matches ? 'dark' : 'light');
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
+  };
   }, [enableSystemDetection]);
 
   // Detect system motion preferences
@@ -133,6 +136,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     }
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
+  };
   }, []);
 
   // Detect system contrast preferences
@@ -149,9 +153,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     }
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
+  };
   }, []);
 
-  // Get current theme configuration
+  // Get current theme configuration;
   const currentTheme = useMemo((): TherapeuticThemeConfig => {
     let themeId = preferences.therapeuticTheme;
           // Override with high contrast if needed
@@ -160,31 +165,34 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       }
 
     return THERAPEUTIC_THEMES[themeId];
+  };
   }, [preferences.therapeuticTheme, preferences.highContrast]);
 
-     // Get current color mode
+     // Get current color mode;
    const currentColorMode = useMemo((): "light" | "dark" => {
     if(preferences.colorMode === "auto") {
       return systemColorMode;
     }
     return preferences.colorMode === "dark" ? "dark" : "light";
+  };
   }, [preferences.colorMode, systemColorMode]);
 
-  // Get current colors with intensity and customizations applied
+  // Get current colors with intensity and customizations applied;
   const currentColors = useMemo((): ThemeColors => {
     const baseColors = currentTheme.colors[currentColorMode];
 
-    // Apply intensity modifications
+    // Apply intensity modifications;
     const intensityMultiplier = calculateIntensityMultiplier(preferences.intensity);
     const adjustedColors = applyIntensityToColors(baseColors, intensityMultiplier);
 
-    // Apply user color overrides
+    // Apply user color overrides;
     const finalColors={ ...adjustedColors, ...preferences.colorOverrides };
 
     return finalColors;
+  };
   }, [currentTheme, currentColorMode, preferences.intensity, preferences.colorOverrides]);
 
-  // Helper functions
+  // Helper functions;
   const getSpacingScale = (spacing: "compact" | "comfortable" | "spacious"): Record<string, string> => {
     const baseScale={
       xs: "0.25rem",
@@ -197,8 +205,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     };
     let multiplier = 1;
     if(spacing === "compact") {
-      multiplier = 0.75;
-    } else if(spacing === "spacious") {
+      multiplier = 0.75;;
+  } else if (spacing === "spacious") {
       multiplier = 1.25;
     }
 
@@ -234,23 +242,23 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       root.style.setProperty(`--color-${kebabCase(key)}`, value);
     });
 
-    // Apply spacing variables
+    // Apply spacing variables;
     const spacingScale = getSpacingScale(preferences.spacing);
     Object.entries(spacingScale).forEach(([key, value]) => {
       root.style.setProperty(`--spacing-${key}`, value);
     });
 
-    // Apply font size variables
+    // Apply font size variables;
     const fontSizeScale = getFontSizeScale(preferences.fontSize);
     Object.entries(fontSizeScale).forEach(([key, value]) => {
       root.style.setProperty(`--font-size-${key}`, value);
     });
 
-          // Apply animation duration
+          // Apply animation duration;
       let animationDuration = "200ms";
     if(preferences.reduceMotion) {
-      animationDuration = "0.01ms"
-    } else if(preferences.customAnimationDuration) {
+      animationDuration = "0.01ms";
+  } else if (preferences.customAnimationDuration) {
       animationDuration = `${preferences.customAnimationDuration}ms`;
     }
     root.style.setProperty('--animation-duration', animationDuration);
@@ -268,15 +276,16 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     if(preferences.reduceMotion) {
       document.body.classList.add("reduce-motion");
     }
+  };
   }, [currentColors, currentTheme.id, currentColorMode, preferences]);
 
-  // Calculate contrast ratio between two colors
+  // Calculate contrast ratio between two colors;
   const getContrastRatio = useCallback((color1: string, color2: string): number => {
     // Simplified contrast calculation
-    // In production, use a proper color contrast library
+    // In production, use a proper color contrast library;
     const getLuminance = (color: string): number => {
       // This is a very simplified implementation
-      // Use a proper color library for accurate calculations
+      // Use a proper color library for accurate calculations;
       const hex = color.replace('#', '');
       const r = parseInt(hex.substring(0, 2), 16) / 255;
       const g = parseInt(hex.substring(2, 4), 16) / 255;
@@ -293,30 +302,36 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     const darker = Math.min(l1, l2);
 
     return (lighter + 0.05) / (darker + 0.05);
+  };
   }, []);
 
-  // Check if color combination meets accessibility standards
+  // Check if color combination meets accessibility standards;
   const isAccessibilityCompliant = useCallback((foreground: string, background: string): boolean => {
     const ratio = getContrastRatio(foreground, background);
     const threshold = preferences.accessibilityLevel === 'AAA' ? 7 : 4.5;
     return ratio >= threshold;
+  };
   }, [getContrastRatio, preferences.accessibilityLevel]);
 
-  // Theme management functions
+  // Theme management functions;
   const setTherapeuticTheme = useCallback((theme: TherapeuticTheme) => {
     setPreferences(prev => ({ ...prev, therapeuticTheme: theme }));
+  };
   }, []);
 
   const setColorMode = useCallback((mode: ColorMode) => {
     setPreferences(prev => ({ ...prev, colorMode: mode }));
+  };
   }, []);
 
   const setIntensity = useCallback((intensity: ColorIntensity) => {
     setPreferences(prev => ({ ...prev, intensity }));
+  };
   }, []);
 
   const setAccessibilityLevel = useCallback((level: AccessibilityLevel) => {
     setPreferences(prev => ({ ...prev, accessibilityLevel: level }));
+  };
   }, []);
 
   const setColorOverride = useCallback((colorKey: keyof ThemeColors, color: string) => {
@@ -324,6 +339,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       ...prev,
       colorOverrides: { ...prev.colorOverrides, [colorKey]: color }
     }));
+  };
   }, []);
 
   const resetCustomizations = useCallback(() => {
@@ -331,18 +347,20 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
               ...prev,
         colorOverrides: undefined,
         intensity: "balanced",
-        customAnimationDuration: undefined
+        customAnimationDuration: undefined;
     }));
+  };
   }, []);
   
-  // Export/import theme functions
+  // Export/import theme functions;
   const exportTheme = useCallback((): string => {
     return JSON.stringify({
               preferences,
         currentTheme: currentTheme.id,
         version: "1.0.0",
-        exportDate: new Date().toISOString()
+        exportDate: new Date().toISOString();
     }, null, 2);
+  };
   }, [preferences, currentTheme.id]);
 
   const importTheme = useCallback((themeData: string): boolean => {
@@ -356,9 +374,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     } catch {
       return false;
     }
+  };
   }, []);
 
-    // Mental health specific functions
+    // Mental health specific functions;
   const getMoodBasedColors = useCallback((mood: string): Partial<ThemeColors> => {
     const moodColorMap: Record<string, Partial<ThemeColors>> = {
       "anxious": { primary: currentColors.calm, background: currentColors.backgroundSecondary },
@@ -370,15 +389,17 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     };
 
     return moodColorMap[mood.toLowerCase()] || {};
+  };
   }, [currentColors]);
 
   const getCrisisSafeColors = useCallback((): ThemeColors => {
     return THERAPEUTIC_THEMES["crisis-safe"].colors[currentColorMode];
+  };
   }, [currentColorMode]);
 
   const getTherapeuticRecommendations = useCallback((userProfile?: any): TherapeuticTheme[] => {
     if (!enableColorPsychologyRecommendations) return [];
-          // Basic recommendations based on common mental health needs
+          // Basic recommendations based on common mental health needs;
       const recommendations: TherapeuticTheme[] = ["calm-sanctuary", "nature-healing"];
     if (userProfile?.conditions?.includes("anxiety")) {
       recommendations.unshift("calm-sanctuary");
@@ -398,9 +419,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
 
     // Remove duplicates and limit to 5 recommendations
     return [...new Set(recommendations)].slice(0, 5);
+  };
   }, [enableColorPsychologyRecommendations]);
 
-  // Context value
+  // Context value;
   const contextValue: ThemeContextValue = useMemo(() => ({
     currentTheme,
     currentColors,

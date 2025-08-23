@@ -1,14 +1,14 @@
 /**
  * Authentication Type Definitions
  * Centralized type definitions for authentication across the application
- */
+ */;
 
 import { Helper } from '../types';
 
 /**
  * JWT Token Payload
  * Standard JWT claims plus custom user data
- */
+ */;
 export interface JWTPayload {
   // Standard JWT claims
   sub: string;  // Subject (user ID)
@@ -35,7 +35,7 @@ export interface JWTPayload {
 /**
  * Authenticated User
  * User data available after successful authentication
- */
+ */;
 export interface AuthUser extends JWTPayload {
   id: string;
   email: string;
@@ -51,7 +51,7 @@ export interface AuthUser extends JWTPayload {
 /**
  * Demo User
  * Structure for demo/test users
- */
+ */;
 export interface DemoUser {
   id: string;
   email: string;
@@ -64,7 +64,7 @@ export interface DemoUser {
 /**
  * Auth State
  * Global authentication state
- */
+ */;
 export interface AuthState {
   isAuthenticated: boolean;
   isAnonymous: boolean;
@@ -77,7 +77,7 @@ export interface AuthState {
 /**
  * Session Data
  * Session information for authenticated users
- */
+ */;
 export interface SessionData {
   sessionId: string;
   userId: string;
@@ -91,7 +91,7 @@ export interface SessionData {
 /**
  * Wellness Data
  * User wellness tracking data
- */
+ */;
 export interface WellnessData {
   userId: string;
   moodHistory: Array<{
@@ -114,14 +114,14 @@ export interface WellnessData {
 
  * Authentication Type Definitions
  * Centralized type definitions for authentication across the application
- */
+ */;
 
 import { Helper } from '../types';
 
 /**
  * JWT Token Payload
  * Standard JWT claims plus custom user data
- */
+ */;
 export interface JWTPayload {
   // Standard JWT claims
   sub: string;  // Subject (user ID)
@@ -148,7 +148,7 @@ export interface JWTPayload {
 /**
  * Authenticated User
  * User data available after successful authentication
- */
+ */;
 export interface AuthUser extends JWTPayload {
   id: string;
   email: string;
@@ -164,7 +164,7 @@ export interface AuthUser extends JWTPayload {
 /**
  * Demo User
  * Structure for demo/test users
- */
+ */;
 export interface DemoUser {
   id: string;
   email: string;
@@ -177,7 +177,7 @@ export interface DemoUser {
 /**
  * Auth State
  * Global authentication state
- */
+ */;
 export interface AuthState {
   isAuthenticated: boolean;
   isAnonymous: boolean;
@@ -190,7 +190,7 @@ export interface AuthState {
 /**
  * Session Data
  * Session information for authenticated users
- */
+ */;
 export interface SessionData {
   sessionId: string;
   userId: string;
@@ -204,7 +204,7 @@ export interface SessionData {
 /**
  * Wellness Data
  * User wellness tracking data
- */
+ */;
 export interface WellnessData {
   userId: string;
   moodHistory: Array<{

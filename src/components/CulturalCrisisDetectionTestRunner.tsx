@@ -3,7 +3,7 @@
  * 
  * Manual test runner for validating cultural crisis detection integration
  * across different scenarios in a live environment.
- */
+ */;
 
 import React, { useState } from 'react';
 import { MoodTracker } from '../components/MoodTracker';
@@ -32,9 +32,9 @@ const testScenarios: TestScenario[] = [
       component: 'MoodTracker',
       mood: { id: 'terrible', value: 1, label: 'Terrible' },
       tags: [],
-      note: ''
+      note: '';
     },
-    expectedOutcome: 'Should trigger cultural crisis alert due to low mood value'
+    expectedOutcome: 'Should trigger cultural crisis alert due to low mood value';
   },
   {
     id: 'mood-concerning-tags',
@@ -44,9 +44,9 @@ const testScenarios: TestScenario[] = [
       component: 'MoodTracker',
       mood: { id: 'okay', value: 3, label: 'Okay' },
       tags: ['hopeless', 'overwhelmed', 'trapped'],
-      note: ''
+      note: '';
     },
-    expectedOutcome: 'Should trigger cultural crisis alert due to concerning tags'
+    expectedOutcome: 'Should trigger cultural crisis alert due to concerning tags';
   },
   {
     id: 'mood-crisis-note',
@@ -56,9 +56,9 @@ const testScenarios: TestScenario[] = [
       component: 'MoodTracker',
       mood: { id: 'okay', value: 3, label: 'Okay' },
       tags: [],
-      note: 'I want to hurt myself and end it all'
+      note: 'I want to hurt myself and end it all';
     },
-    expectedOutcome: 'Should trigger cultural crisis alert due to crisis language in note'
+    expectedOutcome: 'Should trigger cultural crisis alert due to crisis language in note';
   },
 
   // Cultural Context Tests
@@ -72,7 +72,7 @@ const testScenarios: TestScenario[] = [
       component: 'CulturalCrisisAlert',
       analysisText: "I want to kill myself, I can't take this anymore"
     },
-    expectedOutcome: 'Should detect direct crisis expression with appropriate Western interventions'
+    expectedOutcome: 'Should detect direct crisis expression with appropriate Western interventions';
   },
   {
     id: 'eastern-indirect',
@@ -84,7 +84,7 @@ const testScenarios: TestScenario[] = [
       component: 'CulturalCrisisAlert',
       analysisText: "I feel like I'm a burden to my family, maybe they'd be better off without me"
     },
-    expectedOutcome: 'Should detect indirect crisis expression and adjust for cultural context'
+    expectedOutcome: 'Should detect indirect crisis expression and adjust for cultural context';
   },
   {
     id: 'latin-expressive',
@@ -96,7 +96,7 @@ const testScenarios: TestScenario[] = [
       component: 'CulturalCrisisAlert',
       analysisText: "No puedo más, siento que todo está perdido y mi familia no me entiende"
     },
-    expectedOutcome: 'Should detect crisis with family-centered intervention approach'
+    expectedOutcome: 'Should detect crisis with family-centered intervention approach';
   },
   {
     id: 'middle-eastern-honor',
@@ -106,9 +106,9 @@ const testScenarios: TestScenario[] = [
     languageCode: 'ar',
     testData: {
       component: 'CulturalCrisisAlert',
-      analysisText: "I feel like I have brought shame to my family and community"
+      analysisText: "I feel like I have brought shame to my family and community";
     },
-    expectedOutcome: 'Should detect crisis with cultural sensitivity to honor concepts'
+    expectedOutcome: 'Should detect crisis with cultural sensitivity to honor concepts';
   },
 
   // Bias Mitigation Tests
@@ -120,9 +120,9 @@ const testScenarios: TestScenario[] = [
     languageCode: 'zh',
     testData: {
       component: 'CulturalCrisisAlert',
-      analysisText: "I have failed my parents' expectations and feel worthless"
+      analysisText: "I have failed my parents' expectations and feel worthless";
     },
-    expectedOutcome: 'Should adjust risk score considering cultural context of family expectations'
+    expectedOutcome: 'Should adjust risk score considering cultural context of family expectations';
   },
 
   // Edge Cases
@@ -134,9 +134,9 @@ const testScenarios: TestScenario[] = [
     languageCode: 'en',
     testData: {
       component: 'CulturalCrisisAlert',
-      analysisText: "I feel disconnected from both my traditional family values and Western society"
+      analysisText: "I feel disconnected from both my traditional family values and Western society";
     },
-    expectedOutcome: 'Should handle multicultural context appropriately'
+    expectedOutcome: 'Should handle multicultural context appropriately';
   }
 ];
 
@@ -154,17 +154,17 @@ export const CulturalCrisisDetectionTestRunner: React.FC = () => {
     console.log(`[Test Runner] Expected: ${scenario.expectedOutcome}`);
     
     try {
-      // Record test start time
+      // Record test start time;
       const startTime = Date.now();
       
-      // Set up test environment
+      // Set up test environment;
       const result = {
         scenario: scenario.name,
         startTime,
         status: 'running',
         culturalContext: scenario.culturalContext,
         languageCode: scenario.languageCode,
-        testData: scenario.testData
+        testData: scenario.testData;
       };
       
       setTestResults(prev => ({
@@ -180,7 +180,7 @@ export const CulturalCrisisDetectionTestRunner: React.FC = () => {
         ...result,
         endTime,
         duration: endTime - startTime,
-        status: 'completed'
+        status: 'completed';
       };
       
       setTestResults(prev => ({
@@ -197,7 +197,7 @@ export const CulturalCrisisDetectionTestRunner: React.FC = () => {
         [scenario.id]: {
           ...prev[scenario.id],
           status: 'failed',
-          error: error instanceof Error ? error.message : String(error)
+          error: error instanceof Error ? error.message : String(error);
         }
       }));
     } finally {
@@ -227,7 +227,7 @@ export const CulturalCrisisDetectionTestRunner: React.FC = () => {
               ...prev,
               [currentTest.id]: {
                 ...prev[currentTest.id],
-                moodSubmitted: data
+                moodSubmitted: data;
               }
             }));
           }}
@@ -248,7 +248,7 @@ export const CulturalCrisisDetectionTestRunner: React.FC = () => {
               ...prev,
               [currentTest.id]: {
                 ...prev[currentTest.id],
-                crisisDetected: result
+                crisisDetected: result;
               }
             }));
           }}
@@ -258,7 +258,7 @@ export const CulturalCrisisDetectionTestRunner: React.FC = () => {
               ...prev,
               [currentTest.id]: {
                 ...prev[currentTest.id],
-                biasAdjustments: adjustments
+                biasAdjustments: adjustments;
               }
             }));
           }}
@@ -324,7 +324,7 @@ export const CulturalCrisisDetectionTestRunner: React.FC = () => {
                 <AppButton 
                   onClick={() => runTest(scenario)}
                   disabled={isRunning}
-                  size="sm"
+                  size="sm";
                   variant="secondary"
                 >
                   Run Test

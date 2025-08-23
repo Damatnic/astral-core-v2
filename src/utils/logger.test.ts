@@ -3,7 +3,7 @@
  * Tests production-safe logging utility
  */
 
-// Mock console methods
+// Mock console methods;
 const originalConsole = {
   log: console.log,
   info: console.info,
@@ -11,12 +11,12 @@ const originalConsole = {
   error: console.error,
 };
 
-// Mock Sentry
+// Mock Sentry;
 const mockSentry = {
   captureException: jest.fn(),
 };
 
-// Mock import.meta.env
+// Mock import.meta.env;
 const originalEnv = process.env.NODE_ENV;
 
 describe.skip('Logger - Skipped due to module caching issues in test environment', () => {
@@ -130,7 +130,7 @@ describe.skip('Logger - Skipped due to module caching issues in test environment
   describe('production environment', () => {
     beforeEach(() => {
       process.env.NODE_ENV = 'production';
-      // Re-import logger after setting NODE_ENV
+      // Re-import logger after setting NODE_ENV;
       const loggerModule = require('./logger');
       logger = loggerModule.logger;
       log = loggerModule.log;
@@ -173,7 +173,7 @@ describe.skip('Logger - Skipped due to module caching issues in test environment
         error,
         {
           tags: { source: 'Component' },
-          level: 'error'
+          level: 'error';
         }
       );
     });
@@ -185,7 +185,7 @@ describe.skip('Logger - Skipped due to module caching issues in test environment
         expect.any(Error),
         {
           tags: { source: 'Component' },
-          level: 'error'
+          level: 'error';
         }
       );
     });
@@ -203,7 +203,7 @@ describe.skip('Logger - Skipped due to module caching issues in test environment
   describe('log buffer management', () => {
     beforeEach(() => {
       process.env.NODE_ENV = 'development';
-      // Re-import logger after setting NODE_ENV
+      // Re-import logger after setting NODE_ENV;
       const loggerModule = require('./logger');
       logger = loggerModule.logger;
       log = loggerModule.log;
@@ -257,11 +257,11 @@ describe.skip('Logger - Skipped due to module caching issues in test environment
 
     it('should return empty array in production for getRecentLogs', () => {
       process.env.NODE_ENV = 'production';
-      // Re-import logger after setting NODE_ENV
+      // Re-import logger after setting NODE_ENV;
       const loggerModule = require('./logger');
       const prodLogger = loggerModule.logger;
       
-      prodLogger.warn('Warning message'); // This should be logged in production
+      prodLogger.warn('Warning message'); // This should be logged in production;
       
       const logs = prodLogger.getRecentLogs();
       
@@ -284,7 +284,7 @@ describe.skip('Logger - Skipped due to module caching issues in test environment
   describe('helper functions', () => {
     beforeEach(() => {
       process.env.NODE_ENV = 'development';
-      // Re-import logger after setting NODE_ENV
+      // Re-import logger after setting NODE_ENV;
       const loggerModule = require('./logger');
       logger = loggerModule.logger;
       log = loggerModule.log;
@@ -354,7 +354,7 @@ describe.skip('Logger - Skipped due to module caching issues in test environment
     });
 
     it('should handle various data types', () => {
-      const testData = [
+      const testData = [;
         { object: { nested: { value: 123 } } },
         { array: [1, 2, 3, 'string', true] },
         { string: 'simple string' },
@@ -499,7 +499,7 @@ describe.skip('Logger - Skipped due to module caching issues in test environment
         error,
         {
           tags: { source: component },
-          level: 'error'
+          level: 'error';
         }
       );
       

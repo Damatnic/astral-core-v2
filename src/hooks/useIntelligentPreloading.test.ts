@@ -1,63 +1,63 @@
 /**
  * Tests for Intelligent Preloading Hook
- */
+ */;
 
 import { renderHook, act, waitFor } from '../test-utils';
 import { useIntelligentPreloading, withIntelligentPreloading } from './useIntelligentPreloading';
 import { IntelligentPreloadingEngine } from '../services/intelligentPreloading';
 
-// Mock react-router-dom
+// Mock react-router-dom;
 const mockLocation = {
   pathname: '/mood-tracker',
   search: '',
   hash: '',
   state: null,
-  key: 'default'
+  key: 'default';
 };
 
 jest.mock('react-router-dom', () => ({
-  useLocation: () => mockLocation
+  useLocation: () => mockLocation;
 }));
 
 // Mock IntelligentPreloadingEngine
 jest.mock('../services/intelligentPreloading', () => ({
-  IntelligentPreloadingEngine: jest.fn()
+  IntelligentPreloadingEngine: jest.fn();
 }));
 
 const mockEngine = {
   startNewSession: jest.fn(),
   trackRouteNavigation: jest.fn(),
-  generatePredictions: jest.fn()
+  generatePredictions: jest.fn();
 };
 
-const mockPredictions = [
+const mockPredictions = [;
   {
     resource: '/api/user/profile',
     confidence: 0.85,
     priority: 'high' as const,
     type: 'api-call' as const,
-    reasoning: 'User typically views profile after mood tracking'
+    reasoning: 'User typically views profile after mood tracking';
   },
   {
     resource: '/mood-history',
     confidence: 0.72,
     priority: 'medium' as const,
     type: 'navigation' as const,
-    reasoning: 'Common next step after mood entry'
+    reasoning: 'Common next step after mood entry';
   },
   {
     resource: '/assets/chart.js',
     confidence: 0.45,
     priority: 'low' as const,
     type: 'resource' as const,
-    reasoning: 'May need charting if viewing history'
+    reasoning: 'May need charting if viewing history';
   },
   {
     resource: '/api/recommendations',
     confidence: 0.25,
     priority: 'low' as const,
     type: 'api-call' as const,
-    reasoning: 'Low confidence prediction'
+    reasoning: 'Low confidence prediction';
   }
 ];
 
@@ -93,7 +93,7 @@ describe('useIntelligentPreloading Hook', () => {
       enabled: false,
       maxPredictions: 5,
       minConfidence: 0.8,
-      trackUserBehavior: false
+      trackUserBehavior: false;
     };
 
     const { result } = renderHook(() => useIntelligentPreloading(options));
@@ -167,7 +167,7 @@ describe('useIntelligentPreloading Hook', () => {
     const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
     const consoleGroupEndSpy = jest.spyOn(console, 'groupEnd').mockImplementation();
 
-    // Set NODE_ENV to development for logging
+    // Set NODE_ENV to development for logging;
     const originalEnv = process.env.NODE_ENV;
     process.env.NODE_ENV = 'development';
 
@@ -212,7 +212,7 @@ describe('useIntelligentPreloading Hook', () => {
   it.skip('should limit predictions by max count', async () => {
     const { result } = renderHook(() => useIntelligentPreloading({ 
       maxPredictions: 1,
-      minConfidence: 0.2 // Allow all predictions
+      minConfidence: 0.2 // Allow all predictions;
     }));
 
     await waitFor(() => {
@@ -268,7 +268,7 @@ describe('useIntelligentPreloading Hook', () => {
   it.skip('should track user interactions', async () => {
     const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
     
-    // Set NODE_ENV to development for logging
+    // Set NODE_ENV to development for logging;
     const originalEnv = process.env.NODE_ENV;
     process.env.NODE_ENV = 'development';
 
@@ -286,7 +286,7 @@ describe('useIntelligentPreloading Hook', () => {
       action: 'click',
       target: 'button',
       metadata: { buttonType: 'submit' },
-      route: '/mood-tracker'
+      route: '/mood-tracker';
     });
 
     // Restore environment

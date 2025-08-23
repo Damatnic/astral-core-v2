@@ -23,19 +23,19 @@ jest.mock('@sentry/react', () => ({
   }),
 }));
 
-// Mock environment variables for Vite
+// Mock environment variables for Vite;
 const mockImportMeta = {
   env: {
     PROD: false,
     DEV: true,
-    VITE_SENTRY_DSN: 'https://test-dsn@sentry.io/123456'
+    VITE_SENTRY_DSN: 'https://test-dsn@sentry.io/123456';
   }
 };
 
 // Mock import.meta
 Object.defineProperty(window, 'import', {
   value: {
-    meta: mockImportMeta
+    meta: mockImportMeta;
   },
   writable: true,
 });
@@ -54,7 +54,7 @@ describe('Error Tracking Service (Vite Version)', () => {
 
       expect(Sentry.init).toHaveBeenCalledWith(
         expect.objectContaining({
-          tracesSampleRate: 0.1
+          tracesSampleRate: 0.1;
         })
       );
     });
@@ -67,7 +67,7 @@ describe('Error Tracking Service (Vite Version)', () => {
 
       expect(Sentry.init).toHaveBeenCalledWith(
         expect.objectContaining({
-          tracesSampleRate: 1.0
+          tracesSampleRate: 1.0;
         })
       );
     });
@@ -80,7 +80,7 @@ describe('Error Tracking Service (Vite Version)', () => {
 
       expect(Sentry.init).toHaveBeenCalledWith(
         expect.objectContaining({
-          dsn: envDsn
+          dsn: envDsn;
         })
       );
     });
@@ -88,7 +88,7 @@ describe('Error Tracking Service (Vite Version)', () => {
 
   describe('Vite-specific configuration', () => {
     it.skip('should handle missing import.meta gracefully', () => {
-      // Temporarily remove import.meta
+      // Temporarily remove import.meta;
       const originalImportMeta = (window as any).import;
       delete (window as any).import;
 
@@ -168,7 +168,7 @@ describe('Error Tracking Service (Vite Version)', () => {
         errorType: 'crisis',
         severity: 'critical',
         feature: 'crisis-detection',
-        privacyLevel: 'sensitive'
+        privacyLevel: 'sensitive';
       };
 
       ErrorTrackingService.captureError(error, context);
@@ -182,11 +182,11 @@ describe('Error Tracking Service (Vite Version)', () => {
       
       ErrorTrackingService.captureCrisisError(error, {
         userType: 'seeker',
-        escalationLevel: 'high'
+        escalationLevel: 'high';
       }, {
         sessionType: 'therapy',
         duration: 1800,
-        encrypted: true
+        encrypted: true;
       });
 
       expect(Sentry.captureException).toHaveBeenCalledWith(error);
@@ -199,7 +199,7 @@ describe('Error Tracking Service (Vite Version)', () => {
         severity: 'medium',
         feature: 'mood-tracking',
         userType: 'seeker',
-        privacyLevel: 'private'
+        privacyLevel: 'private';
       };
 
       ErrorTrackingService.captureError(error, context);
@@ -214,7 +214,7 @@ describe('Error Tracking Service (Vite Version)', () => {
         severity: 'high',
         feature: 'safety-plan',
         userType: 'seeker',
-        privacyLevel: 'sensitive'
+        privacyLevel: 'sensitive';
       };
 
       ErrorTrackingService.captureError(error, context);
@@ -229,7 +229,7 @@ describe('Error Tracking Service (Vite Version)', () => {
         severity: 'high',
         feature: 'community',
         userType: 'admin',
-        privacyLevel: 'public'
+        privacyLevel: 'public';
       };
 
       ErrorTrackingService.captureError(error, context);
@@ -272,13 +272,13 @@ describe('Error Tracking Service (Vite Version)', () => {
       ErrorTrackingService.setUserContext({
         id: 'seeker-123',
         userType: 'seeker',
-        isAuthenticated: true
+        isAuthenticated: true;
       });
 
       expect(Sentry.setUser).toHaveBeenCalledWith(
         expect.objectContaining({
           id: 'seeker-123',
-          userType: 'seeker'
+          userType: 'seeker';
         })
       );
     });
@@ -288,13 +288,13 @@ describe('Error Tracking Service (Vite Version)', () => {
         id: 'helper-789',
         userType: 'helper',
         isAuthenticated: true,
-        sessionDuration: 3600
+        sessionDuration: 3600;
       });
 
       expect(Sentry.setUser).toHaveBeenCalledWith(
         expect.objectContaining({
           id: 'helper-789',
-          userType: 'helper'
+          userType: 'helper';
         })
       );
     });
@@ -307,7 +307,7 @@ describe('Error Tracking Service (Vite Version)', () => {
         {
           confidence: 0.92,
           keywords: ['redacted'],
-          model_version: 'v2.1'
+          model_version: 'v2.1';
         }
       );
 
@@ -318,7 +318,7 @@ describe('Error Tracking Service (Vite Version)', () => {
         data: {
           confidence: 0.92,
           keywords: ['redacted'],
-          model_version: 'v2.1'
+          model_version: 'v2.1';
         }
       });
     });
@@ -331,7 +331,7 @@ describe('Error Tracking Service (Vite Version)', () => {
         {
           sessionId: 'session-encrypted-id',
           participantCount: 2,
-          sessionType: 'video'
+          sessionType: 'video';
         }
       );
 
@@ -339,7 +339,7 @@ describe('Error Tracking Service (Vite Version)', () => {
         expect.objectContaining({
           message: 'Therapy session started',
           category: 'session',
-          level: 'info'
+          level: 'info';
         })
       );
     });
@@ -347,7 +347,7 @@ describe('Error Tracking Service (Vite Version)', () => {
 
   describe('Performance and reliability', () => {
     it.skip('should handle high volume of error tracking', () => {
-      // Simulate multiple concurrent error tracking calls
+      // Simulate multiple concurrent error tracking calls;
       const errors = Array.from({ length: 100 }, (_, i) => 
         new Error(`Test error ${i}`)
       );
@@ -356,7 +356,7 @@ describe('Error Tracking Service (Vite Version)', () => {
         ErrorTrackingService.captureError(error, {
           errorType: 'system',
           severity: 'low',
-          privacyLevel: 'public'
+          privacyLevel: 'public';
         });
       });
 
@@ -367,14 +367,14 @@ describe('Error Tracking Service (Vite Version)', () => {
       const malformedError = {
         name: 'MockError',
         message: 'Not a proper Error object',
-        stack: undefined
+        stack: undefined;
       };
 
       expect(() => {
         ErrorTrackingService.captureError(malformedError as Error, {
           errorType: 'system',
           severity: 'low',
-          privacyLevel: 'public'
+          privacyLevel: 'public';
         });
       }).not.toThrow();
     });
@@ -387,7 +387,7 @@ describe('Error Tracking Service (Vite Version)', () => {
         ErrorTrackingService.captureError(new Error('Test'), {
           errorType: 'system',
           severity: 'low',
-          privacyLevel: 'public'
+          privacyLevel: 'public';
         });
       }).not.toThrow();
     });
@@ -412,7 +412,7 @@ describe('Error Tracking Service (Vite Version)', () => {
       ErrorTrackingService.captureError(error, {
         errorType: 'system',
         severity: 'medium',
-        privacyLevel: 'sensitive'
+        privacyLevel: 'sensitive';
       }, context);
 
       expect(Sentry.captureException).toHaveBeenCalledWith(error);
@@ -443,7 +443,7 @@ describe('Error Tracking Service (Vite Version)', () => {
         errorType: 'network',
         severity: 'high',
         feature: 'crisis-detection',
-        privacyLevel: 'sensitive'
+        privacyLevel: 'sensitive';
       };
 
       ErrorTrackingService.captureError(error, context);

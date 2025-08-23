@@ -1,5 +1,5 @@
 // AES-256 encryption service for HIPAA-compliant data protection
-// Implements client-side encryption for sensitive mental health data
+// Implements client-side encryption for sensitive mental health data;
 
 export interface EncryptionConfig {
   algorithm: string;
@@ -26,24 +26,24 @@ export interface DataClassification {
   hipaaCompliant: boolean;
 }
 
-// Default encryption configuration
+// Default encryption configuration;
 const DEFAULT_CONFIG: EncryptionConfig = {
   algorithm: 'AES-GCM',
   keyLength: 256,       // AES-256
   ivLength: 12,         // 96 bits for GCM
   tagLength: 16,        // 128 bits for authentication
   iterations: 100000,   // PBKDF2 iterations
-  hashAlgorithm: 'SHA-256'
+  hashAlgorithm: 'SHA-256';
 };
 
-// Data classification rules for different types of sensitive data
+// Data classification rules for different types of sensitive data;
 const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
   // Safety plans contain highly sensitive personal crisis information
   'safetyPlan': {
     level: 'restricted',
     category: 'health',
     retention: 2555,      // 7 years (HIPAA requirement)
-    hipaaCompliant: true
+    hipaaCompliant: true;
   },
   
   // Mood analysis contains personal health information
@@ -51,7 +51,7 @@ const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
     level: 'restricted',
     category: 'health',
     retention: 2555,
-    hipaaCompliant: true
+    hipaaCompliant: true;
   },
   
   // User tokens for authentication
@@ -59,7 +59,7 @@ const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
     level: 'confidential',
     category: 'personal',
     retention: 90,
-    hipaaCompliant: false
+    hipaaCompliant: false;
   },
   
   // User ID for identification
@@ -67,7 +67,7 @@ const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
     level: 'confidential',
     category: 'personal',
     retention: 90,
-    hipaaCompliant: false
+    hipaaCompliant: false;
   },
   
   // Chat messages may contain health information
@@ -75,14 +75,14 @@ const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
     level: 'restricted',
     category: 'health',
     retention: 1095,      // 3 years
-    hipaaCompliant: true
+    hipaaCompliant: true;
   },
   
   'peerChatHistory': {
     level: 'restricted',
     category: 'communication',
     retention: 1095,
-    hipaaCompliant: true
+    hipaaCompliant: true;
   },
   
   // Crisis-specific data requires highest protection
@@ -90,14 +90,14 @@ const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
     level: 'restricted',
     category: 'crisis',
     retention: 2555,
-    hipaaCompliant: true
+    hipaaCompliant: true;
   },
   
   'last_crisis_error': {
     level: 'restricted',
     category: 'crisis',
     retention: 2555,
-    hipaaCompliant: true
+    hipaaCompliant: true;
   },
   
   // User stats and gamification data
@@ -105,7 +105,7 @@ const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
     level: 'internal',
     category: 'analytics',
     retention: 365,
-    hipaaCompliant: false
+    hipaaCompliant: false;
   },
   
   // Accessibility preferences
@@ -113,7 +113,7 @@ const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
     level: 'internal',
     category: 'personal',
     retention: 365,
-    hipaaCompliant: false
+    hipaaCompliant: false;
   },
   
   // Content filters
@@ -121,7 +121,7 @@ const DATA_CLASSIFICATIONS: Record<string, DataClassification> = {
     level: 'internal',
     category: 'personal',
     retention: 365,
-    hipaaCompliant: false
+    hipaaCompliant: false;
   }
 };
 
@@ -139,11 +139,11 @@ class EncryptionService {
    * Check if the browser supports the required cryptographic operations
    */
   private checkBrowserSupport(): void {
-    this.isSupported = !!(
+    this.isSupported = !!(;
       typeof crypto !== 'undefined' &&
-      crypto.subtle &&
-      typeof crypto.getRandomValues === 'function' &&
-      typeof TextEncoder !== 'undefined' &&
+      crypto.subtle &&;
+      typeof crypto.getRandomValues === 'function' &&;
+      typeof TextEncoder !== 'undefined' &&;
       typeof TextDecoder !== 'undefined'
     );
 
@@ -189,8 +189,8 @@ class EncryptionService {
     const encoder = new TextEncoder();
     const passwordData = encoder.encode(password);
 
-    // Import password as key material
-    const keyMaterial = await crypto.subtle.importKey(
+    // Import password as key material;
+    const keyMaterial = await crypto.subtle.importKey(;
       'raw',
       passwordData,
       'PBKDF2',
@@ -204,12 +204,12 @@ class EncryptionService {
         name: 'PBKDF2',
         salt: salt,
         iterations: this.config.iterations,
-        hash: this.config.hashAlgorithm
+        hash: this.config.hashAlgorithm;
       },
       keyMaterial,
       {
         name: this.config.algorithm,
-        length: this.config.keyLength
+        length: this.config.keyLength;
       },
       false,
       ['encrypt', 'decrypt']
@@ -271,7 +271,7 @@ class EncryptionService {
     return { level: 'internal',
       category: 'personal',
       retention: 90,
-      hipaaCompliant: false
+      hipaaCompliant: false;
      }
 
   /**
@@ -294,25 +294,25 @@ class EncryptionService {
       const encoder = new TextEncoder();
       const dataBytes = encoder.encode(data);
 
-      // Generate random salt and IV
+      // Generate random salt and IV;
       const salt = this.generateRandomBytes(16);
       const iv = this.generateRandomBytes(this.config.ivLength);
 
-      // Get device password and derive encryption key
+      // Get device password and derive encryption key;
       const password = await this.getDevicePassword();
       const cryptoKey = await this.deriveKey(password, salt);
 
-      // Encrypt the data
-      const encryptedData = await crypto.subtle.encrypt(
+      // Encrypt the data;
+      const encryptedData = await crypto.subtle.encrypt(;
         {
           name: this.config.algorithm,
-          iv: iv
+          iv: iv;
         },
         cryptoKey,
         dataBytes
       );
 
-      // Split encrypted data and authentication tag for GCM
+      // Split encrypted data and authentication tag for GCM;
       const encryptedArray = new Uint8Array(encryptedData);
       const tagLength = this.config.tagLength;
       const ciphertext = encryptedArray.slice(0, -tagLength);
@@ -324,7 +324,7 @@ class EncryptionService {
         salt: this.arrayBufferToBase64(salt),
         tag: this.arrayBufferToBase64(tag),
         version: '1.0',
-        algorithm: this.config.algorithm
+        algorithm: this.config.algorithm;
       };
 
       // Log encryption event for audit trail (without sensitive data)
@@ -332,8 +332,9 @@ class EncryptionService {
         key: key,
         algorithm: this.config.algorithm,
         dataSize: data.length,
-        classification: this.getDataClassification(key)
-      });
+        classification: this.getDataClassification(key);
+      };
+  };
 
       return result;
 
@@ -341,7 +342,7 @@ class EncryptionService {
       console.error('Encryption failed:', error);
       this.logSecurityEvent('encryption_failed', {
         key: key,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error';
       });
       throw new Error('Failed to encrypt data');
     }
@@ -356,32 +357,32 @@ class EncryptionService {
     }
 
     try {
-      // Convert Base64 data back to Uint8Array
+      // Convert Base64 data back to Uint8Array;
       const ciphertext = this.base64ToArrayBuffer(encryptedData.data);
       const iv = this.base64ToArrayBuffer(encryptedData.iv);
       const salt = this.base64ToArrayBuffer(encryptedData.salt);
       const tag = this.base64ToArrayBuffer(encryptedData.tag || '');
 
-      // Combine ciphertext and tag for GCM
+      // Combine ciphertext and tag for GCM;
       const combinedData = new Uint8Array(ciphertext.length + tag.length);
       combinedData.set(ciphertext);
       combinedData.set(tag, ciphertext.length);
 
-      // Get device password and derive decryption key
+      // Get device password and derive decryption key;
       const password = await this.getDevicePassword();
       const cryptoKey = await this.deriveKey(password, salt);
 
-      // Decrypt the data
-      const decryptedData = await crypto.subtle.decrypt(
+      // Decrypt the data;
+      const decryptedData = await crypto.subtle.decrypt(;
         {
           name: encryptedData.algorithm,
-          iv: iv
+          iv: iv;
         },
         cryptoKey,
         combinedData
       );
 
-      // Convert decrypted data back to string
+      // Convert decrypted data back to string;
       const decoder = new TextDecoder();
       const result = decoder.decode(decryptedData);
 
@@ -390,7 +391,7 @@ class EncryptionService {
         key: key,
         algorithm: encryptedData.algorithm,
         dataSize: result.length,
-        classification: this.getDataClassification(key)
+        classification: this.getDataClassification(key);
       });
 
       return result;
@@ -399,7 +400,7 @@ class EncryptionService {
       console.error('Decryption failed:', error);
       this.logSecurityEvent('decryption_failed', {
         key: key,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error';
       });
       throw new Error('Failed to decrypt data');
     }
@@ -416,10 +417,10 @@ class EncryptionService {
           encrypted: true,
           ...encryptedData,
           classification: this.getDataClassification(key),
-          timestamp: Date.now()
+          timestamp: Date.now();
         };
-        localStorage.setItem(key, JSON.stringify(storageData));
-      } else {
+        localStorage.setItem(key, JSON.stringify(storageData));;
+  } else {
         // Store non-sensitive data as plain text
         localStorage.setItem(key, value);
       }
@@ -441,7 +442,7 @@ class EncryptionService {
         return null;
       }
 
-      // Try to parse as encrypted data
+      // Try to parse as encrypted data;
       let parsedData: any;
       try {
         parsedData = JSON.parse(storedValue);
@@ -458,7 +459,7 @@ class EncryptionService {
           salt: parsedData.salt,
           tag: parsedData.tag,
           version: parsedData.version,
-          algorithm: parsedData.algorithm
+          algorithm: parsedData.algorithm;
         };
         
         return await this.decrypt(encryptedData, key);
@@ -483,7 +484,7 @@ class EncryptionService {
     // Log data deletion for audit trail
     this.logSecurityEvent('data_deleted', {
       key: key,
-      classification: classification
+      classification: classification;
     });
 
     localStorage.removeItem(key);
@@ -574,8 +575,8 @@ class EncryptionService {
     for (const key of keysToMigrate) {
       const migrated = await this.migrateSingleKey(key);
       if (migrated) {
-        migratedCount++;
-      } else {
+        migratedCount++;;
+  } else {
         failedCount++;
       }
     }
@@ -587,7 +588,7 @@ class EncryptionService {
       migratedCount,
       failedCount,
       migrationTime,
-      totalKeys: localStorage.length
+      totalKeys: localStorage.length;
     });
 
     console.log(`Data migration completed: ${migratedCount} keys migrated, ${failedCount} failed in ${migrationTime}ms`);
@@ -604,8 +605,8 @@ class EncryptionService {
       try {
         const value = await this.secureGetItem(key);
         if (value !== null) {
-          results.valid++;
-        } else {
+          results.valid++;;
+  } else {
           results.invalid++;
           results.errors.push(`Failed to decrypt data for key: ${key}`);
         }
@@ -629,7 +630,7 @@ class EncryptionService {
     this.keyCache.clear();
 
     this.logSecurityEvent('encryption_keys_cleared', {
-      keysClearedCount: this.keyCache.size
+      keysClearedCount: this.keyCache.size;
     });
   }
 
@@ -674,9 +675,9 @@ class EncryptionService {
       details: {
         ...details,
         userAgent: navigator.userAgent,
-        url: window.location.href
+        url: window.location.href;
       },
-      severity: 'info' as const
+      severity: 'info' as const;
     };
 
     // Store in localStorage for development/audit
@@ -781,12 +782,12 @@ class EncryptionService {
     }
 }
 
-// Singleton instance
+// Singleton instance;
 let encryptionServiceInstance: EncryptionService | null = null;
 
 /**
  * Get the singleton encryption service instance
- */
+ */;
 export const getEncryptionService = (): EncryptionService => {
   if (!encryptionServiceInstance) {
     encryptionServiceInstance = new EncryptionService();
@@ -796,7 +797,7 @@ export const getEncryptionService = (): EncryptionService => {
 
 /**
  * React hook for using the encryption service
- */
+ */;
 export const useEncryption = () => {
   const service = getEncryptionService();
 
@@ -829,7 +830,7 @@ export const useEncryption = () => {
     migrateData: () => service.migrateExistingData(),
     validateIntegrity: () => service.validateDataIntegrity(),
     getStats: () => service.getEncryptionStats(),
-    checkHIPAACompliance: () => service.performHIPAAComplianceCheck()
+    checkHIPAACompliance: () => service.performHIPAAComplianceCheck();
   };
 
 export default EncryptionService;
