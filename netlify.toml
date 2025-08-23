@@ -1,17 +1,11 @@
 # Netlify Configuration for Astral Core Mental Health Platform
 
 [build]
-  # Build command
   command = "npm run build"
-  
-  # Directory to deploy (Vite outputs to dist)
   publish = "dist"
-  
-  # Node version for builds
-  environment = { NODE_VERSION = "18" }
 
 [build.environment]
-  # Ensure production build
+  NODE_VERSION = "18"
   NODE_ENV = "production"
 
 # Redirect all routes to index.html for SPA routing
@@ -30,46 +24,42 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    # Security headers
-    X-Frame-Options = "DENY"
-    X-Content-Type-Options = "nosniff"
-    X-XSS-Protection = "1; mode=block"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    
-    # Permissions Policy for mental health app
-    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+    "X-Frame-Options" = "DENY"
+    "X-Content-Type-Options" = "nosniff"
+    "X-XSS-Protection" = "1; mode=block"
+    "Referrer-Policy" = "strict-origin-when-cross-origin"
+    "Permissions-Policy" = "camera=(), microphone=(), geolocation=(), payment=()"
 
 [[headers]]
   for = "/*.js"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    "Cache-Control" = "public, max-age=31536000, immutable"
 
 [[headers]]
   for = "/*.css"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    "Cache-Control" = "public, max-age=31536000, immutable"
 
 [[headers]]
   for = "/assets/*"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    "Cache-Control" = "public, max-age=31536000, immutable"
 
 [[headers]]
   for = "/index.html"
   [headers.values]
-    Cache-Control = "no-cache, no-store, must-revalidate"
+    "Cache-Control" = "no-cache, no-store, must-revalidate"
 
-# Service Worker headers
 [[headers]]
   for = "/sw.js"
   [headers.values]
-    Cache-Control = "no-cache, no-store, must-revalidate"
-    Service-Worker-Allowed = "/"
+    "Cache-Control" = "no-cache, no-store, must-revalidate"
+    "Service-Worker-Allowed" = "/"
 
 [[headers]]
   for = "/sw-*.js"
   [headers.values]
-    Cache-Control = "no-cache, no-store, must-revalidate"
+    "Cache-Control" = "no-cache, no-store, must-revalidate"
 
 # Functions configuration
 [functions]
@@ -85,11 +75,11 @@
   autoLaunch = false
 
 # Context-specific settings
-[context.production]
-  environment = { NODE_ENV = "production" }
+[context.production.environment]
+  NODE_ENV = "production"
 
-[context.deploy-preview]
-  environment = { NODE_ENV = "development" }
+[context.deploy-preview.environment]
+  NODE_ENV = "development"
 
-[context.branch-deploy]
-  environment = { NODE_ENV = "development" }
+[context.branch-deploy.environment]
+  NODE_ENV = "development"
