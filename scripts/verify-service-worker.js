@@ -1,5 +1,6 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 /**
  * Service Worker Build Verification Script
@@ -10,6 +11,10 @@ const path = require('path');
  * 3. Offline pages are available
  * 4. PWA manifest is properly configured
  */
+
+// Get __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const DIST_DIR = path.join(__dirname, '..', 'dist');
 const SW_PATH = path.join(DIST_DIR, 'sw.js');
@@ -239,10 +244,10 @@ function analyzePerformance() {
     }
 }
 
-// Run verification
-if (require.main === module) {
+// Run verification if this is the main module
+if (import.meta.url === `file://${__filename}`) {
     verifyServiceWorker();
     analyzePerformance();
 }
 
-module.exports = { verifyServiceWorker, analyzePerformance };
+export { verifyServiceWorker, analyzePerformance };
