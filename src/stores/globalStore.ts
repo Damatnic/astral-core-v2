@@ -39,7 +39,7 @@ interface GlobalState {
     pageLoadTime: number,
     criticalResourcesLoaded: boolean,
     errorCount: number;
-  }',
+  },
   
   // UI State
   sidebarOpen: boolean,
