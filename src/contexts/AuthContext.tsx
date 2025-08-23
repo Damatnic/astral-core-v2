@@ -445,3 +445,15 @@ export const useLegalConsents = () => {
         getConsentContent,
     };
 };
+            };
+            default: return { title: 'Community Agreement', text: 'Please review our community agreements to continue.'};
+        }
+    }
+
+    return {
+        requiredConsent,
+        allConsentsGiven,
+        acceptConsent,
+        getConsentContent,
+    };
+};

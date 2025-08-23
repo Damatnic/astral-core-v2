@@ -375,3 +375,6 @@ export const useConnectionStatus = (): string => {
 }
 
 export default useConnectionStatus
+
+
+export default useConnectionStatus

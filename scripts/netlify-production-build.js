@@ -131,26 +131,39 @@ async function build() {
   // Step 6: Generate Service Worker (optional)
   log('\n📦 Step 5: Generating Service Worker...', 'cyan');
   
-  const workboxConfigs = [
-    'workbox-enhanced.js',
-    'workbox-config.js',
-    'workbox-intelligent.js'
-  ];
-  
-  let swGenerated = false;
-  for (const config of workboxConfigs) {
-    const configPath = path.join(process.cwd(), config);
-    if (fs.existsSync(configPath)) {
-      swGenerated = safeExec(
-        `npx workbox-cli generateSW ${config}`,
-        `Generate SW with ${config}`
-      ).success;
-      if (swGenerated) break;
+  // Check if service worker already exists in dist
+  const existingSW = path.join(distDir, 'sw.js');
+  if (fs.existsSync(existingSW)) {
+    log('✓ Service Worker already exists in dist', 'green');
+  } else {
+    // Service worker generation is optional - skip for now to avoid interactive prompts
+    log('⚠️  Service Worker generation skipped (not critical for deployment)', 'yellow');
+    
+    // Create a minimal service worker as fallback
+    const minimalSW = `
+// Minimal Service Worker for Astral Core Mental Health Platform
+self.addEventListener('install', (event) => {
+  console.log('Service Worker installed');
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  console.log('Service Worker activated');
+  event.waitUntil(self.clients.claim());
+});
+
+self.addEventListener('fetch', (event) => {
+  // Let network handle all requests for now
+  event.respondWith(fetch(event.request));
+});
+`;
+    
+    try {
+      fs.writeFileSync(existingSW, minimalSW);
+      log('✓ Created minimal service worker fallback', 'green');
+    } catch (error) {
+      log('⚠️  Could not create service worker fallback', 'yellow');
     }
-  }
-  
-  if (!swGenerated) {
-    log('⚠️  Service Worker generation skipped', 'yellow');
   }
   
   // Step 7: Copy critical files

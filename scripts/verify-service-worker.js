@@ -251,3 +251,7 @@ if (import.meta.url === `file://${__filename}`) {
 }
 
 export { verifyServiceWorker, analyzePerformance };
+    analyzePerformance();
+}
+
+export { verifyServiceWorker, analyzePerformance };

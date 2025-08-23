@@ -76,3 +76,4 @@ export const WebAuthSession={
     return { accessToken: process.env.REACT_APP_TOKEN || "default-token" };
   }
 };
+};

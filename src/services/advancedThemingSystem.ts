@@ -708,3 +708,4 @@ export const useTheme = (): void => {
 
 // Export default theme for initial load
 export const DEFAULT_THEME = THERAPEUTIC_THEMES['calm-sanctuary'];
+export const DEFAULT_THEME = THERAPEUTIC_THEMES['calm-sanctuary'];

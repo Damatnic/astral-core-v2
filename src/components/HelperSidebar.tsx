@@ -245,3 +245,13 @@ const HelperSidebar: React.FC<HelperSidebarProps> = ({
 
 HelperSidebar.displayName = "HelperSidebar";
 export default HelperSidebar;
+            <span className="hint-text">Swipe left or tap outside to close</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+HelperSidebar.displayName = "HelperSidebar";
+export default HelperSidebar;

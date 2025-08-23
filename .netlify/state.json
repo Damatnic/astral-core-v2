@@ -1,0 +1,20 @@
+{
+	"geolocation": {
+		"data": {
+			"city": "Waukesha",
+			"country": {
+				"code": "US",
+				"name": "United States"
+			},
+			"subdivision": {
+				"code": "WI",
+				"name": "Wisconsin"
+			},
+			"timezone": "America/Chicago",
+			"latitude": 42.9516,
+			"longitude": -88.2963,
+			"postalCode": "53189"
+		},
+		"timestamp": 1755122499269
+	}
+}

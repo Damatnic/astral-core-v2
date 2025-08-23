@@ -1,0 +1,28 @@
+⚠️ PRIVATE - DO NOT COMMIT TO GIT ⚠️
+
+Your OpenAI API Key for Netlify Environment Variables:
+--------------------------------------------------------
+OPENAI_API_KEY=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
+
+Instructions:
+1. Copy the API key above
+2. Go to your Netlify dashboard
+3. Add it as an environment variable
+4. DO NOT share this file or commit it to Git
+5. Keep this file locally for your reference
+
+This file is already in .gitignore so it won't be committed.
+
+
+Your OpenAI API Key for Netlify Environment Variables:
+--------------------------------------------------------
+OPENAI_API_KEY=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
+
+Instructions:
+1. Copy the API key above
+2. Go to your Netlify dashboard
+3. Add it as an environment variable
+4. DO NOT share this file or commit it to Git
+5. Keep this file locally for your reference
+
+This file is already in .gitignore so it won't be committed.

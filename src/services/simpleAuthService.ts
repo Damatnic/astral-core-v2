@@ -465,3 +465,159 @@ export const simpleAuthService = new SimpleAuthService();
 
 // Export for convenience
 export default simpleAuthService;
+      };
+    } catch (error) {
+      logger.error('Profile update failed:', error, 'SimpleAuthService');
+      return {
+        success: false,
+        error: 'Failed to update profile'
+      };
+    }
+  }
+
+  /**
+   * Validate email format
+   */
+  private isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  /**
+   * Request password reset
+   */
+  async requestPasswordReset(email: string): Promise<AuthResponse> {
+    try {
+      // Validate email
+      if (!email || !this.isValidEmail(email)) {
+        return {
+          success: false,
+          error: 'Please provide a valid email address'
+        };
+      }
+
+      // In production, this would send a reset email via API
+      // const response = await fetch('/api/auth/reset-password', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ email })
+      // });
+
+      // For demo purposes, generate a reset token
+      const resetToken = Math.random().toString(36).substring(2, 15);
+      const resetData = {
+        email,
+        token: resetToken,
+        expiry: Date.now() + 3600000 // 1 hour expiry
+      };
+
+      // Store reset token temporarily
+      localStorage.setItem('password_reset_' + email, JSON.stringify(resetData));
+
+      logger.info('Password reset requested', { email }, 'SimpleAuthService');
+
+      // In production, this would send an email
+      console.log(`Password reset link: /reset-password?token=${resetToken}&email=${email}`);
+
+      return {
+        success: true,
+        message: 'Password reset instructions have been sent to your email'
+      };
+    } catch (error) {
+      logger.error('Password reset request failed:', error, 'SimpleAuthService');
+      return {
+        success: false,
+        error: 'Failed to process password reset request'
+      };
+    }
+  }
+
+  /**
+   * Reset password with token
+   */
+  async resetPassword(email: string, token: string, newPassword: string): Promise<AuthResponse> {
+    try {
+      // Validate inputs
+      if (!email || !token || !newPassword) {
+        return {
+          success: false,
+          error: 'Missing required information'
+        };
+      }
+
+      // Check password strength
+      if (newPassword.length < 8) {
+        return {
+          success: false,
+          error: 'Password must be at least 8 characters long'
+        };
+      }
+
+      // Verify reset token
+      const resetDataStr = localStorage.getItem('password_reset_' + email);
+      if (!resetDataStr) {
+        return {
+          success: false,
+          error: 'Invalid or expired reset token'
+        };
+      }
+
+      const resetData = JSON.parse(resetDataStr);
+      if (resetData.token !== token || resetData.expiry < Date.now()) {
+        return {
+          success: false,
+          error: 'Invalid or expired reset token'
+        };
+      }
+
+      // In production, this would update the password via API
+      // const response = await fetch('/api/auth/reset-password/confirm', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ email, token, newPassword })
+      // });
+
+      // Clear reset token
+      localStorage.removeItem('password_reset_' + email);
+
+      logger.info('Password reset successful', { email }, 'SimpleAuthService');
+
+      return {
+        success: true,
+        message: 'Password has been reset successfully'
+      };
+    } catch (error) {
+      logger.error('Password reset failed:', error, 'SimpleAuthService');
+      return {
+        success: false,
+        error: 'Failed to reset password'
+      };
+    }
+  }
+
+  /**
+   * Subscribe to auth state changes
+   */
+  onAuthStateChange(callback: (user: User | null) => void): () => void {
+    const handleLogin = (event: CustomEvent) => callback(event.detail);
+    const handleLogout = () => callback(null);
+    const handleRegister = (event: CustomEvent) => callback(event.detail);
+    
+    window.addEventListener('auth:login', handleLogin as EventListener);
+    window.addEventListener('auth:logout', handleLogout);
+    window.addEventListener('auth:register', handleRegister as EventListener);
+    
+    // Return unsubscribe function
+    return () => {
+      window.removeEventListener('auth:login', handleLogin as EventListener);
+      window.removeEventListener('auth:logout', handleLogout);
+      window.removeEventListener('auth:register', handleRegister as EventListener);
+    };
+  }
+}
+
+// Export singleton instance
+export const simpleAuthService = new SimpleAuthService();
+
+// Export for convenience
+export default simpleAuthService;
