@@ -1,6 +1,6 @@
 # 🌟 Astral Core Mental Health Platform
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/YOUR-BADGE-ID/deploy-status)](https://app.netlify.com/sites/YOUR-SITE-NAME/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/YOUR-BADGE-ID/deploy-status)](https://app.netlify.com/sites/astral-core-v2/deploys)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18.2+-61DAFB.svg)](https://reactjs.org/)
@@ -32,8 +32,8 @@ Astral Core is a comprehensive mental health support platform that provides AI-p
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/YOUR-USERNAME/astral-core-mental-health.git
-cd astral-core-mental-health
+git clone https://github.com/Damatnic/astral-core-v2.git
+cd astral-core-v2
 ```
 
 2. Install dependencies:
