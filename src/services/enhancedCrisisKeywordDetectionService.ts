@@ -591,8 +591,7 @@ class EnhancedCrisisKeywordDetectionService {
     else if (immediateRisk >= 50) interventionUrgency = 'medium';
     else if (immediateRisk >= 30) interventionUrgency = 'low';
 
-    return {
-      immediateRisk,
+    return { immediateRisk,
       shortTermRisk,
       longTermRisk,
       interventionUrgency,
@@ -602,7 +601,7 @@ class EnhancedCrisisKeywordDetectionService {
       triggerIndicators: keywordMatches.map(match => match.keyword),
       timelineAnalysis,
       emotionalProfile
-    }
+     }
 
   /**
    * Analyze emotional crisis patterns with linguistic markers

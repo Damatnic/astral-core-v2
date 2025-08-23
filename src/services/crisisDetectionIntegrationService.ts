@@ -26,8 +26,7 @@ export interface CrisisAnalysisOptions {
       country: string;
       region?: string;
       hasGeolocation: boolean;
-    };
-}
+    }
 
 export interface CrisisAnalysisResult {
   isCrisis: boolean;
@@ -175,12 +174,11 @@ export class CrisisDetectionIntegrationService {
       })
       .filter((action, index, array) => array.indexOf(action) === index); // Remove duplicates
     
-    return {
-      isInCrisis: crisisResults.length > 0,
+    return { isInCrisis: crisisResults.length > 0,
       highestSeverity,
       escalationTriggered,
       recommendedActions
-    }
+     }
 
   /**
    * Process emergency escalation for safety plan events

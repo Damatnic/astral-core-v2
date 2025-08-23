@@ -443,14 +443,13 @@ class MultilingualCrisisDetectionService {
       confidence = 0.1;
     }
     
-    return {
-      riskLevel: result.riskLevel,
+    return { riskLevel: result.riskLevel,
       confidence,
       triggers: result.detectedKeywords,
       culturalRecommendations: [result.recommendedResponse],
       detectedLanguage,
       languageConfidence: 0.9 // Simplified for now
-    }
+     }
 
   /**
    * Simple language detection (mock implementation)

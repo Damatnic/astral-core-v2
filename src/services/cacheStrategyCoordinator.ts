@@ -524,11 +524,10 @@ export class CacheStrategyCoordinator {
 
     const storageInfo = await intelligentCache.getStorageInfo();
 
-    return {
-      strategies: strategyStats,
+    return { strategies: strategyStats,
       totalEntries,
       storageInfo
-    }
+     }
 
   /**
    * Handle fetch requests with intelligent strategy selection

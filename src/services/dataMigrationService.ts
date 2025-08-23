@@ -290,11 +290,10 @@ class DataMigrationService {
       recommendations.push('Re-run migration for failed items');
     }
 
-    return {
-      isValid: issues.length === 0,
+    return { isValid: issues.length === 0,
       issues,
       recommendations
-    }
+     }
 
   /**
    * Get migration status and recommendations
@@ -331,14 +330,13 @@ class DataMigrationService {
       urgency = 'medium';
     }
 
-    return {
-      needsMigration: hasUnencryptedSensitiveData,
+    return { needsMigration: hasUnencryptedSensitiveData,
       reason: hasUnencryptedSensitiveData 
         ? 'Unencrypted sensitive data detected'
         : 'All sensitive data is properly encrypted',
       urgency,
       sensitiveKeysFound: sensitiveKeys
-    }
+     }
 
   /**
    * Set up automatic data protection for new data

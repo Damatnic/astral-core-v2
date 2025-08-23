@@ -711,13 +711,12 @@ class CrisisResourceCacheService {
       totalGuides = guideCount;
     }
     
-    return {
-      totalResources,
+    return { totalResources,
       totalGuides,
       memorySize: this.memoryCache.size,
       lastUpdate: this.memoryCache.get('lastUpdate') || 0,
       isOnline: this.isOnline
-    }
+     }
 
   /**
    * Cleanup on destroy

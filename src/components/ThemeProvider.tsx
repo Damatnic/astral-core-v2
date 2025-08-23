@@ -358,10 +358,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     }
   }, []);
 
-  // Mental health specific functions
+    // Mental health specific functions
   const getMoodBasedColors = useCallback((mood: string): Partial<ThemeColors> => {
-          const moodColorMap: Record<string, Partial<ThemeColors>> = {
-        "anxious": { primary: currentColors.calm, background: currentColors.backgroundSecondary },
+    const moodColorMap: Record<string, Partial<ThemeColors>> = {
+      "anxious": { primary: currentColors.calm, background: currentColors.backgroundSecondary },
       "depressed": { primary: currentColors.hope, secondary: currentColors.support },
       "stressed": { background: currentColors.calm, surface: currentColors.surfaceSecondary },
       "energetic": { primary: currentColors.growth, secondary: currentColors.hope },
@@ -369,7 +369,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       "motivated": { primary: currentColors.growth, secondary: currentColors.hope }
     };
 
-    return moodColorMap[mood.toLowerCase()] || {}, [currentColors]);
+    return moodColorMap[mood.toLowerCase()] || {};
+  }, [currentColors]);
 
   const getCrisisSafeColors = useCallback((): ThemeColors => {
     return THERAPEUTIC_THEMES["crisis-safe"].colors[currentColorMode];

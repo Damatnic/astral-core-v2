@@ -475,8 +475,7 @@ class CoreWebVitalsService {
     const emergencyButtonMetrics = crisisMetrics.filter(m => m.id.includes('emergency-response'));
     const crisisPageMetrics = crisisMetrics.filter(m => m.name === 'LCP' && m.isCrisisSituation);
 
-    return {
-      timeToFirstCrisisResource: crisisResourceMetrics.length > 0 
+    return { timeToFirstCrisisResource: crisisResourceMetrics.length > 0 
         ? Math.min(...crisisResourceMetrics.map(m => m.value))
         : 0,
       crisisPageLoadTime: crisisPageMetrics.length > 0
@@ -485,7 +484,7 @@ class CoreWebVitalsService {
       emergencyButtonResponseTime: emergencyButtonMetrics.length > 0
         ? Math.max(...emergencyButtonMetrics.map(m => m.value))
         : 0
-    }
+     }
 
   /**
    * Send report to analytics endpoint
@@ -518,8 +517,7 @@ class CoreWebVitalsService {
    * Get current performance summary
    */
   public getPerformanceSummary() {
-    return {
-      totalMetrics: this.metrics.length,
+    return { totalMetrics: this.metrics.length,
       goodMetrics: this.metrics.filter(m => m.rating === 'good').length,
       needsImprovementMetrics: this.metrics.filter(m => m.rating === 'needs-improvement').length,
       poorMetrics: this.metrics.filter(m => m.rating === 'poor').length,
@@ -527,7 +525,7 @@ class CoreWebVitalsService {
       deviceType: this.deviceType,
       connectionType: this.connectionType,
       sessionId: this.sessionId
-    }
+     }
 
   /**
    * Stop monitoring

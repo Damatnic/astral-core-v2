@@ -324,7 +324,6 @@ export const createMobileFormValidator = (rules: Record<string, any>) => {
       isValid: errors.length === 0,
       errors,
     };
-};
 
 // Common validation patterns
 export const commonValidationRules = {

@@ -592,7 +592,7 @@ class AstralCoreCrisisResourceCache {
    * Get cache statistics
    */
   getStats(): CacheStats {
-    return { ...this.stats }
+    return { ...this.stats  }
 
   /**
    * Clear all cached resources

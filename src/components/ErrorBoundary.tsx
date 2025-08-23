@@ -144,7 +144,8 @@ interface ErrorReport {
     isCrisisContext: boolean;
     route: string;
     userState?: any;
-  }
+  };
+}
 
 /**
  * Comprehensive Error Boundary Component

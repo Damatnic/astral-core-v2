@@ -178,13 +178,12 @@ this.handleAppBlur()
    * Get current PWA status
    */
   public getStatus(): PWAStatus {
-    return {
-      isInstallable: this.installPrompt !== null,
+    return { isInstallable: this.installPrompt !== null,
       isInstalled: this.isStandalone(),
       isOffline: this.isOffline,
       isStandalone: this.isStandalone(),
       supportsPWA: this.supportsPWA()
-    }
+     }
 
   /**
    * Check if app is running in standalone mode

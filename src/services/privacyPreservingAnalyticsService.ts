@@ -299,8 +299,7 @@ class PrivacyPreservingAnalyticsService {
     // Calculate confidence interval (simplified)
     const margin = 1.96 * Math.sqrt(successRate * (100 - successRate) / culturalData.length);
     
-    return {
-      language,
+    return { language,
       culturalGroup,
       totalInterventions: culturalData.length,
       averageRiskReduction,
@@ -313,7 +312,7 @@ class PrivacyPreservingAnalyticsService {
         Math.min(100, successRate + margin)
       ],
       privacyNoise: this.EPSILON
-    }
+     }
 
   /**
    * Generate global metrics with privacy preservation
@@ -351,12 +350,11 @@ class PrivacyPreservingAnalyticsService {
       culturalDistribution[culture] = this.addDifferentialPrivacyNoise(count, 1.0);
     }
 
-    return {
-      totalInterventions,
+    return { totalInterventions,
       averageEffectiveness: globalEffectiveness,
       languageDistribution,
       culturalDistribution
-    }
+     }
 
   /**
    * Generate cultural comparisons
@@ -560,12 +558,11 @@ class PrivacyPreservingAnalyticsService {
     dataPoints: number;
     retentionCompliance: boolean;
   } {
-    return {
-      budgetUsed: this.privacyBudgetUsed,
+    return { budgetUsed: this.privacyBudgetUsed,
       budgetRemaining: Math.max(0, 10.0 - this.privacyBudgetUsed),
       dataPoints: this.analyticsData.length,
       retentionCompliance: true
-    }
+     }
 
   /**
    * Reset privacy budget (should be done periodically)

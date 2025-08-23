@@ -617,7 +617,7 @@ export class IntelligentCachingManager {
    * Get user metrics for analytics
    */
   public getUserMetrics(): UserBehaviorMetrics {
-    return { ...this.userMetrics }
+    return { ...this.userMetrics  }
 
   /**
    * Clean up old caches and optimize storage

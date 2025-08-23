@@ -352,12 +352,11 @@ class EnhancedCrisisDetectionIntegrationService {
       immediateRisk
     );
 
-    return {
-      immediateRisk: Math.min(100, immediateRisk),
+    return { immediateRisk: Math.min(100, immediateRisk),
       shortTermRisk,
       longTermRisk,
       interventionUrgency
-    }
+     }
 
   /**
    * Get analysis weights based on prioritization method
@@ -425,12 +424,11 @@ class EnhancedCrisisDetectionIntegrationService {
                    (safeAiConfidence * weights.ai) + 
                    (culturalConfidence * (weights.cultural || 0));
 
-    return {
-      keyword: keywordConfidence,
+    return { keyword: keywordConfidence,
       ai: safeAiConfidence,
       cultural: culturalAnalysis ? culturalConfidence : undefined,
       overall
-    }
+     }
 
   /**
    * Consolidate intervention recommendations from all methods
@@ -531,8 +529,7 @@ class EnhancedCrisisDetectionIntegrationService {
     const aiEmotion = aiAnalysis.emotionalState;
     const keywordEmotion = keywordAnalysis.riskAssessment.emotionalProfile;
 
-    return {
-      primaryEmotion: aiEmotion.primaryEmotion || keywordEmotion.primaryEmotion,
+    return { primaryEmotion: aiEmotion.primaryEmotion || keywordEmotion.primaryEmotion,
       intensity: Math.max(aiEmotion.intensity, keywordEmotion.intensity),
       stability: Math.min(1 - aiEmotion.intensity, keywordEmotion.stability),
       crisisAlignment: Math.max(
@@ -540,7 +537,7 @@ class EnhancedCrisisDetectionIntegrationService {
         // Calculate crisis alignment from AI emotion data
         this.calculateCrisisAlignmentFromAI(aiEmotion)
       )
-    }
+     }
 
   /**
    * Calculate crisis alignment from AI emotional state

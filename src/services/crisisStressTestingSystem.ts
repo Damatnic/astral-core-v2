@@ -883,11 +883,10 @@ export class CrisisStressTestingSystem {
     // Verify data integrity during failover
     const dataIntegrity = await this.verifyDataIntegrity(test.component);
     
-    return {
-      fallbackWorked,
+    return { fallbackWorked,
       userExperience,
       dataIntegrity
-    }
+     }
 
   /**
    * Test if the fallback mechanism activates correctly

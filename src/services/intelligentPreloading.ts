@@ -66,14 +66,13 @@ export class IntelligentPreloadingEngine {
    * Initialize emotional state tracking
    */
   private initializeEmotionalState(): EmotionalStateIndicators {
-    return {
-      crisisKeywords: [],
+    return { crisisKeywords: [],
       helpSeekingBehavior: false,
       rapidNavigation: false,
       timeSpentOnCrisisResources: 0,
       repeatVisitsToSameContent: 0,
       urgentLanguageDetected: false
-    }
+     }
 
   /**
    * Initialize machine learning prediction models

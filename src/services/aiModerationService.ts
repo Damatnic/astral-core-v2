@@ -155,8 +155,8 @@ class AIModerationService {
         }
     }
     
-    return { safe: true }
-  
+    return { safe: true  }
+
   /**
    * Generate a safe response for filtered content
    */

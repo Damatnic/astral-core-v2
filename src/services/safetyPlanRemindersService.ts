@@ -488,14 +488,13 @@ class SafetyPlanRemindersService {
    * Get engagement metrics for a plan
    */
   async getEngagementMetrics(planId: string): Promise<unknown> {
-    return {
-      planId,
+    return { planId,
       totalInteractions: 45,
       responseRate: 0.87,
       averageResponseTime: 300, // 5 minutes
       effectivenessScore: 0.82,
       lastInteraction: new Date(Date.now() - 2 * 60 * 60 * 1000) // 2 hours ago
-    }
+     }
 
   /**
    * Create quick access reminder
@@ -711,37 +710,34 @@ class SafetyPlanRemindersService {
    * Update safety plan
    */
   async updatePlan(planId: string, updates: any): Promise<unknown> {
-    return {
-      planId,
+    return { planId,
       updates,
       version: 2,
       updatedAt: new Date(),
       changelog: Object.keys(updates)
-    }
+     }
 
   /**
    * Get sync status of plan
    */
   async getSyncStatus(planId: string): Promise<unknown> {
-    return {
-      planId,
+    return { planId,
       lastSynced: new Date(Date.now() - 5 * 60 * 1000), // 5 minutes ago
       syncStatus: 'up_to_date',
       pendingChanges: 0,
       conflicts: []
-    }
+     }
 
   /**
    * Check review status of plan
    */
   async checkReviewStatus(planId: string): Promise<unknown> {
-    return {
-      planId,
+    return { planId,
       reviewStatus: 'current',
       lastReviewed: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000), // 14 days ago
       nextReviewDue: new Date(Date.now() + 16 * 24 * 60 * 60 * 1000), // 16 days from now
       reviewRequired: false
-    }
+     }
 
   /**
    * Get version history of plan

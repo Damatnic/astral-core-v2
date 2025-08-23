@@ -204,8 +204,7 @@ class AccessibilityService {
    * Get default accessibility settings
    */
   private getDefaultSettings(): AccessibilitySettings {
-    return {
-      // Visual accessibility
+    return { // Visual accessibility
       highContrast: false,
       reducedMotion: false,
       increasedTextSize: 1.0,
@@ -239,7 +238,7 @@ class AccessibilityService {
       readingAssistance: false,
       contextualHelp: true,
       errorSummaryEnabled: true
-    }
+     }
 
   /**
    * Detect system accessibility preferences
@@ -1088,7 +1087,7 @@ class AccessibilityService {
    * Get current settings
    */
   public getSettings(): AccessibilitySettings {
-    return { ...this.settings }
+    return { ...this.settings  }
 
   /**
    * Get available keyboard shortcuts

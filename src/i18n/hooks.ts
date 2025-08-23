@@ -55,7 +55,9 @@ export const useI18n = () => {
     tWithNamespace: (namespace: string, key: string, options?: any) => {
       return i18n.t(`${namespace}:${key}`, options);
     }
-  }
+  };
+}
+
 /**
  * Hook specifically for crisis-related translations and cultural context
  */
@@ -92,6 +94,7 @@ export const useCrisisI18n = () => {
     prefersFormalCommunication: culturalContext.preferredCommunicationStyle === "formal",
     respondsToBrotherlyApproach: culturalContext.preferredCommunicationStyle === "familial"
   };
+}
 
 /**
  * Hook for accessibility-aware translations
@@ -127,5 +130,6 @@ export const useAccessibilityI18n = () => {
       return urgencyPrefix + message;
     }
   };
+}
 
 export default useI18n;

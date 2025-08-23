@@ -86,7 +86,7 @@ class CulturalContextService {
    * Get all supported cultural contexts
    */
   getAllCulturalContexts(): Record<string, CulturalContext> {
-    return { ...this.culturalContexts }
+    return { ...this.culturalContexts  }
 
   /**
    * Get cultural regions list

@@ -281,6 +281,7 @@ const initializeTranslations = async () => {
 
 // Initialize translations on startup
 initializeTranslations().catch(error => {
+  console.error('Failed to initialize translations:', error);
 });
 
 // Cultural context utilities

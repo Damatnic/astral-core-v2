@@ -74,8 +74,7 @@ interface CacheDB extends DBSchema {
       usage: number;
       timestamp: number;
       warningThreshold: number;
-    };
-}
+    }
 
 export class IntelligentCachingService {
   private db: IDBPDatabase<CacheDB> | null = null;

@@ -274,8 +274,7 @@ class PeerSupportNetworkService {
     // Estimate wait time based on peer's current load
     const estimatedWaitTime = this.calculateEstimatedWaitTime(peer);
 
-    return {
-      peerId: peer.id,
+    return { peerId: peer.id,
       compatibilityScore,
       culturalMatch,
       languageMatch,
@@ -284,7 +283,7 @@ class PeerSupportNetworkService {
       safetyScore,
       matchReason,
       estimatedWaitTime
-    }
+     }
 
   /**
    * Calculate experience area match score

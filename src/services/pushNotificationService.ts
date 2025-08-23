@@ -93,10 +93,9 @@ class PushNotificationService {
     const alertTypes = ['crisis_immediate', 'crisis_warning', 'crisis_support'];
     this.notificationPreferences.set(`${userId}_crisis_alerts`, alertTypes);
 
-    return {
-      subscribed: true,
+    return { subscribed: true,
       alertTypes
-    }
+     }
 
   /**
    * Send crisis notification to user
@@ -685,12 +684,11 @@ class PushNotificationService {
     isSubscribed: boolean;
     subscription: PushSubscription | null;
   } {
-    return {
-      isSupported: this.isSupported,
+    return { isSupported: this.isSupported,
       hasPermission: this.permissionStatus === 'granted',
       isSubscribed: !!this.subscription,
       subscription: this.subscription
-    }
+     }
 
   /**
    * Utility: Convert URL-safe base64 to Uint8Array

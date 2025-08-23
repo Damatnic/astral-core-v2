@@ -610,7 +610,7 @@ class NotificationService {
    * Get notification preferences
    */
   getPreferences(): NotificationPreferences {
-    return { ...this.preferences }
+    return { ...this.preferences  }
 
   /**
    * Show crisis notification

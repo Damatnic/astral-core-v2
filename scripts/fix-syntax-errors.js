@@ -25,6 +25,11 @@ const fixes = [
     pattern: /export\s+const\s+(\w+)\s*=\s*([^;]+);\s*export\s+const\s+\1\s*=\s*\2;/g,
     replacement: 'export const $1 = $2;'
   },
+  // Fix missing semicolon and closing brace before function declarations
+  {
+    pattern: /return\s+\{\s*([^}]+)\s*\}\s*\n\s*\/\*\*/g,
+    replacement: 'return { $1 };\n  }\n\n  /**'
+  },
   // Fix extra closing braces
   {
     pattern: /}\s*;\s*}/g,

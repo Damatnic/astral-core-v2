@@ -583,12 +583,11 @@ class CulturalCrisisDetectionService {
       adjustments.reduce((sum, adj) => sum + adj.confidence, 0) / Math.max(1, adjustments.length)
     );
 
-    return {
-      originalRisk,
+    return { originalRisk,
       adjustedRisk: Math.round(adjustedRisk),
       culturalConfidence: Math.max(this.MIN_CULTURAL_CONFIDENCE, culturalConfidence),
       adjustmentFactors
-    }
+     }
 
   /**
    * Generate culturally-appropriate interventions
@@ -633,13 +632,12 @@ class CulturalCrisisDetectionService {
     // Language-specific resources
     const languageSpecificResources = this.getLanguageSpecificResources(languageCode);
 
-    return {
-      familyInvolvement,
+    return { familyInvolvement,
       communityApproach,
       religiousConsideration,
       culturalResources,
       languageSpecificResources
-    }
+     }
 
   /**
    * Get cultural resources for specific region

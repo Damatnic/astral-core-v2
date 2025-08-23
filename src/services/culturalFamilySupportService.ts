@@ -455,7 +455,7 @@ class CulturalFamilySupportService {
         break;
     }
 
-    return { contactsToNotify, escalationOrder, culturalProtocols }
+    return { contactsToNotify, escalationOrder, culturalProtocols  }
 
   /**
    * Send crisis notification to family
@@ -648,12 +648,11 @@ class CulturalFamilySupportService {
       notifications.flatMap(n => n.culturalProtocolsActivated)
     )];
 
-    return {
-      supportEngagement,
+    return { supportEngagement,
       familyResponseRate,
       crisisResolutionTime,
       culturalProtocolsUsed
-    }
+     }
 
   /**
    * Get default escalation levels based on cultural context
@@ -711,11 +710,10 @@ class CulturalFamilySupportService {
       decisionMakingProcess = 'community_input';
     }
 
-    return {
-      familyMeetingFormat,
+    return { familyMeetingFormat,
       crisisDisclosureProtocol,
       decisionMakingProcess
-    }
+     }
 
   /**
    * Send notification to family member
@@ -908,12 +906,11 @@ class CulturalFamilySupportService {
       sum + n.notificationsSent.filter(ns => ns.responseStatus === 'responded').length, 0
     );
 
-    return {
-      supportEngagement: familySupport.familyMembers.filter(m => m.consentGiven).length / Math.max(familySupport.familyMembers.length, 1),
+    return { supportEngagement: familySupport.familyMembers.filter(m => m.consentGiven).length / Math.max(familySupport.familyMembers.length, 1),
       familyResponseRate: totalNotifications > 0 ? responsiveNotifications / totalNotifications : 0,
       crisisResolutionTime: notifications.length > 0 ? this.calculateAverageResolutionTime(notifications) : 0,
       culturalProtocolsUsed: [...new Set(notifications.flatMap(n => n.culturalProtocolsActivated))]
-    }
+     }
 
   /**
    * Calculate average crisis resolution time

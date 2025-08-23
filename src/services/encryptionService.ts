@@ -268,12 +268,11 @@ class EncryptionService {
     }
 
     // Default to internal level for unknown keys
-    return {
-      level: 'internal',
+    return { level: 'internal',
       category: 'personal',
       retention: 90,
       hipaaCompliant: false
-    }
+     }
 
   /**
    * Determine if data should be encrypted based on classification
@@ -658,13 +657,12 @@ class EncryptionService {
       }
     }
 
-    return {
-      isSupported: this.isSupported,
+    return { isSupported: this.isSupported,
       encryptedKeys: encryptedKeys.length,
       totalKeys: localStorage.length,
       classifications,
       hipaaCompliantKeys
-    }
+     }
 
   /**
    * Log security events for audit trail

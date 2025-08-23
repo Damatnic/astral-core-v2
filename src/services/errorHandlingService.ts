@@ -667,13 +667,12 @@ class ErrorHandlingService {
    * Get error statistics
    */
   getErrorStats() {
-    return {
-      ...this.errorStats,
+    return { ...this.errorStats,
       byCategory: Object.fromEntries(this.errorStats.byCategory),
       bySeverity: Object.fromEntries(this.errorStats.bySeverity),
       queuedErrors: this.errorQueue.length,
       activeRetries: this.retryHandlers.size
-    }
+     }
 
   /**
    * Clear error history

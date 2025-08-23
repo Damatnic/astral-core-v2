@@ -211,8 +211,7 @@ class AstralCoreErrorService {
     details?: any,
     type: ErrorType = ErrorType.UNKNOWN
   ): AstralCoreError {
-    return {
-      id: this.generateErrorId(),
+    return { id: this.generateErrorId(),
       type,
       severity: this.determineSeverity(code, type),
       code,
@@ -223,7 +222,7 @@ class AstralCoreErrorService {
       recoverable: this.isRecoverable(code, type),
       retryable: this.isRetryable(code, type),
       context: this.getErrorContext(),
-    }
+     }
 
   /**
    * Handle network error
@@ -398,8 +397,7 @@ class AstralCoreErrorService {
     const code = errorObj?.code || errorObj?.name || 'UNKNOWN_ERROR';
     const message = errorObj?.message || 'An unknown error occurred';
 
-    return {
-      id: this.generateErrorId(),
+    return { id: this.generateErrorId(),
       type,
       severity: this.determineSeverity(code, type),
       code,
@@ -411,7 +409,7 @@ class AstralCoreErrorService {
       recoverable: this.isRecoverable(code, type),
       retryable: this.isRetryable(code, type),
       context: this.getErrorContext(),
-    }
+     }
 
   /**
    * Check if error is AstralCoreError

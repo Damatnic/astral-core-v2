@@ -924,7 +924,7 @@ class ScreenReaderService {
    * Get crisis context
    */
   public getCrisisContext(): typeof this.crisisContext {
-    return { ...this.crisisContext }
+    return { ...this.crisisContext  }
 
   /**
    * Announce form validation errors

@@ -154,8 +154,7 @@ class Auth0Service {
    * Transform Auth0 user to app user format
    */
   private transformAuth0User(auth0User: any): User {
-    return {
-      id: auth0User.sub,
+    return { id: auth0User.sub,
       email: auth0User.email,
       name: auth0User.name || auth0User.nickname,
       picture: auth0User.picture,
@@ -163,7 +162,7 @@ class Auth0Service {
       isEmailVerified: auth0User.email_verified,
       createdAt: auth0User.created_at,
       updatedAt: auth0User.updated_at,
-    }
+     }
 
   /**
    * Extract user roles from Auth0 user
