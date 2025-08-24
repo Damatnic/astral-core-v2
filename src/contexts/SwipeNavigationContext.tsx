@@ -1,181 +1,414 @@
-import React, { createContext, useContext, useState(, useCallback, useRef, useEffect ) from 'react';""""'}
-import { useSwipeRef  } from '../hooks/useSwipeGesture';""'
-interface SwipeNavigationContextType { { { {
-  isSidebarOpen: boolean
+/**
+ * Swipe Navigation Context
+ *
+ * Provides swipe gesture navigation functionality for mobile interfaces,
+ * including sidebar management and back navigation.
+ */
+
+import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
+
+export interface SwipeNavigationContextType {
+  // Sidebar state
+  isSidebarOpen: boolean;
+  openSidebar: () => void;
+  closeSidebar: () => void;
+  toggleSidebar: () => void;
+  
+  // Navigation state
+  canSwipeBack: boolean;
+  onSwipeBack: () => void;
+  
+  // Swipe area management
+  registerSwipeArea: (element: HTMLElement) => void;
+  unregisterSwipeArea: (element: HTMLElement) => void;
+  
+  // Gesture settings
+  swipeThreshold: number;
+  setSwipeThreshold: (threshold: number) => void;
+  
+  // Touch state
+  isSwiping: boolean;
+  swipeProgress: number;
+}
+
+const SwipeNavigationContext = createContext<SwipeNavigationContextType | null>(null);
+
+export const useSwipeNavigation = (): SwipeNavigationContextType => {
+  const context = useContext(SwipeNavigationContext);
+  if (!context) {
+    throw new Error('useSwipeNavigation must be used within SwipeNavigationProvider');
+  }
+  return context;
 };
 
-openSidebar: () =} void
-  closeSidebar: () = void,
-  toggleSidebar: () = void,
-  canSwipeBack: boolean;,
-  onSwipeBack: () = void,
-  registerSwipeArea: (element: HTMLElement) = void,
-  unregisterSwipeArea: (element: HTMLElement) = void
-  
-const SwipeNavigationContext = createContext<SwipeNavigationContextType | null>(null)
-export const useSwipeNavigation = () = { const context = useContext(SwipeNavigationContext  ) }
-  if (!context) {
-    throw new Error("useSwipeNavigation must be used within SwipeNavigationProvider') }""'"
-  return context;
-  };
-interface SwipeNavigationProviderProps { { { { children: React.ReactNode
-  onNavigateBack?: () => void
-  currentPath?: string };
+export interface SwipeNavigationProviderProps {
+  children: React.ReactNode;
+  onNavigateBack?: () => void;
+  currentPath?: string;
+  enableSidebar?: boolean;
+  enableBackNavigation?: boolean;
+  defaultSwipeThreshold?: number;
+}
+
 export const SwipeNavigationProvider: React.FC<SwipeNavigationProviderProps> = ({
   children,
   onNavigateBack,
-};
-
-currentPath = "'}) => { const [isSidebarOpen, setIsSidebarOpen] = useState(false);"""'
+  currentPath = '/',
+  enableSidebar = true,
+  enableBackNavigation = true,
+  defaultSwipeThreshold = 50
+}) => {
+  // Sidebar state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
+  // Swipe state
+  const [isSwiping, setIsSwiping] = useState(false);
+  const [swipeProgress, setSwipeProgress] = useState(0);
+  const [swipeThreshold, setSwipeThreshold] = useState(defaultSwipeThreshold);
+  
+  // Refs
   const swipeAreasRef = useRef<Set<HTMLElement>>(new Set());
+  const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
+  const lastTouchRef = useRef<{ x: number; y: number } | null>(null);
+  const swipeDirectionRef = useRef<'left' | 'right' | 'up' | 'down' | null>(null);
 
   // Determine if we can swipe back based on navigation history
-  const canSwipeBack = Boolean(onNavigateBack && currentPath && currentPath !== "/');""'"
-const openSidebar = useCallback(() => {
+  const canSwipeBack = Boolean(
+    enableBackNavigation && 
+    onNavigateBack && 
+    currentPath && 
+    currentPath !== '/'
+  );
+
+  /**
+   * Open sidebar
+   */
+  const openSidebar = useCallback(() => {
+    if (!enableSidebar) return;
+    
     setIsSidebarOpen(true);
-    document.body.style.overflow = "hidden"; // Prevent background scroll, [])"''
-const closeSidebar = useCallback(() =) {
-    setIsSidebarOpen(false  );
-    document.body.style.overflow = ""; // Restore scroll, [])'""'
-const toggleSidebar = useCallback(() =) { if (isSidebarOpen) {
-      closeSidebar() } else { openSidebar() }, [isSidebarOpen, openSidebar, closeSidebar]};
-const onSwipeBack = useCallback(() =) { if (canSwipeBack && onNavigateBack) {
-      onNavigateBack() }, [canSwipeBack, onNavigateBack]};
-const registerSwipeArea = useCallback((element: HTMLElement) =) { swipeAreasRef.current.add(element) }, []};
-const unregisterSwipeArea = useCallback((element: HTMLElement) =) { swipeAreasRef.current.delete(element) }, []};
+    // Prevent background scroll when sidebar is open
+    document.body.style.overflow = 'hidden';
+  }, [enableSidebar]);
 
-  // Global swipe handlers for edge swipes
-  const { ref: globalSwipeRef } = useSwipeRef<HTMLDivElement>({
-  threshold: 50,
-};
+  /**
+   * Close sidebar
+   */
+  const closeSidebar = useCallback(() => {
+    setIsSidebarOpen(false);
+    // Restore background scroll
+    document.body.style.overflow = '';
+  }, []);
 
-velocityThreshold: 0.2,
-};
+  /**
+   * Toggle sidebar
+   */
+  const toggleSidebar = useCallback(() => {
+    if (isSidebarOpen) {
+      closeSidebar();
+    } else {
+      openSidebar();
+    }
+  }, [isSidebarOpen, openSidebar, closeSidebar]);
 
-onSwipeRight: (gesture) =} {
-      // Only open sidebar if swipe starts from left edge (< 50px from edge)
-      const startX = gesture.distance } 0 ? 0 : 50, // Approximate edge detection
-      if (startX < 50 && !isSidebarOpen> {
-        openSidebar() },
-    onSwipeLeft: () =) { if (isSidebarOpen) {
-        closeSidebar() } else if (canSwipeBack) { onSwipeBack() },;
-  });
+  /**
+   * Handle swipe back navigation
+   */
+  const onSwipeBack = useCallback(() => {
+    if (canSwipeBack && onNavigateBack) {
+      onNavigateBack();
+    }
+  }, [canSwipeBack, onNavigateBack]);
 
-  // Handle escape key to close sidebar
-  useEffect(() =) { const handleKeyDown = (event: KeyboardEvent) =} {}
-      if (event.key === "Escape" && isSidebarOpen) {''""
-        closeSidebar() };
+  /**
+   * Register swipe area element
+   */
+  const registerSwipeArea = useCallback((element: HTMLElement) => {
+    swipeAreasRef.current.add(element);
+  }, []);
 
-    document.addEventListener("keydown", handleKeyDown);'""'
-    return () =} document.removeEventListener('keydown", handleKeyDown);""'
-  }, [isSidebarOpen, closeSidebar]);
+  /**
+   * Unregister swipe area element
+   */
+  const unregisterSwipeArea = useCallback((element: HTMLElement) => {
+    swipeAreasRef.current.delete(element);
+  }, []);
 
-  // Style objects for esbuild compatibility
-  const overlayButtonStyle: React.CSSProperties = { border: "none', padding: 0, background: "transparent" };'"
+  /**
+   * Check if touch point is in edge area for sidebar swipe
+   */
+  const isInSidebarEdgeArea = useCallback((x: number): boolean => {
+    const edgeWidth = 20; // 20px edge area
+    return x <= edgeWidth;
+  }, []);
 
-  // Close sidebar when clicking outside
-  useEffect(() =) { const handleClickOutside = (event: MouseEvent) =} {
-      const target = event.target as HTMLElement;
-      const sidebar = document.querySelector(".sidebar-panel");"'"'
-      const trigger = document.querySelector(".sidebar-trigger'  );""'
+  /**
+   * Check if touch point is in back navigation edge area
+   */
+  const isInBackNavEdgeArea = useCallback((x: number): boolean => {
+    const edgeWidth = 20; // 20px edge area from right
+    const screenWidth = window.innerWidth;
+    return x >= screenWidth - edgeWidth;
+  }, []);
 
-      if(isSidebarOpen &&)
-          sidebar &&
-          !sidebar.contains(target) &&
-          trigger &&
-          !trigger.contains(target)} {
-        closeSidebar() };
+  /**
+   * Handle touch start
+   */
+  const handleTouchStart = useCallback((event: TouchEvent) => {
+    const touch = event.touches[0];
+    if (!touch) return;
 
-    if (isSidebarOpen) { document.addEventListener("mousedown", handleClickOutside  );''""
-      return () =} document.removeEventListener("mousedown", handleClickOutside) }, [isSidebarOpen, closeSidebar];'""'
-contextValue: SwipeNavigationContextType = React.useMemo(() =) ({ isSidebarOpen,
-    openSidebar,
-    closeSidebar,
-    toggleSidebar,
+    touchStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      time: Date.now()
+    };
+
+    lastTouchRef.current = {
+      x: touch.clientX,
+      y: touch.clientY
+    };
+
+    swipeDirectionRef.current = null;
+    setSwipeProgress(0);
+  }, []);
+
+  /**
+   * Handle touch move
+   */
+  const handleTouchMove = useCallback((event: TouchEvent) => {
+    const touch = event.touches[0];
+    const touchStart = touchStartRef.current;
+    
+    if (!touch || !touchStart) return;
+
+    const deltaX = touch.clientX - touchStart.x;
+    const deltaY = touch.clientY - touchStart.y;
+    const absDeltaX = Math.abs(deltaX);
+    const absDeltaY = Math.abs(deltaY);
+
+    // Determine swipe direction if not already set
+    if (!swipeDirectionRef.current && (absDeltaX > 10 || absDeltaY > 10)) {
+      if (absDeltaX > absDeltaY) {
+        swipeDirectionRef.current = deltaX > 0 ? 'right' : 'left';
+      } else {
+        swipeDirectionRef.current = deltaY > 0 ? 'down' : 'up';
+      }
+    }
+
+    // Handle horizontal swipes
+    if (swipeDirectionRef.current === 'right' || swipeDirectionRef.current === 'left') {
+      // Sidebar swipe (left edge, swipe right)
+      if (
+        enableSidebar &&
+        !isSidebarOpen &&
+        swipeDirectionRef.current === 'right' &&
+        isInSidebarEdgeArea(touchStart.x) &&
+        deltaX > 0
+      ) {
+        setIsSwiping(true);
+        const progress = Math.min(1, deltaX / (window.innerWidth * 0.3)); // 30% of screen width
+        setSwipeProgress(progress);
+        
+        // Prevent default scrolling
+        event.preventDefault();
+      }
+      
+      // Back navigation swipe (right edge, swipe left)
+      else if (
+        canSwipeBack &&
+        swipeDirectionRef.current === 'left' &&
+        isInBackNavEdgeArea(touchStart.x) &&
+        deltaX < 0
+      ) {
+        setIsSwiping(true);
+        const progress = Math.min(1, Math.abs(deltaX) / (window.innerWidth * 0.3));
+        setSwipeProgress(progress);
+        
+        // Prevent default scrolling
+        event.preventDefault();
+      }
+      
+      // Close sidebar swipe (swipe left when sidebar is open)
+      else if (
+        isSidebarOpen &&
+        swipeDirectionRef.current === 'left' &&
+        deltaX < -swipeThreshold
+      ) {
+        setIsSwiping(true);
+        const progress = Math.min(1, Math.abs(deltaX) / 100);
+        setSwipeProgress(progress);
+        
+        // Prevent default scrolling
+        event.preventDefault();
+      }
+    }
+
+    lastTouchRef.current = {
+      x: touch.clientX,
+      y: touch.clientY
+    };
+  }, [
+    enableSidebar,
+    isSidebarOpen,
     canSwipeBack,
+    swipeThreshold,
+    isInSidebarEdgeArea,
+    isInBackNavEdgeArea
+  ]);
+
+  /**
+   * Handle touch end
+   */
+  const handleTouchEnd = useCallback((event: TouchEvent) => {
+    const touchStart = touchStartRef.current;
+    const lastTouch = lastTouchRef.current;
+    
+    if (!touchStart || !lastTouch) return;
+
+    const deltaX = lastTouch.x - touchStart.x;
+    const deltaY = lastTouch.y - touchStart.y;
+    const deltaTime = Date.now() - touchStart.time;
+    const velocity = Math.abs(deltaX) / deltaTime; // pixels per millisecond
+
+    // Check for completed swipe gestures
+    const isQuickSwipe = velocity > 0.5; // Quick swipe threshold
+    const isLongSwipe = Math.abs(deltaX) > swipeThreshold;
+
+    if (isSwiping) {
+      // Sidebar open gesture
+      if (
+        enableSidebar &&
+        !isSidebarOpen &&
+        swipeDirectionRef.current === 'right' &&
+        isInSidebarEdgeArea(touchStart.x) &&
+        (isQuickSwipe || isLongSwipe) &&
+        deltaX > 0
+      ) {
+        openSidebar();
+      }
+      
+      // Back navigation gesture
+      else if (
+        canSwipeBack &&
+        swipeDirectionRef.current === 'left' &&
+        isInBackNavEdgeArea(touchStart.x) &&
+        (isQuickSwipe || isLongSwipe) &&
+        deltaX < 0
+      ) {
+        onSwipeBack();
+      }
+      
+      // Close sidebar gesture
+      else if (
+        isSidebarOpen &&
+        swipeDirectionRef.current === 'left' &&
+        (isQuickSwipe || isLongSwipe) &&
+        deltaX < 0
+      ) {
+        closeSidebar();
+      }
+    }
+
+    // Reset swipe state
+    setIsSwiping(false);
+    setSwipeProgress(0);
+    touchStartRef.current = null;
+    lastTouchRef.current = null;
+    swipeDirectionRef.current = null;
+  }, [
+    isSwiping,
+    enableSidebar,
+    isSidebarOpen,
+    canSwipeBack,
+    swipeThreshold,
+    isInSidebarEdgeArea,
+    isInBackNavEdgeArea,
+    openSidebar,
     onSwipeBack,
-    registerSwipeArea,
-    unregisterSwipeArea}), [
+    closeSidebar
+  ]);
+
+  /**
+   * Handle keyboard shortcuts
+   */
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    // ESC key closes sidebar
+    if (event.key === 'Escape' && isSidebarOpen) {
+      closeSidebar();
+    }
+    
+    // Alt + Left arrow for back navigation
+    if (event.altKey && event.key === 'ArrowLeft' && canSwipeBack) {
+      event.preventDefault();
+      onSwipeBack();
+    }
+    
+    // Alt + Right arrow for sidebar toggle
+    if (event.altKey && event.key === 'ArrowRight' && enableSidebar) {
+      event.preventDefault();
+      toggleSidebar();
+    }
+  }, [isSidebarOpen, canSwipeBack, enableSidebar, closeSidebar, onSwipeBack, toggleSidebar]);
+
+  // Set up event listeners
+  useEffect(() => {
+    const options = { passive: false };
+    
+    document.addEventListener('touchstart', handleTouchStart, options);
+    document.addEventListener('touchmove', handleTouchMove, options);
+    document.addEventListener('touchend', handleTouchEnd, options);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleTouchStart, handleTouchMove, handleTouchEnd, handleKeyDown]);
+
+  // Close sidebar when navigating
+  useEffect(() => {
+    if (isSidebarOpen) {
+      closeSidebar();
+    }
+  }, [currentPath, closeSidebar]);
+
+  // Cleanup body overflow on unmount
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
+  const contextValue: SwipeNavigationContextType = {
+    // Sidebar state
     isSidebarOpen,
     openSidebar,
     closeSidebar,
     toggleSidebar,
+    
+    // Navigation state
     canSwipeBack,
     onSwipeBack,
+    
+    // Swipe area management
     registerSwipeArea,
-    unregisterSwipeArea];
+    unregisterSwipeArea,
+    
+    // Gesture settings
+    swipeThreshold,
+    setSwipeThreshold,
+    
+    // Touch state
+    isSwiping,
+    swipeProgress
+  };
 
-  // Compute classNames outside JSX for esbuild compatibility
-  const overlayClassName = "sidebar-overlay" + (isSidebarOpen ? " swipe-active" : '");"'
-  const panelClassName = 'sidebar-panel" + (isSidebarOpen ? " swipe-active" : "');""
-
-  // Handler function for keydown
-  const handleOverlayKeyDown = (e: React.KeyboardEvent) =} { if (e.key === 'Enter") {"}"'"
-      closeSidebar() };
-
-  return()
+  return (
     <SwipeNavigationContext.Provider value={contextValue}>
-      <div ref={globalSwipeRef} className='swipe-navigation-container">"""'
-        {children}
-
-        <button className={overlayClassName}
-          onClick={closeSidebar}
-          onKeyDown={handleOverlayKeyDown}
-          aria-hidden={!isSidebarOpen}
-          aria-label='Close navigation menu""'
-          style={overlayButtonStyle}
-          /
-
-        <nav className={panelClassName}
-          aria-label="Navigation menu"""'"'
-          aria-hidden={!isSidebarOpen}
-        >
-          <div className="sidebar-header'>"""'
-            <h2>Navigation</h2>
-            <button className="sidebar-close-btn touch-optimized'""'"
-              onClick={closeSidebar}
-              aria-label="Close navigation menu""''
-            >
-              ✕
-            </button
-          </div
-          <div className="sidebar-content"></div''"
-        </nav
-      </div
-    </SwipeNavigationContext.Provider;
-// Hook for components that need to add swipe gesture support
-export const useSwipeGestures = (
-  element: HTMLElement | null,
-  options: { onSwipeLeft?: () =} void;
-    onSwipeRight?: () =) void;
-    onSwipeUp?: () = void;
-    onSwipeDown?: () = void,
-    disabled?: boolean  = {}
- =>{
-  const { registerSwipeArea, unregisterSwipeArea } = useSwipeNavigation();
-  const { onSwipeLeft, onSwipeRight, onSwipeUp, onSwipeDown, disabled = false } = options;
-{ ref } = useSwipeRef({
-  threshold: 50,
-    velocityThreshold: 0.3,
-    onSwipeLeft: disabled ? undefined : onSwipeLeft,
-    onSwipeRight: disabled ? undefined : onSwipeRight,)
+      {children}
+    </SwipeNavigationContext.Provider>
+  );
 };
-
-onSwipeUp: disabled ? undefined : onSwipeUp,)
-};
-
-onSwipeDown: disabled ? undefined : onSwipeDown});
-
-  useEffect(() =) { if (element && !disabled) {
-      registerSwipeArea(element ),
-      return () =} unregisterSwipeArea(element) }}, [element, disabled, registerSwipeArea, unregisterSwipeArea];
-
-  return.ref
-
-// Higher-order component for adding swipe navigation to any component
-export const withSwipeNavigation = <P extends object(Component: React.ComponentType<P>)
-): React.ComponentType<P> = {}
-  return (props: P) =} (
-    <SwipeNavigationProvider>
-      <Component {...props}     />
-    </SwipeNavigationProvider);
