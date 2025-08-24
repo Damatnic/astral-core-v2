@@ -1,244 +1,497 @@
-import React, { useState(, useEffect, useRef ) from 'react';"""'"'""'
-import { SparkleIcon, SendIcon, HeartIcon, AlertIcon  } from '../components/icons.dynamic';"""'
-interface ChatMessage { { { {
-  id: string;,
-  text: string
-};
+/**
+ * AI Assistant View
+ * Interactive AI chat interface with crisis detection and safety features
+ */
 
-sender: "user" | 'ai"""'
-};
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { 
+  SparkleIcon, 
+  SendIcon, 
+  HeartIcon, 
+  AlertTriangleIcon,
+  MicrophoneIcon,
+  VolumeUpIcon,
+  RefreshIcon,
+  SettingsIcon,
+  ShieldIcon,
+  InfoIcon,
+  UserIcon,
+  BotIcon
+} from '../components/icons.dynamic';
+import { Card } from '../components/Card';
+import { ViewHeader } from '../components/ViewHeader';
+import { AppButton } from '../components/AppButton';
+import { AppTextArea } from '../components/AppTextArea';
+import { useAuth } from '../contexts/AuthContext';
+import { useNotification } from '../contexts/NotificationContext';
+import { crisisDetectionService } from '../services/crisisDetectionService';
+import { formatTimeAgo } from '../utils/formatTimeAgo';
 
-timestamp: Date
-  isTyping?: boolean
-  
-const AIAssistantView: React.FC = () = {  }
-const [messages, setMessages] = useState<ChatMessage[]>([]);
-const [inputText, setInputText] = useState("');""'
-const [isTyping, setIsTyping] = useState(false);
-const [isCrisisDetected, setIsCrisisDetected] = useState(false );
-const messagesEndRef = useRef<HTMLDivElement>(null );
-const scrollToBottom = () =} {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" ));""
+export interface ChatMessage {
+  id: string;
+  text: string;
+  sender: 'user' | 'ai' | 'system';
+  timestamp: Date;
+  isTyping?: boolean;
+  metadata?: {
+    crisisDetected?: boolean;
+    sentiment?: number;
+    intent?: string;
+    confidence?: number;
   };
+}
 
-  useEffect(() =) { scrollToBottom() }, [messages];
+export interface AIPersonality {
+  id: string;
+  name: string;
+  description: string;
+  avatar: string;
+  traits: string[];
+  responseStyle: 'supportive' | 'clinical' | 'casual' | 'professional';
+}
 
-  useEffect(() =) {
-    // Initial greeting
-    setMessages([])
-      {
-  id: '1","'""""
-        text: 'Hi there! I"m your AI companion. I"m here to listen, provide support, and help you explore your thoughts and feelings. How are you doing today?',""""
-};
+export interface ConversationContext {
+  sessionId: string;
+  userId: string;
+  startTime: Date;
+  messageCount: number;
+  topics: string[];
+  mood: number;
+  riskLevel: 'low' | 'medium' | 'high' | 'critical';
+}
 
-sender: 'ai","'""""
-};
+const AI_PERSONALITIES: AIPersonality[] = [
+  {
+    id: 'sage',
+    name: 'Sage',
+    description: 'Wise, empathetic, and supportive companion',
+    avatar: '🧙‍♀️',
+    traits: ['empathetic', 'wise', 'patient', 'supportive'],
+    responseStyle: 'supportive'
+  },
+  {
+    id: 'nova',
+    name: 'Nova',
+    description: 'Energetic, optimistic, and encouraging',
+    avatar: '⭐',
+    traits: ['optimistic', 'energetic', 'encouraging', 'creative'],
+    responseStyle: 'casual'
+  },
+  {
+    id: 'zen',
+    name: 'Zen',
+    description: 'Calm, mindful, and grounding presence',
+    avatar: '🧘‍♂️',
+    traits: ['calm', 'mindful', 'grounding', 'peaceful'],
+    responseStyle: 'clinical'
+  }
+];
 
-timestamp: new Date()
+const CRISIS_KEYWORDS = [
+  'suicide', 'kill myself', 'end it all', 'hurt myself', 'self-harm',
+  'overdose', 'can\'t go on', 'no point', 'better off dead'
+];
 
-    })
-  }, [];
-const handleSendMessage = async () = {}
-    if (!inputText.trim()) return;
-userMessage: ChatMessage = {}
-      id: Date.now().toString(),
-      text: inputText,
-      sender: 'user","'""""'"'
-      timestamp: new Date()
-  
-    setMessages(prev =) [...prev, userMessage];
-    setInputText("');""'""'"'
-    setIsTyping(true);
+const SUPPORTIVE_RESPONSES = [
+  "I hear you, and I want you to know that your feelings are valid. What you're experiencing matters.",
+  "Thank you for sharing that with me. It takes courage to open up about difficult feelings.",
+  "I'm here to listen and support you. You don't have to go through this alone.",
+  "That sounds really challenging. How are you taking care of yourself right now?",
+  "I appreciate you trusting me with these thoughts. What would feel most helpful right now?"
+];
 
-    // Simple crisis detection (in real app, this would be more sophisticated)
-const crisisKeywords = ["suicide', "kill myself", "end it all", 'hurt myself", "hopeless'];"
-const containsCrisisKeywords = crisisKeywords.some(keyword =);
-      inputText.toLowerCase().includes(keyword)
+const AIAssistantView: React.FC = () => {
+  const { user } = useAuth();
+  const { showNotification } = useNotification();
+
+  // State management
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [inputText, setInputText] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [isCrisisDetected, setIsCrisisDetected] = useState(false);
+  const [selectedPersonality, setSelectedPersonality] = useState<AIPersonality>(AI_PERSONALITIES[0]);
+  const [conversationContext, setConversationContext] = useState<ConversationContext>({
+    sessionId: `session_${Date.now()}`,
+    userId: user?.id || 'anonymous',
+    startTime: new Date(),
+    messageCount: 0,
+    topics: [],
+    mood: 5,
+    riskLevel: 'low'
+  });
+
+  // Refs
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Scroll to bottom of messages
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, scrollToBottom]);
+
+  // Initialize conversation with greeting
+  useEffect(() => {
+    const initialMessage: ChatMessage = {
+      id: 'greeting',
+      text: `Hi ${user?.name || 'there'}! I'm ${selectedPersonality.name}, your AI companion. I'm here to listen, provide support, and help you explore your thoughts and feelings. How are you doing today?`,
+      sender: 'ai',
+      timestamp: new Date(),
+      metadata: {
+        intent: 'greeting',
+        confidence: 1.0
+      }
     };
 
-    if (containsCrisisKeywords) { setIsCrisisDetected(true) }
+    setMessages([initialMessage]);
+  }, [user?.name, selectedPersonality]);
 
-    // Simulate AI response (in real app, this would call an AI service)
-    setTimeout(() =) {;
-const aiResponse = "";"''""'"'
+  // Crisis detection
+  const detectCrisis = useCallback((text: string): boolean => {
+    try {
+      const result = crisisDetectionService.detectCrisis(text);
+      
+      if (result.hasCrisisIndicators) {
+        setIsCrisisDetected(true);
+        setConversationContext(prev => ({
+          ...prev,
+          riskLevel: result.severityLevel === 'critical' || result.severityLevel === 'high' ? 'critical' : 'high'
+        }));
 
-      if (containsCrisisKeywords) {
-  
-};
+        // Show crisis notification
+        showNotification(
+          'Crisis Support Available',
+          'I notice you might be going through a difficult time. Professional help is available 24/7.',
+          'warning'
+        );
 
-aiResponse = "I"m really concerned about what you"ve shared. It sounds like you're going through an incredibly difficult time. Please know that you don"t have to face this alone. Would you like me to connect you with a crisis counselor who can provide immediate support? You can also call 988 for the Suicide & Crisis Lifeline." } else if (inputText.toLowerCase().includes('anxious") || inputText.toLowerCase().includes("anxiety")) { aiResponse = "I hear that you're feeling anxious. That"s a very common experience, and it"s brave of you to acknowledge it. Can you tell me more about what's been triggering your anxiety? Sometimes talking through specific situations can help us understand them better." } else if (inputText.toLowerCase().includes("sad") || inputText.toLowerCase().includes("depressed')) { aiResponse = "Thank you for sharing that with me. Feeling sad is a natural human emotion, though I know it can be very difficult to experience. What"s been on your mind lately? Sometimes it helps to explore what might be contributing to these feelings.'  else if (inputText.toLowerCase().includes("stress")) { aiResponse = "Stress can be really overwhelming. It sounds like you have a lot on your plate right now. What"s been the most challenging part of your day? Let's break it down together and see if we can find some ways to manage it." } else(aiResponse = "I appreciate you sharing that with me. It's important to express your thoughts and feelings. Can you tell me more about what"s been on your mind? I"m here to listen and support you." };"'
-aiMessage: ChatMessage = {}
-        id: (Date.now() + 1).toString(),
-        text: aiResponse,
-        sender: "ai",'"""'
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.error('Crisis detection error:', error);
+      return false;
+    }
+  }, [showNotification]);
+
+  // Generate AI response
+  const generateAIResponse = useCallback(async (userMessage: string, crisisDetected: boolean): Promise<string> => {
+    // Simulate AI processing delay
+    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
+
+    if (crisisDetected) {
+      return `I'm really concerned about what you've shared. Your life has value, and there are people who want to help. Please consider reaching out to:
+
+• National Suicide Prevention Lifeline: 988
+• Crisis Text Line: Text HOME to 741741
+• Emergency Services: 911
+
+I'm here to support you too. Would you like to talk about what's been making things feel so difficult?`;
+    }
+
+    // Simple response generation based on keywords and personality
+    const lowerMessage = userMessage.toLowerCase();
+    
+    if (lowerMessage.includes('sad') || lowerMessage.includes('depressed')) {
+      return selectedPersonality.responseStyle === 'supportive' 
+        ? "I hear that you're feeling sad. Those feelings are completely valid. Sometimes when we're going through difficult times, it can help to talk about what's contributing to these feelings. What's been weighing on your mind lately?"
+        : "Depression can feel overwhelming. What's one small thing that usually brings you a moment of peace or comfort?";
+    }
+
+    if (lowerMessage.includes('anxious') || lowerMessage.includes('worried')) {
+      return "Anxiety can be really challenging to manage. It sounds like you're dealing with some worrying thoughts. Would it help to talk through what's causing you to feel anxious right now?";
+    }
+
+    if (lowerMessage.includes('stressed')) {
+      return "Stress can really take a toll on us. What's been the biggest source of stress for you lately? Sometimes breaking it down can make it feel more manageable.";
+    }
+
+    if (lowerMessage.includes('thank')) {
+      return "You're very welcome. I'm glad I could be here for you. Remember, reaching out and talking about how you're feeling is a sign of strength.";
+    }
+
+    // Default supportive response
+    const randomResponse = SUPPORTIVE_RESPONSES[Math.floor(Math.random() * SUPPORTIVE_RESPONSES.length)];
+    return randomResponse;
+  }, [selectedPersonality]);
+
+  // Handle sending message
+  const handleSendMessage = useCallback(async () => {
+    if (!inputText.trim()) return;
+
+    const userMessage: ChatMessage = {
+      id: `user_${Date.now()}`,
+      text: inputText.trim(),
+      sender: 'user',
+      timestamp: new Date()
+    };
+
+    // Add user message
+    setMessages(prev => [...prev, userMessage]);
+    setInputText('');
+    setIsTyping(true);
+
+    // Detect crisis
+    const crisisDetected = detectCrisis(userMessage.text);
+
+    // Update conversation context
+    setConversationContext(prev => ({
+      ...prev,
+      messageCount: prev.messageCount + 1,
+      topics: [...prev.topics, userMessage.text.substring(0, 50)]
+    }));
+
+    try {
+      // Generate AI response
+      const aiResponseText = await generateAIResponse(userMessage.text, crisisDetected);
+
+      const aiMessage: ChatMessage = {
+        id: `ai_${Date.now()}`,
+        text: aiResponseText,
+        sender: 'ai',
+        timestamp: new Date(),
+        metadata: {
+          crisisDetected,
+          intent: crisisDetected ? 'crisis_support' : 'general_support',
+          confidence: 0.8
+        }
+      };
+
+      setMessages(prev => [...prev, aiMessage]);
+    } catch (error) {
+      console.error('Error generating AI response:', error);
+      
+      const errorMessage: ChatMessage = {
+        id: `error_${Date.now()}`,
+        text: "I apologize, but I'm having trouble responding right now. Please try again, or if you're in crisis, please reach out to emergency services or a crisis hotline immediately.",
+        sender: 'system',
         timestamp: new Date()
-  };
+      };
 
-      setMessages(prev =) [...prev, aiMessage]};
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-  }, 1500;
-const handleKeyPress = (e: React.KeyboardEvent) = { if (e.key === "Enter' && !e.shiftKey) {""}''"""'
+    }
+  }, [inputText, detectCrisis, generateAIResponse]);
+
+  // Handle enter key
+  const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
-  };
+    }
+  }, [handleSendMessage]);
 
-  return(<div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col'>")'"'"'
-      {/* Header */}
-      <div className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 p-4">"'""'
-        <div className='container mx-auto flex items-center space-x-3">""'"'""'
-          <SparkleIcon className="w-8 h-8 text-purple-600 dark:text-purple-400"     />""''""'"'
-          <div>
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">"'""'
-              AI Mental Health Companion
-            </h1
-            <p className="text-sm text-gray-600 dark:text-gray-400">""''""'"'
-              A safe space to explore your thoughts and feelings
-            </p>
-          </div>
+  // Clear conversation
+  const handleClearConversation = useCallback(() => {
+    setMessages([]);
+    setIsCrisisDetected(false);
+    setConversationContext(prev => ({
+      ...prev,
+      messageCount: 0,
+      topics: [],
+      riskLevel: 'low'
+    }));
+
+    // Re-initialize with greeting
+    setTimeout(() => {
+      const greetingMessage: ChatMessage = {
+        id: 'new_greeting',
+        text: `Let's start fresh! I'm ${selectedPersonality.name}, and I'm here to support you. What would you like to talk about?`,
+        sender: 'ai',
+        timestamp: new Date()
+      };
+      setMessages([greetingMessage]);
+    }, 100);
+  }, [selectedPersonality]);
+
+  // Message component
+  const MessageBubble: React.FC<{ message: ChatMessage }> = ({ message }) => (
+    <div className={`message-bubble ${message.sender}`}>
+      <div className="message-avatar">
+        {message.sender === 'user' ? (
+          <UserIcon className="w-6 h-6" />
+        ) : message.sender === 'ai' ? (
+          <span className="ai-avatar">{selectedPersonality.avatar}</span>
+        ) : (
+          <InfoIcon className="w-6 h-6" />
+        )}
+      </div>
+      <div className="message-content">
+        <div className="message-text">
+          {message.text.split('\n').map((line, index) => (
+            <p key={index}>{line}</p>
+          ))}
+        </div>
+        <div className="message-meta">
+          <span className="message-time">{formatTimeAgo(message.timestamp)}</span>
+          {message.metadata?.crisisDetected && (
+            <AlertTriangleIcon className="w-4 h-4 text-red-500" />
+          )}
         </div>
       </div>
+    </div>
+  );
 
-      {/* Crisis Warning */}
+  return (
+    <div className="ai-assistant-view">
+      <ViewHeader 
+        title="AI Assistant"
+        subtitle={`Chatting with ${selectedPersonality.name}`}
+        icon={<SparkleIcon className="w-6 h-6" />}
+      />
+
+      {/* Crisis Alert Banner */}
       {isCrisisDetected && (
-        <div className="bg-red-100 dark:bg-red-900/20 border-b border-red-200 dark:border-red-800 p-4">"'""'
-          <div className='container mx-auto flex items-center space-x-3">""'"'"'
-            <AlertIcon className="w-6 h-6 text-red-600 dark:text-red-400'     />""""'
-            <div className='flex-1">"'""
-              <p className="text-red-800 dark:text-red-200 font-semibold">''""''
-                Crisis Support Available
-              </p
-              <p className="text-red-700 dark:text-red-300 text-sm">'"'"'"'
-                If you"re having thoughts of self-harm, please reach out for immediate help: 988 Suicide & Crisis Lifeline"""
-              </p
-            </div
-            <button className='bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">"'""""''
-              Get Help Now
-            </button}
-    </div}
-    </div
-      {/* Messages Container */}
-      <div className="flex-1 container mx-auto px-4 py-6 max-w-4xl">'"""'
-        <div className="space-y-4 pb-4'>""''""'
-          {
-  messages.map((message) => (}
-    <div
-};
+        <Card className="crisis-alert-banner">
+          <div className="crisis-content">
+            <AlertTriangleIcon className="w-6 h-6 text-red-500" />
+            <div className="crisis-text">
+              <h4>Crisis Support Available</h4>
+              <p>If you're in immediate danger, please call 911 or go to your nearest emergency room.</p>
+            </div>
+            <div className="crisis-actions">
+              <AppButton variant="danger" size="small">
+                Call 988
+              </AppButton>
+              <AppButton variant="secondary" size="small">
+                Resources
+              </AppButton>
+            </div>
+          </div>
+        </Card>
+      )}
 
-key={message.id};
-className={`flex ${message.sender === "user" ? "justify-end' : "justify-start"}`}'""
-            
-              <div className= { `max-w-xs lg:max-w-md xl:max-w-lg flex space-x-3 ${}`
-                message.sender === "user" ? 'flex-row-reverse space-x-reverse" : "' }`}>"`
-                {/* Avatar */}
-                <div className= { `w-8 h-8 rounded-full flex items-center justify-center ${}`
-                  message.sender === "user" "'"'"'"""'
-                    ? "bg-blue-600 text-white' ""''"""'
-                    : "bg-purple-600 text-white' }`}"'`"'"'
-                  {message.sender === "user" ? ("'""'
-                    <span className='text-sm font-semibold">You</span>""'"'"'
-                  ) : (}
-    <SparkleIcon className="w-4 h-4"     />'"'"""'"'
-                  >>}
-    </div
-
-                {/* Message Bubble */}
-                <div className= {`rounded-lg px-4 py-2 ${}`}>
-                  message.sender === "user'"""'"'""'
-                    ? 'bg-blue-600 text-white""""''""'
-                    : "bg-white dark: bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700"""''
-  `}>`
-                  <p className="text-sm leading-relaxed">{message.text}</p''""""''
-                  <p className= {`text-xs mt-1 ${}`
-                    message.sender === "user" '"""'
-                      ? "text-blue-100' ""'""""
-                      : 'text-gray-500 dark: text-gray-400""'
-  `}>`
-                    {message.timestamp.toLocaleTimeString([], {
-  hour: "2-digit", '"'"'"')
-};
-
-minute: "2-digit"'"'
-  ))
-                  </p
-                </div
-              </div
-            </div
-          {/* Typing Indicator */}
-          {}
-  isTyping && (
-            <div className="flex justify-start'>""'""'"'
-              <div className="max-w-xs lg:max-w-md xl:max-w-lg flex space-x-3'>"'"""''
-                <div className="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center">''""""''
-                  <SparkleIcon className="w-4 h-4"     />'"'"""''
-                </div)
-                <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2">'"'"""''
-                  <div className="flex space-x-1">'""""'
-                    <div className='w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div)"''""""'
-                    <div className='w-2 h-2 bg-gray-400 rounded-full animate-bounce" style= {{animationDelay: "0.1s'"}"
-}}</div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style= {'}""}>'
-  {animationDelay: '0.2s""""'
-}}</div>
-                  </div
-                </div
-              </div
-            </div
-          >
-
-          <div ref={messagesEndRef}     />
-        </div
-      </div
-
-      {/* Input Area */}
-      <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">'"""'
-        <div className="container mx-auto max-w-4xl'>""'""""
-          <div className='flex space-x-4">"''""'
-            <div className="flex-1">'""''"""'
-              <textarea
-                value={inputText}
-                onChange={(e) =} setInputText(e.target.value)>
-                onKeyDown={handleKeyPress}
-                placeholder="Share what's on your mind...";"'
-className='w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent"""'"'"'
-                rows={2}
-                disabled={isTyping}
-              /
-            </div
-            <button>
-              onClick={handleSendMessage}
-              disabled={!inputText.trim() || isTyping};
-className="self-end p-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors"'"""'
+      {/* AI Personality Selector */}
+      <Card className="personality-selector">
+        <div className="selector-header">
+          <h4>Choose Your AI Companion</h4>
+        </div>
+        <div className="personality-options">
+          {AI_PERSONALITIES.map((personality) => (
+            <div
+              key={personality.id}
+              className={`personality-option ${selectedPersonality.id === personality.id ? 'selected' : ''}`}
+              onClick={() => setSelectedPersonality(personality)}
             >
-              <SendIcon className="w-5 h-5'     />""'""""
-            </button
-          </div
+              <span className="personality-avatar">{personality.avatar}</span>
+              <div className="personality-info">
+                <h5>{personality.name}</h5>
+                <p>{personality.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
 
-          <p className='text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">"''""'
-            This AI companion is for support only. In crisis situations, please contact emergency services or call 988.
-          </p
-        </div
-      </div
+      {/* Chat Interface */}
+      <Card className="chat-interface">
+        <div className="chat-header">
+          <div className="chat-info">
+            <span className="ai-avatar">{selectedPersonality.avatar}</span>
+            <div>
+              <h4>{selectedPersonality.name}</h4>
+              <p>{selectedPersonality.description}</p>
+            </div>
+          </div>
+          <div className="chat-actions">
+            <AppButton
+              variant="secondary"
+              size="small"
+              onClick={handleClearConversation}
+              icon={<RefreshIcon className="w-4 h-4" />}
+            >
+              New Chat
+            </AppButton>
+          </div>
+        </div>
 
-      {/* Supportive Resources */}
-      <div className="bg-gray-100 dark:bg-gray-800 p-4">'""''"""'
-        <div className="container mx-auto max-w-4xl'>"'"'""'
-          <div className="flex items-center justify-center space-x-6 text-sm text-gray-600 dark:text-gray-400">'"'"'"'
-            <button className="flex items-center space-x-1 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">"''""'""'
-              <HeartIcon className="w-4 h-4"     />'"'"'""'
-              <span>Breathing Exercise</span>
-            </button
-            <button className="flex items-center space-x-1 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">''""''
-              <SparkleIcon className="w-4 h-4"     />""''""'""'
-              <span>Guided Meditation</span>
-            </button
-            <button className="flex items-center space-x-1 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">''""'""'
-              <AlertIcon className="w-4 h-4"     />'""""'
-              <span>Crisis Resources</span>
-            </button
-          </div
-        </div
-      </div
-    </div
-  
-  
-export default AIAssistantView
+        <div className="messages-container">
+          <div className="messages-list">
+            {messages.map((message) => (
+              <MessageBubble key={message.id} message={message} />
+            ))}
+            
+            {isTyping && (
+              <div className="typing-indicator">
+                <div className="typing-avatar">
+                  <span className="ai-avatar">{selectedPersonality.avatar}</span>
+                </div>
+                <div className="typing-content">
+                  <div className="typing-animation">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <span className="typing-text">{selectedPersonality.name} is typing...</span>
+                </div>
+              </div>
+            )}
+            
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
+
+        <div className="chat-input-container">
+          <div className="input-wrapper">
+            <AppTextArea
+              ref={inputRef}
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder={`Share your thoughts with ${selectedPersonality.name}...`}
+              rows={1}
+              className="chat-input"
+              disabled={isTyping}
+            />
+            <div className="input-actions">
+              <AppButton
+                variant="primary"
+                onClick={handleSendMessage}
+                disabled={!inputText.trim() || isTyping}
+                icon={<SendIcon className="w-5 h-5" />}
+                className="send-button"
+              >
+                Send
+              </AppButton>
+            </div>
+          </div>
+          
+          <div className="chat-footer">
+            <div className="privacy-notice">
+              <ShieldIcon className="w-4 h-4" />
+              <span>Your conversations are private and secure. Crisis detection helps ensure your safety.</span>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* Conversation Stats */}
+      <Card className="conversation-stats">
+        <h4>Session Information</h4>
+        <div className="stats-grid">
+          <div className="stat-item">
+            <span className="stat-label">Messages</span>
+            <span className="stat-value">{conversationContext.messageCount}</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-label">Duration</span>
+            <span className="stat-value">{formatTimeAgo(conversationContext.startTime)}</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-label">Risk Level</span>
+            <span className={`stat-value risk-${conversationContext.riskLevel}`}>
+              {conversationContext.riskLevel.charAt(0).toUpperCase() + conversationContext.riskLevel.slice(1)}
+            </span>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+export default AIAssistantView;
