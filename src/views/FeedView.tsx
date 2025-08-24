@@ -1,134 +1,453 @@
-import React, { useState(, useCallback ) from 'react';"""'"'""'
-import { PostCard  } from '../components/PostCard';""'"'""'
-import { SkeletonPostCard  } from '../components/SkeletonPostCard';""'"'"'
-import { SearchIcon  } from '../components/icons.dynamic';"""'"'""'
-import { CATEGORIES  } from '../constants';"""''""'
-import { AppButton  } from '../components/AppButton';""''""'""'
-import { useDilemmaStore  } from '../stores/dilemmaStore';'"'"'""'
-import { useChatStore  } from '../stores/chatStore';'""''""""'
-import { ViewHeader  } from '../components/ViewHeader';"'""""''
-import { ErrorState  } from '../components/ErrorState';'"'"""''
-import { Card  } from '../components/Card';'""""'
-import { usePreferenceStore  } from '../stores/preferenceStore';"'""""''
-import { usePullToRefresh  } from '../hooks/useSwipeGesture';'"""'
-export const FeedView: React.FC = () => {,
-{
-        visibleDilemmas,
-        forYouDilemmas,
-        isLoading,
-        toggleSupport,
-        filter,
-        setFilter,
-        sort,
-        setSort,
-        searchTerm,
-        setSearchTerm,
-        loadMore,
-        hasMore,
-        openReportModal,
-        fetchDilemmas,
-        fetchForYouFeed } = useDilemmaStore();
-{ chatSessions, startChat } = useChatStore();
-{ contentFilters } = usePreferenceStore();
-const [activeTab, setActiveTab] = useState<"forYou' | "community">('forYou");"
-const dilemmasToDisplay = activeTab === "forYou" ? forYouDilemmas : visibleDilemmas;'"'"'""'
+import React, { useState, useCallback, useEffect } from 'react';
+import { PostCard } from '../components/PostCard';
+import { SkeletonPostCard } from '../components/SkeletonPostCard';
+import { SearchIcon } from '../components/icons.dynamic';
+import { CATEGORIES } from '../constants';
+import { AppButton } from '../components/AppButton';
+import { ViewHeader } from '../components/ViewHeader';
+import { ErrorState } from '../components/ErrorState';
+import { EmptyState } from '../components/EmptyState';
+import { useAuth } from '../contexts/AuthContext';
+import { useNotification } from '../contexts/NotificationContext';
+import { Dilemma } from '../types';
 
-    // Pull-to-refresh functionality
-const handleRefresh = useCallback(async () =) { try {
-            if (activeTab === "forYou") {'"'"'"'
-                await fetchForYouFeed() } else(await fetchDilemmas() );
-  } catch (error) { console.error("Failed to refresh feed:", error );"}"''
-  }, [activeTab, fetchForYouFeed, fetchDilemmas]};
-{ ref: pullToRefreshRef,
-        isPulling,
-        isRefreshing,
-        pullProgress } = usePullToRefresh(handleRefresh, {
-  threshold: 80,)
-};
+interface FeedFilters {
+  category: string;
+  sortBy: 'recent' | 'popular' | 'trending';
+  timeRange: 'today' | 'week' | 'month' | 'all';
+  searchQuery: string;
+}
 
-enabled: !isLoading)
-});
+interface FeedPost extends Dilemma {
+  isBookmarked?: boolean;
+  isLiked?: boolean;
+  viewCount?: number;
+  shareCount?: number;
+  trendingScore?: number;
+}
 
-    return()
-      <div ref={pullToRefreshRef} className="feed-view-container">'"""'
-        {/* Pull-to-refresh indicator */}
-        <div className={`pull-to-refresh ${isPulling ? active: "'} ${isRefreshing ? refreshing: ""}`}'"""
-          style= {}
-  { opacity: pullProgress
-  }>
-          {isRefreshing ? "⟳' : '↓"}"""
-        </div
+const FeedView: React.FC = () => {
+  const { user } = useAuth();
+  const { showNotification } = useNotification();
+  
+  const [posts, setPosts] = useState<FeedPost[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<FeedPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [filters, setFilters] = useState<FeedFilters>({
+    category: 'all',
+    sortBy: 'recent',
+    timeRange: 'all',
+    searchQuery: ''
+  });
+  const [showFilters, setShowFilters] = useState(false);
+  const [page, setPage] = useState(1);
 
-        <ViewHeader
-          title='Community Feed""'""
-          subtitle="A place to connect and find support."'''""'
-            />
+  useEffect(() => {
+    loadInitialPosts();
+  }, []);
 
-        <div className="dashboard-tabs">'"'"'"'
-            <AppButton className={activeTab === "forYou" ? active: ""} onClick={() =} setActiveTab('forYou")>}For You</AppButton>"''"""'
-            <AppButton className={activeTab === "community' ? active: ""} onClick={() =} setActiveTab('community")>>Community</AppButton>"""'"'
+  useEffect(() => {
+    applyFilters();
+  }, [posts, filters]);
+
+  const loadInitialPosts = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      // Mock data for demonstration
+      const mockPosts: FeedPost[] = [
+        {
+          id: '1',
+          title: 'Finding Peace in Daily Meditation',
+          description: 'How I discovered the power of meditation during my recovery journey',
+          author: 'MindfulWarrior',
+          authorId: 'user-1',
+          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+          category: 'wellness',
+          likes: 45,
+          comments: 12,
+          isAnonymous: false,
+          content: 'After struggling with anxiety for years, I finally found a practice that works...',
+          isBookmarked: false,
+          isLiked: false,
+          viewCount: 234,
+          shareCount: 8,
+          trendingScore: 85
+        },
+        {
+          id: '2',
+          title: 'Coping with Work Stress',
+          description: 'Strategies that helped me manage overwhelming work pressure',
+          author: 'Anonymous',
+          authorId: 'user-2',
+          timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000),
+          category: 'coping',
+          likes: 32,
+          comments: 8,
+          isAnonymous: true,
+          content: 'The pressure at work was becoming unbearable until I learned these techniques...',
+          isBookmarked: true,
+          isLiked: true,
+          viewCount: 156,
+          shareCount: 5,
+          trendingScore: 72
+        },
+        {
+          id: '3',
+          title: 'My Journey with Depression',
+          description: 'Sharing my story to help others who might be struggling',
+          author: 'HopeSeeker',
+          authorId: 'user-3',
+          timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
+          category: 'personal-story',
+          likes: 89,
+          comments: 23,
+          isAnonymous: false,
+          content: 'It started slowly, but eventually I realized I needed help...',
+          isBookmarked: false,
+          isLiked: false,
+          viewCount: 512,
+          shareCount: 15,
+          trendingScore: 68
+        }
+      ];
+
+      setPosts(mockPosts);
+      setHasMore(mockPosts.length >= 10);
+      
+    } catch (error) {
+      console.error('Error loading posts:', error);
+      setError('Failed to load feed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loadMorePosts = async () => {
+    if (isLoadingMore || !hasMore) return;
+
+    try {
+      setIsLoadingMore(true);
+      
+      // Simulate loading more posts
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const morePosts: FeedPost[] = [
+        {
+          id: `${page}-4`,
+          title: 'Building Healthy Habits',
+          description: 'Small steps that made a big difference',
+          author: 'WellnessJourney',
+          authorId: 'user-4',
+          timestamp: new Date(Date.now() - 48 * 60 * 60 * 1000),
+          category: 'wellness',
+          likes: 28,
+          comments: 6,
+          isAnonymous: false,
+          content: 'It all started with one small change...',
+          viewCount: 98,
+          shareCount: 3,
+          trendingScore: 45
+        }
+      ];
+
+      setPosts(prev => [...prev, ...morePosts]);
+      setPage(prev => prev + 1);
+      setHasMore(morePosts.length >= 10);
+      
+    } catch (error) {
+      console.error('Error loading more posts:', error);
+      showNotification('error', 'Failed to load more posts');
+    } finally {
+      setIsLoadingMore(false);
+    }
+  };
+
+  const applyFilters = () => {
+    let filtered = [...posts];
+
+    // Apply category filter
+    if (filters.category !== 'all') {
+      filtered = filtered.filter(post => post.category === filters.category);
+    }
+
+    // Apply search filter
+    if (filters.searchQuery) {
+      const query = filters.searchQuery.toLowerCase();
+      filtered = filtered.filter(post => 
+        post.title.toLowerCase().includes(query) ||
+        post.description.toLowerCase().includes(query) ||
+        post.content?.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply time range filter
+    const now = Date.now();
+    switch (filters.timeRange) {
+      case 'today':
+        filtered = filtered.filter(post => 
+          now - post.timestamp.getTime() < 24 * 60 * 60 * 1000
+        );
+        break;
+      case 'week':
+        filtered = filtered.filter(post => 
+          now - post.timestamp.getTime() < 7 * 24 * 60 * 60 * 1000
+        );
+        break;
+      case 'month':
+        filtered = filtered.filter(post => 
+          now - post.timestamp.getTime() < 30 * 24 * 60 * 60 * 1000
+        );
+        break;
+    }
+
+    // Apply sorting
+    switch (filters.sortBy) {
+      case 'recent':
+        filtered.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+        break;
+      case 'popular':
+        filtered.sort((a, b) => (b.likes + b.comments) - (a.likes + a.comments));
+        break;
+      case 'trending':
+        filtered.sort((a, b) => (b.trendingScore || 0) - (a.trendingScore || 0));
+        break;
+    }
+
+    setFilteredPosts(filtered);
+  };
+
+  const handleLike = useCallback(async (postId: string) => {
+    try {
+      setPosts(prev => prev.map(post => {
+        if (post.id === postId) {
+          return {
+            ...post,
+            isLiked: !post.isLiked,
+            likes: post.isLiked ? post.likes - 1 : post.likes + 1
+          };
+        }
+        return post;
+      }));
+    } catch (error) {
+      console.error('Error liking post:', error);
+      showNotification('error', 'Failed to like post');
+    }
+  }, [showNotification]);
+
+  const handleBookmark = useCallback(async (postId: string) => {
+    try {
+      setPosts(prev => prev.map(post => {
+        if (post.id === postId) {
+          return {
+            ...post,
+            isBookmarked: !post.isBookmarked
+          };
+        }
+        return post;
+      }));
+      
+      const post = posts.find(p => p.id === postId);
+      if (post) {
+        showNotification(
+          'success',
+          post.isBookmarked ? 'Removed from bookmarks' : 'Added to bookmarks'
+        );
+      }
+    } catch (error) {
+      console.error('Error bookmarking post:', error);
+      showNotification('error', 'Failed to bookmark post');
+    }
+  }, [posts, showNotification]);
+
+  const handleShare = useCallback(async (postId: string) => {
+    try {
+      const post = posts.find(p => p.id === postId);
+      if (post && navigator.share) {
+        await navigator.share({
+          title: post.title,
+          text: post.description,
+          url: window.location.href
+        });
+        
+        setPosts(prev => prev.map(p => {
+          if (p.id === postId) {
+            return { ...p, shareCount: (p.shareCount || 0) + 1 };
+          }
+          return p;
+        }));
+      } else {
+        // Fallback: Copy to clipboard
+        await navigator.clipboard.writeText(window.location.href);
+        showNotification('success', 'Link copied to clipboard');
+      }
+    } catch (error) {
+      console.error('Error sharing post:', error);
+    }
+  }, [posts, showNotification]);
+
+  const handleFilterChange = (key: keyof FeedFilters, value: any) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      category: 'all',
+      sortBy: 'recent',
+      timeRange: 'all',
+      searchQuery: ''
+    });
+  };
+
+  if (error) {
+    return (
+      <ErrorState
+        message={error}
+        onRetry={loadInitialPosts}
+      />
+    );
+  }
+
+  return (
+    <div className="feed-view">
+      <ViewHeader
+        title="Community Feed"
+        subtitle="Discover stories, insights, and support from the community"
+      />
+
+      <div className="feed-controls">
+        <div className="search-bar">
+          <SearchIcon />
+          <input
+            type="text"
+            placeholder="Search posts..."
+            value={filters.searchQuery}
+            onChange={(e) => handleFilterChange('searchQuery', e.target.value)}
+          />
         </div>
 
-        <div className="card filter-sort-bar">'""'
-            <div className="search-group">'"'"'"'
-                <SearchIcon     />
-                <input type="search"""''"
-                    placeholder="Search posts...";""
-className='search-input""'""""
-                    value={searchTerm}
-                    onChange={e =} setSearchTerm(e.target.value)>
-                /
-            </div
-            <div className='filter-group">"'""""'"'
-                <label>Filter by:</label
-                <div className="filter-buttons'>"'"'"'
-                    <button className={filter === "All' ? active: ""} onClick={() =} setFilter("All")>}All</button>'""'""'
-                    {CATEGORIES.map(cat =) ()}
-    <button key={cat} className={filter === cat ? active: ""} onClick={() =} setFilter(cat)>}{cat}</button'''""'
-                    )
-                </div
-            </div
-            <div className="sort-group">'"''""'
-                <label htmlFor="sort-select">Sort by:</label''""'"'
-                <select id="sort-select" value={sort} onChange={(e) =} setSort(e.target.value as typeof sort)>"'"'"'"'
-                    <option value="newest">Newest</option>""'"'
-                    <option value="most-support">Most Support</option>'"""'
-                    <option value="needs-support'>Needs Support</option>"'"'"'
-                </select
-            </div
-        </div
+        <button
+          className="filter-toggle"
+          onClick={() => setShowFilters(!showFilters)}
+        >
+          Filters {showFilters ? '▲' : '▼'}
+        </button>
+      </div>
 
-        {isLoading ? (}
-    <ul className="posts-list">""'""'
-                {[...Array(3)].map((_, i) =) <SkeletonPostCard key={i}    />})
-            </ul
-         : dilemmasToDisplay.length }0 ? ()
-          <ul className="posts-list">""'"'
-            {
-  dilemmasToDisplay.map(dilemma =) ()}
-    <PostCard
+      {showFilters && (
+        <div className="filters-panel">
+          <div className="filter-group">
+            <label>Category</label>
+            <select
+              value={filters.category}
+              onChange={(e) => handleFilterChange('category', e.target.value)}
+            >
+              <option value="all">All Categories</option>
+              {CATEGORIES.map(category => (
+                <option key={category} value={category}>
+                  {category.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <label>Sort By</label>
+            <select
+              value={filters.sortBy}
+              onChange={(e) => handleFilterChange('sortBy', e.target.value)}
+            >
+              <option value="recent">Most Recent</option>
+              <option value="popular">Most Popular</option>
+              <option value="trending">Trending</option>
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <label>Time Range</label>
+            <select
+              value={filters.timeRange}
+              onChange={(e) => handleFilterChange('timeRange', e.target.value)}
+            >
+              <option value="all">All Time</option>
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+            </select>
+          </div>
+
+          <AppButton
+            variant="secondary"
+            size="small"
+            onClick={clearFilters}
+          >
+            Clear Filters
+          </AppButton>
+        </div>
+      )}
+
+      <div className="feed-content">
+        {isLoading ? (
+          <div className="loading-posts">
+            {[1, 2, 3].map(i => (
+              <SkeletonPostCard key={i} />
+            ))}
+          </div>
+        ) : filteredPosts.length === 0 ? (
+          <EmptyState
+            title="No posts found"
+            description={
+              filters.searchQuery
+                ? "Try adjusting your search or filters"
+                : "Be the first to share your story"
+            }
+          />
+        ) : (
+          <>
+            <div className="posts-list">
+              {filteredPosts.map(post => (
+                <PostCard
+                  key={post.id}
+                  dilemma={post}
+                  onLike={() => handleLike(post.id)}
+                  onBookmark={() => handleBookmark(post.id)}
+                  onShare={() => handleShare(post.id)}
+                  isLiked={post.isLiked}
+                  isBookmarked={post.isBookmarked}
+                  showActions
+                />
+              ))}
+            </div>
+
+            {hasMore && (
+              <div className="load-more">
+                <AppButton
+                  onClick={loadMorePosts}
+                  loading={isLoadingMore}
+                  variant="secondary"
+                >
+                  Load More Posts
+                </AppButton>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {filteredPosts.length > 0 && (
+        <div className="feed-stats">
+          <span>Showing {filteredPosts.length} posts</span>
+          {filters.category !== 'all' && (
+            <span> in {filters.category.replace('-', ' ')}</span>
+          )}
+        </div>
+      )}
+    </div>
+  );
 };
 
-key={dilemma.id}
-                    dilemma={dilemma}
-                    onToggleSupport={toggleSupport}
-                    onStartChat={(dilemmaId) =} startChat(dilemmaId, 'seeker")>""''""'
-                    onReport={openReportModal}
-                    hasUnread={chatSessions[dilemma.id]?.unread ?? false}
-                    filteredCategories={contentFilters}
-                /}
-            )
-          </ul
-         : (
-          <Card>
-            <ErrorState
-                title="No Posts Found'""""'
-                message='Try adjusting your search or filter settings to find what you're looking for.""""
-                />
-          </Card)
-        {hasMore && !isLoading && activeTab === 'community' && (""""}
-    <div className='load-more-container">"'""}
-    <button className="btn btn-secondary' onClick={loadMore}>Load More</button>"''""'
-            </div)
-      </div;
 export default FeedView;

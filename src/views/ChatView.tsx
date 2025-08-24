@@ -1,345 +1,458 @@
-import React, { useState(, useEffect, useRef ) from 'react';"""'"'""'
-import { LazyMarkdown  } from '../components/LazyMarkdown';""'"'""'
-import { ChatSession, Dilemma  } from '../types';""'"'"'
-import { BackIcon, SendIcon, HeartIcon, CrisisIcon   } from '../components/icons.dynamic';"""'"'""'
-import { TypingIndicator  } from '../components/TypingIndicator';"""''""'
-import { formatChatTimestamp  } from '../utils/formatTimeAgo';""''""'""'
-import { GuidancePanel  } from '../components/GuidancePanel';'"'"'""'
-import { AppButton  } from '../components/AppButton';'""''""""'
-import { MobileAppInput, MobileChatComposer, useMobileViewport  } from '../components/MobileKeyboardHandler';"'""""''
-import { ApiClient  } from '../utils/ApiClient';'"'"""''
-import { useAuth  } from '../contexts/AuthContext';'""""'
-import CulturalCrisisAlert from '../components/CulturalCrisisAlert';"'""""''
-import { useNotification  } from '../contexts/NotificationContext';'""'""'"'
-import { useChatStore  } from '../stores/chatStore';"""'"'""'
-import { useSessionStore  } from '../stores/sessionStore';""'""'
-import { isError  } from '../types/common';""'""'
-export const ChatView: React.FC<{
-  ,
-  session: ChatSession
-};
+import React, { useState, useEffect, useRef } from 'react';
+import { LazyMarkdown } from '../components/LazyMarkdown';
+import { ChatSession, Dilemma } from '../types';
+import { BackIcon, SendIcon, HeartIcon, CrisisIcon } from '../components/icons.dynamic';
+import { TypingIndicator } from '../components/TypingIndicator';
+import { formatChatTimestamp } from '../utils/formatTimeAgo';
+import { GuidancePanel } from '../components/GuidancePanel';
+import { AppButton } from '../components/AppButton';
+import { ApiClient } from '../utils/ApiClient';
+import { useAuth } from '../contexts/AuthContext';
+import { useNotification } from '../contexts/NotificationContext';
 
-dilemma: Dilemma
-};
+interface ChatMessage {
+  id: string;
+  content: string;
+  sender: 'user' | 'helper' | 'system';
+  timestamp: Date;
+  isRead: boolean;
+  metadata?: {
+    senderName?: string;
+    senderAvatar?: string;
+    isEdited?: boolean;
+    editedAt?: Date;
+    reactions?: Array<{
+      type: string;
+      userId: string;
+      timestamp: Date;
+    }>;
+  };
+}
 
-onViewHelperProfile: (helperId: string) =} void
-  >} = ({ session, dilemma, onViewHelperProfile }) = {   }
-const [newMessage, setNewMessage] = useState('" );"'
-const messagesEndRef = useRef<HTMLDivElement>(null );
-{ userToken, helperProfile } = useAuth();
-const [showBreakPrompt, setShowBreakPrompt] = useState(false);
-{ addToast, showConfirmationModal } = useNotification();
-{ sendMessage, setTyping, closeChat, guidance, dismissGuidance } = useChatStore();
-{ helpSessions, toggleFavorite } = useSessionStore();
+interface ChatViewProps {
+  sessionId?: string;
+  partnerId?: string;
+  partnerType: 'helper' | 'ai' | 'peer';
+  onBack?: () => void;
+}
 
-    // Mobile keyboard handling
-    useMobileViewport();
-const perspective = session.perspective;
-const helperForChat = session.helper;
-const helpSessionDetails = helpSessions.find(hs =) hs.id === session.helpSessionId;
-const isFavorited = helpSessionDetails?.isFavorited ?? false;
+const ChatView: React.FC<ChatViewProps> = ({
+  sessionId,
+  partnerId,
+  partnerType,
+  onBack
+}) => {
+  const { user } = useAuth();
+  const { showNotification } = useNotification();
+  
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [inputMessage, setInputMessage] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [partnerIsTyping, setPartnerIsTyping] = useState(false);
+  const [session, setSession] = useState<ChatSession | null>(null);
+  const [showGuidance, setShowGuidance] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSending, setIsSending] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState<'connected' | 'connecting' | 'disconnected'>('connecting');
+  
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    // State for Emergency Hold Button
-[, setIsHolding] = useState(false);
-const [holdProgress, setHoldProgress] = useState(0);
-const holdTimerRef = useRef<number | null>(null);
-const animationFrameRef = useRef<number | null>(null);
+  useEffect(() => {
+    initializeChat();
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+    };
+  }, [sessionId, partnerId]);
 
-    useEffect(() =) {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" ), []);'""'""'"'
-        // Simple break prompt logic
-        if (session.messages.length ) 20 && session.messages.length % 10 === 0} { setShowBreakPrompt(true ),
-            setTimeout(() =) setShowBreakPrompt(false), 10000};
-  , [session.messages, session.isTyping]
-const handleSend = () = { if (!newMessage.trim()) return }
-        sendMessage(session.dilemmaId, newMessage);
-        setNewMessage("'  );""'""'"'
-        setTyping(session.dilemmaId, false);
-const handleBlockUser = async () = {   }
-const blockerId = perspective === "helper' ? helperProfile?.id : userToken;""""'
-const blockedId = perspective === 'helper" ? dilemma.userToken : dilemma.assignedHelperId;"'""
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-        if (!blockerId || !blockedId) {
-            addToast("Could not identify users to block.", 'error"  );"''""'
-            return }
+  const initializeChat = async () => {
+    try {
+      setIsLoading(true);
+      
+      // Mock session data
+      const mockSession: ChatSession = {
+        id: sessionId || `session-${Date.now()}`,
+        userId: user?.id || 'current-user',
+        helperId: partnerId,
+        startTime: new Date(),
+        status: 'active',
+        messages: []
+      };
 
-        showConfirmationModal({
-  title: "Block User?","'"'"'"""'
-            message: "Are you sure you want to block this user? You will no longer see their posts or messages.',""''"""'
-            confirmText: "Block',""'"""")
-};
+      // Mock initial messages
+      const initialMessages: ChatMessage[] = [
+        {
+          id: '1',
+          content: `Hello! I'm here to support you. How are you feeling today?`,
+          sender: 'helper',
+          timestamp: new Date(Date.now() - 5 * 60 * 1000),
+          isRead: true,
+          metadata: {
+            senderName: partnerType === 'ai' ? 'AI Assistant' : 'Helper',
+            senderAvatar: undefined
+          }
+        }
+      ];
 
-confirmVariant: 'danger","'""")
-};
+      setSession(mockSession);
+      setMessages(initialMessages);
+      setConnectionStatus('connected');
+      
+    } catch (error) {
+      console.error('Error initializing chat:', error);
+      showNotification('error', 'Failed to initialize chat');
+      setConnectionStatus('disconnected');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-onConfirm: async () => {
-                try(await ApiClient.userBlocking.blockUser(blockerId, blockedId);
-                    addToast("User has been blocked. This chat will now close.', "info"  );'""
-                    closeChat(dilemma.id) } catch (err) {;
-const errorMessage = isError(err) ? err.message : "Failed to block user.";'""''"""'
-                    addToast(errorMessage, "error') };"'"";
-const handleFavoriteClick = () = { if (session.helpSessionId) {}
-            toggleFavorite(session.helpSessionId) };
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
-    // --- Emergency Button Logic ---
-const triggerEmergency = () = {}
-        showConfirmationModal({
-  title: "Confirm Emergency',""''"""'
-            message: "Are you in immediate danger? This will attempt to get your location and send an alert.',""''""'
-            confirmText: "YES, SEND ALERT","'"'"'""')
-};
+  const handleSendMessage = async () => {
+    if (!inputMessage.trim() || isSending) return;
 
-confirmVariant: "danger",'"'"'""')
-};
+    const messageContent = inputMessage.trim();
+    setInputMessage('');
+    setIsSending(true);
 
-onConfirm: () =} {
-                navigator.geolocation.getCurrentPosition()
-                    (position) =} {;
-{ latitude, longitude } = position.coords;
-                        ApiClient.emergency.trigger(dilemma.id, { latitude, longitude ));
-                        addToast("Emergency alert sent with your approximate location.", 'success");"'""
-  },
-                    (error) = {   }
-const errorMessage = "Could not get your location. ";'"'"'"'
+    // Add user message immediately
+    const userMessage: ChatMessage = {
+      id: `msg-${Date.now()}`,
+      content: messageContent,
+      sender: 'user',
+      timestamp: new Date(),
+      isRead: false,
+      metadata: {
+        senderName: user?.username || 'You',
+        senderAvatar: user?.avatar
+      }
+    };
 
-                        // Provide specific error messages based on error code
-                        switch(error.code) {
-  case error.PERMISSION_DENIED:
-                                errorMessage += "Location access was denied. Please enable location permissions in your browser settings."""''
-                                break
-                            case error.POSITION_UNAVAILABLE:
-                                errorMessage += "Location information is unavailable. Your device may not support location services."'""'
-                                break
-                            case error.TIMEOUT:
-                                errorMessage += "Location request timed out. Please check your internet connection."'"'
-                                break
-};
+    setMessages(prev => [...prev, userMessage]);
 
-default: errorMessage += "An unknown error occurred while getting your location.'""'"
+    try {
+      // Simulate partner typing
+      setTimeout(() => {
+        setPartnerIsTyping(true);
+      }, 500);
 
-                        console.error("Geolocation error:', error.code, error.message  );"'"""'"'
+      // Simulate partner response
+      setTimeout(() => {
+        const responseMessage: ChatMessage = {
+          id: `msg-${Date.now() + 1}`,
+          content: generateResponse(messageContent, partnerType),
+          sender: 'helper',
+          timestamp: new Date(),
+          isRead: false,
+          metadata: {
+            senderName: partnerType === 'ai' ? 'AI Assistant' : 'Helper',
+            senderAvatar: undefined
+          }
+        };
 
-                        showConfirmationModal({
-  title: "Location Access Issue',""""')
-};
+        setMessages(prev => [...prev, responseMessage]);
+        setPartnerIsTyping(false);
+      }, 2000 + Math.random() * 2000);
 
-message: `${errorMessage}\n\nWould you like to send the emergency alert without location data?`,
-                            confirmText: 'Yes, Send Anyway","'""""''
-                            cancelText: "Cancel",'"'"""''
-                            confirmVariant: "danger",'"'"""''
-                            onConfirm: () =} { ApiClient.emergency.trigger(dilemma.id)
-                                    .then(() =) {
-                                        addToast("Emergency alert sent successfully without location data.", 'warning") }}"""'
-                                    .catch((err) =) { console.error('Failed to send emergency alert:", err  );"'""""'"'
-                                        addToast("Failed to send emergency alert. Please try again or call 911.', "error") }};""'
-  );
-  }};
-  ,
-                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 };
-const startHold = () = { if (holdTimerRef.current) clearTimeout(holdTimerRef.current) }
-        if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+    } catch (error) {
+      console.error('Error sending message:', error);
+      showNotification('error', 'Failed to send message');
+    } finally {
+      setIsSending(false);
+    }
+  };
 
-        setIsHolding(true);
-const startTime = Date.now();
-const duration = 3000;
-const animateProgress = () = {;}
-const elapsed = Date.now() - startTime;
-const progress = Math.min(elapsed / duration, 1 );
-            setHoldProgress(progress ),
-            if (progress < 1> {
-                animationFrameRef.current = requestAnimationFrame(animateProgress) };
-  );
-        animationFrameRef.current = requestAnimationFrame(animateProgress);
+  const generateResponse = (userMessage: string, type: string): string => {
+    const responses = {
+      ai: [
+        "I understand how you're feeling. Let's explore this together.",
+        "That's a valid concern. What specific aspects are most challenging for you?",
+        "Thank you for sharing that with me. How long have you been experiencing this?",
+        "I hear you. Let's work through this step by step.",
+        "Your feelings are completely valid. What would help you feel better right now?"
+      ],
+      helper: [
+        "I appreciate you opening up about this. How can I best support you?",
+        "That sounds challenging. Would you like to talk more about it?",
+        "I'm here to listen. Take your time to express what you're feeling.",
+        "Thank you for trusting me with this. What's been on your mind lately?",
+        "I understand. Let's explore some coping strategies together."
+      ],
+      peer: [
+        "I can relate to what you're going through. You're not alone in this.",
+        "I've experienced something similar. Would you like to hear what helped me?",
+        "That's tough. I'm here if you need someone who understands.",
+        "Thanks for sharing. It takes courage to open up about these things.",
+        "I hear you. Sometimes just talking to someone who gets it helps."
+      ]
+    };
 
-        holdTimerRef.current = window.setTimeout(() =) { triggerEmergency(),
-            endHold() }, duration};
-const endHold = () = { setIsHolding(false) }
-        setHoldProgress(0 );
-        if (holdTimerRef.current) {
-            clearTimeout(holdTimerRef.current ),
-            holdTimerRef.current = null }
-        if (animationFrameRef.current) { cancelAnimationFrame(animationFrameRef.current );
-            animationFrameRef.current = null };
-const getHeaderTitle = () = {}
-        if (perspective === 'helper") return "Chat with Seeker';""""'""'
-        if (helperForChat) return `Chat with ${helperForChat.displayName}`;
-        return 'Waiting for a helper...";"""';
-const getHeaderSubTitle = () = {}
-         if (perspective === 'helper") return `About: "${dilemma.content.substring(0, 30)}...'`;""""`'"`'
-         if (helperForChat) return `Reputation: ${helperForChat.reputation.toFixed(1)}/5.0`;
-         return `Your conversation about "${dilemma.content.substring(0, 30)}...'`;""'
-return(<div className='chat-view">"')""""''
-            <div className="chat-header">'""""'
-                <button onClick={() =} closeChat(dilemma.id)> className='back-btn"}<BackIcon    /</button>"'""""
-                <div className='chat-header-info">"''""'
-                    <h2>
-                        {
-  helperForChat && perspective !== "helper" ? ('"'"'"'}
-    <button type="button""''""''
-};
+    const typeResponses = responses[type as keyof typeof responses] || responses.ai;
+    return typeResponses[Math.floor(Math.random() * typeResponses.length)];
+  };
 
-onClick={() =} onViewHelperProfile(helperForChat.id)>
-                                style= {}
-  {
-  background: "none",""'""'
-                                    border: "none',""'""'"'
-                                    color: "inherit',"""'"'"'
-                                    textDecoration: "underline',"""'"'""'
-                                    cursor: "pointer",""'""'
-};
+  const handleTyping = () => {
+    if (!isTyping) {
+      setIsTyping(true);
+      // Notify partner that user is typing
+    }
 
-font: "inherit',""'""'"'
-};
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
 
-padding: 0
-})
-                                {getHeaderTitle()}
-                            </button}
-                        } : getHeaderTitle()}
-                    </h2
-                    <p>{getHeaderSubTitle()}</p
-                </div
-                <div className="chat-header-actions' style= {">"""'}
-  {display: 'flex", gap: "1rem', alignItems: "center""
+    typingTimeoutRef.current = setTimeout(() => {
+      setIsTyping(false);
+      // Notify partner that user stopped typing
+    }, 1000);
+  };
 
-                    {perspective === "seeker' && session.helpSessionId && (""''}}"""'
-                         <AppButton variant="ghost';">"'
-className={`btn-sm btn-support ${isFavorited ? supported: '"}`}"'""'"'
-                            onClick={handleFavoriteClick}
-                            style= {}
-  {padding: "0.5rem'""""'
-}aria-label={isFavorited ? 'Unfavorite this helper" : "Favorite this helper'}""""'"'
-                            icon={<HeartIcon     />}
-                        />
-                    <AppButton variant="secondary' onClick={handleBlockUser} className="btn-sm">Block User</AppButton>""''""'"
-                </div>
-            </div)
-             {
-  showBreakPrompt && (}
-    <div style= {{ padding: "0.5rem 1rem", backgroundColor: "var(--accent-warning)', color: "var(--bg-primary)", textAlign: 'center" ""}
-}>
-                    This is a long conversation. Remember to take breaks!
-                </div)
-            }}
-            <div className="chat-messages'>""''"""'
-                 {
-  guidance?.isCrisis && perspective === "seeker' && (""''""'}
-    <CulturalCrisisAlert
-};
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
 
-analysisText={session.messages.slice(-3).map(m => m.text).join(" ")}'""''""""'
-                     show={true}
-                     userType='seeker""''""""'
-                     onCrisisDetected= {}
-  (_result) => {/* Crisis detected in chat */
-}onDismiss={() => dismissGuidance()}
-                   />
-                 )}
-                 {session.messages.map(msg => ()}
-    <div key={msg.id} className={`message-group ${msg.sender}`}>
-                        <div className='message-bubble-wrapper">"'""""
-                             <div className='message-bubble markdown-content">"''"""'
-                                <LazyMarkdown className="chat-message' autoLoad={true}>""''""""'
-                                    {msg.text}
-                                </LazyMarkdown>
-                            </div>
-                        </div>
-                        <span className='message-timestamp">{formatChatTimestamp(msg.timestamp)}</span>"''""""'
-                    </div>
-                ))}
-                {session.isTyping && <TypingIndicator     />}
-                 <div ref={messagesEndRef}     />
+  const handleReaction = (messageId: string, reactionType: string) => {
+    setMessages(prev => prev.map(msg => {
+      if (msg.id === messageId) {
+        const reactions = msg.metadata?.reactions || [];
+        const existingReaction = reactions.find(
+          r => r.userId === user?.id && r.type === reactionType
+        );
+
+        if (existingReaction) {
+          // Remove reaction
+          return {
+            ...msg,
+            metadata: {
+              ...msg.metadata,
+              reactions: reactions.filter(r => r !== existingReaction)
+            }
+          };
+        } else {
+          // Add reaction
+          return {
+            ...msg,
+            metadata: {
+              ...msg.metadata,
+              reactions: [...reactions, {
+                type: reactionType,
+                userId: user?.id || 'current-user',
+                timestamp: new Date()
+              }]
+            }
+          };
+        }
+      }
+      return msg;
+    }));
+  };
+
+  const getConnectionStatusColor = () => {
+    switch (connectionStatus) {
+      case 'connected': return '#10b981';
+      case 'connecting': return '#f59e0b';
+      case 'disconnected': return '#ef4444';
+      default: return '#6b7280';
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="chat-view">
+        <div className="loading-state">
+          <div className="spinner"></div>
+          <p>Connecting to chat...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="chat-view">
+      <div className="chat-header">
+        <div className="header-left">
+          {onBack && (
+            <button className="back-button" onClick={onBack}>
+              <BackIcon />
+            </button>
+          )}
+          <div className="partner-info">
+            <div className="partner-avatar">
+              {partnerType === 'ai' ? '🤖' : partnerType === 'peer' ? '👥' : '👨‍⚕️'}
             </div>
+            <div className="partner-details">
+              <div className="partner-name">
+                {partnerType === 'ai' ? 'AI Assistant' : partnerType === 'peer' ? 'Peer Support' : 'Helper'}
+              </div>
+              <div className="connection-status">
+                <span 
+                  className="status-dot"
+                  style={{ backgroundColor: getConnectionStatusColor() }}
+                />
+                <span className="status-text">{connectionStatus}</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-            <MobileChatComposer style= {}
-  {position: 'relative""'"
-)}
-                {
-  perspective === "seeker" && ("''""'"'}
-    <button className="btn btn-danger""'""'
-};
+        <div className="header-actions">
+          <button
+            className="guidance-toggle"
+            onClick={() => setShowGuidance(!showGuidance)}
+          >
+            {showGuidance ? 'Hide' : 'Show'} Tips
+          </button>
+          {partnerType === 'helper' && (
+            <button className="crisis-button">
+              <CrisisIcon />
+              Crisis
+            </button>
+          )}
+        </div>
+      </div>
 
-onMouseDown={startHold}
-                        onMouseUp={endHold}
-                        onTouchStart={startHold}
-                        onTouchEnd={endHold}
-                        style= {}
-  {
-  position: 'absolute",""'"'"'
-                            right: "calc(100% + 1rem)', /* Position left of the input area */""'""''
-                            top: "50%",'""""'
-                            transform: 'translateY(-50%)","'"""
-                            width: "auto',""''""'
-                            padding: "0.75rem 1rem",'"'"'"'
-                            display: "flex","''""''
-                            alignItems: "center",""'""'
-                            gap: '0.5rem",""'"'"'
-                            overflow: "hidden',""'""''
-};
+      <div className="chat-content">
+        <div className={`messages-container ${showGuidance ? 'with-guidance' : ''}`}>
+          <div className="messages-list">
+            {messages.map((message, index) => (
+              <div
+                key={message.id}
+                className={`message ${message.sender === 'user' ? 'sent' : 'received'}`}
+              >
+                {message.sender !== 'user' && (
+                  <div className="message-avatar">
+                    {message.metadata?.senderAvatar ? (
+                      <img src={message.metadata.senderAvatar} alt={message.metadata.senderName} />
+                    ) : (
+                      <div className="avatar-placeholder">
+                        {message.metadata?.senderName?.[0] || 'H'}
+                      </div>
+                    )}
+                  </div>
+                )}
 
-minHeight: "44px", // Touch target size'""""'
-};
+                <div className="message-content">
+                  <div className="message-bubble">
+                    <LazyMarkdown content={message.content} />
+                    {message.metadata?.isEdited && (
+                      <span className="edited-indicator">edited</span>
+                    )}
+                  </div>
 
-borderRadius: '20px""'
+                  <div className="message-footer">
+                    <span className="message-time">
+                      {formatChatTimestamp(message.timestamp)}
+                    </span>
+                    
+                    {message.sender !== 'user' && (
+                      <div className="message-reactions">
+                        <button
+                          className="reaction-button"
+                          onClick={() => handleReaction(message.id, 'heart')}
+                        >
+                          <HeartIcon />
+                        </button>
+                      </div>
+                    )}
+                  </div>
 
-                        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, background: "rgba(255,255,255,0.3)", width: `${holdProgress * 100}%` }}></div'"'"'""'
-                        <CrisisIcon     />
-                        <span style= {}
-  {position: "relative"'"'
-}>Emergency</span>
-                    </button
-                >
-                <MobileAppInput type='text"""''">"'
-                    placeholder="Type your message...'""'""'"'
-                    value={newMessage}
-                    onChange= { (e) =} {}
-                        setNewMessage(e.target.value ),
-                        if (e.target.value) {
-                            setTyping(session.dilemmaId, true) } else(setTyping(session.dilemmaId, false) );
-  )}
-                    onKeyDown= { (e) =} {}
-                        if (e.key === "Enter' && !e.shiftKey) { """'"'""'
-                            e.preventDefault();
-                            handleSend() };
-className="chat-input"""''""'""'
-                    containerStyle= {}
-  { flexGrow: 1, marginBottom: 0
-}style= {}
-  {
-  fontSize: "16px", // Prevent zoom on iOS'""''""""'
-};
+                  {message.metadata?.reactions && message.metadata.reactions.length > 0 && (
+                    <div className="reactions-display">
+                      {message.metadata.reactions.map((reaction, idx) => (
+                        <span key={idx} className="reaction">
+                          {reaction.type === 'heart' ? '❤️' : reaction.type}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
 
-padding: '12px 16px","'""""
-};
-
-borderRadius: '20px""'"
-}/>
-                <AppButton
-                    onClick={handleSend}
-                    disabled= { !newMessage.trim( ) }
-className="chat-send-btn""''""'""'
-                    style= {}
-  {
-  minWidth: "44px",'"'"'""'
-                        minHeight: "44px",'""''"""'
-                        borderRadius: "50%',""''""'
-                        display: "flex",'""''""""'
-                        alignItems: 'center","'""""
-                        justifyContent: 'center","'""""''
-};
-
-padding: 0,
-};
-
-marginLeft: "8px"'""'
-}}
-                    <SendIcon     />
-                </AppButton
-            </MobileChatComposer
-
-            {/* AI Guidance Panel - Placed at the end to overlay correctly with CSS */}
-            {perspective === "helper" && guidance && guidance.dilemmaId === session.dilemmaId && (''""'"'}
-    <GuidancePanel guidance={guidance} onDismiss={dismissGuidance}     />
+            {partnerIsTyping && (
+              <div className="message received">
+                <div className="message-avatar">
+                  <div className="avatar-placeholder">
+                    {partnerType === 'ai' ? 'AI' : 'H'}
+                  </div>
+                </div>
+                <div className="message-content">
+                  <div className="message-bubble">
+                    <TypingIndicator />
+                  </div>
+                </div>
+              </div>
             )}
-        </div;
+
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
+
+        {showGuidance && (
+          <div className="guidance-panel">
+            <GuidancePanel 
+              context="chat"
+              suggestions={[
+                "Take your time to express yourself",
+                "It's okay to pause if you need to",
+                "Share what feels comfortable",
+                "Ask for clarification if needed"
+              ]}
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="chat-input-container">
+        {isTyping && (
+          <div className="typing-indicator-self">
+            You are typing...
+          </div>
+        )}
+        
+        <div className="chat-input">
+          <textarea
+            ref={inputRef}
+            value={inputMessage}
+            onChange={(e) => {
+              setInputMessage(e.target.value);
+              handleTyping();
+            }}
+            onKeyPress={handleKeyPress}
+            placeholder="Type your message..."
+            rows={1}
+            disabled={isSending || connectionStatus !== 'connected'}
+          />
+          
+          <AppButton
+            onClick={handleSendMessage}
+            disabled={!inputMessage.trim() || isSending || connectionStatus !== 'connected'}
+            loading={isSending}
+            className="send-button"
+          >
+            <SendIcon />
+          </AppButton>
+        </div>
+
+        <div className="input-hints">
+          <span>Press Enter to send, Shift+Enter for new line</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default ChatView;
