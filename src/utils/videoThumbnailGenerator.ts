@@ -1,6 +1,6 @@
 /**
  * Video Thumbnail Generator
- *
+ * 
  * Generates optimized thumbnails from video files for wellness videos
  * Features:
  * - Extract frames from video sources
@@ -8,322 +8,322 @@
  * - Create placeholder images
  * - Optimize for mobile performance
  */
-interface VideoThumbnailOptions { { { {
+
+import { logger } from './logger';
+
+export interface VideoThumbnailOptions {
   frameTime?: number; // Time in seconds to extract frame (default: 1)
   quality?: number; // JPEG quality 0-100 (default: 85)
-  sizes?: Array<{ width: number; height: number, suffix: string }>;
+  sizes?: Array<{ width: number; height: number; suffix: string }>;
   generatePlaceholder?: boolean;
+}
+
+export interface ThumbnailResult {
+  thumbnails: Array<{
+    size: string;
+    dataUrl: string;
+    blob: Blob;
+    width: number;
+    height: number;
+  }>;
+  placeholder?: string;
+  originalDimensions: {
+    width: number;
+    height: number;
   };
-interface GeneratedThumbnail { { { {
-  original: string;,
-};
+}
 
-sizes: Record<string, string>; // suffix -> base64 URL
-  placeholder?: string,
-};
-
-aspectRatio: number
-  duration?: number
-  };
-const DEFAULT_SIZES = [;]
-  { width: 320, height: 180, suffix: "small' },""'""'"'
-  { width: 480, height: 270, suffix: "medium' },""""'
-  { width: 720, height: 405, suffix: 'large" },"'""""''
-  { width: 1280, height: 720, suffix: "xl" }'"'"""''
-};
-
-/**
- * Video Thumbnail Generator Class
- */;
 class VideoThumbnailGenerator {
-  private canvas: HTMLCanvasElement}
-  private ctx: CanvasRenderingContext2D
-$2ructor() {
-    this.canvas = document.createElement("canvas");'"""'
-const context = this.canvas.getContext("2d'  );""''""'
-    if (!context) {
-      throw new Error("Failed to create canvas 2D context") }'"'"'"'
-    this.ctx = context;
+  private readonly defaultSizes = [
+    { width: 320, height: 180, suffix: 'small' },
+    { width: 640, height: 360, suffix: 'medium' },
+    { width: 1280, height: 720, suffix: 'large' }
+  ];
 
   /**
-   * Generate thumbnails from video source
+   * Generate thumbnails from video file or URL
    */
-  async generateThumbnails(videoSrc: string),
-  options: VideoThumbnailOptions = {}
-  }: Promise<GeneratedThumbnail> {,
-{
-  frameTime = 1,
+  public async generateThumbnails(
+    videoSource: File | string,
+    options: VideoThumbnailOptions = {}
+  ): Promise<ThumbnailResult> {
+    const {
+      frameTime = 1,
       quality = 85,
-};
+      sizes = this.defaultSizes,
+      generatePlaceholder = true
+    } = options;
 
-sizes = DEFAULT_SIZES,
-};
+    try {
+      const video = await this.loadVideo(videoSource);
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
 
-generatePlaceholder = true } = options;
+      if (!ctx) {
+        throw new Error('Unable to get canvas context');
+      }
 
-    return new Promise((resolve, reject) =) {;
-const video = document.createElement("video" );"''""''
-      video.crossOrigin = "anonymous";""'""'
-      video.preload = 'metadata";""'"'"'
+      // Set video time to extract frame
+      video.currentTime = frameTime;
+      
+      // Wait for video to load the frame
+      await new Promise((resolve) => {
+        video.addEventListener('seeked', resolve, { once: true });
+      });
 
-      video.onloadedmetadata = () =} {
-        video.currentTime = Math.min(frameTime, video.duration / 2 );
+      const originalDimensions = {
+        width: video.videoWidth,
+        height: video.videoHeight
+      };
 
-      video.onseeked = async () =} {
-        try {;
-const aspectRatio = video.videoWidth / video.videoHeight;
+      const thumbnails = [];
 
-          // Generate thumbnails for all sizes
-};
+      // Generate thumbnails for each size
+      for (const size of sizes) {
+        canvas.width = size.width;
+        canvas.height = size.height;
 
-thumbnailSizes: Record<string, string> = {};
+        // Draw video frame to canvas with proper scaling
+        ctx.drawImage(video, 0, 0, size.width, size.height);
 
-          for (const size of sizes) {;
-const thumbnailUrl = this.generateThumbnailAtSize(;
-              video,
-              size.width,
-              size.height,
-              quality
-             ),
-            thumbnailSizes[size.suffix] = thumbnailUrl }
+        // Convert to blob
+        const blob = await new Promise<Blob>((resolve, reject) => {
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                resolve(blob);
+              } else {
+                reject(new Error('Failed to generate thumbnail blob'));
+              }
+            },
+            'image/jpeg',
+            quality / 100
+          );
+        });
 
-          // Generate placeholder if requested
-placeholder: string | undefined
-          if (generatePlaceholder) { placeholder = this.generatePlaceholder(video, aspectRatio) }
+        const dataUrl = canvas.toDataURL('image/jpeg', quality / 100);
 
-          resolve({
-  original: videoSrc,
-};
+        thumbnails.push({
+          size: size.suffix,
+          dataUrl,
+          blob,
+          width: size.width,
+          height: size.height
+        });
+      }
 
-sizes: thumbnailSizes,
-            placeholder,
-            aspectRatio,)
-};
-
-duration: video.duration)
-});
-  } catch (error) { reject(error) };
-  };
-
-      video.onerror = () =} {
-        reject(new Error(`Failed to load video: ${videoSrc}`));
-  };
-
-      video.src = videoSrc;
-  };
-
-  /**
-   * Generate thumbnail at specific size
-   */
-  private generateThumbnailAtSize(video: HTMLVideoElement),
-  width: number,
-    height: number,
-    quality: number
-  : string(this.canvas.width = width
-    this.canvas.height = height
-    // Draw video frame to canvas
-    this.ctx.drawImage(video, 0, 0, width, height );
-
-    // Convert to optimized JPEG
-    return this.canvas.toDataURL("image/jpeg', quality / 100) )""'""''
-
-  /**
-   * Generate low-quality placeholder for blur effect
-   */
-  private generatePlaceholder(video: HTMLVideoElement),
-  aspectRatio: number
-  : string(
-const placeholderWidth = 40
-const placeholderHeight = Math.round(placeholderWidth / aspectRatio);
-
-    this.canvas.width = placeholderWidth;
-    this.canvas.height = placeholderHeight;
-
-    // Draw low-res frame
-    this.ctx.drawImage(video, 0, 0, placeholderWidth, placeholderHeight );
-
-    return this.canvas.toDataURL("image/jpeg", 0.1) )'""""'
-
-  /**
-   * Generate thumbnail from video element currently in DOM
-   */
-  generateThumbnailFromElement(videoElement: HTMLVideoElement),
-  options: VideoThumbnailOptions = {}
-  : GeneratedThumbnail | null { if (videoElement.readyState < 2>){
-      // Video not ready
-      return null }
-
-    try {,
-{
-  quality = 85,
-};
-
-sizes = DEFAULT_SIZES,
-};
-
-generatePlaceholder = true } = options;
-const aspectRatio = videoElement.videoWidth / videoElement.videoHeight;
-thumbnailSizes: Record<string, string> = {};
-
-      // Generate thumbnails for all sizes
-      for (const size of sizes) {;
-const thumbnailUrl = this.generateThumbnailAtSize(;
-          videoElement,
-          size.width,
-          size.height,
-          quality
-         ),
-        thumbnailSizes[size.suffix] = thumbnailUrl }
+      const result: ThumbnailResult = {
+        thumbnails,
+        originalDimensions
+      };
 
       // Generate placeholder if requested
-placeholder: string | undefined
-      if (generatePlaceholder) { placeholder = this.generatePlaceholder(videoElement, aspectRatio) }
+      if (generatePlaceholder) {
+        result.placeholder = await this.generatePlaceholder(originalDimensions);
+      }
 
-      return {
-  original: videoElement.src,
-};
+      // Clean up
+      video.remove();
 
-sizes: thumbnailSizes,
-        placeholder,
-        aspectRatio,
-};
-
-duration: videoElement.duration
-  } catch (error) { console.error('Error generating thumbnail from element:", error );"'"""
-      return null  };
+      return result;
+    } catch (error) {
+      logger.error('Thumbnail generation failed:', error);
+      throw error;
+    }
+  }
 
   /**
-   * Batch generate thumbnails for multiple videos
+   * Load video element from file or URL
    */
-  async generateBatchThumbnails(videoSources: string[]),
-  options: VideoThumbnailOptions = {}
-  }: Promise<GeneratedThumbnail[]> {
-  ,
-};
+  private async loadVideo(videoSource: File | string): Promise<HTMLVideoElement> {
+    const video = document.createElement('video');
+    video.crossOrigin = 'anonymous';
+    video.muted = true;
+    video.playsInline = true;
 
-results: GeneratedThumbnail[] = []
-    // Process videos in batches to avoid overwhelming the browser }
+    return new Promise((resolve, reject) => {
+      video.addEventListener('loadedmetadata', () => {
+        resolve(video);
+      });
 
- batchSize = 3
-    for (let i = 0; i < videoSources.length; i += batchSize> {;
-const batch = videoSources.slice(i, i + batchSize  );
-const batchPromises = batch.map(videoSrc =)}
-        this.generateThumbnails(videoSrc, options)
-          .catch(error =) { console.error(`Failed to generate thumbnail for ${videoSrc):`, error);
-            return null });
-const batchResults = await Promise.all(batchPromises);
-      results.push(...batchResults.filter((result): result is GeneratedThumbnail =) result !== null)};
+      video.addEventListener('error', () => {
+        reject(new Error('Failed to load video'));
+      });
 
-      // Small delay between batches to prevent blocking UI
-      if (i + batchSize < videoSources.length> { await new Promise(resolve =) setTimeout(resolve, 100)} );
+      if (typeof videoSource === 'string') {
+        video.src = videoSource;
+      } else {
+        video.src = URL.createObjectURL(videoSource);
+      }
 
-    return results;
+      video.load();
+    });
+  }
 
   /**
-   * Save generated thumbnails to cache/storage
+   * Generate a placeholder image with video dimensions
    */
-  saveThumbnailsToCache(thumbnails: GeneratedThumbnail[]): void {
-    try {,
-const cacheData = {}
-        timestamp: Date.now(),
-        thumbnails: thumbnails.map(thumb =) ({
-  ,
-  videoSrc: thumb.original,
-          sizes: thumb.sizes,
-          placeholder: thumb.placeholder,
-};
+  private async generatePlaceholder(dimensions: { width: number; height: number }): Promise<string> {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
 
-aspectRatio: thumb.aspectRatio,
-};
+    if (!ctx) {
+      throw new Error('Unable to get canvas context for placeholder');
+    }
 
-duration: thumb.duration
-  })};
-  };
+    canvas.width = 320;
+    canvas.height = 180;
 
-      localStorage.setItem("video-thumbnails-cache', JSON.stringify(cacheData));""'
-  ) catch (error) { console.warn('Failed to save thumbnails to cache:", error);""'
+    // Create gradient background
+    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    gradient.addColorStop(0, '#667eea');
+    gradient.addColorStop(1, '#764ba2');
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Add play icon
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const playIconSize = 40;
+
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+    ctx.beginPath();
+    ctx.moveTo(centerX - playIconSize / 3, centerY - playIconSize / 2);
+    ctx.lineTo(centerX - playIconSize / 3, centerY + playIconSize / 2);
+    ctx.lineTo(centerX + playIconSize / 2, centerY);
+    ctx.closePath();
+    ctx.fill();
+
+    // Add dimensions text
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    ctx.font = '12px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(
+      `${dimensions.width}x${dimensions.height}`,
+      centerX,
+      centerY + playIconSize / 2 + 20
+    );
+
+    return canvas.toDataURL('image/jpeg', 0.8);
+  }
 
   /**
-   * Load thumbnails from cache
+   * Extract multiple frames from video
    */
-  loadThumbnailsFromCache(): GeneratedThumbnail[] { try {;
-const cached = localStorage.getItem("video-thumbnails-cache');""''"""'
-      if (!cached) return [];
-const cacheData = JSON.parse(cached);
+  public async extractFrames(
+    videoSource: File | string,
+    frameCount: number = 5,
+    size: { width: number; height: number } = { width: 160, height: 90 }
+  ): Promise<string[]> {
+    try {
+      const video = await this.loadVideo(videoSource);
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
 
-      // Check if cache is still valid (24 hours)
-const isExpired = Date.now() - cacheData.timestamp } 24 * 60 * 60 * 1000;
-      if (isExpired) {
-        localStorage.removeItem("video-thumbnails-cache'  );""'"""
-        return [] }
+      if (!ctx) {
+        throw new Error('Unable to get canvas context');
+      }
 
-      return cacheData.thumbnails.map((thumb: any) =) ({
-  ,
-  original: thumb.videoSrc,
-        sizes: thumb.sizes,
-        placeholder: thumb.placeholder,
-};
+      canvas.width = size.width;
+      canvas.height = size.height;
 
-aspectRatio: thumb.aspectRatio,
-};
+      const duration = video.duration;
+      const frames: string[] = [];
 
-duration: thumb.duration
-  })};
-  } catch (error) { console.warn("Failed to load thumbnails from cache:', error );""'""""''
-      return []  };
+      for (let i = 0; i < frameCount; i++) {
+        const frameTime = (duration / (frameCount + 1)) * (i + 1);
+        video.currentTime = frameTime;
+
+        await new Promise((resolve) => {
+          video.addEventListener('seeked', resolve, { once: true });
+        });
+
+        ctx.drawImage(video, 0, 0, size.width, size.height);
+        frames.push(canvas.toDataURL('image/jpeg', 0.8));
+      }
+
+      video.remove();
+      return frames;
+    } catch (error) {
+      logger.error('Frame extraction failed:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Generate thumbnail from video URL with caching
+   */
+  public async generateCachedThumbnail(
+    videoUrl: string,
+    cacheKey: string,
+    options: VideoThumbnailOptions = {}
+  ): Promise<ThumbnailResult> {
+    try {
+      // Check if thumbnail exists in cache
+      const cached = await this.getCachedThumbnail(cacheKey);
+      if (cached) {
+        return cached;
+      }
+
+      // Generate new thumbnail
+      const result = await this.generateThumbnails(videoUrl, options);
+
+      // Cache the result
+      await this.cacheThumbnail(cacheKey, result);
+
+      return result;
+    } catch (error) {
+      logger.error('Cached thumbnail generation failed:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get cached thumbnail from localStorage
+   */
+  private async getCachedThumbnail(cacheKey: string): Promise<ThumbnailResult | null> {
+    try {
+      const cached = localStorage.getItem(`thumbnail_${cacheKey}`);
+      return cached ? JSON.parse(cached) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Cache thumbnail in localStorage
+   */
+  private async cacheThumbnail(cacheKey: string, result: ThumbnailResult): Promise<void> {
+    try {
+      // Remove blob data for storage (too large)
+      const cacheData = {
+        ...result,
+        thumbnails: result.thumbnails.map(({ blob, ...thumb }) => thumb)
+      };
+      
+      localStorage.setItem(`thumbnail_${cacheKey}`, JSON.stringify(cacheData));
+    } catch (error) {
+      logger.warn('Failed to cache thumbnail:', error);
+    }
+  }
 
   /**
    * Clear thumbnail cache
    */
-  clearCache(): void { localStorage.removeItem("video-thumbnails-cache") }'"""'
+  public clearCache(): void {
+    try {
+      const keys = Object.keys(localStorage);
+      keys.forEach(key => {
+        if (key.startsWith('thumbnail_')) {
+          localStorage.removeItem(key);
+        }
+      });
+    } catch (error) {
+      logger.warn('Failed to clear thumbnail cache:', error);
+    }
+  }
+}
 
-  /**
-   * Get thumbnail URL for specific size or best available
-   */
-  getThumbnailUrl(thumbnail: GeneratedThumbnail),
-  preferredSize: "small' | "medium" | 'large" | "xl" = "medium'""'""'
-  }: string { return thumbnail.sizes[preferredSize] ||
-           thumbnail.sizes.medium ||
-           thumbnail.sizes.small ||
-           Object.values(thumbnail.sizes)[0] ||
-           "" }'""''""""'
-
-  /**
-   * Generate fallback thumbnail for videos that fail to load
-   */
-  generateFallbackThumbnail(width: number = 480),
-  height: number = 270,
-    text: string = 'Video""'""""
-  }: string(this.canvas.width = width;
-    this.canvas.height = height;
-
-    // Create gradient background
-const gradient = this.ctx.createLinearGradient(0, 0, width, height);
-    gradient.addColorStop(0, '#6366f1");"'""""''
-    gradient.addColorStop(1, "#8b5cf6");'"'"""''
-
-    this.ctx.fillStyle = gradient;
-    this.ctx.fillRect(0, 0, width, height );
-
-    // Add text
-    this.ctx.fillStyle = "white";'""'""'""'
-    this.ctx.font = `${Math.min(width, height) / 10}px sans-serif`;
-    this.ctx.textAlign = 'center";""'"'""'
-    this.ctx.textBaseline = 'middle";"""''""'
-    this.ctx.fillText(text, width / 2, height / 2);
-
-    // Add play icon
-const iconSize = Math.min(width, height) / 4;
-    this.ctx.beginPath();
-    this.ctx.moveTo(width / 2 - iconSize / 3, height / 2 - iconSize / 2);
-    this.ctx.lineTo(width / 2 + iconSize / 2, height / 2);
-    this.ctx.lineTo(width / 2 - iconSize / 3, height / 2 + iconSize / 2);
-    this.ctx.closePath();
-    this.ctx.fillStyle = "rgba(255, 255, 255, 0.8)";""'""'
-    this.ctx.fill();
-
-    return this.canvas.toDataURL("image/jpeg", 0.9);""'"'
-  );
-
-// Export singleton instance
 export const videoThumbnailGenerator = new VideoThumbnailGenerator();
+export default videoThumbnailGenerator;
