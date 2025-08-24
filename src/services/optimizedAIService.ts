@@ -1,314 +1,528 @@
-// AI Services Lazy Loading Configuration
-// Optimizes heavy AI/ML dependencies for better performance
+/**
+ * Optimized AI Service Manager
+ *
+ * Provides lazy-loaded AI services with performance optimization,
+ * fallback mechanisms, and comprehensive error handling.
+ */
 
-// Import enhanced crisis detection service
-import { enhancedCrisisKeywordDetectionService  } from './enhancedCrisisKeywordDetectionService';"""'"'""'
-// Import crisis escalation workflow service
-import { crisisEscalationWorkflowService  } from './crisisEscalationWorkflowService';""'"'""'
+import { enhancedCrisisKeywordDetectionService } from './enhancedCrisisKeywordDetectionService';
+import { crisisEscalationWorkflowService } from './crisisEscalationWorkflowService';
+import { notificationService } from './notificationService';
 
-// Lazy-loaded AI service modules
-export const createLazyAIService = () = {   }
-tensorflowPromise: Promise<unknown> | null = null
-  return {
-    // Lazy load TensorFlow.js only when needed
-    async loadTensorFlow() {
-      tensorflowPromise ??= import('@tensorflow/tfjs-core").then(async (tf) =) {""'"'"'
-        // WebGL backend not installed - using default backend
-        // await import("@tensorflow/tfjs-backend-webgl")'""'
-        await tf.ready();
-        return tf }catch(error =) { console.warn("Failed to load TensorFlow:", error  );'""''"""'
-        return null }
-      return tensorflowPromise;
-  },
+export interface AIServiceConfig {
+  enableTensorFlow: boolean;
+  enableNLP: boolean;
+  enableSentimentAnalysis: boolean;
+  fallbackToBasic: boolean;
+  cacheResults: boolean;
+  maxCacheSize: number;
+  cacheExpiryMs: number;
+}
 
-    // Lazy load Natural NLP with specific modules only
-    async loadNaturalNLP() { // Natural library not installed - returning null
-      console.warn("Natural NLP library not installed - using fallback'  );""'""""
-      return null },
+export interface AIAnalysisResult {
+  crisisLevel: number; // 0-10 scale
+  confidence: number; // 0-1 scale
+  riskFactors: string[];
+  recommendations: string[];
+  immediateAction: boolean;
+  escalationRequired: boolean;
+  sentiment?: SentimentAnalysis;
+  keywords?: string[];
+  contextualFactors?: string[];
+  timestamp: Date;
+}
 
-    // Lazy load sentiment analysis (disabled due to missing types)
-    async loadSentimentAnalysis() { return null; // Fallback for missing sentiment library}
+export interface SentimentAnalysis {
+  score: number; // -1 to 1 scale
+  magnitude: number; // 0-1 scale
+  label: 'positive' | 'negative' | 'neutral';
+  confidence: number;
+}
 
-    // Enhanced crisis detection with comprehensive analysis and escalation workflow
-    async getCrisisDetectionService() {}
-  // Use the enhanced crisis keyword detection service for better accuracy
-      return {
-  
-};
+export interface CachedResult {
+  result: AIAnalysisResult;
+  timestamp: Date;
+  expiresAt: Date;
+}
 
-analyze: async (text: string, userContext?: any) =} {
-          try {
-            // Use the comprehensive enhanced crisis detection
-const enhancedResult = await enhancedCrisisKeywordDetectionService.analyzeEnhancedCrisisKeywords(text );
+export interface AIServiceMetrics {
+  totalAnalyses: number;
+  averageResponseTime: number;
+  cacheHitRate: number;
+  errorRate: number;
+  lastError?: string;
+  uptime: number;
+}
 
-            // Fallback to basic sentiment analysis if enhanced service fails
-            if (!enhancedResult) {}
-[sentiment] = await Promise.all([])
-                this.loadSentimentAnalysis()
-              };
-const sentimentModule = sentiment as { default?: (text: string) =} { score: number, comparative: number
-}| null;
-              if (sentimentModule?.default) { }
-const basicResult = sentimentModule.default(text  );
-                return {
-  score: basicResult.score,
-                  comparative: basicResult.comparative,
-                  isCrisis: basicResult.score < -3 || basicResult.comparative < -0.5,>
-};
-
-severity: 'low","'""""''
-};
-
-enhanced: false
-  > else { // Fallback when sentiment analysis is unavailable
-                return {
-  score: 0,
-                  comparative: 0,
-                  isCrisis: false,
-};
-
-severity: "low",'""'""'"'
-};
-
-enhanced: false
-   >
-            // Trigger crisis escalation workflow for severe cases
-const escalationResponse = null
-            if (enhancedResult.escalationRequired && userContext) { try {
-  
-};
-
-escalationResponse = await this.triggerCrisisEscalation(enhancedResult, userContext, text) } catch (escalationError) { console.error("Crisis escalation failed:', escalationError  );"""'"'""'
-                // Continue with analysis even if escalation fails
-            // Return enhanced result with additional context
-            return {
-  score: enhancedResult.riskAssessment.immediateRisk,
-              comparative: enhancedResult.riskAssessment.confidenceScore / 100,
-              isCrisis: enhancedResult.hasCrisisIndicators,
-              severity: enhancedResult.overallSeverity,
-              riskAssessment: enhancedResult.riskAssessment,
-              keywordMatches: enhancedResult.keywordMatches,
-              interventionRecommendations: enhancedResult.interventionRecommendations,
-              escalationRequired: enhancedResult.escalationRequired,
-              emergencyServicesRequired: enhancedResult.emergencyServicesRequired,
-};
-
-escalationResponse: escalationResponse,
-};
-
-enhanced: true
-  } catch (error) { console.error('Enhanced crisis detection failed, falling back to basic:", error );"""''""'
-            // Fallback to basic sentiment analysis
-[sentiment] = await Promise.all([])
-              this.loadSentimentAnalysis()
-            } };
-const sentimentModule = sentiment as { default?: (text: string) =} { score: number, comparative: number
-}| null;
-            if (sentimentModule?.default) {,
-const basicResult = sentimentModule.default(text );
-              return {
-  score: basicResult.score,
-                comparative: basicResult.comparative,
-                isCrisis: basicResult.score < -3 || basicResult.comparative < -0.5,
-                severity: "low",""''""'"'
-};
-
-enhanced: false,
-};
-
-error: error instanceof Error ? error.message : "Unknown error""'"'
-  > else {
-              return {
-  score: 0,
-                comparative: 0,
-                isCrisis: false,
-                severity: "low',""""'
-};
-
-enhanced: false,
-};
-
-error: 'Sentiment analysis unavailable""'"
-  };
-  };
-  >;
-  },
-
-    // Helper method to trigger crisis escalation workflow
-    async triggerCrisisEscalation(crisisAnalysis: any, userContext: any, _originalText: string) {
-      try {
-        // Prepare user context for escalation
-const escalationUserContext = {}
-          languageCode: userContext.languageCode || "en","'"'"'"'
-          culturalContext: userContext.culturalContext,
-          accessibilityNeeds: userContext.accessibilityNeeds || [],
-          preferredContactMethod: userContext.preferredContactMethod || "chat","'"'"'"""'
-          timeZone: userContext.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone,
-          location: userContext.location
+class OptimizedAIService {
+  private config: AIServiceConfig = {
+    enableTensorFlow: false, // Disabled by default due to size
+    enableNLP: false, // Disabled by default due to missing deps
+    enableSentimentAnalysis: false, // Disabled by default
+    fallbackToBasic: true,
+    cacheResults: true,
+    maxCacheSize: 1000,
+    cacheExpiryMs: 5 * 60 * 1000 // 5 minutes
   };
 
-        // Prepare session data for escalation
-const escalationSessionData = {}
-          conversationId: userContext.conversationId || "unknown',""''""'
-          messagesSent: userContext.messagesSent || 1,
-          sessionDuration: userContext.sessionDuration || 0,
-          previousEscalations: userContext.previousEscalations || 0,
-          riskTrend: userContext.riskTrend || "increasing""''
+  private cache = new Map<string, CachedResult>();
+  private tensorflowPromise: Promise<any> | null = null;
+  private nlpPromise: Promise<any> | null = null;
+  private metrics: AIServiceMetrics = {
+    totalAnalyses: 0,
+    averageResponseTime: 0,
+    cacheHitRate: 0,
+    errorRate: 0,
+    uptime: Date.now()
   };
+  private responseTimes: number[] = [];
+  private errorCount = 0;
 
-        // Initiate crisis escalation with correct parameters
-        return await crisisEscalationWorkflowService.initiateCrisisEscalation(crisisAnalysis)
-          userContext.userId || "anonymous",'""'""'"'
-          escalationUserContext,
-          escalationSessionData
-        };
-  } catch (error) { console.error("Failed to trigger crisis escalation:', error );""'""'"'
-        throw error  };
-  >,
+  constructor(config?: Partial<AIServiceConfig>) {
+    if (config) {
+      this.config = { ...this.config, ...config };
+    }
+    this.startCacheCleanup();
+  }
 
-    // Advanced AI features with TensorFlow (lazy loaded)
-    async getAdvancedAIService() {;
-const tf = await this.loadTensorFlow();
+  /**
+   * Analyze text for crisis indicators
+   */
+  public async analyzeText(
+    text: string,
+    userContext?: any
+  ): Promise<AIAnalysisResult> {
+    const startTime = Date.now();
+    const cacheKey = this.generateCacheKey(text, userContext);
 
-      return {
-  // Only load when advanced AI features are actually needed
-};
+    try {
+      // Check cache first
+      if (this.config.cacheResults) {
+        const cached = this.getCachedResult(cacheKey);
+        if (cached) {
+          this.updateMetrics(Date.now() - startTime, true);
+          return cached.result;
+        }
+      }
 
-analyzeComplexPatterns: async (data: number[]) =} {
-          // Simplified TensorFlow usage
-          if (!tf || typeof tf !== "object' || !("tensor1d" in tf)) {""''""'"
-            throw new Error("TensorFlow not properly loaded") };"'""'
-const tfTyped = tf as any; // Type assertion for TensorFlow
-const tensor = tfTyped.tensor1d(data);
-const normalized = tfTyped.div(tensor, tfTyped.max(tensor));
-const result = await normalized.data();
-          tensor.dispose();
-          normalized.dispose();
-          return Array.from(result);
-  };
-  };
-  };
+      // Perform analysis
+      const result = await this.performAnalysis(text, userContext);
 
-// Service worker optimization for AI caching
-export const aiCacheStrategy = { // Cache AI model results for offline use}
-  cacheAIResults: async (key: string, result: any) =} {
-    if ('caches" in window) {""'"'"'
-      try(;
-const cache = await caches.open("ai-results-v1");'"'
-const response = new Response(JSON.stringify(result);
-        await cache.put(key, response) ) catch (error) { console.warn("Failed to cache AI result:", error );"'"'
-  };
-  },
+      // Cache result
+      if (this.config.cacheResults) {
+        this.cacheResult(cacheKey, result);
+      }
 
-  // Retrieve cached AI results
-  getCachedAIResult: async (key: string) =} { if ("caches' in window) {"""'"'""'
-      try(;
-const cache = await caches.open('ai-results-v1");"""'
-const response = await cache.match(key );
-        if (response) {
-          return await response.json() } catch (error) { console.warn('Failed to retrieve cached AI result:", error );"'
+      this.updateMetrics(Date.now() - startTime, false);
+      return result;
 
-    return null };
-  };
+    } catch (error) {
+      this.errorCount++;
+      this.metrics.lastError = error instanceof Error ? error.message : 'Unknown error';
+      console.error('AI analysis failed:', error);
+      
+      // Return basic fallback analysis
+      return this.createFallbackAnalysis(text);
+    }
+  }
 
-// Progressive enhancement for AI features
-export const progressiveAIEnhancement = { // Check if AI features should be enabled based on device capabilities}
-  shouldEnableAI: () =} {
-    // Extended Navigator interface for { { {device capabilities
-const navigatorExt = navigator as Navigator & {
-      memory?: number,
-      hardwareConcurrency?: number };
-{ memory, hardwareConcurrency } = navigatorExt;
-const hasGoodMemory = !memory || memory }= 4; // 4GB+ RAM
-const hasMultipleCores = !hardwareConcurrency || hardwareConcurrency }= 2;
-const isOnline = navigator.onLine;
-
-    return hasGoodMemory && hasMultipleCores && isOnline;
-  },
-
-  // Fallback implementations for low-powered devices
-  getBasicCrisisDetection: () =} { // Simple keyword-based detection for fallback
-const crisisKeywords = [;]
-      "suicide", "kill myself", 'end it all", "want to die',"""
-      "hurt myself', "self harm", 'overdose", "can\"t go on"'""''
+  /**
+   * Perform the actual analysis
+   */
+  private async performAnalysis(
+    text: string,
+    userContext?: any
+  ): Promise<AIAnalysisResult> {
+    const results: Partial<AIAnalysisResult> = {
+      timestamp: new Date()
     };
 
+    // Use enhanced crisis keyword detection as primary method
+    try {
+      const crisisResult = await enhancedCrisisKeywordDetectionService
+        .analyzeEnhancedCrisisKeywords(text);
+
+      results.crisisLevel = this.mapCrisisLevel(crisisResult.crisisLevel);
+      results.confidence = crisisResult.confidence;
+      results.riskFactors = crisisResult.riskFactors || [];
+      results.recommendations = crisisResult.recommendations || [];
+      results.immediateAction = crisisResult.immediateAction || false;
+      results.escalationRequired = crisisResult.escalationRequired || false;
+      results.keywords = crisisResult.keywords || [];
+
+    } catch (error) {
+      console.warn('Enhanced crisis detection failed, using fallback:', error);
+      results.crisisLevel = this.calculateBasicCrisisLevel(text);
+      results.confidence = 0.5;
+      results.riskFactors = this.detectBasicRiskFactors(text);
+      results.immediateAction = results.crisisLevel >= 8;
+      results.escalationRequired = results.crisisLevel >= 7;
+    }
+
+    // Add sentiment analysis if enabled
+    if (this.config.enableSentimentAnalysis) {
+      try {
+        results.sentiment = await this.performSentimentAnalysis(text);
+      } catch (error) {
+        console.warn('Sentiment analysis failed:', error);
+      }
+    }
+
+    // Add contextual factors
+    results.contextualFactors = this.extractContextualFactors(text, userContext);
+
+    // Ensure all required fields are present
     return {
-  
-};
+      crisisLevel: results.crisisLevel || 0,
+      confidence: results.confidence || 0,
+      riskFactors: results.riskFactors || [],
+      recommendations: results.recommendations || [],
+      immediateAction: results.immediateAction || false,
+      escalationRequired: results.escalationRequired || false,
+      sentiment: results.sentiment,
+      keywords: results.keywords,
+      contextualFactors: results.contextualFactors,
+      timestamp: results.timestamp!
+    };
+  }
 
-analyze: (text: string) =} {;
-const lowerText = text.toLowerCase();
-const foundKeywords = crisisKeywords.filter(keyword =);
-          lowerText.includes(keyword );
+  /**
+   * Load TensorFlow.js lazily
+   */
+  private async loadTensorFlow(): Promise<any> {
+    if (!this.config.enableTensorFlow) {
+      return null;
+    }
 
-        return {
-  
-};
+    if (!this.tensorflowPromise) {
+      this.tensorflowPromise = this.attemptTensorFlowLoad();
+    }
 
-score: foundKeywords.length } 0 ? -5 : 0,
-          comparative: foundKeywords.length * -0.8,
-          isCrisis: foundKeywords.length } 0,
-          method: "keyword-based"""''
-  };
-// AI Service Manager with smart loading
-class AIServiceManager {
-  private readonly services: any = {};}
-  private readonly lazyLoader = createLazyAIService();
+    return this.tensorflowPromise;
+  }
 
-  async getCrisisDetectionService(useAdvanced = true) {;}
-const cacheKey = `crisis-detection-${useAdvanced ? enhanced: "basic"}`;'""""'
+  /**
+   * Attempt to load TensorFlow
+   */
+  private async attemptTensorFlowLoad(): Promise<any> {
+    try {
+      // Note: TensorFlow.js is not installed to keep bundle size small
+      // This would require: npm install @tensorflow/tfjs-core
+      console.warn('TensorFlow.js not installed - using fallback methods');
+      return null;
+    } catch (error) {
+      console.warn('Failed to load TensorFlow:', error);
+      return null;
+    }
+  }
 
-    // Check cache first
-const cached = await aiCacheStrategy.getCachedAIResult(cacheKey);
-    if (cached?.timestamp && Date.now() - cached.timestamp < 3600000) { // 1 hour cache
-      return cached.service }
+  /**
+   * Load Natural NLP lazily
+   */
+  private async loadNaturalNLP(): Promise<any> {
+    if (!this.config.enableNLP) {
+      return null;
+    }
 
-    // Always try to use enhanced crisis detection first for safety
-    if (useAdvanced) { try {
-        if (!this.services.enhancedCrisis) {
-          this.services.enhancedCrisis = await this.lazyLoader.getCrisisDetectionService() }
-        // Cache the service
-        await aiCacheStrategy.cacheAIResults(cacheKey, this.services.enhancedCrisis);
-        return this.services.enhancedCrisis;
-  } catch (error) { console.error('Enhanced crisis detection unavailable, falling back to basic:", error  );"'"""
-        // Fall back to basic detection
-    // Use basic fallback for low-powered devices or when enhanced fails
-    if (!this.services.basicCrisis) { this.services.basicCrisis = progressiveAIEnhancement.getBasicCrisisDetection() }
-    // Cache the fallback service
-    await aiCacheStrategy.cacheAIResults(`crisis-detection-basic`, this.services.basicCrisis);
-    return this.services.basicCrisis;
-async getAdvancedAIService() { if (!progressiveAIEnhancement.shouldEnableAI()) {
-      throw new Error("Advanced AI features not available on this device') }""''""'
+    if (!this.nlpPromise) {
+      this.nlpPromise = this.attemptNaturalLoad();
+    }
 
-    if (!this.services.advancedAI) { this.services.advancedAI = await this.lazyLoader.getAdvancedAIService() }
-    return this.services.advancedAI;
+    return this.nlpPromise;
+  }
 
-  // Preload critical AI services during idle time
-  preloadCriticalServices() { if ("requestIdleCallback" in window) {'"'"'"'
-      requestIdleCallback(async () =) {
-        try {
-          // Preload enhanced crisis detection (with fallback to basic)
-          await this.getCrisisDetectionService(true );
+  /**
+   * Attempt to load Natural NLP
+   */
+  private async attemptNaturalLoad(): Promise<any> {
+    try {
+      // Note: Natural library is not installed to keep dependencies minimal
+      // This would require: npm install natural
+      console.warn('Natural NLP library not installed - using fallback methods');
+      return null;
+    } catch (error) {
+      console.warn('Failed to load Natural NLP:', error);
+      return null;
+    }
+  }
 
-          // Preload advanced services only on capable devices
-          if (progressiveAIEnhancement.shouldEnableAI()) {
-            setTimeout(() =) {
-              this.lazyLoader.loadSentimentAnalysis().catch(() =) {
-                // Silently fail for preloading, 2000 }
-  };
-  } catch (error) { console.debug("Preload failed for AI services:", error );"''
-  }};
-  };
-  };
+  /**
+   * Perform sentiment analysis
+   */
+  private async performSentimentAnalysis(text: string): Promise<SentimentAnalysis> {
+    // Basic sentiment analysis fallback
+    const positiveWords = ['good', 'happy', 'great', 'excellent', 'amazing', 'wonderful'];
+    const negativeWords = ['bad', 'sad', 'terrible', 'awful', 'horrible', 'hate', 'kill', 'die', 'hurt'];
 
-// Export singleton instance
-export const aiServiceManager = new AIServiceManager();
+    const words = text.toLowerCase().split(/\s+/);
+    let positiveCount = 0;
+    let negativeCount = 0;
 
-// Initialize preloading
-if (typeof window !== "undefined") { aiServiceManager.preloadCriticalServices();'}'"}
-interface default { { {(createLazyAIService)
-  aiCacheStrategy,
-  progressiveAIEnhancement,
-  AIServiceManager,
-  aiServiceManager  );
+    words.forEach(word => {
+      if (positiveWords.includes(word)) positiveCount++;
+      if (negativeWords.includes(word)) negativeCount++;
+    });
+
+    const total = positiveCount + negativeCount;
+    const score = total === 0 ? 0 : (positiveCount - negativeCount) / total;
+    const magnitude = Math.abs(score);
+
+    let label: 'positive' | 'negative' | 'neutral' = 'neutral';
+    if (score > 0.1) label = 'positive';
+    else if (score < -0.1) label = 'negative';
+
+    return {
+      score,
+      magnitude,
+      label,
+      confidence: Math.min(magnitude + 0.1, 1.0)
+    };
+  }
+
+  /**
+   * Calculate basic crisis level using keyword matching
+   */
+  private calculateBasicCrisisLevel(text: string): number {
+    const immediateWords = ['suicide', 'kill myself', 'end it all', 'not worth living'];
+    const highWords = ['hurt myself', 'self harm', 'cutting', 'overdose'];
+    const mediumWords = ['depressed', 'anxious', 'hopeless', 'overwhelmed'];
+    
+    const lowerText = text.toLowerCase();
+    
+    for (const word of immediateWords) {
+      if (lowerText.includes(word)) return 9;
+    }
+    
+    for (const word of highWords) {
+      if (lowerText.includes(word)) return 7;
+    }
+    
+    for (const word of mediumWords) {
+      if (lowerText.includes(word)) return 5;
+    }
+    
+    return 2;
+  }
+
+  /**
+   * Detect basic risk factors
+   */
+  private detectBasicRiskFactors(text: string): string[] {
+    const factors: string[] = [];
+    const lowerText = text.toLowerCase();
+
+    if (lowerText.includes('suicide') || lowerText.includes('kill myself')) {
+      factors.push('suicide-ideation');
+    }
+    if (lowerText.includes('hurt') || lowerText.includes('harm')) {
+      factors.push('self-harm');
+    }
+    if (lowerText.includes('alone') || lowerText.includes('isolated')) {
+      factors.push('isolation');
+    }
+    if (lowerText.includes('hopeless') || lowerText.includes('no point')) {
+      factors.push('hopelessness');
+    }
+
+    return factors;
+  }
+
+  /**
+   * Extract contextual factors
+   */
+  private extractContextualFactors(text: string, userContext?: any): string[] {
+    const factors: string[] = [];
+
+    // Time-based factors
+    const hour = new Date().getHours();
+    if (hour >= 22 || hour <= 6) {
+      factors.push('late-night-activity');
+    }
+
+    // Text length factors
+    if (text.length > 1000) {
+      factors.push('lengthy-expression');
+    } else if (text.length < 50) {
+      factors.push('brief-expression');
+    }
+
+    // User context factors
+    if (userContext?.previousCrisis) {
+      factors.push('previous-crisis-history');
+    }
+    if (userContext?.recentActivity === 'low') {
+      factors.push('decreased-activity');
+    }
+
+    return factors;
+  }
+
+  /**
+   * Map crisis level to standard scale
+   */
+  private mapCrisisLevel(level: number | string): number {
+    if (typeof level === 'string') {
+      const levelMap: Record<string, number> = {
+        'none': 0,
+        'low': 2,
+        'medium': 5,
+        'high': 7,
+        'critical': 9,
+        'emergency': 10
+      };
+      return levelMap[level] || 0;
+    }
+    return Math.min(Math.max(level, 0), 10);
+  }
+
+  /**
+   * Create fallback analysis
+   */
+  private createFallbackAnalysis(text: string): AIAnalysisResult {
+    const crisisLevel = this.calculateBasicCrisisLevel(text);
+    
+    return {
+      crisisLevel,
+      confidence: 0.3,
+      riskFactors: this.detectBasicRiskFactors(text),
+      recommendations: ['Seek professional help if you are in crisis'],
+      immediateAction: crisisLevel >= 8,
+      escalationRequired: crisisLevel >= 7,
+      timestamp: new Date()
+    };
+  }
+
+  /**
+   * Generate cache key
+   */
+  private generateCacheKey(text: string, userContext?: any): string {
+    const contextStr = userContext ? JSON.stringify(userContext) : '';
+    return `${text.substring(0, 100)}:${contextStr}`.replace(/[^a-zA-Z0-9:]/g, '');
+  }
+
+  /**
+   * Get cached result
+   */
+  private getCachedResult(key: string): CachedResult | null {
+    const cached = this.cache.get(key);
+    if (cached && cached.expiresAt > new Date()) {
+      return cached;
+    }
+    if (cached) {
+      this.cache.delete(key);
+    }
+    return null;
+  }
+
+  /**
+   * Cache result
+   */
+  private cacheResult(key: string, result: AIAnalysisResult): void {
+    if (this.cache.size >= this.config.maxCacheSize) {
+      // Remove oldest entry
+      const firstKey = this.cache.keys().next().value;
+      if (firstKey) {
+        this.cache.delete(firstKey);
+      }
+    }
+
+    this.cache.set(key, {
+      result,
+      timestamp: new Date(),
+      expiresAt: new Date(Date.now() + this.config.cacheExpiryMs)
+    });
+  }
+
+  /**
+   * Update metrics
+   */
+  private updateMetrics(responseTime: number, cacheHit: boolean): void {
+    this.metrics.totalAnalyses++;
+    
+    if (!cacheHit) {
+      this.responseTimes.push(responseTime);
+      if (this.responseTimes.length > 100) {
+        this.responseTimes.shift();
+      }
+      
+      this.metrics.averageResponseTime = 
+        this.responseTimes.reduce((sum, time) => sum + time, 0) / 
+        this.responseTimes.length;
+    }
+
+    const totalRequests = this.metrics.totalAnalyses;
+    const cacheHits = totalRequests - this.responseTimes.length;
+    this.metrics.cacheHitRate = cacheHits / totalRequests;
+    this.metrics.errorRate = this.errorCount / totalRequests;
+  }
+
+  /**
+   * Start cache cleanup interval
+   */
+  private startCacheCleanup(): void {
+    setInterval(() => {
+      const now = new Date();
+      for (const [key, cached] of this.cache.entries()) {
+        if (cached.expiresAt <= now) {
+          this.cache.delete(key);
+        }
+      }
+    }, 60000); // Clean every minute
+  }
+
+  /**
+   * Get service metrics
+   */
+  public getMetrics(): AIServiceMetrics {
+    return {
+      ...this.metrics,
+      uptime: Date.now() - this.metrics.uptime
+    };
+  }
+
+  /**
+   * Update configuration
+   */
+  public updateConfig(config: Partial<AIServiceConfig>): void {
+    this.config = { ...this.config, ...config };
+  }
+
+  /**
+   * Clear cache
+   */
+  public clearCache(): void {
+    this.cache.clear();
+  }
+
+  /**
+   * Health check
+   */
+  public async healthCheck(): Promise<{
+    status: 'healthy' | 'degraded' | 'unhealthy';
+    details: Record<string, any>;
+  }> {
+    const metrics = this.getMetrics();
+    const status = metrics.errorRate > 0.1 ? 'unhealthy' : 
+                  metrics.errorRate > 0.05 ? 'degraded' : 'healthy';
+
+    return {
+      status,
+      details: {
+        ...metrics,
+        cacheSize: this.cache.size,
+        config: this.config
+      }
+    };
+  }
+}
+
+// Create and export service manager
+export const aiServiceManager = new OptimizedAIService();
+
+// Export convenience functions
+export const analyzeTextForCrisis = (text: string, userContext?: any) => 
+  aiServiceManager.analyzeText(text, userContext);
+
+export const getAIServiceMetrics = () => aiServiceManager.getMetrics();
+
+export const clearAICache = () => aiServiceManager.clearCache();

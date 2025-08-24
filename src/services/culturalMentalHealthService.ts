@@ -2,1032 +2,529 @@
  * Cultural Mental Health Service
  *
  * Provides culturally-sensitive mental health content and approaches
- * tailored to each supported locale
- *
- * @license Apache-2.0
- */;
+ * tailored to each supported locale with comprehensive cultural context.
+ */
 
-import { getCulturalContext  } from '../i18n';""""'
-interface CulturalMentalHealthContent { { { {
-  locale: string
-};
+import { getCulturalContext } from '../i18n';
+import { notificationService } from './notificationService';
 
-culturalContext: {
-  ,
-  stigmaLevel: "low" | 'medium" | "high""',
-  familyInvolvement: 'low" | "medium' | "high""",
-  communitySupport: 'low" | "medium' | "high"",
-  religiousContext: string;,
-  preferredApproach: string;,
-  copingStrategies: CopingStrategy[],
-  crisisApproaches: CrisisApproach[],
-  culturalConsiderations: string[],
-};
+export interface CulturalMentalHealthContent {
+  locale: string;
+  culturalContext: CulturalContext;
+  supportResources: SupportResource[];
+  communicationGuidelines: CommunicationGuideline[];
+  copingStrategies: CopingStrategy[];
+  crisisApproaches: CrisisApproach[];
+  accessibilityConsiderations: AccessibilityConsiderations;
+}
 
-supportResources: SupportResource[]
-};
+export interface CulturalContext {
+  stigmaLevel: 'low' | 'medium' | 'high';
+  familyInvolvement: 'low' | 'medium' | 'high';
+  communitySupport: 'low' | 'medium' | 'high';
+  religiousContext: string;
+  preferredApproach: string;
+  culturalValues: string[];
+  communicationStyle: 'direct' | 'indirect' | 'contextual';
+  authorityRespect: 'low' | 'medium' | 'high';
+  collectivismLevel: 'individual' | 'mixed' | 'collective';
+  mentalHealthPerception: string;
+}
 
-communicationGuidelines: CommunicationGuideline[]
-  
-interface CopingStrategy { { { {
-  id: string;,
-  name: string;,
-  description: string;,
-  culturallyAppropriate: boolean
-};
-
-category: "spiritual' | "family" | 'community" | "individual" | "professional'""'
-};
-
-effectiveness: number; // 1-5 scale
+export interface CopingStrategy {
+  id: string;
+  name: string;
+  description: string;
+  culturallyAppropriate: boolean;
+  category: 'spiritual' | 'family' | 'community' | 'individual' | 'professional';
+  effectiveness: number; // 1-5 scale
   steps?: string[];
-interface CrisisApproach { { { {
-  id: string;,
-  name: string;,
-  description: string;,
-  urgencyLevel: "immediate" | "urgent" | 'moderate""',
-  culturalFactors: string[],
-};
+  culturalConsiderations: string[];
+  contraindications?: string[];
+}
 
-steps: string[]
-};
+export interface CrisisApproach {
+  id: string;
+  name: string;
+  description: string;
+  urgencyLevel: 'immediate' | 'urgent' | 'moderate';
+  culturalFactors: string[];
+  recommendedActions: string[];
+  avoidActions: string[];
+  familyInvolvement: boolean;
+  communityInvolvement: boolean;
+  professionalReferral: boolean;
+}
 
-whenToUse: string
-  
-interface SupportResource { { { {
-  id: string;,
-  name: string
-$2: "family" | "community" | 'religious" | "professional' | "peer""",
-  description: string
-};
+export interface SupportResource {
+  id: string;
+  name: string;
+  type: 'hotline' | 'text' | 'chat' | 'in-person' | 'online' | 'community';
+  description: string;
+  contactInfo: ContactInfo;
+  languages: string[];
+  culturalSpecialization: string[];
+  availability: ResourceAvailability;
+  cost: 'free' | 'low-cost' | 'sliding-scale' | 'insurance';
+  accessibility: AccessibilityFeatures;
+}
 
-availability: string
-};
+export interface ContactInfo {
+  phone?: string;
+  text?: string;
+  email?: string;
+  website?: string;
+  address?: string;
+}
 
-culturallyPreferred: boolean
-  };
-interface CommunicationGuideline { { { {
-  context: string;,
-  recommendation: string
-};
+export interface ResourceAvailability {
+  available24x7: boolean;
+  hours?: string;
+  days?: string[];
+  timezone?: string;
+}
 
-culturalNuance: string
-};
+export interface AccessibilityFeatures {
+  wheelchairAccessible?: boolean;
+  signLanguage?: boolean;
+  audioDescription?: boolean;
+  braille?: boolean;
+  multiLanguage: boolean;
+}
 
-examples: string[]
-  };
-interface CulturalMentalHealthService { { { { private static instance: CulturalMentalHealthService}
-  private contentCache: Map<string, CulturalMentalHealthContent> = new Map(),
+export interface CommunicationGuideline {
+  id: string;
+  context: 'crisis' | 'support' | 'therapy' | 'family' | 'community';
+  doRecommendations: string[];
+  avoidRecommendations: string[];
+  culturalNuances: string[];
+  nonVerbalConsiderations: string[];
+  languagePreferences: LanguagePreference[];
+}
 
-  private constructor() {
-    this.initializeContent() }
+export interface LanguagePreference {
+  language: string;
+  dialect?: string;
+  formalityLevel: 'formal' | 'informal' | 'mixed';
+  preferredTerms: Record<string, string>;
+  avoidedTerms: string[];
+}
 
-  static getInstance(): CulturalMentalHealthService { if (!CulturalMentalHealthService.instance) {
-      CulturalMentalHealthService.instance = new CulturalMentalHealthService() }
-    return CulturalMentalHealthService.instance;
+export interface AccessibilityConsiderations {
+  visualImpairment: AccessibilitySupport;
+  hearingImpairment: AccessibilitySupport;
+  cognitiveConsiderations: AccessibilitySupport;
+  motorImpairment: AccessibilitySupport;
+  languageBarriers: LanguageSupport;
+}
+
+export interface AccessibilitySupport {
+  available: boolean;
+  methods: string[];
+  resources: string[];
+  specialConsiderations: string[];
+}
+
+export interface LanguageSupport {
+  translationServices: boolean;
+  interpreterServices: boolean;
+  multilingualStaff: boolean;
+  culturalLiaisons: boolean;
+  supportedLanguages: string[];
+}
+
+export interface CulturalAssessment {
+  userId: string;
+  locale: string;
+  culturalBackground: string[];
+  religiousAffiliation?: string;
+  languagePreferences: string[];
+  familyStructure: 'nuclear' | 'extended' | 'single-parent' | 'other';
+  communityConnections: string[];
+  previousMentalHealthExperience: boolean;
+  stigmaLevel: number; // 1-10 scale
+  preferredSupportType: string[];
+  accessibilityNeeds: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+class CulturalMentalHealthService {
+  private culturalContent = new Map<string, CulturalMentalHealthContent>();
+  private userAssessments = new Map<string, CulturalAssessment>();
+
+  constructor() {
+    this.initializeDefaultContent();
+  }
 
   /**
-   * Initialize cultural content for all supported locales
+   * Initialize default cultural content
    */
-  private initializeContent(): void {
-    // English (Western approach)
-    this.contentCache.set('en", {"'""")"'"})'
-      locale: "en',""""'
+  private initializeDefaultContent(): void {
+    // English/US content
+    this.culturalContent.set('en-US', {
+      locale: 'en-US',
       culturalContext: {
-  ,
-  stigmaLevel: 'medium","'""""
-        familyInvolvement: 'medium","'""""
-        communitySupport: 'medium","'""""'"'
-};
-
-religiousContext: "mixed',""""'
-};
-
-preferredApproach: 'professional""'
-  },
-      copingStrategies: [ { id: "en-mindfulness",""''""'"}]'
-          name: "Mindfulness Meditation","''""'"'
-          description: "Focus on present moment awareness to reduce anxiety and stress","''""'"'
-          culturallyAppropriate: true,
-          category: "individual","'""'
-          effectiveness: 4,
-          steps: [
-            'Find a quiet, comfortable space","""''""'
-            "Close your eyes or soften your gaze",""'""'
-            "Focus on your breath",""'""'
-            "Notice thoughts without judgment",""'""'
-            "Gently return focus to breathing',"""'import "Continue for 5-10 minutes' ] },"'"'"'
-        {
-  id: "en-cbt","'"'"'""'
-          name: "Cognitive Restructuring",'"'"'""'
-          description: "Challenge and reframe negative thought patterns",'"'"'""'
-          culturallyAppropriate: true,
-          category: "professional",'"'"'"'
-};
-
-effectiveness: 5,
-};
-
-steps: [ "Identify the negative thought",""''""'"]'
-            "Examine evidence for and against","''""'"'
-            "Consider alternative perspectives","''""'"'
-            "Create a balanced thought","''import "Test the new perspective" ] },'""'
-        {
-  id: "en-exercise",'"'"'"'
-          name: "Physical Exercise",""''""'"'
-          description: "Regular physical activity to improve mood and reduce stress","''""'"'
-          culturallyAppropriate: true,
-          category: "individual","''""'"'
-};
-
-effectiveness: 4,
-};
-
-steps: [ "Choose an activity you enjoy","'""'
-            'Start with 15-20 minutes","""''""'
-            "Gradually increase duration",""'""'
-            "Aim for 3-5 times per week",""''import "Track your mood improvements" ] }'""""'
+        stigmaLevel: 'medium',
+        familyInvolvement: 'medium',
+        communitySupport: 'medium',
+        religiousContext: 'varied',
+        preferredApproach: 'individual-focused',
+        culturalValues: ['independence', 'self-reliance', 'privacy'],
+        communicationStyle: 'direct',
+        authorityRespect: 'medium',
+        collectivismLevel: 'individual',
+        mentalHealthPerception: 'medical-model'
       },
-      crisisApproaches: [
-        {
-  id: 'en-crisis-professional","'""""
-          name: 'Professional Crisis Intervention","'""
-          description: "Immediate professional mental health support",'""''"""'
-          urgencyLevel: "immediate',""''"""'
-          culturalFactors: ["Individual autonomy valued', "Privacy important", 'Professional expertise trusted"],"""
-};
+      supportResources: this.getDefaultSupportResources('en-US'),
+      communicationGuidelines: this.getDefaultCommunicationGuidelines('en-US'),
+      copingStrategies: this.getDefaultCopingStrategies('en-US'),
+      crisisApproaches: this.getDefaultCrisisApproaches('en-US'),
+      accessibilityConsiderations: this.getDefaultAccessibilityConsiderations()
+    });
 
-steps: [ 'Call 988 Suicide & Crisis Lifeline","'""""''
-            "Or text "HELLO' to 741741","""''""'
-            "Go to nearest emergency room if in immediate danger",""''""'"'
-            "Contact your therapist or psychiatrist","'"'import "Follow safety plan if you have one' ],""""'
-};
-
-whenToUse: 'When experiencing suicidal thoughts, self-harm urges, or severe mental health crisis" }"'""
-      ],
-      culturalConsiderations: [ "Individual therapy is widely accepted",'"'"'"'
-        "Medication may be offered as first-line treatment",""'""'
-        "Privacy and confidentiality are paramount',""""'
-        'Self-advocacy is encouraged in treatment","'"import "Evidence-based approaches are preferred" ],"'""'
-      supportResources: [
-        {
-  id: 'en-therapist",""'"'""'
-          name: 'Licensed Therapist",;""'"
-
-$2: 'professional","""''""'
-          description: "Professional mental health counseling",""'""'
-};
-
-availability: 'By appointment, covered by many insurance plans","""''""'"
-};
-
-culturallyPreferred: true
-  },
-        {
-  id: "en-support-group","''""'"'
-          name: "Support Groups",;"'"'
-
-$2: "peer',""""'
-          description: 'Peer-led groups for shared experiences","'""
-          availability: "Weekly meetings, online and in-person options",'"'"'"'
-};
-
-culturallyPreferred: true
-
-      ],
-};
-
-communicationGuidelines: [ {
-  ,
-  context: "Discussing mental health",""'""'
-          recommendation: "Use direct, clear language about symptoms and feelings',""""'
-};
-
-culturalNuance: 'Personal responsibility and self-improvement are valued","'""
-};
-
-examples: [
-            ""I\'m struggling with depression"",'"""
-            "'I need professional help"",'import ""My anxiety is affecting my work"" ]''""'"'
-      ] }];
-
-    // Spanish (Latino/Hispanic approach)
-    this.contentCache.set("es", {"'"'"'))""})'
-      locale: "es",'"'"'"'
+    // Spanish/Latin American content
+    this.culturalContent.set('es-US', {
+      locale: 'es-US',
       culturalContext: {
-  ,
-  stigmaLevel: "high","'"'"'"""'
-        familyInvolvement: "high',""''"""'
-        communitySupport: "high',""'""""
-};
-
-religiousContext: 'christian","'"""
-};
-
-preferredApproach: "family'""'"
-  },
-      copingStrategies: [ { id: "es-family-support","'""}]'
-          name: 'Apoyo Familiar",""'"'"'
-          description: "Buscar consuelo y consejo en la familia cercana",'"""'
-          culturallyAppropriate: true,
-          category: "family',""''""'
-          effectiveness: 5,
-          steps: [
-            "Hablar con un familiar de confianza","'""'
-            'Compartir sus preocupaciones abiertamente",""'"'"'
-            "Pedir consejo y orientación",'"""'
-            "Participar en actividades familiares',""'import "Mantener conexiones familiares regulares" ] },""'"'
-        {
-  id: "es-prayer',""'""'"'
-          name: "Oración y Fe',"""'"'""'
-          description: "Encontrar fortaleza a través de la práctica espiritual",""'""'
-          culturallyAppropriate: true,
-          category: "spiritual",""''""'"'
-};
-
-effectiveness: 5,
-};
-
-steps: [ "Dedicar tiempo diario a la oración","''""'"'
-            "Leer textos sagrados reconfortantes","'"'"'"""'
-            "Asistir a servicios religiosos',""''"""'
-            "Hablar con un líder espiritual',""'import 'Participar en grupos de oración" ] ],""'"'"'
-        { id: "es-sobremesa",'""'""'"}'
-          name: "Sobremesa Terapéutica',"""'"'""'
-          description: 'Conversaciones profundas después de comidas familiares","""''""'
-          culturallyAppropriate: true,
-          category: "family",""''""'"'
-          effectiveness: 4,
-          steps: [ "Organizar comidas familiares regulares","'"'"'""'
-            "Permanecer en la mesa después de comer",'""''"""'
-            "Compartir experiencias y sentimientos',""'""""
-            'Escuchar sin juzgar","'import "Ofrecer apoyo mutuo" ] }""'""'
-      ],
-      crisisApproaches: [ {
-  ,
-  id: "es-crisis-family',"""'"'""'
-          name: 'Intervención Familiar de Crisis",""'"'""'
-          description: 'Movilizar a la familia para apoyo inmediato","""''""'"
-          urgencyLevel: "immediate","''""'"'
-          culturalFactors: [
-            "La familia es la primera línea de apoyo","'"'"'""'
-            "La vergüenza puede retrasar la búsqueda de ayuda",'""'import 'Los mayores son respetados consejeros" ],"'""''
-};
-
-steps: [ "Contactar al familiar más cercano de confianza",'"""'
-            "Reunir a la familia inmediata',""''""'
-            "Buscar consejo del miembro mayor de la familia","'""'
-            'Considerar hablar con un sacerdote o pastor","""'import 'Si es necesario, buscar ayuda profesional con apoyo familiar" ],"''""'
-};
-
-whenToUse: "Cuando se siente abrumado, con pensamientos negativos persistentes o en crisis emocional" }'"'"'""'
-      ],
-      culturalConsiderations: [ "El "qué dirán' puede influir en buscar ayuda","'""]""''
-        "La familia extendida juega un rol importante",'""'""'"'
-        "La fe y religión son fuentes de fortaleza',"""'"'""'
-        'Los problemas personales son asuntos familiares",""'import "Resistencia a medicación psiquiátrica es común' ],""''""'
-      supportResources: [
-        {
-  id: "es-priest","'"'"'"""'
-          name: "Consejero Espiritual',;'"
-
-$2: "religious","''""'"'
-          description: "Orientación espiritual y emocional","''""'"'
-};
-
-availability: "Disponible en la iglesia local","'""'
-};
-
-culturallyPreferred: true
-  },
-        {
-  id: 'es-comadre","""''""'
-          name: "Comadres/Compadres",;""
-
-$2: 'community',""""
-          description: 'Red de apoyo comunitario tradicional',""""
-          availability: 'Red social establecida',""""
-};
-
-culturallyPreferred: true
-
-      ],
-};
-
-communicationGuidelines: [ {
-  ,
-  context: 'Hablar de salud mental',""""
-          recommendation: 'Usar términos indirectos o somáticos',""""
-};
-
-culturalNuance: 'Evitar términos que impliquen "locura" o debilidad',""""''
-};
-
-examples: [
-            ""Me siento nervioso/a'","'""''
-            ""Tengo los nervios alterados'",""'import "'Necesito desahogarme"" ]'"""
-      };
-  ]];
-
-    // Portuguese (Brazilian approach)
-    this.contentCache.set("pt-BR', {
-  ""'""""))
-};
-
-locale: 'pt-BR","'""""''
-};
-
-culturalContext: {
-  ,
-  stigmaLevel: "high",'""'""'"'
-        familyInvolvement: "high',"""'"'""'
-        communitySupport: 'high","""''""'
-};
-
-religiousContext: "christian",""''""'"'
-};
-
-preferredApproach: "community""'"'
-  },
-      copingStrategies: [ {
-  ,
-  id: "pt-social',""'""'"'
-          name: "Roda de Conversa',""""'
-          description: 'Círculos de conversação com amigos próximos","'""""''
-          culturallyAppropriate: true,
-          category: "community",'"'"""''
-};
-
-effectiveness: 4,
-};
-
-steps: []
-            "Reunir amigos de confiança",'"'"""''
-            "Criar ambiente acolhedor",'"""'
-            "Compartilhar experiências',""'""""
-            'Oferecer apoio mútuo","'import "Manter encontros regulares" ] ),""'""'
-        {
-  id: "pt-music',""'""'"'
-          name: "Musicoterapia Brasileira',""'""'"'
-          description: "Usar música brasileira para expressar e processar emoções',""""'
-          culturallyAppropriate: true,
-          category: 'individual","'""""''
-          effectiveness: 4,
-};
-
-steps: [ "Escolher músicas que ressoem com seus sentimentos",'"'"""''
-            "Cantar ou tocar instrumentos",'"'"""''
-            "Participar de rodas de samba ou música",'"""'
-            "Escrever letras sobre suas experiências',""'import "Compartilhar música com outros" ] )""'"'
-      ],
-};
-
-crisisApproaches: [ {
-  ,
-  id: "pt-crisis-community',"""'"'""'
-          name: 'Rede de Apoio Comunitária",""'"'""'
-          description: 'Mobilizar a comunidade para suporte",""'"'""'
-          urgencyLevel: 'urgent",""'"'"'
-          culturalFactors: [
-            "Forte senso de comunidade",'""'""'"'
-            "Jeitinho brasileiro para resolver problemas',""'import "Preferência por soluções informais" ],'"'"'"'
-          steps: [ "Contatar amigo ou vizinho de confiança",""'""'
-            "Buscar apoio na comunidade religiosa",""'""'
-            "Procurar o CAPS mais próximo",""'""'
-            "Ligar para o CVV (188)',"""'import "Envolver família se apropriado' ],"'"'"'
-          whenToUse: "Quando precisar de apoio emocional imediato ou estiver em crise""'"'
-
-      ],
-};
-
-culturalConsiderations: [ "O 'jeitinho" pode influenciar acesso a serviços",""''""'"
-        "Festas e socialização são formas de terapia","'"'"'""'
-        "Espiritualidade mista é comum",'""''"""'
-        "CAPS são preferidos a hospitais psiquiátricos',""'import 'Terapias alternativas são populares" ],""'"'"'
-};
-
-supportResources: []
-        {
-  id: "pt-caps",'""'""'"'
-          name: "CAPS - Centro de Atenção Psicossocial',;""'
-
-$2: "professional",'"'"'"'
-          description: "Serviço público de saúde mental","'"'"'"""'
-};
-
-availability: "Gratuito pelo SUS',""''"""'
-};
-
-culturallyPreferred: true
-
+        stigmaLevel: 'high',
+        familyInvolvement: 'high',
+        communitySupport: 'high',
+        religiousContext: 'predominantly-catholic',
+        preferredApproach: 'family-centered',
+        culturalValues: ['familia', 'respeto', 'personalismo', 'simpatía'],
+        communicationStyle: 'indirect',
+        authorityRespect: 'high',
+        collectivismLevel: 'collective',
+        mentalHealthPerception: 'spiritual-medical-mixed'
       },
-      communicationGuidelines: [ {
-  ,
-  context: "Discutir saúde mental',""'""""
-          recommendation: 'Usar expressões coloquiais e metáforas","'"""
-};
-
-culturalNuance: "Evitar parecer 'fresco" ou dramático",'"""
-};
-
-examples: [
-            "'Tô mal das ideias"",'"""
-            "'Preciso botar pra fora"",'import ""Tá difícil segurar a barra"" ]''""'"'
-      ] }];
-
-    // Arabic (Middle Eastern approach)
-    this.contentCache.set("ar", {"'"'"'))""})'
-      locale: "ar",'"'"'"'
-      culturalContext: {
-  ,
-  stigmaLevel: "high","'"'"'"""'
-        familyInvolvement: "high',""''"""'
-        communitySupport: "high',""'""""
-};
-
-religiousContext: 'islamic","'"""
-};
-
-preferredApproach: "family'""'"
-  },
-      copingStrategies: [ { id: "ar-prayer","'""}]'
-          name: 'الصلاة والذكر",""'"'"'
-          description: "الصلاة اليومية والذكر للسلام الداخلي",'"""'
-          culturallyAppropriate: true,
-          category: "spiritual',""''""'
-          effectiveness: 5,
-          steps: [
-            "المحافظة على الصلوات الخمس","'""'
-            'قراءة القرآن يومياً",""'"'"'
-            "الذكر والاستغفار",'"""'
-            "صلاة الاستخارة عند الحاجة',""'import "الدعاء في الثلث الأخير من الليل" ] },""'"'
-        {
-  id: "ar-family-council',""'""'"'
-          name: "مجلس العائلة',"""'"'""'
-          description: "استشارة كبار العائلة للحصول على التوجيه",""'""'
-          culturallyAppropriate: true,
-          category: "family",""''""'"'
-};
-
-effectiveness: 5,
-};
-
-steps: [ "التحدث مع الوالدين أو كبار العائلة","''""'"'
-            "طلب النصيحة بأدب واحترام","'"'"'"""'
-            "الاستماع للحكمة والخبرة',""''"""'
-            "احترام التوجيه العائلي',""'import 'الحفاظ على خصوصية العائلة" ] ],""'"'"'
-        { id: "ar-ruqyah",'""'""'"}'
-          name: "الرقية الشرعية',"""'"'""'
-          description: 'العلاج بالقرآن والأدعية النبوية","""''""'
-          culturallyAppropriate: true,
-          category: "spiritual",""''""'"'
-          effectiveness: 5,
-          steps: [ "قراءة سورة الفاتحة","'"'"'""'
-            "قراءة آية الكرسي",'""''"""'
-            "قراءة المعوذات',""'""""
-            'الأدعية النبوية للشفاء","'import "الاستماع للرقية الشرعية" ] }""'""'
-      ],
-      crisisApproaches: [ {
-  ]
-          id: "ar-crisis-family',"""'"'""'
-          name: 'التدخل العائلي",""'"'""'
-          description: 'حشد العائلة للدعم الفوري","""''""'"
-          urgencyLevel: "immediate","''""'"'
-          culturalFactors: [
-            "شرف العائلة مهم جداً","'"'"'""'
-            "الخصوصية داخل العائلة فقط",'""'import 'الشيوخ والعلماء مصادر موثوقة" ],"'""''
-};
-
-steps: [ "التحدث مع أحد الوالدين أو الأخ الأكبر",'"""'
-            "طلب المشورة من شيخ موثوق',""''""'
-            "اللجوء للرقية الشرعية","'""'
-            'زيارة طبيب إذا نصحت العائلة","""'import 'الحفاظ على السرية العائلية" ],"''""'
-};
-
-whenToUse: "عند الشعور بالضيق الشديد أو الأفكار السلبية المستمرة"'"'
-
-      },
-      culturalConsiderations: [ "الصحة النفسية قد تُفسر روحانياً',""'""''
-        "العار الاجتماعي يمنع طلب المساعدة",'""'""'""'
-        'الفصل بين الجنسين في العلاج مهم",""'"'""'
-        'الحلول الدينية مفضلة على الطبية","""'import 'كبار السن لهم احترام وسلطة" ],"''""'
-      supportResources: []
-        {
-  id: "ar-imam",'""''"""'
-          name: "الإمام أو الشيخ',;""'
-
-$2: "religious",""''""'""'
-          description: "الإرشاد الديني والروحي",'"'"'""'
-};
-
-availability: "متاح في المسجد المحلي",'""''"""'
-};
-
-culturallyPreferred: true
-  ],
-        {
-  id: "ar-family-elder',""''"""'
-          name: "كبير العائلة',;"'""
-
-$2: "family',""'""""
-          description: 'الحكمة والتوجيه من كبار السن","'"""
-};
-
-availability: "داخل العائلة',""'""""''
-};
-
-culturallyPreferred: true
-
-      },
-      communicationGuidelines: [ {
-  ,
-  context: "التحدث عن الصحة النفسية",'"'"""''
-          recommendation: "استخدام المصطلحات الدينية والروحية",'""'""'"'
-};
-
-culturalNuance: "تجنب المصطلحات التي تشير للجنون',""'""''
-};
-
-examples: [
-            ""أشعر بضيق في صدري'","'""''
-            ""أحتاج للدعاء'","'import ""قلبي مقبوض'" ]"''"""'
-      ] }];
-
-    // Chinese (East Asian approach)
-    this.contentCache.set("zh', {
-  ""'""))""
-};
-
-locale: 'zh","'"""
-};
-
-culturalContext: {
-  ,
-  stigmaLevel: "high',""'""""''
-        familyInvolvement: "high",'"'"""''
-        communitySupport: "medium",'""'""'"'
-};
-
-religiousContext: "mixed',""'""''
-};
-
-preferredApproach: "family"'"""'
-  },
-      copingStrategies: [ { id: "zh-qigong',""''"}"'
-          name: "气功练习","'""'
-          description: '通过气功调节身心平衡",""'"'"'
-          culturallyAppropriate: true,
-          category: "individual",'"""'
-          effectiveness: 4,
-          steps: [
-            "找一个安静的地方',""''""'
-            "站立或坐姿舒适","'""'
-            '调整呼吸节奏",""'"'"'
-            "缓慢移动身体",'"""'
-            "意念集中丹田',""'import "每天练习20-30分钟" ] },""'"'
-        {
-  id: "zh-tcm',""'""'"'
-          name: "中医调理',"""'"'""'
-          description: "通过中医方法调理情志",""'""'
-          culturallyAppropriate: true,
-          category: "professional",""''""'"'
-};
-
-effectiveness: 4,
-};
-
-steps: [ "寻找信誉良好的中医师","''""'"'
-            "详细描述身心症状","'"'"'"""'
-            "按医嘱服用中药',""''"""'
-            "配合针灸或推拿',""'import '调整饮食和作息" ] ],""'"'"'
-        { id: "zh-face",'""'""}'"'
-          name: "保持面子策略',"""'"'""'
-          description: '在维护尊严的同时寻求帮助","""''""'
-          culturallyAppropriate: true,
-          category: "family",""''""'"'
-          effectiveness: 3,
-          steps: [ "私下与信任的家人交谈","'"'"']""'
-            "强调身体症状而非情绪",'""''"""'
-            "寻求'调理"而非"治疗'","""'""'
-            '保持家庭内部处理","""'import '逐步接受专业帮助" ] }"''"""'
-      ],
-      crisisApproaches: [ {
-  ,
-  id: "zh-crisis-discrete',""'"""
-          name: "谨慎危机干预',""'""""''
-          description: "在保护面子的前提下获得帮助",'"""'
-          urgencyLevel: "urgent',""''"""'
-          culturalFactors: [
-            "面子极其重要',""'"""
-            "家丑不可外扬',""'import '集体利益高于个人" ],""'"'"'
-          steps: [ "先与最亲近的家人商议",'""'""'"'
-            "寻求中医'调理"","'"'"'
-            "如需要，悄悄咨询心理医生',""'""'"'
-            "使用在线匿名咨询',"""'import "必要时家人陪同就医' ,"'"'""'
-          whenToUse: "当感到极度压力、失眠严重或有自我伤害念头时"'""'
-
-      ,
-};
-
-culturalConsiderations: [ "心理问题常被视为意志薄弱",""''""'"'
-        "倾向于躯体化表达","''""''
-        "孝道可能增加压力",""''""'""'
-        "学业/事业成功压力大",'""'import '集体和谐重于个人需求" ],"'""'"'
-};
-
-supportResources: []
-        {
-  id: "zh-tcm-doctor',""'""'"'
-          name: "中医师',;"""'
-
-$2: "professional',""''""'
-          description: "通过中医方法调理身心","'""'
-};
-
-availability: '预约就诊",""'"'"'
-};
-
-culturallyPreferred: true
-  },
-        {
-  id: "zh-online-anon",'"""'
-          name: "在线匿名咨询',;""'
-
-$2: 'professional",""'"'""'
-          description: '保护隐私的专业咨询","""''""'
-};
-
-availability: "24小时在线",""'""'
-};
-
-culturallyPreferred: true
-
-      },
-      communicationGuidelines: [ {
-  ,
-  context: '讨论心理健康","""''""'"
-          recommendation: "使用身体症状描述情绪问题","''""'"'
-};
-
-culturalNuance: "避免直接提及精神疾病","'"'"'""'
-};
-
-examples: [
-            ""最近睡不好觉'","''""'
-            ""心里堵得慌'","'import ""需要调理一下身体"" ]'"'"'""'
-      ] }];
-
-    // Vietnamese approach
-    this.contentCache.set("vi", {
-  '"'"'))""'
-};
-
-locale: "vi",'""''"""'
-};
-
-culturalContext: {
-  ,
-  stigmaLevel: "high',""''""'
-        familyInvolvement: "high",'""''""""'
-        communitySupport: 'high","'""""
-};
-
-religiousContext: 'buddhist","'""""''
-};
-
-preferredApproach: "community"'""'
-  },
-      copingStrategies: [ {
-  ,
-  id: "vi-meditation",'""''""""'
-          name: 'Thiền Phật Giáo","'""""
-          description: 'Thực hành thiền định theo truyền thống Phật giáo","'""""''
-          culturallyAppropriate: true,
-          category: "spiritual",'"'"""''
-};
-
-effectiveness: 5,
-};
-
-steps: [
-            "Tìm nơi yên tĩnh trong chùa hoặc nhà",'""'""'""'
-            'Ngồi trong tư thế thoải mái",""'"'""'
-            'Tập trung vào hơi thở","""''""'
-            "Niệm Phật hoặc tụng kinh",""'""'
-            "Thực hành từ bi với bản thân",""''import "Duy trì 15-30 phút mỗi ngày" ] },'""""'
-        {
-  id: 'vi-ancestor","'""""'"'
-          name: "Cầu Nguyện Tổ Tiên',"""'"'""'
-          description: "Tìm sức mạnh từ sự kết nối với tổ tiên",""''""'""'
-          culturallyAppropriate: true,
-          category: "spiritual",'""''""""'
-};
-
-effectiveness: 4,
-};
-
-steps: [ 'Thắp hương tại bàn thờ tổ tiên","'""""'"'
-            "Báo cáo khó khăn với tổ tiên',"""'"'""'
-            "Cầu xin sự phù hộ và hướng dẫn",""''""'""'
-            "Hứa nguyện và giữ lời hứa",'""'import 'Duy trì nghi lễ thường xuyên" } ]"'""'"'
-      ],
-      crisisApproaches: [ {}]
-          id: "vi-crisis-community',"""'"'""'
-          name: "Hỗ Trợ Cộng Đồng",""'""'
-          description: "Huy động láng giềng và cộng đồng",""''""'"'
-          urgencyLevel: "urgent","''""'"'
-          culturalFactors: [
-            "Tình làng nghĩa xóm quan trọng","'"'"'"""'
-            "Thể diện gia đình cần được bảo vệ',""'import "Phật giáo ảnh hưởng mạnh" ],""'""'
-          steps: [ 'Tâm sự với người láng giềng thân thiết",""'"']"'
-            "Nhờ sư thầy tại chùa tư vấn",'"""'
-            "Tham gia sinh hoạt cộng đồng',""''""'
-            "Tìm bác sĩ Đông y hoặc châm cứu","'"'import "Cân nhắc đi bệnh viện nếu cần' ,"'"""''
-          whenToUse: "Khi cảm thấy tuyệt vọng hoặc không thể tự xử lý"'"'
-
-      ,
-      culturalConsiderations: [ "Karma và nghiệp báo ảnh hưởng nhận thức","''"]"'"'
-        "Gia đình mở rộng có vai trò lớn","'"'"'""'
-        "Thầy bói và tâm linh được tin tưởng",'"'"'"'
-        "Thuốc Nam được ưa chuộng","'"'import "Tránh mất mặt là ưu tiên' ],"'"""''
-      supportResources: []
-        {
-  id: "vi-monk",'""'""'""'
-          name: 'Sư Thầy/Ni Cô",;""'"
-
-$2: 'religious","""''""'
-          description: "Tư vấn tâm linh và hướng dẫn thiền",""'""'
-};
-
-availability: "Tại chùa địa phương",""''""'""'
-};
-
-culturallyPreferred: true
-
-      },
-      communicationGuidelines: [ {
-  ,
-  context: "Nói về sức khỏe tâm thần",'"'"'""'
-          recommendation: "Dùng ngôn ngữ gián tiếp và ẩn dụ",'""''"""'
-};
-
-culturalNuance: "Tránh nhãn mác bệnh tâm thần',""''"""'
-};
-
-examples: [
-            "'Tâm không an"",'""""''
-            ""Người không khỏe'",""'import "'Cần tĩnh tâm"" ]'""
-      };
-  ]];
-
-    // Tagalog/Filipino approach
-    this.contentCache.set("tl", {"''""}'"'
-      locale: "tl","'"'"'"""'
-      culturalContext: {
-  ,
-  stigmaLevel: "high',""''"""'
-        familyInvolvement: "high',""'""""
-        communitySupport: 'high","'""""
-};
-
-religiousContext: 'christian","'""""'"')
-};
-
-preferredApproach: "family'""')
-},
-      copingStrategies: [ {
-  ,
-  id: "tl-bayanihan",'"'"))'""'
-          name: "Bayanihan Spirit",'""''"""'
-          description: "Pagkakaisa ng komunidad para sa suporta',""''""'
-          culturallyAppropriate: true,
-          category: "community",'""''""""'
-};
-
-effectiveness: 5,
-};
-
-steps: []
-            'Makipag-ugnayan sa mga kaibigan","'""""
-            'Sumali sa mga aktibidad ng barangay","'""""''
-            "Tumulong sa iba para makaramdam ng layunin",'""""'
-            'Magbahagi ng mga karanasan","'"import "Panatilihin ang pakikipagkapwa" ] },"'""'
-        { id: "tl-prayer",""''"}"'""'
-          name: "Novena at Dasal",'"'"'""'
-          description: "Paghahanap ng lakas sa pananampalataya",'""''"""'
-          culturallyAppropriate: true,
-          category: "spiritual',""''""'
-          effectiveness: 5,
-          steps: [ "Mag-novena sa simbahan",'""'']""""'
-            'Manalangin kasama ang pamilya","'""""
-            'Humingi ng bendisyon sa pari","'""""''
-            "Magbasa ng Bibliya",'"'import "Sumali sa prayer group" ] },"'""'
-        { id: 'tl-ventilation",""'"}'"'
-          name: "Pakikipagkuwentuhan',"""'"'""'
-          description: "Pagbabahagi ng damdamin sa mga kaibigan",""'""'
-          culturallyAppropriate: true,
-          category: "community",""''""'"'
-          effectiveness: 4,
-          steps: [ "Maghanap ng kumpare/kumare","''""''
-            "Mag-kwentuhan habang kumakain",""''""'""'
-            "Makinig at magbigay ng payo",'"'"'""'
-            "Panatilihin ang tiwala",'""'import 'Regular na pagkikita-kita" ] }"'""''
-      ),
-      crisisApproaches: [ {
-  ,
-  id: "tl-crisis-family",'""'""'"'
-          name: "Pagtitipon ng Pamilya',""'""''
-          description: "Pagsasama ng pamilya para sa suporta",'""'""'""'
-          urgencyLevel: 'immediate",""'"'""'
-          culturalFactors: [
-            'Kapakanan ng pamilya ay mahalaga","""''""'
-            "Hiya ay malaking hadlang",""import 'Utang na loob sa pamilya" ],"'""
-          steps: [ "Kausapin ang pinagkakatiwalaang kamag-anak",'"'"'"'
-            "Magpatawag ng family meeting","'"'"'"""'
-            "Humingi ng payo sa nakatatanda',""''"""'
-            "Kumunsulta sa pari kung kailangan',""'import "Magpatingin sa doktor kung payagan" ],""'"'
-          whenToUse: "Kapag hindi na kaya ng sarili at kailangan ng tulong'"""'
-
-      ],
-};
-
-culturalConsiderations: [ "Hiya ay humahadlang sa paghingi ng tulong',""''"""'
-        "Bahala na attitude ay maaaring makasama o makabuti',""'""""
-        'Extended family ay bahagi ng support system","'""""
-        'Ginhawa at pahinga ay cultural values","'"import "Pakikipagkapwa-tao ay therapeutic" ],"'""'
-};
-
-supportResources: []
-        {
-  id: "tl-priest",""''""'""'
-          name: "Pari o Pastor",;'""'
-
-$2: "religious",""''""'"'
-          description: "Espirituwal na gabay at counseling","''""''
-};
-
-availability: "Sa lokal na simbahan",""''""'""'
-};
-
-culturallyPreferred: true
-  },
-        {
-  id: "tl-albularyo",'"'"'""'
-          name: "Albularyo/Manghihilot",;'""'
-
-$2: 'community",""'"'""'
-          description: 'Tradisyonal na healing","""''""'
-};
-
-availability: "Sa komunidad",""'""'
-};
-
-culturallyPreferred: true
-
-      },
-      communicationGuidelines: [ {
-  ,
-  context: "Pag-usap tungkol sa mental health",""''""]'""'
-          recommendation: "Gamitin ang mga salitang pamilyar at hindi medical",'"'"'""'
-};
-
-culturalNuance: "Iwasan ang salitang "baliw' o "sira-ulo"',""""'"'
-};
-
-examples: [
-            "'Hindi ako okay"",""''""'
-            ""Mabigat ang loob ko"",'"'import "'Kailangan ko ng kausap"" }"""'
-      ];
-  ));
+      supportResources: this.getDefaultSupportResources('es-US'),
+      communicationGuidelines: this.getDefaultCommunicationGuidelines('es-US'),
+      copingStrategies: this.getDefaultCopingStrategies('es-US'),
+      crisisApproaches: this.getDefaultCrisisApproaches('es-US'),
+      accessibilityConsiderations: this.getDefaultAccessibilityConsiderations()
+    });
+  }
 
   /**
-   * Get cultural mental health content for a specific locale
+   * Get cultural content for locale
    */
-  getCulturalContent(locale: string): CulturalMentalHealthContent | undefined {;
-const baseLocale = locale.split('-")[0];"'""""
-    return this.contentCache.get(locale) || this.contentCache.get(baseLocale) }
+  public async getCulturalContent(locale: string): Promise<CulturalMentalHealthContent | null> {
+    const content = this.culturalContent.get(locale);
+    if (content) {
+      return content;
+    }
+
+    // Try base language if specific locale not found
+    const baseLanguage = locale.split('-')[0];
+    for (const [key, value] of this.culturalContent.entries()) {
+      if (key.startsWith(baseLanguage)) {
+        return value;
+      }
+    }
+
+    return null;
+  }
 
   /**
    * Get culturally appropriate coping strategies
    */
-  getCopingStrategies(locale: string, category?: string): CopingStrategy[] {;
-const content = this.getCulturalContent(locale  );
-    if (!content) return [],
+  public async getCopingStrategies(
+    locale: string,
+    category?: string,
+    effectivenessThreshold?: number
+  ): Promise<CopingStrategy[]> {
+    const content = await this.getCulturalContent(locale);
+    if (!content) {
+      return [];
+    }
+
+    let strategies = content.copingStrategies;
 
     if (category) {
-      return content.copingStrategies.filter(s => s.category === category) }
-    return content.copingStrategies;
+      strategies = strategies.filter(s => s.category === category);
+    }
+
+    if (effectivenessThreshold) {
+      strategies = strategies.filter(s => s.effectiveness >= effectivenessThreshold);
+    }
+
+    return strategies.sort((a, b) => b.effectiveness - a.effectiveness);
+  }
 
   /**
-   * Get crisis approaches for a locale
+   * Get crisis approaches for cultural context
    */
-  getCrisisApproaches(locale: string, urgencyLevel?: string): CrisisApproach[] {;
-const content = this.getCulturalContent(locale  );
-    if (!content) return [],
+  public async getCrisisApproaches(
+    locale: string,
+    urgencyLevel?: string
+  ): Promise<CrisisApproach[]> {
+    const content = await this.getCulturalContent(locale);
+    if (!content) {
+      return [];
+    }
+
+    let approaches = content.crisisApproaches;
 
     if (urgencyLevel) {
-      return content.crisisApproaches.filter(a => a.urgencyLevel === urgencyLevel) }
-    return content.crisisApproaches;
+      approaches = approaches.filter(a => a.urgencyLevel === urgencyLevel);
+    }
 
-  /**
-   * Get support resources
-   */
-  getSupportResources(locale: string, type?: string): SupportResource[] {;
-const content = this.getCulturalContent(locale  );
-    if (!content) return [],
-
-    if (type) {
-      return content.supportResources.filter(r => r.type === type) }
-    return content.supportResources;
+    return approaches;
+  }
 
   /**
    * Get communication guidelines
    */
-  getCommunicationGuidelines(locale: string): CommunicationGuideline[] {;
-const content = this.getCulturalContent(locale ),
-    return content?.communicationGuidelines || [] }
+  public async getCommunicationGuidelines(
+    locale: string,
+    context?: string
+  ): Promise<CommunicationGuideline[]> {
+    const content = await this.getCulturalContent(locale);
+    if (!content) {
+      return [];
+    }
+
+    let guidelines = content.communicationGuidelines;
+
+    if (context) {
+      guidelines = guidelines.filter(g => g.context === context);
+    }
+
+    return guidelines;
+  }
 
   /**
-   * Get cultural considerations
+   * Get support resources
    */
-  getCulturalConsiderations(locale: string): string[] {   };
+  public async getSupportResources(
+    locale: string,
+    type?: string
+  ): Promise<SupportResource[]> {
+    const content = await this.getCulturalContent(locale);
+    if (!content) {
+      return [];
+    }
 
-content = this.getCulturalContent(locale ),
-    return content?.culturalConsiderations || [] }
+    let resources = content.supportResources;
+
+    if (type) {
+      resources = resources.filter(r => r.type === type);
+    }
+
+    return resources;
+  }
 
   /**
-   * Check if a coping strategy is culturally appropriate
+   * Create cultural assessment for user
    */
-  isCulturallyAppropriate(locale: string, strategyId: string): boolean(
-const content = this.getCulturalContent(locale)
-    if (!content) return false;
-const strategy = content.copingStrategies.find(s => s.id === strategyId );
-    return strategy?.culturallyAppropriate || false }
+  public async createCulturalAssessment(
+    userId: string,
+    assessmentData: Partial<CulturalAssessment>
+  ): Promise<CulturalAssessment> {
+    const assessment: CulturalAssessment = {
+      userId,
+      locale: assessmentData.locale || 'en-US',
+      culturalBackground: assessmentData.culturalBackground || [],
+      religiousAffiliation: assessmentData.religiousAffiliation,
+      languagePreferences: assessmentData.languagePreferences || ['en'],
+      familyStructure: assessmentData.familyStructure || 'nuclear',
+      communityConnections: assessmentData.communityConnections || [],
+      previousMentalHealthExperience: assessmentData.previousMentalHealthExperience || false,
+      stigmaLevel: assessmentData.stigmaLevel || 5,
+      preferredSupportType: assessmentData.preferredSupportType || [],
+      accessibilityNeeds: assessmentData.accessibilityNeeds || [],
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    this.userAssessments.set(userId, assessment);
+    return assessment;
+  }
 
   /**
-   * Get recommended approach based on cultural context
+   * Get user's cultural assessment
    */
-  getRecommendedApproach(locale: string, situation: 'crisis" | "ongoing' | "preventive"): string(;""
-const content = this.getCulturalContent(locale);
-    if (!content) return 'professional";"'"
-const context = getCulturalContext(locale );
-
-    switch (situation) {
-      case crisis:"""'""'
-        if (context.mentalHealthStigma === 'high") {"""''""'
-          return context.crisisEscalationPreference || "family" }""''""'"'
-        return "professional";"'"'"'""'
-
-      case ongoing:""'""'
-        if (context.familyInvolvement === "high") { return "family" }'"'"'"""'
-        if (context.communitySupport === "high') { return "community" }'"""
-        return "professional';""''""'
-
-      case preventive:"""'""'
-        return content.culturalContext.preferredApproach
-      default: return 'professional'""
-  };
+  public async getUserAssessment(userId: string): Promise<CulturalAssessment | null> {
+    return this.userAssessments.get(userId) || null;
+  }
 
   /**
-   * Adapt mental health message for cultural context
+   * Get personalized recommendations
    */
-  adaptMessage(message: string, locale: string): string(
-const content = this.getCulturalContent(locale )
-    if (!content) return message;
+  public async getPersonalizedRecommendations(
+    userId: string
+  ): Promise<{
+    copingStrategies: CopingStrategy[];
+    supportResources: SupportResource[];
+    communicationGuidelines: CommunicationGuideline[];
+  }> {
+    const assessment = await this.getUserAssessment(userId);
+    if (!assessment) {
+      throw new Error('No cultural assessment found for user');
+    }
 
-    // This would involve complex NLP and cultural adaptation
-    // For now, return guidelines on how to communicate
-const guidelines = content.communicationGuidelines;
-    if (guidelines.length ) 0) {;
-const examples = guidelines[0].examples,
-      // Return a culturally appropriate example
-      return examples[0] || message }
+    const content = await this.getCulturalContent(assessment.locale);
+    if (!content) {
+      throw new Error('No cultural content available for user locale');
+    }
 
-    return message;
+    // Filter strategies based on cultural appropriateness
+    const copingStrategies = content.copingStrategies
+      .filter(s => s.culturallyAppropriate)
+      .sort((a, b) => b.effectiveness - a.effectiveness)
+      .slice(0, 10);
+
+    // Filter resources based on language preferences
+    const supportResources = content.supportResources
+      .filter(r => r.languages.some(lang => 
+        assessment.languagePreferences.includes(lang)
+      ))
+      .slice(0, 5);
+
+    // Get relevant communication guidelines
+    const communicationGuidelines = content.communicationGuidelines
+      .filter(g => g.context === 'crisis' || g.context === 'support');
+
+    return {
+      copingStrategies,
+      supportResources,
+      communicationGuidelines
+    };
+  }
 
   /**
-   * Get all supported locales
+   * Default support resources by locale
    */
-  getSupportedLocales(): string[] { return Array.from(this.contentCache.keys()) }
+  private getDefaultSupportResources(locale: string): SupportResource[] {
+    const baseResources: SupportResource[] = [
+      {
+        id: 'national-suicide-prevention',
+        name: 'National Suicide Prevention Lifeline',
+        type: 'hotline',
+        description: 'Free and confidential emotional support 24/7',
+        contactInfo: { phone: '988' },
+        languages: locale === 'es-US' ? ['es', 'en'] : ['en'],
+        culturalSpecialization: locale === 'es-US' ? ['latino', 'hispanic'] : ['general'],
+        availability: { available24x7: true },
+        cost: 'free',
+        accessibility: { multiLanguage: true }
+      }
+    ];
+
+    return baseResources;
+  }
 
   /**
-   * Export content for offline storage
-   */;
-$2ForOfflineStorage(): Record<string, CulturalMentalHealthContent> {
-  ,
-};
+   * Default communication guidelines by locale
+   */
+  private getDefaultCommunicationGuidelines(locale: string): CommunicationGuideline[] {
+    return [
+      {
+        id: 'crisis-communication',
+        context: 'crisis',
+        doRecommendations: locale === 'es-US' 
+          ? ['Show respect for family', 'Use formal address', 'Acknowledge cultural values']
+          : ['Be direct and clear', 'Validate feelings', 'Provide options'],
+        avoidRecommendations: locale === 'es-US'
+          ? ['Dismiss family concerns', 'Rush decisions', 'Ignore religious beliefs']
+          : ['Be dismissive', 'Make assumptions', 'Use medical jargon'],
+        culturalNuances: [],
+        nonVerbalConsiderations: [],
+        languagePreferences: [
+          {
+            language: locale.split('-')[0],
+            formalityLevel: locale === 'es-US' ? 'formal' : 'mixed',
+            preferredTerms: {},
+            avoidedTerms: []
+          }
+        ]
+      }
+    ];
+  }
 
-exported: Record<string, CulturalMentalHealthContent> = {};
-    this.contentCache.forEach((content, locale) =) {,
-$2ed[locale] = content }};
-    return exported;
-  ];
+  /**
+   * Default coping strategies by locale
+   */
+  private getDefaultCopingStrategies(locale: string): CopingStrategy[] {
+    return [
+      {
+        id: 'deep-breathing',
+        name: locale === 'es-US' ? 'Respiración Profunda' : 'Deep Breathing',
+        description: locale === 'es-US' 
+          ? 'Técnica de respiración para calmar la ansiedad'
+          : 'Breathing technique to calm anxiety',
+        culturallyAppropriate: true,
+        category: 'individual',
+        effectiveness: 4,
+        culturalConsiderations: []
+      }
+    ];
+  }
+
+  /**
+   * Default crisis approaches by locale
+   */
+  private getDefaultCrisisApproaches(locale: string): CrisisApproach[] {
+    return [
+      {
+        id: 'immediate-safety',
+        name: locale === 'es-US' ? 'Seguridad Inmediata' : 'Immediate Safety',
+        description: locale === 'es-US'
+          ? 'Evaluación inmediata de seguridad con apoyo familiar'
+          : 'Immediate safety assessment and intervention',
+        urgencyLevel: 'immediate',
+        culturalFactors: locale === 'es-US' 
+          ? ['family-involvement', 'religious-support']
+          : ['individual-autonomy', 'professional-support'],
+        recommendedActions: [],
+        avoidActions: [],
+        familyInvolvement: locale === 'es-US',
+        communityInvolvement: locale === 'es-US',
+        professionalReferral: true
+      }
+    ];
+  }
+
+  /**
+   * Default accessibility considerations
+   */
+  private getDefaultAccessibilityConsiderations(): AccessibilityConsiderations {
+    return {
+      visualImpairment: {
+        available: true,
+        methods: ['screen-reader', 'high-contrast', 'large-text'],
+        resources: ['NVDA', 'JAWS', 'VoiceOver'],
+        specialConsiderations: ['Describe visual elements', 'Use clear headings']
+      },
+      hearingImpairment: {
+        available: true,
+        methods: ['sign-language', 'captions', 'text-chat'],
+        resources: ['ASL interpreters', 'Video relay'],
+        specialConsiderations: ['Visual alerts', 'Written communication']
+      },
+      cognitiveConsiderations: {
+        available: true,
+        methods: ['simple-language', 'visual-aids', 'step-by-step'],
+        resources: ['Easy-read materials', 'Cognitive aids'],
+        specialConsiderations: ['Allow extra time', 'Repeat information']
+      },
+      motorImpairment: {
+        available: true,
+        methods: ['voice-control', 'switch-access', 'eye-tracking'],
+        resources: ['Adaptive hardware', 'Voice recognition'],
+        specialConsiderations: ['Alternative input methods', 'Accessible interfaces']
+      },
+      languageBarriers: {
+        translationServices: true,
+        interpreterServices: true,
+        multilingualStaff: true,
+        culturalLiaisons: true,
+        supportedLanguages: ['en', 'es', 'fr', 'de', 'it', 'pt', 'ru', 'ar', 'zh', 'ja']
+      }
+    };
+  }
+}
 
 // Export singleton instance
-export const culturalMentalHealthService = CulturalMentalHealthService.getInstance();
-
-// Export types
-interface type { { {(CopingStrategy)
-  CrisisApproach,
-  SupportResource,
-  CommunicationGuideline };
+export const culturalMentalHealthService = new CulturalMentalHealthService();
