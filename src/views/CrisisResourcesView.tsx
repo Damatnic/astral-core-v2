@@ -1,519 +1,701 @@
-import React, { useState(, useEffect ) from 'react';"""'"'""'
-import { ApiClient  } from '../utils/ApiClient';""'"'""'
-import { Resource  } from '../types';""'"'"'
-import { SearchIcon, PhoneIcon, HeartIcon, SparkleIcon, ShieldIcon, ClockIcon, UserIcon, HomeIcon  } from '../components/icons.dynamic';"""'"'""'
-import { Card  } from '../components/Card';"""''""'
-import { AppButton  } from '../components/AppButton';""''""'""'
-import { CrisisSupportWidget  } from '../components/CrisisSupportWidget';'"'"'""'
-import { BreathingWidget  } from '../components/BreathingWidget';'""''""""'
-import '../styles/crisis-resources.css";"'""
-const RESOURCE_CATEGORIES = ["All", 'Emergency Help", "Text Support', "Youth & Students", "Veterans", 'LGBTQ+", "Coping Strategies'];"
-const DEMOGRAPHIC_RESOURCES = {}
-    "Youth & Students": {
-  "''""'"'
-        icon: UserIcon,
-};
+import React, { useState, useEffect } from 'react';
+import { Card } from '../components/Card';
+import { AppButton } from '../components/AppButton';
+import { AppInput } from '../components/AppInput';
+import { ViewHeader } from '../components/ViewHeader';
+import { useAuth } from '../contexts/AuthContext';
+import { useNotification } from '../contexts/NotificationContext';
+import { 
+  PhoneIcon, 
+  MessageIcon, 
+  LocationIcon, 
+  ClockIcon, 
+  SearchIcon, 
+  HeartIcon,
+  AlertIcon,
+  InfoIcon,
+  ExternalLinkIcon
+} from '../components/icons.dynamic';
 
-color: "#3B82F6","'"'"'""'
-};
-
-description: "Specialized support for young people and students"'""'
-  },
-    Veterans: {
-  '"""'"'""'
-        icon: HomeIcon,
-};
-
-color: '#10B981","""''""'"
-};
-
-description: "Resources specifically for military veterans""''
-  },
-    "LGBTQ+": {
-  '"'"""''
-        icon: HeartIcon,
-};
-
-color: "#F59E0B",'""'""'"'
-};
-
-description: "Safe spaces and support for LGBTQ+ individuals'"""'
+interface CrisisResource {
+  id: string;
+  name: string;
+  description: string;
+  type: 'hotline' | 'chat' | 'text' | 'emergency' | 'local' | 'online';
+  contact: {
+    phone?: string;
+    website?: string;
+    textNumber?: string;
+    chatUrl?: string;
+    email?: string;
   };
+  availability: {
+    hours: string;
+    timezone?: string;
+    languages: string[];
   };
-const EMERGENCY_NUMBERS = [;]
-    {
-  name: "National Suicide Prevention Lifeline',""'""""''
-        number: "988",'""'""'""'
-};
-
-description: '24/7 free and confidential support",;"""'
-
-};
-
-$2: "crisis"'""'
-  },
-    {
-  name: "Crisis Text Line",'"'"'""'
-        number: "741741",'""''"""'
-};
-
-description: "Text HOME for immediate support',;""'
-
-};
-
-$2: 'text""""'
-  },
-    {
-  name: 'Emergency Services","'""""'"'
-        number: "911',"""'"'""'
-};
-
-description: "Life-threatening emergencies",;""'"'
-
-};
-
-$2: "emergency'"""'
-
-] }
-
- EmergencyNumberCard: React.FC<{ emergency: typeof EMERGENCY_NUMBERS[0] }> = ({ emergency }) => (
-    <Card className={`emergency-card ${emergency.type}`}>
-        <div className="emergency-header'>""''""""'
-            <PhoneIcon className='emergency-icon"     />"'""""
-            <div className='emergency-info">"''""'
-                <h3>{emergency.name}</h3}
-                <p>{emergency.description}</p
-            </div
-        </div
-        <div className="emergency-actions">'""''""""'
-            <AppButton variant='primary";">'
-className='call-button"""'"'""'
-                onClick= {() =} {}
-                    if (emergency.type === 'text") {"""''""'
-                        window.open(`sms:${emergency.number)?body='HOME`," "_blank");"'"
-  ) else {
-                        window.open(`tel:${emergency.number)`, "_blank');""'"
+  specializations: string[];
+  isEmergency: boolean;
+  location?: {
+    city: string;
+    state: string;
+    country: string;
+    address?: string;
   };
-  }}
-            
-                {emergency.type === "text' ? `Text ${emergency.number}` : `Call ${emergency.number}`}"""'"'""'
-            </AppButton
-        </div
-    </Card;
-const ResourceCard: React.FC<{ resource: Resource, priority?: boolean }> = ({ resource, priority }) = {;}
-const categoryInfo = DEMOGRAPHIC_RESOURCES[resource.category as keyof typeof DEMOGRAPHIC_RESOURCES];
-const IconComponent = categoryInfo?.icon || ShieldIcon;
-
-    return()
-        <Card className={`resource-card ${priority ? 'priority-resource" : ""} ${resource.category.toLowerCase().replace(/[^a-z0-9]/g, "-')}`}>""'""""'
-            <div className='resource-header">"'""""
-                <div className='resource-title-section">"'""""
-                    {
-  categoryInfo && <IconComponent className='category-icon" style= {{ color: categoryInfo.color "'}"
-  }   />
-                    <h3>{resource.title}</h3
-                </div
-                {priority && <span className="priority-badge">Immediate Help</span>}"'""'"
-            </div
-            <p className="resource-description">{resource.description}</p"'"'"'""'
-            <div className="resource-contact">''""''
-                {resource.contact ? (
-                    <div className="contact-info">""'""'}
-    <PhoneIcon     />}
-    <strong>{resource.contact}</strong)
-                        <AppButton variant="secondary'""'""'""'
-                            size='sm""""''""'
-                            onClick={ () =} {;
-const phoneNumber = resource.contact?.replace(/[^\d]/g, ""  );""''""'""'
-                                if (phoneNumber) {
-                                    window.open(`tel:${phoneNumber)`, "_blank");''
-  };
-  }};
-className="quick-call-btn"""'""'
-                        >
-                            Call Now
-                        </AppButton>
-                    </div>
-                ) : (
-                    <AppButton variant='secondary" "'""'""'
-                        onClick= { () => window.open(resource.link, '_blank" );""}'
-className="resource-button'""'""""
-
-                        Learn More
-                    </AppButton}
-                >}
-            </div
-        </Card;
-const SafetyPlanAccess: React.FC = () = (
-    <Card className='safety-plan-card">"''"""'
-        <div className="safety-plan-header'>""'""""
-            <ShieldIcon className='safety-icon"     />"''""'
-            <div className="safety-plan-info">'"'"'"'
-                <h3>Personal Safety Plan</h3>
-                <p>Quick access to your personalized crisis management plan</p>
-            </div)
-        </div
-        <div className="safety-plan-actions">"'""'
-            <AppButton variant='primary"""'"'"'
-                onClick={() =} window.location.href = "#/safety-plan">;'"'
-className="safety-plan-btn""'""'
-            >
-                View My Safety Plan
-            </AppButton}
-            <AppButton variant="secondary"""'""'"
-                onClick={() =} window.location.href = "#/create-safety-plan">;"''"
-className="create-safety-plan-btn""'"'"'""'
-            
-                Create Safety Plan</AppButton
-        </div
-    </Card;
-export const CrisisResourcesView = () = {   }
-const [resources, setResources] = useState<Resource[]>([]);
-const [filteredResources, setFilteredResources] = useState<Resource[]>([]);
-const [isLoading, setIsLoading] = useState(true);
-const [activeCategory, setActiveCategory] = useState("All");'""'
-const [searchTerm, setSearchTerm] = useState('");"""''""'"
-
-    useEffect(() =) {
-        setIsLoading(true );
-        ApiClient.resources.getResources()
-            .then(data =) {
-                setResources(Array.isArray(data) ? data : [] );
-                setFilteredResources(Array.isArray(data) ? data : []) }}
-            .catch(error =) {
-  console.error("Failed to load resources:", error  );"''""'"'
-                // Enhanced fallback crisis resources with demographic categories
-};
-
-fallbackResources: Resource[] = []
-                    // Emergency Help
-                    {
-  id: "crisis-1","'"'"'""'
-                        title: "National Suicide Prevention Lifeline",'"'"'"'
-                        description: "24/7 free and confidential support for people in distress and prevention resources.","'"'"'"""'
-                        category: "Emergency Help',""''"""'
-};
-
-contact: "988',""'""""
-};
-
-link: 'https://suicidepreventionlifeline.org","'"""
-                    {
-  id: "crisis-2',""'""""''
-                        title: "Emergency Services",'"'"""''
-                        description: "For immediate life-threatening emergencies requiring police, fire, or medical response.",'""'""'"'
-                        category: "Emergency Help',""'""''
-};
-
-contact: "911",'""'""'""'
-};
-
-link: '"""'"
-  },
-                    {
-  id: 'crisis-3","""''""'
-                        title: "SAMHSA National Helpline",""''""'"'
-                        description: "Treatment referral and information service for mental health and substance use disorders.","'"'"'""'
-                        category: "Emergency Help",'""''"""'
-};
-
-contact: "1-800-662-4357',""'""""
-};
-
-link: 'https://samhsa.gov","'""""''
-                    // Text Support
-                    {
-  id: "text-1",'""'""'"'
-                        title: "Crisis Text Line',"""'"'""'
-                        description: 'Free, 24/7 crisis support via text message. Trained counselors available immediately.","""''""'
-                        category: "Text Support",""''""'"'
-};
-
-contact: "Text HOME to 741741","'"'"'""'
-};
-
-link: "https://crisistextline.org",'""''"""'
-                    {
-  id: "text-2',""'""""
-                        title: 'Teen Line Text Support","'""""''
-                        description: "Text support specifically for teenagers, by trained teen volunteers.",'""'""'"'
-                        category: "Text Support',"""'"'""'
-};
-
-contact: 'Text TEEN to 839863","""''""'
-};
-
-link: "https://teenlineonline.org",""''""'"'
-                    // Youth & Students
-                    {
-  id: "youth-1","'"'"'""'
-                        title: "National Suicide Prevention Lifeline (Youth)",'""''"""'
-                        description: "Specialized support for young people experiencing suicidal thoughts.',""'""""
-                        category: 'Youth & Students","'""""''
-};
-
-contact: "988",'""'""'"'
-};
-
-link: "https://suicidepreventionlifeline.org',"""'"'""'
-                    {
-  id: 'youth-2","""''""'
-                        title: "JED Campus Mental Health",""''""'"'
-                        description: "Mental health resources and support specifically designed for college students.","'"'"'""'
-                        category: "Youth & Students",'""''"""'
-};
-
-contact: "',""'""""
-};
-
-link: 'https://jedcampus.org","'""""''
-                    // Veterans
-                    {
-  id: "veterans-1",'""'""'"'
-                        title: "Veterans Crisis Line',"""'"'""'
-                        description: '24/7 confidential support for Veterans and their families, even if not enrolled in VA.","""''""'
-                        category: "Veterans",""''""'"'
-};
-
-contact: "1-800-273-8255 Press 1","'"'"'""'
-};
-
-link: "https://veteranscrisisline.net",'""''"""'
-                    {
-  id: "veterans-2',""'""""
-                        title: 'Veterans Text Support","'""""''
-                        description: "Text support for Veterans experiencing crisis or emotional distress.",'""'""'"'
-                        category: "Veterans',"""'"'""'
-};
-
-contact: 'Text 838255","""''""'
-};
-
-link: "https://veteranscrisisline.net",""''""'"'
-                    // LGBTQ+
-                    {
-  id: "lgbtq-1","'"'"'""'
-                        title: "The Trevor Project",'""''"""'
-                        description: "24/7 crisis support services to LGBTQ young people under 25.',""'""""
-                        category: 'LGBTQ+","'""""''
-};
-
-contact: "1-866-488-7386",'""'""'"'
-};
-
-link: "https://thetrevorproject.org',"""'"'""'
-                    {
-  id: 'lgbtq-2","""''""'
-                        title: "Trans Lifeline",""''""'"'
-                        description: "Crisis hotline staffed by transgender people for transgender people.","'"'"'""'
-                        category: "LGBTQ+",'""''"""'
-};
-
-contact: "877-565-8860',""'""""
-};
-
-link: 'https://translifeline.org","'""""''
-                    // Coping Strategies
-                    {
-  id: "coping-1",'""'""'"'
-                        title: "Breathing Techniques for Anxiety',"""'"'""'
-                        description: 'Learn the 4-7-8 breathing technique and box breathing to manage anxiety attacks.","""''""'
-                        category: "Coping Strategies",""''""'"'
-};
-
-contact: "","'"'"'""'
-};
-
-link: "#/quiet-space"'""'
-  },
-                    {
-  id: 'coping-2","""''""'"
-                        title: "Grounding Exercises (5-4-3-2-1)","''""'"'
-                        description: "Use your senses to ground yourself: 5 things you see, 4 you touch, 3 you hear, 2 you smell, 1 you taste.","'"'"'""'
-                        category: "Coping Strategies",'"'"'"'
-};
-
-contact: "","'"'"'"""'
-};
-
-link: "#/quiet-space'"'""
-  },
-                    {
-  id: "coping-3',""'""""
-                        title: 'Progressive Muscle Relaxation","'""""
-                        description: 'Systematic tensing and relaxing of muscle groups to reduce physical tension.","'""""'"'
-                        category: "Coping Strategies',""'""'"'
-};
-
-contact: "',"""'"'""'
-};
-
-link: '#/quiet-space"""'
-  },
-                    {
-  id: "coping-4',""''""'
-                        title: "Mindfulness Meditation",'""''""""'
-                        description: 'Simple mindfulness exercises to help center yourself in the present moment.","'""""
-                        category: 'Coping Strategies","'""""''
-};
-
-contact: "",'""""'
-};
-
-link: '#/quiet-space""'""
-
-                setResources(fallbackResources  )
-                setFilteredResources(fallbackResources) }}
-            .finally(() =) setIsLoading(false)};
-  }, []};
-
-    useEffect(() =) {;
-const results = resources;
-        if (activeCategory !== "All") {
-  '"'"'"'
-};
-
-results = results.filter(r =) r.category === activeCategory} }
-        if (searchTerm) {;
-const lowerCaseSearchTerm = searchTerm.toLowerCase(),
-};
-
-results = results.filter(r =)
-                r.title.toLowerCase().includes(lowerCaseSearchTerm) ||
-                r.description.toLowerCase().includes(lowerCaseSearchTerm)
-            } }
-        setFilteredResources(results);
-  }, [activeCategory, searchTerm, resources]};
-
-    return(<div className="crisis-resources-container">"")'""'
-            <div className="calm-header'>""""'
-                <h1>Crisis Support & Resources</h1>
-                <p>You're not alone. Here you'll find helpful resources and immediate support when you need it most.</p)""""
-            </div}
-
-            {/* Enhanced Crisis Support Widget */}
-            <CrisisSupportWidget     />
-
-            {/* Emergency Numbers Section */}
-            <div className='emergency-section'>""""
-                <h2 className='section-title">"'""""
-                    <PhoneIcon className='section-icon"     />"'""""'"'
-                    <span>Emergency Contact Numbers</span>
-                </h2}
-                <div className="emergency-grid'>"'"""'"'
-                    {EMERGENCY_NUMBERS.map(emergency =) (}
-    <EmergencyNumberCard key={emergency.number} emergency={emergency}     />
-                    )}
-                </div
-            </div
-
-            {/* Quick Access Buttons */}
-            <div className="quick-access-section'>"""'"'""'
-                <div className='quick-access-grid">"'""''
-                    <AppButton variant="primary"'"""'
-                        size="lg'""''""""'
-                        onClick={() =} window.location.href = '#/quiet-space">;"'"
-className="quick-access-btn breathing-btn""'""'"
-                    >
-                        <HeartIcon     />
-                        <span>Quiet Space & Breathing</span>
-                    </AppButton>
-                    <AppButton variant="secondary""''""'"'
-                        size="lg""''""'"'
-                        onClick={() => window.location.href = "#/crisis-chat"};"''
-className='quick-access-btn chat-btn"""'"'"'
-                    
-                        <ShieldIcon     />
-                        <span>Crisis Chat Support</span>
-                    </AppButton
-                    <AppButton variant="secondary"'"'"""''
-                        size="lg"'""'""'""'
-                        onClick={() =} window.location.href = '#/safety-plan">;""'"
-className='quick-access-btn safety-btn"""'"'""'
-
-                        <ClockIcon     />
-                        <span>My Safety Plan</span>
-                    </AppButton}
-                </div>
-            </div}
-
-            {/* Enhanced Breathing Exercise Widget */}
-            <div style= {}
-  { marginBottom: '2rem" """'
+  rating?: number;
+  isVerified: boolean;
+  lastUpdated: Date;
+  tags: string[];
 }
-    <BreathingWidget embedded={false}     />
-            </div
 
-            {/* Safety Plan Access */}
-            <SafetyPlanAccess     />
+interface CrisisCategory {
+  id: string;
+  name: string;
+  description: string;
+  icon: React.ReactNode;
+  resources: CrisisResource[];
+  isEmergency?: boolean;
+}
 
-            {/* Search and Filter Section */}
-            <div className='search-section">"''""""'
-                <div className='search-wrapper">"'""""''
-                    <SearchIcon className="search-icon"     />'"""'
-                    <input type="search'""''>""'
-                        placeholder="Search for specific topics or resources...";"''
-className="search-input"'"'"""''
-                        value={searchTerm}
-                        onChange={e => setSearchTerm(e.target.value)}
-                    />
+const CrisisResourcesView: React.FC = () => {
+  const { user } = useAuth();
+  const { showNotification } = useNotification();
+  
+  const [resources, setResources] = useState<CrisisResource[]>([]);
+  const [categories, setCategories] = useState<CrisisCategory[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedType, setSelectedType] = useState<string>('all');
+  const [filteredResources, setFilteredResources] = useState<CrisisResource[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userLocation, setUserLocation] = useState<string>('');
+
+  useEffect(() => {
+    loadCrisisResources();
+    getUserLocation();
+  }, []);
+
+  useEffect(() => {
+    filterResources();
+  }, [resources, searchQuery, selectedCategory, selectedType, userLocation]);
+
+  const loadCrisisResources = async () => {
+    try {
+      setIsLoading(true);
+      
+      // Mock crisis resources data
+      const mockResources: CrisisResource[] = [
+        // Emergency Resources
+        {
+          id: '1',
+          name: 'National Suicide Prevention Lifeline',
+          description: '24/7 free and confidential support for people in distress, prevention and crisis resources.',
+          type: 'hotline',
+          contact: {
+            phone: '988',
+            website: 'https://suicidepreventionlifeline.org',
+            chatUrl: 'https://suicidepreventionlifeline.org/chat'
+          },
+          availability: {
+            hours: '24/7',
+            languages: ['English', 'Spanish']
+          },
+          specializations: ['Suicide Prevention', 'Mental Health Crisis', 'Emotional Support'],
+          isEmergency: true,
+          rating: 4.9,
+          isVerified: true,
+          lastUpdated: new Date(),
+          tags: ['crisis', 'suicide', 'emergency', 'national']
+        },
+        {
+          id: '2',
+          name: 'Crisis Text Line',
+          description: 'Free, 24/7 support for those in crisis. Text HOME to 741741 from anywhere in the US.',
+          type: 'text',
+          contact: {
+            textNumber: '741741',
+            website: 'https://www.crisistextline.org'
+          },
+          availability: {
+            hours: '24/7',
+            languages: ['English', 'Spanish']
+          },
+          specializations: ['Crisis Support', 'Text-based Help', 'Youth Crisis'],
+          isEmergency: true,
+          rating: 4.8,
+          isVerified: true,
+          lastUpdated: new Date(),
+          tags: ['crisis', 'text', 'emergency', 'youth']
+        },
+        {
+          id: '3',
+          name: 'SAMHSA National Helpline',
+          description: 'Treatment referral and information service for individuals and families facing mental health and substance use disorders.',
+          type: 'hotline',
+          contact: {
+            phone: '1-800-662-4357',
+            website: 'https://www.samhsa.gov/find-help/national-helpline'
+          },
+          availability: {
+            hours: '24/7',
+            languages: ['English', 'Spanish']
+          },
+          specializations: ['Substance Abuse', 'Mental Health Treatment', 'Referrals'],
+          isEmergency: false,
+          rating: 4.7,
+          isVerified: true,
+          lastUpdated: new Date(),
+          tags: ['treatment', 'referral', 'substance abuse']
+        },
+        // Specialized Resources
+        {
+          id: '4',
+          name: 'National Sexual Assault Hotline',
+          description: 'Free, confidential support 24/7 for survivors of sexual assault and their loved ones.',
+          type: 'hotline',
+          contact: {
+            phone: '1-800-656-4673',
+            website: 'https://www.rainn.org',
+            chatUrl: 'https://hotline.rainn.org/online'
+          },
+          availability: {
+            hours: '24/7',
+            languages: ['English', 'Spanish']
+          },
+          specializations: ['Sexual Assault', 'Trauma Support', 'Legal Resources'],
+          isEmergency: true,
+          rating: 4.9,
+          isVerified: true,
+          lastUpdated: new Date(),
+          tags: ['sexual assault', 'trauma', 'emergency']
+        },
+        {
+          id: '5',
+          name: 'National Domestic Violence Hotline',
+          description: 'Confidential support for domestic violence survivors and anyone seeking resources and information.',
+          type: 'hotline',
+          contact: {
+            phone: '1-800-799-7233',
+            website: 'https://www.thehotline.org',
+            textNumber: '22522',
+            chatUrl: 'https://www.thehotline.org/get-help/what-is-live-chat'
+          },
+          availability: {
+            hours: '24/7',
+            languages: ['English', 'Spanish', '200+ languages via interpretation']
+          },
+          specializations: ['Domestic Violence', 'Safety Planning', 'Legal Advocacy'],
+          isEmergency: true,
+          rating: 4.8,
+          isVerified: true,
+          lastUpdated: new Date(),
+          tags: ['domestic violence', 'safety', 'emergency']
+        },
+        {
+          id: '6',
+          name: 'Trans Lifeline',
+          description: 'Peer support service run by and for trans people, offering direct emotional and financial support.',
+          type: 'hotline',
+          contact: {
+            phone: '877-565-8860',
+            website: 'https://translifeline.org'
+          },
+          availability: {
+            hours: '24/7',
+            languages: ['English']
+          },
+          specializations: ['LGBTQ+ Support', 'Transgender Issues', 'Peer Support'],
+          isEmergency: false,
+          rating: 4.6,
+          isVerified: true,
+          lastUpdated: new Date(),
+          tags: ['lgbtq', 'transgender', 'peer support']
+        },
+        // Local/Online Resources
+        {
+          id: '7',
+          name: 'BetterHelp Crisis Support',
+          description: 'Professional online therapy platform with crisis support features.',
+          type: 'online',
+          contact: {
+            website: 'https://www.betterhelp.com',
+            chatUrl: 'https://www.betterhelp.com/crisis'
+          },
+          availability: {
+            hours: 'Varies by therapist',
+            languages: ['English', 'Spanish']
+          },
+          specializations: ['Online Therapy', 'Professional Counseling', 'Crisis Support'],
+          isEmergency: false,
+          rating: 4.3,
+          isVerified: true,
+          lastUpdated: new Date(),
+          tags: ['online', 'therapy', 'professional']
+        },
+        {
+          id: '8',
+          name: 'Veterans Crisis Line',
+          description: 'Free, confidential support for Veterans in crisis and their families and friends.',
+          type: 'hotline',
+          contact: {
+            phone: '988 (Press 1)',
+            website: 'https://www.veteranscrisisline.net',
+            textNumber: '838255',
+            chatUrl: 'https://www.veteranscrisisline.net/get-help-now/chat'
+          },
+          availability: {
+            hours: '24/7',
+            languages: ['English', 'Spanish']
+          },
+          specializations: ['Veterans Support', 'Military Mental Health', 'PTSD'],
+          isEmergency: true,
+          rating: 4.7,
+          isVerified: true,
+          lastUpdated: new Date(),
+          tags: ['veterans', 'military', 'ptsd', 'emergency']
+        }
+      ];
+
+      const mockCategories: CrisisCategory[] = [
+        {
+          id: 'emergency',
+          name: 'Emergency Crisis Support',
+          description: 'Immediate help for life-threatening situations',
+          icon: <AlertIcon />,
+          resources: mockResources.filter(r => r.isEmergency),
+          isEmergency: true
+        },
+        {
+          id: 'suicide',
+          name: 'Suicide Prevention',
+          description: 'Support for suicidal thoughts and prevention',
+          icon: <HeartIcon />,
+          resources: mockResources.filter(r => r.specializations.some(s => s.toLowerCase().includes('suicide')))
+        },
+        {
+          id: 'trauma',
+          name: 'Trauma & Violence',
+          description: 'Support for trauma, abuse, and violence survivors',
+          icon: <AlertIcon />,
+          resources: mockResources.filter(r => 
+            r.specializations.some(s => 
+              s.toLowerCase().includes('trauma') || 
+              s.toLowerCase().includes('assault') || 
+              s.toLowerCase().includes('violence')
+            )
+          )
+        },
+        {
+          id: 'substance',
+          name: 'Substance Abuse',
+          description: 'Help with addiction and substance use disorders',
+          icon: <InfoIcon />,
+          resources: mockResources.filter(r => r.specializations.some(s => s.toLowerCase().includes('substance')))
+        },
+        {
+          id: 'specialized',
+          name: 'Specialized Support',
+          description: 'Support for specific communities and needs',
+          icon: <HeartIcon />,
+          resources: mockResources.filter(r => 
+            r.specializations.some(s => 
+              s.toLowerCase().includes('lgbtq') || 
+              s.toLowerCase().includes('veterans') ||
+              s.toLowerCase().includes('transgender')
+            )
+          )
+        },
+        {
+          id: 'online',
+          name: 'Online Resources',
+          description: 'Web-based support and therapy platforms',
+          icon: <ExternalLinkIcon />,
+          resources: mockResources.filter(r => r.type === 'online')
+        }
+      ];
+
+      setResources(mockResources);
+      setCategories(mockCategories);
+      
+    } catch (error) {
+      console.error('Error loading crisis resources:', error);
+      showNotification('error', 'Failed to load crisis resources');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getUserLocation = async () => {
+    try {
+      // Try to get user's location for local resources
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            // In a real app, you'd use a geocoding service
+            setUserLocation('Local Area');
+          },
+          (error) => {
+            console.log('Location access denied:', error);
+          }
+        );
+      }
+    } catch (error) {
+      console.log('Geolocation not supported');
+    }
+  };
+
+  const filterResources = () => {
+    let filtered = [...resources];
+
+    // Apply search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(resource => 
+        resource.name.toLowerCase().includes(query) ||
+        resource.description.toLowerCase().includes(query) ||
+        resource.specializations.some(spec => spec.toLowerCase().includes(query)) ||
+        resource.tags.some(tag => tag.toLowerCase().includes(query))
+      );
+    }
+
+    // Apply category filter
+    if (selectedCategory !== 'all') {
+      const category = categories.find(c => c.id === selectedCategory);
+      if (category) {
+        filtered = filtered.filter(resource => 
+          category.resources.some(cr => cr.id === resource.id)
+        );
+      }
+    }
+
+    // Apply type filter
+    if (selectedType !== 'all') {
+      filtered = filtered.filter(resource => resource.type === selectedType);
+    }
+
+    // Sort by priority (emergency first, then by rating)
+    filtered.sort((a, b) => {
+      if (a.isEmergency && !b.isEmergency) return -1;
+      if (!a.isEmergency && b.isEmergency) return 1;
+      return (b.rating || 0) - (a.rating || 0);
+    });
+
+    setFilteredResources(filtered);
+  };
+
+  const handleContactResource = (resource: CrisisResource, contactType: string) => {
+    const { contact } = resource;
+    
+    switch (contactType) {
+      case 'phone':
+        if (contact.phone) {
+          window.open(`tel:${contact.phone}`, '_self');
+          showNotification('info', `Calling ${resource.name}...`);
+        }
+        break;
+      case 'text':
+        if (contact.textNumber) {
+          window.open(`sms:${contact.textNumber}`, '_self');
+          showNotification('info', `Opening text to ${resource.name}...`);
+        }
+        break;
+      case 'chat':
+        if (contact.chatUrl) {
+          window.open(contact.chatUrl, '_blank');
+          showNotification('info', `Opening chat with ${resource.name}...`);
+        }
+        break;
+      case 'website':
+        if (contact.website) {
+          window.open(contact.website, '_blank');
+          showNotification('info', `Opening ${resource.name} website...`);
+        }
+        break;
+      case 'email':
+        if (contact.email) {
+          window.open(`mailto:${contact.email}`, '_self');
+          showNotification('info', `Opening email to ${resource.name}...`);
+        }
+        break;
+    }
+  };
+
+  const getResourceTypeIcon = (type: string) => {
+    switch (type) {
+      case 'hotline': return <PhoneIcon />;
+      case 'text': return <MessageIcon />;
+      case 'chat': return <MessageIcon />;
+      case 'online': return <ExternalLinkIcon />;
+      case 'local': return <LocationIcon />;
+      default: return <InfoIcon />;
+    }
+  };
+
+  const getResourceTypeLabel = (type: string) => {
+    switch (type) {
+      case 'hotline': return 'Phone Support';
+      case 'text': return 'Text Support';
+      case 'chat': return 'Online Chat';
+      case 'online': return 'Online Platform';
+      case 'local': return 'Local Resource';
+      case 'emergency': return 'Emergency';
+      default: return 'Support';
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <div className="spinner" />
+        <p>Loading crisis resources...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="crisis-resources-view">
+      <ViewHeader
+        title="Crisis Resources"
+        subtitle="Immediate help and support when you need it most"
+      />
+
+      {/* Emergency Banner */}
+      <Card className="emergency-banner">
+        <div className="emergency-content">
+          <AlertIcon className="emergency-icon" />
+          <div className="emergency-text">
+            <h3>In Immediate Danger?</h3>
+            <p>If you are in immediate danger or having thoughts of suicide, please contact emergency services or call 988 (Suicide & Crisis Lifeline) immediately.</p>
+          </div>
+          <div className="emergency-actions">
+            <AppButton 
+              variant="danger" 
+              onClick={() => window.open('tel:911', '_self')}
+            >
+              Call 911
+            </AppButton>
+            <AppButton 
+              variant="primary" 
+              onClick={() => window.open('tel:988', '_self')}
+            >
+              Call 988
+            </AppButton>
+          </div>
+        </div>
+      </Card>
+
+      {/* Search and Filters */}
+      <Card className="filters-card">
+        <div className="search-and-filters">
+          <div className="search-bar">
+            <SearchIcon />
+            <AppInput
+              type="text"
+              placeholder="Search resources by name, type, or specialization..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          <div className="filters">
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              <option value="all">All Categories</option>
+              {categories.map(category => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value)}
+            >
+              <option value="all">All Types</option>
+              <option value="hotline">Phone Support</option>
+              <option value="text">Text Support</option>
+              <option value="chat">Online Chat</option>
+              <option value="online">Online Platform</option>
+              <option value="local">Local Resources</option>
+            </select>
+          </div>
+        </div>
+      </Card>
+
+      {/* Quick Access Categories */}
+      <div className="categories-grid">
+        {categories.map(category => (
+          <Card 
+            key={category.id} 
+            className={`category-card ${category.isEmergency ? 'emergency' : ''} ${selectedCategory === category.id ? 'selected' : ''}`}
+            onClick={() => setSelectedCategory(category.id)}
+          >
+            <div className="category-icon">{category.icon}</div>
+            <h4>{category.name}</h4>
+            <p>{category.description}</p>
+            <span className="resource-count">{category.resources.length} resources</span>
+          </Card>
+        ))}
+      </div>
+
+      {/* Resources List */}
+      <div className="resources-list">
+        <div className="resources-header">
+          <h3>Available Resources</h3>
+          <span className="results-count">
+            {filteredResources.length} resource{filteredResources.length !== 1 ? 's' : ''} found
+          </span>
+        </div>
+
+        {filteredResources.length === 0 ? (
+          <Card className="no-results">
+            <h4>No resources found</h4>
+            <p>Try adjusting your search or filters to find relevant resources.</p>
+          </Card>
+        ) : (
+          filteredResources.map(resource => (
+            <Card key={resource.id} className={`resource-card ${resource.isEmergency ? 'emergency' : ''}`}>
+              <div className="resource-header">
+                <div className="resource-title-section">
+                  <div className="resource-type">
+                    {getResourceTypeIcon(resource.type)}
+                    <span>{getResourceTypeLabel(resource.type)}</span>
+                    {resource.isEmergency && <span className="emergency-badge">Emergency</span>}
+                    {resource.isVerified && <span className="verified-badge">✓ Verified</span>}
+                  </div>
+                  <h4>{resource.name}</h4>
+                  {resource.rating && (
+                    <div className="resource-rating">
+                      <span>★ {resource.rating.toFixed(1)}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="resource-content">
+                <p className="resource-description">{resource.description}</p>
+
+                <div className="resource-details">
+                  <div className="detail-item">
+                    <ClockIcon />
+                    <span>Available: {resource.availability.hours}</span>
+                  </div>
+                  
+                  <div className="detail-item">
+                    <span>Languages: {resource.availability.languages.join(', ')}</span>
+                  </div>
+
+                  {resource.location && (
+                    <div className="detail-item">
+                      <LocationIcon />
+                      <span>{resource.location.city}, {resource.location.state}</span>
+                    </div>
+                  )}
                 </div>
 
-                <div className="category-filters">'"'"""''
-                    {
-  RESOURCE_CATEGORIES.map(cat =) ()}
-    <button
-};
-
-key= {cat  };>
-className={`category-btn ${activeCategory === cat ? active: ""}`}''""''
-                            onClick={() => setActiveCategory(cat)}
-                        >
-                            {cat}
-                        </button>
-                    ))}
+                <div className="resource-specializations">
+                  {resource.specializations.map(spec => (
+                    <span key={spec} className="specialization-tag">{spec}</span>
+                  ))}
                 </div>
-            </div>
 
-            {/* Resources Grid */}
-            {isLoading ? (
-                <div className="loading-state">'""""'
-                    <SparkleIcon className='loading-icon"     />"'"""
-                    <p>Loading resources...</p>}
+                <div className="resource-actions">
+                  {resource.contact.phone && (
+                    <AppButton
+                      variant="primary"
+                      size="small"
+                      onClick={() => handleContactResource(resource, 'phone')}
+                    >
+                      <PhoneIcon /> Call {resource.contact.phone}
+                    </AppButton>
+                  )}
+
+                  {resource.contact.textNumber && (
+                    <AppButton
+                      variant="secondary"
+                      size="small"
+                      onClick={() => handleContactResource(resource, 'text')}
+                    >
+                      <MessageIcon /> Text {resource.contact.textNumber}
+                    </AppButton>
+                  )}
+
+                  {resource.contact.chatUrl && (
+                    <AppButton
+                      variant="secondary"
+                      size="small"
+                      onClick={() => handleContactResource(resource, 'chat')}
+                    >
+                      <MessageIcon /> Online Chat
+                    </AppButton>
+                  )}
+
+                  {resource.contact.website && (
+                    <AppButton
+                      variant="secondary"
+                      size="small"
+                      onClick={() => handleContactResource(resource, 'website')}
+                    >
+                      <ExternalLinkIcon /> Visit Website
+                    </AppButton>
+                  )}
+
+                  {resource.contact.email && (
+                    <AppButton
+                      variant="secondary"
+                      size="small"
+                      onClick={() => handleContactResource(resource, 'email')}
+                    >
+                      Email Support
+                    </AppButton>
+                  )}
+                </div>
+              </div>
+            </Card>
+          ))
+        )}
+      </div>
+
+      {/* Additional Information */}
+      <Card className="additional-info">
+        <h3>Important Information</h3>
+        <div className="info-grid">
+          <div className="info-item">
+            <h4>When to Seek Emergency Help</h4>
+            <ul>
+              <li>Thoughts of suicide or self-harm</li>
+              <li>Immediate danger to yourself or others</li>
+              <li>Severe mental health crisis</li>
+              <li>Substance overdose</li>
+            </ul>
+          </div>
+          
+          <div className="info-item">
+            <h4>What to Expect</h4>
+            <ul>
+              <li>Trained crisis counselors available 24/7</li>
+              <li>Confidential and free support</li>
+              <li>No judgment, just help</li>
+              <li>Referrals to local resources when needed</li>
+            </ul>
+          </div>
+
+          <div className="info-item">
+            <h4>Privacy & Confidentiality</h4>
+            <ul>
+              <li>Your calls and chats are confidential</li>
+              <li>Information is only shared if you're in immediate danger</li>
+              <li>You can remain anonymous if you choose</li>
+              <li>No personal information required</li>
+            </ul>
+          </div>
+        </div>
+      </Card>
     </div>
-            ) : (}
-    <>
-                    {filteredResources.length > 0 ? (
-                        <div className="resources-section'>""''""'
-                            <h2 className="section-title">"'''""'}
-    <UserIcon className="section-icon"     />"'""'}
-    <span>{activeCategory === "All' ? "All Resources" : activeCategory}</span>"'"'"'
-                            </h2>
-                            <div className="resources-grid">'"'"""''
-                                {
-  filteredResources.map(resource => ()}
-    <ResourceCard
+  );
 };
 
-key={resource.id}
-                                        resource={resource}
-                                        priority={resource.category === "Emergency Help"} '""'""'""'
-                                        />
-                                ))}
-                            </div>
-                        </div>
-                    ) : (
-                        <div className='empty-state">""'"'""'
-                            <HeartIcon className='empty-icon"     />"'""''
-                            <h3>No resources found</h3>
-                            <p>Try adjusting your search or filters to find what you're looking for.</p}""'
-                            <AppButton variant="secondary""'""'
-                                onClick= { () => {}
-                                    setSearchTerm('"  );""''""'
-                                    setActiveCategory("All') }>""'""'"'
-                                Clear Filters
-                            </AppButton>
-                        </div>
-                </
-        </div;
 export default CrisisResourcesView;
