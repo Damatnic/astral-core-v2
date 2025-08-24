@@ -1,5 +1,11 @@
-import React, { useState(, useEffect ) from 'react';"""'"'""'
-import { HeartIcon,
+/**
+ * Enhanced Dashboard View
+ * Comprehensive wellness dashboard with advanced analytics and personalized insights
+ */
+
+import React, { useState, useEffect, useMemo } from 'react';
+import { 
+  HeartIcon,
   UsersIcon,
   ShieldIcon,
   SparkleIcon,
@@ -10,471 +16,598 @@ import { HeartIcon,
   SmileIcon,
   MoonIcon,
   SunIcon,
-  CloudIcon  } from '../components/icons.dynamic";""'"'"'
-import "../styles/modern-therapeutic-design.css';""""'
-interface WellnessStat { { { {
-  label: string;,
-  value: string | number,
-  change: number;,
-};
+  CloudIcon,
+  BrainIcon,
+  TargetIcon,
+  AwardIcon,
+  ClockIcon
+} from '../components/icons.dynamic';
+import { Card } from '../components/Card';
+import { ViewHeader } from '../components/ViewHeader';
+import { AppButton } from '../components/AppButton';
+import { ProgressBar } from '../components/ProgressBar';
+import { useAuth } from '../contexts/AuthContext';
+import { useNotification } from '../contexts/NotificationContext';
+import '../styles/modern-therapeutic-design.css';
 
-trend: 'up" | "down' | "stable""
-};
+export interface WellnessStat {
+  id: string;
+  label: string;
+  value: string | number;
+  change: number;
+  trend: 'up' | 'down' | 'stable';
+  color: string;
+  icon: React.FC<any>;
+  description: string;
+}
 
-color: string
-  
-interface QuickAction { { { {
-  id: string;,
-  title: string;,
-  description: string;,
-  icon: React.FC<any>
-};
+export interface QuickAction {
+  id: string;
+  title: string;
+  description: string;
+  icon: React.FC<any>;
+  gradient: string;
+  delay: number;
+  category: 'wellness' | 'social' | 'crisis' | 'tools';
+  priority: 'high' | 'medium' | 'low';
+}
 
-gradient: string
-};
+export interface MoodData {
+  date: string;
+  mood: string;
+  emoji: string;
+  color: string;
+  gradient: string;
+  score: number;
+  notes?: string;
+}
 
-delay: number
-  };
-interface MoodData { { { {
-  mood: string;,
-  emoji: string
-};
+export interface WellnessGoal {
+  id: string;
+  title: string;
+  description: string;
+  category: 'mental' | 'physical' | 'social' | 'spiritual';
+  targetValue: number;
+  currentValue: number;
+  unit: string;
+  deadline: Date;
+  priority: 'high' | 'medium' | 'low';
+  icon: React.FC<any>;
+}
 
-color: string
-};
+export interface InsightCard {
+  id: string;
+  type: 'tip' | 'achievement' | 'recommendation' | 'alert';
+  title: string;
+  content: string;
+  icon: React.FC<any>;
+  priority: 'high' | 'medium' | 'low';
+  actionLabel?: string;
+  actionHandler?: () => void;
+  dismissible: boolean;
+}
 
-gradient: string
-  };
-const EnhancedDashboardView: React.FC = () = {   }
-const [userName, setUserName] = useState("Friend');""'"
-const [timeOfDay, setTimeOfDay] = useState("");"''
-const [currentDate, setCurrentDate] = useState('");""'
-const [selectedMood, setSelectedMood] = useState<string | null>(null);
-const [isLoading, setIsLoading] = useState(true);
-const [animateCards, setAnimateCards] = useState(false);
-
-  useEffect(() =) {
-    // Simulate loading
-    setTimeout(() =) {
-      setIsLoading(false  );
-      setTimeout(() =) setAnimateCards(true), 100} }, 1000};
-
-    // Get time of day greeting
-const hour = new Date().getHours();
-    if (hour < 12> { setTimeOfDay("Good morning') } else if (hour < 17> { setTimeOfDay("Good afternoon") } else if (hour < 22> { setTimeOfDay('Good evening") } else { setTimeOfDay("Good night") }"'""'
-
-    // Get current date
-options: Intl.DateTimeFormatOptions = {}
-      weekday: 'long", ""'"'""'
-      year: 'numeric", """''""'"
-      month: "long", "''""'"'
-      day: "numeric""'"'
-  };
-    setCurrentDate(new Date().toLocaleDateString(undefined, options));
-
-    // Get user name from auth/storage
-const storedName = localStorage.getItem("userName');"""'"'""'
-    if (storedName) setUserName(storedName);
-  , []}
-wellnessStats: WellnessStat[] = []
-    {
-  label: "Wellness Score",""'""'
-      value: "82%",""''""'"'
-      change: 5,
-};
-
-trend: "up","''""''
-};
-
-color: "var(--gradient-wellness)"""'"'
+const WELLNESS_STATS: WellnessStat[] = [
+  {
+    id: 'mood-trend',
+    label: 'Mood Trend',
+    value: '7.2',
+    change: 0.8,
+    trend: 'up',
+    color: '#10b981',
+    icon: SmileIcon,
+    description: '7-day average mood score'
   },
-    {
-  label: "Check-ins This Week',""""'
-      value: 5,
-      change: 2,
-};
-
-trend: 'up","'""
-};
-
-color: "var(--gradient-calm)"'"'
+  {
+    id: 'session-streak',
+    label: 'Session Streak',
+    value: 12,
+    change: 2,
+    trend: 'up',
+    color: '#f59e0b',
+    icon: ActivityIcon,
+    description: 'Consecutive days with mindfulness practice'
   },
-    {
-  label: "Mood Average',""'""''
-      value: "7.2/10",'""'""'""'
-      change: 0,
-};
-
-trend: 'stable",""'"'""'
-};
-
-color: 'var(--gradient-peaceful)""""'
+  {
+    id: 'sleep-quality',
+    label: 'Sleep Quality',
+    value: '85%',
+    change: -5,
+    trend: 'down',
+    color: '#6366f1',
+    icon: MoonIcon,
+    description: 'Average sleep quality this week'
   },
-    {
-  label: 'Active Streak","'""""
-      value: '12 days","'""""''
-      change: 1,
-      trend: "up",'"'"""''
-};
+  {
+    id: 'social-connections',
+    label: 'Social Score',
+    value: 6.5,
+    change: 1.2,
+    trend: 'up',
+    color: '#ec4899',
+    icon: UsersIcon,
+    description: 'Peer support engagement level'
+  }
+];
 
-color: "var(--gradient-sunset)"'""'
-
-};
-
-quickActions: QuickAction[] = []
-    {
-  id: "crisis-support",'""'""'"'
-      title: "Crisis Support',""'""''
-      description: "Get immediate help when you need it most",'""'""'""'
-      icon: ShieldIcon,
-};
-
-gradient: 'linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%)",""'"'""'
-};
-
-delay: 0
+const QUICK_ACTIONS: QuickAction[] = [
+  {
+    id: 'breathing-exercise',
+    title: 'Quick Breathing',
+    description: '5-minute calming session',
+    icon: CloudIcon,
+    gradient: 'from-blue-400 to-cyan-400',
+    delay: 0,
+    category: 'wellness',
+    priority: 'high'
   },
-    {
-  id: 'peer-support","""''""'
-      title: "Peer Support",""'""'
-      description: 'Connect with others who understand","""''""'"
-      icon: UsersIcon,
-};
-
-gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)","''""'"'
-};
-
-delay: 100
+  {
+    id: 'mood-check',
+    title: 'Mood Check-in',
+    description: 'Log your current feelings',
+    icon: HeartIcon,
+    gradient: 'from-pink-400 to-rose-400',
+    delay: 100,
+    category: 'wellness',
+    priority: 'high'
   },
-    {
-  id: "mood-tracker","'"'"'""'
-      title: "Track Mood",'"'"'"'
-      description: "Record how you\"re feeling today",'"'"'"""'
-      icon: HeartIcon,
-};
-
-gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',""'""""''
-};
-
-delay: 200
+  {
+    id: 'peer-connect',
+    title: 'Find Support',
+    description: 'Connect with peers',
+    icon: UsersIcon,
+    gradient: 'from-purple-400 to-indigo-400',
+    delay: 200,
+    category: 'social',
+    priority: 'medium'
   },
-    {
-  id: "ai-companion",'"'"""''
-      title: "AI Companion",'""'""'"'
-      description: "Chat with your supportive AI friend',""'""'"'
+  {
+    id: 'crisis-resources',
+    title: 'Crisis Resources',
+    description: 'Immediate help available',
+    icon: ShieldIcon,
+    gradient: 'from-red-400 to-pink-400',
+    delay: 300,
+    category: 'crisis',
+    priority: 'high'
+  },
+  {
+    id: 'guided-meditation',
+    title: 'Meditation',
+    description: 'Guided mindfulness session',
+    icon: BrainIcon,
+    gradient: 'from-green-400 to-emerald-400',
+    delay: 400,
+    category: 'wellness',
+    priority: 'medium'
+  },
+  {
+    id: 'journal-entry',
+    title: 'Journal',
+    description: 'Write your thoughts',
+    icon: BookIcon,
+    gradient: 'from-amber-400 to-orange-400',
+    delay: 500,
+    category: 'tools',
+    priority: 'medium'
+  }
+];
+
+const SAMPLE_MOOD_DATA: MoodData[] = [
+  {
+    date: '2024-01-15',
+    mood: 'Great',
+    emoji: '😊',
+    color: '#10b981',
+    gradient: 'from-green-400 to-emerald-400',
+    score: 8,
+    notes: 'Had a productive therapy session'
+  },
+  {
+    date: '2024-01-14',
+    mood: 'Good',
+    emoji: '🙂',
+    color: '#3b82f6',
+    gradient: 'from-blue-400 to-cyan-400',
+    score: 7
+  },
+  {
+    date: '2024-01-13',
+    mood: 'Okay',
+    emoji: '😐',
+    color: '#f59e0b',
+    gradient: 'from-amber-400 to-yellow-400',
+    score: 5
+  },
+  {
+    date: '2024-01-12',
+    mood: 'Challenging',
+    emoji: '😔',
+    color: '#ef4444',
+    gradient: 'from-red-400 to-rose-400',
+    score: 3,
+    notes: 'Difficult day, but used coping strategies'
+  },
+  {
+    date: '2024-01-11',
+    mood: 'Good',
+    emoji: '🙂',
+    color: '#3b82f6',
+    gradient: 'from-blue-400 to-cyan-400',
+    score: 7
+  }
+];
+
+const WELLNESS_GOALS: WellnessGoal[] = [
+  {
+    id: 'daily-meditation',
+    title: 'Daily Meditation',
+    description: 'Complete 10 minutes of mindfulness daily',
+    category: 'mental',
+    targetValue: 7,
+    currentValue: 5,
+    unit: 'days/week',
+    deadline: new Date('2024-02-15'),
+    priority: 'high',
+    icon: BrainIcon
+  },
+  {
+    id: 'social-connections',
+    title: 'Social Connections',
+    description: 'Engage with peer support network',
+    category: 'social',
+    targetValue: 3,
+    currentValue: 2,
+    unit: 'interactions/week',
+    deadline: new Date('2024-02-01'),
+    priority: 'medium',
+    icon: UsersIcon
+  },
+  {
+    id: 'sleep-schedule',
+    title: 'Sleep Schedule',
+    description: 'Maintain consistent sleep routine',
+    category: 'physical',
+    targetValue: 8,
+    currentValue: 6,
+    unit: 'hours/night',
+    deadline: new Date('2024-02-28'),
+    priority: 'high',
+    icon: MoonIcon
+  }
+];
+
+const EnhancedDashboardView: React.FC = () => {
+  const { user } = useAuth();
+  const { showNotification } = useNotification();
+  const [selectedTimeframe, setSelectedTimeframe] = useState<'week' | 'month' | 'year'>('week');
+  const [insights, setInsights] = useState<InsightCard[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Generate personalized insights based on user data
+  const generateInsights = useMemo((): InsightCard[] => {
+    const currentMoodTrend = WELLNESS_STATS.find(s => s.id === 'mood-trend');
+    const sessionStreak = WELLNESS_STATS.find(s => s.id === 'session-streak');
+    const insights: InsightCard[] = [];
+
+    // Mood trend insight
+    if (currentMoodTrend && currentMoodTrend.trend === 'up') {
+      insights.push({
+        id: 'mood-improvement',
+        type: 'achievement',
+        title: 'Mood Improving! 🎉',
+        content: `Your mood has improved by ${currentMoodTrend.change} points this week. Keep up the great work!`,
+        icon: TrendingUpIcon,
+        priority: 'high',
+        dismissible: true
+      });
+    }
+
+    // Session streak achievement
+    if (sessionStreak && sessionStreak.value >= 10) {
+      insights.push({
+        id: 'streak-achievement',
+        type: 'achievement',
+        title: 'Amazing Streak!',
+        content: `${sessionStreak.value} days of consistent practice! You're building strong mental health habits.`,
+        icon: AwardIcon,
+        priority: 'medium',
+        dismissible: true
+      });
+    }
+
+    // Wellness tip
+    insights.push({
+      id: 'daily-tip',
+      type: 'tip',
+      title: 'Today\'s Wellness Tip',
+      content: 'Try the 5-4-3-2-1 grounding technique when feeling overwhelmed: notice 5 things you see, 4 you can touch, 3 you hear, 2 you smell, and 1 you taste.',
       icon: SparkleIcon,
-};
+      priority: 'low',
+      dismissible: true
+    });
 
-gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',"""'"'""'
-};
+    return insights;
+  }, []);
 
-delay: 300
-  },
-    {
-  id: "reflections",""'""'
-      title: "Journal",""''""'"'
-      description: "Write your thoughts and reflections","''""'"'
-      icon: BookIcon,
-};
+  useEffect(() => {
+    setInsights(generateInsights);
+    // Simulate loading time
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, [generateInsights]);
 
-gradient: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)","'"'"'"""'
-};
+  const handleQuickAction = (actionId: string) => {
+    switch (actionId) {
+      case 'breathing-exercise':
+        showNotification('Starting breathing exercise', 'Take deep breaths and relax', 'info');
+        // Navigate to breathing exercise
+        break;
+      case 'mood-check':
+        showNotification('Mood check-in', 'How are you feeling today?', 'info');
+        // Navigate to mood logging
+        break;
+      case 'peer-connect':
+        showNotification('Connecting to peers', 'Finding available support', 'info');
+        // Navigate to peer support
+        break;
+      case 'crisis-resources':
+        showNotification('Crisis resources', 'Help is available 24/7', 'warning');
+        // Navigate to crisis resources
+        break;
+      default:
+        showNotification('Feature coming soon', 'This feature will be available soon', 'info');
+    }
+  };
 
-delay: 400
-  },
-    {
-  id: "insights',""''"""'
-      title: "Insights',""'""""
-      description: 'View your wellness journey","'""""
-      icon: TrendingUpIcon,
-      gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)","'""""'"'
-};
+  const dismissInsight = (insightId: string) => {
+    setInsights(prev => prev.filter(insight => insight.id !== insightId));
+  };
 
-delay: 500
+  const getGreeting = (): string => {
+    const hour = new Date().getHours();
+    const name = user?.name || 'there';
+    
+    if (hour < 12) return `Good morning, ${name}`;
+    if (hour < 17) return `Good afternoon, ${name}`;
+    return `Good evening, ${name}`;
+  };
 
-};
+  const getMoodTrendData = () => {
+    return SAMPLE_MOOD_DATA.slice(-7).map(data => ({
+      ...data,
+      date: new Date(data.date).toLocaleDateString('en-US', { weekday: 'short' })
+    }));
+  };
 
-moods: MoodData[] = []
-    { mood: "Happy', emoji: "😊", color: "#FFD700", gradient: 'linear-gradient(135deg, #FFD700, #FFA500)" },"'""""'
-    { mood: 'Calm", emoji: "😌', color: "#87CEEB", gradient: "linear-gradient(135deg, #87CEEB, #4682B4)" },'""'""'
-    { mood: "Energetic", emoji: '⚡", color: "#FF6347', gradient: "linear-gradient(135deg, #FF6347, #FF4500)" },""'"'
-    { mood: "Anxious", emoji: '😰", color: "#DDA0DD", gradient: "linear-gradient(135deg, #DDA0DD, #9370DB)' },""'"'
-    { mood: "Sad", emoji: "😔', color: "#4169E1", gradient: 'linear-gradient(135deg, #4169E1, #1E90FF)" },"""''
-    { mood: "Grateful", emoji: '🙏", color: "#98D8C8", gradient: "linear-gradient(135deg, #98D8C8, #6BB6A5)' }""'""'
-  );
-const getTimeIcon = () =) {;
-const hour = new Date().getHours();
-    if (hour )= 6 && hour < 12> return <SunIcon className="w-6 h-6"     />;''""''
-    if (hour )= 12 && hour < 18> return <CloudIcon className="w-6 h-6"     />;""''""'"'
-    return <MoonIcon className="w-6 h-6"     /> };"'""'
+  if (isLoading) {
+    return (
+      <div className="enhanced-dashboard-view loading">
+        <div className="loading-spinner">
+          <SparkleIcon className="w-8 h-8 animate-spin" />
+          <p>Loading your wellness dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
-  if (isLoading) { return(<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">"")'""'}
-    <div className='therapy-spinner"></div}""'"'""'
-      </div}
-    ] 
+  return (
+    <div className="enhanced-dashboard-view">
+      <ViewHeader 
+        title={getGreeting()}
+        subtitle="Your personalized wellness journey"
+        icon={<SunIcon className="w-6 h-6" />}
+      />
 
-  return(<div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">"")'""'
-      <div className="container mx-auto px-4 py-8 max-w-7xl">""'"'
+      {/* Insights Section */}
+      {insights.length > 0 && (
+        <div className="insights-section">
+          {insights.map((insight, index) => (
+            <Card 
+              key={insight.id} 
+              className={`insight-card insight-${insight.type} priority-${insight.priority}`}
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              <div className="insight-header">
+                <div className="insight-icon">
+                  <insight.icon className="w-5 h-5" />
+                </div>
+                <h3>{insight.title}</h3>
+                {insight.dismissible && (
+                  <button 
+                    className="dismiss-btn"
+                    onClick={() => dismissInsight(insight.id)}
+                    aria-label="Dismiss insight"
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+              <p>{insight.content}</p>
+              {insight.actionLabel && insight.actionHandler && (
+                <AppButton 
+                  variant="secondary" 
+                  size="small"
+                  onClick={insight.actionHandler}
+                >
+                  {insight.actionLabel}
+                </AppButton>
+              )}
+            </Card>
+          ))}
+        </div>
+      )}
 
-        {/* Animated Welcome Header */}
-        <div className={`glass-card mb-8 p-8 ${animateCards ? "animate-slideIn' : "opacity-0"}`}>"'"'"'
-          <div className="flex items-start justify-between flex-wrap gap-4'>""""'
-            <div>
-              <div className='flex items-center gap-3 mb-3">"'""""''
-                {getTimeIcon()}
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">'"""'
-                  {timeOfDay}, {userName}!
-                </h1}
-              </div
-              <p className="text-gray-600 text-lg mb-2'>""'""""
-                Welcome back to your wellness sanctuary
-              </p
-              <p className='text-sm text-gray-500">"''"""'
-                {currentDate}
-              </p
-            </div
+      {/* Wellness Stats Grid */}
+      <div className="wellness-stats-grid">
+        {WELLNESS_STATS.map((stat, index) => (
+          <Card 
+            key={stat.id} 
+            className="wellness-stat-card"
+            style={{ animationDelay: `${index * 50}ms` }}
+          >
+            <div className="stat-header">
+              <div className="stat-icon" style={{ backgroundColor: `${stat.color}20` }}>
+                <stat.icon className="w-5 h-5" style={{ color: stat.color }} />
+              </div>
+              <div className="stat-trend">
+                <TrendingUpIcon 
+                  className={`w-4 h-4 ${stat.trend === 'up' ? 'text-green-500' : stat.trend === 'down' ? 'text-red-500' : 'text-gray-400'}`}
+                  style={{ 
+                    transform: stat.trend === 'down' ? 'rotate(180deg)' : stat.trend === 'stable' ? 'rotate(90deg)' : 'none'
+                  }}
+                />
+              </div>
+            </div>
+            <div className="stat-content">
+              <div className="stat-value" style={{ color: stat.color }}>
+                {stat.value}
+              </div>
+              <div className="stat-label">{stat.label}</div>
+              <div className="stat-change">
+                <span className={stat.trend === 'up' ? 'positive' : stat.trend === 'down' ? 'negative' : 'neutral'}>
+                  {stat.change > 0 ? '+' : ''}{stat.change}
+                </span>
+                <span className="stat-description">{stat.description}</span>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
 
-            {/* Quick Mood Check */}
-            <div className="glass-card p-4'>""''""'
-              <p className="text-sm text-gray-600 mb-3">How are you feeling?</p'"'"'"""'
-              <div className="flex gap-2'>""''"""'
-                {
-  moods.slice(0, 3).map((mood) =) (}
-    <button
-};
-
-key={mood.mood}
-                    onClick={() =} setSelectedMood(mood.mood)>;
-className={`mood-option ${selectedMood === mood.mood ? selected: "'}`}""''"""'
-                    style= {}
-  {
-  
-};
-
-background: selectedMood === mood.mood ? mood.gradient : undefined
-})
-                    <span className="text-2xl'>{mood.emoji}</span}""''""'
-                  </button}
-                
-              </div
-            </div
-          </div
-        </div
-
-        {/* Wellness Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">'"'"'"""'
-          {wellnessStats.map((stat, index) =) ()}
-            <div>
-              key={stat.label};
-className={`wellness-stat-card ${animateCards ? "animate-slideIn' : "opacity-0"}`}'"""
-              style= {{}
-                animationDelay: `${index * 100}ms`,
-                background: "white'""'
-  
-            
-              <div className='flex justify-between items-start mb-3">"'""'"'
-                <div>
-                  <p className="text-sm text-gray-600 mb-1'>{stat.label}</p""'""'""'
-                  <p className='text-3xl font-bold text-gray-900">{stat.value}</p"'""'""'
-                </div
-                <div className='w-12 h-12 rounded-full flex items-center justify-center"""'"'""'
-                  style= {}
-  { background: stat.color
-}>
-                  {stat.trend === 'up" && (""'"'"'}
-    <TrendingUpIcon className="w-6 h-6 text-white'     />""'""'""'
-                  )}
-                  {stat.trend === 'stable" && (""'"'""'}
-    <ActivityIcon className='w-6 h-6 text-white"     />""'"'""'
-                  )}
-                </div
-              </div
-
-              <div className='flex items-center gap-2">"'""'"'
-                <span className= { `text-sm font-medium ${}`
-                  stat.trend === "up' ? "text-green-600" : "'"'"'
-                  stat.trend === "down' ? "text-red-600" : "'"'"'
-                  "text-blue-600' }`}>"`"""`'
-                  {stat.trend === 'up" ? "↑' : stat.trend === "down" ? "↓" : '→"}"'""'
-                  {Math.abs(stat.change)}%
-                </span
-                <span className="text-xs text-gray-500">from last week</span>'"'"'""'
-              </div
-
-              {/* Progress bar */}
-              <div className="wellness-progress mt-4">'"'"'""'
-                <div className="wellness-progress-bar"''""''
-                  style= {}
-  {
-  width: typeof stat.value === "string" && stat.value.includes("%") '""'
-                      ? stat.value
-                      : '70%",""'"'""'
-};
-
-background: stat.color
-}    />
+      {/* Quick Actions */}
+      <Card className="quick-actions-card">
+        <h3>Quick Actions</h3>
+        <div className="quick-actions-grid">
+          {QUICK_ACTIONS.map((action, index) => (
+            <div
+              key={action.id}
+              className={`quick-action-item priority-${action.priority}`}
+              onClick={() => handleQuickAction(action.id)}
+              style={{ animationDelay: `${action.delay}ms` }}
+            >
+              <div className={`action-icon bg-gradient-to-r ${action.gradient}`}>
+                <action.icon className="w-6 h-6 text-white" />
+              </div>
+              <div className="action-content">
+                <h4>{action.title}</h4>
+                <p>{action.description}</p>
               </div>
             </div>
           ))}
         </div>
+      </Card>
 
-        {/* Quick Actions Grid */}
-        <div className='mb-8">"'""''
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">'""'""'"'
-            <SparkleIcon className="w-6 h-6 text-purple-600'     />"'"""''
-            Quick Actions
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">'""""'
-            { quickActions.map((action) =) {;
-const IconComponent = action.icon,
-              return(<button>)
-};
-
-key= {action.id };)
-className={`therapy-card group ${animateCards ? 'animate-slideIn" : "opacity-0'}`}""""
-                  style= {{}
-                    animationDelay: `${action.delay}ms`;
-  }}
-                  onClick={() =} console.log(`Navigate to ${
-  action.id)`)
-                }
-    <div className='flex items-start gap-4">"'""""''}
-    <div className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:animate-breathe"'""""'
-};
-
-style= {}
-  { background: action.gradient
-}}
-                      <IconComponent className='w-7 h-7 text-white"     />"'"""
-                    </div>
-
-                    <div className="text-left flex-1'>""''""""'
-                      <h3 className='text-lg font-semibold text-gray-900 mb-1">"'""""
-                        {action.title}
-                      </h3}
-                      <p className='text-sm text-gray-600">"''""'
-                        {action.description}
-                      </p>
-                    </div
-
-                    <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transform group-hover:translate-x-1 transition-all"'""''""""'
-                      fill='none" "''""""'
-                      viewBox='0 0 24 24" "'""""
-                      stroke='currentColor""'""""
-                    >
-                      <path strokeLinecap='round" strokeLinejoin="round' strokeWidth={2} d="M9 5l7 7-7 7"     />""'"'
-                    </svg
-                  </div
-                </button;
-  )
-          </div
-        </div
-
-        {/* Today"s Activities */"'""'}
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">"'""'
-          {/* Recent Activities */}
-          <div className='lg:col-span-2">"""''""'"
-            <div className="glass-card p-6">"'""'"
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-3">"''""'"'
-                <CalendarIcon className="w-5 h-5 text-blue-600"     />"''""'"'
-                Today"s Journey""'"'
-              </h3>
-
-              <div className="space-y-4">'"""'
-                {[
-                  { time: "9:00 AM', activity: "Morning meditation", type: 'meditation", completed: true },"""
-                  { time: '11:30 AM", activity: "Mood check-in', type: "mood", completed: true },""'"'
-                  { time: "2:00 PM", activity: 'Peer support session", type: "support", completed: false },"''""'
-                  { time: "6:00 PM", activity: "Evening reflection", type: 'journal", completed: false }"'""""
-                .map((item, index) =>)(
-                  <div
-                    key={index};
-className= { `flex items-center gap-4 p-4 rounded-xl transition-all ${}`
-                      item.completed
-                        ? 'bg-green-50 border-l-4 border-green-500" "'""""''
-                        : "bg-gray-50 border-l-4 border-gray-300" }`}'`"""'
-                  >
-                    <div className= { `w-10 h-10 rounded-full flex items-center justify-center ${}`
-                      item.completed ? "bg-green-500' : "bg-gray-300" }`}>'`
-                      {item.completed ? (}
-    <svg className="w-5 h-5 text-white" fill="none" viewBox='0 0 24 24" stroke="currentColor'>""""'"'}
-    <path strokeLinecap="round' strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"     />'""'"'
-                        </svg>
-                      ) : (
-                        <div className="w-3 h-3 bg-white rounded-full"     />""'""'
-                      )}
-                    </div>
-
-                    <div className="flex-1">""'""'
-                      <p className={`font-medium ${item.completed ? "text-gray-900" : "text-gray-600"}`}>'"'"'"""'
-                        {item.activity}
-                      </p)
-                      <p className="text-sm text-gray-500'>{item.time}</p""''"""'
-                    </div
-
-                    {!item.completed && (}
-    <button className="glass-button py-2 px-4 text-sm'>"'"'""'
-                        Start}
-    </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
+      {/* Mood Trend Visualization */}
+      <Card className="mood-trend-card">
+        <div className="card-header">
+          <h3>Mood Trend</h3>
+          <div className="timeframe-selector">
+            {(['week', 'month', 'year'] as const).map((timeframe) => (
+              <button
+                key={timeframe}
+                className={`timeframe-btn ${selectedTimeframe === timeframe ? 'active' : ''}`}
+                onClick={() => setSelectedTimeframe(timeframe)}
+              >
+                {timeframe.charAt(0).toUpperCase() + timeframe.slice(1)}
+              </button>
+            ))}
           </div>
+        </div>
+        <div className="mood-chart">
+          {getMoodTrendData().map((data, index) => (
+            <div key={index} className="mood-data-point">
+              <div 
+                className="mood-bar"
+                style={{ 
+                  height: `${(data.score / 10) * 100}%`,
+                  backgroundColor: data.color 
+                }}
+              />
+              <div className="mood-emoji">{data.emoji}</div>
+              <div className="mood-date">{data.date}</div>
+            </div>
+          ))}
+        </div>
+      </Card>
 
-          {/* Wellness Tips */}
-          <div>
-            <div className="glass-card p-6">'"'"'""'
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-3">'"'"'"""'
-                <SmileIcon className="w-5 h-5 text-purple-600'     />"'"'""'
-                Daily Tip
-              </h3>
-
-              <div className="neumorph-card">''""'""'
-                <div className="text-center">'"'"'""'
-                  <div className="text-4xl mb-3">🌱</div>'"'"'""'
-                  <p className="text-gray-700 mb-2 font-medium">'"'"'""'
-                    Remember to breathe
-                  </p>
-                  <p className="text-sm text-gray-600">''""'"'
-                    Take 3 deep breaths whenever you feel overwhelmed.
-                    It"s a simple way to reset your nervous system.""'""'
-                  </p)
-
-                  <button className='glass-button w-full mt-4">""'"'""'
-                    Try Breathing Exercise
-                  </button}
-                </div
-              </div
-
-              {/* Achievements */}
-              <div className='mt-6">""'"'""'
-                <p className='text-sm font-medium text-gray-700 mb-3">Recent Achievements</p>"'""'"'
-                <div className="space-y-2'>""'""'"'
-                  {[
-                    { badge: "🏆', title: "7-Day Streak" },"'"'"'
-                    { badge: "💪', title: "Wellness Warrior" },"'"'"'
-                    { badge: "🌟', title: "Mood Master" }"'"'"'
-                  ].map((achievement, index) => (
-                    <div
-                      key={index};
-className="flex items-center gap-3 p-3 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg'""'""'"'
-                    >
-                      <span className="text-2xl'>{achievement.badge}</span>"""'"'""'
-                      <span className="text-sm font-medium text-gray-700">""'"""'
-                        {achievement.title}
-                      </span>
-                    </div>
-                  ))}
+      {/* Wellness Goals */}
+      <Card className="wellness-goals-card">
+        <h3>Wellness Goals</h3>
+        <div className="goals-list">
+          {WELLNESS_GOALS.map((goal) => {
+            const progress = (goal.currentValue / goal.targetValue) * 100;
+            const isOverdue = new Date() > goal.deadline;
+            
+            return (
+              <div key={goal.id} className={`goal-item priority-${goal.priority}`}>
+                <div className="goal-header">
+                  <div className="goal-icon">
+                    <goal.icon className="w-5 h-5" />
+                  </div>
+                  <div className="goal-info">
+                    <h4>{goal.title}</h4>
+                    <p>{goal.description}</p>
+                  </div>
+                  <div className="goal-deadline">
+                    <ClockIcon className={`w-4 h-4 ${isOverdue ? 'text-red-500' : 'text-gray-500'}`} />
+                    <span className={isOverdue ? 'text-red-500' : 'text-gray-600'}>
+                      {goal.deadline.toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+                <div className="goal-progress">
+                  <div className="progress-info">
+                    <span>{goal.currentValue} / {goal.targetValue} {goal.unit}</span>
+                    <span>{Math.round(progress)}%</span>
+                  </div>
+                  <ProgressBar 
+                    progress={progress} 
+                    color={isOverdue ? '#ef4444' : '#10b981'}
+                    height={6}
+                  />
                 </div>
               </div>
+            );
+          })}
+        </div>
+      </Card>
+
+      {/* Recent Activity */}
+      <Card className="recent-activity-card">
+        <h3>Recent Activity</h3>
+        <div className="activity-list">
+          <div className="activity-item">
+            <div className="activity-icon">
+              <CloudIcon className="w-4 h-4 text-blue-500" />
+            </div>
+            <div className="activity-content">
+              <span>Completed breathing exercise</span>
+              <span className="activity-time">2 hours ago</span>
+            </div>
+          </div>
+          <div className="activity-item">
+            <div className="activity-icon">
+              <HeartIcon className="w-4 h-4 text-pink-500" />
+            </div>
+            <div className="activity-content">
+              <span>Logged mood: Good (7/10)</span>
+              <span className="activity-time">5 hours ago</span>
+            </div>
+          </div>
+          <div className="activity-item">
+            <div className="activity-icon">
+              <UsersIcon className="w-4 h-4 text-purple-500" />
+            </div>
+            <div className="activity-content">
+              <span>Connected with peer supporter</span>
+              <span className="activity-time">Yesterday</span>
             </div>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
-  };
+};
+
 export default EnhancedDashboardView;

@@ -1,685 +1,738 @@
-import React, { useState() from 'react';"""'"'""'
-import { ActiveView  } from '../types';""'"'""'
-import { AlertTriangle,
-    UsersIcon,
-    ShieldIcon,
-    BookIcon,
-    MessageCircleIcon,
-    SettingsIcon,
-    CheckIcon,
-    PostsIcon  } from '../components/icons.dynamic";""'"'"'
-import { AppButton  } from '../components/AppButton';'""'""'"'
-import { AnimatedNumber  } from '../components/AnimatedNumber';"""'"'""'
-import { useAuth  } from '../contexts/AuthContext';""'""'
-import { Modal  } from '../components/Modal';""'""'
-interface CrisisAlertItem { { { {
-  id: string;,
-  userId: string;,
-  username: string;,
-  severity: 'high" | "medium" | "low'"
-$2: "self-harm' | "suicide-ideation" | "panic-attack" | 'crisis-escalation"",
-  timestamp: string
-};
+/**
+ * Constellation Guide Dashboard View
+ * Advanced crisis management dashboard for constellation guides and crisis responders
+ */
 
-status: 'active" | "responded" | "escalated'"
-};
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { 
+  AlertTriangle,
+  UsersIcon,
+  ShieldIcon,
+  BookIcon,
+  MessageCircleIcon,
+  SettingsIcon,
+  CheckIcon,
+  PostsIcon,
+  ClockIcon,
+  PhoneIcon,
+  MapPinIcon,
+  TrendingUpIcon,
+  BellIcon,
+  EyeIcon,
+  UserCheckIcon,
+  AlertCircleIcon
+} from '../components/icons.dynamic';
+import { AppButton } from '../components/AppButton';
+import { AnimatedNumber } from '../components/AnimatedNumber';
+import { Card } from '../components/Card';
+import { ViewHeader } from '../components/ViewHeader';
+import { Modal } from '../components/Modal';
+import { ProgressBar } from '../components/ProgressBar';
+import { useAuth } from '../contexts/AuthContext';
+import { useNotification } from '../contexts/NotificationContext';
 
-description: string
-    location?: string
+export interface CrisisAlertItem {
+  id: string;
+  userId: string;
+  username: string;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  type: 'self-harm' | 'suicide-ideation' | 'panic-attack' | 'crisis-escalation' | 'substance-abuse';
+  timestamp: string;
+  status: 'active' | 'responded' | 'escalated' | 'resolved';
+  description: string;
+  location?: string;
+  contactInfo?: string;
+  assignedGuide?: string;
+  responseTime?: number;
+  notes?: string;
+}
+
+export interface AssignedUser {
+  id: string;
+  username: string;
+  email: string;
+  lastContact: string;
+  status: 'active' | 'at-risk' | 'stable' | 'needs-attention' | 'crisis';
+  caseType: 'ongoing-support' | 'crisis-follow-up' | 'weekly-check-in' | 'escalated-case';
+  nextSession?: string;
+  unreadMessages: number;
+  riskLevel: 'low' | 'medium' | 'high' | 'critical';
+  lastMoodScore?: number;
+  completedAssessments: number;
+}
+
+export interface ModerationCase {
+  id: string;
+  type: 'inappropriate-content' | 'harassment' | 'spam' | 'crisis-content' | 'safety-concern';
+  reportedBy: string;
+  targetUser: string;
+  content: string;
+  timestamp: string;
+  status: 'pending' | 'investigating' | 'resolved' | 'escalated';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  assignedModerator?: string;
+  resolution?: string;
+  actionTaken?: string;
+}
+
+export interface GuideStats {
+  totalAssignedUsers: number;
+  activeAlerts: number;
+  resolvedToday: number;
+  averageResponseTime: number;
+  satisfactionRating: number;
+  completedSessions: number;
+  escalatedCases: number;
+  onlineHours: number;
+}
+
+export interface SystemHealth {
+  totalUsers: number;
+  activeUsers: number;
+  crisisAlerts: number;
+  systemLoad: number;
+  responseTime: number;
+  uptime: number;
+}
+
+// Mock data for demonstration
+const MOCK_CRISIS_ALERTS: CrisisAlertItem[] = [
+  {
+    id: 'alert-001',
+    userId: 'user-123',
+    username: 'Sarah M.',
+    severity: 'critical',
+    type: 'suicide-ideation',
+    timestamp: '2024-01-15T10:30:00Z',
+    status: 'active',
+    description: 'User expressed thoughts of self-harm in chat. Immediate intervention required.',
+    location: 'Seattle, WA',
+    contactInfo: '+1-555-0123',
+    responseTime: 0
+  },
+  {
+    id: 'alert-002',
+    userId: 'user-456',
+    username: 'Michael R.',
+    severity: 'high',
+    type: 'panic-attack',
+    timestamp: '2024-01-15T09:45:00Z',
+    status: 'responded',
+    description: 'Severe panic attack reported through mobile app.',
+    assignedGuide: 'guide-001',
+    responseTime: 3
+  },
+  {
+    id: 'alert-003',
+    userId: 'user-789',
+    username: 'Jessica L.',
+    severity: 'medium',
+    type: 'crisis-escalation',
+    timestamp: '2024-01-15T08:15:00Z',
+    status: 'escalated',
+    description: 'Escalating anxiety symptoms over past 24 hours.',
+    assignedGuide: 'guide-002',
+    responseTime: 8
+  }
+];
+
+const MOCK_ASSIGNED_USERS: AssignedUser[] = [
+  {
+    id: 'user-001',
+    username: 'Alex Johnson',
+    email: 'alex.j@example.com',
+    lastContact: '2024-01-15T08:00:00Z',
+    status: 'stable',
+    caseType: 'weekly-check-in',
+    nextSession: '2024-01-18T14:00:00Z',
+    unreadMessages: 2,
+    riskLevel: 'low',
+    lastMoodScore: 7,
+    completedAssessments: 3
+  },
+  {
+    id: 'user-002',
+    username: 'Taylor Smith',
+    email: 'taylor.s@example.com',
+    lastContact: '2024-01-14T16:30:00Z',
+    status: 'at-risk',
+    caseType: 'ongoing-support',
+    nextSession: '2024-01-16T10:00:00Z',
+    unreadMessages: 5,
+    riskLevel: 'medium',
+    lastMoodScore: 4,
+    completedAssessments: 1
+  },
+  {
+    id: 'user-003',
+    username: 'Jordan Davis',
+    email: 'jordan.d@example.com',
+    lastContact: '2024-01-15T12:00:00Z',
+    status: 'needs-attention',
+    caseType: 'crisis-follow-up',
+    unreadMessages: 0,
+    riskLevel: 'high',
+    lastMoodScore: 3,
+    completedAssessments: 0
+  }
+];
+
+const MOCK_MODERATION_CASES: ModerationCase[] = [
+  {
+    id: 'mod-001',
+    type: 'crisis-content',
+    reportedBy: 'user-456',
+    targetUser: 'user-789',
+    content: 'Post containing concerning language about self-harm',
+    timestamp: '2024-01-15T11:00:00Z',
+    status: 'pending',
+    priority: 'urgent'
+  },
+  {
+    id: 'mod-002',
+    type: 'harassment',
+    reportedBy: 'user-123',
+    targetUser: 'user-456',
+    content: 'Inappropriate messages in peer support chat',
+    timestamp: '2024-01-15T09:30:00Z',
+    status: 'investigating',
+    priority: 'high',
+    assignedModerator: 'mod-001'
+  }
+];
+
+const ConstellationGuideDashboardView: React.FC = () => {
+  const { user } = useAuth();
+  const { showNotification } = useNotification();
   
-interface AssignedUser { { { {
-  id: string;,
-  username: string;,
-  lastContact: string;,
-  status: "active' | "at-risk" | "stable" | 'needs-attention""
-};
+  const [selectedAlert, setSelectedAlert] = useState<CrisisAlertItem | null>(null);
+  const [selectedUser, setSelectedUser] = useState<AssignedUser | null>(null);
+  const [showAlertModal, setShowAlertModal] = useState(false);
+  const [showUserModal, setShowUserModal] = useState(false);
+  const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'pending' | 'resolved'>('all');
+  const [refreshing, setRefreshing] = useState(false);
 
-caseType: 'ongoing-support" | "crisis-follow-up" | "weekly-check-in' | "escalated-case"'
-    nextSession?: string
-};
-
-unreadMessages: number
+  // Mock stats - in real app, these would come from API
+  const guideStats: GuideStats = {
+    totalAssignedUsers: MOCK_ASSIGNED_USERS.length,
+    activeAlerts: MOCK_CRISIS_ALERTS.filter(a => a.status === 'active').length,
+    resolvedToday: 8,
+    averageResponseTime: 4.2,
+    satisfactionRating: 4.7,
+    completedSessions: 12,
+    escalatedCases: 2,
+    onlineHours: 6.5
   };
-interface ModerationCase { { { {
-  id: string
-$2: "content-review" | "user-report" | 'boundary-violation" | "policy-breach'",
-  reportedBy: string;,
-  targetUser: string,
-  description: string;,
-  timestamp: string,
-};
 
-priority: "urgent" | "high' | "normal"'"
-};
-
-status: "pending" | "reviewed' | "action-taken"'"
-    relatedContent?: string
+  const systemHealth: SystemHealth = {
+    totalUsers: 2847,
+    activeUsers: 186,
+    crisisAlerts: MOCK_CRISIS_ALERTS.length,
+    systemLoad: 67,
+    responseTime: 1.2,
+    uptime: 99.8
   };
-interface ProfessionalResource { { { {
-  id: string;,
-  title: string
-};
 
-$2: "training" | "guideline' | "protocol" | 'continuing-education""
-};
+  const filteredAlerts = useMemo(() => {
+    if (filterStatus === 'all') return MOCK_CRISIS_ALERTS;
+    return MOCK_CRISIS_ALERTS.filter(alert => alert.status === filterStatus);
+  }, [filterStatus]);
 
-category: "crisis-intervention" | 'communication" | "boundaries' | "self-care""
-    duration?: string
-    completed?: boolean
-    dueDate?: string };
-export const ConstellationGuideDashboardView: React.FC<{
-  
-};
-
-setActiveView: (view: ActiveView) => void
-  }> = ({ setActiveView }) => {,
-{ helperProfile } = useAuth();
-const [activeTab, setActiveTab] = useState<"overview' | "active-cases" | 'crisis-alerts" | "moderation" | "resources'>("overview");'"
-const [selectedAlert, setSelectedAlert] = useState<CrisisAlertItem | null>(null);
-const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
-
-    // Sample data - in real app, this would come from API
-crisisAlerts: CrisisAlertItem[] = []
-        {
-  id: "alert-001","'""'
-            userId: 'user-789","""''""'
-            username: "StarSeeker23",""'""'
-            severity: "high",;""'"'
-
-$2: "suicide-ideation',""""'
-            timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
-            status: 'active","'""""
-};
-
-description: 'User expressed thoughts of self-harm in journal entry. AI detection flagged for immediate review.","'""""
-};
-
-location: 'Personal Journal""'""
-  },
-        {
-  id: 'alert-002","'""""
-            userId: 'user-456","'""
-            username: "HopeSeeker",'""''"""'
-            severity: "medium',;""'
-
-$2: 'panic-attack","'""
-            timestamp: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
-            status: 'responded","'""
-};
-
-description: 'User reported severe panic attack and requested immediate support.","'""
-};
-
-location: 'Crisis Chat""'
-  },
-        {
-  id: "alert-003",'""'""'"'
-            userId: "user-321',""'""'"'
-            username: "QuietStorm',""'""'"'
-            severity: "medium',;""'
-
-$2: "crisis-escalation",'""''""""'
-            timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-            status: 'escalated","'""
-            description: "Session escalated due to mention of substance use with safety concerns.",'"'"'""'
-};
-
-location: "Support Session"'""'
-
-};
-
-assignedUsers: AssignedUser[] = []
-        {
-  id: "case-001",""'""'
-            username: "LunaLight',"""'"'""'
-            lastContact: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-            status: 'active",""'"'""'
-            caseType: 'ongoing-support",""'"'""'
-};
-
-nextSession: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
-};
-
-unreadMessages: 2
-  },
-        {
-  id: 'case-002",""'"'"'
-            username: "StarSeeker23",'""'""'"'
-            lastContact: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
-            status: "at-risk',""'""'"'
-            caseType: "crisis-follow-up',""'""'"'
-};
-
-nextSession: new Date(Date.now() + 1 * 60 * 60 * 1000).toISOString(),
-};
-
-unreadMessages: 0
-  },
-        {
-  id: "case-003',""""'
-            username: 'CalmSeeker","'""""''
-            lastContact: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-            status: "needs-attention",'"'"""''
-};
-
-caseType: "weekly-check-in",'"'"""''
-};
-
-unreadMessages: 0
-  },
-        {
-  id: "case-004",'"""'
-            username: "BrightPath',""'""""
-            lastContact: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-            status: 'stable","'""""
-            caseType: 'ongoing-support","'""""
-            nextSession: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-};
-
-unreadMessages: 1
-
-};
-
-moderationCases: ModerationCase[] = []
-        {
-  id: 'mod-001",;"'
-
-$2: "boundary-violation",""''""'"'
-            reportedBy: "StarLight88","'"'"'""'
-            targetUser: "Helper_Alex",'""''"""'
-            description: "Helper requested personal contact information outside platform guidelines',""'""""
-            timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
-            priority: 'urgent","'""""''
-};
-
-status: "pending",'""'""'"'
-};
-
-relatedContent: "Chat Session #447'"""'
-  },
-        {
-  id: "mod-002',;""'"
-
-$2: "content-review","'""'
-            reportedBy: 'CommunityBot",""'"'""'
-            targetUser: 'TroubledSoul","""''""'
-            description: 'Post contains potential self-harm content requiring review","""''""'"
-            timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
-            priority: "high","'""'
-};
-
-status: 'pending",""'"'""'
-};
-
-relatedContent: 'Forum Post #1247""""'
-  },
-        {
-  id: "mod-003",;'"'
-
-$2: "user-report","'"'"'""'
-            reportedBy: "SafeSpace",'""''"""'
-            targetUser: "RandomUser123',""'""""
-            description: 'User reported inappropriate comments in group discussion","'""""''
-            timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
-            priority: "normal",'""'""'"'
-            status: "reviewed',"""'"'""'
-};
-
-relatedContent: 'Group Discussion #89""""'
-
-};
-
-professionalResources: ProfessionalResource[] = []
-        {
-  id: 'res-001","'""""
-            title: 'Advanced Crisis Intervention Techniques",;"'
-
-$2: "training",""''""'""'
-            category: "crisis-intervention",'"'"'"'
-            duration: "2 hours",""'""'
-};
-
-completed: false,
-};
-
-dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
-  },
-        {
-  id: "res-002",""''""''
-            title: "Maintaining Professional Boundaries",;""''
-
-$2: "guideline",""'""'
-};
-
-category: "boundaries",""'""'
-};
-
-completed: true
-  },
-        {
-  id: "res-003',"""'"'""'
-            title: 'Trauma-Informed Communication Protocols",;""'
-
-$2: "protocol','"""
-            category: "communication','"""
-};
-
-duration: "45 minutes','"""
-};
-
-completed: false
-  },
-        {
-  id: "res-004','"""
-            title: "Helper Self-Care & Burnout Prevention',;'"
-
-$2: "continuing-education","'"'"'""'
-            category: "self-care",'"'"'""'
-};
-
-duration: "1.5 hours",'"'"'""'
-};
-
-completed: true
-
-    } }
-
- handleAlertClick = (alert: CrisisAlertItem) =} { setSelectedAlert(alert ),
-        setIsAlertModalOpen(true) };
-const getStatusColor = (status: string) =} {
-        switch(status) {
-  case active: return "var(--accent-success)";'"'"'""'
-            case "at-risk": return 'var(--accent-warning)";"'""""''
-            case "needs-attention": return 'var(--accent-primary)";""'"'""'
-            case stable: return "var(--text-secondary)";""'""'
-};
-
-default: return "var(--text-secondary)"""'"'
+  const getSeverityColor = (severity: string): string => {
+    switch (severity) {
+      case 'critical': return '#dc2626';
+      case 'high': return '#ea580c';
+      case 'medium': return '#d97706';
+      case 'low': return '#65a30d';
+      default: return '#6b7280';
+    }
   };
+
+  const getStatusColor = (status: string): string => {
+    switch (status) {
+      case 'active': return '#dc2626';
+      case 'responded': return '#2563eb';
+      case 'escalated': return '#ea580c';
+      case 'resolved': return '#16a34a';
+      default: return '#6b7280';
+    }
   };
-const getSeverityColor = (severity: string) = {}
-        switch(severity) {
-  case high: return "var(--accent-error)';""'""'"'
-            case medium: return "var(--accent-warning)';"'"'"'
-            case low: return "var(--accent-primary)';""'""'"'
-};
 
-default: return "var(--text-secondary)'""'"
+  const getRiskLevelColor = (riskLevel: string): string => {
+    switch (riskLevel) {
+      case 'critical': return '#dc2626';
+      case 'high': return '#ea580c';
+      case 'medium': return '#d97706';
+      case 'low': return '#16a34a';
+      default: return '#6b7280';
+    }
   };
+
+  const handleAlertClick = useCallback((alert: CrisisAlertItem) => {
+    setSelectedAlert(alert);
+    setShowAlertModal(true);
+  }, []);
+
+  const handleUserClick = useCallback((user: AssignedUser) => {
+    setSelectedUser(user);
+    setShowUserModal(true);
+  }, []);
+
+  const handleRespondToAlert = useCallback((alertId: string) => {
+    // In real app, this would make API call
+    showNotification('Alert Response', 'Crisis response initiated', 'success');
+    setShowAlertModal(false);
+  }, [showNotification]);
+
+  const handleEscalateAlert = useCallback((alertId: string) => {
+    // In real app, this would make API call
+    showNotification('Alert Escalated', 'Alert escalated to crisis team', 'warning');
+    setShowAlertModal(false);
+  }, [showNotification]);
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setRefreshing(false);
+    showNotification('Dashboard Updated', 'Latest data loaded', 'info');
+  }, [showNotification]);
+
+  const formatTimeAgo = (timestamp: string): string => {
+    const now = new Date();
+    const time = new Date(timestamp);
+    const diffMs = now.getTime() - time.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h ago`;
+    return `${Math.floor(diffMins / 1440)}d ago`;
   };
-const getPriorityColor = (priority: string) = {}
-        switch(priority) {
-  case urgent: return "var(--accent-error)';""""'
-            case high: return 'var(--accent-warning)";"'""""
-            case normal: return 'var(--accent-primary)";"''""'
-};
 
-default: return "var(--text-secondary)'""'
-  };
-  };
-const renderTabContent = () => {
-        switch (activeTab) {
-            case overview:'""""'
-                return(<div className="constellation-overview'>'")""
-                        <div className="overview-stats'>""''"""'
-                            <div className="card stat-card'>""''"""'
-                                <div className="stat-header'>"'"'"'
-                                    <UsersIcon     />
-                                    <h3>Active Cases</h3>
-                                </div>}
-    <div className="stat-number">"'""'}
-    <AnimatedNumber value={assignedUsers.length}     />
-                                </div>
-                                <p>{assignedUsers.filter(u => u.status === 'at-risk").length} require immediate attention</p>""'"'"'
-                            </div>
-                            <div className="card stat-card">'"'"""''
-                                <div className="stat-header">'"'"""''
-                                    <AlertTriangle     />
-                                    <h3>Crisis Alerts</h3>
-                                </div}
-                                <div className="stat-number">'"""'
-                                    <AnimatedNumber value={crisisAlerts.filter(a => a.status === "active').length} />'"""
-                                </div>
-                                <p>Active crisis situations requiring response</p>
-                            </div>
-                            <div className="card stat-card'>""''""'
-                                <div className="stat-header">"'""'
-                                    <ShieldIcon     />
-                                    <h3>Moderation Queue</h3>
-                                </div}
-                                <div className="stat-number">""'""'
-                                    <AnimatedNumber value={moderationCases.filter(m =) m.status === 'pending"}.length> /""'"'""'
-                                </div
-                                <p>Cases pending review and action</p>
-                            </div
-                            <div className='card stat-card">"'""''
-                                <div className="stat-header">'"""'
-                                    <BookIcon     />
-                                    <h3>Training Progress</h3>
-                                </div>
-                                <div className="stat-number'>"'"'""'
-                                    <AnimatedNumber value={Math.round((professionalResources.filter(r =) r.completed).length / professionalResources.length) * 100}> /
-                                    <span style= {}
-  {fontSize: "1.5rem", color: 'var(--text-secondary)""'
-  }>%</span}
-                                </div
-                                <p>Professional development completion</p>
-                            </div
-                        </div
+  return (
+    <div className="constellation-guide-dashboard">
+      <ViewHeader 
+        title="Constellation Guide Dashboard"
+        subtitle={`Welcome back, ${user?.name || 'Guide'}. You have ${guideStats.activeAlerts} active alerts.`}
+        icon={<ShieldIcon className="w-6 h-6" />}
+      />
 
-                        <div className="quick-actions">""'""'
-                            <div className="card">""'""'
-                                <h3>Quick Actions</h3>
-                                <div className='action-buttons">"'""''
-                                    <AppButton variant='primary" onClick={() =} setActiveTab("crisis-alerts")>"''""'
-                                        <AlertTriangle     />
-                                        Review Crisis Alerts
-                                    </AppButton
-                                    <AppButton variant="secondary' onClick={() =} setActiveTab("active-cases")>"'"'"'
-                                        <MessageCircleIcon     />
-                                        Check Active Cases
-                                    </AppButton
-                                    <AppButton variant="secondary" onClick={() =} setActiveTab('moderation")>"'""''
-                                        <ShieldIcon     />
-                                        Moderation Queue
-                                    </AppButton
-                                </div
-                            </div
-                        </div
-                    </div;
-            case "active-cases":'"""'
-                return(<div className="active-cases'>'")""
-                        <div className="cases-list'>""'""""''
-                            {assignedUsers.map(user =) (}
-    <div key={user.id} className="card case-item">'""'
-                                    <div className="case-header'>"'""
-                                        <div className="case-info">'"'"'""'
-                                            <h4>{user.username}</h4
-                                            <span className="case-type">{user.caseType.replace('-", " ')}</span"""
-                                        </div)
-                                        <div className="case-status'>"'"'""'
-                                            <span className="status-badge"''""''
-                                                style= {}
-  { backgroundColor: getStatusColor(user.status)
-}>
-                                                {user.status.replace("-", ' ")}"''""'
-                                            </span
-                                            {user.unreadMessages } 0 && (
-                                                <span className="unread-badge'>{user.unreadMessages}</span)"'"""
+      {/* Quick Stats Overview */}
+      <div className="stats-overview-grid">
+        <Card className="stat-card critical">
+          <div className="stat-icon">
+            <AlertTriangle className="w-6 h-6" />
+          </div>
+          <div className="stat-content">
+            <div className="stat-value">
+              <AnimatedNumber value={guideStats.activeAlerts} />
+            </div>
+            <div className="stat-label">Active Alerts</div>
+          </div>
+        </Card>
 
-                                        </div
-                                    </div
-                                    <div className="case-details'>""''"""'
-                                        <p>🕒 Last Contact: {new Date(user.lastContact).toLocaleDateString()}</p
-                                        {user.nextSession && (}
-    <p>📅 Next Session: {new Date(user.nextSession).toLocaleDateString()}</p)
-                                    </div
-                                    <div className="case-actions'>"'"'""'
-                                        <AppButton variant="primary" className='btn-sm" onClick= {"'}
-  () => {/* Open chat */
+        <Card className="stat-card success">
+          <div className="stat-icon">
+            <CheckIcon className="w-6 h-6" />
+          </div>
+          <div className="stat-content">
+            <div className="stat-value">
+              <AnimatedNumber value={guideStats.resolvedToday} />
+            </div>
+            <div className="stat-label">Resolved Today</div>
+          </div>
+        </Card>
 
-                                            <MessageCircleIcon     />
-                                            Open Chat}
-    </AppButton}
-    <AppButton variant="secondary" className='btn-sm" onClick= {"'}
-  () => {/* View history */
+        <Card className="stat-card info">
+          <div className="stat-icon">
+            <UsersIcon className="w-6 h-6" />
+          </div>
+          <div className="stat-content">
+            <div className="stat-value">
+              <AnimatedNumber value={guideStats.totalAssignedUsers} />
+            </div>
+            <div className="stat-label">Assigned Users</div>
+          </div>
+        </Card>
 
-                                            View History}
-    </AppButton
-                                        { user.status === "at-risk" && ('"'"'"'}
-    <AppButton variant="danger" className="btn-sm" onClick={() =} {/* Escalate */ }>'""'
-                                                <AlertTriangle     />
-                                                Escalate
-                                            </AppButton>
-                                        
-                                    </div
-                                </div
-                            
-                        </div
-                    </div;
-            case 'crisis-alerts":"""''""'"
-                return(<div className="crisis-alerts">")'"'""
-                        <div className="alerts-list'>"'"'""'
-                            {
-  crisisAlerts.map(alert =) (}
-    <button
-};
+        <Card className="stat-card warning">
+          <div className="stat-icon">
+            <ClockIcon className="w-6 h-6" />
+          </div>
+          <div className="stat-content">
+            <div className="stat-value">
+              <AnimatedNumber value={guideStats.averageResponseTime} decimals={1} />m
+            </div>
+            <div className="stat-label">Avg Response Time</div>
+          </div>
+        </Card>
+      </div>
 
-key={alert.id  };
-className="card alert-item"'"'"'"'
-                                    onClick={() =} handleAlertClick(alert)>
-                                    style= {}
-  { cursor: "pointer", background: "none', border: "none", padding: 0, textAlign: 'left", width: "100%" "'"
->)
-                                    <div className="alert-header'>""'""''}
-    <div className="alert-info">'"""'}
-    <h4>{alert.username}</h4>
-                                            <span className="alert-type'>{alert.type.replace("-", ' ")}</span>"""
-                                        </div}
-                                        <div className='alert-status">"''"""'
-                                            <span className="severity-badge'"'"'""'
-                                                style= {}
-  { backgroundColor: getSeverityColor(alert.severity)
-  }}
-                                                {alert.severity} priority
-                                            </span
-                                            <span className={`status-badge ${alert.status}`}>
-                                                {alert.status}
-                                            </span
-                                        </div
-                                    </div
-                                    <div className="alert-details">''""'"'
-                                        <p>{alert.description}</p
-                                        <div className="alert-meta">"'"'""
-                                            <span>🕒 {new Date(alert.timestamp).toLocaleString()}</span
-                                            <span>📍 {alert.location}</span
-                                        </div
-                                    </div
-                                    <div className="alert-actions'>""''"""'
-                                        { alert.status === "active' && (""''""'}
-    <}
-    <AppButton variant="primary" className='btn-sm" onClick= {(e) =} { e.stopPropagation(); /* Respond */ "'}
->
-                                                    <CheckIcon     />
-                                                    Respond
-                                                </AppButton
-                                                <AppButton variant="danger" className="btn-sm" onClick= { (e) =} { e.stopPropagation(), /* Escalate */ '}"'
-}>
-                                                    <AlertTriangle     />
-                                                    Escalate to Admin
-                                                </AppButton
-                                            </
-                                        
-                                        { alert.status === "responded' && ("""'"'""'}
-    <AppButton variant="secondary" className="btn-sm" onClick= {(e) =} { e.stopPropagation(); /* View response */ '}"'
-}>
-                                                <PostsIcon     />
-                                                View Response
-                                            </AppButton)
-                                    </div
-                                </button
-                            
-                        </div
-                    </div;
-            case moderation:"'"""'
-                return(<div className="moderation-queue'>"')""
-                        <div className="moderation-list">'"'"'"'
-                            {moderationCases.map(caseItem =) ()}
-    <div key={caseItem.id} className="card moderation-item">""'""'
-                                    <div className="moderation-header'>"'"""''
-                                        <div className="moderation-info">'""'""'"'
-                                            <h4>{caseItem.type.replace("-', " ")}</h4"'"'"'
-                                            <span className='reported-by">Reported by: {caseItem.reportedBy}</span}""''""'
-                                        </div
-                                        <div className='moderation-status">""''""'
-                                            <span className="priority-badge'""""'
-                                                style= {}
-  { backgroundColor: getPriorityColor(caseItem.priority)
-}>
-                                                {caseItem.priority}
-                                            </span
-                                            <span className={`status-badge ${caseItem.status}`}>
-                                                {caseItem.status.replace('-", " ')}"""
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="moderation-details'>""''""'
-                                        <p><strong>Target:</strong> {caseItem.targetUser}</p>
-                                        <p>{caseItem.description}</p>
-                                        {caseItem.relatedContent && (}
-    <p><strong>Related:</strong> {caseItem.relatedContent}</p>
-                                        )}
-                                        <p>🕒 {new Date(caseItem.timestamp).toLocaleString()}</p>
-                                    </div>
-                                    {
-  caseItem.status === "pending" && ("'""'}
-    <div className='moderation-actions">""'"'""'}
-    <AppButton variant='primary" className="btn-sm" onClick= {() =} {/* Approve */"'
-}>
-                                                <CheckIcon     />
-                                                Approve
-                                            </AppButton
-                                            <AppButton variant="secondary" className='btn-sm" onClick= {""'}
-  () => {/* Flag */
+      {/* System Health Indicators */}
+      <Card className="system-health-card">
+        <div className="card-header">
+          <h3>System Health</h3>
+          <AppButton
+            variant="secondary"
+            size="small"
+            onClick={handleRefresh}
+            disabled={refreshing}
+            icon={<TrendingUpIcon className="w-4 h-4" />}
+          >
+            {refreshing ? 'Refreshing...' : 'Refresh'}
+          </AppButton>
+        </div>
+        <div className="health-metrics">
+          <div className="health-metric">
+            <span className="metric-label">System Load</span>
+            <ProgressBar progress={systemHealth.systemLoad} color="#3b82f6" />
+            <span className="metric-value">{systemHealth.systemLoad}%</span>
+          </div>
+          <div className="health-metric">
+            <span className="metric-label">Uptime</span>
+            <ProgressBar progress={systemHealth.uptime} color="#10b981" />
+            <span className="metric-value">{systemHealth.uptime}%</span>
+          </div>
+          <div className="health-stats">
+            <div className="health-stat">
+              <span className="stat-value">{systemHealth.activeUsers}</span>
+              <span className="stat-label">Active Users</span>
+            </div>
+            <div className="health-stat">
+              <span className="stat-value">{systemHealth.responseTime}s</span>
+              <span className="stat-label">Response Time</span>
+            </div>
+          </div>
+        </div>
+      </Card>
 
-                                                <PostsIcon     />
-                                                Flag for Review}
-    </AppButton}
-    <AppButton variant="danger' className="btn-sm" onClick={ () =} {/* Take action */ }>'""''
-                                                <AlertTriangle     />
-                                                Take Action
-                                            </AppButton>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                );
-
-            case resources:""'""'
-                return(<div className="professional-resources'>"")''""'
-                        <div className="resources-grid">"''""'"'
-                            {professionalResources.map(resource =) ()}
-    <div key={resource.id} className="card resource-item">"'"'"'"""'
-                                    <div className="resource-header'>"'"'"'
-                                        <h4>{resource.title}</h4
-                                        <span className={`resource-type ${resource.type}`}>
-                                            {resource.type.replace("-", ' ")}"''""'
-                                        </span}
-                                    </div
-                                    <div className="resource-details">"'""'
-                                        <p><strong>Category:</strong> {resource.category.replace('-", " ")}</p>"'""'"'
-                                        {resource.duration && (}
-    <p>🕒 Duration: {resource.duration}</p)
-                                        {resource.dueDate && (}
-    <p>📅 Due: {new Date(resource.dueDate).toLocaleDateString()}</p)
-                                    </div
-                                    <div className="resource-actions">"'""'
-                                        {
-  resource.completed ? (}
-    <AppButton variant='success" className="btn-sm" disabled onClick= {() =} {'"}
->)
-                                                <CheckIcon     />
-                                                Completed
-                                            </AppButton}
-                                         : (
-                                            <AppButton variant='primary" className="btn-sm" onClick={ () =} {/* Start resource */ }>'""
-                                                {resource.type === 'training" ? "Start Training" : "View Resource'}""'"'
-                                            </AppButton)
-                                    </div
-                                </div
-                            )
-                        </div
-                    </div;
-            default: return null
-  
-    if (!helperProfile) {
-  return <div className="loading-spinner" style= {{margin: '5rem auto""'}
-}>}
-
-    return()
-        <
-            <Modal
-                isOpen={isAlertModalOpen}
-                onClose={() =} setIsAlertModalOpen(false)>
-                title="Crisis Alert Details"'"'"'"'
-            
-                {selectedAlert && (
-                    <div className="alert-details-modal">""''""'""'}
-    <div className="alert-summary">'""'}
-    <h3>{selectedAlert.username}</h3)
-                            <p><strong}Type:</strong) {selectedAlert.type.replace('-", " ')}</p""'"'
-                            <p><strongSeverity:</strong){selectedAlert.severity} priority</p>
-                            <p><strongStatus:</strong}{selectedAlert.status}</p
-                            <p><strongLocation:</strong{selectedAlert.location}</p
-                            <p><strongTime:</strong{new Date(selectedAlert.timestamp).toLocaleString()}</p
-                        </div
-                        <div className="alert-description">""'""'
-                            <h4>Description</h4>
-                            <p>{selectedAlert.description}</p
-                        </div
-                        <div className="alert-actions'>""'"'"'
-                            <AppButton variant="primary' onClick= {">}"'
-  () =} {/* Open chat */
-}>
-                                <MessageCircleIcon     />
-                                Open Direct Chat
-                            </AppButton
-                            <AppButton variant="danger" onClick={ () =} {/* Escalate */ }>''""'"'
-                                <AlertTriangle     />
-                                Escalate to Crisis Team
-                            </AppButton>
-                        </div>
-                    </div>
-                )}
-            </Modal>
-
-            <div className="view-header">"'"'""
-                <div>
-                    <h1>Constellation Guide Dashboard</h1>
-                    <p className="view-subheader'>Support Center • Level {helperProfile.level} Guide</p>"'"'""'
-                </div
-                <AppButton onClick={() =} setActiveView({ view: "helper-profile" })>'"'"'"'
-                    Edit Profile
-                </AppButton
-            </div
-
-            <div className="dashboard-tabs constellation-tabs">""'""'
-                <AppButton className={activeTab === 'overview" ? active: ""} "'''""
-                    onClick={() =} setActiveTab("overview")"'""'
-                
-                    <SettingsIcon     />
-                    Overview
-                </AppButton
-                <AppButton className={activeTab === 'active-cases" ? active: "'} ""'"'
-                    onClick={() =} setActiveTab("active-cases")""'""'
-                
-                    <UsersIcon     />
-                    Active Cases ({assignedUsers.filter(u =) u.status !== "stable'}.length)"""'"'""'
-                </AppButton
-                <AppButton className={activeTab === "crisis-alerts" ? active: ""} '''""'
-                    onClick={() =} setActiveTab("crisis-alerts")>'"'"'"'
-                
-                    <AlertTriangle     />
-                    Crisis Alerts ({crisisAlerts.filter(a =) a.status === "active"}.length)'"'"'"'
-                </AppButton
-                <AppButton className={activeTab === "moderation" ? active: ""} '"">'
-                    onClick={() => setActiveTab('moderation")}"""''""'"
+      {/* Crisis Alerts Section */}
+      <Card className="crisis-alerts-card">
+        <div className="card-header">
+          <h3>Crisis Alerts</h3>
+          <div className="alert-filters">
+            {(['all', 'active', 'pending', 'resolved'] as const).map((status) => (
+              <button
+                key={status}
+                className={`filter-btn ${filterStatus === status ? 'active' : ''}`}
+                onClick={() => setFilterStatus(status)}
+              >
+                {status.charAt(0).toUpperCase() + status.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+        
+        <div className="alerts-list">
+          {filteredAlerts.map((alert) => (
+            <div
+              key={alert.id}
+              className={`alert-item severity-${alert.severity} status-${alert.status}`}
+              onClick={() => handleAlertClick(alert)}
+            >
+              <div className="alert-priority">
+                <div 
+                  className="severity-indicator"
+                  style={{ backgroundColor: getSeverityColor(alert.severity) }}
+                />
+                <AlertTriangle 
+                  className="w-5 h-5"
+                  style={{ color: getSeverityColor(alert.severity) }}
+                />
+              </div>
+              
+              <div className="alert-content">
+                <div className="alert-header">
+                  <h4>{alert.username}</h4>
+                  <span className="alert-type">{alert.type.replace('-', ' ')}</span>
+                  <span 
+                    className="alert-status"
+                    style={{ color: getStatusColor(alert.status) }}
+                  >
+                    {alert.status}
+                  </span>
+                </div>
+                <p className="alert-description">{alert.description}</p>
+                <div className="alert-meta">
+                  <span className="alert-time">{formatTimeAgo(alert.timestamp)}</span>
+                  {alert.location && (
+                    <span className="alert-location">
+                      <MapPinIcon className="w-3 h-3" />
+                      {alert.location}
+                    </span>
+                  )}
+                  {alert.responseTime !== undefined && (
+                    <span className="response-time">
+                      Response: {alert.responseTime}m
+                    </span>
+                  )}
+                </div>
+              </div>
+              
+              <div className="alert-actions">
+                <AppButton
+                  variant="danger"
+                  size="small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRespondToAlert(alert.id);
+                  }}
                 >
-                    <ShieldIcon     />
-                    Moderation ({moderationCases.filter(m => m.status === "pending").length})"''""'"'
+                  Respond
                 </AppButton>
-                <AppButton className={activeTab === "resources" ? active: "'} "'"'"'
-                    onClick={() =} setActiveTab("resources')>""''""'
-                
-                    <BookIcon     />
-                    Resources
-                </AppButton
-            </div
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
 
-            <div className="dashboard-content constellation-content">"'""""'
-                {renderTabContent()}
-            </div
-        </;
+      {/* Assigned Users Section */}
+      <Card className="assigned-users-card">
+        <div className="card-header">
+          <h3>Assigned Users</h3>
+          <span className="user-count">{MOCK_ASSIGNED_USERS.length} users</span>
+        </div>
+        
+        <div className="users-list">
+          {MOCK_ASSIGNED_USERS.map((assignedUser) => (
+            <div
+              key={assignedUser.id}
+              className={`user-item status-${assignedUser.status} risk-${assignedUser.riskLevel}`}
+              onClick={() => handleUserClick(assignedUser)}
+            >
+              <div className="user-avatar">
+                <UserCheckIcon className="w-5 h-5" />
+                {assignedUser.unreadMessages > 0 && (
+                  <div className="unread-badge">{assignedUser.unreadMessages}</div>
+                )}
+              </div>
+              
+              <div className="user-content">
+                <div className="user-header">
+                  <h4>{assignedUser.username}</h4>
+                  <span 
+                    className="risk-level"
+                    style={{ color: getRiskLevelColor(assignedUser.riskLevel) }}
+                  >
+                    {assignedUser.riskLevel} risk
+                  </span>
+                </div>
+                <p className="user-case-type">{assignedUser.caseType.replace('-', ' ')}</p>
+                <div className="user-meta">
+                  <span>Last contact: {formatTimeAgo(assignedUser.lastContact)}</span>
+                  {assignedUser.lastMoodScore && (
+                    <span>Mood: {assignedUser.lastMoodScore}/10</span>
+                  )}
+                  {assignedUser.nextSession && (
+                    <span>Next: {new Date(assignedUser.nextSession).toLocaleDateString()}</span>
+                  )}
+                </div>
+              </div>
+              
+              <div className="user-actions">
+                <AppButton
+                  variant="secondary"
+                  size="small"
+                  icon={<MessageCircleIcon className="w-4 h-4" />}
+                >
+                  Message
+                </AppButton>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* Moderation Queue */}
+      <Card className="moderation-queue-card">
+        <div className="card-header">
+          <h3>Moderation Queue</h3>
+          <span className="queue-count">{MOCK_MODERATION_CASES.length} pending</span>
+        </div>
+        
+        <div className="moderation-list">
+          {MOCK_MODERATION_CASES.map((moderationCase) => (
+            <div key={moderationCase.id} className={`moderation-item priority-${moderationCase.priority}`}>
+              <div className="moderation-icon">
+                <EyeIcon className="w-5 h-5" />
+              </div>
+              <div className="moderation-content">
+                <div className="moderation-header">
+                  <span className="case-type">{moderationCase.type.replace('-', ' ')}</span>
+                  <span className={`priority-badge priority-${moderationCase.priority}`}>
+                    {moderationCase.priority}
+                  </span>
+                </div>
+                <p className="moderation-description">{moderationCase.content}</p>
+                <div className="moderation-meta">
+                  <span>Reported by: {moderationCase.reportedBy}</span>
+                  <span>{formatTimeAgo(moderationCase.timestamp)}</span>
+                </div>
+              </div>
+              <div className="moderation-actions">
+                <AppButton variant="secondary" size="small">
+                  Review
+                </AppButton>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* Alert Detail Modal */}
+      {showAlertModal && selectedAlert && (
+        <Modal
+          isOpen={showAlertModal}
+          onClose={() => setShowAlertModal(false)}
+          title="Crisis Alert Details"
+          size="large"
+        >
+          <div className="alert-modal-content">
+            <div className="alert-summary">
+              <div className="severity-header">
+                <AlertTriangle 
+                  className="w-6 h-6"
+                  style={{ color: getSeverityColor(selectedAlert.severity) }}
+                />
+                <h3>{selectedAlert.severity.toUpperCase()} ALERT</h3>
+              </div>
+              <div className="alert-details">
+                <div className="detail-row">
+                  <span className="label">User:</span>
+                  <span className="value">{selectedAlert.username}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="label">Type:</span>
+                  <span className="value">{selectedAlert.type.replace('-', ' ')}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="label">Time:</span>
+                  <span className="value">{formatTimeAgo(selectedAlert.timestamp)}</span>
+                </div>
+                {selectedAlert.location && (
+                  <div className="detail-row">
+                    <span className="label">Location:</span>
+                    <span className="value">{selectedAlert.location}</span>
+                  </div>
+                )}
+                {selectedAlert.contactInfo && (
+                  <div className="detail-row">
+                    <span className="label">Contact:</span>
+                    <span className="value">{selectedAlert.contactInfo}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            <div className="alert-description">
+              <h4>Description</h4>
+              <p>{selectedAlert.description}</p>
+            </div>
+            
+            <div className="alert-actions-modal">
+              <AppButton
+                variant="danger"
+                onClick={() => handleRespondToAlert(selectedAlert.id)}
+                icon={<PhoneIcon className="w-4 h-4" />}
+              >
+                Respond Immediately
+              </AppButton>
+              <AppButton
+                variant="warning"
+                onClick={() => handleEscalateAlert(selectedAlert.id)}
+                icon={<AlertCircleIcon className="w-4 h-4" />}
+              >
+                Escalate to Crisis Team
+              </AppButton>
+              <AppButton
+                variant="secondary"
+                icon={<MessageCircleIcon className="w-4 h-4" />}
+              >
+                Send Message
+              </AppButton>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* User Detail Modal */}
+      {showUserModal && selectedUser && (
+        <Modal
+          isOpen={showUserModal}
+          onClose={() => setShowUserModal(false)}
+          title="User Details"
+          size="large"
+        >
+          <div className="user-modal-content">
+            <div className="user-summary">
+              <div className="user-header-modal">
+                <h3>{selectedUser.username}</h3>
+                <span 
+                  className="risk-badge"
+                  style={{ backgroundColor: getRiskLevelColor(selectedUser.riskLevel) }}
+                >
+                  {selectedUser.riskLevel} risk
+                </span>
+              </div>
+              
+              <div className="user-details-grid">
+                <div className="detail-item">
+                  <span className="label">Status:</span>
+                  <span className="value">{selectedUser.status.replace('-', ' ')}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="label">Case Type:</span>
+                  <span className="value">{selectedUser.caseType.replace('-', ' ')}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="label">Last Contact:</span>
+                  <span className="value">{formatTimeAgo(selectedUser.lastContact)}</span>
+                </div>
+                {selectedUser.lastMoodScore && (
+                  <div className="detail-item">
+                    <span className="label">Last Mood:</span>
+                    <span className="value">{selectedUser.lastMoodScore}/10</span>
+                  </div>
+                )}
+                <div className="detail-item">
+                  <span className="label">Completed Assessments:</span>
+                  <span className="value">{selectedUser.completedAssessments}</span>
+                </div>
+                {selectedUser.nextSession && (
+                  <div className="detail-item">
+                    <span className="label">Next Session:</span>
+                    <span className="value">{new Date(selectedUser.nextSession).toLocaleString()}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            <div className="user-actions-modal">
+              <AppButton
+                variant="primary"
+                icon={<MessageCircleIcon className="w-4 h-4" />}
+              >
+                Send Message
+              </AppButton>
+              <AppButton
+                variant="secondary"
+                icon={<CalendarIcon className="w-4 h-4" />}
+              >
+                Schedule Session
+              </AppButton>
+              <AppButton
+                variant="secondary"
+                icon={<BookIcon className="w-4 h-4" />}
+              >
+                View History
+              </AppButton>
+            </div>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+};
+
 export default ConstellationGuideDashboardView;
