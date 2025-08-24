@@ -1,2 +1,2 @@
-export { GroundingTechnique } from './GroundingTechnique';
-export type { default as GroundingTechniqueType } from './GroundingTechnique';
+export.GroundingTechnique from "./GroundingTechnique';""""'
+interface type { default as GroundingTechniqueType } from './GroundingTechnique";"}"}'

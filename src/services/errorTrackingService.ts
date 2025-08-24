@@ -1,410 +1,218 @@
 /**
- * Sentry Error Tracking Configuration
- * 
- * Production-ready error tracking with privacy-focused settings for mental health platform
- */;
+ * Error Tracking Service
+ * Provides centralized error handling and reporting for the mental health platform
+ */
 
-import * as Sentry from '@sentry/react';
+import { logger } from '../utils/logger';
 
-import { ENV } from '../utils/envConfig';
-
-// Environment configuration;
-const isProduction = ENV.IS_PROD;
-const isDevelopment = ENV.IS_DEV;
-const sentryDsn = ENV.SENTRY_DSN;
-
-// Error classification for mental health context;
-export interface ErrorContext {
-  errorType: 'system' | 'user-action' | 'network' | 'security' | 'crisis';
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  userType?: 'seeker' | 'helper' | 'admin';
-  feature?: 'chat' | 'crisis-detection' | 'safety-plan' | 'mood-tracking' | 'community';
-  privacyLevel: 'public' | 'private' | 'sensitive'
-  }
-
-// Privacy-safe error filtering;
-const sanitizeErrorData = (error: Error, context?: any) => {
-  // Remove sensitive data from error messages and context;
-  const sensitivePatterns = [;;
-    /password/gi,
-    /token/gi,
-    /auth/gi,
-    /session/gi,
-    /email/gi,
-    /phone/gi,
-    /ssn/gi,
-    /medical/gi,
-    /therapy/gi,
-    /medication/gi,
-    /diagnosis/gi
-  ];
-
-  let sanitizedMessage = error.message;
-  let sanitizedContext = { ...context };
-
-  // Sanitize error message
-  sensitivePatterns.forEach(pattern => {
-    sanitizedMessage = sanitizedMessage.replace(pattern, '[REDACTED]')
-  });
-
-  // Sanitize context data
-  if (sanitizedContext) {
-    JSON.stringify(sanitizedContext, (key, value) => {
-      if (typeof value === 'string') {
-        sensitivePatterns.forEach(pattern => {
-          if (pattern.test(key) || pattern.test(value)) {
-            return '[REDACTED]'
-  }
-        })
-  }
-      return value
-  })
-  }
-
-  return {
-    message: sanitizedMessage,
-    context: sanitizedContext
-  };
+// Sentry-like interface for error tracking
+export interface ErrorTrackingService {
+  captureException(error: Error, context?: ErrorContext): void;
+  captureMessage(message: string, level?: LogLevel, context?: ErrorContext): void;
+  setUserContext(user: UserContext): void;
+  clearUserContext(): void;
+  addBreadcrumb(message: string, category?: string, level?: string, data?: any): void;
 }
 
-// Get environment name helper;
-const getEnvironmentName = (): string => {
-  if (isProduction) return 'production';
-  if (isDevelopment) return 'development';
-  return 'staging'
-  };
+// Error classification for mental health context
+export interface ErrorContext {
+  errorType: "system" | "user-action" | "network" | "security" | "crisis";
+  severity: "low" | "medium" | "high" | "critical";
+  userType?: "seeker" | "helper" | "admin";
+  feature?: string;
+  privacyLevel?: "public" | "sensitive" | "confidential";
+  sessionId?: string;
+  userId?: string;
+  timestamp?: string;
+  metadata?: Record<string, any>;
+}
 
-// Initialize Sentry;
-export const initializeSentry = () => {
-  if (!sentryDsn) {
-    console.warn('Sentry DSN not configured');
-    return
+export interface UserContext {
+  id: string;
+  email?: string;
+  username?: string;
+  userType?: "seeker" | "helper" | "admin";
+  subscriptionTier?: string;
+}
+
+export type LogLevel = "debug" | "info" | "warning" | "error" | "fatal";
+
+// Breadcrumb for tracking user actions leading to errors
+export interface Breadcrumb {
+  message: string;
+  category: string;
+  level: string;
+  timestamp: string;
+  data?: any;
+}
+
+class ErrorTrackingServiceImpl implements ErrorTrackingService {
+  private userContext: UserContext | null = null;
+  private breadcrumbs: Breadcrumb[] = [];
+  private maxBreadcrumbs = 50;
+  private isInitialized = false;
+
+  constructor() {
+    this.initializeService();
   }
 
-  Sentry.init({
-    dsn: sentryDsn,
-    environment: getEnvironmentName(),
-    
-    // Privacy and compliance settings
-    integrations: [
-      // Basic integrations only for compatibility
-    ],
-
-    // Performance monitoring
-    tracesSampleRate: isProduction ? 0.1 : 1.0,
-
-    // Error filtering and privacy
-    beforeSend(event, hint) {
-      const error = hint.originalException as Error;
-      
-      // Don't send errors in development unless explicitly enabled
-      if (isDevelopment && !ENV.SENTRY_DEV_ENABLED) {
-        return null
+  private initializeService(): void {
+    // Initialize error tracking service
+    // In a real implementation, this would initialize Sentry or similar service
+    this.isInitialized = true;
+    logger.info("Error tracking service initialized", undefined, "ErrorTrackingService");
   }
 
-      // Filter out non-critical errors in production
-      if (isProduction) {
-        const ignoredErrors = [;;
-          'ResizeObserver loop limit exceeded',
-          'Script error',
-          'Network request failed',
-          'Load failed',
-          'Non-Error promise rejection captured'
-        ];
+  captureException(error: Error, context?: ErrorContext): void {
+    if (!this.isInitialized) {
+      console.error("Error tracking service not initialized");
+      return;
+    }
 
-        if (error && ignoredErrors.some(ignored => 
-          error.message?.includes(ignored) || error.name?.includes(ignored)
-        )) {
-          return null
-  }
-      }
+    const errorData = {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+      context: context || {},
+      userContext: this.userContext,
+      breadcrumbs: [...this.breadcrumbs],
+      timestamp: new Date().toISOString()
+    };
 
-      // Sanitize sensitive data
-      if (error instanceof Error) {
-        const sanitized = sanitizeErrorData(error, event.extra);
-        event.message = sanitized.message;
-        event.extra = sanitized.context
-  }
+    // Log the error
+    logger.error("Exception captured", errorData, "ErrorTrackingService");
 
-      return event
-  },
+    // In production, send to error tracking service
+    if (process.env.NODE_ENV === 'production') {
+      this.sendToExternalService('exception', errorData);
+    }
 
-    // User context (privacy-safe)
-    beforeSendTransaction(event) {
-      // Remove any PII from transaction data
-      if (event.user) {
-        event.user = {
-          id: event.user.id ? '[USER_ID]' : undefined,
-          // Don't include email, username, or other PII
-        };
-      }
-      return event
-  },
-
-    // Additional privacy settings
-    sendDefaultPii: false,
-    attachStacktrace: true,
-    maxBreadcrumbs: 50,
-    
-    // Release tracking
-    release: ENV.APP_VERSION || 'unknown',
-  };
-  };
-};
-
-// Error tracking service;
-export class ErrorTrackingService {
-  /**
-   * Track application errors with mental health context
-   */
-  static captureError(
-    error: Error, 
-    context: ErrorContext,
-    extra?: Record<string, any>
-  ) {
-    const sanitized = sanitizeErrorData(error, extra);
-    
-    Sentry.withScope(scope => {
-      // Set error classification
-      scope.setTag('error_type', context.errorType);
-      scope.setTag('severity', context.severity);
-      scope.setTag('privacy_level', context.privacyLevel);
-      
-      if (context.userType) {
-        scope.setTag('user_type', context.userType)
-  }
-      
-      if (context.feature) {
-        scope.setTag('feature', context.feature)
+    // Handle crisis-related errors with higher priority
+    if (context?.errorType === 'crisis') {
+      this.handleCrisisError(error, context);
+    }
   }
 
-      // Set context without PII
-      scope.setContext('error_details', {
-        timestamp: new Date().toISOString(),
-        user_agent: navigator.userAgent,
-        url: window.location.pathname, // Don't include query params
-        viewport: {
-          width: window.innerWidth,
-          height: window.innerHeight
-  }
-      });
+  captureMessage(message: string, level: LogLevel = "info", context?: ErrorContext): void {
+    if (!this.isInitialized) {
+      console.error("Error tracking service not initialized");
+      return;
+    }
 
-      // Add extra data (sanitized)
-      if (sanitized.context) {
-        scope.setExtra('additional_context', sanitized.context)
-  }
+    const messageData = {
+      message,
+      level,
+      context: context || {},
+      userContext: this.userContext,
+      breadcrumbs: [...this.breadcrumbs],
+      timestamp: new Date().toISOString()
+    };
 
-      Sentry.captureException(error)
-  })
-  }
+    // Log the message
+    logger[level === 'warning' ? 'warn' : level === 'fatal' ? 'error' : level](
+      message, 
+      messageData, 
+      "ErrorTrackingService"
+    );
 
-  /**
-   * Track crisis-related errors with high priority
-   */
-  static captureCrisisError(
-    error: Error,
-    crisisContext: {
-      detectionResult?: any;
-      userType: 'seeker' | 'helper';
-      escalationLevel?: 'low' | 'medium' | 'high' | 'critical'
-  },
-    extra?: Record<string, any>
-  ) {
-    this.captureError(error, {
-      errorType: 'crisis',
-      severity: 'critical',
-      userType: crisisContext.userType,
-      feature: 'crisis-detection',
-      privacyLevel: 'sensitive'
-  }, {
-      escalation_level: crisisContext.escalationLevel,
-      has_detection_result: !!crisisContext.detectionResult,
-      ...extra
-    })
+    // In production, send to error tracking service
+    if (process.env.NODE_ENV === 'production') {
+      this.sendToExternalService('message', messageData);
+    }
   }
 
-  /**
-   * Track user action errors
-   */
-  static captureUserActionError(
-    error: Error,
-    action: string,
-    userType: 'seeker' | 'helper',
-    feature: ErrorContext['feature'],
-    extra?: Record<string, any>
-  ) {
-    this.captureError(error, {
-      errorType: 'user-action',
-      severity: 'medium',
-      userType,
-      feature,
-      privacyLevel: 'private'
-  }, {
-      action,
-      ...extra
-    })
+  setUserContext(user: UserContext): void {
+    this.userContext = user;
+    logger.info("User context set", { userId: user.id }, "ErrorTrackingService");
   }
 
-  /**
-   * Track network errors
-   */
-  static captureNetworkError(
-    error: Error,
-    endpoint: string,
-    method: string,
-    statusCode?: number,
-    extra?: Record<string, any>
-  ) {
-    this.captureError(error, {
-      errorType: 'network',
-      severity: statusCode && statusCode >= 500 ? 'high' : 'medium',
-      privacyLevel: 'public'
-  }, {
-      endpoint: endpoint.replace(/\/\d+/g, '/[ID]'), // Remove IDs from endpoint
-      method,
-      status_code: statusCode,
-      ...extra
-    })
+  clearUserContext(): void {
+    this.userContext = null;
+    logger.info("User context cleared", undefined, "ErrorTrackingService");
   }
 
-  /**
-   * Track performance issues
-   */
-  static capturePerformanceIssue(
-    name: string,
-    duration: number,
-    threshold: number,
-    context?: Record<string, any>
-  ) {
-    if (duration > threshold) {
-      const error = new Error(`Performance issue: ${name} took ${duration}ms (threshold: ${threshold}ms)`);
-      
-      this.captureError(error, {
-        errorType: 'system',
-        severity: duration > threshold * 2 ? 'high' : 'medium',
-        privacyLevel: 'public'
-  }, {
-        performance_metric: name,
-        duration,
-        threshold,
-        ...context
-      })
-  }
-  }
-
-  /**
-   * Add user context (privacy-safe)
-   */
-  static setUserContext(userContext: {
-    id?: string;
-    userType: 'seeker' | 'helper' | 'admin';
-    isAuthenticated: boolean;
-    sessionDuration?: number
-  }) {
-    Sentry.setUser({
-      id: userContext.id ? '[USER_ID]' : undefined,
-      // Don't include any PII
-    });
-
-    Sentry.setTag('user_type', userContext.userType);
-    Sentry.setTag('authenticated', userContext.isAuthenticated);
-    
-    if (userContext.sessionDuration) {
-      Sentry.setTag('session_duration', userContext.sessionDuration > 3600 ? 'long' : 'normal')
-  }
-  }
-
-  /**
-   * Clear user context (on logout)
-   */
-  static clearUserContext() {
-    Sentry.setUser(null)
-  }
-
-  /**
-   * Capture a message (non-error event)
-   */
-  static captureMessage(
-    message: string,
-    level: 'fatal' | 'error' | 'warning' | 'info' | 'debug' = 'info',
-    context?: ErrorContext,
-    extra?: Record<string, any>
-  ) {
-    Sentry.withScope(scope => {
-      if (context) {
-        scope.setTag('error_type', context.errorType);
-        scope.setTag('severity', context.severity);
-        scope.setTag('privacy_level', context.privacyLevel);
-        
-        if (context.userType) {
-          scope.setTag('user_type', context.userType)
-  }
-        
-        if (context.feature) {
-          scope.setTag('feature', context.feature)
-  }
-      }
-
-      if (extra) {
-        scope.setExtra('additional_context', extra)
-  }
-
-      Sentry.captureMessage(message, level)
-  })
-  }
-
-  /**
-   * Add breadcrumb for debugging
-   */
-  static addBreadcrumb(
-    message: string,
-    category: string,
-    level: 'fatal' | 'error' | 'warning' | 'info' | 'debug' = 'info',
-    data?: Record<string, any>
-  ) {
-    Sentry.addBreadcrumb({
+  addBreadcrumb(message: string, category = "default", level = "info", data?: any): void {
+    const breadcrumb: Breadcrumb = {
       message,
       category,
       level,
-      data: data ? sanitizeErrorData(new Error(''), data).context : undefined,
-      timestamp: Date.now() / 1000,
-    })
+      timestamp: new Date().toISOString(),
+      data
+    };
+
+    this.breadcrumbs.push(breadcrumb);
+
+    // Keep breadcrumbs within limit
+    if (this.breadcrumbs.length > this.maxBreadcrumbs) {
+      this.breadcrumbs.shift();
+    }
   }
 
-  /**
-   * Create performance transaction (deprecated - use startSpan instead)
-   */
-  static startTransaction(name: string, operation: string) {
-    // Modern Sentry uses startSpan instead of startTransaction
-    return {
-      name,
-      op: operation,
-      finish: () => {},
-      setTag: () => {},
-      setContext: () => {}
-    };
+  private handleCrisisError(error: Error, context: ErrorContext): void {
+    // Special handling for crisis-related errors
+    logger.error("Crisis-related error detected", {
+      error: error.message,
+      severity: context.severity,
+      userType: context.userType,
+      feature: context.feature
+    }, "CrisisErrorHandler");
+
+    // In a real implementation, this might:
+    // - Send immediate alerts to crisis response team
+    // - Log to special crisis monitoring system
+    // - Trigger failover mechanisms for critical features
+  }
+
+  private sendToExternalService(type: 'exception' | 'message', data: any): void {
+    // In production, this would send data to external error tracking service
+    // For now, we'll just log it
+    logger.info(`Sending ${type} to external service`, data, "ErrorTrackingService");
+  }
+
+  // Utility method to get current breadcrumbs
+  getBreadcrumbs(): Breadcrumb[] {
+    return [...this.breadcrumbs];
+  }
+
+  // Utility method to clear breadcrumbs
+  clearBreadcrumbs(): void {
+    this.breadcrumbs = [];
   }
 }
 
-// React Error Boundary integration;
-export const SentryErrorBoundary = Sentry.withErrorBoundary;
+// Export singleton instance
+export const errorTrackingService = new ErrorTrackingServiceImpl();
 
-// Performance monitoring hook (deprecated);
-export const useSentryPerformance = (name: string, operation: string = 'react') => {
-  // Mock transaction object for compatibility;
-  const transaction = {
-    name,
-    op: operation,
-    finish: () => {},
-    setTag: () => {},
-    setContext: () => {}
-  };
-
-  return {
-    finish: () => transaction.finish(),
-    setTag: (_key: string, _value: string) => {},
-    setContext: (_key: string, _context: Record<string, any>) => {},
-  };
+// Convenience functions for common error tracking operations
+export const captureException = (error: Error, context?: ErrorContext) => {
+  errorTrackingService.captureException(error, context);
 };
 
-export default ErrorTrackingService;
+export const captureMessage = (message: string, level?: LogLevel, context?: ErrorContext) => {
+  errorTrackingService.captureMessage(message, level, context);
+};
+
+export const setUserContext = (user: UserContext) => {
+  errorTrackingService.setUserContext(user);
+};
+
+export const clearUserContext = () => {
+  errorTrackingService.clearUserContext();
+};
+
+export const addBreadcrumb = (message: string, category?: string, level?: string, data?: any) => {
+  errorTrackingService.addBreadcrumb(message, category, level, data);
+};
+
+// Initialize Sentry-like service (stub implementation)
+export const initializeSentry = () => {
+  // This would initialize the actual Sentry SDK in production
+  logger.info("Sentry initialization (stub)", undefined, "ErrorTrackingService");
+  return errorTrackingService;
+};
+
+// Export the main service as default
+export default errorTrackingService;
+
+// Re-export the service instance for compatibility
+export { errorTrackingService as ErrorTrackingService };

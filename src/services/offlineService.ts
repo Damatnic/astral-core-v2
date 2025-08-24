@@ -1,396 +1,231 @@
 /**
  * Offline Service
  * Manages offline functionality for the mental health platform
- */;
+ */
 
 import { logger } from '../utils/logger';
-import { localStorageService } from './localStorageService';
 
 export interface CopingStrategy {
   id: string;
   title: string;
   description: string;
-  category: 'distraction' | 'self-soothe' | 'emotional-release' | 'mindfulness' | 'social';
+  category: "distraction" | "self-soothe" | "emotional-release" | "mindfulness" | "social";
   steps: string[];
-  duration?: number
-  }
-
-export interface SafetyPlan {
-  id: string;
-  warningSignals: string[];
-  copingStrategies: string[];
-  socialContacts: { name: string; phone: string; }[];
-  safeEnvironments: string[];
-  reasonsToLive: string[];
-  lastUpdated: Date
-  }
-
-export interface MoodEntry {
-  id: string;
-  mood: number;
-  emotions: string[];
-  notes?: string;
-  timestamp: Date
-  }
-
-class OfflineService {
-  private isOnline: boolean = navigator.onLine;
-  private syncQueue: any[] = [];
-  private offlineData: any;
-  private readonly OFFLINE_DATA_KEY = 'offline_data';
-
-  constructor() {
-    this.initializeService();
-    this.setupEventListeners();
-    logger.info("OfflineService initialized", undefined, "OfflineService")
-  }
-
-  private initializeService(): void {
-    const savedData = localStorageService.getItem(this.OFFLINE_DATA_KEY);
-    if (savedData) {
-      try {
-        this.offlineData = JSON.parse(savedData)
-  } catch (error) {
-        logger.error("Failed to load offline data", error, "OfflineService");
-        this.offlineData = this.getDefaultData()
-  }
-  } else {
-      this.offlineData = this.getDefaultData()
-  }
-  }
-
-  private setupEventListeners(): void {
-    window.addEventListener('online', () => {
-      this.isOnline = true;
-      logger.info("Connection restored", undefined, "OfflineService");
-      this.processSyncQueue()
-  });
-    
-    window.addEventListener('offline', () => {
-      this.isOnline = false;
-      logger.info("Offline mode activated", undefined, "OfflineService")
-  })
-  }
-
-  private getDefaultData(): any {
-    return {
-      copingStrategies: [
-        {
-          id: 'cs1',
-          title: 'Deep Breathing',
-          description: 'Calm your mind through controlled breathing',
-          category: 'mindfulness',
-          steps: [
-            'Find a comfortable position',
-            'Breathe in slowly for 4 counts',
-            'Hold for 4 counts',
-            'Exhale slowly for 6 counts',
-            'Repeat 5-10 times'
-          ],
-          duration: 5
-  },
-        {
-          id: 'cs2',
-          title: '5-4-3-2-1 Grounding',
-          description: 'Ground yourself using your senses',
-          category: 'mindfulness',
-          steps: [
-            'Name 5 things you can see',
-            'Name 4 things you can touch',
-            'Name 3 things you can hear',
-            'Name 2 things you can smell',
-            'Name 1 thing you can taste'
-          ],
-          duration: 3
-  }
-      ],
-      safetyPlan: null,
-      recentMoodEntries: [],
-      lastSyncTime: new Date()
-  }
-
-  getOnlineStatus(): boolean {
-    return this.isOnline
-  }
-
-  getCopingStrategies(): CopingStrategy[] {
-    return this.offlineData.copingStrategies || []
-  }
-
-  getSafetyPlan(): SafetyPlan | null {
-    return this.offlineData.safetyPlan
-  }
-
-  saveSafetyPlan(plan: SafetyPlan): void {
-    this.offlineData.safetyPlan = plan;
-    this.saveOfflineData()
-  }
-
-  addMoodEntry(entry: Omit<MoodEntry, 'id'>): MoodEntry {
-    const newEntry: MoodEntry = {
-      ...entry,
-      id: `mood_${Date.now()}`,
-      timestamp: new Date()
-  };
-
-    this.offlineData.recentMoodEntries.unshift(newEntry);
-    if (this.offlineData.recentMoodEntries.length > 30) {
-      this.offlineData.recentMoodEntries = this.offlineData.recentMoodEntries.slice(0, 30)
-  }
-
-    this.saveOfflineData();
-
-    if (!this.isOnline) {
-      this.addToSyncQueue({
-        type: 'mood_entry',
-        data: newEntry,
-        timestamp: new Date()
-  };
-  };
-    }
-
-    return newEntry
-  }
-
-  getRecentMoodEntries(limit: number = 10): MoodEntry[] {
-    return this.offlineData.recentMoodEntries.slice(0, limit)
-  }
-
-  private addToSyncQueue(item: any): void {
-    this.syncQueue.push(item);
-    localStorageService.setItem('offline_sync_queue', JSON.stringify(this.syncQueue))
-  }
-
-  private async processSyncQueue(): Promise<void> {
-    if (this.syncQueue.length === 0) return;
-
-    const failedItems = [];
-    for (const item of this.syncQueue) {
-      try {
-        // In production, sync with API
-        logger.info("Syncing item", { type: item.type }, "OfflineService")
-  } catch (error) {
-        failedItems.push(item)
-  }
-    }
-
-    this.syncQueue = failedItems;
-    localStorageService.setItem('offline_sync_queue', JSON.stringify(this.syncQueue))
-  }
-
-  private saveOfflineData(): void {
-    localStorageService.setItem(this.OFFLINE_DATA_KEY, JSON.stringify(this.offlineData))
-  }
-
-  clearOfflineData(): void {
-    this.offlineData = this.getDefaultData();
-    this.syncQueue = [];
-    this.saveOfflineData()
-  }
-
-  getSyncQueueStatus(): { itemsInQueue: number; isOnline: boolean } {
-    return {
-      itemsInQueue: this.syncQueue.length,
-      isOnline: this.isOnline
-  }
+  duration?: number;
+  difficulty: "easy" | "medium" | "hard";
+  tags: string[];
 }
 
-export const offlineService = new OfflineService();
-export default offlineService;
- * Offline Service
- * Manages offline functionality for the mental health platform
- */;
-
-import { logger } from '../utils/logger';
-import { localStorageService } from './localStorageService';
-
-export interface CopingStrategy {
+export interface OfflineResource {
   id: string;
+  type: "article" | "video" | "audio" | "exercise";
   title: string;
-  description: string;
-  category: 'distraction' | 'self-soothe' | 'emotional-release' | 'mindfulness' | 'social';
-  steps: string[];
-  duration?: number
-  }
+  content: string;
+  category: string;
+  lastUpdated: Date;
+  size: number;
+}
 
-export interface SafetyPlan {
-  id: string;
-  warningSignals: string[];
-  copingStrategies: string[];
-  socialContacts: { name: string; phone: string; }[];
-  safeEnvironments: string[];
-  reasonsToLive: string[];
-  lastUpdated: Date
-  }
-
-export interface MoodEntry {
-  id: string;
-  mood: number;
-  emotions: string[];
-  notes?: string;
-  timestamp: Date
-  }
+export interface OfflineData {
+  copingStrategies: CopingStrategy[];
+  resources: OfflineResource[];
+  userProgress: Record<string, any>;
+  lastSync: Date;
+}
 
 class OfflineService {
+  private readonly STORAGE_KEY = 'corev2_offline_data';
+  private readonly CACHE_NAME = 'corev2-offline-cache';
   private isOnline: boolean = navigator.onLine;
-  private syncQueue: any[] = [];
-  private offlineData: any;
-  private readonly OFFLINE_DATA_KEY = 'offline_data';
 
   constructor() {
-    this.initializeService();
+    this.initializeOfflineSupport();
     this.setupEventListeners();
-    logger.info("OfflineService initialized", undefined, "OfflineService")
   }
 
-  private initializeService(): void {
-    const savedData = localStorageService.getItem(this.OFFLINE_DATA_KEY);
-    if (savedData) {
-      try {
-        this.offlineData = JSON.parse(savedData)
-  } catch (error) {
-        logger.error("Failed to load offline data", error, "OfflineService");
-        this.offlineData = this.getDefaultData()
+  private initializeOfflineSupport(): void {
+    if ('serviceWorker' in navigator) {
+      this.registerServiceWorker();
+    }
+    this.initializeOfflineData();
   }
-  } else {
-      this.offlineData = this.getDefaultData()
-  }
+
+  private async registerServiceWorker(): Promise<void> {
+    try {
+      const registration = await navigator.serviceWorker.register('/sw.js');
+      logger.info('Service Worker registered successfully', { scope: registration.scope });
+    } catch (error) {
+      logger.error('Service Worker registration failed', { error });
+    }
   }
 
   private setupEventListeners(): void {
     window.addEventListener('online', () => {
       this.isOnline = true;
-      logger.info("Connection restored", undefined, "OfflineService");
-      this.processSyncQueue()
-  };
-  };
-    
+      this.handleOnline();
+    });
+
     window.addEventListener('offline', () => {
       this.isOnline = false;
-      logger.info("Offline mode activated", undefined, "OfflineService")
-  })
+      this.handleOffline();
+    });
   }
 
-  private getDefaultData(): any {
-    return {
-      copingStrategies: [
-        {
-          id: 'cs1',
-          title: 'Deep Breathing',
-          description: 'Calm your mind through controlled breathing',
-          category: 'mindfulness',
-          steps: [
-            'Find a comfortable position',
-            'Breathe in slowly for 4 counts',
-            'Hold for 4 counts',
-            'Exhale slowly for 6 counts',
-            'Repeat 5-10 times'
-          ],
-          duration: 5
-  },
-        {
-          id: 'cs2',
-          title: '5-4-3-2-1 Grounding',
-          description: 'Ground yourself using your senses',
-          category: 'mindfulness',
-          steps: [
-            'Name 5 things you can see',
-            'Name 4 things you can touch',
-            'Name 3 things you can hear',
-            'Name 2 things you can smell',
-            'Name 1 thing you can taste'
-          ],
-          duration: 3
-  }
-      ],
-      safetyPlan: null,
-      recentMoodEntries: [],
-      lastSyncTime: new Date()
+  private handleOnline(): void {
+    logger.info('Connection restored - syncing offline data');
+    this.syncOfflineData();
   }
 
-  getOnlineStatus(): boolean {
-    return this.isOnline
+  private handleOffline(): void {
+    logger.info('Connection lost - switching to offline mode');
+    this.showOfflineNotification();
   }
 
-  getCopingStrategies(): CopingStrategy[] {
-    return this.offlineData.copingStrategies || []
+  private showOfflineNotification(): void {
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification('You are now offline', {
+        body: 'You can still access your saved resources and coping strategies.',
+        icon: '/icon-192.png'
+      });
+    }
   }
 
-  getSafetyPlan(): SafetyPlan | null {
-    return this.offlineData.safetyPlan
+  private initializeOfflineData(): void {
+    const existingData = this.getOfflineData();
+    if (!existingData) {
+      const initialData: OfflineData = {
+        copingStrategies: this.getDefaultCopingStrategies(),
+        resources: [],
+        userProgress: {},
+        lastSync: new Date()
+      };
+      this.saveOfflineData(initialData);
+    }
   }
 
-  saveSafetyPlan(plan: SafetyPlan): void {
-    this.offlineData.safetyPlan = plan;
-    this.saveOfflineData()
+  private getDefaultCopingStrategies(): CopingStrategy[] {
+    return [
+      {
+        id: 'breathing-exercise',
+        title: '4-7-8 Breathing Exercise',
+        description: 'A simple breathing technique to reduce anxiety and promote calm',
+        category: 'mindfulness',
+        steps: [
+          'Sit comfortably with your back straight',
+          'Inhale through your nose for 4 counts',
+          'Hold your breath for 7 counts',
+          'Exhale through your mouth for 8 counts',
+          'Repeat 3-4 times'
+        ],
+        duration: 5,
+        difficulty: 'easy',
+        tags: ['anxiety', 'breathing', 'quick']
+      },
+      {
+        id: 'grounding-5-4-3-2-1',
+        title: '5-4-3-2-1 Grounding Technique',
+        description: 'Use your senses to ground yourself in the present moment',
+        category: 'mindfulness',
+        steps: [
+          'Look around and name 5 things you can see',
+          'Notice 4 things you can touch',
+          'Listen for 3 things you can hear',
+          'Identify 2 things you can smell',
+          'Think of 1 thing you can taste'
+        ],
+        duration: 10,
+        difficulty: 'easy',
+        tags: ['grounding', 'anxiety', 'mindfulness']
+      }
+    ];
   }
 
-  addMoodEntry(entry: Omit<MoodEntry, 'id'>): MoodEntry {
-    const newEntry: MoodEntry = {
-      ...entry,
-      id: `mood_${Date.now()}`,
-      timestamp: new Date()
-  };
-
-    this.offlineData.recentMoodEntries.unshift(newEntry);
-    if (this.offlineData.recentMoodEntries.length > 30) {
-      this.offlineData.recentMoodEntries = this.offlineData.recentMoodEntries.slice(0, 30)
+  public isOffline(): boolean {
+    return !this.isOnline;
   }
 
-    this.saveOfflineData();
+  public getOfflineData(): OfflineData | null {
+    try {
+      const data = localStorage.getItem(this.STORAGE_KEY);
+      return data ? JSON.parse(data) : null;
+    } catch (error) {
+      logger.error('Failed to retrieve offline data', { error });
+      return null;
+    }
+  }
 
+  public saveOfflineData(data: OfflineData): void {
+    try {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+      logger.info('Offline data saved successfully');
+    } catch (error) {
+      logger.error('Failed to save offline data', { error });
+    }
+  }
+
+  public getCopingStrategies(): CopingStrategy[] {
+    const data = this.getOfflineData();
+    return data?.copingStrategies || [];
+  }
+
+  public addCopingStrategy(strategy: CopingStrategy): void {
+    const data = this.getOfflineData();
+    if (data) {
+      data.copingStrategies.push(strategy);
+      this.saveOfflineData(data);
+    }
+  }
+
+  public getOfflineResources(): OfflineResource[] {
+    const data = this.getOfflineData();
+    return data?.resources || [];
+  }
+
+  public addOfflineResource(resource: OfflineResource): void {
+    const data = this.getOfflineData();
+    if (data) {
+      data.resources.push(resource);
+      this.saveOfflineData(data);
+    }
+  }
+
+  public updateUserProgress(key: string, value: any): void {
+    const data = this.getOfflineData();
+    if (data) {
+      data.userProgress[key] = value;
+      this.saveOfflineData(data);
+    }
+  }
+
+  public getUserProgress(key: string): any {
+    const data = this.getOfflineData();
+    return data?.userProgress[key];
+  }
+
+  private async syncOfflineData(): Promise<void> {
     if (!this.isOnline) {
-      this.addToSyncQueue({
-        type: 'mood_entry',
-        data: newEntry,
-        timestamp: new Date()
-  };
-  };
+      return;
     }
 
-    return newEntry
-  }
-
-  getRecentMoodEntries(limit: number = 10): MoodEntry[] {
-    return this.offlineData.recentMoodEntries.slice(0, limit)
-  }
-
-  private addToSyncQueue(item: any): void {
-    this.syncQueue.push(item);
-    localStorageService.setItem('offline_sync_queue', JSON.stringify(this.syncQueue))
-  }
-
-  private async processSyncQueue(): Promise<void> {
-    if (this.syncQueue.length === 0) return;
-
-    const failedItems = [];
-    for (const item of this.syncQueue) {
-      try {
-        // In production, sync with API
-        logger.info("Syncing item", { type: item.type }, "OfflineService")
-  } catch (error) {
-        failedItems.push(item)
-  }
+    try {
+      const data = this.getOfflineData();
+      if (data) {
+        data.lastSync = new Date();
+        this.saveOfflineData(data);
+      }
+      logger.info('Offline data synced successfully');
+    } catch (error) {
+      logger.error('Failed to sync offline data', { error });
     }
-
-    this.syncQueue = failedItems;
-    localStorageService.setItem('offline_sync_queue', JSON.stringify(this.syncQueue))
   }
 
-  private saveOfflineData(): void {
-    localStorageService.setItem(this.OFFLINE_DATA_KEY, JSON.stringify(this.offlineData))
-  }
-
-  clearOfflineData(): void {
-    this.offlineData = this.getDefaultData();
-    this.syncQueue = [];
-    this.saveOfflineData()
-  }
-
-  getSyncQueueStatus(): { itemsInQueue: number; isOnline: boolean } {
-    return {
-      itemsInQueue: this.syncQueue.length,
-      isOnline: this.isOnline
+  public clearOfflineData(): void {
+    try {
+      localStorage.removeItem(this.STORAGE_KEY);
+      logger.info('Offline data cleared');
+    } catch (error) {
+      logger.error('Failed to clear offline data', { error });
+    }
   }
 }
 

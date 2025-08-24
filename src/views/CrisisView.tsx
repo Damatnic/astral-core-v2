@@ -1,183 +1,179 @@
 import React, { useState, useEffect } from 'react';
-import { AlertIcon, PhoneIcon, MessageCircleIcon, HeartIcon, ShieldIcon } from '../components/icons.dynamic';
 
 interface CrisisResource {
   id: string;
-  name: string;
-  phone: string;
+  title: string;
   description: string;
-  available24h: boolean
-  }
+  phone?: string;
+  website?: string;
+  available: string;
+  type: 'hotline' | 'text' | 'chat' | 'emergency';
+}
 
 const CrisisView: React.FC = () => {
-  const [emergencyContacted, setEmergencyContacted] = useState(false);
-  
-  const crisisResources: CrisisResource[] = [
+  const [resources] = useState<CrisisResource[]>([
     {
       id: 'suicide-prevention',
-      name: '988 Suicide & Crisis Lifeline',
-      phone: '988',
+      title: 'National Suicide Prevention Lifeline',
       description: 'Free and confidential emotional support 24/7',
-      available24h: true
-  },
+      phone: '988',
+      website: 'https://suicidepreventionlifeline.org',
+      available: '24/7',
+      type: 'hotline'
+    },
     {
       id: 'crisis-text',
-      name: 'Crisis Text Line',
-      phone: 'Text HOME to 741741',
+      title: 'Crisis Text Line',
       description: 'Text-based crisis support',
-      available24h: true
-  },
+      phone: '741741',
+      website: 'https://crisistextline.org',
+      available: '24/7',
+      type: 'text'
+    },
     {
       id: 'emergency',
-      name: 'Emergency Services',
+      title: 'Emergency Services',
+      description: 'For immediate life-threatening emergencies',
       phone: '911',
-      description: 'For immediate medical emergencies',
-      available24h: true
-  }
-  ];
+      available: '24/7',
+      type: 'emergency'
+    },
+    {
+      id: 'samhsa',
+      title: 'SAMHSA National Helpline',
+      description: 'Treatment referral and information service',
+      phone: '1-800-662-4357',
+      website: 'https://samhsa.gov',
+      available: '24/7',
+      type: 'hotline'
+    }
+  ]);
+
+  const [isEmergency, setIsEmergency] = useState(false);
 
   const handleEmergencyCall = (phone: string) => {
-    if (phone === '911' || phone === '988') {
-      setEmergencyContacted(true);
-      // In a real app, this would integrate with device calling capabilities
-      window.open(`tel:${phone}`, '_self')
-  } else if (phone.includes('741741')) {
-      window.open('sms:741741?body=HOME', '_self')
-  }
+    window.open(`tel:${phone}`, '_self');
   };
 
-  useEffect(() => {
-    // Log crisis view access for safety monitoring
-    console.log('Crisis view accessed at:', new Date().toISOString())
+  const getResourceIcon = (type: string) => {
+    switch (type) {
+      case 'hotline': return '📞';
+      case 'text': return '💬';
+      case 'chat': return '💭';
+      case 'emergency': return '🚨';
+      default: return '📞';
+    }
   };
-  }, []);
 
   return (
-    <div className="min-h-screen bg-red-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4 py-8">
-        {/* Crisis Alert Header */}
-        <div className="bg-red-100 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 mb-8">
-          <div className="flex items-center mb-4">
-            <AlertIcon className="w-8 h-8 text-red-600 dark:text-red-400 mr-3" />
-            <h1 className="text-2xl font-bold text-red-800 dark:text-red-200">
-              Crisis Support Resources
-            </h1>
+    <div className="crisis-view">
+      <div className="crisis-header">
+        <h1>Crisis Support Resources</h1>
+        <div className="crisis-alert">
+          <div className="alert-icon">⚠️</div>
+          <div className="alert-content">
+            <p><strong>If you are in immediate danger, call 911 now.</strong></p>
+            <p>If you are having thoughts of suicide or self-harm, please reach out for help immediately.</p>
           </div>
-          <p className="text-red-700 dark:text-red-300 text-lg">
-            If you're experiencing a mental health crisis, you're not alone. Help is available 24/7.
-          </p>
         </div>
+      </div>
 
-        {/* Immediate Action Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-          <div className="flex items-center mb-4">
-            <ShieldIcon className="w-6 h-6 text-blue-600 dark:text-blue-400 mr-2" />
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-              Immediate Support
-            </h2>
-          </div>
-          
-          <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-3">
-            {crisisResources.map((resource) => (
-              <div
-                key={resource.id}
-                className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:shadow-lg transition-shadow"
-              >
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                  {resource.name}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">
-                  {resource.description}
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-lg font-bold text-blue-600 dark:text-blue-400">
-                    {resource.phone}
-                  </span>
-                  <button
-                    onClick={() => handleEmergencyCall(resource.phone)}
-                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-                  >
-                    {resource.phone.includes('Text') ? (
-                      <MessageCircleIcon className="w-4 h-4" />
-                    ) : (
-                      <PhoneIcon className="w-4 h-4" />
-                    )}
-                    {resource.phone.includes('Text') ? 'Text' : 'Call'}
-                  </button>
+      <div className="emergency-actions">
+        <button
+          className="emergency-button emergency-button--primary"
+          onClick={() => handleEmergencyCall('911')}
+        >
+          🚨 Call 911 - Emergency
+        </button>
+        <button
+          className="emergency-button emergency-button--suicide"
+          onClick={() => handleEmergencyCall('988')}
+        >
+          📞 Call 988 - Suicide Prevention
+        </button>
+        <button
+          className="emergency-button emergency-button--text"
+          onClick={() => handleEmergencyCall('741741')}
+        >
+          💬 Text 741741 - Crisis Support
+        </button>
+      </div>
+
+      <div className="crisis-resources">
+        <h2>Available Support Resources</h2>
+        <div className="resources-grid">
+          {resources.map((resource) => (
+            <div key={resource.id} className={`resource-card resource-card--${resource.type}`}>
+              <div className="resource-header">
+                <div className="resource-icon">
+                  {getResourceIcon(resource.type)}
                 </div>
-                {resource.available24h && (
-                  <div className="mt-2 text-xs text-green-600 dark:text-green-400">
-                    ✓ Available 24/7
-                  </div>
+                <div className="resource-info">
+                  <h3 className="resource-title">{resource.title}</h3>
+                  <span className="resource-availability">{resource.available}</span>
+                </div>
+              </div>
+              
+              <p className="resource-description">{resource.description}</p>
+              
+              <div className="resource-actions">
+                {resource.phone && (
+                  <button
+                    className="resource-button resource-button--call"
+                    onClick={() => handleEmergencyCall(resource.phone!)}
+                  >
+                    Call {resource.phone}
+                  </button>
+                )}
+                {resource.website && (
+                  <a
+                    href={resource.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="resource-button resource-button--website"
+                  >
+                    Visit Website
+                  </a>
                 )}
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Safety Planning */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-          <div className="flex items-center mb-4">
-            <HeartIcon className="w-6 h-6 text-pink-600 dark:text-pink-400 mr-2" />
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-              Safety & Coping Strategies
-            </h2>
-          </div>
-          
-          <div className="grid gap-6 md:grid-cols-2">
-            <div>
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                Immediate Coping Techniques
-              </h3>
-              <ul className="space-y-2 text-gray-600 dark:text-gray-400">
-                <li>• Take slow, deep breaths</li>
-                <li>• Ground yourself - notice 5 things you can see, 4 you can touch, 3 you can hear</li>
-                <li>• Call a trusted friend or family member</li>
-                <li>• Remove yourself from harmful situations</li>
-                <li>• Use ice or cold water on your face/hands</li>
-              </ul>
             </div>
-            
-            <div>
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                When to Seek Emergency Help
-              </h3>
-              <ul className="space-y-2 text-gray-600 dark:text-gray-400">
-                <li>• Thoughts of hurting yourself or others</li>
-                <li>• Unable to care for yourself</li>
-                <li>• Severe panic or anxiety attacks</li>
-                <li>• Hearing voices or seeing things</li>
-                <li>• Feeling completely hopeless</li>
-              </ul>
-            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="crisis-safety-plan">
+        <h2>Safety Planning</h2>
+        <div className="safety-tips">
+          <div className="safety-tip">
+            <h4>🛡️ Create a Safety Plan</h4>
+            <p>Identify warning signs, coping strategies, and support contacts.</p>
+          </div>
+          <div className="safety-tip">
+            <h4>👥 Build Your Support Network</h4>
+            <p>Connect with family, friends, and mental health professionals.</p>
+          </div>
+          <div className="safety-tip">
+            <h4>🏥 Know Your Resources</h4>
+            <p>Keep crisis hotline numbers easily accessible.</p>
+          </div>
+          <div className="safety-tip">
+            <h4>💊 Medication Safety</h4>
+            <p>Store medications safely and take as prescribed.</p>
           </div>
         </div>
+      </div>
 
-        {/* Follow-up Resources */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-blue-800 dark:text-blue-200 mb-4">
-            Follow-up Support
-          </h2>
-          <p className="text-blue-700 dark:text-blue-300 mb-4">
-            After the immediate crisis passes, consider these ongoing support options:
-          </p>
-          <ul className="space-y-2 text-blue-600 dark:text-blue-400">
-            <li>• Schedule an appointment with a mental health professional</li>
-            <li>• Contact your primary care doctor</li>
-            <li>• Join a support group in your area</li>
-            <li>• Use the Astral Core wellness tracking features</li>
-            <li>• Create a safety plan with your support network</li>
-          </ul>
-        </div>
-
-        {emergencyContacted && (
-          <div className="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg">
-            Help is on the way. Stay safe.
-          </div>
-        )}
+      <div className="crisis-disclaimer">
+        <h3>Important Information</h3>
+        <ul>
+          <li>These resources provide immediate support for mental health crises</li>
+          <li>If you're experiencing a medical emergency, call 911</li>
+          <li>All crisis hotlines are free, confidential, and available 24/7</li>
+          <li>You don't have to go through this alone - help is available</li>
+        </ul>
       </div>
     </div>
-  )
-  };
+  );
+};
 
 export default CrisisView;

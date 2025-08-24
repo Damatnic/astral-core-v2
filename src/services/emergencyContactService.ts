@@ -1,10 +1,9 @@
 /**
  * Emergency Contact Service
  * Manages emergency contacts and crisis response for mental health support
- */;
+ */
 
 import { logger } from '../utils/logger';
-import { localStorageService } from './localStorageService';
 
 export interface EmergencyContact {
   id: string;
@@ -14,850 +13,370 @@ export interface EmergencyContact {
   email?: string;
   isPrimary: boolean;
   isHealthcareProfessional?: boolean;
-  specialization?: string; // therapist, psychiatrist, counselor, etc.
-  availability?: {
-    days: string[];
-    hours: string
-  };
-  notificationPreferences?: {
-    sms: boolean;
-    email: boolean;
-    call: boolean
-  }
-
-export interface CrisisLine {
-  id: string;
-  name: string;
-  phone: string;
-  textLine?: string;
-  chatUrl?: string;
-  country: string;
-  language: string[];
-  available24x7: boolean;
-  specializations: string[]; // suicide, domestic violence, LGBTQ+, veterans, etc.
+  notes?: string;
+  availableHours?: string;
 }
 
-interface EmergencyNotification {
-  contactId: string;
-  timestamp: Date;
-  type: 'sms' | 'email' | 'call';
-  status: 'pending' | 'sent' | 'failed';
-  message?: string;
-  error?: string
-  }
+export interface CrisisResource {
+  id: string;
+  name: string;
+  type: 'hotline' | 'text' | 'chat' | 'local' | 'professional';
+  contactInfo: string;
+  description: string;
+  availability: string;
+  isEmergency: boolean;
+  country?: string;
+  language?: string[];
+}
+
+export interface EmergencyPlan {
+  id: string;
+  userId: string;
+  warningSignals: string[];
+  copingStrategies: string[];
+  emergencyContacts: string[]; // IDs of emergency contacts
+  crisisResources: string[]; // IDs of crisis resources
+  safeEnvironment: string[];
+  professionalSupports: string[];
+  lastUpdated: Date;
+  isActive: boolean;
+}
 
 class EmergencyContactService {
-  private contacts: EmergencyContact[] = [];
-  private crisisLines: CrisisLine[] = [];
-  private notificationHistory: EmergencyNotification[] = [];
-  private readonly STORAGE_KEY = 'emergency_contacts';
-  private readonly CRISIS_LINES_KEY = 'crisis_lines';
+  private readonly CONTACTS_KEY = 'corev2_emergency_contacts';
+  private readonly PLAN_KEY = 'corev2_emergency_plan';
+  private readonly RESOURCES_KEY = 'corev2_crisis_resources';
 
   constructor() {
-    this.initializeService();
-    this.loadDefaultCrisisLines();
-    logger.info("EmergencyContactService initialized", undefined, "EmergencyContactService")
+    this.initializeDefaultResources();
   }
 
-  private initializeService(): void {
-    // Load saved contacts from local storage;
-    const savedContacts = localStorageService.getItem(this.STORAGE_KEY);
-    if (savedContacts) {
-      try {
-        this.contacts = JSON.parse(savedContacts)
-  } catch (error) {
-        logger.error("Failed to load emergency contacts", error, "EmergencyContactService")
-  }
+  private initializeDefaultResources(): void {
+    const existingResources = this.getCrisisResources();
+    if (existingResources.length === 0) {
+      const defaultResources = this.getDefaultCrisisResources();
+      this.saveCrisisResources(defaultResources);
     }
   }
 
-  private loadDefaultCrisisLines(): void {
-    // Default crisis lines for different regions
-    this.crisisLines = [
+  private getDefaultCrisisResources(): CrisisResource[] {
+    return [
       {
-        id: 'us-988',
-        name: '988 Suicide & Crisis Lifeline',
-        phone: '988',
-        textLine: '988',
-        chatUrl: 'https://988lifeline.org/chat',
-        country: 'USA',
-        language: ['English', 'Spanish'],
-        available24x7: true,
-        specializations: ['suicide', 'crisis', 'mental health']
+        id: 'suicide-prevention-lifeline',
+        name: 'National Suicide Prevention Lifeline',
+        type: 'hotline',
+        contactInfo: '988',
+        description: '24/7 free and confidential support for people in distress and crisis prevention resources',
+        availability: '24/7',
+        isEmergency: true,
+        country: 'US',
+        language: ['English', 'Spanish']
       },
       {
-        id: 'us-crisis-text',
+        id: 'crisis-text-line',
         name: 'Crisis Text Line',
-        phone: '',
-        textLine: '741741',
-        chatUrl: '',
-        country: 'USA',
-        language: ['English'],
-        available24x7: true,
-        specializations: ['crisis', 'anxiety', 'depression', 'self-harm']
+        type: 'text',
+        contactInfo: 'Text HOME to 741741',
+        description: 'Free, 24/7 crisis support via text message',
+        availability: '24/7',
+        isEmergency: true,
+        country: 'US',
+        language: ['English', 'Spanish']
       },
       {
-        id: 'uk-samaritans',
-        name: 'Samaritans',
-        phone: '116123',
-        email: 'jo@samaritans.org',
-        chatUrl: '',
-        country: 'UK',
-        language: ['English'],
-        available24x7: true,
-        specializations: ['suicide', 'crisis', 'emotional support']
+        id: 'emergency-services',
+        name: 'Emergency Services',
+        type: 'hotline',
+        contactInfo: '911',
+        description: 'Immediate emergency response for life-threatening situations',
+        availability: '24/7',
+        isEmergency: true,
+        country: 'US',
+        language: ['English']
       },
       {
-        id: 'ca-talk-suicide',
-        name: 'Talk Suicide Canada',
-        phone: '1-833-456-4566',
-        textLine: '45645',
-        chatUrl: '',
-        country: 'Canada',
-        language: ['English', 'French'],
-        available24x7: true,
-        specializations: ['suicide', 'crisis']
+        id: 'nami-helpline',
+        name: 'NAMI National Helpline',
+        type: 'hotline',
+        contactInfo: '1-800-950-6264',
+        description: 'Information, referrals and support for people with mental health conditions',
+        availability: 'Mon-Fri 10am-10pm ET',
+        isEmergency: false,
+        country: 'US',
+        language: ['English', 'Spanish']
       },
       {
-        id: 'au-lifeline',
-        name: 'Lifeline Australia',
-        phone: '131114',
-        textLine: '0477131114',
-        chatUrl: 'https://www.lifeline.org.au/crisis-chat/',
-        country: 'Australia',
-        language: ['English'],
-        available24x7: true,
-        specializations: ['suicide', 'crisis', 'mental health']
+        id: 'samhsa-helpline',
+        name: 'SAMHSA National Helpline',
+        type: 'hotline',
+        contactInfo: '1-800-662-4357',
+        description: 'Treatment referral and information service for mental health and substance use disorders',
+        availability: '24/7',
+        isEmergency: false,
+        country: 'US',
+        language: ['English', 'Spanish']
       }
     ];
-
-    // Save to local storage
-    localStorageService.setItem(this.CRISIS_LINES_KEY, JSON.stringify(this.crisisLines))
   }
 
-  /**
-   * Add a new emergency contact
-   */
-  async addContact(contact: Omit<EmergencyContact, 'id'>): Promise<EmergencyContact> {
+  // Emergency Contacts Management
+  public getEmergencyContacts(): EmergencyContact[] {
+    try {
+      const contacts = localStorage.getItem(this.CONTACTS_KEY);
+      return contacts ? JSON.parse(contacts) : [];
+    } catch (error) {
+      logger.error('Failed to retrieve emergency contacts', { error });
+      return [];
+    }
+  }
+
+  public addEmergencyContact(contact: Omit<EmergencyContact, 'id'>): EmergencyContact {
     const newContact: EmergencyContact = {
       ...contact,
-      id: `contact_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      id: this.generateId()
     };
 
-    // If this is set as primary, update other contacts
-    if (newContact.isPrimary) {
-      this.contacts.forEach(c => c.isPrimary = false)
+    const contacts = this.getEmergencyContacts();
+    contacts.push(newContact);
+    this.saveEmergencyContacts(contacts);
+
+    logger.info('Emergency contact added', { contactId: newContact.id });
+    return newContact;
   }
 
-    this.contacts.push(newContact);
-    this.saveContacts();
+  public updateEmergencyContact(id: string, updates: Partial<EmergencyContact>): boolean {
+    const contacts = this.getEmergencyContacts();
+    const index = contacts.findIndex(contact => contact.id === id);
 
-    logger.info("Emergency contact added", { contactId: newContact.id }, "EmergencyContactService");
-    return newContact
-  }
-
-  /**
-   * Update an existing emergency contact
-   */
-  async updateContact(id: string, updates: Partial<EmergencyContact>): Promise<EmergencyContact | null> {
-    const index = this.contacts.findIndex(c => c.id === id);
     if (index === -1) {
-      logger.warn("Contact not found for update", { contactId: id }, "EmergencyContactService");
-      return null
+      logger.warn('Emergency contact not found for update', { id });
+      return false;
+    }
+
+    contacts[index] = { ...contacts[index], ...updates };
+    this.saveEmergencyContacts(contacts);
+
+    logger.info('Emergency contact updated', { contactId: id });
+    return true;
   }
 
-    // If setting as primary, update others
-    if (updates.isPrimary) {
-      this.contacts.forEach(c => c.isPrimary = false)
+  public removeEmergencyContact(id: string): boolean {
+    const contacts = this.getEmergencyContacts();
+    const filteredContacts = contacts.filter(contact => contact.id !== id);
+
+    if (filteredContacts.length === contacts.length) {
+      logger.warn('Emergency contact not found for removal', { id });
+      return false;
+    }
+
+    this.saveEmergencyContacts(filteredContacts);
+    logger.info('Emergency contact removed', { contactId: id });
+    return true;
   }
 
-    this.contacts[index] = { ...this.contacts[index], ...updates };
-    this.saveContacts();
-
-    logger.info("Emergency contact updated", { contactId: id }, "EmergencyContactService");
-    return this.contacts[index]
+  public getPrimaryContact(): EmergencyContact | null {
+    const contacts = this.getEmergencyContacts();
+    return contacts.find(contact => contact.isPrimary) || null;
   }
 
-  /**
-   * Remove an emergency contact
-   */
-  async removeContact(id: string): Promise<boolean> {
-    const initialLength = this.contacts.length;
-    this.contacts = this.contacts.filter(c => c.id !== id);
+  public setPrimaryContact(id: string): boolean {
+    const contacts = this.getEmergencyContacts();
     
-    if (this.contacts.length < initialLength) {
-      this.saveContacts();
-      logger.info("Emergency contact removed", { contactId: id }, "EmergencyContactService");
-      return true
-  }
-    
-    return false
+    // Remove primary flag from all contacts
+    contacts.forEach(contact => {
+      contact.isPrimary = false;
+    });
+
+    // Set new primary contact
+    const targetContact = contacts.find(contact => contact.id === id);
+    if (!targetContact) {
+      logger.warn('Contact not found for primary assignment', { id });
+      return false;
+    }
+
+    targetContact.isPrimary = true;
+    this.saveEmergencyContacts(contacts);
+
+    logger.info('Primary contact updated', { contactId: id });
+    return true;
   }
 
-  /**
-   * Get all emergency contacts
-   */
-  getContacts(): EmergencyContact[] {
-    return [...this.contacts]
-  }
-
-  /**
-   * Get primary emergency contact
-   */
-  getPrimaryContact(): EmergencyContact | null {
-    return this.contacts.find(c => c.isPrimary) || null
-  }
-
-  /**
-   * Get healthcare professional contacts
-   */
-  getHealthcareProfessionals(): EmergencyContact[] {
-    return this.contacts.filter(c => c.isHealthcareProfessional)
-  }
-
-  /**
-   * Get crisis lines for a specific country
-   */
-  getCrisisLines(country?: string): CrisisLine[] {
-    if (country) {
-      return this.crisisLines.filter(line => 
-        line.country.toLowerCase() === country.toLowerCase()
-      )
-  }
-    return [...this.crisisLines]
-  }
-
-  /**
-   * Get crisis lines by specialization
-   */
-  getCrisisLinesBySpecialization(specialization: string): CrisisLine[] {
-    return this.crisisLines.filter(line => 
-      line.specializations.includes(specialization.toLowerCase())
-    )
-  }
-
-  /**
-   * Trigger emergency contact notification
-   */
-  async notifyEmergencyContacts(
-    message: string, 
-    contactIds?: string[],
-    notificationType: 'sms' | 'email' | 'call' = 'sms'
-  ): Promise<void> {
-    const contactsToNotify = contactIds ;;
-      ? this.contacts.filter(c => contactIds.includes(c.id))
-      : this.contacts.filter(c => c.isPrimary);
-
-    for (const contact of contactsToNotify) {
-      const notification: EmergencyNotification = {
-        contactId: contact.id,
-        timestamp: new Date(),
-        type: notificationType,
-        status: 'pending',
-        message
-      };
-
-      try {
-        // In a real implementation, this would integrate with SMS/Email services
-        await this.sendNotification(contact, message, notificationType);
-        notification.status = 'sent';
-        logger.info("Emergency notification sent", { 
-          contactId: contact.id, 
-          type: notificationType
-  }, "EmergencyContactService")
-  } catch (error) {
-        notification.status = 'failed';
-        notification.error = error instanceof Error ? error.message : 'Unknown error';
-        logger.error("Failed to send emergency notification", error, "EmergencyContactService")
-  }
-  }
-
-  this.notificationHistory.push(notification)
-  }
-  }
-
-  /**
-   * Send notification to contact (placeholder for actual implementation)
-   */
-  private async sendNotification(
-    contact: EmergencyContact, 
-    message: string, 
-    type: 'sms' | 'email' | 'call'
-  ): Promise<void> {
-    // This would integrate with actual notification services
-    // For now, just log the action
-    logger.info("Notification would be sent", {
-      contact: contact.name,
-      type,
-      message: message.substring(0, 100) // Log first 100 chars
-    }, "EmergencyContactService");
-
-    // In production, integrate with:
-    // - Twilio for SMS/calls
-    // - SendGrid/AWS SES for emails
-    // - Push notifications for app alerts
-  }
-
-  /**
-   * Get notification history
-   */
-  getNotificationHistory(contactId?: string): EmergencyNotification[] {
-    if (contactId) {
-      return this.notificationHistory.filter(n => n.contactId === contactId)
-  }
-    return [...this.notificationHistory]
-  }
-
-  /**
-   * Clear notification history
-   */
-  clearNotificationHistory(): void {
-    this.notificationHistory = [];
-    logger.info("Notification history cleared", undefined, "EmergencyContactService")
-  }
-
-  /**
-   * Check if user has emergency contacts configured
-   */
-  hasEmergencyContacts(): boolean {
-    return this.contacts.length > 0
-  }
-
-  /**
-   * Check if user has a primary contact
-   */
-  hasPrimaryContact(): boolean {
-    return this.contacts.some(c => c.isPrimary)
-  }
-
-  /**
-   * Validate contact information
-   */
-  validateContact(contact: Partial<EmergencyContact>): string[] {
-    const errors: string[] = [];
-
-    if (!contact.name || contact.name.trim().length === 0) {
-      errors.push("Contact name is required")
-  }
-
-    if (!contact.phone || !this.isValidPhoneNumber(contact.phone)) {
-      errors.push("Valid phone number is required")
-  }
-
-    if (contact.email && !this.isValidEmail(contact.email)) {
-      errors.push("Invalid email address")
-  }
-
-    if (!contact.relationship || contact.relationship.trim().length === 0) {
-      errors.push("Relationship is required")
-  }
-
-    return errors
-  }
-
-  /**
-   * Validate phone number format
-   */
-  private isValidPhoneNumber(phone: string): boolean {
-    // Basic phone validation - can be enhanced based on region;
-    const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-    return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 10
-  }
-
-  /**
-   * Validate email format
-   */
-  private isValidEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email)
-  }
-
-  /**
-   * Save contacts to local storage
-   */
-  private saveContacts(): void {
-    localStorageService.setItem(this.STORAGE_KEY, JSON.stringify(this.contacts))
-  }
-
-  /**
-   * Export contacts for backup
-   */;
-  exportContacts(): string {
-    return JSON.stringify({
-      contacts: this.contacts,
-      exportDate: new Date().toISOString(),
-      version: '1.0'
-  }, null, 2)
-  }
-
-  /**
-   * Import contacts from backup
-   */;
-  importContacts(data: string): boolean {
+  private saveEmergencyContacts(contacts: EmergencyContact[]): void {
     try {
-      const parsed = JSON.parse(data);
-      if (parsed.contacts && Array.isArray(parsed.contacts)) {
-        this.contacts = parsed.contacts;
-        this.saveContacts();
-        logger.info("Contacts imported successfully", { 
-          count: this.contacts.length
-  }, "EmergencyContactService");
-        return true
-  }
+      localStorage.setItem(this.CONTACTS_KEY, JSON.stringify(contacts));
     } catch (error) {
-      logger.error("Failed to import contacts", error, "EmergencyContactService")
-  }
-  }
-
-  return false
-  }
-
-  /**
-   * Get quick dial information for emergency
-   */
-  getQuickDialInfo(): {
-    primaryContact: EmergencyContact | null;
-    localCrisisLine: CrisisLine | null
-  } {
-    const primaryContact = this.getPrimaryContact();
-    const localCrisisLine = this.crisisLines.find(line => line.available24x7) || null;
-
-    return {
-      primaryContact,
-      localCrisisLine
-    }
-}
-
-export const emergencyContactService = new EmergencyContactService();
-export default emergencyContactService;
- * Emergency Contact Service
- * Manages emergency contacts and crisis response for mental health support
- */;
-
-import { logger } from '../utils/logger';
-import { localStorageService } from './localStorageService';
-
-export interface EmergencyContact {
-  id: string;
-  name: string;
-  relationship: string;
-  phone: string;
-  email?: string;
-  isPrimary: boolean;
-  isHealthcareProfessional?: boolean;
-  specialization?: string; // therapist, psychiatrist, counselor, etc.
-  availability?: {
-    days: string[];
-    hours: string
-  };
-  notificationPreferences?: {
-    sms: boolean;
-    email: boolean;
-    call: boolean
-  }
-
-export interface CrisisLine {
-  id: string;
-  name: string;
-  phone: string;
-  textLine?: string;
-  chatUrl?: string;
-  country: string;
-  language: string[];
-  available24x7: boolean;
-  specializations: string[]; // suicide, domestic violence, LGBTQ+, veterans, etc.
-}
-
-interface EmergencyNotification {
-  contactId: string;
-  timestamp: Date;
-  type: 'sms' | 'email' | 'call';
-  status: 'pending' | 'sent' | 'failed';
-  message?: string;
-  error?: string
-  }
-
-class EmergencyContactService {
-  private contacts: EmergencyContact[] = [];
-  private crisisLines: CrisisLine[] = [];
-  private notificationHistory: EmergencyNotification[] = [];
-  private readonly STORAGE_KEY = 'emergency_contacts';
-  private readonly CRISIS_LINES_KEY = 'crisis_lines';
-
-  constructor() {
-    this.initializeService();
-    this.loadDefaultCrisisLines();
-    logger.info("EmergencyContactService initialized", undefined, "EmergencyContactService")
-  }
-
-  private initializeService(): void {
-    // Load saved contacts from local storage;
-    const savedContacts = localStorageService.getItem(this.STORAGE_KEY);
-    if (savedContacts) {
-      try {
-        this.contacts = JSON.parse(savedContacts)
-  } catch (error) {
-        logger.error("Failed to load emergency contacts", error, "EmergencyContactService")
-  }
+      logger.error('Failed to save emergency contacts', { error });
     }
   }
 
-  private loadDefaultCrisisLines(): void {
-    // Default crisis lines for different regions
-    this.crisisLines = [
-      {
-        id: 'us-988',
-        name: '988 Suicide & Crisis Lifeline',
-        phone: '988',
-        textLine: '988',
-        chatUrl: 'https://988lifeline.org/chat',
-        country: 'USA',
-        language: ['English', 'Spanish'],
-        available24x7: true,
-        specializations: ['suicide', 'crisis', 'mental health']
-      },
-      {
-        id: 'us-crisis-text',
-        name: 'Crisis Text Line',
-        phone: '',
-        textLine: '741741',
-        chatUrl: '',
-        country: 'USA',
-        language: ['English'],
-        available24x7: true,
-        specializations: ['crisis', 'anxiety', 'depression', 'self-harm']
-      },
-      {
-        id: 'uk-samaritans',
-        name: 'Samaritans',
-        phone: '116123',
-        email: 'jo@samaritans.org',
-        chatUrl: '',
-        country: 'UK',
-        language: ['English'],
-        available24x7: true,
-        specializations: ['suicide', 'crisis', 'emotional support']
-      },
-      {
-        id: 'ca-talk-suicide',
-        name: 'Talk Suicide Canada',
-        phone: '1-833-456-4566',
-        textLine: '45645',
-        chatUrl: '',
-        country: 'Canada',
-        language: ['English', 'French'],
-        available24x7: true,
-        specializations: ['suicide', 'crisis']
-      },
-      {
-        id: 'au-lifeline',
-        name: 'Lifeline Australia',
-        phone: '131114',
-        textLine: '0477131114',
-        chatUrl: 'https://www.lifeline.org.au/crisis-chat/',
-        country: 'Australia',
-        language: ['English'],
-        available24x7: true,
-        specializations: ['suicide', 'crisis', 'mental health']
+  // Crisis Resources Management
+  public getCrisisResources(): CrisisResource[] {
+    try {
+      const resources = localStorage.getItem(this.RESOURCES_KEY);
+      return resources ? JSON.parse(resources) : [];
+    } catch (error) {
+      logger.error('Failed to retrieve crisis resources', { error });
+      return [];
+    }
+  }
+
+  public getEmergencyResources(): CrisisResource[] {
+    return this.getCrisisResources().filter(resource => resource.isEmergency);
+  }
+
+  public getSupportResources(): CrisisResource[] {
+    return this.getCrisisResources().filter(resource => !resource.isEmergency);
+  }
+
+  private saveCrisisResources(resources: CrisisResource[]): void {
+    try {
+      localStorage.setItem(this.RESOURCES_KEY, JSON.stringify(resources));
+    } catch (error) {
+      logger.error('Failed to save crisis resources', { error });
+    }
+  }
+
+  // Emergency Plan Management
+  public getEmergencyPlan(): EmergencyPlan | null {
+    try {
+      const plan = localStorage.getItem(this.PLAN_KEY);
+      return plan ? JSON.parse(plan) : null;
+    } catch (error) {
+      logger.error('Failed to retrieve emergency plan', { error });
+      return null;
+    }
+  }
+
+  public createEmergencyPlan(planData: Omit<EmergencyPlan, 'id' | 'lastUpdated'>): EmergencyPlan {
+    const newPlan: EmergencyPlan = {
+      ...planData,
+      id: this.generateId(),
+      lastUpdated: new Date()
+    };
+
+    this.saveEmergencyPlan(newPlan);
+    logger.info('Emergency plan created', { planId: newPlan.id });
+    return newPlan;
+  }
+
+  public updateEmergencyPlan(updates: Partial<EmergencyPlan>): boolean {
+    const currentPlan = this.getEmergencyPlan();
+    if (!currentPlan) {
+      logger.warn('No emergency plan found for update');
+      return false;
+    }
+
+    const updatedPlan: EmergencyPlan = {
+      ...currentPlan,
+      ...updates,
+      lastUpdated: new Date()
+    };
+
+    this.saveEmergencyPlan(updatedPlan);
+    logger.info('Emergency plan updated', { planId: updatedPlan.id });
+    return true;
+  }
+
+  private saveEmergencyPlan(plan: EmergencyPlan): void {
+    try {
+      localStorage.setItem(this.PLAN_KEY, JSON.stringify(plan));
+    } catch (error) {
+      logger.error('Failed to save emergency plan', { error });
+    }
+  }
+
+  // Emergency Actions
+  public async initiateEmergencyContact(contactId: string): Promise<boolean> {
+    const contact = this.getEmergencyContacts().find(c => c.id === contactId);
+    if (!contact) {
+      logger.error('Emergency contact not found', { contactId });
+      return false;
+    }
+
+    try {
+      // Log the emergency contact initiation
+      logger.info('Emergency contact initiated', { 
+        contactId, 
+        contactName: contact.name,
+        timestamp: new Date()
+      });
+
+      // In a real app, you might integrate with calling APIs or send notifications
+      // For now, we'll open the phone dialer or email client
+      if (contact.phone) {
+        window.open(`tel:${contact.phone}`);
       }
-    ];
 
-    // Save to local storage
-    localStorageService.setItem(this.CRISIS_LINES_KEY, JSON.stringify(this.crisisLines))
-  }
-
-  /**
-   * Add a new emergency contact
-   */
-  async addContact(contact: Omit<EmergencyContact, 'id'>): Promise<EmergencyContact> {
-    const newContact: EmergencyContact = {
-      ...contact,
-      id: `contact_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-    };
-
-    // If this is set as primary, update other contacts
-    if (newContact.isPrimary) {
-      this.contacts.forEach(c => c.isPrimary = false)
-  }
-
-    this.contacts.push(newContact);
-    this.saveContacts();
-
-    logger.info("Emergency contact added", { contactId: newContact.id }, "EmergencyContactService");
-    return newContact
-  }
-
-  /**
-   * Update an existing emergency contact
-   */
-  async updateContact(id: string, updates: Partial<EmergencyContact>): Promise<EmergencyContact | null> {
-    const index = this.contacts.findIndex(c => c.id === id);
-    if (index === -1) {
-      logger.warn("Contact not found for update", { contactId: id }, "EmergencyContactService");
-      return null
-  }
-
-    // If setting as primary, update others
-    if (updates.isPrimary) {
-      this.contacts.forEach(c => c.isPrimary = false)
-  }
-
-    this.contacts[index] = { ...this.contacts[index], ...updates };
-    this.saveContacts();
-
-    logger.info("Emergency contact updated", { contactId: id }, "EmergencyContactService");
-    return this.contacts[index]
-  }
-
-  /**
-   * Remove an emergency contact
-   */
-  async removeContact(id: string): Promise<boolean> {
-    const initialLength = this.contacts.length;
-    this.contacts = this.contacts.filter(c => c.id !== id);
-    
-    if (this.contacts.length < initialLength) {
-      this.saveContacts();
-      logger.info("Emergency contact removed", { contactId: id }, "EmergencyContactService");
-      return true
-  }
-    
-    return false
-  }
-
-  /**
-   * Get all emergency contacts
-   */
-  getContacts(): EmergencyContact[] {
-    return [...this.contacts]
-  }
-
-  /**
-   * Get primary emergency contact
-   */
-  getPrimaryContact(): EmergencyContact | null {
-    return this.contacts.find(c => c.isPrimary) || null
-  }
-
-  /**
-   * Get healthcare professional contacts
-   */
-  getHealthcareProfessionals(): EmergencyContact[] {
-    return this.contacts.filter(c => c.isHealthcareProfessional)
-  }
-
-  /**
-   * Get crisis lines for a specific country
-   */
-  getCrisisLines(country?: string): CrisisLine[] {
-    if (country) {
-      return this.crisisLines.filter(line => 
-        line.country.toLowerCase() === country.toLowerCase()
-      )
-  }
-    return [...this.crisisLines]
-  }
-
-  /**
-   * Get crisis lines by specialization
-   */
-  getCrisisLinesBySpecialization(specialization: string): CrisisLine[] {
-    return this.crisisLines.filter(line => 
-      line.specializations.includes(specialization.toLowerCase())
-    )
-  }
-
-  /**
-   * Trigger emergency contact notification
-   */
-  async notifyEmergencyContacts(
-    message: string, 
-    contactIds?: string[],
-    notificationType: 'sms' | 'email' | 'call' = 'sms'
-  ): Promise<void> {
-    const contactsToNotify = contactIds ;;
-      ? this.contacts.filter(c => contactIds.includes(c.id))
-      : this.contacts.filter(c => c.isPrimary);
-
-    for (const contact of contactsToNotify) {
-      const notification: EmergencyNotification = {
-        contactId: contact.id,
-        timestamp: new Date(),
-        type: notificationType,
-        status: 'pending',
-        message
-      };
-
-      try {
-        // In a real implementation, this would integrate with SMS/Email services
-        await this.sendNotification(contact, message, notificationType);
-        notification.status = 'sent';
-        logger.info("Emergency notification sent", { 
-          contactId: contact.id, 
-          type: notificationType
-  }, "EmergencyContactService")
-  } catch (error) {
-        notification.status = 'failed';
-        notification.error = error instanceof Error ? error.message : 'Unknown error';
-        logger.error("Failed to send emergency notification", error, "EmergencyContactService")
-  }
-  }
-
-  this.notificationHistory.push(notification)
-  }
-  }
-
-  /**
-   * Send notification to contact (placeholder for actual implementation)
-   */
-  private async sendNotification(
-    contact: EmergencyContact, 
-    message: string, 
-    type: 'sms' | 'email' | 'call'
-  ): Promise<void> {
-    // This would integrate with actual notification services
-    // For now, just log the action
-    logger.info("Notification would be sent", {
-      contact: contact.name,
-      type,
-      message: message.substring(0, 100) // Log first 100 chars
-    }, "EmergencyContactService");
-
-    // In production, integrate with:
-    // - Twilio for SMS/calls
-    // - SendGrid/AWS SES for emails
-    // - Push notifications for app alerts
-  }
-
-  /**
-   * Get notification history
-   */
-  getNotificationHistory(contactId?: string): EmergencyNotification[] {
-    if (contactId) {
-      return this.notificationHistory.filter(n => n.contactId === contactId)
-  }
-    return [...this.notificationHistory]
-  }
-
-  /**
-   * Clear notification history
-   */
-  clearNotificationHistory(): void {
-    this.notificationHistory = [];
-    logger.info("Notification history cleared", undefined, "EmergencyContactService")
-  }
-
-  /**
-   * Check if user has emergency contacts configured
-   */
-  hasEmergencyContacts(): boolean {
-    return this.contacts.length > 0
-  }
-
-  /**
-   * Check if user has a primary contact
-   */
-  hasPrimaryContact(): boolean {
-    return this.contacts.some(c => c.isPrimary)
-  }
-
-  /**
-   * Validate contact information
-   */
-  validateContact(contact: Partial<EmergencyContact>): string[] {
-    const errors: string[] = [];
-
-    if (!contact.name || contact.name.trim().length === 0) {
-      errors.push("Contact name is required")
-  }
-
-    if (!contact.phone || !this.isValidPhoneNumber(contact.phone)) {
-      errors.push("Valid phone number is required")
-  }
-
-    if (contact.email && !this.isValidEmail(contact.email)) {
-      errors.push("Invalid email address")
-  }
-
-    if (!contact.relationship || contact.relationship.trim().length === 0) {
-      errors.push("Relationship is required")
-  }
-
-    return errors
-  }
-
-  /**
-   * Validate phone number format
-   */
-  private isValidPhoneNumber(phone: string): boolean {
-    // Basic phone validation - can be enhanced based on region;
-    const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-    return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 10
-  }
-
-  /**
-   * Validate email format
-   */
-  private isValidEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email)
-  }
-
-  /**
-   * Save contacts to local storage
-   */
-  private saveContacts(): void {
-    localStorageService.setItem(this.STORAGE_KEY, JSON.stringify(this.contacts))
-  }
-
-  /**
-   * Export contacts for backup
-   */;
-  exportContacts(): string {
-    return JSON.stringify({
-      contacts: this.contacts,
-      exportDate: new Date().toISOString(),
-      version: '1.0'
-  }, null, 2)
-  }
-
-  /**
-   * Import contacts from backup
-   */;
-  importContacts(data: string): boolean {
-    try {
-      const parsed = JSON.parse(data);
-      if (parsed.contacts && Array.isArray(parsed.contacts)) {
-        this.contacts = parsed.contacts;
-        this.saveContacts();
-        logger.info("Contacts imported successfully", { 
-          count: this.contacts.length
-  }, "EmergencyContactService");
-        return true
-  }
+      return true;
     } catch (error) {
-      logger.error("Failed to import contacts", error, "EmergencyContactService")
-  }
-  }
-
-  return false
-  }
-
-  /**
-   * Get quick dial information for emergency
-   */
-  getQuickDialInfo(): {
-    primaryContact: EmergencyContact | null;
-    localCrisisLine: CrisisLine | null
-  } {
-    const primaryContact = this.getPrimaryContact();
-    const localCrisisLine = this.crisisLines.find(line => line.available24x7) || null;
-
-    return {
-      primaryContact,
-      localCrisisLine
+      logger.error('Failed to initiate emergency contact', { contactId, error });
+      return false;
     }
+  }
+
+  public async callCrisisHotline(resourceId: string): Promise<boolean> {
+    const resource = this.getCrisisResources().find(r => r.id === resourceId);
+    if (!resource) {
+      logger.error('Crisis resource not found', { resourceId });
+      return false;
+    }
+
+    try {
+      logger.info('Crisis hotline called', { 
+        resourceId, 
+        resourceName: resource.name,
+        timestamp: new Date()
+      });
+
+      // Open phone dialer
+      if (resource.type === 'hotline') {
+        window.open(`tel:${resource.contactInfo}`);
+      } else if (resource.type === 'text') {
+        // For text services, show instructions
+        alert(`To contact ${resource.name}: ${resource.contactInfo}`);
+      }
+
+      return true;
+    } catch (error) {
+      logger.error('Failed to call crisis hotline', { resourceId, error });
+      return false;
+    }
+  }
+
+  // Utility Methods
+  private generateId(): string {
+    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  public clearAllData(): void {
+    try {
+      localStorage.removeItem(this.CONTACTS_KEY);
+      localStorage.removeItem(this.PLAN_KEY);
+      localStorage.removeItem(this.RESOURCES_KEY);
+      logger.info('All emergency contact data cleared');
+    } catch (error) {
+      logger.error('Failed to clear emergency contact data', { error });
+    }
+  }
+
+  // Quick Access Methods
+  public getQuickAccessContacts(): EmergencyContact[] {
+    return this.getEmergencyContacts()
+      .filter(contact => contact.isPrimary || contact.isHealthcareProfessional)
+      .sort((a, b) => {
+        if (a.isPrimary && !b.isPrimary) return -1;
+        if (!a.isPrimary && b.isPrimary) return 1;
+        return 0;
+      });
+  }
+
+  public getQuickAccessResources(): CrisisResource[] {
+    return this.getCrisisResources()
+      .filter(resource => resource.isEmergency)
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }
 }
 
+// Export singleton instance
 export const emergencyContactService = new EmergencyContactService();
 export default emergencyContactService;

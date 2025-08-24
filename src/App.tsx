@@ -1,172 +1,150 @@
-/**
- * Main App Component for Astral Core
- * Clean version with proper component integration
- */;
+import React, { useEffect, useState, Suspense } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { ErrorBoundary } from 'react-error-boundary';
 
-import React, { useEffect } from 'react';
-import { ErrorBoundary } from './components/ErrorBoundary';
-import { OptionalAuthProvider } from './contexts/OptionalAuthContext';
-import { useAnalyticsTracking } from './hooks/useAnalyticsTracking';
-import AppRoutes from './routes/AppRoutes';
-
-// Providers;
+// Context Providers
+import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './components/ThemeProvider';
-import { OfflineProvider } from './contexts/OfflineProvider';
-import { NotificationProvider } from './contexts/NotificationContext';
 import { SessionProvider } from './contexts/SessionContext';
-import { WellnessProvider } from './contexts/WellnessContext';
-import { SwipeNavigationProvider } from './contexts/SwipeNavigationContext';
+import { I18nProvider } from './i18n';
 
-// Components;
-import { Sidebar } from './components/Sidebar';
-import { NetworkBanner } from './components/NetworkBanner';
-import ServiceWorkerUpdate from './components/ServiceWorkerUpdate';
-import { CrisisAlert as CrisisAlertFixed } from './components/CrisisAlertFixed';
+// Layout Components
+import Navigation from './components/Navigation';
+import Footer from './components/Footer';
+import LoadingSpinner from './components/LoadingSpinner';
+import ErrorFallback from './components/ErrorFallback';
+
+// Core Components
 import PWAInstallBanner from './components/PWAInstallBanner';
-import { CrisisHelpWidget } from './components/CrisisSupport/CrisisHelpWidget';
-// import { MobileViewportProvider } from './components/MobileViewportProvider';
-// import ConsentBanner from './components/privacy/ConsentBanner';
+import ServiceWorkerUpdate from './components/ServiceWorkerUpdate';
 
-// Layout component;
-const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
-  const [isMobile, setIsMobile] = React.useState(false);
+// Views - Lazy loaded for better performance
+const LandingView = React.lazy(() => import('./views/LandingView'));
+const DashboardView = React.lazy(() => import('./views/DashboardView'));
+const AuthPage = React.lazy(() => import('./views/AuthPage'));
+const ProfileView = React.lazy(() => import('./views/ProfileView'));
+const SettingsView = React.lazy(() => import('./views/SettingsView'));
+const AIChatView = React.lazy(() => import('./views/AIChatView'));
+const CrisisView = React.lazy(() => import('./views/CrisisView'));
+const CommunityView = React.lazy(() => import('./views/CommunityView'));
+const WellnessView = React.lazy(() => import('./views/WellnessView'));
+const AssessmentsView = React.lazy(() => import('./views/AssessmentsView'));
+const ReflectionsView = React.lazy(() => import('./views/ReflectionsView'));
+const TetherView = React.lazy(() => import('./views/TetherView'));
+const HelpView = React.lazy(() => import('./views/HelpView'));
 
-  React.useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768)
-  };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile)
-  }, []);
+// Utils
+import { logger } from './utils/logger';
+import { useAuth } from './hooks/useAuth';
+import { useMobile } from './hooks/useMobile';
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen)
-  };
+// Styles
+import './App.css';
 
-  return (
-    <div className="app-layout">
-      {/* Mobile menu toggle button - only visible on mobile */}
-              {isMobile && (
-          <button className="mobile-menu-toggle"
-          onClick={toggleMobileMenu}
-          aria-label="Toggle navigation menu"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M3 12h18M3 6h18M3 18h18" />
-          </svg>
-        </button>
-      )}
-      
-      {/* Sidebar with mobile state */}
-      <div className={isMobileMenuOpen ? 'sidebar-wrapper mobile-open' : 'sidebar-wrapper'}>
-        <Sidebar />
-      </div>
-      
-      {/* Mobile overlay */}
-      {isMobileMenuOpen && (
-        <div className="sidebar-overlay active"
-          onClick={() => setIsMobileMenuOpen(false)}
-          aria-hidden="true"
-        />
-      )}
-      
-      <main className="app-content">
-        {children}
-      </main>
-      <CrisisAlertFixed />
-      <NetworkBanner />
-      <ServiceWorkerUpdate />
-      <PWAInstallBanner />
-      <CrisisHelpWidget />
-    </div>
-  )
-  };
-
-// Main App Component;
 const App: React.FC = () => {
-  const { trackEvent } = useAnalyticsTracking({ componentName: 'App' });
+  const [isLoading, setIsLoading] = useState(true);
+  const { user, loading: authLoading } = useAuth();
+  const { isMobile } = useMobile();
 
   useEffect(() => {
-    // Track app initialization
-    trackEvent('app_initialized', {
-      category: 'performance',
-      properties: {
-        timestamp: Date.now(),
-        userAgent: navigator.userAgent,
-        platform: navigator.platform
+    // Initialize app
+    const initializeApp = async () => {
+      try {
+        logger.info('App initializing', { userAgent: navigator.userAgent }, 'App');
+        
+        // Simulate initialization time
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        setIsLoading(false);
+        logger.info('App initialized successfully', undefined, 'App');
+      } catch (error) {
+        logger.error('App initialization failed', error, 'App');
+        setIsLoading(false);
       }
-    });
-  }, [trackEvent]);
-
-  useEffect(() => {
-    // Set up viewport for mobile;
-    const viewport = document.querySelector('meta[name="viewport"]');
-    if (viewport) {
-      viewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes')
-  }
-
-    // Add app-specific classes to body
-    document.body.classList.add('astral-core-app');
-    
-    // Detect and add platform classes;
-    const platform = navigator.platform.toLowerCase();
-    if (platform.includes('mac')) {
-      document.body.classList.add('platform-mac')
-  } else if (platform.includes('win')) {
-      document.body.classList.add('platform-windows')
-  } else if (platform.includes('linux')) {
-      document.body.classList.add('platform-linux')
-  }
-
-    // Detect mobile;
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (isMobile) {
-      document.body.classList.add('is-mobile')
-  }
-
-    return () => {
-      document.body.classList.remove('astral-core-app', 'platform-mac', 'platform-windows', 'platform-linux', 'is-mobile');
     };
-  }, []);
+
+    if (!authLoading) {
+      initializeApp();
+    }
+  }, [authLoading]);
+
+  if (isLoading || authLoading) {
+    return (
+      <div className="app-loading">
+        <LoadingSpinner size="large" message="Initializing CoreV2..." />
+      </div>
+    );
+  }
 
   return (
-    <ErrorBoundary>
-      <NotificationProvider>
-        <OptionalAuthProvider>
-          <AppWithAuth />
-        </OptionalAuthProvider>
-      </NotificationProvider>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <I18nProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <SessionProvider>
+              <div className="app">
+                <Helmet>
+                  <title>CoreV2 - Mental Health Support Platform</title>
+                  <meta name="description" content="A comprehensive mental health support platform providing AI-powered assistance, crisis intervention, and peer support." />
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                  <meta name="theme-color" content="#2563eb" />
+                </Helmet>
+
+                {/* PWA Components */}
+                <PWAInstallBanner />
+                <ServiceWorkerUpdate />
+
+                {/* Navigation */}
+                <Navigation />
+
+                {/* Main Content */}
+                <main className="main-content">
+                  <Suspense fallback={<LoadingSpinner message="Loading..." />}>
+                    <Routes>
+                      {/* Public Routes */}
+                      <Route path="/" element={<LandingView />} />
+                      <Route path="/auth" element={<AuthPage />} />
+                      <Route path="/help" element={<HelpView />} />
+                      <Route path="/crisis" element={<CrisisView />} />
+
+                      {/* Protected Routes */}
+                      {user ? (
+                        <>
+                          <Route path="/dashboard" element={<DashboardView />} />
+                          <Route path="/profile" element={<ProfileView />} />
+                          <Route path="/settings" element={<SettingsView />} />
+                          <Route path="/ai-chat" element={<AIChatView />} />
+                          <Route path="/community" element={<CommunityView />} />
+                          <Route path="/wellness" element={<WellnessView />} />
+                          <Route path="/assessments" element={<AssessmentsView />} />
+                          <Route path="/reflections" element={<ReflectionsView />} />
+                          <Route path="/tether" element={<TetherView />} />
+                        </>
+                      ) : (
+                        <Route path="*" element={<Navigate to="/auth" replace />} />
+                      )}
+
+                      {/* Catch-all redirect */}
+                      <Route path="*" element={<Navigate to="/" replace />} />
+                    </Routes>
+                  </Suspense>
+                </main>
+
+                {/* Footer */}
+                <Footer />
+
+                {/* Mobile-specific overlays */}
+                {isMobile && (
+                  <div className="mobile-overlay" aria-hidden="true" />
+                )}
+              </div>
+            </SessionProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </I18nProvider>
     </ErrorBoundary>
-  )
-  };
-
-// Inner component that can use auth;
-const AppWithAuth: React.FC = () => {
-
-  return (
-    <ThemeProvider>
-      <OfflineProvider>
-        <SessionProvider>
-          <WellnessProvider>
-            <SwipeNavigationProvider>
-              {/* <MobileViewportProvider> */}
-                <AppLayout>
-                  <AppRoutes />
-                </AppLayout>
-                
-                {/* Global Components */}
-                {/* <ConsentBanner /> */}
-              {/* </MobileViewportProvider> */}
-            </SwipeNavigationProvider>
-          </WellnessProvider>
-        </SessionProvider>
-      </OfflineProvider>
-    </ThemeProvider>
-  )
-  };
+  );
+};
 
 export default App;

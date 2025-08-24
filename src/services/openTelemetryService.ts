@@ -1,15 +1,12 @@
 /**
  * OpenTelemetry Service Stub
- * 
+ *
  * This is a stub implementation while OpenTelemetry packages are not installed
  * Replace this with the actual implementation when packages are added
- */;
-
-class OpenTelemetryServiceStub {
-  async initialize(): Promise<void> {
+ */
+class OpenTelemetryServiceStub { async initialize(): Promise<void> {
     console.log('OpenTelemetry disabled - packages not installed');
-    return Promise.resolve()
-  }
+    return Promise.resolve() }
 
   startSpan(_name: string): any {
     return {
@@ -24,9 +21,7 @@ class OpenTelemetryServiceStub {
     // No-op
   }
 
-  shutdown(): Promise<void> {
-    return Promise.resolve()
-  }
+  shutdown(): Promise<void> { return Promise.resolve() }
 }
 
 export const openTelemetryService = new OpenTelemetryServiceStub();

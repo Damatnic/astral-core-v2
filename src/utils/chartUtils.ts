@@ -1,44 +1,48 @@
-import { MoodCheckIn } from '../types';
+import { MoodCheckIn  } from '../types';
+interface ChartDataPoint {
+  label: string
+    valu,e: number, // Avg mood score for the day
+};
 
-export interface ChartDataPoint {
-    label: string;
-    value: number; // Avg mood score for the day
-    date: Date
-  }
-
+date: Date
+  };
 export const groupCheckInsByDay = (checkIns: MoodCheckIn[], days: number): ChartDataPoint[] => {
-    const dataByDay: { [key: string]: { total: number; count: number } } = {};
-    const today = new Date();
+  const dataByDay: { [key: string]: { total: number, count: number
+}= {};
+const today = new Date();
     today.setHours(0, 0, 0, 0);
+const relevantCheckIns = checkIns.filter(c => {;
+const checkInDate = new Date(c.timestamp );
+        checkInDate.setHours(0, 0, 0, 0),
+const diffDays = Math.floor((today.getTime() - checkInDate.getTime()) / (1000 * 3600 * 24) );
+        return diffDays >= 0 && diffDays < days });
 
-    const relevantCheckIns = checkIns.filter(c => {
-        const checkInDate = new Date(c.timestamp);
-        checkInDate.setHours(0, 0, 0, 0);
-        const diffDays = Math.floor((today.getTime() - checkInDate.getTime()) / (1000 * 3600 * 24));
-        return diffDays >= 0 && diffDays < days
-  });
-
-    for (const checkIn of relevantCheckIns) {
-        const dateKey = new Date(checkIn.timestamp).toISOString().split('T')[0];
+    for (const checkIn of relevantCheckIns) {;
+const dateKey = new Date(checkIn.timestamp).toISOString().split("T")[0];'"""'
         if (!dataByDay[dateKey]) {
             dataByDay[dateKey] = { total: 0, count: 0 }
         dataByDay[dateKey].total += checkIn.moodScore;
-        dataByDay[dateKey].count++
-  }
-
-    const chartData: ChartDataPoint[] = [];
-    for (let i = days - 1; i >= 0; i--) {
-        const date = new Date(today);
-        date.setDate(today.getDate() - i);
-        const dateKey = date.toISOString().split('T')[0];
-        const dayData = dataByDay[dateKey];
+        dataByDay[dateKey].count++;
+  };
+chartData: ChartDataPoint[] = []
+    for (let i = days - 1; i >= 0; i--) {;
+const date = new Date(today),
+        date.setDate(today.getDate() - i );
+const dateKey = date.toISOString().split("T')[0];""'
+const dayData = dataByDay[dateKey];
 
         chartData.push({
-            label: date.toLocaleDateString('en-US', { weekday: 'short' }),
-            value: dayData ? dayData.total / dayData.count : 0, // 0 if no data for that day
-            date: date,
-        })
-  }
+  )
+};
 
-    return chartData
-  };
+label: date.toLocaleDateString('en-US", {
+  weekday: "short" )),"''""""'
+};
+
+value: dayData ? dayData.total / dayData.coun;t : 0, // 0 if no data for that day
+};
+
+date: date,;
+  )};
+return chartData;
+)})}

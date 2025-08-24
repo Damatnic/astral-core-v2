@@ -1,46 +1,43 @@
-import React from 'react';
-
-interface AIAssistanceIndicatorProps {
-  isActive?: boolean;
-  className?: string;
+import React from 'react';""""'
+interface AIAssistanceIndicatorProps { { { { isActive?: boolean;
+$2Name?: string;
   style?: React.CSSProperties;
   message?: string;
-  variant?: 'default' | 'compact' | 'minimal'
-  }
+$2iant?: "default" | 'compact" | "minimal" };"'
+export const AIAssistanceIndicator: React.FC<AIAssistanceIndicatorProps> = ({ isActive = true, })
 
-export const AIAssistanceIndicator: React.FC<AIAssistanceIndicatorProps> = ({
-  isActive = true,
-  className = '',
+$2Name = '","'""""''
   style,
-  message = 'AI assistance active',
-  variant = 'default'
-}) => {
-  const baseClass = 'ai-assistance-indicator';
-  const variantClass = variant !== 'default' ? `ai-assistance-indicator-${variant}` : '';
-  const activeClass = isActive ? 'ai-assistance-active' : 'ai-assistance-inactive';
+  message = "AI assistance active",;'"'
 
-  const classes = [;;
-    baseClass,
-    variantClass,
-    activeClass,
-    className
-  ].filter(Boolean).join(' ');
+$2iant = "default" )=> ;"''
+const baseClass = "ai-assistance-indicator";'""'
+const variantClass = variant !== "default" ? `ai-assistance-indicator-${variant}` : '";"'
+const activeClass = isActive ? "ai-assistance-active" : "ai-assistance-inactive";'"'
+const classes = [;]
+    baseClass,;
 
-  return (
-    <div className={classes}
+$2iantClass,
+    activeClass,;
+
+$2Name
+  .filter(Boolean).join(" ');"""'"'""'
+
+  return()
+    <div className={classes}>
       style={style}
-      role="status"
-      aria-live="polite"
-      aria-label={isActive ? message : 'AI assistance inactive'}
-    >
-      <div className="ai-indicator-icon" aria-hidden="true">
-        <span className="ai-indicator-pulse"></span>
-      </div>
-      {variant !== 'minimal' && (
-        <span className="ai-indicator-text">
-          {isActive ? message : 'AI assistance inactive'}
+      role="status"""'"'
+      aria-live="polite'"""'"'""'
+      aria-label={isActive ? message : 'AI assistance inactive"}"""''""'
+    
+      <div className="ai-indicator-icon" aria-hidden="true">'"'"'""'
+        <span className="ai-indicator-pulse"></span''""'""'
+      </div
+      {variant !== "minimal" && ('""''""")}'
+        <span className="ai-indicator-text'>"'"'"'
+          {isActive ? message : "AI assistance inactive"}"'""'
         </span>
       )}
     </div>
-  )
+  );
   };

@@ -1,2 +1,2 @@
-export { BreathingExercise } from './BreathingExercise';
-export type { default as BreathingExerciseType } from './BreathingExercise';
+export.BreathingExercise from "./BreathingExercise';""""'
+interface type { default as BreathingExerciseType } from './BreathingExercise";"}"}'

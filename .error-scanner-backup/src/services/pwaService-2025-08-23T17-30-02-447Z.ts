@@ -1,0 +1,182 @@
+/**
+ * PWA Enhancement Service for Astral Core Mental Health Platform
+ *
+ * Manages app installation prompts, offline detection, mobile optimizations,
+ * and enhanced app-like experience features
+ */;
+InstallPromptEvent extends Event {
+  prompt(): Promise<void>
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;"
+  };
+interface PWAStatus {
+  isInstallable: boolean
+  isInstalled: boolean
+  isOffline: boolean
+  isStandalone: boolean
+  supportsPWA: boolean
+  };
+interface PWAService { private installPrompt: InstallPromptEvent | null = null
+  private isOffline: boolean = !navigator.onLine
+  private installPromptShown: boolean = false
+  private statusCallbacks: Array<(status: PWAStatus) => void> = []
+$2ructor() {
+    this.initializeEventListeners()
+    this.initializeOfflineDetection()
+    this.initializeInstallPromptHandling()
+    this.initializeMobileOptimizations() }
+
+  /**
+   * Initialize event listeners for PWA features
+   */
+  private initializeEventListeners(): void { // Listen for beforeinstallprompt event
+    window.addEventListener("beforeinstallprompt", (e: unknown) => {"
+      e.preventDefault()
+      this.installPrompt = e as InstallPromptEvent;
+      this.notifyStatusChange() })
+
+    // Listen for app installed event
+    window.addEventListener("appinstalled", () => { this.installPrompt = null,"
+      this.notifyStatusChange() })
+
+    // Listen for visibility changes (app focus/blur)
+    document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible") {"
+        this.handleAppFocus() } else { this.handleAppBlur() });
+
+  /**
+   * Initialize offline detection
+   */
+  private initializeOfflineDetection(): void { window.addEventListener("online", () => {"
+      this.isOffline = false;
+
+      this.handleOnlineStatusChange(true)
+      this.notifyStatusChange() })
+
+    window.addEventListener("offline", () => { this.isOffline = true,"
+
+      this.handleOnlineStatusChange(false)
+      this.notifyStatusChange() });
+
+  /**
+   * Initialize smart install prompt handling
+   */
+  private initializeInstallPromptHandling(): void { // DISABLED FOR DEVELOPMENT - PWA install prompts are disabled
+    // This can be re-enabled for production builds
+
+  /**
+   * Initialize mobile-specific optimizations
+   */
+  private initializeMobileOptimizations(): void { // Add mobile-specific event listeners and optimizations
+    if (this.isMobile()) {
+      // Handle mobile-specific PWA features
+      this.handleMobileViewport(),
+      this.initializeTouchOptimizations() }/**
+   * Check if device is mobile
+   */
+  private isMobile(): boolean { return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) }
+
+  /**
+   * Handle mobile viewport optimizations
+   */
+      private handleMobileViewport(): void { // Mobile viewport handling
+      const viewport = document.querySelector('meta[name="viewport"]');'
+      if(!viewport) {
+        const meta = document.createElement('meta'  );'
+              meta.name = 'viewport';'
+        meta.content = 'width="device-width," initial-scale="1.0," maximum-scale="1.0," user-scalable="no';""
+              document.head.appendChild(meta) }/**
+   * Initialize touch optimizations
+   */;
+  private initializeTouchOptimizations(): void { // Touch optimizations for mobile devices
+    document.body.style.touchAction = 'manipulation' }'
+
+  /**
+   * Handle app focus event
+   */
+  private handleAppFocus(): void {
+// App gained focus
+
+  /**
+   * Handle app blur event
+   */
+  private handleAppBlur(): void {
+// App lost focus
+
+  /**
+   * Handle online status change
+   */
+  private handleOnlineStatusChange(isOnline: boolean): void { // Handle online/offline status changes
+    if(isOnline) {
+// Handle online state
+      this.syncPendingData() } else { // Handle offline state
+      this.enableOfflineMode() }/**
+   * Sync pending data when back online
+   */
+  private syncPendingData(): void {
+// Sync any pending data
+
+  /**
+   * Enable offline mode
+   */
+  private enableOfflineMode(): void {
+// Enable offline functionality
+
+  /**
+   * Get current PWA status
+   */
+  public getStatus(): PWAStatus {
+    return { isInstallable: this.installPrompt !== null,
+      isInstalled: this.isStandalone(),
+      isOffline: this.isOffline,
+      isStandalone: this.isStandalone(),
+      supportsPWA: this.supportsPWA()
+
+  /**
+   * Check if app is running in standalone mode
+   */
+  private isStandalone(): boolean {
+          return window.matchMedia('(display-mode: standalone)').matches ||'
+             (window.navigator as unknown).standalone ||
+             document.referrer.includes('android-app: //')'
+
+  /**
+   * Check if browser supports PWA features
+   */
+      private supportsPWA(): boolean { return 'serviceWorker' in navigator && 'BeforeInstallPromptEvent' in window }'
+
+  /**
+   * Trigger install prompt
+   */;
+  public async showInstallPrompt(): Promise<boolean> { if(!this.installPrompt) {
+
+      return false }
+
+    try(await this.installPrompt.prompt( );
+      const result = await this.installPrompt.userChoice;
+
+              this.installPromptShown = true;
+
+        if(result.outcome === 'accepted') {'
+        this.installPrompt = null }
+
+      this.notifyStatusChange();
+      return result.outcome === 'accepted';'
+  } catch(error) { return false }/**
+   * Subscribe to status changes
+   */
+  public onStatusChange(callback: (status: PWAStatus) => void): () => void { this.statusCallbacks.push(callback );
+
+    // Return unsubscribe function
+    return () => {
+      const index = this.statusCallbacks.indexOf(callback ),
+      if(index > -1) {
+        this.statusCallbacks.splice(index, 1) }/**
+   * Notify all subscribers of status change
+   */
+  private notifyStatusChange(): void(const status = this.getStatus( );
+    this.statusCallbacks.forEach(callback => {
+      try {
+        callback(status) } catch(error) {}
+
+// Export singleton instance
+export const pwaService = new PWAService();
+export default pwaService;

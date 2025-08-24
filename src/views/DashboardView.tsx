@@ -1,277 +1,189 @@
 import React, { useState, useEffect } from 'react';
-import { HeartIcon, UsersIcon, ShieldIcon, SparkleIcon, TrendingUpIcon, BookIcon } from '../components/icons.dynamic';
+import { useAuth } from '../hooks/useAuth';
 
 interface DashboardCard {
   id: string;
   title: string;
   description: string;
-  icon: React.FC<any>;
+  icon: string;
+  link: string;
   color: string;
-  href: string;
-  stats?: {
-    label: string;
-    value: string
-  };
 }
 
 const DashboardView: React.FC = () => {
-  const [userName, setUserName] = useState('');
-  const [timeOfDay, setTimeOfDay] = useState('');
-
-  useEffect(() => {
-    // Get time of day greeting;
-    const hour = new Date().getHours();
-    if (hour < 12) setTimeOfDay('Good morning');
-    else if (hour < 17) setTimeOfDay('Good afternoon');
-    else setTimeOfDay('Good evening');
-
-    // Get user name (this would come from auth context in real app)
-    setUserName('Friend')
-  };
-  }, []);
-
-  const dashboardCards: DashboardCard[] = [
+  const { user } = useAuth();
+  const [cards] = useState<DashboardCard[]>([
     {
-      id: 'crisis-support',
-      title: 'Crisis Support',
-      description: 'Immediate help and resources',
-      icon: ShieldIcon,
-      color: 'red',
-      href: '/crisis',
-      stats: {
-        label: '24/7 Available',
-        value: 'Always'
-  }
+      id: 'ai-chat',
+      title: 'AI Chat Support',
+      description: 'Talk with our AI mental health assistant',
+      icon: '🤖',
+      link: '/ai-chat',
+      color: 'blue'
     },
     {
-      id: 'peer-support',
-      title: 'Peer Support',
-      description: 'Connect with others',
-      icon: UsersIcon,
-      color: 'blue',
-      href: '/peer-support',
-      stats: {
-        label: 'Active Helpers',
-        value: '200+'
-  }
+      id: 'crisis-resources',
+      title: 'Crisis Resources',
+      description: 'Get immediate help and support',
+      icon: '🚨',
+      link: '/crisis',
+      color: 'red'
     },
     {
-      id: 'wellness-tracking',
-      title: 'Wellness Tracking',
-      description: 'Monitor your mental health',
-      icon: HeartIcon,
-      color: 'pink',
-      href: '/wellness',
-      stats: {
-        label: 'Current Streak',
-        value: '5 days'
-  }
+      id: 'wellness',
+      title: 'Wellness Tools',
+      description: 'Track your mood and mental health',
+      icon: '💚',
+      link: '/wellness',
+      color: 'green'
     },
     {
-      id: 'ai-assistant',
-      title: 'AI Assistant',
-      description: 'Talk to our AI companion',
-      icon: SparkleIcon,
-      color: 'purple',
-      href: '/ai-assistant',
-      stats: {
-        label: 'Conversations',
-        value: '12'
-  }
+      id: 'community',
+      title: 'Community Support',
+      description: 'Connect with others on similar journeys',
+      icon: '👥',
+      link: '/community',
+      color: 'purple'
+    },
+    {
+      id: 'assessments',
+      title: 'Mental Health Assessments',
+      description: 'Evaluate your mental health status',
+      icon: '📋',
+      link: '/assessments',
+      color: 'orange'
     },
     {
       id: 'reflections',
-      title: 'Reflections',
-      description: 'Daily journaling and insights',
-      icon: BookIcon,
-      color: 'green',
-      href: '/reflections',
-      stats: {
-        label: 'This Week',
-        value: '3 entries'
-  }
-    },
-    {
-      id: 'progress',
-      title: 'Progress Insights',
-      description: 'View your wellness trends',
-      icon: TrendingUpIcon,
-      color: 'indigo',
-      href: '/analytics',
-      stats: {
-        label: 'Overall Trend',
-        value: '↗ Improving'
-  }
+      title: 'Daily Reflections',
+      description: 'Journal your thoughts and feelings',
+      icon: '📝',
+      link: '/reflections',
+      color: 'teal'
     }
-  ];
+  ]);
 
-  const getGradientClass = (color: string) => {
-    const gradientMap: { [key: string]: string } = {
-      red: 'gradient-sunset',
-      blue: 'gradient-peaceful',
-      pink: 'gradient-wellness',
-      purple: 'gradient-calm',
-      green: 'gradient-forest',
-      indigo: 'gradient-aurora'
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 17) return 'Good afternoon';
+    return 'Good evening';
   };
-    return gradientMap[color] || 'gradient-ocean'
+
+  const getUserName = () => {
+    return user?.firstName || user?.username || 'there';
   };
-  
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-therapy-primary-50 to-therapy-secondary-50 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-8">
-        {/* Welcome Header */}
-        <div className="mb-8 glass-card p-6 animate-float">
-          <h1 className="text-3xl font-bold gradient-text mb-2">
-            {timeOfDay}, {userName}!
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-lg">
-            Welcome to your mental wellness dashboard. How are you feeling today?
-          </p>
-        </div>
+    <div className="dashboard-view">
+      <div className="dashboard-header">
+        <h1 className="dashboard-title">
+          {getGreeting()}, {getUserName()}!
+        </h1>
+        <p className="dashboard-subtitle">
+          Welcome to your mental health support dashboard. How can we help you today?
+        </p>
+      </div>
 
-        {/* Quick Stats */}
-        <div className="grid gap-4 md:grid-cols-3 mb-8">
-          <div className="wellness-stat-card glass-card smooth-transition animate-breathe">
-            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
-              Check-ins This Week
-            </h3>
-            <p className="text-2xl font-bold gradient-text">5</p>
-            <p className="text-sm text-green-600 dark:text-green-400 animate-glow">+2 from last week</p>
-          </div>
-          
-          <div className="wellness-stat-card glass-card smooth-transition animate-breathe" style={{animationDelay: '0.2s'}}>
-            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
-              Mood Average
-            </h3>
-            <p className="text-2xl font-bold gradient-text">7.2/10</p>
-            <p className="text-sm text-blue-600 dark:text-blue-400">Stable trend</p>
-          </div>
-          
-          <div className="wellness-stat-card glass-card smooth-transition animate-breathe" style={{animationDelay: '0.4s'}}>
-            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
-              Support Connections
-            </h3>
-            <p className="text-2xl font-bold gradient-text">18</p>
-            <p className="text-sm text-purple-600 dark:text-purple-400">Active helpers</p>
+      <div className="dashboard-stats">
+        <div className="stat-card">
+          <div className="stat-icon">📊</div>
+          <div className="stat-content">
+            <h3>Today's Check-in</h3>
+            <p>How are you feeling?</p>
+            <button className="stat-button">Quick Mood Check</button>
           </div>
         </div>
-
-        {/* Dashboard Cards */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {dashboardCards.map((card) => {
-            const IconComponent = card.icon;
-            return (
-              <button
-                key={card.id}
-                className={`therapy-card smooth-transition-slow cursor-pointer text-left ${getGradientClass(card.color)} animate-gradient`}
-                onClick={() => {
-                  // In a real app, this would use React Router
-                  console.log(`Navigate to ${card.href}`)
-  }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    console.log(`Navigate to ${card.href}`)
-  }
-                }}
-                style={{
-                  background: `var(--${getGradientClass(card.color)})`,
-                  backgroundSize: '200% 200%',
-                  animationDelay: `${dashboardCards.indexOf(card) * 0.1}s`
-                }}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="glass-card p-3 animate-float">
-                    <IconComponent className="w-8 h-8 text-white" />
-                  </div>
-                  {card.stats && (
-                    <div className="text-right text-white">
-                      <p className="text-xs opacity-90">{card.stats.label}</p>
-                      <p className="text-sm font-semibold">{card.stats.value}</p>
-                    </div>
-                  )}
-                </div>
-                
-                <h3 className="text-lg font-semibold mb-2 text-white">
-                  {card.title}
-                </h3>
-                
-                <p className="text-sm text-white opacity-90">
-                  {card.description}
-                </p>
-              </button>
-            )
-  })}
-        </div>
-
-        {/* Recent Activity */}
-        <div className="mt-8 glass-card smooth-transition p-6">
-          <h2 className="text-xl font-semibold gradient-text mb-4">
-            Recent Activity
-          </h2>
-          
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3 p-3 glass-card smooth-transition animate-float" style={{animationDelay: '0.1s'}}>
-              <div className="neumorph-card p-2">
-                <HeartIcon className="w-5 h-5 text-pink-500" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  Wellness check-in completed
-                </p>
-                <p className="text-xs text-gray-600 dark:text-gray-400">2 hours ago</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-3 p-3 glass-card smooth-transition animate-float" style={{animationDelay: '0.2s'}}>
-              <div className="neumorph-card p-2">
-                <SparkleIcon className="w-5 h-5 text-purple-500" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  AI conversation: Stress management tips
-                </p>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Yesterday</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-3 p-3 glass-card smooth-transition animate-float" style={{animationDelay: '0.3s'}}>
-              <div className="neumorph-card p-2">
-                <UsersIcon className="w-5 h-5 text-blue-500" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  Connected with new peer support helper
-                </p>
-                <p className="text-xs text-gray-600 dark:text-gray-400">2 days ago</p>
-              </div>
+        
+        <div className="stat-card">
+          <div className="stat-icon">🎯</div>
+          <div className="stat-content">
+            <h3>Weekly Goal</h3>
+            <p>3 of 5 wellness activities</p>
+            <div className="progress-bar">
+              <div className="progress-fill" style={{ width: '60%' }}></div>
             </div>
           </div>
         </div>
-
-        {/* Emergency Section */}
-        <div className="mt-8 crisis-indicator glass-card animate-breathe">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">
-                Need Immediate Help?
-              </h3>
-              <p className="text-red-700 dark:text-red-300">
-                Crisis support is available 24/7. You're not alone.
-              </p>
-            </div>
-            <button className="crisis-button smooth-transition ripple-button"
-              onClick={() => console.log('Navigate to /crisis')}
-            >
-              Get Help Now
-            </button>
+        
+        <div className="stat-card">
+          <div className="stat-icon">🌟</div>
+          <div className="stat-content">
+            <h3>Streak</h3>
+            <p>7 days of self-care</p>
+            <span className="streak-count">Keep it up!</span>
           </div>
         </div>
       </div>
+
+      <div className="dashboard-cards">
+        <h2>Your Support Tools</h2>
+        <div className="cards-grid">
+          {cards.map((card) => (
+            <div 
+              key={card.id} 
+              className={`dashboard-card dashboard-card--${card.color}`}
+              onClick={() => window.location.href = card.link}
+            >
+              <div className="card-icon">{card.icon}</div>
+              <div className="card-content">
+                <h3 className="card-title">{card.title}</h3>
+                <p className="card-description">{card.description}</p>
+              </div>
+              <div className="card-arrow">→</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="dashboard-quick-actions">
+        <h2>Quick Actions</h2>
+        <div className="quick-actions-grid">
+          <button className="quick-action-button">
+            <span className="action-icon">📞</span>
+            <span>Call Crisis Line</span>
+          </button>
+          <button className="quick-action-button">
+            <span className="action-icon">💬</span>
+            <span>Start AI Chat</span>
+          </button>
+          <button className="quick-action-button">
+            <span className="action-icon">📝</span>
+            <span>Write Reflection</span>
+          </button>
+          <button className="quick-action-button">
+            <span className="action-icon">🧘</span>
+            <span>Breathing Exercise</span>
+          </button>
+        </div>
+      </div>
+
+      <div className="dashboard-tips">
+        <h2>Daily Wellness Tip</h2>
+        <div className="tip-card">
+          <div className="tip-icon">💡</div>
+          <div className="tip-content">
+            <h4>Practice Gratitude</h4>
+            <p>
+              Take a moment to think of three things you're grateful for today. 
+              Gratitude can help shift your focus to positive aspects of your life 
+              and improve your overall mood.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="dashboard-footer">
+        <div className="emergency-notice">
+          <p>
+            <strong>In Crisis?</strong> Contact the National Suicide Prevention Lifeline: 
+            <a href="tel:988" className="emergency-link"> 988</a> or 
+            <a href="tel:911" className="emergency-link"> 911</a>
+          </p>
+        </div>
+      </div>
     </div>
-  )
-  };
+  );
+};
 
 export default DashboardView;

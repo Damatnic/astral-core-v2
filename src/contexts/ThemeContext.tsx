@@ -1,111 +1,124 @@
-
-
 import React, { createContext, useState, useContext, ReactNode, useEffect, useMemo, useCallback } from 'react';
-import { Theme } from '../types';
 
-interface AppTheme {
-    colors: {
-        bgPrimary: string;
-        bgSecondary: string;
-        bgTertiary: string;
-        textPrimary: string;
-        textSecondary: string;
-        accentPrimary: string;
-        accentPrimaryHover: string;
-        accentPrimaryText: string;
-        accentDanger: string;
-        accentSuccess: string;
-        borderColor: string
-  },
-    spacing: {
-        xs: string;
-        sm: string;
-        md: string;
-        lg: string;
-        xl: string
-  },
-    radius: {
-        sm: string;
-        md: string;
-        lg: string
-  }
-}
+export type Theme = 'light' | 'dark';
+export type ThemeMode = 'light' | 'dark' | 'system';
 
 interface ThemeContextType {
   theme: Theme;
-  themeConfig: AppTheme;
-  toggleTheme: () => void
-  }
+  mode: ThemeMode;
+  systemTheme: Theme;
+  changeTheme: (theme: Theme) => void;
+  changeMode: (mode: ThemeMode) => void;
+  toggleTheme: () => void;
+  isDark: boolean;
+  isLight: boolean;
+  isSystem: boolean;
+}
 
-const lightTheme: AppTheme = {
-    colors: {
-        bgPrimary: '#f7f9fc',
-        bgSecondary: '#FFFFFF',
-        bgTertiary: '#eef2f7',
-        textPrimary: '#2c3e50',
-        textSecondary: '#7f8c8d',
-        accentPrimary: '#3498db',
-        accentPrimaryHover: '#2980b9',
-        accentPrimaryText: '#ffffff',
-        accentDanger: '#e74c3c',
-        accentSuccess: '#2ecc71',
-        borderColor: '#e0e6ed',
-    },
-    spacing: { xs: '0.25rem', sm: '0.5rem', md: '1rem', lg: '1.5rem', xl: '2.5rem' },
-    radius: { sm: '4px', md: '8px', lg: '12px' },
-};
+export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-const darkTheme: AppTheme = {
-    colors: {
-        bgPrimary: '#161b22',
-        bgSecondary: '#22272e',
-        bgTertiary: '#1c2128',
-        textPrimary: '#cdd9e5',
-        textSecondary: '#768390',
-        accentPrimary: '#58a6ff',
-        accentPrimaryHover: '#79b8ff',
-        accentPrimaryText: '#161b22',
-        accentDanger: '#f85149',
-        accentSuccess: '#3fb950',
-        borderColor: '#373e47',
-    },
-    spacing: { ...lightTheme.spacing },
-    radius: { ...lightTheme.radius },
-};
+interface ThemeProviderProps {
+  children: ReactNode;
+  defaultTheme?: Theme;
+  defaultMode?: ThemeMode;
+}
 
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({
+  children,
+  defaultTheme = 'light',
+  defaultMode = 'system'
+}) => {
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [mode, setMode] = useState<ThemeMode>(defaultMode);
+  const [systemTheme, setSystemTheme] = useState<Theme>('light');
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
-
-export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    if (savedTheme) return savedTheme;
-    
-    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-  });
-
+  // Detect system theme preference
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme)
-  };
-  }, [theme]);
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const updateSystemTheme = (e: MediaQueryListEvent | MediaQueryList) => {
+      setSystemTheme(e.matches ? 'dark' : 'light');
+    };
 
-  const toggleTheme = useCallback(() => {
-    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'))
-  };
+    updateSystemTheme(mediaQuery);
+    mediaQuery.addEventListener('change', updateSystemTheme);
+    
+    return () => {
+      mediaQuery.removeEventListener('change', updateSystemTheme);
+    };
   }, []);
 
-  const themeConfig = useMemo(() => (theme === 'light' ? lightTheme : darkTheme), [theme]);
+  // Update theme based on mode and system preference
+  useEffect(() => {
+    let effectiveTheme: Theme;
+    
+    switch (mode) {
+      case 'light':
+        effectiveTheme = 'light';
+        break;
+      case 'dark':
+        effectiveTheme = 'dark';
+        break;
+      case 'system':
+      default:
+        effectiveTheme = systemTheme;
+        break;
+    }
+    
+    setTheme(effectiveTheme);
+    document.documentElement.setAttribute('data-theme', effectiveTheme);
+    document.documentElement.className = `theme-${effectiveTheme}`;
+  }, [mode, systemTheme]);
 
-  const value = useMemo(() => ({ theme, themeConfig, toggleTheme }), [theme, themeConfig, toggleTheme]);
+  // Load saved theme preference on mount
+  useEffect(() => {
+    const savedMode = localStorage.getItem('theme-mode') as ThemeMode;
+    if (savedMode && ['light', 'dark', 'system'].includes(savedMode)) {
+      setMode(savedMode);
+    }
+  }, []);
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
-  };
+  const changeTheme = useCallback((newTheme: Theme) => {
+    setTheme(newTheme);
+    setMode(newTheme);
+    localStorage.setItem('theme-mode', newTheme);
+  }, []);
+
+  const changeMode = useCallback((newMode: ThemeMode) => {
+    setMode(newMode);
+    localStorage.setItem('theme-mode', newMode);
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    changeTheme(newTheme);
+  }, [theme, changeTheme]);
+
+  const contextValue = useMemo((): ThemeContextType => ({
+    theme,
+    mode,
+    systemTheme,
+    changeTheme,
+    changeMode,
+    toggleTheme,
+    isDark: theme === 'dark',
+    isLight: theme === 'light',
+    isSystem: mode === 'system'
+  }), [theme, mode, systemTheme, changeTheme, changeMode, toggleTheme]);
+
+  return (
+    <ThemeContext.Provider value={contextValue}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
 
 export const useTheme = (): ThemeContextType => {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider')
+    throw new Error('useTheme must be used within a ThemeProvider');
   }
-  return context
-  };
+  return context;
+};
+
+export default ThemeProvider;

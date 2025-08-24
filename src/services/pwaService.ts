@@ -1,263 +1,203 @@
 /**
- * PWA Enhancement Service for Astral Core Mental Health Platform
- * 
- * Manages app installation prompts, offline detection, mobile optimizations,
- * and enhanced app-like experience features
- */;
+ * PWA Enhancement Service
+ * Manages app installation, offline detection, and enhanced app-like experience
+ */
 
 interface InstallPromptEvent extends Event {
-  prompt(): Promise<void>
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>
-  }
+  prompt(): Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+}
 
-interface PWAStatus {
-  isInstallable: boolean
-  isInstalled: boolean
-  isOffline: boolean
-  isStandalone: boolean
-  supportsPWA: boolean
-  }
+export interface PWAStatus {
+  isInstallable: boolean;
+  isInstalled: boolean;
+  isOffline: boolean;
+}
+
+export type PWAStatusType = 'not-supported' | 'installable' | 'installed' | 'offline';
 
 class PWAService {
-  private installPrompt: InstallPromptEvent | null = null;
-  private isOffline: boolean = !navigator.onLine;
-  private installPromptShown: boolean = false;
-  private statusCallbacks: Array<(status: PWAStatus) => void> = [];
+  private deferredPrompt: InstallPromptEvent | null = null;
+  private isInstalled = false;
+  private isOffline = false;
 
   constructor() {
-    this.initializeEventListeners()
-    this.initializeOfflineDetection()
-    this.initializeInstallPromptHandling()
-    this.initializeMobileOptimizations()
-  
+    this.initialize();
   }
 
-  /**
-   * Initialize event listeners for PWA features
-   */
-  private initializeEventListeners(): void {
+  private initialize(): void {
     // Listen for beforeinstallprompt event
-    window.addEventListener("beforeinstallprompt", (e: unknown) => {
-      e.preventDefault()
-      this.installPrompt = e as InstallPromptEvent;
-      this.notifyStatusChange()
-    })
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      this.deferredPrompt = e as InstallPromptEvent;
+    });
 
-    // Listen for app installed event
-    window.addEventListener("appinstalled", () => {
-      this.installPrompt = null,
-      this.notifyStatusChange()
-    })
+    // Listen for appinstalled event
+    window.addEventListener('appinstalled', () => {
+      this.isInstalled = true;
+      this.deferredPrompt = null;
+    });
 
-    // Listen for visibility changes (app focus/blur)
-    document.addEventListener("visibilitychange", () => {
-      if(document.visibilityState === "visible") {
-        this.handleAppFocus()
-  } else {
-this.handleAppBlur()
-      }
-    })
-  }
-
-  /**
-   * Initialize offline detection
-   */
-  private initializeOfflineDetection(): void {
-    window.addEventListener("online", () => {
+    // Monitor online/offline status
+    window.addEventListener('online', () => {
       this.isOffline = false;
+    });
 
-      this.handleOnlineStatusChange(true)
-      this.notifyStatusChange()
-    })
+    window.addEventListener('offline', () => {
+      this.isOffline = true;
+    });
 
-    window.addEventListener("offline", () => {
-      this.isOffline = true,
-
-      this.handleOnlineStatusChange(false)
-      this.notifyStatusChange()
-    })
+    // Check if already installed
+    this.checkInstallStatus();
   }
 
-  /**
-   * Initialize smart install prompt handling
-   */
-  private initializeInstallPromptHandling(): void {
-// DISABLED FOR DEVELOPMENT - PWA install prompts are disabled
-    // This can be re-enabled for production builds
+  private checkInstallStatus(): void {
+    // Check if running as PWA
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      this.isInstalled = true;
+    }
 
+    // Check initial offline status
+    this.isOffline = !navigator.onLine;
   }
 
-  /**
-   * Initialize mobile-specific optimizations
-   */
-  private initializeMobileOptimizations(): void {
-    // Add mobile-specific event listeners and optimizations
-    if (this.isMobile()) {
-      // Handle mobile-specific PWA features
-      this.handleMobileViewport();
-      this.initializeTouchOptimizations()
-  }
-  }
+  async promptInstall(): Promise<boolean> {
+    if (!this.deferredPrompt) {
+      return false;
+    }
 
-  /**
-   * Check if device is mobile
-   */
-  private isMobile(): boolean {
-    return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-  }
-
-  /**
-   * Handle mobile viewport optimizations
-   */
-      private handleMobileViewport(): void {
-      // Mobile viewport handling;
-      const viewport = document.querySelector('meta[name="viewport"]');
-      if(!viewport) {
-        const meta = document.createElement('meta');
-              meta.name = 'viewport';
-        meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
-              document.head.appendChild(meta)
-  }
-  }
-
-  /**
-   * Initialize touch optimizations
-   */;
-  private initializeTouchOptimizations(): void {
-    // Touch optimizations for mobile devices
-    document.body.style.touchAction = 'manipulation'
-  }
-
-  /**
-   * Handle app focus event
-   */
-  private handleAppFocus(): void {
-// App gained focus
-
-  }
-
-  /**
-   * Handle app blur event
-   */
-  private handleAppBlur(): void {
-// App lost focus
-
-  }
-
-  /**
-   * Handle online status change
-   */
-  private handleOnlineStatusChange(isOnline: boolean): void {
-// Handle online/offline status changes
-    if(isOnline) {
-// Handle online state
-      this.syncPendingData()
-  } else {
-// Handle offline state
-      this.enableOfflineMode()
+    try {
+      await this.deferredPrompt.prompt();
+      const { outcome } = await this.deferredPrompt.userChoice;
+      
+      if (outcome === 'accepted') {
+        this.isInstalled = true;
+      }
+      
+      this.deferredPrompt = null;
+      return outcome === 'accepted';
+    } catch (error) {
+      console.error('Install prompt failed:', error);
+      return false;
     }
   }
 
-  /**
-   * Sync pending data when back online
-   */
-  private syncPendingData(): void {
-// Sync any pending data
+  async getInstallStatus(): Promise<PWAStatusType> {
+    if (!('serviceWorker' in navigator)) {
+      return 'not-supported';
+    }
 
+    if (this.isInstalled) {
+      return 'installed';
+    }
+
+    if (this.deferredPrompt) {
+      return 'installable';
+    }
+
+    if (this.isOffline) {
+      return 'offline';
+    }
+
+    return 'not-supported';
   }
 
-  /**
-   * Enable offline mode
-   */
-  private enableOfflineMode(): void {
-// Enable offline functionality
-
+  getPWAStatus(): PWAStatus {
+    return {
+      isInstallable: !!this.deferredPrompt,
+      isInstalled: this.isInstalled,
+      isOffline: this.isOffline
+    };
   }
 
-  /**
-   * Get current PWA status
-   */
-  public getStatus(): PWAStatus {
-    return { isInstallable: this.installPrompt !== null,
-      isInstalled: this.isStandalone(),
-      isOffline: this.isOffline,
-      isStandalone: this.isStandalone(),
-      supportsPWA: this.supportsPWA()
-  };
-   }
-
-  /**
-   * Check if app is running in standalone mode
-   */
-  private isStandalone(): boolean {
-          return window.matchMedia('(display-mode: standalone)').matches ||
-             (window.navigator as unknown).standalone ||
-             document.referrer.includes('android-app: //')
+  isSupported(): boolean {
+    return 'serviceWorker' in navigator;
   }
 
-  /**
-   * Check if browser supports PWA features
-   */;
-      private supportsPWA(): boolean {
-      return 'serviceWorker' in navigator && 'BeforeInstallPromptEvent' in window
+  isStandalone(): boolean {
+    return window.matchMedia('(display-mode: standalone)').matches ||
+           (window.navigator as any).standalone === true;
   }
 
-  /**
-   * Trigger install prompt
-   */;
-  public async showInstallPrompt(): Promise<boolean> {
-    if(!this.installPrompt) {
-
-      return false
-  }
+  async registerServiceWorker(swPath = '/sw.js'): Promise<ServiceWorkerRegistration | null> {
+    if (!this.isSupported()) {
+      return null;
+    }
 
     try {
-      await this.installPrompt.prompt();
-      const result = await this.installPrompt.userChoice;
-      
-              this.installPromptShown = true;
-
-        if(result.outcome === 'accepted') {
-        this.installPrompt = null
-  }
-      
-      this.notifyStatusChange();
-      return result.outcome === 'accepted'
-  } catch(error) {
-
-      return false
-  }
+      const registration = await navigator.serviceWorker.register(swPath);
+      console.log('Service Worker registered successfully');
+      return registration;
+    } catch (error) {
+      console.error('Service Worker registration failed:', error);
+      return null;
+    }
   }
 
-  /**
-   * Subscribe to status changes
-   */
-  public onStatusChange(callback: (status: PWAStatus) => void): () => void {
-    this.statusCallbacks.push(callback);
+  async unregisterServiceWorker(): Promise<boolean> {
+    if (!this.isSupported()) {
+      return false;
+    }
+
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      const unregistered = await registration.unregister();
+      console.log('Service Worker unregistered');
+      return unregistered;
+    } catch (error) {
+      console.error('Service Worker unregistration failed:', error);
+      return false;
+    }
+  }
+
+  // Mobile-specific enhancements
+  optimizeForMobile(): void {
+    // Prevent zoom on input focus
+    const viewport = document.querySelector('meta[name="viewport"]');
+    if (viewport) {
+      viewport.setAttribute('content', 
+        'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
+      );
+    }
+
+    // Add mobile-specific CSS classes
+    document.body.classList.add('mobile-optimized');
     
-    // Return unsubscribe function
-    return () => {
-      const index = this.statusCallbacks.indexOf(callback);
-      if(index > -1) {
-        this.statusCallbacks.splice(index, 1)
-  }
-    };
+    if (this.isStandalone()) {
+      document.body.classList.add('standalone-mode');
+    }
   }
 
-  /**
-   * Notify all subscribers of status change
-   */
-  private notifyStatusChange(): void {
-    const status = this.getStatus();
-    this.statusCallbacks.forEach(callback => {
-      try {
-        callback(status)
-  } catch(error) {}
-    };
-  };
+  // Notification helpers
+  async requestNotificationPermission(): Promise<NotificationPermission> {
+    if (!('Notification' in window)) {
+      return 'denied';
+    }
+
+    if (Notification.permission === 'default') {
+      return await Notification.requestPermission();
+    }
+
+    return Notification.permission;
+  }
+
+  canShowNotifications(): boolean {
+    return 'Notification' in window && Notification.permission === 'granted';
+  }
+
+  showNotification(title: string, options?: NotificationOptions): void {
+    if (!this.canShowNotifications()) {
+      return;
+    }
+
+    new Notification(title, {
+      icon: '/icon-192.png',
+      badge: '/badge-72.png',
+      ...options
+    });
   }
 }
 
-// Export singleton instance;
+// Export singleton instance
 export const pwaService = new PWAService();
 export default pwaService;

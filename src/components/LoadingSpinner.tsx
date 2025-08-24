@@ -1,36 +1,50 @@
-import React from "react";
+import React from 'react';
+import './LoadingSpinner.css';
+
 interface LoadingSpinnerProps {
-  size?: "small" | "medium" | "large";
+  size?: 'small' | 'medium' | 'large';
   message?: string;
-  className?: string
-  }
+  className?: string;
+  color?: 'primary' | 'secondary' | 'white';
+  overlay?: boolean;
+}
 
-export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
-  size = "medium",
+const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
+  size = 'medium',
   message,
-  className
+  className = '',
+  color = 'primary',
+  overlay = false
 }) => {
-  const sizeClasses = {
-    small: "w-4 h-4",
-    medium: "w-8 h-8",
-    large: "w-12 h-12"
-  };
+  const spinnerClasses = [
+    'loading-spinner',
+    `loading-spinner--${size}`,
+    `loading-spinner--${color}`,
+    className
+  ].filter(Boolean).join(' ');
 
-  return (
-    <div className={`loading-spinner-container glass-card smooth-transition animate-float ${className || ''}`} aria-live="polite">
-      <div className={`loading-spinner ${sizeClasses[size]}`}>
-        <span className="loading-dot"></span>
-        <span className="loading-dot"></span>
-        <span className="loading-dot"></span>
+  const content = (
+    <div className={spinnerClasses}>
+      <div className="loading-spinner__circle">
+        <div className="loading-spinner__inner"></div>
       </div>
       {message && (
-        <p className="loading-message gradient-text animate-gradient">
-          <span className="sr-only">Loading: </span>
+        <div className="loading-spinner__message">
           {message}
-        </p>
+        </div>
       )}
     </div>
-  )
+  );
+
+  if (overlay) {
+    return (
+      <div className="loading-spinner-overlay">
+        {content}
+      </div>
+    );
   }
+
+  return content;
+};
 
 export default LoadingSpinner;

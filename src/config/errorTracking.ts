@@ -1,180 +1,222 @@
 /**
- * Sentry Configuration for Astral Core
- * 
- * Environment variables and initialization setup
- */;
+ * Error Tracking Configuration
+ * Centralized configuration for error tracking and monitoring
+ */
 
-import { initializeSentry, ErrorTrackingService } from '../services/errorTrackingService';
-import { logger } from '../utils/logger';
+// Error tracking configuration interface
+export interface ErrorTrackingConfig {
+  enabled: boolean;
+  dsn?: string;
+  environment: string;
+  sampleRate: number;
+  tracesSampleRate: number;
+  beforeSend?: (event: any) => any | null;
+  beforeSendTransaction?: (event: any) => any | null;
+  integrations?: any[];
+  release?: string;
+  debug: boolean;
+}
 
-// Environment variables configuration;
-export const sentryConfig = {
-  // Get DSN from environment variables
+// Default error tracking configuration
+export const errorTrackingConfig: ErrorTrackingConfig = {
+  enabled: process.env.NODE_ENV === 'production',
   dsn: process.env.VITE_SENTRY_DSN,
-  
-  // Development settings
-  enableInDevelopment: process.env.VITE_SENTRY_DEV_ENABLED === 'true',
-  
-  // Release version
+  environment: process.env.NODE_ENV || "development",
+  sampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
+  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
+  debug: process.env.NODE_ENV === 'development',
   release: process.env.VITE_APP_VERSION || '1.0.0',
   
-  // Environment name
-  environment: process.env.NODE_ENV || 'development'
-  };
+  // Filter out sensitive information
+  beforeSend: (event: any) => {
+    // Don't send events in development unless explicitly enabled
+    if (process.env.NODE_ENV === 'development' && !process.env.VITE_ENABLE_ERROR_TRACKING) {
+      return null;
+    }
+
+    // Filter out sensitive data
+    if (event.exception) {
+      const exception = event.exception.values?.[0];
+      if (exception?.value) {
+        // Remove potential passwords, tokens, etc.
+        exception.value = exception.value.replace(/password=[\w\d]+/gi, 'password=[FILTERED]');
+        exception.value = exception.value.replace(/token=[\w\d]+/gi, 'token=[FILTERED]');
+        exception.value = exception.value.replace(/key=[\w\d]+/gi, 'key=[FILTERED]');
+      }
+    }
+
+    // Filter out user data from breadcrumbs
+    if (event.breadcrumbs) {
+      event.breadcrumbs = event.breadcrumbs.map((breadcrumb: any) => {
+        if (breadcrumb.data) {
+          const filteredData = { ...breadcrumb.data };
+          delete filteredData.password;
+          delete filteredData.token;
+          delete filteredData.apiKey;
+          delete filteredData.email;
+          breadcrumb.data = filteredData;
+        }
+        return breadcrumb;
+      });
+    }
+
+    return event;
+  },
+
+  // Filter transactions
+  beforeSendTransaction: (event: any) => {
+    // Don't send transactions in development
+    if (process.env.NODE_ENV === 'development') {
+      return null;
+    }
+
+    return event;
+  }
+};
 
 /**
- * Initialize error tracking for the application
- */;
-export const initializeErrorTracking = () => {
-  // Only initialize if DSN is provided
-  if (!sentryConfig.dsn) {
-    logger.warn('Sentry DSN not configured. Error tracking disabled.', undefined, 'errorTracking');
-    return false
+ * Initialize error tracking
+ * This function should be called early in the application lifecycle
+ */
+export const initializeErrorTracking = async (): Promise<void> => {
+  if (!errorTrackingConfig.enabled || !errorTrackingConfig.dsn) {
+    console.log('Error tracking disabled or no DSN provided');
+    return;
   }
 
-  // Initialize Sentry
   try {
-    initializeSentry();
+    // Dynamically import Sentry to avoid loading it in development
+    const { init, configureScope } = await import('@sentry/browser');
     
-    // Add initial breadcrumb
-    ErrorTrackingService.addBreadcrumb(
-      'Application initialized',
-      'lifecycle',
-      'info',
-      {
-        environment: sentryConfig.environment,
-        release: sentryConfig.release
-  }
-    );
+    init({
+      dsn: errorTrackingConfig.dsn,
+      environment: errorTrackingConfig.environment,
+      sampleRate: errorTrackingConfig.sampleRate,
+      tracesSampleRate: errorTrackingConfig.tracesSampleRate,
+      beforeSend: errorTrackingConfig.beforeSend,
+      beforeSendTransaction: errorTrackingConfig.beforeSendTransaction,
+      debug: errorTrackingConfig.debug,
+      release: errorTrackingConfig.release,
+      
+      integrations: [
+        // Add browser-specific integrations
+      ],
+      
+      // Additional configuration
+      attachStacktrace: true,
+      autoSessionTracking: true,
+      sendDefaultPii: false, // Don't send personally identifiable information
+    });
 
-    logger.info('Error tracking initialized successfully', undefined, 'errorTracking');
-    return true
+    // Configure scope
+    configureScope((scope) => {
+      scope.setTag('component', 'mental-health-platform');
+      scope.setContext('app', {
+        name: 'CoreV2',
+        version: errorTrackingConfig.release,
+      });
+    });
+
+    console.log('Error tracking initialized successfully');
   } catch (error) {
-    logger.error('Failed to initialize error tracking:', error, 'errorTracking');
-    return false
+    console.error('Failed to initialize error tracking:', error);
   }
 };
 
 /**
  * Set user context for error tracking
- */;
-export const setUserErrorContext = (user: {
-  id?: string;
-  userType: 'seeker' | 'helper' | 'admin';
-  isAuthenticated: boolean;
-  sessionStart?: Date
-  }) => {
-  const sessionDuration = user.sessionStart
-    ? Math.floor((Date.now() - user.sessionStart.getTime()) / 1000)
-    : undefined;
+ */
+export const setUserContext = (user: {
+  id: string;
+  email?: string;
+  username?: string;
+  role?: string;
+}): void => {
+  if (!errorTrackingConfig.enabled) return;
 
-  ErrorTrackingService.setUserContext({
-    id: user.id,
-    userType: user.userType,
-    isAuthenticated: user.isAuthenticated,
-    sessionDuration
-  });
-
-  ErrorTrackingService.addBreadcrumb(
-    'User context updated',
-    'auth',
-    'info',
-    {
-      user_type: user.userType,
-      authenticated: user.isAuthenticated
-  }
-  )
-  };
-
-/**
- * Clear user context on logout
- */;
-export const clearUserErrorContext = () => {
-  ErrorTrackingService.clearUserContext();
-  
-  ErrorTrackingService.addBreadcrumb(
-    'User logged out',
-    'auth',
-    'info'
-  )
-  };
-
-/**
- * Track navigation events
- */;
-export const trackNavigation = (from: string, to: string, userType?: string) => {
-  ErrorTrackingService.addBreadcrumb(
-    `Navigation: ${from} → ${to}`,
-    'navigation',
-    'info',
-    {
-      from_path: from,
-      to_path: to,
-      user_type: userType
-  }
-  )
-  };
-
-/**
- * Track feature usage
- */;
-export const trackFeatureUsage = (
-  feature: string, 
-  action: string, 
-  userType?: string,
-  metadata?: Record<string, any>
-) => {
-  ErrorTrackingService.addBreadcrumb(
-    `Feature: ${feature} - ${action}`,
-    'feature',
-    'info',
-    {
-      feature_name: feature,
-      action,
-      user_type: userType,
-      ...metadata
-    }
-  )
-  };
-
-/**
- * Track crisis events (with high priority)
- */;
-export const trackCrisisEvent = (
-  event: string,
-  severity: 'low' | 'medium' | 'high' | 'critical',
-  userType: 'seeker' | 'helper',
-  metadata?: Record<string, any>
-) => {
-  const getLogLevel = (severity: string) => {
-    if (severity === 'critical') return 'error';
-    if (severity === 'high') return 'warning';
-    return 'info'
-  };
-
-  ErrorTrackingService.captureMessage(
-    `Crisis event: ${event}`,
-    getLogLevel(severity),
-    {
-      errorType: 'crisis',
-      severity,
-      userType,
-      feature: 'crisis-detection',
-      privacyLevel: 'sensitive'
-  },
-    {
-      event_type: event,
-      ...metadata
-    }
-  )
-  };
-
-export default {
-  config: sentryConfig,
-  initialize: initializeErrorTracking,
-  setUserContext: setUserErrorContext,
-  clearUserContext: clearUserErrorContext,
-  trackNavigation,
-  trackFeatureUsage,
-  trackCrisisEvent
+  import('@sentry/browser').then(({ configureScope }) => {
+    configureScope((scope) => {
+      scope.setUser({
+        id: user.id,
+        username: user.username,
+        // Don't include email in production for privacy
+        ...(process.env.NODE_ENV !== 'production' && { email: user.email }),
+      });
+      scope.setTag('user.role', user.role || 'user');
+    });
+  }).catch(console.error);
 };
+
+/**
+ * Clear user context
+ */
+export const clearUserContext = (): void => {
+  if (!errorTrackingConfig.enabled) return;
+
+  import('@sentry/browser').then(({ configureScope }) => {
+    configureScope((scope) => {
+      scope.clear();
+    });
+  }).catch(console.error);
+};
+
+/**
+ * Add breadcrumb for debugging
+ */
+export const addBreadcrumb = (message: string, category = 'custom', level = 'info', data?: any): void => {
+  if (!errorTrackingConfig.enabled) return;
+
+  import('@sentry/browser').then(({ addBreadcrumb: sentryAddBreadcrumb }) => {
+    sentryAddBreadcrumb({
+      message,
+      category,
+      level: level as any,
+      data,
+      timestamp: Date.now() / 1000,
+    });
+  }).catch(console.error);
+};
+
+/**
+ * Capture exception manually
+ */
+export const captureException = (error: Error, context?: any): void => {
+  if (!errorTrackingConfig.enabled) {
+    console.error('Error (tracking disabled):', error, context);
+    return;
+  }
+
+  import('@sentry/browser').then(({ captureException: sentryCaptureException, withScope }) => {
+    if (context) {
+      withScope((scope) => {
+        scope.setContext('error_context', context);
+        sentryCaptureException(error);
+      });
+    } else {
+      sentryCaptureException(error);
+    }
+  }).catch(console.error);
+};
+
+/**
+ * Capture message manually
+ */
+export const captureMessage = (message: string, level = 'info', context?: any): void => {
+  if (!errorTrackingConfig.enabled) {
+    console.log(`Message (tracking disabled) [${level}]:`, message, context);
+    return;
+  }
+
+  import('@sentry/browser').then(({ captureMessage: sentryCaptureMessage, withScope }) => {
+    if (context) {
+      withScope((scope) => {
+        scope.setContext('message_context', context);
+        sentryCaptureMessage(message, level as any);
+      });
+    } else {
+      sentryCaptureMessage(message, level as any);
+    }
+  }).catch(console.error);
+};
+
+export default errorTrackingConfig;

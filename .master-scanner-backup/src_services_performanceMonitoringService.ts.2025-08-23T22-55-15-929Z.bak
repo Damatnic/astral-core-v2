@@ -1,0 +1,174 @@
+/**
+ * Performance Monitoring Service
+ * Tracks performance metrics and provides analytics
+ */
+
+interface PerformanceReport {
+  sessionId: string;
+  userId?: string;
+  timestamp: number,
+  webVitals: {
+    LCP?: { value: number, rating: string };
+    FID?: { value: number, rating: string };
+    CLS?: { value: number, rating: string };
+    FCP?: { value: number, rating: string };
+    TTFB?: { value: number, rating: string };
+  };
+  errors: Array<{
+    message: string;
+    stack?: string;
+    timestamp: number;
+  }>;
+  memory?: {
+    usedJSHeapSize: number,
+    totalJSHeapSize: number;
+    jsHeapSizeLimit: number;
+  };
+
+class PerformanceMonitoringService {
+  private static instance: PerformanceMonitoringService;
+  private readonly sessionId: string;
+  private userId?: string;
+  private report: PerformanceReport;
+
+  private constructor() {
+    this.sessionId = this.generateSessionId();
+    this.report = {
+      sessionId: this.sessionId,
+      timestamp: Date.now(),
+      webVitals: {},
+      errors: []
+    };
+    this.initialize();
+
+  static getInstance(): PerformanceMonitoringService {
+    if (!PerformanceMonitoringService.instance) {
+      PerformanceMonitoringService.instance = new PerformanceMonitoringService();
+
+    return PerformanceMonitoringService.instance;
+
+  private generateSessionId(): string {
+    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+  private initialize(): void {
+    // Initialize performance monitoring
+    this.monitorWebVitals();
+    this.monitorErrors();
+    this.monitorMemory();
+    this.monitorConnection();
+
+  setUserId(userId: string): void {
+    this.userId = userId;
+    this.report.userId = userId;
+
+  private monitorWebVitals(): void {
+    // Simple Web Vitals monitoring
+    if (typeof window !== "undefined" && "performance" in window) {
+      try {
+        // Monitor LCP
+        new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          const lastEntry = entries[entries.length - 1];
+          if (lastEntry) {
+            this.report.webVitals.LCP = {
+              value: lastEntry.startTime,
+              rating: lastEntry.startTime < 2500 ? 'good' : lastEntry.startTime < 4000 ? 'needs-improvement' : 'poor'
+            };
+
+        }).observe({ entryTypes: ['largest-contentful-paint'] });
+
+        // Monitor FID
+        new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          entries.forEach((entry: any) => {
+            this.report.webVitals.FID = {
+              value: entry.processingStart - entry.startTime,
+              rating: entry.processingStart - entry.startTime < 100 ? 'good' : entry.processingStart - entry.startTime < 300 ? 'needs-improvement' : 'poor'
+            };
+          });
+        }).observe({ entryTypes: ['first-input'] });
+
+      } catch (error) {
+        console.warn('Performance monitoring not supported:', error);
+
+
+
+  private monitorErrors(): void {
+    if (typeof window !== "undefined") {
+      window.addEventListener('error', (event) => {
+        this.report.errors.push({
+          message: event.message,
+          stack: event.error?.stack,
+          timestamp: Date.now()
+        });
+      });
+
+      window.addEventListener('unhandledrejection', (event) => {
+        this.report.errors.push({
+          message: event.reason?.message || 'Unhandled promise rejection',
+          stack: event.reason?.stack,
+          timestamp: Date.now()
+        });
+      });
+
+
+  private monitorMemory(): void {
+    if (typeof window !== "undefined" && 'performance' in window && 'memory' in (window.performance as any)) {
+      const memory = (window.performance as any).memory;
+      this.report.memory = {
+        usedJSHeapSize: memory.usedJSHeapSize,
+        totalJSHeapSize: memory.totalJSHeapSize,
+        jsHeapSizeLimit: memory.jsHeapSizeLimit
+      };
+
+
+  private monitorConnection(): void {
+    // Monitor network connection if available
+    if (typeof navigator !== "undefined" && 'connection' in navigator) {
+      const connection = (navigator as any).connection;
+      // Could track connection metrics here
+      console.log('Connection type:', connection?.effectiveType);
+
+
+  getReport(): PerformanceReport {
+    return { ...this.report };
+
+  getPerformanceScore(): { score: number, recommendations: string[] } {
+    let score = 100;
+    const recommendations: string[] = [];
+
+    // Simple scoring based on Web Vitals
+    if (this.report.webVitals.LCP && this.report.webVitals.LCP.value > 4000) {
+      score -= 20;
+      recommendations.push('Improve Largest Contentful Paint');
+
+    if (this.report.webVitals.FID && this.report.webVitals.FID.value > 300) {
+      score -= 15;
+      recommendations.push('Reduce First Input Delay');
+
+    if (this.report.errors.length > 0) {
+      score -= this.report.errors.length * 5;
+      recommendations.push('Fix JavaScript errors');
+
+    return { score: Math.max(score, 0), recommendations };
+
+  async sendReport(): Promise<void> {
+    try {
+      // In a real implementation, send to analytics service
+      console.log("Performance Report:", this.getReport());
+      console.log("Performance Score:", this.getPerformanceScore());
+    } catch (error) {
+      console.error("Failed to send performance report:", error);
+
+
+  reset(): void {
+    this.report = {
+      sessionId: this.sessionId,
+      userId: this.userId,
+      timestamp: Date.now(),
+      webVitals: {},
+      errors: []
+    };
+
+
+export default PerformanceMonitoringService.getInstance();

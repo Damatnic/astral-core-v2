@@ -1,0 +1,73 @@
+/**
+ * Internationalization configuration and translations
+ * Astral Core Mental Health Platform
+ */
+
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+
+// Import the main i18n instance and functions
+import i18nInstance, { 
+  changeLanguageFunction,
+  getCurrentLanguage,
+  getSupportedLanguages,
+  isRTLLanguage 
+} from './i18n/index';
+
+// Re-export everything from the main i18n module
+export { 
+  i18nInstance as i18n,
+  changeLanguageFunction as changeLanguage,
+  getCurrentLanguage,
+  getSupportedLanguages,
+  isRTLLanguage
+};
+
+// Import and re-export the useI18n hook
+import { useI18n } from "./i18n/hooks";
+export { useI18n };
+
+// Translation objects for direct use
+export const en = {
+  share: "Share",
+  my_activity: "My Activity",
+  ai_chat: "Chat with AI",
+  my_safety_plan: "My Safety Plan",
+  community_feed: "Community Feed",
+  reflections: "Reflections",
+  get_help_now: "Get Help Now",
+  quiet_space: "Quiet Space",
+  wellness_videos: "Wellness Videos",
+  moderation_history: "Moderation History",
+  guidelines: "Guidelines",
+  legal: "Legal",
+  helper_login: "Helper Login",
+  settings: "Settings",
+  donate: "Donate"
+};
+
+export const es = {
+  share: "Compartir",
+  my_activity: "Mi Actividad",
+  ai_chat: "Chat con IA",
+  my_safety_plan: "Mi Plan de Seguridad",
+  community_feed: "Feed de la Comunidad",
+  reflections: "Reflexiones",
+  get_help_now: "Obtener Ayuda Ahora",
+  quiet_space: "Espacio Tranquilo",
+  wellness_videos: "Videos de Bienestar",
+  moderation_history: "Historial de Moderación",
+  guidelines: "Directrices",
+  legal: "Legal",
+  helper_login: "Acceso para Ayudantes",
+  settings: "Configuración",
+  donate: "Donar"
+};
+
+// Legacy locale setter function
+export const setLocale = (locale: string) => {
+  changeLanguageFunction(locale);
+};
+
+// Default export
+export default i18nInstance;

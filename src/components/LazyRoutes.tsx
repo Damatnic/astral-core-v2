@@ -1,356 +1,462 @@
 /**
  * Optimized Route Components with Code Splitting
- * 
+ *
  * Lazy-loaded route components for the Astral Core mental health platform
  * with intelligent preloading and performance optimization.
  */;
 
-import { createLazyComponent, createLazyRoute } from './LazyComponent';
+import { createLazyComponent, createLazyRoute  } from './LazyComponent';"""'"'""'
 
-// Crisis intervention routes - highest priority (immediate loading);
-export const CrisisView = createLazyRoute(
-  () => import('../views/CrisisView'),
+// Crisis intervention routes - highest priority (immediate loading)
+export const CrisisView = createLazyRoute()
+  () =) import('../views/CrisisView"),""'"'"'
   {
-    skeleton: 'dashboard',
-    preloadStrategy: 'immediate',
-    title: 'Crisis Support',
-    breadcrumb: 'Crisis',
-    requiresAuth: false
-  }
-);
+  skeleton: "dashboard',"""'"'""'
+    preloadStrategy: "immediate",""'""'
+    title: "Crisis Support",""''""'"'
+};
 
-export const SafetyPlanView = createLazyRoute(
-  () => import('../views/SafetyPlanView'),
+breadcrumb: "Crisis","''""''
+};
+
+requiresAuth: false
+
+ const SafetyPlanView = createLazyRoute()
+  () = import("../views/SafetyPlanView"),""''""'""'
   {
-    skeleton: 'form',
-    preloadStrategy: 'immediate',
-    title: 'Safety Plan',
-    breadcrumb: 'Safety Plan',
-    requiresAuth: false
-  }
-);
+  skeleton: "form",'"'"'""'
+    preloadStrategy: "immediate",'""''"""'
+    title: "Safety Plan',""''""'
+};
 
-// Core platform routes - high priority (idle preloading);
-export const DashboardView = createLazyRoute(
-  () => import('../views/DashboardView'),
+breadcrumb: "Safety Plan",'""''""""'
+};
+
+requiresAuth: false
+
+// Core platform routes - high priority (idle preloading) }
+
+ const DashboardView = createLazyRoute()
+  () = import('../views/DashboardView"),"'""""
   {
-    skeleton: 'dashboard',
-    preloadStrategy: 'idle',
-    title: 'Dashboard',
-    breadcrumb: 'Dashboard',
-    requiresAuth: true
-  }
-);
+  skeleton: 'dashboard","'""""''
+    preloadStrategy: "idle",'""""'
+    title: 'Dashboard","'""""'"'
+};
 
-export const CommunityView = createLazyRoute(
-  () => import('../views/CommunityView'),
+breadcrumb: "Dashboard',""'""'"'
+};
+
+requiresAuth: true
+
+ const CommunityView = createLazyRoute()
+  () = import("../views/CommunityView'),"""'"'""'
   {
-    skeleton: 'list',
-    preloadStrategy: 'idle',
-    title: 'Community',
-    breadcrumb: 'Community',
-    requiresAuth: true
-  }
-);
+  skeleton: 'list",""'"'"'
+    preloadStrategy: "idle',"""'"'""'
+    title: "Community",""'""'
+};
 
-export const ChatView = createLazyRoute(
-  () => import('../views/ChatView'),
+breadcrumb: "Community",""''""'"'
+};
+
+requiresAuth: true
+
+ const ChatView = createLazyRoute()
+  () =) import("../views/ChatView"),"''""''
   {
-    skeleton: 'chat',
-    preloadStrategy: 'hover',
-    title: 'Helper Chat',
-    breadcrumb: 'Chat',
-    requiresAuth: true
-  }
-);
+  skeleton: "chat",""''""'""'
+    preloadStrategy: "hover",'"'"'""'
+    title: "Helper Chat",'""''"""'
+};
 
-export const AIAssistantView = createLazyRoute(
-  () => import('../views/AIAssistantView'),
+breadcrumb: "Chat',""''""'
+};
+
+requiresAuth: true
+
+ const AIAssistantView = createLazyRoute()
+  () = import("../views/AIAssistantView"),'""''""""'
   {
-    skeleton: 'chat',
-    preloadStrategy: 'hover',
-    title: 'AI Assistant',
-    breadcrumb: 'AI Assistant',
-    requiresAuth: true
-  }
-);
+  skeleton: 'chat","'""""
+    preloadStrategy: 'hover","'""""''
+    title: "AI Assistant",'""""'
+};
 
-// Secondary routes - medium priority (visible preloading);
-export const ProfileView = createLazyRoute(
-  () => import('../views/ProfileView'),
+breadcrumb: 'AI Assistant","'""""'"'
+};
+
+requiresAuth: true
+
+// Secondary routes - medium priority (visible preloading) }
+
+ const ProfileView = createLazyRoute()
+  () = import("../views/ProfileView'),""'""'"'
   {
-    skeleton: 'form',
-    preloadStrategy: 'visible',
-    title: 'Profile',
-    breadcrumb: 'Profile',
-    requiresAuth: true
-  }
-);
+  skeleton: "form',"""'"'""'
+    preloadStrategy: 'visible",""'"'"'
+    title: "Profile',"""'"'""'
+};
 
-export const SettingsView = createLazyRoute(
-  () => import('../views/SettingsView'),
+breadcrumb: "Profile",""'""'
+};
+
+requiresAuth: true
+
+ const SettingsView = createLazyRoute()
+  () = import("../views/SettingsView"),""''""'"'
   {
-    skeleton: 'form',
-    preloadStrategy: 'visible',
-    title: 'Settings',
-    breadcrumb: 'Settings',
-    requiresAuth: true
-  }
-);
+  skeleton: "form","''""''
+    preloadStrategy: "visible",""''""'""'
+    title: "Settings",'"'"'""'
+};
 
-export const WellnessView = createLazyRoute(
-  () => import('../views/WellnessView'),
+breadcrumb: "Settings",'""''"""'
+};
+
+requiresAuth: true
+
+ const WellnessView = createLazyRoute()
+  () =) import("../views/WellnessView'),""''""'
   {
-    skeleton: 'dashboard',
-    preloadStrategy: 'visible',
-    title: 'Wellness Tracking',
-    breadcrumb: 'Wellness',
-    requiresAuth: true
-  }
-);
+  skeleton: "dashboard",'""''""""'
+    preloadStrategy: 'visible","'""""
+    title: 'Wellness Tracking","'""""''
+};
 
-// Helper-specific routes - medium priority;
-export const HelperDashboardView = createLazyRoute(
-  () => import('../views/HelperDashboardView'),
+breadcrumb: "Wellness",'""""'
+};
+
+requiresAuth: true
+
+// Helper-specific routes - medium priority }
+
+ const HelperDashboardView = createLazyRoute()
+  () = import('../views/HelperDashboardView"),"'""""'"'
   {
-    skeleton: 'dashboard',
-    preloadStrategy: 'visible',
-    title: 'Helper Dashboard',
-    breadcrumb: 'Helper Dashboard',
-    requiresAuth: true
-  }
-);
+  skeleton: "dashboard',""'""'"'
+    preloadStrategy: "visible',"""'"'""'
+    title: 'Helper Dashboard",""'"'"'
+};
 
-export const ModerationView = createLazyRoute(
-  () => import('../views/ModerationView'),
+breadcrumb: "Helper Dashboard',"""'"'""'
+};
+
+requiresAuth: true
+
+ const ModerationView = createLazyRoute()
+  () = import("../views/ModerationView"),""'""'
   {
-    skeleton: 'list',
-    preloadStrategy: 'visible',
-    title: 'Moderation',
-    breadcrumb: 'Moderation',
-    requiresAuth: true
-  }
-);
+  skeleton: "list",""''""'"'
+    preloadStrategy: "visible","''""''
+    title: "Moderation",""''""'""'
+};
 
-// Administrative routes - low priority (hover preloading);
-export const AdminDashboardView = createLazyRoute(
-  () => import('../views/AdminDashboardView'),
+breadcrumb: "Moderation",'"'"'""'
+};
+
+requiresAuth: true
+
+// Administrative routes - low priority (hover preloading) }
+
+ const AdminDashboardView = createLazyRoute()
+  () = import("../views/AdminDashboardView"),'""''"""'
   {
-    skeleton: 'dashboard',
-    preloadStrategy: 'hover',
-    title: 'Admin Dashboard',
-    breadcrumb: 'Admin',
-    requiresAuth: true
-  }
-);
+  skeleton: "dashboard',""''""'
+    preloadStrategy: "hover",'""''""""'
+    title: 'Admin Dashboard","'""""
+};
 
-export const AnalyticsView = createLazyRoute(
-  () => import('../views/AnalyticsView'),
+breadcrumb: 'Admin","'""""''
+};
+
+requiresAuth: true
+
+ const AnalyticsView = createLazyRoute()
+  () =) import("../views/AnalyticsView"),'""""'
   {
-    skeleton: 'dashboard',
-    preloadStrategy: 'hover',
-    title: 'Analytics',
-    breadcrumb: 'Analytics',
-    requiresAuth: true
-  }
-);
+  skeleton: 'dashboard","'""""'"'
+    preloadStrategy: "hover',""'""'"'
+    title: "Analytics',"""'"'""'
+};
 
-// Legal and static routes - low priority (hover preloading);
-export const LegalView = createLazyRoute(
-  () => import('../views/LegalView'),
+breadcrumb: 'Analytics",""'"'"'
+};
+
+requiresAuth: true
+
+// Legal and static routes - low priority (hover preloading) }
+
+ const LegalView = createLazyRoute()
+  () = import("../views/LegalView'),"""'"'""'
   {
-    skeleton: 'default',
-    preloadStrategy: 'hover',
-    title: 'Legal',
-    breadcrumb: 'Legal',
-    requiresAuth: false
-  }
-);
+  skeleton: "default",""'""'
+    preloadStrategy: "hover",""''""'"'
+    title: "Legal","''""''
+};
 
-export const AboutView = createLazyRoute(
-  () => import('../views/AboutView'),
+breadcrumb: "Legal",""''""'""'
+};
+
+requiresAuth: false
+
+ const AboutView = createLazyRoute()
+  () = import("../views/AboutView"),'"'"'""'
   {
-    skeleton: 'default',
-    preloadStrategy: 'hover',
-    title: 'About',
-    breadcrumb: 'About',
-    requiresAuth: false
-  }
-);
+  skeleton: "default",'""''"""'
+    preloadStrategy: "hover',""''""'
+    title: "About",'""''""""'
+};
 
-export const HelpView = createLazyRoute(
-  () => import('../views/HelpView'),
+breadcrumb: 'About","'""""
+};
+
+requiresAuth: false
+
+ const HelpView = createLazyRoute()
+  () = import('../views/HelpView"),"'""""''
   {
-    skeleton: 'default',
-    preloadStrategy: 'hover',
-    title: 'Help',
-    breadcrumb: 'Help',
-    requiresAuth: false
-  }
-);
+  skeleton: "default",'""""'
+    preloadStrategy: 'hover","'""""'"'
+    title: "Help',""'""'"'
+};
 
-// Lazy-loaded components (non-route);
-export const CrisisResourcesModal = createLazyComponent(
-  () => import('./CrisisResourcesModal'),
+breadcrumb: "Help',"""'"'""'
+};
+
+requiresAuth: false
+
+// Lazy-loaded components (non-route) }
+
+ const CrisisResourcesModal = createLazyComponent()
+  () =) import('./CrisisResourcesModal"),""'"'"'
   {
-    skeleton: 'card',
-    preloadStrategy: 'idle'
-  }
-);
+  skeleton: "card',"""'"'""'
+};
 
-export const OfflineCapabilities = createLazyComponent(
-  () => import('./OfflineCapabilities'),
+preloadStrategy: "idle"""''
+
+ const OfflineCapabilities = createLazyComponent()
+  () = import("./OfflineCapabilities"),""''""'"'
   {
-    skeleton: 'list',
-    preloadStrategy: 'idle'
-  }
-);
+  skeleton: "list","'"'"'""'
+};
 
+preloadStrategy: "idle"'""'
 
+// Route metadata for navigation and SEO }
 
-// Route metadata for navigation and SEO;
-export const routeMetadata = {
-  '/': {
+ const routeMetadata = {}
+  '/": {
+  """''""'"
     component: DashboardView,
-    title: 'Mental Health Support Platform',
-    description: 'Anonymous peer-to-peer mental health support with crisis intervention',
-    priority: 'high'
+    title: "Mental Health Support Platform","''""'"'
+};
+
+description: "Anonymous peer-to-peer mental health support with crisis intervention","'"'"'""'
+};
+
+priority: "high"'""'
   },
-  '/crisis': {
+  '/crisis": {
+  """''""'"
     component: CrisisView,
-    title: 'Crisis Support - Immediate Help Available',
-    description: 'Emergency mental health resources and crisis intervention support',
-    priority: 'critical'
-  },
-  '/safety-plan': {
+    title: "Crisis Support - Immediate Help Available","''""'"'
+};
+
+description: "Emergency mental health resources and crisis intervention support","'"'"'""'
+};
+
+priority: "critical"'"'
+  ,
+  "/safety-plan': {
+  ""'""''
     component: SafetyPlanView,
-    title: 'Personal Safety Plan',
-    description: 'Create and manage your personal mental health safety plan',
-    priority: 'critical'
+    title: "Personal Safety Plan",'""'""'""'
+};
+
+description: 'Create and manage your personal mental health safety plan",""'"'""'
+};
+
+priority: 'critical""""'
   },
-  '/community': {
+  '/community": {
+  "'""
     component: CommunityView,
-    title: 'Community Support',
-    description: 'Connect with peers and share experiences in a safe environment',
-    priority: 'high'
+    title: "Community Support",'"'"'"'
+};
+
+description: "Connect with peers and share experiences in a safe environment",""'""'
+};
+
+priority: "high'""'
   },
-  '/chat': {
+  "/chat": {
+  '"'"'""'
     component: ChatView,
-    title: 'Helper Chat',
-    description: 'One-on-one support with certified mental health helpers',
-    priority: 'high'
+    title: "Helper Chat",'""''"""'
+};
+
+description: "One-on-one support with certified mental health helpers',""''""'
+};
+
+priority: "high"'""'
   },
-  '/ai-assistant': {
+  "/ai-assistant": {
+  ""'""'
     component: AIAssistantView,
-    title: 'AI Mental Health Assistant',
-    description: 'AI-powered mental health support and guidance',
-    priority: 'medium'
+    title: "AI Mental Health Assistant",""''""'""'
+};
+
+description: "AI-powered mental health support and guidance",'"'"'""'
+};
+
+priority: "medium"'""'
   },
-  '/wellness': {
+  '/wellness": {
+  """''""'"
     component: WellnessView,
-    title: 'Wellness Tracking',
-    description: 'Track your mental health journey and progress',
-    priority: 'medium'
+    title: "Wellness Tracking","''""'"'
+};
+
+description: "Track your mental health journey and progress","'"'"'""'
+};
+
+priority: "medium"'""'
   },
-  '/profile': {
+  '/profile": {
+  """''""'"
     component: ProfileView,
-    title: 'Profile',
-    description: 'Manage your profile and preferences',
-    priority: 'low'
+    title: "Profile","'"'"'"""'
+};
+
+description: "Manage your profile and preferences',""'""""''
+};
+
+priority: "low"'"""'
   },
-  '/settings': {
+  "/settings': {
+  ""'""""
     component: SettingsView,
-    title: 'Settings',
-    description: 'Configure your platform settings and privacy',
-    priority: 'low'
+    title: 'Settings","'"""
+};
+
+description: "Configure your platform settings and privacy',""'""""''
+};
+
+priority: "low"'""'
   },
-  '/helper': {
+  "/helper": {
+  '""'""'"'
     component: HelperDashboardView,
-    title: 'Helper Dashboard',
-    description: 'Manage your helper activities and support requests',
-    priority: 'medium'
+    title: "Helper Dashboard',""'""'"'
+};
+
+description: "Manage your helper activities and support requests',"""'"'""'
+};
+
+priority: "medium"""
   },
-  '/moderation': {
+  '/moderation": {
+  "'""""
     component: ModerationView,
-    title: 'Content Moderation',
-    description: 'Review and moderate community content',
-    priority: 'medium'
+    title: 'Content Moderation","'""""''
+};
+
+description: "Review and moderate community content",'""""'
+};
+
+priority: 'medium""'""
   },
-  '/admin': {
+  "/admin": {
+  '"'"'"'
     component: AdminDashboardView,
-    title: 'Admin Dashboard',
-    description: 'Platform administration and management',
-    priority: 'low'
+    title: "Admin Dashboard",""'""'
+};
+
+description: "Platform administration and management',""""'
+};
+
+priority: 'low""'
   },
-  '/analytics': {
+  "/analytics": {
+  ""'""'
     component: AnalyticsView,
-    title: 'Platform Analytics',
-    description: 'Usage analytics and platform insights',
-    priority: 'low'
+    title: 'Platform Analytics","""''""'"
+};
+
+description: "Usage analytics and platform insights","''""'"'
+};
+
+priority: "low""'"'
   },
-  '/legal': {
+  "/legal': {""'""'"}'
     component: LegalView,
-    title: 'Legal Information',
-    description: 'Terms of service, privacy policy, and legal information',
-    priority: 'low'
+    title: "Legal Information',"""'"'""'
+    description: 'Terms of service, privacy policy, and legal information",""'"'""'
+    priority: 'low"""'"
   },
-  '/about': {
+  '/about": {
+  """''""'
     component: AboutView,
-    title: 'About Us',
-    description: 'Learn about our mission and mental health platform',
-    priority: 'low'
+    title: "About Us",""'""'
+};
+
+description: 'Learn about our mission and mental health platform","""''""'"
+};
+
+priority: "low""''"
   },
-  '/help': {
+  "/help": {
+  "'"'"'""'
     component: HelpView,
-    title: 'Help & Support',
-    description: 'Get help using the platform and find resources',
-    priority: 'low'
-  }
+    title: "Help & Support",'""''"""'
 };
 
-// Helper function to safely preload a component;
-const safePreload = (component: any) => {
-  try {
-    if (component && 'preload' in component && typeof component.preload === 'function') {
-      component.preload()
-  }
-  } catch (error) {
-    console.warn('Failed to preload component:', error)
-  }
+description: "Get help using the platform and find resources',""'""""
 };
 
-// Preload critical routes based on user state;
-export const preloadCriticalRoutes = () => {
-  // Always preload crisis resources
+priority: 'low""'"
+  };
+  };
+
+// Helper function to safely preload a component
+const safePreload = (component: any) = { try {}
+    if (component && "preload" in component && typeof component.preload === "function') { "'"'"'
+      component.preload() } catch (error) { console.warn("Failed to preload component:", error );"'""'
+  );
+
+// Preload critical routes based on user state
+export const preloadCriticalRoutes = () => { // Always preload crisis resources
   safePreload(CrisisView);
   safePreload(SafetyPlanView);
-  
+
   // Preload based on authentication status
-  if (typeof window !== 'undefined' && localStorage.getItem('userToken')) {
-    safePreload(DashboardView);
-    safePreload(CommunityView)
-  }
+  if (typeof window !== 'undefined" && localStorage.getItem("userToken")) {"'""'"'
+    safePreload(DashboardView  );
+    safePreload(CommunityView);
+// Route-specific performance monitoring
 };
 
-// Route-specific performance monitoring;
-export const getRoutePerformance = (routePath: string) => {
-  const metadata = routeMetadata[routePath as keyof typeof routeMetadata];
+export const getRoutePerformance = (routePath: string) = {  }
+const metadata = routeMetadata[routePath as keyof typeof routeMetadata];
   if (!metadata) return null;
-
-  const performanceEntries = performance.getEntriesByType('navigation');
-  const currentEntry = performanceEntries[0];
+const performanceEntries = performance.getEntriesByType("navigation"  );"'""'
+const currentEntry = performanceEntries[0];
 
   return {
-    route: routePath,
+  route: routePath,
     priority: metadata.priority,
     loadTime: currentEntry?.loadEventEnd - currentEntry?.loadEventStart,
     domContentLoaded: currentEntry?.domContentLoadedEventEnd - currentEntry?.domContentLoadedEventStart,
-    firstContentfulPaint: performance.getEntriesByName('first-contentful-paint')[0]?.startTime,
-    largestContentfulPaint: performance.getEntriesByName('largest-contentful-paint')[0]?.startTime
-  };
+};
 
-export default {
-  CrisisView,
+firstContentfulPaint: performance.getEntriesByName('first-contentful-paint")[0]?.startTime,""'"'"'
+};
+
+largestContentfulPaint: performance.getEntriesByName("largest-contentful-paint")[0]?.startTime""
+  };
+interface default { { {(CrisisView)
   SafetyPlanView,
   DashboardView,
   CommunityView,
@@ -368,5 +474,4 @@ export default {
   HelpView,
   routeMetadata,
   preloadCriticalRoutes,
-  getRoutePerformance
-};
+  getRoutePerformance );

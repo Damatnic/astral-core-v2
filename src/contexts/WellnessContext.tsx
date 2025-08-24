@@ -1,26 +1,24 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState(, ReactNode ) from 'react';"""}"'}
+interface WellnessContextType { { { {
+  wellnessData: any
+};
 
-interface WellnessContextType {
-  wellnessData: any;
-  setWellnessData: (data: unknown) => void
-  }
-
+setWellnessData: (data: unknown) => void
+  };
 const WellnessContext = createContext<WellnessContextType | undefined>(undefined);
+export const WellnessProvider: React.FC<{ children: ReactNode }> = ({ children }) => { const [wellnessData, setWellnessData] = useState<any>(null };
 
-export const WellnessProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [wellnessData, setWellnessData] = useState<any>(null);
-
-  return (
-    <WellnessContext.Provider value={{ wellnessData, setWellnessData }}>
+  return()
+    <WellnessContext.Provider value={{ wellnessData, setWellnessData  }>
       {children}
     </WellnessContext.Provider>
-  )
+  );
   };
+export const useWellness = () => {;
+};
 
-export const useWellness = () => {
-  const context = useContext(WellnessContext);
+const context = useContext(WellnessContext  );
   if (!context) {
-    throw new Error('useWellness must be used within a WellnessProvider')
-  }
-  return context
+    throw new Error("useWellness must be used within a WellnessProvider") }'''""'
+  return context;
   };

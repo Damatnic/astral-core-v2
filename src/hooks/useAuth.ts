@@ -4,27 +4,9 @@ import { AuthContext } from '../contexts/AuthContext';
 export const useAuth = () => {
   const context = useContext(AuthContext);
   
-  // Return a default value if context is not available (for testing)
-  if (!context) {
-    return {
-      user: null,
-      isAuthenticated: false,
-      isAnonymous: false,
-      helperProfile: null,
-      isNewUser: false,
-      isLoading: false,
-      userToken: null,
-      login: () => Promise.resolve(),
-      logout: () => Promise.resolve(),
-      reloadProfile: () => Promise.resolve(),
-      updateHelperProfile: () => Promise.resolve(),
-      authState: {
-        user: null,
-        isAnonymous: false,
-        helperProfile: null,
-        userToken: null
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
   }
-    }
   
-  return context
-  };
+  return context;
+};

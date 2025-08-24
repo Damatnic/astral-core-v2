@@ -1,16 +1,17 @@
 /**
  * Production-safe logging utility
- * Replaces console.log with environment-aware logging
- */;
+ * Provides environment-aware logging with buffer management
+ */
 
 type LogLevel = "debug" | "info" | "warn" | "error";
+
 interface LogEntry {
   level: LogLevel;
   message: string;
   data?: any;
   timestamp: string;
-  source?: string
-  }
+  source?: string;
+}
 
 class Logger {
   private logBuffer: LogEntry[] = [];
@@ -18,38 +19,47 @@ class Logger {
 
   private get isDevelopment(): boolean {
     // Check current NODE_ENV dynamically for testing
-    if(typeof process !== 'undefined' && process.env.NODE_ENV === "development") {
-      return true
-  }
-    if(typeof process !== "undefined" && process.env.NODE_ENV === "test") {
-      return false
-  }
+    if (typeof process !== 'undefined' && process.env.NODE_ENV === 'development') {
+      return true;
+    }
+
+    if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
+      return false;
+    }
+
     // Check Vite's import.meta.env
-    return (typeof (import.meta as unknown) !== 'undefined' && (import.meta as unknown).env?.DEV) || false
+    return (typeof import.meta !== 'undefined' && import.meta.env?.DEV) || false;
   }
 
   private shouldLog(level: LogLevel): boolean {
     // In production, only log warnings and errors
-    if(!this.isDevelopment) {
-      return level === "warn" || level === "error"
-    };
-    return true
+    if (!this.isDevelopment) {
+      return level === "warn" || level === "error";
+    }
+    return true;
   }
 
-  private formatMessage(_level: LogLevel, message: string, source?: string): string {
-    const prefix = source ? `[${source}]` : ""
-    return `${prefix} ${message}`
+  private formatMessage(level: LogLevel, message: string, data?: any, source?: string): string {
+    const timestamp = new Date().toISOString();
+    const prefix = `[${timestamp}] [${level.toUpperCase()}]`;
+    const sourcePrefix = source ? ` [${source}]` : '';
+    const dataString = data ? ` ${JSON.stringify(data, null, 2)}` : '';
+    
+    return `${prefix}${sourcePrefix}: ${message}${dataString}`;
   }
 
   private addToBuffer(entry: LogEntry): void {
     this.logBuffer.push(entry);
-    if(this.logBuffer.length > this.maxBufferSize) {
-      this.logBuffer.shift()
-  }
+    
+    // Keep buffer size manageable
+    if (this.logBuffer.length > this.maxBufferSize) {
+      this.logBuffer.shift();
+    }
   }
 
   debug(message: string, data?: any, source?: string): void {
     if (!this.shouldLog("debug")) return;
+
     const entry: LogEntry = {
       level: "debug",
       message,
@@ -57,14 +67,17 @@ class Logger {
       timestamp: new Date().toISOString(),
       source
     };
+
     this.addToBuffer(entry);
-    if(this.isDevelopment) {
-      console.log(this.formatMessage("debug", message, source), data || "")
-  }
+    
+    if (this.isDevelopment) {
+      console.debug(this.formatMessage("debug", message, data, source));
+    }
   }
 
   info(message: string, data?: any, source?: string): void {
     if (!this.shouldLog("info")) return;
+
     const entry: LogEntry = {
       level: "info",
       message,
@@ -72,14 +85,17 @@ class Logger {
       timestamp: new Date().toISOString(),
       source
     };
+
     this.addToBuffer(entry);
-    if(this.isDevelopment) {
-      console.info(this.formatMessage("info", message, source), data || "")
-  }
+    
+    if (this.isDevelopment) {
+      console.info(this.formatMessage("info", message, data, source));
+    }
   }
 
   warn(message: string, data?: any, source?: string): void {
     if (!this.shouldLog("warn")) return;
+
     const entry: LogEntry = {
       level: "warn",
       message,
@@ -87,54 +103,50 @@ class Logger {
       timestamp: new Date().toISOString(),
       source
     };
+
     this.addToBuffer(entry);
-    console.warn(this.formatMessage("warn", message, source), data || "")
+    console.warn(this.formatMessage("warn", message, data, source));
   }
 
   error(message: string, error?: any, source?: string): void {
-    const entry: LogEntry={
+    if (!this.shouldLog("error")) return;
+
+    const entry: LogEntry = {
       level: "error",
       message,
       data: error,
       timestamp: new Date().toISOString(),
       source
-    }
+    };
+
     this.addToBuffer(entry);
-    console.error(this.formatMessage("error", message, source), error || "");
-    // In production, could send to error tracking service
-    if(!this.isDevelopment && window.Sentry) {
-      window.Sentry.captureException(error || new Error(message), {
-        tags: { source },
-        level: "error"
-  })
-  }
+    console.error(this.formatMessage("error", message, error, source));
+    
+    // In production, you might want to send errors to a service
+    if (!this.isDevelopment && typeof window !== 'undefined') {
+      // Could integrate with error tracking service here
+    }
   }
 
-  // Get recent logs for debugging (development only)
-  getRecentLogs(): LogEntry[] {
-    if (!this.isDevelopment) return [];
-    return [...this.logBuffer]
+  getLogs(): LogEntry[] {
+    return [...this.logBuffer];
   }
 
-  // Clear log buffer
   clearLogs(): void {
-    this.logBuffer = []
+    this.logBuffer = [];
+  }
+
+  getLogsSince(timestamp: string): LogEntry[] {
+    return this.logBuffer.filter(entry => entry.timestamp >= timestamp);
+  }
+
+  exportLogs(): string {
+    return JSON.stringify(this.logBuffer, null, 2);
   }
 }
-// Export singleton instance;
+
+// Create and export singleton instance
 export const logger = new Logger();
 
-// Helper functions for migration from console.log;
-export const log = logger.debug.bind(logger);
-export const logInfo = logger.info.bind(logger);
-export const logWarn = logger.warn.bind(logger);
-export const logError = logger.error.bind(logger);
-
-// Window interface for Sentry (if used)
-declare global {
-  interface Window {
-    Sentry?: {
-      captureException: (error: Error, context?: any) => void
-  }
-  }
-}
+// Export the Logger class for testing
+export { Logger, LogLevel, LogEntry };

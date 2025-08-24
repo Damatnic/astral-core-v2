@@ -1,0 +1,1 @@
+import{r as t}from"./react-vendor-BrUtqo1j.js";import"./utils-BmJP5i7H.js";const e=t.createContext(void 0);t.createContext(void 0);const o=()=>{const o=t.useContext(e);if(void 0===o)throw new Error("useAuth must be used within an AuthProvider");return o};export{o as u};

@@ -1,0 +1,4664 @@
+{
+  "timestamp": "2025-08-23T22:55:18.984Z",
+  "duration": 5079,
+  "mode": "conservative",
+  "config": {
+    "mode": "conservative",
+    "strategy": "safe",
+    "dryRun": false,
+    "backup": true
+  },
+  "totals": {
+    "files": 662,
+    "modified": 8,
+    "fixes": 14,
+    "errors": 0,
+    "warnings": 0,
+    "tscErrors": 100
+  },
+  "byCategory": {
+    "objects": 4,
+    "imports": 1,
+    "functions": 1,
+    "interfaces": 4,
+    "comments": 1,
+    "structure": 1,
+    "exports": 2
+  },
+  "files": [
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\App.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\AppWithSimpleAuth.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\AccessibilityButton.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 12
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\AccessibilityDashboard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 12
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\AccessibilityIntegrationGuide.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 12
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\AccessibilityProvider.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\AccessibilitySettings.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 14
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\AIAssistanceIndicator.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\AIChatHistory.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\AIChatInterface.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\AIChatStatus.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\AITypingIndicator.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\AnimatedCard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\AnimatedNumber.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\AppButton.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\AppInput.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\AppTextArea.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\AstralTetherDemo.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\auth\\AnonymousLogin.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\auth\\AuthGuard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\auth\\LoginForm.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\auth\\RegisterForm.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\AutoSaveIndicator.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\AutoSaveTextEditor.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\BreathingExercise\\BreathingExercise.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\BreathingExercise\\index.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\BreathingWidget.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\CalmingBackground.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\Card.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\chat\\AnonymousIndicator.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\CommunityWellnessIndicator.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ComprehensivePerformanceMonitor.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 11
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\CopyToClipboard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\CoreFeaturesDashboard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\crisis\\CrisisIntegrationManager.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 9
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\crisis\\CrisisTimeline.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\crisis\\EnhancedPanicButton.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\CrisisAlert.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\CrisisAlertBanner.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\CrisisAlertFixed.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\CrisisAlertNotification.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\CrisisDetectionDashboard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 9
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\CrisisResourcesModal.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\CrisisStressTestingDashboard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 9
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\CrisisSupport\\CrisisHelpWidget.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\CrisisSupportWidget.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\CulturalAssessmentsView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\CulturalCrisisAlert.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\CulturalCrisisDetectionTestRunner.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\Custom404Page.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\DesignSystemShowcase.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\EmptyState.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\EnhancedErrorBoundary-broken.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\EnhancedErrorBoundary-simplified.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\EnhancedErrorBoundary.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\EnhancedLazyComponent.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\EnhancedLoadingStates.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\EnhancedModal.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\EnhancedMoodChart.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\EnhancedMoodTracker.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 10
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\EnhancedToast.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\EnhancedVideoCard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ErrorBoundary.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ErrorFallback.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ErrorState.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\FamilySupportManagement.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 13
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\FloatingButtonManager.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 10
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\FormInput.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\GoogleBadge.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\GroundingTechnique\\GroundingTechnique.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\GroundingTechnique\\index.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\GuidancePanel.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\GuidedTetherExperience.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\HelperSidebar.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\HelpTutorialSystem.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 25
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\icon-paths\\apple.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\icon-paths\\book.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\icon-paths\\bookmark.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\icon-paths\\clipboard-check.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\icon-paths\\comment.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\icon-paths\\copy.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\icon-paths\\dashboard.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\icon-paths\\feed.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\icon-paths\\google.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\icons.dynamic.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\icons.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\index.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\JournalPrompts.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\Landing.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\LanguageSelector.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\LanguageSwitcher.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 13
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\LazyComponent.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\LazyComponentRegistry.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\LazyComponents.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\LazyLoading.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\LazyMarkdown.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\LazyRoutes.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\LiveChat.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\LoadingSkeleton.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\LoadingSkeletons.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\LoadingSpinner.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\LoadingStates.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MeditationTimer\\index.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MeditationTimer\\MeditationTimer.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MeditationTimer.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\mobile\\MobileAccessibilitySystem.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\mobile\\MobileCrisisKit.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\mobile\\MobileResponsiveComponents.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MobileAccessibilityDashboard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 13
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MobileAccessibilityProvider.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 14
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MobileBottomNav.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MobileBreathing.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MobileChat.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MobileCrisisButton.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MobileEmergencyContacts.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MobileFormComponents.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 14
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MobileGrounding.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MobileKeyboardHandler.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MobileNavigation.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MobilePerformanceProvider.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MobileResponsiveSystem.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MobileSidebarNav.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MobileViewportProvider.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\Modal.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MoodSharing.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MoodThemeAdapter.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\MoodTracker.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\NetworkBanner.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\NotificationPreferences.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\OfflineCapabilities.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\OfflineFallbackUI.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\OfflineIndicator.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\OfflineStatusIndicator.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\OnboardingFlow.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 13
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\OptimizedImage.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\OptimizedImageLoader.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\OptimizedRouter.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\peer\\PeerSupportDashboard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\PerformanceMonitor.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\PostCard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\PostCardSkeleton.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\PreferencesManager.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 9
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\PresenceIndicator.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\privacy\\ConsentBanner.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\privacy\\index.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\privacy\\PrivacyDashboard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\privacy\\__tests__\\ConsentBanner.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\PrivacyAnalyticsDashboard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ProgressiveAssets.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ProgressiveLoading.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\PWAInstallBanner.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\RealtimeNotifications.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ReflectionCard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ReportModal.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ResourceHintsOptimizer.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ResponsiveNavigation.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\safety\\BreathingExerciseOverlay.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 16
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\safety\\CalmingSafetySystem.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\safety\\CrisisSafetySystem.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\safety\\EmergencyContactsWidget.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\safety\\EmotionalSupportLayer.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\safety\\GroundingExercise.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\safety\\PanicButton.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\safety\\QuickExitButton.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\safety\\SafeSpaceIndicator.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\safety\\SafetyPlanBuilder.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\safety\\__tests__\\BreathingExerciseOverlay.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\safety\\__tests__\\CrisisAlertBanner.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\safety\\__tests__\\EmergencyContactsWidget.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\safety\\__tests__\\QuickExitButton.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\safety\\__tests__\\QuickExitButton.working.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\safety\\__tests__\\SafeSpaceIndicator.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\SafetyPlan\\index.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\SafetyPlan\\SafetyPlanBuilder.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\SafetyTipsModal.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\SaveSessionModal.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ScreenReaderAnnouncement.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\SeekerSidebar.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\SelfCareReminders\\index.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\SelfCareReminders\\SelfCareReminders.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ServiceWorkerUpdate.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\Sidebar.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\SimpleErrorBoundary.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\SkeletonPostCard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\SpecializedErrorBoundaries.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\StandardizedLoading.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ThemeCustomizationDashboard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 14
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ThemeProvider.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\TherapistSelector.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\TimestampTooltip.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\TimestampTooltipExample.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\Toast.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\TrendingTopics.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\TypingIndicator.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ui\\Avatar.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ui\\Badge.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ui\\Button.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ui\\Card.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ui\\index.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ui\\Modal.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ui\\Progress.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ui\\Skeleton.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ui\\Tabs.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ui\\Toast.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\UserFeedback.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\ViewHeader.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\WelcomeScreen.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\wellness\\GroundingToolkit.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\WellnessInsights.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\WellnessNotifications.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\withMobileResponsive.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\WorkflowDemoView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 17
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\XPBar.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\__mocks__\\CrisisStressTestingDashboard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\__tests__\\AppButton.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\__tests__\\Card.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\__tests__\\CrisisAlertFixed.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\__tests__\\ErrorState.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\__tests__\\FormInput.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\__tests__\\LoadingSkeleton.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\__tests__\\LoadingSpinner.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\__tests__\\Modal.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\components\\__tests__\\Toast.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\config\\advancedBundleSplitting.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\config\\bundleExternals.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\config\\bundleOptimization.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\config\\errorTracking.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\config\\security.config.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\config\\testAccounts.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\constants.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\contexts\\AuthContext.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\contexts\\ChatContext.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\contexts\\DilemmaContext.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\contexts\\NotificationContext.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\contexts\\OfflineProvider.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\contexts\\OptionalAuthContext.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\contexts\\SessionContext.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\contexts\\SimpleAuthContext.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\contexts\\SwipeNavigationContext.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\contexts\\ThemeContext.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\contexts\\WellnessContext.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\contexts\\__mocks__\\AuthContext.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\contexts\\__mocks__\\NotificationContext.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\contexts\\__mocks__\\ThemeContext.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\contexts\\__tests__\\AuthContext.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\contexts\\__tests__\\NotificationContext.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\contexts\\__tests__\\ThemeContext.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\data\\sampleData.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 11
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\examples\\enhancedCrisisDetectionDemo.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\examples\\EnhancedMobileContactForm.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\examples\\privacyAnalyticsIntegration.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\accounts\\OptionalSignIn.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\chat\\AITherapeuticChat.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\chat\\AITherapyChat.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\chat\\AnonymousPeerChat.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\chat\\AnonymousTherapyChat.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\community\\CommunityEvents.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 11
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\community\\ForumDiscussions.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 10
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\community\\GroupTherapy.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\community\\HelperMatching.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\community\\MentorshipProgram.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 12
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\community\\PeerSupport.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\community\\PeerSupportGroups.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\community\\StorySharing.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 18
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\data\\DataExportManager.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\privacy\\PrivacyDashboard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\tether\\AstralTetherHub.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\tether\\FamilyTether.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\tether\\TetherRequest.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\tether\\TherapistTether.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 10
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\tether\\VolunteerTether.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\wellness\\HabitTracker.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\wellness\\MedicationManager.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\wellness\\MeditationCenter.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 10
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\wellness\\MoodTracking.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\features\\wellness\\SleepTracker.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useAccessibilityMonitoring.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useAccessibilityMonitoring.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useAIChat.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useAIChat.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useAnalyticsTracking.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useAnimations.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useAnimations.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useAuth.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useAutoSave.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useAutoSave.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useConnectionStatus.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useConnectionStatus.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useCrisisDetection.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useCrisisDetection.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useCrisisStressTesting.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useCrisisStressTesting.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useCulturalCrisisDetection.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useCulturalCrisisDetection.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useEnhancedCrisisDetection.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useEnhancedCrisisDetection.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useEnhancedOffline.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useEnhancedOffline.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useErrorTracking.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useErrorTracking.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useIntelligentCaching.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useIntelligentCaching.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useIntelligentPreloading.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useIntelligentPreloading.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useInterval.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useInterval.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useKeyboardNavigation.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useKeyboardNavigation.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useLazyStyles.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useLazyStyles.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useMediaQuery.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useMobileForm.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useMobileForm.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\usePeerSupport.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\usePeerSupport.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\usePerformanceMonitor.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\usePerformanceMonitor.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\usePerformanceMonitoring.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 11
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\usePerformanceMonitoring.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\usePrivacyAnalytics.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\usePrivacyAnalytics.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useSafeLocation.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useSafeLocation.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useServiceWorker.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useServiceWorker.ts",
+      "modified": true,
+      "fixes": 1,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useSwipeGesture.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\hooks\\useSwipeGesture.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\i18n\\hooks.ts",
+      "modified": true,
+      "fixes": 4,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\i18n\\index.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\i18n.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\lib\\security.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\lib\\supabase.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\main.tsx",
+      "modified": true,
+      "fixes": 1,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\middleware\\security.middleware.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\middleware\\securityMiddleware.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\routes\\AdminDashboardRoute.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\routes\\AppRoutes.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\routes\\AppRoutesWithAuth.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\routes\\ChatRoute.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\routes\\HelperApplicationRoute.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\routes\\HelperDashboardRoute.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\routes\\HelperProfileRoute.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\routes\\HelperTrainingRoute.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\service-worker\\intelligentCaching.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\service-worker\\sw-intelligent.js",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\service-worker\\sw-template.js",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\accessibilityAuditSystem.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 32
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\accessibilityService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 11
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\advancedCrisisDetection.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\advancedThemingSystem.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 11
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\ai\\therapyEngine.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\aiModerationService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\analyticsService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\anonymityService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\anonymousChatService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\api\\analyticsService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\api\\chatService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\api\\crisisService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\api\\moodService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\api\\realtimeService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\api\\safetyPlanService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\api\\userService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\apiClient.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\apiService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\astralCoreCrisisResourceCache.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 9
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\astralCoreErrorService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\astralCoreNotificationService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\astralCoreWebSocketService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\astralTetherService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 11
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\auth\\authService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\auth0Service.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\authService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\backendApiService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\backendService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\backgroundSyncService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\cacheIntegration.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\cacheStrategyCoordinator.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\chatModerationService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\communityService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\comprehensivePerformanceMonitor.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 17
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\coreWebVitalsService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\crisisDetectionIntegrationService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\crisisDetectionService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 11
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\crisisEscalationWorkflowService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 17
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\crisisHistoryService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\crisisInterventionWorkflow.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 17
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\crisisResourceCache.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 12
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\crisisStressTestingSystem.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 16
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\culturalAssessmentService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 14
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\culturalContextService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\culturalCrisisDetectionService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 15
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\culturalFamilySupportService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 18
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\culturalMentalHealthService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 26
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\dataExportService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\dataMigrationService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\demoDataService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 108
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\emergencyContactService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\emergencyProtocol.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\emergencyProtocolService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\encryptionService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\enhancedAiCrisisDetectionService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\enhancedCrisisDetectionIntegrationService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 11
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\enhancedCrisisKeywordDetectionService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 16
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\enhancedOfflineService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 11
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\environmentService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\errorHandlingService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\errorTracking.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\errorTrackingService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\gamificationService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\integratedAuthService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\integrationService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\intelligentCachingService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\intelligentPreloading.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 10
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\localStorageService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\mobileFeatureServices.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\mobileNetworkService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\moodAnalysisService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\multilingualCrisisDetectionService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\netlifyApiService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\notificationScheduler.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\notificationService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\offlineService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\openTelemetryService.ts",
+      "modified": true,
+      "fixes": 1,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\optimizedAIService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\peerSupportNetworkService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\performanceMonitor.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\performanceMonitoringService.ts",
+      "modified": true,
+      "fixes": 2,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\privacyPreservingAnalyticsService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\pushNotificationService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\pwaService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\rbacService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\realtimeService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\safetyPlanRemindersService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 18
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\safetyPlanService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\screenReaderService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\secureStorageService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\securityService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\serviceWorkerConfig.ts",
+      "modified": true,
+      "fixes": 2,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\serviceWorkerManager.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\sessionPersistenceService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\simpleAuthService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\storageService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\tetherSyncService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\therapeuticAIService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\webAuthService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\webSocketService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 9
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\wellnessTrackingService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__mocks__\\authService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__mocks__\\crisisDetectionService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__mocks__\\crisisStressTestingSystem.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__mocks__\\enhancedOfflineService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__mocks__\\notificationService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__mocks__\\peerSupportService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__mocks__\\privacyPreservingAnalyticsService.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\accessibilityAuditSystem.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 10
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\accessibilityService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\advancedThemingSystem.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\analyticsService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\astralTetherService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\authService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\cacheIntegration.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\cacheStrategyCoordinator.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\comprehensivePerformanceMonitor.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 9
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\coreFeatures.integration.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\coreWebVitalsService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\crisisDetection.integration.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\crisisDetectionIntegrationService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\crisisDetectionService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\crisisEscalationWorkflowService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\crisisStressTestingSystem.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\culturalAssessmentService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 10
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\culturalContextService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\culturalCrisisDetectionService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\culturalFamilySupportService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 18
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\dataExportService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\dataMigrationService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\demoDataService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\encryptionService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\enhancedAiCrisisDetectionService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\enhancedCrisisDetectionIntegrationService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\enhancedCrisisKeywordDetectionService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\enhancedOfflineService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\errorTracking.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\errorTrackingService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\gamificationService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\intelligentCachingService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\intelligentPreloading.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\mobileNetworkService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\moodAnalysisService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\multilingualCrisisDetectionService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\notificationService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\optimizedAIService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\peerSupportNetworkService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\pushNotificationService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\pwaService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\safetyPlanRemindersService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\screenReaderService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\securityService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\serviceWorkerConfig.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\serviceWorkerManager.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\webAuthService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\services\\__tests__\\websocketService.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\setupTests.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 23
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\stores\\assessmentStore.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\stores\\assessmentStore.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\stores\\chatStore.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\stores\\chatStore.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\stores\\dilemmaStore.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\stores\\dilemmaStore.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 12
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\stores\\globalStore.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\stores\\preferenceStore.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\stores\\preferenceStore.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\stores\\reflectionStore.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\stores\\sessionStore.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\stores\\sessionStore.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\stores\\storeEnhancements.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\stores\\tetherStore.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 12
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\stores\\tetherStore.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\stores\\wellnessStore.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\stores\\wellnessStore.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\stores\\wellnessStoreEnhanced.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\sw-custom.js",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\sw-enhanced.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\test-utils\\mockContexts.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\test-utils\\mockData.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\test-utils\\performanceMocks.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\test-utils\\react18-fix.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\test-utils\\setupDom.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\test-utils\\setupTests.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\test-utils\\testHelpers.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\test-utils\\testUtils.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\test-utils\\timerSetup.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\test-utils.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\tests\\culturalCrisisDetection.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\tests\\integration.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\translations.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\types\\auth.types.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\types\\common.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\types\\database.types.ts",
+      "modified": true,
+      "fixes": 1,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\types\\jest-dom.d.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\types\\mentalHealth.types.ts",
+      "modified": true,
+      "fixes": 2,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\types.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\accessibilityAuditor.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 13
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\accessibilityAuditor.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 12
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\accessibilityHelpers.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\accessibilityUtils.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\accessibilityUtils.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\animations.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\ApiClient.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 12
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\ApiClient.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\apiClientTestHelper.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\assessmentUtils.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\assessmentUtils.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\bundleOptimization.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 11
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\bundleOptimization.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\chartUtils.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\chartUtils.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\crisisDetection.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\crisisDetection.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\crisisPerformanceValidator.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\culturalAssessmentUtils.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 9
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\culturalAssessmentUtils.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 10
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\enhancedRouting.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\enhancedRouting.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\enhancedServiceWorker.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\envConfig.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\envValidator.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\errorHandler.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\fontOptimizer.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\formatTimeAgo.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\formatTimeAgo.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\habitUtils.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\identityMasking.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\imageOptimization.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 9
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\imageOptimization.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\localeFormatting.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\logger.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\logger.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\mobilePerformanceOptimizer.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\mobileUtils.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 10
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\mobileUtils.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\mobileViewportManager.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\networkDetection.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\networkDetection.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\performanceIntegration.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\performanceMonitor.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\responsiveUtils.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\roleAccess.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\roleAccess.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\sanitizeHtml.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\sanitizeHtml.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\securityHelpers.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\securityValidation.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\touchOptimization.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\truncateText.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\truncateText.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\videoThumbnailGenerator.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\videoThumbnailGenerator.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\__mocks__\\envConfig.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\__mocks__\\logger.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\utils\\__tests__\\mobilePerformanceOptimizer.test.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\AboutView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\AdminDashboardView.enhanced.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 9
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\AdminDashboardView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 10
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\AIAssistantView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\AIChatView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\AnalyticsView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\AssessmentDetailView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\AssessmentHistoryView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\AssessmentsView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\AuthPage.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\BlockedUsersView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\ChatView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\CommunityGuidelinesView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\CommunityView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\ConstellationGuideDashboardView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 13
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\CreateHelperProfileView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\CrisisResourcesView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 22
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\CrisisView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\DashboardView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\DesignShowcaseView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\DonationView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\EnhancedDashboardView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 11
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\EnhancedTetherView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 7
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\FavoriteHelpersView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\FeedView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\GroupSessionView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 10
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\HelperApplicationView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\HelperCommunityView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\HelperDashboardView.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\HelperDashboardView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\HelperProfileView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\HelperTrainingView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\HelpView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\LandingView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\LegalView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\LoginView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 11
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\MentalHealthDashboard.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\ModerationDashboardView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\ModerationHistoryView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\ModerationView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\MyActivityView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\MyPostsView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\PastSessionsView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\PeerSupportView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\ProfileView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\PublicHelperProfileView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\QuietSpaceView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\ReflectionsView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\SafetyPlanView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\SettingsView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\ShareView.test.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 0
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\ShareView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 5
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\StarkeeperDashboardView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 4
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\TetherView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 11
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\UIShowcaseView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 3
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\UploadVideoView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\VeteransResourcesView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 19
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\VideoChatView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 1
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\WellnessVideosView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 6
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\views\\WellnessView.tsx",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 8
+    },
+    {
+      "path": "C:\\Users\\damat\\_REPOS\\CoreV2_Mental_Health_Platform\\src\\__mocks__\\services.ts",
+      "modified": false,
+      "fixes": 0,
+      "errors": 0,
+      "duration": 2
+    }
+  ]
+}

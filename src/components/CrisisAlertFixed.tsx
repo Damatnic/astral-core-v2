@@ -1,16 +1,15 @@
 /**
  * Crisis Alert Component
- * 
+ *
  * Displays crisis detection alerts with appropriate urgency levels,
  * emergency actions, and resource connections.
- */;
+ */
 
 import React, { useState, useEffect } from 'react';
-import './CrisisAlert.css';
+import "./CrisisAlert.css";
 
-interface CrisisAlertProps {
-  show?: boolean;
-  severity?: 'none' | 'low' | 'medium' | 'high' | 'critical';
+interface CrisisAlertProps { show?: boolean;
+  severity?: "none" | "low" | "medium" | "high" | "critical";
   message?: string;
   actions?: string[];
   resources?: string[];
@@ -18,318 +17,224 @@ interface CrisisAlertProps {
   onDismiss?: () => void;
   onEmergencyCall?: () => void;
   onCrisisChat?: () => void;
-  userType?: 'seeker' | 'helper'
-  }
+  userType?: "seeker" | "helper" }
 
 interface EmergencyContact {
-  id: string;
-  name: string;
-  number: string;
-  description: string;
-  available: string;
-  type: 'call' | 'text' | 'chat'
-  }
+  id: string;,
+  name: string
+  number: string;,
+  description: string
+  available: string
+};
+
+type: "call" | "text" | "chat"
+}
 
 const emergencyContacts: EmergencyContact[] = [
   {
-    id: 'crisis-lifeline',
-    name: '988 Suicide & Crisis Lifeline',
-    number: '988',
-    description: 'Free, confidential crisis counseling',
-    available: '24/7',
-    type: 'call'
+  id: "crisis-lifeline",
+    name: "988 Suicide & Crisis Lifeline",
+    number: "988",
+    description: "24/7 free and confidential support",
+    available: "24/7",
+};
+
+type: "call"
   },
   {
-    id: 'crisis-text',
-    name: 'Crisis Text Line',
-    number: '741741',
-    description: 'Text HOME for immediate support',
-    available: '24/7',
-    type: 'text'
+  id: "crisis-text",
+    name: "Crisis Text Line",
+    number: "741741",
+    description: "Text HOME to 741741",
+    available: "24/7",
+};
+
+type: "text"
   },
   {
-    id: 'emergency-services',
-    name: 'Emergency Services',
-    number: '911',
-    description: 'Immediate emergency assistance',
-    available: '24/7',
-    type: 'call'
+  id: "emergency",
+    name: "Emergency Services",
+    number: "911",
+    description: "For immediate life-threatening emergencies",
+    available: "24/7",
+};
+
+type: "call"
   }
 ];
 
-export function CrisisAlert({
+const CrisisAlertFixed: React.FC<CrisisAlertProps> = ({
   show = false,
-  severity = 'none',
-  message = '',
+  severity = "none",
+  message = "We detected you might be going through a difficult time.",
   actions = [],
   resources = [],
   emergencyMode = false,
-  onDismiss = () => {},
+  onDismiss,
   onEmergencyCall,
   onCrisisChat,
-  userType = 'seeker'
-}: CrisisAlertProps) {
-  const [isVisible, setIsVisible] = useState(false);
-  const [timeShown, setTimeShown] = useState<Date | null>(null);
+};
+
+userType = "seeker"
+}) => { const [isVisible, setIsVisible] = useState(show);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [selectedContact, setSelectedContact] = useState<EmergencyContact | null>(null);
 
   useEffect(() => {
-    if (show) {
-      setIsVisible(true);
-      setTimeShown(new Date());
-      
-      // Auto-focus for screen readers with a small delay to ensure element is rendered
-      setTimeout(() => {
-        const alertElement = document.getElementById('crisis-alert');
-        if (alertElement) {
-          alertElement.focus()
-  }
-      }, 0)
-  } else {
-      const timer = setTimeout(() => setIsVisible(false), 300);
-      return () => clearTimeout(timer)
-  }
-  };
-  }, [show]);
+    setIsVisible(show) }, [show]);
 
-  const handleDismiss = () => {
-    onDismiss()
+  const handleDismiss = () => { setIsVisible(false);
+    onDismiss?.() };
+
+  const handleEmergencyCall = () => {
+    onEmergencyCall?.();
+    // Open phone dialer
+    window.location.href = "tel:988"
   };
 
-  const handleEmergencyCall = (contact: EmergencyContact) => {
-    if (onEmergencyCall) {
-      onEmergencyCall()
-  }
-    
-    // For web, we can try to open the phone app
-    if (contact.type === 'call') {
-      window.open(`tel:${contact.number}`, '_self')
-  } else if (contact.type === 'text') {
-      window.open(`sms:${contact.number}`, '_self')
-  }
-  };
+  const handleCrisisChat = () => { onCrisisChat?.() };
 
-  const handleCrisisChat = () => {
-    if (onCrisisChat) {
-      onCrisisChat()
-  } else {
-      // Open crisis chat website
-      window.open('https://suicidepreventionlifeline.org/chat/', '_blank')
-  }
-  };
+  const getSeverityColor = (level: string) => {
+    switch (level) {
+  case "critical":
+        return "#dc2626"; // red-600
+      case "high":
+        return "#ea580c"; // orange-600
+      case "medium":
+        return "#d97706"; // amber-600
+      case "low":
+        return "#059669"; // emerald-600
+};
 
-  const handleBackdropClick = () => {
-    if (!emergencyMode) {
-      handleDismiss()
-  }
-  };
-
-  const handleBackdropKeyDown = (event: React.KeyboardEvent) => {
-    if (!emergencyMode && (event.key === 'Enter' || event.key === ' ')) {
-      event.preventDefault();
-      handleDismiss()
-  }
-  };
-
-  const getSeverityConfig = () => {
-    switch (severity) {
-      case 'critical':
-        return {
-          className: 'crisis-alert--critical',
-          color: '#dc2626',
-          pulse: true,
-          title: 'IMMEDIATE ATTENTION NEEDED'
-  };
-      case 'high':
-        return {
-          className: 'crisis-alert--high',
-          color: '#ea580c',
-          pulse: true,
-          title: 'Crisis Support Needed'
-  };
-      case 'medium':
-        return {
-          className: 'crisis-alert--medium',
-          color: '#d97706',
-          pulse: false,
-          title: 'Support Recommended'
-  };
-      case 'low':
-        return {
-          className: 'crisis-alert--low',
-          color: '#059669',
-          pulse: false,
-          title: 'Resources Available'
-  };
-      default:
-        return {
-          className: 'crisis-alert--none',
-          color: '#6b7280',
-          pulse: false,
-          title: 'Support Available'
-  };
+default:
+        return "#6b7280"; // gray-500
     }
   };
 
-  const getContactClassName = (contactType: string) => {
-    if (contactType === 'call') return 'crisis-alert__emergency-contact--call';
-    if (contactType === 'text') return 'crisis-alert__emergency-contact--text';
-    return 'crisis-alert__emergency-contact--chat'
-  };
+  const getSeverityIcon = (level: string) => {
+    switch (level) {
+  case "critical":
+        return "🚨";
+      case "high":
+        return "⚠️";
+      case "medium":
+        return "⚡";
+      case "low":
+        return "💙";
+};
 
-  const config = getSeverityConfig();
+default:
+        return "ℹ️"
+    }
+  };
 
   if (!isVisible) return null;
 
   return (
-    <div className={[
-        'crisis-alert',
-        config.className,
-        show ? 'crisis-alert--show' : 'crisis-alert--hide'
-      ].join(' ')}
-      role="alert"
-      aria-live="assertive"
-      aria-labelledby="crisis-alert-title"
-      id="crisis-alert"
-      tabIndex={-1}
-    >
-      <div className="crisis-alert__backdrop" 
-        onClick={handleBackdropClick}
-        onKeyDown={handleBackdropKeyDown}
-        role="button"
-        tabIndex={emergencyMode ? -1 : 0}
-        aria-label={emergencyMode ? undefined : "Close alert backdrop"}
-      />
-      
-      <div className="crisis-alert__container">
-        {/* Header */}
-        <div className="crisis-alert__header">
-          <div className="crisis-alert__icon-container">
-            <div className={config.pulse ? 'crisis-alert__icon crisis-alert__icon--pulse' : 'crisis-alert__icon'}
-              style={{ color: config.color }}
-              aria-hidden="true"
-            >
-              ⚠️
-            </div>
-          </div>
-          
-          <div className="crisis-alert__title-container">
-            <h2 id="crisis-alert-title" className="crisis-alert__title">
-              {config.title}
-            </h2>
-            {timeShown && (
-              <div className="crisis-alert__timestamp">
-                🕐 <span>{timeShown.toLocaleTimeString()}</span>
-              </div>
-            )}
-          </div>
-
-          {!emergencyMode && (
-            <button className="crisis-alert__close"
-              onClick={handleDismiss}
-              aria-label="Close alert";
-              type="button"
-            >
-              ✕
-            </button>
-          )}
+    <div className={`crisis-alert crisis-alert--${severity} ${emergencyMode ? 'crisis-alert--emergency' : ''}`}>
+      <div className="crisis-alert__header">
+        <div className="crisis-alert__icon">
+          {getSeverityIcon(severity)}
         </div>
-
-        {/* Message */}
-        <div className="crisis-alert__content">
-          <p className="crisis-alert__message">{message}</p>
+        <div className="crisis-alert__title">
+          <h3 style={{ color: getSeverityColor(severity) }}>
+            {emergencyMode ? "Emergency Support Available" : "Crisis Support"}
+          </h3>
         </div>
+        <button 
+          className="crisis-alert__close"
+          onClick={handleDismiss}
+          aria-label="Close alert"
+        >
+          ×
+        </button>
+      </div>
 
-        {/* Emergency Contacts (for critical/high severity) */}
-        {(severity === 'critical' || severity === 'high') && (
-          <div className="crisis-alert__emergency-section">
-            <h3 className="crisis-alert__section-title">Immediate Help Available</h3>
-            <div className="crisis-alert__emergency-contacts">
-              {emergencyContacts.map((contact) => (
-                <button
-                  key={contact.id}
-                  className={`crisis-alert__emergency-contact ${getContactClassName(contact.type)}`}
-                  onClick={() => handleEmergencyCall(contact)}
-                  type="button"
+      <div className="crisis-alert__content">
+        <p className="crisis-alert__message">{message}</p>
+        
+        {emergencyMode && (
+          <div className="crisis-alert__emergency">
+            <p className="crisis-alert__emergency-text">
+              If you're having thoughts of self-harm or suicide, please reach out for immediate help:
+            </p>}
+    <div className="crisis-alert__contacts">
+              {
+  emergencyContacts.map((contact) => (}
+    <button
+};
+
+key={contact.id}
+                  className="crisis-alert__contact"
+                  onClick={() => {
+                    if (contact.type === "call") {
+                      window.location.href = `tel:${contact.number}`;
+                    } else if (contact.type === "text") {
+                      window.location.href = `sms:${contact.number}`;
+                    }
+                  }}
                 >
-                  <div className="crisis-alert__contact-icon">
-                    {contact.type === 'call' && '📞'}
-                    {contact.type === 'text' && '💬'}
-                    {contact.type === 'chat' && '💬'}
-                  </div>
-                  <div className="crisis-alert__contact-info">
-                    <div className="crisis-alert__contact-name">{contact.name}</div>
-                    <div className="crisis-alert__contact-number">{contact.number}</div>
-                    <div className="crisis-alert__contact-description">{contact.description}</div>
-                    <div className="crisis-alert__contact-availability">{contact.available}</div>
-                  </div>
-                  <div className="crisis-alert__contact-external">🔗</div>
+                  <div className="crisis-alert__contact-name">{contact.name}</div>
+                  <div className="crisis-alert__contact-number">{contact.number}</div>
+                  <div className="crisis-alert__contact-desc">{contact.description}</div>
                 </button>
               ))}
             </div>
           </div>
         )}
 
-        {/* Actions */}
-        {actions.length > 0 && (
-          <div className="crisis-alert__actions-section">
-            <h3 className="crisis-alert__section-title">Recommended Actions</h3>
-            <ul className="crisis-alert__actions-list">
-              {actions.map((action, index) => (
-                <li key={`action-${index}`} className="crisis-alert__action-item">
-                  {action}
-                </li>
+        {actions && actions.length > 0 && (
+          <div className="crisis-alert__actions">
+            <h4>Suggested Actions:</h4>}
+    <ul>
+              {actions.map((action, index) => (}
+    <li key={index}>{action}</li>
               ))}
             </ul>
           </div>
         )}
 
-        {/* Crisis Chat Button */}
-        <div className="crisis-alert__chat-section">
-          <button className="crisis-alert__chat-button"
-            onClick={handleCrisisChat}
-            type="button"
-          >
-            💬 <span>Start Crisis Chat</span>
-          </button>
-        </div>
-
-        {/* Resources */}
-        {resources.length > 0 && (
-          <div className="crisis-alert__resources-section">
-            <h3 className="crisis-alert__section-title">Additional Resources</h3>
-            <ul className="crisis-alert__resources-list">
-              {resources.map((resource, index) => (
-                <li key={`resource-${index}`} className="crisis-alert__resource-item">
-                  {resource}
-                </li>
+        {resources && resources.length > 0 && (
+          <div className="crisis-alert__resources">
+            <h4>Available Resources:</h4>}
+    <ul>
+              {resources.map((resource, index) => (}
+    <li key={index}>{resource}</li>
               ))}
             </ul>
-          </div>
-        )}
-
-        {/* Footer for helpers */}
-        {userType === 'helper' && (
-          <div className="crisis-alert__helper-footer">
-            <div className="crisis-alert__helper-note">
-              <strong>Helper Guidance:</strong> This situation requires professional intervention. 
-              Do not attempt to handle this crisis alone. Connect the person with professional crisis services immediately.
-            </div>
-          </div>
-        )}
-
-        {/* Footer Actions */}
-        {!emergencyMode && (
-          <div className="crisis-alert__footer">
-            <button className="crisis-alert__dismiss-button"
-              onClick={handleDismiss}
-              type="button"
-            >
-              I understand
-            </button>
           </div>
         )}
       </div>
-    </div>
-  )
-  }
 
+      <div className="crisis-alert__footer">
+        <div className="crisis-alert__buttons">
+          <button
+            className="crisis-alert__button crisis-alert__button--primary"
+            onClick={handleEmergencyCall}
+          >
+            Call 988 Now
+          </button>
+          <button
+            className="crisis-alert__button crisis-alert__button--secondary"
+            onClick={handleCrisisChat}
+          >
+            Start Crisis Chat
+          </button>
+          {
+  !emergencyMode && (}
+    <button
+              className="crisis-alert__button crisis-alert__button--tertiary"
+};
+
+onClick={handleDismiss}
+            >
+              I'm Safe Right Now
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CrisisAlertFixed;

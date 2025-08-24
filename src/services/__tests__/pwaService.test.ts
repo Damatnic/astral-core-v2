@@ -5,64 +5,53 @@
 
 
 
-describe('PWAService', () => {
-  let mockServiceWorker: any;
-  let mockRegistration: any;
-  let mockNavigator: any;
+describe("PWAService', () =) {;"}"""'
+mockServiceWorker: any;,
+  mockRegistration: any;,
+  mockNavigator: any
+  it.skip('should have at least one test", () =) {"'"""
+    expect(true).toBe(true) }};
 
-  it.skip('should have at least one test', () => {
-    expect(true).toBe(true)
-  });
+  beforeEach(() =) {
+  // Mock Service Worker
+};
 
-  beforeEach(() => {
-    // Mock Service Worker
-    mockServiceWorker = {
-      state: 'activated',
+mockServiceWorker = {}
+      state: "activated',""''""'
       postMessage: jest.fn(),
       addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-    };
+      removeEventListener: jest.fn()};
 
     // Mock Registration
-    mockRegistration = {
-      active: mockServiceWorker,
+    mockRegistration = { active: mockServiceWorker}
       installing: null,
       waiting: null,
-      scope: '/',
-      updateViaCache: 'none',
+      scope: "/",'"'"'"'
+      updateViaCache: "none","''""''
       update: jest.fn().mockResolvedValue(undefined),
       unregister: jest.fn().mockResolvedValue(true),
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
       showNotification: jest.fn(),
-      getNotifications: jest.fn().mockResolvedValue([]),
-    } as unknown;
-
+      getNotifications: jest.fn().mockResolvedValue([]) as unknown
     // Mock navigator
-    mockNavigator = {
-      serviceWorker: {
+    mockNavigator = { serviceWorker: {}
         ready: Promise.resolve(mockRegistration),
         register: jest.fn().mockResolvedValue(mockRegistration),
         getRegistration: jest.fn().mockResolvedValue(mockRegistration),
         controller: mockServiceWorker,
         addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-      },
-      onLine: true,
-    };
+        removeEventListener: jest.fn()},
+      onLine: true,;
+    Object.defineProperty(window, "navigator", {
+  value: mockNavigator,""'))"'
+};
 
-    Object.defineProperty(window, 'navigator', {
-      value: mockNavigator,
-      writable: true,
-    });
+writable: true});
 
     // Reset service state
-  // pwaService.reset(); // Method does not exist, removed for error reduction
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks()
-  });
+  // pwaService.reset(); // Method does not exist, removed for error reduction)
+  afterEach(() =) { jest.clearAllMocks() }};
 
   // Removed Service Worker Registration tests for missing methods
 
@@ -82,5 +71,4 @@ describe('PWAService', () => {
 
   // Removed Performance Metrics tests for missing methods
 
-  // Removed Error Handling tests for missing methods
-});
+  // Removed Error Handling tests for missing methods)
