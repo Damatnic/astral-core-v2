@@ -1,275 +1,497 @@
-import { create  } from 'zustand';"""'"'""'
-import { MoodCheckIn, Habit, TrackedHabit, HabitCompletion, JournalEntry  } from '../types';""'"'""'
-import { ApiClient  } from '../utils/ApiClient';""'"'"'
-import { authState  } from '../contexts/AuthContext';"""'"'""'
-import { calculateStreaks  } from '../utils/habitUtils';"""'
-interface WellnessState { { { {
-  history: MoodCheckIn[],
-  journalEntries: JournalEntry[],
-  isLoading: boolean;,
-  predefinedHabits: Habit[],
-  trackedHabits: TrackedHabit[],
-  isLoadingHabits: boolean;,
-  completions: HabitCompletion[]
-  // Actions
-  fetchHistory: () => Promise<void>,
-  postCheckIn: (checkInData: Omit<MoodCheckIn, "id" | 'userToken" | "timestamp">) => Promise<void>;"''""'
-  fetchHabits: () = Promise<void>,
-  trackHabit: (habitId: string) = Promise<void>,
-  untrackHabit: (habitId: string) = Promise<void>,
-  logCompletion: (habitId: string) = Promise<void>,
-};
+/**
+ * Wellness Store
+ *
+ * Basic Zustand store for managing wellness data including mood tracking,
+ * habit management, and journal entries. This is the standard version
+ * without enhanced features.
+ */
 
-fetchJournalEntries: () = Promise<void>
-};
+import { create } from 'zustand';
+import { persist, devtools } from 'zustand/middleware';
 
-postJournalEntry: (content: string) = Promise<void>
+// Basic types for wellness functionality
+export interface MoodCheckIn {
+  id: string;
+  mood: number; // 1-10 scale
+  energy: number; // 1-10 scale
+  anxiety: number; // 1-10 scale
+  notes?: string;
+  timestamp: number;
+  tags: string[];
+  userToken: string;
+}
+
+export interface Habit {
+  id: string;
+  name: string;
+  description?: string;
+  category: string;
+  frequency: 'daily' | 'weekly' | 'monthly';
+  target?: number;
+  unit?: string;
+  color: string;
+  icon: string;
+  isActive: boolean;
+  createdAt: number;
+}
+
+export interface TrackedHabit extends Habit {
+  streak: number;
+  longestStreak: number;
+  lastCompleted?: number;
+  weeklyProgress: number;
+  monthlyProgress: number;
+}
+
+export interface HabitCompletion {
+  id: string;
+  habitId: string;
+  timestamp: number;
+  value?: number;
+  notes?: string;
+  userToken: string;
+}
+
+export interface JournalEntry {
+  id: string;
+  title?: string;
+  content: string;
+  mood?: number;
+  tags: string[];
+  timestamp: number;
+  isPrivate: boolean;
+  userToken: string;
+}
+
+// Store state interface
+interface WellnessState {
+  // Mood tracking
+  history: MoodCheckIn[];
+  isLoading: boolean;
   
-export const useWellnessStore = create<WellnessState>((set, get) =) ({
-  history: [],
-  journalEntries: [],
-  isLoading: true,
-  predefinedHabits: [],
-  trackedHabits: [],
-  isLoadingHabits: true,
+  // Habit management
+  predefinedHabits: Habit[];
+  trackedHabits: TrackedHabit[];
+  isLoadingHabits: boolean;
+  completions: HabitCompletion[];
+  
+  // Journal
+  journalEntries: JournalEntry[];
+  isLoadingJournal: boolean;
+  
+  // Error handling
+  error: string | null;
+}
+
+// Store actions interface
+interface WellnessActions {
+  // Mood tracking actions
+  fetchHistory: () => Promise<void>;
+  postCheckIn: (checkInData: Omit<MoodCheckIn, 'id' | 'userToken' | 'timestamp'>) => Promise<void>;
+  
+  // Habit management actions
+  fetchHabits: () => Promise<void>;
+  trackHabit: (habitId: string) => Promise<void>;
+  untrackHabit: (habitId: string) => Promise<void>;
+  logCompletion: (habitId: string, value?: number, notes?: string) => Promise<void>;
+  
+  // Journal actions
+  fetchJournalEntries: () => Promise<void>;
+  addJournalEntry: (entry: Omit<JournalEntry, 'id' | 'userToken' | 'timestamp'>) => Promise<void>;
+  updateJournalEntry: (id: string, updates: Partial<JournalEntry>) => Promise<void>;
+  deleteJournalEntry: (id: string) => Promise<void>;
+  
+  // Utility actions
+  setError: (error: string | null) => void;
+  clearError: () => void;
+}
+
+// Predefined habits
+const DEFAULT_HABITS: Omit<Habit, 'id' | 'createdAt'>[] = [
+  {
+    name: 'Meditation',
+    description: 'Daily mindfulness practice',
+    category: 'mental',
+    frequency: 'daily',
+    target: 10,
+    unit: 'minutes',
+    color: '#8B5CF6',
+    icon: '🧘',
+    isActive: true
+  },
+  {
+    name: 'Exercise',
+    description: 'Physical activity',
+    category: 'physical',
+    frequency: 'daily',
+    target: 30,
+    unit: 'minutes',
+    color: '#EF4444',
+    icon: '🏃',
+    isActive: true
+  },
+  {
+    name: 'Water Intake',
+    description: 'Stay hydrated',
+    category: 'physical',
+    frequency: 'daily',
+    target: 8,
+    unit: 'glasses',
+    color: '#3B82F6',
+    icon: '💧',
+    isActive: true
+  },
+  {
+    name: 'Reading',
+    description: 'Read for personal growth',
+    category: 'mental',
+    frequency: 'daily',
+    target: 20,
+    unit: 'minutes',
+    color: '#F59E0B',
+    icon: '📚',
+    isActive: true
+  },
+  {
+    name: 'Social Connection',
+    description: 'Connect with friends or family',
+    category: 'social',
+    frequency: 'daily',
+    color: '#10B981',
+    icon: '👥',
+    isActive: true
+  }
+];
+
+// Mock API client for demonstration
+const mockApiClient = {
+  async get(endpoint: string): Promise<any> {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500 + Math.random() * 1000));
+    
+    if (endpoint === '/wellness/history') {
+      return { data: [] };
+    }
+    if (endpoint === '/wellness/habits') {
+      return { data: DEFAULT_HABITS.map((habit, index) => ({
+        ...habit,
+        id: `habit_${index + 1}`,
+        createdAt: Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000
+      })) };
+    }
+    if (endpoint === '/wellness/journal') {
+      return { data: [] };
+    }
+    if (endpoint === '/wellness/completions') {
+      return { data: [] };
+    }
+    
+    return { data: [] };
+  },
+  
+  async post(endpoint: string, data: any): Promise<any> {
+    await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 700));
+    
+    const id = `${endpoint.split('/').pop()}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return { data: { id, ...data, timestamp: Date.now() } };
+  },
+  
+  async put(endpoint: string, data: any): Promise<any> {
+    await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 700));
+    return { data: { ...data, updatedAt: Date.now() } };
+  },
+  
+  async delete(endpoint: string): Promise<any> {
+    await new Promise(resolve => setTimeout(resolve, 200 + Math.random() * 500));
+    return { success: true };
+  }
 };
 
-completions: [],
-
+// Get user token (mock implementation)
+const getUserToken = (): string => {
+  return localStorage.getItem('userToken') || 'demo_user_token';
 };
 
-fetchHistory: async () =) { }
-const userToken = authState.userToken,
-    if (!userToken) {
-        set({ history: [], isLoading: false });
-        return;
-set({ isLoading: true });
-    try(;
-const data = await ApiClient.mood.getHistory(userToken );
-      set({ history: data });
-  ) catch (error) {
-      // Provide demo data in development mode
-const err = error as { message?: string, isDevelopmentError?: boolean };
-      if (err.message?.includes("Demo mode") || err.isDevelopmentError || true) { // Always show demo data for now""'}'
-demoHistory: MoodCheckIn[] = []
-        // Generate 2 weeks of mood data
-        for (let i = 0; i < 14; i++> {;})
-const daysAgo = i;
-const mood = Math.floor(Math.random() * 2) + 3; // 3-5 range for mostly positive
-const anxiety = Math.floor(Math.random() * 3) + 1, // 1-3 range for low-moderate
-          demoHistory.push({
+// Create the wellness store
+export const useWellnessStore = create<WellnessState & WellnessActions>()(
+  persist(
+    devtools(
+      (set, get) => ({
+        // Initial state
+        history: [],
+        isLoading: false,
+        predefinedHabits: [],
+        trackedHabits: [],
+        isLoadingHabits: false,
+        completions: [],
+        journalEntries: [],
+        isLoadingJournal: false,
+        error: null,
+
+        // Mood tracking actions
+        fetchHistory: async () => {
+          try {
+            set({ isLoading: true, error: null });
+            
+            const response = await mockApiClient.get('/wellness/history');
+            
+            set({ 
+              history: response.data || [],
+              isLoading: false 
+            });
+          } catch (error) {
+            set({ 
+              error: error instanceof Error ? error.message : 'Failed to fetch mood history',
+              isLoading: false 
+            });
+          }
+        },
+
+        postCheckIn: async (checkInData) => {
+          try {
+            set({ isLoading: true, error: null });
+            
+            const checkIn: Omit<MoodCheckIn, 'id'> = {
+              ...checkInData,
+              userToken: getUserToken(),
+              timestamp: Date.now()
+            };
+            
+            const response = await mockApiClient.post('/wellness/checkin', checkIn);
+            
+            set(state => ({
+              history: [response.data, ...state.history],
+              isLoading: false
+            }));
+          } catch (error) {
+            set({ 
+              error: error instanceof Error ? error.message : 'Failed to save mood check-in',
+              isLoading: false 
+            });
+          }
+        },
+
+        // Habit management actions
+        fetchHabits: async () => {
+          try {
+            set({ isLoadingHabits: true, error: null });
+            
+            const [habitsResponse, completionsResponse] = await Promise.all([
+              mockApiClient.get('/wellness/habits'),
+              mockApiClient.get('/wellness/completions')
+            ]);
+            
+            const habits = habitsResponse.data || [];
+            const completions = completionsResponse.data || [];
+            
+            // Calculate streaks and progress for tracked habits
+            const trackedHabits: TrackedHabit[] = habits.map((habit: Habit) => {
+              const habitCompletions = completions.filter((c: HabitCompletion) => c.habitId === habit.id);
+              
+              // Calculate streak
+              let streak = 0;
+              let longestStreak = 0;
+              let currentStreak = 0;
+              
+              if (habitCompletions.length > 0) {
+                const sortedCompletions = habitCompletions
+                  .sort((a, b) => b.timestamp - a.timestamp);
+                
+                const today = new Date().setHours(0, 0, 0, 0);
+                let checkDate = today;
+                
+                for (const completion of sortedCompletions) {
+                  const completionDate = new Date(completion.timestamp).setHours(0, 0, 0, 0);
+                  
+                  if (completionDate === checkDate || completionDate === checkDate - 24 * 60 * 60 * 1000) {
+                    currentStreak++;
+                    checkDate = completionDate - 24 * 60 * 60 * 1000;
+                  } else {
+                    break;
+                  }
+                }
+                
+                streak = currentStreak;
+                longestStreak = Math.max(currentStreak, longestStreak);
+              }
+              
+              // Calculate progress
+              const now = Date.now();
+              const weekAgo = now - (7 * 24 * 60 * 60 * 1000);
+              const monthAgo = now - (30 * 24 * 60 * 60 * 1000);
+              
+              const weeklyCompletions = habitCompletions.filter(c => c.timestamp >= weekAgo);
+              const monthlyCompletions = habitCompletions.filter(c => c.timestamp >= monthAgo);
+              
+              const weeklyTarget = habit.frequency === 'daily' ? 7 : habit.frequency === 'weekly' ? 1 : 0.25;
+              const monthlyTarget = habit.frequency === 'daily' ? 30 : habit.frequency === 'weekly' ? 4 : 1;
+              
+              const weeklyProgress = Math.min(weeklyCompletions.length / weeklyTarget, 1);
+              const monthlyProgress = Math.min(monthlyCompletions.length / monthlyTarget, 1);
+              
+              return {
+                ...habit,
+                streak,
+                longestStreak,
+                lastCompleted: habitCompletions[0]?.timestamp,
+                weeklyProgress,
+                monthlyProgress
+              };
+            });
+            
+            set({ 
+              predefinedHabits: habits,
+              trackedHabits,
+              completions,
+              isLoadingHabits: false 
+            });
+          } catch (error) {
+            set({ 
+              error: error instanceof Error ? error.message : 'Failed to fetch habits',
+              isLoadingHabits: false 
+            });
+          }
+        },
+
+        trackHabit: async (habitId) => {
+          try {
+            const habit = get().predefinedHabits.find(h => h.id === habitId);
+            if (!habit) return;
+            
+            await mockApiClient.post('/wellness/track-habit', { habitId, userToken: getUserToken() });
+            
+            // Refresh habits to update tracked status
+            await get().fetchHabits();
+          } catch (error) {
+            set({ error: error instanceof Error ? error.message : 'Failed to track habit' });
+          }
+        },
+
+        untrackHabit: async (habitId) => {
+          try {
+            await mockApiClient.delete(`/wellness/track-habit/${habitId}`);
+            
+            set(state => ({
+              trackedHabits: state.trackedHabits.filter(h => h.id !== habitId)
+            }));
+          } catch (error) {
+            set({ error: error instanceof Error ? error.message : 'Failed to untrack habit' });
+          }
+        },
+
+        logCompletion: async (habitId, value, notes) => {
+          try {
+            const completion: Omit<HabitCompletion, 'id'> = {
+              habitId,
+              timestamp: Date.now(),
+              value,
+              notes,
+              userToken: getUserToken()
+            };
+            
+            const response = await mockApiClient.post('/wellness/completion', completion);
+            
+            set(state => ({
+              completions: [...state.completions, response.data]
+            }));
+            
+            // Refresh habits to update streaks and progress
+            await get().fetchHabits();
+          } catch (error) {
+            set({ error: error instanceof Error ? error.message : 'Failed to log habit completion' });
+          }
+        },
+
+        // Journal actions
+        fetchJournalEntries: async () => {
+          try {
+            set({ isLoadingJournal: true, error: null });
+            
+            const response = await mockApiClient.get('/wellness/journal');
+            
+            set({ 
+              journalEntries: response.data || [],
+              isLoadingJournal: false 
+            });
+          } catch (error) {
+            set({ 
+              error: error instanceof Error ? error.message : 'Failed to fetch journal entries',
+              isLoadingJournal: false 
+            });
+          }
+        },
+
+        addJournalEntry: async (entryData) => {
+          try {
+            set({ isLoadingJournal: true, error: null });
+            
+            const entry: Omit<JournalEntry, 'id'> = {
+              ...entryData,
+              userToken: getUserToken(),
+              timestamp: Date.now()
+            };
+            
+            const response = await mockApiClient.post('/wellness/journal', entry);
+            
+            set(state => ({
+              journalEntries: [response.data, ...state.journalEntries],
+              isLoadingJournal: false
+            }));
+          } catch (error) {
+            set({ 
+              error: error instanceof Error ? error.message : 'Failed to save journal entry',
+              isLoadingJournal: false 
+            });
+          }
+        },
+
+        updateJournalEntry: async (id, updates) => {
+          try {
+            const response = await mockApiClient.put(`/wellness/journal/${id}`, updates);
+            
+            set(state => ({
+              journalEntries: state.journalEntries.map(entry =>
+                entry.id === id ? { ...entry, ...response.data } : entry
+              )
+            }));
+          } catch (error) {
+            set({ error: error instanceof Error ? error.message : 'Failed to update journal entry' });
+          }
+        },
+
+        deleteJournalEntry: async (id) => {
+          try {
+            await mockApiClient.delete(`/wellness/journal/${id}`);
+            
+            set(state => ({
+              journalEntries: state.journalEntries.filter(entry => entry.id !== id)
+            }));
+          } catch (error) {
+            set({ error: error instanceof Error ? error.message : 'Failed to delete journal entry' });
+          }
+        },
+
+        // Utility actions
+        setError: (error) => {
+          set({ error });
+        },
+
+        clearError: () => {
+          set({ error: null });
+        }
+      }),
+      { name: 'wellness-store' }
+    ),
+    {
+      name: 'wellness-store',
+      partialize: (state) => ({
+        history: state.history,
+        trackedHabits: state.trackedHabits,
+        completions: state.completions,
+        journalEntries: state.journalEntries
+      })
+    }
   )
-};
+);
 
-id: `demo-${
-  i)`,
-            userToken: userToken,
-            timestamp: new Date(Date.now() - (daysAgo * 86400000)).toISOString(),
-            moodScore: mood,
-            anxietyLevel: anxiety,
-            sleepQuality: Math.floor(Math.random() * 2) + 3,
-            energyLevel: Math.floor(Math.random() * 3) + 2,
-};
-
-tags: [
-              ["Grateful", 'Calm", "Hopeful"][Math.floor(Math.random() * 3)],"''""'
-              ["Productive', "Tired", "Anxious"][Math.floor(Math.random() * 3)]'""'"'
-            ],
-};
-
-notes: [ "Had a good therapy session today","''""'"'
-              "Practiced meditation this morning","''""'"'
-              "Went for a walk in nature","'""'
-              'Connected with a friend","""''""'
-              "Accomplished my daily goals",""'""'
-              "Feeling more balanced",""''import "Working through some challenges" ][Math.floor(Math.random() * 7)] };'""'
-set({ history: demoHistory });
-  ) else { console.error("Failed to fetch wellness history:", error  );''""'""'
-        set({ history: [] });
-  };
-  } finally {
-      set({ isLoading: false });
-  };
-  ),
-
-  postCheckIn: async (checkInData) =} {;
-const userToken = authState.userToken;
-    if (!userToken) throw new Error("User token is not available.");'"'"'""'
-
-    await ApiClient.mood.postCheckIn(checkInData, userToken  );
-    await get().fetchHistory() },
-
-  fetchJournalEntries: async () =} {;
-const userToken = authState.userToken,
-    if (!userToken) {
-        set({ journalEntries: [] });
-        return;
-try(;
-const data = await ApiClient.journal.getEntries(userToken );
-      set({ journalEntries: data.sort((a,b) =) new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()} ));
-  } catch (error) {
-      // Provide demo data in development mode
-const err = error as { message?: string, isDevelopmentError?: boolean };
-      if (err.message?.includes("Demo mode") || err.isDevelopmentError || true) { // Always show demo data for now'""''"""'
-        set({})
-          journalEntries: [
-            {
-  id: "demo-journal-1',""''"""'
-              userToken: userToken,
-};
-
-content: "Today was a breakthrough day in therapy. We talked about setting boundaries with family, and I finally understood why it\'s been so hard for me. It\"s not about not caring - it\"s about caring for myself too. I\'m going to practice saying "no" to one small thing this week.","'""'
-};
-
-timestamp: new Date(Date.now() - 86400000).toISOString()
-  },
-            {
-  id: "demo-journal-2",""''""'""'
-              userToken: userToken,
-};
-
-content: "Anxiety was high this morning, but I used the 5-4-3-2-1 grounding technique and it actually worked! 5 things I could see, 4 I could touch, 3 I could hear, 2 I could smell, 1 I could taste. By the end, I felt present again. Small victories matter.",'"'"'""'
-};
-
-timestamp: new Date(Date.now() - 172800000).toISOString()
-  },
-            {
-  id: "demo-journal-3",'""''"""'
-};
-
-userToken: userToken,
-};
-
-content: "Grateful for: 1} Morning coffee with no rush, 2] My cat purring next to me, 3} A text from an old friend, 4) The sunset I caught on my walk, 5} This safe space to express myself. Some days gratitude is easier than others, but today it feels genuine.',""''"""'
-              timestamp: new Date(Date.now() - 259200000).toISOString()
-  },
-            {
-  id: "demo-journal-4',""'""""''
-              userToken: userToken,
-};
-
-content: "Had a panic attack at the grocery store today. But instead of beating myself up, I\"m proud that I: recognized it happening, found a quiet spot, used my breathing exercises, and finished my shopping afterward. Recovery isn\'t linear, and that\"s okay.","'"'"'
-};
-
-timestamp: new Date(Date.now() - 345600000).toISOString()
-  },
-            {
-  id: "demo-journal-5',""""'
-              userToken: userToken,
-};
-
-content: 'Sleep has been better this week. I think the new bedtime routine is helping - no screens after 10pm, chamomile tea, and 10 minutes of stretching. It\"s amazing how small changes can make such a difference. Tonight I\"ll try adding some meditation.',""""'""'
-};
-
-timestamp: new Date(Date.now() - 432000000).toISOString()
-
-  ]};
-  ) else { console.error('Failed to fetch journal entries:", error  );""'"'""'
-        set({ journalEntries: [] });
-  };
-  };
-  },
-
-  postJournalEntry: async (content) =} {;
-const userToken = authState.userToken;
-    if (!userToken) throw new Error('User token is not available.");""'"'""'
-
-    await ApiClient.journal.postEntry(content, userToken  );
-    await get().fetchJournalEntries() },
-
-  fetchHabits: async () = {;}
-const userToken = authState.userToken,
-    if (!userToken) {
-      set({ predefinedHabits: [], trackedHabits: [], completions: [], isLoadingHabits: false });
-      return;
-set({ isLoadingHabits: true });
-    try(;
-[predefined, trackedIds, comps] = await Promise.all([)
-            ApiClient.habits.getPredefinedHabits(),
-            ApiClient.habits.getTrackedHabitIds(userToken),
-            ApiClient.habits.getCompletions(userToken)]);
-const trackedWithStreaks = calculateStreaks(predefined.filter(h =) trackedIds.includes(h.id)), comps, userToken );
-        set({
-  predefinedHabits: predefined,)
-};
-
-completions: comps,)
-};
-
-trackedHabits: trackedWithStreaks});
-  } catch (error) {
-        // Provide demo data in development mode
-const err = error as { message?: string, isDevelopmentError?: boolean };
-        if (err.message?.includes('Demo mode") || err.isDevelopmentError) {;"}"'
-const demoPredefined = [;]
-                { id: "habit-1', name: "Daily Meditation", description: 'Practice mindfulness for 10 minutes", category: "Mindfulness" as const, icon: "🧘' },""'""'
-                { id: "habit-2", name: 'Gratitude Journal", description: "Write 3 things you\'re grateful for", category: "Self-Care" as const, icon: "📝' },""'"'
-                { id: "habit-3", name: "Morning Walk", description: 'Take a 20-minute walk outdoors", category: "Physical' as const, icon: "🚶" },""'"'
-                { id: "habit-4', name: "Deep Breathing", description: "Practice deep breathing exercises", category: 'Mindfulness" as const, icon: "💨' },""""''
-                { id: "habit-5", name: 'Hydration", description: "Drink 8 glasses of water", category: "Physical' as const, icon: "💧" }'""""''
-            ];
-const demoTracked = [;]
-                {
-  userId: "demo-user",'"'"""''
-                    habitId: "habit-1",'"""'
-                    trackedAt: new Date(Date.now() - 7 * 86400000).toISOString(),
-                    currentStreak: 7,
-};
-
-longestStreak: 14,
-};
-
-isCompletedToday: false
-  },
-                {
-  userId: "demo-user',""'""""
-                    habitId: 'habit-3","'""""
-                    trackedAt: new Date(Date.now() - 3 * 86400000).toISOString(),
-                    currentStreak: 3,
-};
-
-longestStreak: 10,
-};
-
-isCompletedToday: true
-
-            set({
-  predefinedHabits: demoPredefined,
-};
-
-trackedHabits: demoTracked,)
-};
-
-completions: [])
-});
-  } else { console.error('Failed to fetch habits data:", error );"}'
-  } finally {
-        set({ isLoadingHabits: false });
-  };
-  },
-
-  trackHabit: async (habitId) => {;
-const userToken = authState.userToken;
-    if (!userToken) return;
-    await ApiClient.habits.trackHabit(userToken, habitId ),
-    await get().fetchHabits() },
-
-  untrackHabit: async (habitId) => {;
-const userToken = authState.userToken;
-    if (!userToken) return;
-    await ApiClient.habits.untrackHabit(userToken, habitId ),
-    await get().fetchHabits() },
-
-  logCompletion: async (habitId) => {;
-const userToken = authState.userToken;
-    if (!userToken) return;
-const today = new Date().toISOString().split("T")[0];""'""'
-    await ApiClient.habits.logCompletion(userToken, habitId, today  );
-    await get().fetchHabits() },;
-  }));
-
-// Initial data fetches - disabled to prevent refresh issues
-// These will be called when the component mounts instead
-// useWellnessStore.getState().fetchHistory()
-// useWellnessStore.getState().fetchHabits()
-// useWellnessStore.getState().fetchJournalEntries()
+export default useWellnessStore;
