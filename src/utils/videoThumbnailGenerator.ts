@@ -1,6 +1,6 @@
 /**
  * Video Thumbnail Generator
- * 
+ *
  * Generates optimized thumbnails from video files for wellness videos
  * Features:
  * - Extract frames from video sources
@@ -45,10 +45,10 @@ class VideoThumbnailGenerator {
    */
   public async generateThumbnails(
     videoSource: File | string,
-    options: VideoThumbnailOptions = {}
+  options: VideoThumbnailOptions = {}
   ): Promise<ThumbnailResult> {
     const {
-      frameTime = 1,
+  frameTime = 1,
       quality = 85,
       sizes = this.defaultSizes,
       generatePlaceholder = true
