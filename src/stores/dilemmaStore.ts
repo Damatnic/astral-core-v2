@@ -1,520 +1,974 @@
-import { create  } from 'zustand';"""'"'""'
-import { Dilemma, SortOption  } from '../types';""'"'""'
-import { ApiClient  } from '../utils/ApiClient';""'"'"'
-import { authState  } from '../contexts/AuthContext';"""'"'""'
-import { useChatStore  } from './chatStore';"""''""'
-import { notificationService  } from '../services/notificationService';""''""'""'
-import { authService  } from '../services/authService';'""'
+/**
+ * Dilemma Store
+ *
+ * Zustand store for managing dilemmas (posts), user interactions, filtering,
+ * sorting, and moderation features for the mental health platform.
+ */
+
+import { create } from 'zustand';
+import { persist, devtools } from 'zustand/middleware';
+
+// Types for dilemma functionality
+export interface Dilemma {
+  id: string;
+  title: string;
+  content: string;
+  author: {
+    id: string;
+    name: string;
+    avatar?: string;
+    role: string;
+    isVerified: boolean;
+  };
+  category: string;
+  tags: string[];
+  timestamp: number;
+  updatedAt?: number;
+  
+  // Engagement metrics
+  views: number;
+  likes: number;
+  comments: number;
+  shares: number;
+  bookmarks: number;
+  
+  // User interactions
+  isLiked: boolean;
+  isBookmarked: boolean;
+  isFollowing: boolean;
+  userVote?: 'up' | 'down';
+  
+  // Content metadata
+  readingTime: number;
+  difficulty: 'easy' | 'medium' | 'hard';
+  sensitivity: 'low' | 'medium' | 'high';
+  triggerWarnings: string[];
+  
+  // Moderation
+  isReported: boolean;
+  reportCount: number;
+  isFlagged: boolean;
+  moderationStatus: 'pending' | 'approved' | 'rejected' | 'hidden';
+  
+  // Help status
+  hasHelp: boolean;
+  helpCount: number;
+  isResolved: boolean;
+  bestHelpId?: string;
+  
+  // Media attachments
+  attachments?: {
+    type: 'image' | 'video' | 'audio' | 'document';
+    url: string;
+    caption?: string;
+    thumbnail?: string;
+  }[];
+  
+  // Location (if shared)
+  location?: {
+    country: string;
+    region?: string;
+    city?: string;
+  };
+}
+
+export interface DilemmaFilter {
+  category?: string;
+  tags?: string[];
+  difficulty?: Dilemma['difficulty'];
+  sensitivity?: Dilemma['sensitivity'];
+  hasHelp?: boolean;
+  isResolved?: boolean;
+  author?: string;
+  dateRange?: {
+    start: number;
+    end: number;
+  };
+  location?: string;
+}
+
+export type SortOption = 
+  | 'recent' 
+  | 'popular' 
+  | 'trending' 
+  | 'most_liked' 
+  | 'most_commented' 
+  | 'most_helped' 
+  | 'oldest' 
+  | 'alphabetical';
+
+export interface DilemmaStats {
+  total: number;
+  byCategory: Record<string, number>;
+  byDifficulty: Record<Dilemma['difficulty'], number>;
+  bySensitivity: Record<Dilemma['sensitivity'], number>;
+  resolved: number;
+  unresolved: number;
+  trending: Dilemma[];
+  popular: Dilemma[];
+}
+
+// Store state interface
+interface DilemmaState {
+  // Dilemmas
+  allDilemmas: Dilemma[];
+  forYouDilemmas: Dilemma[];
+  trendingDilemmas: Dilemma[];
+  bookmarkedDilemmas: Dilemma[];
+  myDilemmas: Dilemma[];
+  
+  // Loading states
+  isLoading: boolean;
+  isLoadingMore: boolean;
+  isRefreshing: boolean;
+  
+  // Filtering and sorting
+  activeFilter: DilemmaFilter;
+  sortBy: SortOption;
+  searchTerm: string;
+  
+  // Pagination
+  currentPage: number;
+  totalPages: number;
+  hasMore: boolean;
+  postsPerPage: number;
+  
+  // UI state
+  selectedDilemmaId: string | null;
+  viewMode: 'grid' | 'list' | 'card';
+  showFilters: boolean;
+  
+  // Moderation
+  reportingDilemmaId: string | null;
+  isReportModalOpen: boolean;
+  reportReason: string;
+  blockedUserIds: Set<string>;
+  
+  // Statistics
+  stats: DilemmaStats;
+  
+  // Error handling
+  error: string | null;
+}
+
+// Store actions interface
+interface DilemmaActions {
+  // Dilemma management
+  fetchDilemmas: (page?: number, refresh?: boolean) => Promise<void>;
+  fetchForYouDilemmas: () => Promise<void>;
+  fetchTrendingDilemmas: () => Promise<void>;
+  fetchMyDilemmas: () => Promise<void>;
+  fetchBookmarkedDilemmas: () => Promise<void>;
+  
+  // CRUD operations
+  createDilemma: (dilemma: Omit<Dilemma, 'id' | 'timestamp' | 'views' | 'likes' | 'comments' | 'shares' | 'bookmarks' | 'isLiked' | 'isBookmarked' | 'isFollowing' | 'isReported' | 'reportCount' | 'isFlagged' | 'moderationStatus' | 'hasHelp' | 'helpCount' | 'isResolved'>) => Promise<string>;
+  updateDilemma: (id: string, updates: Partial<Dilemma>) => Promise<void>;
+  deleteDilemma: (id: string) => Promise<void>;
+  
+  // User interactions
+  likeDilemma: (id: string) => Promise<void>;
+  unlikeDilemma: (id: string) => Promise<void>;
+  bookmarkDilemma: (id: string) => Promise<void>;
+  unbookmarkDilemma: (id: string) => Promise<void>;
+  shareDilemma: (id: string, platform?: string) => Promise<void>;
+  followAuthor: (dilemmaId: string) => Promise<void>;
+  unfollowAuthor: (dilemmaId: string) => Promise<void>;
+  
+  // Filtering and sorting
+  setFilter: (filter: Partial<DilemmaFilter>) => void;
+  clearFilter: () => void;
+  setSortBy: (sortBy: SortOption) => void;
+  setSearchTerm: (term: string) => void;
+  
+  // Pagination
+  loadMore: () => Promise<void>;
+  goToPage: (page: number) => Promise<void>;
+  setPostsPerPage: (count: number) => void;
+  
+  // UI actions
+  setSelectedDilemma: (id: string | null) => void;
+  setViewMode: (mode: DilemmaState['viewMode']) => void;
+  toggleFilters: () => void;
+  
+  // Moderation actions
+  reportDilemma: (id: string, reason: string) => Promise<void>;
+  blockUser: (userId: string) => Promise<void>;
+  unblockUser: (userId: string) => Promise<void>;
+  flagDilemma: (id: string) => Promise<void>;
+  
+  // Statistics
+  updateStats: () => void;
+  
+  // Utility actions
+  refreshAll: () => Promise<void>;
+  setError: (error: string | null) => void;
+  clearError: () => void;
+}
+
 const POSTS_PER_PAGE = 10;
-interface DilemmaState { { { {
-  allDilemmas: Dilemma[],
-  forYouDilemmas: Dilemma[],
-  isLoading: boolean;,
-  filter: string;,
-  sort: SortOption;,
-  searchTerm: string;,
-  currentPage: number;,
-  reportingDilemmaId: string | null,
-  isReportModalOpen: boolean;,
-  blockedUserIds: Set<string>
-  // Derived state
-  reportedDilemmas: Dilemma[],
-  visibleDilemmas: Dilemma[]
-};
 
-hasMore: boolean
-  // Actions
-};
-
-fetchDilemmas: () =} Promise<void>
-  fetchForYouFeed: () =} Promise<void>
-  setFilter: (filter: string) =} void
-  setSort: (sort: SortOption) = void,
-  setSearchTerm: (term: string) = void,
-  loadMore: () = void,
-  postDilemma: (data: Omit<Dilemma, "id" | "userToken" | 'supportCount" | "isSupported' | "isReported" | "reportReason" | 'status" | "assignedHelperId' | "resolved_by_seeker" | "requestedHelperId" | 'summary" | "summaryLoading' | "moderation" | "aiMatchReason">, userToken: string) = Promise<void>'",
-  createDirectRequest: (data: Pick<Dilemma, "content' | "category">, userToken: string, requestedHelperId: string) = Promise<void>""',
-  toggleSupport: (dilemmaId: string) = Promise<void>,
-  openReportModal: (dilemmaId: string) = void,
-  closeReportModal: () = void,
-  reportDilemma: (reason: string) = Promise<void>,
-  getDilemmaById: (id: string) = Dilemma | undefined,
-  acceptDilemma: (dilemmaId: string) = Promise<void>,
-  resolveDilemma: (dilemmaId: string, userToken: string) = Promise<void>,
-  declineRequest: (dilemmaId: string) = Promise<void>,
-  summarizeDilemma: (dilemmaId: string) = Promise<void>,
-  dismissReport: (dilemmaId: string) = Promise<void>,
-  removePost: (dilemmaId: string) = Promise<void>
-  
-export const useDilemmaStore = create<DilemmaState>((set, get) =) {;
-const calculateDerivedState = (state: DilemmaState) =} {,
-{ allDilemmas, filter, sort, searchTerm, currentPage, blockedUserIds } = state;
-
-        // Calculate reportedDilemmas
-const reportedDilemmas = allDilemmas.filter(d =) d.isReported && d.status !== 'removed_by_moderator"};"'""""
-
-        // Calculate visibleDilemmas and hasMore for the community feed
-const filteredDilemmas = allDilemmas.filter(d =);
-            d.status === 'active" &&"'""""'"'
-            !d.assignedHelperId &&
-            !d.isReported &&
-            !blockedUserIds.has(d.userToken);
-        if (filter !== "All') { filteredDilemmas = filteredDilemmas.filter(d =) d.category === filter} ""'""'"'
-
-        if (searchTerm) {;
-const lowerCaseSearchTerm = searchTerm.toLowerCase(),
-};
-
-filteredDilemmas = filteredDilemmas.filter(d =) d.content.toLowerCase().includes(lowerCaseSearchTerm)} 
-
-        switch (sort) { case newest:"'""'""'"'
-                filteredDilemmas.sort((a, b) =) new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()};
-                break;
-            case "most-support':"""'"'""'
-                filteredDilemmas.sort((a, b) => b.supportCount - a.supportCount };
-                break;
-            case 'needs-support":""'"'""'
-                filteredDilemmas.sort((a, b) => a.supportCount - b.supportCount };
-                break };
-const paginatedDilemmas = filteredDilemmas.slice(0, currentPage * POSTS_PER_PAGE);
-const hasMore = paginatedDilemmas.length < filteredDilemmas.length;
-
-        return {
-  reportedDilemmas,
-};
-
-visibleDilemmas: paginatedDilemmas,
-            hasMore};
-
-  return {
-  allDilemmas: [],
-    forYouDilemmas: [],
-    isLoading: true,
-    filter: 'All","""''""'"
-    sort: "newest","''""'"'
-    searchTerm: "","'"'"'""'
-    currentPage: 1,
-    reportingDilemmaId: null,
-    isReportModalOpen: false,
-    blockedUserIds: new Set(),
-    reportedDilemmas: [],
-    visibleDilemmas: [],
-};
-
-hasMore: false,
-
-};
-
-fetchDilemmas: async () = {}
-        set({ isLoading: true }
-        try(;
-const dilemmas = await ApiClient.dilemmas.getDilemmas( );
-            set(state =) ({
-  ...state,
-};
-
-allDilemmas: dilemmas,
-};
-
-isLoading: false,
-                ...calculateDerivedState({ ...state, allDilemmas: dilemmas ))
-  }));
-  ) catch (error) { console.error("Failed to fetch dilemmas:", error  );''""'}'
-            // Provide sample community posts when API fails
-sampleCommunityPosts: Dilemma[] = [ {}]
-                    id: "community-1",'"'"'"'
-                    userToken: "user-abc123",'"'"'"'
-                    content: "I\"ve been struggling with social anxiety for months. Every time I need to speak up in meetings, my heart races and I freeze up. Has anyone found effective ways to manage this?","'""'
-                    category: "Anxiety',"""'"'""'
-                    timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(), // 1 hour ago
-                    supportCount: 12,
-                    isSupported: false,
-                    isReported: false,
-                    reportReason: undefined,
-                    status: 'active",""'"'""'
-                    assignedHelperId: undefined,
-                    resolved_by_seeker: false,
-                    requestedHelperId: undefined,
-                    summary: undefined,
-                    summaryLoading: false,
-                    moderation: {
-  ,
-  action: 'dismissed",""'"'""'
-};
-
-timestamp: new Date().toISOString(),
-};
-
-moderatorId: 'system"""'
-  
-  ,
-                {
-  id: "community-2',""'""""
-                    userToken: 'user-def456","'""""''
-                    content: "Going through a difficult breakup after 3 years together. The loneliness hits hardest in the evenings. Looking for healthy coping strategies that have worked for others.",'""'""'"'
-                    category: "Relationships',"""'"'""'
-                    timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), // 3 hours ago
-                    supportCount: 8,
-                    isSupported: true,
-                    isReported: false,
-                    reportReason: undefined,
-                    status: 'active","""''""'
-                    assignedHelperId: undefined,
-                    resolved_by_seeker: false,
-                    requestedHelperId: undefined,
-                    summary: undefined,
-};
-
-summaryLoading: false,
-};
-
-moderation: {
-  ,
-  action: "dismissed",""''""'"'
-};
-
-timestamp: new Date().toISOString(),
-};
-
-moderatorId: "system""'"'
-  };
+// Mock API for dilemmas
+const mockDilemmaAPI = {
+  async fetchDilemmas(page = 1, limit = POSTS_PER_PAGE): Promise<{ dilemmas: Dilemma[], total: number, hasMore: boolean }> {
+    await new Promise(resolve => setTimeout(resolve, 500 + Math.random() * 1000));
+    
+    // Generate mock dilemmas
+    const mockDilemmas: Dilemma[] = Array.from({ length: limit }, (_, i) => ({
+      id: `dilemma_${page}_${i + 1}`,
+      title: `Sample Dilemma ${(page - 1) * limit + i + 1}`,
+      content: `This is a sample dilemma content for testing purposes. It contains some meaningful text about mental health challenges and seeking support. This is dilemma number ${(page - 1) * limit + i + 1}.`,
+      author: {
+        id: `user_${Math.floor(Math.random() * 100)}`,
+        name: `User ${Math.floor(Math.random() * 100)}`,
+        role: 'user',
+        isVerified: Math.random() > 0.7
+      },
+      category: ['anxiety', 'depression', 'relationships', 'work', 'family'][Math.floor(Math.random() * 5)],
+      tags: ['mental-health', 'support', 'advice'].slice(0, Math.floor(Math.random() * 3) + 1),
+      timestamp: Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000,
+      views: Math.floor(Math.random() * 1000),
+      likes: Math.floor(Math.random() * 100),
+      comments: Math.floor(Math.random() * 50),
+      shares: Math.floor(Math.random() * 20),
+      bookmarks: Math.floor(Math.random() * 30),
+      isLiked: Math.random() > 0.8,
+      isBookmarked: Math.random() > 0.9,
+      isFollowing: Math.random() > 0.85,
+      readingTime: Math.floor(Math.random() * 5) + 1,
+      difficulty: ['easy', 'medium', 'hard'][Math.floor(Math.random() * 3)] as Dilemma['difficulty'],
+      sensitivity: ['low', 'medium', 'high'][Math.floor(Math.random() * 3)] as Dilemma['sensitivity'],
+      triggerWarnings: Math.random() > 0.7 ? ['anxiety', 'depression'] : [],
+      isReported: false,
+      reportCount: 0,
+      isFlagged: false,
+      moderationStatus: 'approved' as const,
+      hasHelp: Math.random() > 0.6,
+      helpCount: Math.floor(Math.random() * 10),
+      isResolved: Math.random() > 0.7
+    }));
+    
+    return {
+      dilemmas: mockDilemmas,
+      total: 100, // Mock total
+      hasMore: page < 10 // Mock has more
+    };
   },
-                {
-  id: "community-3',""'""'"'
-                    userToken: "user-ghi789',""""'
-                    content: 'Started a new exercise routine to help with depression. Week 2 and already feeling more energy. For anyone considering it - even 15 minutes of walking helps!","'""""''
-                    category: "Coping Strategies",'"'"""''
-                    timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // 5 hours ago
-                    supportCount: 25,
-                    isSupported: false,
-                    isReported: false,
-                    reportReason: undefined,
-                    status: "active",'"'"""''
-                    assignedHelperId: undefined,
-                    resolved_by_seeker: false,
-                    requestedHelperId: undefined,
-                    summary: undefined,
+  
+  async createDilemma(dilemmaData: any): Promise<Dilemma> {
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    return {
+      id: `dilemma_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      timestamp: Date.now(),
+      views: 0,
+      likes: 0,
+      comments: 0,
+      shares: 0,
+      bookmarks: 0,
+      isLiked: false,
+      isBookmarked: false,
+      isFollowing: false,
+      isReported: false,
+      reportCount: 0,
+      isFlagged: false,
+      moderationStatus: 'pending',
+      hasHelp: false,
+      helpCount: 0,
+      isResolved: false,
+      ...dilemmaData
+    };
+  },
+  
+  async updateDilemma(id: string, updates: any): Promise<void> {
+    await new Promise(resolve => setTimeout(resolve, 500));
+  },
+  
+  async deleteDilemma(id: string): Promise<void> {
+    await new Promise(resolve => setTimeout(resolve, 300));
+  },
+  
+  async interactWithDilemma(id: string, action: string): Promise<void> {
+    await new Promise(resolve => setTimeout(resolve, 200));
+  }
 };
 
-summaryLoading: false,
-};
-
-moderation: {
-  ,
-  action: "dismissed",'"""'
-};
-
-timestamp: new Date().toISOString(),
-};
-
-moderatorId: "system'""'
-  } };
-            set(state =) ({
-  ...state,
-};
-
-allDilemmas: sampleCommunityPosts,
-};
-
-isLoading: false,
-                ...calculateDerivedState({ ...state, allDilemmas: sampleCommunityPosts ))
+// Helper functions
+const applyFilters = (dilemmas: Dilemma[], filter: DilemmaFilter, searchTerm: string): Dilemma[] => {
+  return dilemmas.filter(dilemma => {
+    // Search term filter
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      if (!dilemma.title.toLowerCase().includes(term) && 
+          !dilemma.content.toLowerCase().includes(term) &&
+          !dilemma.tags.some(tag => tag.toLowerCase().includes(term))) {
+        return false;
+      }
+    }
+    
+    // Category filter
+    if (filter.category && dilemma.category !== filter.category) {
+      return false;
+    }
+    
+    // Tags filter
+    if (filter.tags && filter.tags.length > 0) {
+      if (!filter.tags.some(tag => dilemma.tags.includes(tag))) {
+        return false;
+      }
+    }
+    
+    // Difficulty filter
+    if (filter.difficulty && dilemma.difficulty !== filter.difficulty) {
+      return false;
+    }
+    
+    // Sensitivity filter
+    if (filter.sensitivity && dilemma.sensitivity !== filter.sensitivity) {
+      return false;
+    }
+    
+    // Help status filter
+    if (filter.hasHelp !== undefined && dilemma.hasHelp !== filter.hasHelp) {
+      return false;
+    }
+    
+    // Resolved status filter
+    if (filter.isResolved !== undefined && dilemma.isResolved !== filter.isResolved) {
+      return false;
+    }
+    
+    // Author filter
+    if (filter.author && dilemma.author.id !== filter.author) {
+      return false;
+    }
+    
+    // Date range filter
+    if (filter.dateRange) {
+      if (dilemma.timestamp < filter.dateRange.start || dilemma.timestamp > filter.dateRange.end) {
+        return false;
+      }
+    }
+    
+    return true;
   });
-  ,
-
-    fetchForYouFeed: async () = {;}
-const userToken = authState.userToken;
-        if (!userToken) return;
-        try(;
-const dilemmas = await ApiClient.dilemmas.getForYouFeed(userToken ),
-            set({ forYouDilemmas: Array.isArray(dilemmas) ? dilemmas : [] });
-  ) catch (error) { console.error("Failed to load For You feed:", error  );""}'"'
-            // Provide inspiring sample posts for the "For You' feed""""'
-sampleForYouPosts: Dilemma[] = []
-                {
-  id: 'sample-1","'""""
-                    userToken: 'sample-user-1","'""""'"'
-                    content: "🌟 Just wanted to share that I completed my first week of daily meditation! Started with just 5 minutes and it\'s already helping with my anxiety. Small steps really do add up. Anyone else trying mindfulness practices?",""'"'""'
-                    category: "Anxiety",""'""'
-                    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
-                    supportCount: 23,
-                    isSupported: false,
-                    isReported: false,
-                    reportReason: undefined,
-                    status: "active",""''""'"'
-                    assignedHelperId: undefined,
-                    resolved_by_seeker: false,
-                    requestedHelperId: undefined,
-                    summary: "User celebrating meditation progress and encouraging others","''""''
 };
 
-summaryLoading: false,
+const applySorting = (dilemmas: Dilemma[], sortBy: SortOption): Dilemma[] => {
+  const sorted = [...dilemmas];
+  
+  switch (sortBy) {
+    case 'recent':
+      return sorted.sort((a, b) => b.timestamp - a.timestamp);
+    case 'oldest':
+      return sorted.sort((a, b) => a.timestamp - b.timestamp);
+    case 'popular':
+      return sorted.sort((a, b) => (b.likes + b.comments + b.shares) - (a.likes + a.comments + a.shares));
+    case 'trending':
+      return sorted.sort((a, b) => {
+        const aScore = (b.likes * 2 + b.comments * 3 + b.shares * 4) / Math.max(1, (Date.now() - b.timestamp) / (1000 * 60 * 60));
+        const bScore = (a.likes * 2 + a.comments * 3 + a.shares * 4) / Math.max(1, (Date.now() - a.timestamp) / (1000 * 60 * 60));
+        return bScore - aScore;
+      });
+    case 'most_liked':
+      return sorted.sort((a, b) => b.likes - a.likes);
+    case 'most_commented':
+      return sorted.sort((a, b) => b.comments - a.comments);
+    case 'most_helped':
+      return sorted.sort((a, b) => b.helpCount - a.helpCount);
+    case 'alphabetical':
+      return sorted.sort((a, b) => a.title.localeCompare(b.title));
+    default:
+      return sorted;
+  }
 };
 
-moderation: {
-  ,
-  action: "dismissed",""''""'""'
-                        timestamp: new Date().toISOString(),
-                        moderatorId: "system",'"'"'""'
-                        flagged: false,
-                        approved: true,
-};
+// Create the dilemma store
+export const useDilemmaStore = create<DilemmaState & DilemmaActions>()(
+  persist(
+    devtools(
+      (set, get) => ({
+        // Initial state
+        allDilemmas: [],
+        forYouDilemmas: [],
+        trendingDilemmas: [],
+        bookmarkedDilemmas: [],
+        myDilemmas: [],
+        
+        isLoading: false,
+        isLoadingMore: false,
+        isRefreshing: false,
+        
+        activeFilter: {},
+        sortBy: 'recent',
+        searchTerm: '',
+        
+        currentPage: 1,
+        totalPages: 1,
+        hasMore: true,
+        postsPerPage: POSTS_PER_PAGE,
+        
+        selectedDilemmaId: null,
+        viewMode: 'card',
+        showFilters: false,
+        
+        reportingDilemmaId: null,
+        isReportModalOpen: false,
+        reportReason: '',
+        blockedUserIds: new Set(),
+        
+        stats: {
+          total: 0,
+          byCategory: {},
+          byDifficulty: { easy: 0, medium: 0, hard: 0 },
+          bySensitivity: { low: 0, medium: 0, high: 0 },
+          resolved: 0,
+          unresolved: 0,
+          trending: [],
+          popular: []
+        },
+        
+        error: null,
 
-reviewedBy: "system",'""''"""'
-};
+        // Dilemma management
+        fetchDilemmas: async (page = 1, refresh = false) => {
+          try {
+            if (refresh) {
+              set({ isRefreshing: true, error: null });
+            } else if (page === 1) {
+              set({ isLoading: true, error: null });
+            } else {
+              set({ isLoadingMore: true, error: null });
+            }
+            
+            const result = await mockDilemmaAPI.fetchDilemmas(page, get().postsPerPage);
+            
+            set(state => ({
+              allDilemmas: page === 1 || refresh 
+                ? result.dilemmas 
+                : [...state.allDilemmas, ...result.dilemmas],
+              currentPage: page,
+              totalPages: Math.ceil(result.total / state.postsPerPage),
+              hasMore: result.hasMore,
+              isLoading: false,
+              isLoadingMore: false,
+              isRefreshing: false
+            }));
+            
+            get().updateStats();
+          } catch (error) {
+            set({ 
+              error: error instanceof Error ? error.message : 'Failed to fetch dilemmas',
+              isLoading: false,
+              isLoadingMore: false,
+              isRefreshing: false
+            });
+          }
+        },
 
-reviewedAt: new Date().toISOString()
-  },
-                    aiMatchReason: "Positive mental health progress post'""'
-  },
-                {
-  id: "sample-2",""''""'""'
-                    userToken: "sample-user-2",'"'"'""'
-                    content: "💙 Today marks 30 days since I started therapy. I was so scared to take that first step, but it\"s been life-changing. For anyone considering it - you deserve support and healing. The hardest part is just beginning.',"'"'"'
-                    category: "Depression","'"'"'"""'
-                    timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(), // 4 hours ago
-                    supportCount: 47,
-                    isSupported: true,
-                    isReported: false,
-                    reportReason: undefined,
-                    status: "active',""''"""'
-                    assignedHelperId: undefined,
-                    resolved_by_seeker: false,
-                    requestedHelperId: undefined,
-                    summary: "Celebrating therapy milestone and encouraging others',""'""""
-};
+        fetchForYouDilemmas: async () => {
+          try {
+            set({ isLoading: true, error: null });
+            
+            // Mock personalized dilemmas
+            const result = await mockDilemmaAPI.fetchDilemmas(1, 20);
+            
+            set({ 
+              forYouDilemmas: result.dilemmas,
+              isLoading: false 
+            });
+          } catch (error) {
+            set({ 
+              error: error instanceof Error ? error.message : 'Failed to fetch personalized dilemmas',
+              isLoading: false 
+            });
+          }
+        },
 
-summaryLoading: false,
-};
+        fetchTrendingDilemmas: async () => {
+          try {
+            const result = await mockDilemmaAPI.fetchDilemmas(1, 10);
+            const trending = applySorting(result.dilemmas, 'trending');
+            
+            set({ trendingDilemmas: trending });
+          } catch (error) {
+            set({ error: error instanceof Error ? error.message : 'Failed to fetch trending dilemmas' });
+          }
+        },
 
-moderation: {
-  ,
-  action: 'dismissed","'"""
-                        timestamp: new Date().toISOString(),
-                        moderatorId: "mod-sarah',""'""""''
-                        flagged: false,
-                        approved: true,
-};
+        fetchMyDilemmas: async () => {
+          try {
+            set({ isLoading: true, error: null });
+            
+            // Mock user's dilemmas
+            const result = await mockDilemmaAPI.fetchDilemmas(1, 50);
+            
+            set({ 
+              myDilemmas: result.dilemmas,
+              isLoading: false 
+            });
+          } catch (error) {
+            set({ 
+              error: error instanceof Error ? error.message : 'Failed to fetch your dilemmas',
+              isLoading: false 
+            });
+          }
+        },
 
-reviewedBy: "mod-sarah",'"'"""''
-};
+        fetchBookmarkedDilemmas: async () => {
+          try {
+            set({ isLoading: true, error: null });
+            
+            const { allDilemmas } = get();
+            const bookmarked = allDilemmas.filter(d => d.isBookmarked);
+            
+            set({ 
+              bookmarkedDilemmas: bookmarked,
+              isLoading: false 
+            });
+          } catch (error) {
+            set({ 
+              error: error instanceof Error ? error.message : 'Failed to fetch bookmarked dilemmas',
+              isLoading: false 
+            });
+          }
+        },
 
-reviewedAt: new Date().toISOString()
-  },
-                    aiMatchReason: "Inspiring recovery story"'""'
-  },
-                {
-  id: "sample-3",'"'"'""'
-                    userToken: "sample-user-3",'""''"""'
-                    content: "🌱 Quick reminder: healing isn\'t linear. I had a tough day yesterday but today I\"m feeling more hopeful. Be gentle with yourself through the ups and downs. You\"re doing better than you think. ✨',""""''
-                    category: "Coping Strategies",'"'"""''
-                    timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(), // 6 hours ago
-                    supportCount: 31,
-                    isSupported: false,
-                    isReported: false,
-                    reportReason: undefined,
-                    status: "active",'"'"""''
-                    assignedHelperId: undefined,
-                    resolved_by_seeker: false,
-                    requestedHelperId: undefined,
-                    summary: "Encouraging post about non-linear healing process",'"""'
-};
+        // CRUD operations
+        createDilemma: async (dilemmaData) => {
+          try {
+            const newDilemma = await mockDilemmaAPI.createDilemma(dilemmaData);
+            
+            set(state => ({
+              allDilemmas: [newDilemma, ...state.allDilemmas],
+              myDilemmas: [newDilemma, ...state.myDilemmas]
+            }));
+            
+            get().updateStats();
+            
+            return newDilemma.id;
+          } catch (error) {
+            throw new Error(error instanceof Error ? error.message : 'Failed to create dilemma');
+          }
+        },
 
-summaryLoading: false,
-};
+        updateDilemma: async (id, updates) => {
+          try {
+            await mockDilemmaAPI.updateDilemma(id, updates);
+            
+            const updateDilemmaInArray = (dilemmas: Dilemma[]) =>
+              dilemmas.map(d => d.id === id ? { ...d, ...updates, updatedAt: Date.now() } : d);
+            
+            set(state => ({
+              allDilemmas: updateDilemmaInArray(state.allDilemmas),
+              forYouDilemmas: updateDilemmaInArray(state.forYouDilemmas),
+              myDilemmas: updateDilemmaInArray(state.myDilemmas),
+              bookmarkedDilemmas: updateDilemmaInArray(state.bookmarkedDilemmas),
+              trendingDilemmas: updateDilemmaInArray(state.trendingDilemmas)
+            }));
+          } catch (error) {
+            throw new Error(error instanceof Error ? error.message : 'Failed to update dilemma');
+          }
+        },
 
-moderation: {
-  ,
-  action: "dismissed',""'""""
-                        timestamp: new Date().toISOString(),
-                        moderatorId: 'system","'""""
-                        flagged: false,
-                        approved: true,
-};
+        deleteDilemma: async (id) => {
+          try {
+            await mockDilemmaAPI.deleteDilemma(id);
+            
+            const removeDilemmaFromArray = (dilemmas: Dilemma[]) =>
+              dilemmas.filter(d => d.id !== id);
+            
+            set(state => ({
+              allDilemmas: removeDilemmaFromArray(state.allDilemmas),
+              forYouDilemmas: removeDilemmaFromArray(state.forYouDilemmas),
+              myDilemmas: removeDilemmaFromArray(state.myDilemmas),
+              bookmarkedDilemmas: removeDilemmaFromArray(state.bookmarkedDilemmas),
+              trendingDilemmas: removeDilemmaFromArray(state.trendingDilemmas),
+              selectedDilemmaId: state.selectedDilemmaId === id ? null : state.selectedDilemmaId
+            }));
+            
+            get().updateStats();
+          } catch (error) {
+            throw new Error(error instanceof Error ? error.message : 'Failed to delete dilemma');
+          }
+        },
 
-reviewedBy: 'system","'""""
-};
+        // User interactions
+        likeDilemma: async (id) => {
+          try {
+            await mockDilemmaAPI.interactWithDilemma(id, 'like');
+            
+            const updateLike = (dilemmas: Dilemma[]) =>
+              dilemmas.map(d => 
+                d.id === id 
+                  ? { ...d, isLiked: true, likes: d.likes + 1 }
+                  : d
+              );
+            
+            set(state => ({
+              allDilemmas: updateLike(state.allDilemmas),
+              forYouDilemmas: updateLike(state.forYouDilemmas),
+              myDilemmas: updateLike(state.myDilemmas),
+              bookmarkedDilemmas: updateLike(state.bookmarkedDilemmas),
+              trendingDilemmas: updateLike(state.trendingDilemmas)
+            }));
+          } catch (error) {
+            set({ error: error instanceof Error ? error.message : 'Failed to like dilemma' });
+          }
+        },
 
-reviewedAt: new Date().toISOString()
-  },
-                    aiMatchReason: 'Supportive community message""'
-  },
-                {
-  id: "sample-4",""''""'"'
-                    userToken: "sample-user-4","'"'"'""'
-                    content: "🎨 Art therapy has been my safe space lately. When words feel too heavy, colors and shapes help me express what I\"m feeling. What creative outlets help you process emotions? Would love to hear your experiences!',"'"'"""'
-                    category: "Coping Strategies',""''"""'
-                    timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(), // 8 hours ago
-                    supportCount: 18,
-                    isSupported: true,
-                    isReported: false,
-                    reportReason: undefined,
-                    status: "active',""''""'
-                    assignedHelperId: undefined,
-                    resolved_by_seeker: false,
-                    requestedHelperId: undefined,
-                    summary: "Sharing art therapy benefits and asking for community input","'"'"'""'
-};
+        unlikeDilemma: async (id) => {
+          try {
+            await mockDilemmaAPI.interactWithDilemma(id, 'unlike');
+            
+            const updateUnlike = (dilemmas: Dilemma[]) =>
+              dilemmas.map(d => 
+                d.id === id 
+                  ? { ...d, isLiked: false, likes: Math.max(0, d.likes - 1) }
+                  : d
+              );
+            
+            set(state => ({
+              allDilemmas: updateUnlike(state.allDilemmas),
+              forYouDilemmas: updateUnlike(state.forYouDilemmas),
+              myDilemmas: updateUnlike(state.myDilemmas),
+              bookmarkedDilemmas: updateUnlike(state.bookmarkedDilemmas),
+              trendingDilemmas: updateUnlike(state.trendingDilemmas)
+            }));
+          } catch (error) {
+            set({ error: error instanceof Error ? error.message : 'Failed to unlike dilemma' });
+          }
+        },
 
-summaryLoading: false,
-};
+        bookmarkDilemma: async (id) => {
+          try {
+            await mockDilemmaAPI.interactWithDilemma(id, 'bookmark');
+            
+            const updateBookmark = (dilemmas: Dilemma[]) =>
+              dilemmas.map(d => 
+                d.id === id 
+                  ? { ...d, isBookmarked: true, bookmarks: d.bookmarks + 1 }
+                  : d
+              );
+            
+            set(state => ({
+              allDilemmas: updateBookmark(state.allDilemmas),
+              forYouDilemmas: updateBookmark(state.forYouDilemmas),
+              myDilemmas: updateBookmark(state.myDilemmas),
+              trendingDilemmas: updateBookmark(state.trendingDilemmas)
+            }));
+            
+            // Refresh bookmarked dilemmas
+            get().fetchBookmarkedDilemmas();
+          } catch (error) {
+            set({ error: error instanceof Error ? error.message : 'Failed to bookmark dilemma' });
+          }
+        },
 
-moderation: {
-  ,
-  action: "dismissed",'"'"'""'
-                        timestamp: new Date().toISOString(),
-                        moderatorId: "mod-alex",'"'"'""'
-                        flagged: false,
-                        approved: true,
-};
+        unbookmarkDilemma: async (id) => {
+          try {
+            await mockDilemmaAPI.interactWithDilemma(id, 'unbookmark');
+            
+            const updateUnbookmark = (dilemmas: Dilemma[]) =>
+              dilemmas.map(d => 
+                d.id === id 
+                  ? { ...d, isBookmarked: false, bookmarks: Math.max(0, d.bookmarks - 1) }
+                  : d
+              );
+            
+            set(state => ({
+              allDilemmas: updateUnbookmark(state.allDilemmas),
+              forYouDilemmas: updateUnbookmark(state.forYouDilemmas),
+              myDilemmas: updateUnbookmark(state.myDilemmas),
+              bookmarkedDilemmas: state.bookmarkedDilemmas.filter(d => d.id !== id),
+              trendingDilemmas: updateUnbookmark(state.trendingDilemmas)
+            }));
+          } catch (error) {
+            set({ error: error instanceof Error ? error.message : 'Failed to unbookmark dilemma' });
+          }
+        },
 
-reviewedBy: "mod-alex",'"'"'"'
-};
+        shareDilemma: async (id, platform) => {
+          try {
+            await mockDilemmaAPI.interactWithDilemma(id, 'share');
+            
+            const updateShare = (dilemmas: Dilemma[]) =>
+              dilemmas.map(d => 
+                d.id === id 
+                  ? { ...d, shares: d.shares + 1 }
+                  : d
+              );
+            
+            set(state => ({
+              allDilemmas: updateShare(state.allDilemmas),
+              forYouDilemmas: updateShare(state.forYouDilemmas),
+              myDilemmas: updateShare(state.myDilemmas),
+              bookmarkedDilemmas: updateShare(state.bookmarkedDilemmas),
+              trendingDilemmas: updateShare(state.trendingDilemmas)
+            }));
+          } catch (error) {
+            set({ error: error instanceof Error ? error.message : 'Failed to share dilemma' });
+          }
+        },
 
-reviewedAt: new Date().toISOString()
-  },
-                    aiMatchReason: "Creative coping strategy discussion"""''
-  },
-                {
-  id: "sample-5",'""'""'"'
-                    userToken: "sample-user-5',"""'"'""'
-                    content: '🌿 Grateful for this community. Three months ago I felt so alone in my struggles. Now I have a support network of people who truly understand. Thank you for being here and sharing your stories. We\"re stronger together. 💚","'"'""'
-                    category: 'Gratitude",""'"'"'
-                    timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(), // 12 hours ago
-                    supportCount: 56,
-                    isSupported: false,
-                    isReported: false,
-                    reportReason: undefined,
-                    status: "active",'""'""'"'
-                    assignedHelperId: undefined,
-                    resolved_by_seeker: false,
-                    requestedHelperId: undefined,
-                    summary: "Expressing gratitude for community support',""'""'"'
-};
+        followAuthor: async (dilemmaId) => {
+          try {
+            await mockDilemmaAPI.interactWithDilemma(dilemmaId, 'follow');
+            
+            const updateFollow = (dilemmas: Dilemma[]) =>
+              dilemmas.map(d => 
+                d.id === dilemmaId 
+                  ? { ...d, isFollowing: true }
+                  : d
+              );
+            
+            set(state => ({
+              allDilemmas: updateFollow(state.allDilemmas),
+              forYouDilemmas: updateFollow(state.forYouDilemmas),
+              myDilemmas: updateFollow(state.myDilemmas),
+              bookmarkedDilemmas: updateFollow(state.bookmarkedDilemmas),
+              trendingDilemmas: updateFollow(state.trendingDilemmas)
+            }));
+          } catch (error) {
+            set({ error: error instanceof Error ? error.message : 'Failed to follow author' });
+          }
+        },
 
-summaryLoading: false,
-};
+        unfollowAuthor: async (dilemmaId) => {
+          try {
+            await mockDilemmaAPI.interactWithDilemma(dilemmaId, 'unfollow');
+            
+            const updateUnfollow = (dilemmas: Dilemma[]) =>
+              dilemmas.map(d => 
+                d.id === dilemmaId 
+                  ? { ...d, isFollowing: false }
+                  : d
+              );
+            
+            set(state => ({
+              allDilemmas: updateUnfollow(state.allDilemmas),
+              forYouDilemmas: updateUnfollow(state.forYouDilemmas),
+              myDilemmas: updateUnfollow(state.myDilemmas),
+              bookmarkedDilemmas: updateUnfollow(state.bookmarkedDilemmas),
+              trendingDilemmas: updateUnfollow(state.trendingDilemmas)
+            }));
+          } catch (error) {
+            set({ error: error instanceof Error ? error.message : 'Failed to unfollow author' });
+          }
+        },
 
-moderation: {
-  ,
-  action: "dismissed',""'""'"'
-                        timestamp: new Date().toISOString(),
-                        moderatorId: "system',""""'
-                        flagged: false,
-                        approved: true,
-};
+        // Filtering and sorting
+        setFilter: (filter) => {
+          set(state => ({
+            activeFilter: { ...state.activeFilter, ...filter },
+            currentPage: 1
+          }));
+        },
 
-reviewedBy: 'system","'""""''
-};
+        clearFilter: () => {
+          set({ 
+            activeFilter: {},
+            currentPage: 1
+          });
+        },
 
-reviewedAt: new Date().toISOString()
-  },
-                    aiMatchReason: "Community appreciation post"'"'
+        setSortBy: (sortBy) => {
+          set({ sortBy, currentPage: 1 });
+        },
 
-            set({ forYouDilemmas: sampleForYouPosts });
-  ];
-  ,
+        setSearchTerm: (term) => {
+          set({ searchTerm: term, currentPage: 1 });
+        },
 
-    setFilter: (filter) = set(state =>){;
-const newState = { ...state, filter, currentPage: 1  }}
-        return { ...newState, ...calculateDerivedState(newState) },
-    setSort: (sort) = set(state =>){   };
+        // Pagination
+        loadMore: async () => {
+          const { currentPage, hasMore } = get();
+          
+          if (hasMore) {
+            await get().fetchDilemmas(currentPage + 1);
+          }
+        },
 
-newState = { ...state, sort  }}
-        return { ...newState, ...calculateDerivedState(newState) },
-    setSearchTerm: (term) = set(state =>){;
-const newState = { ...state, searchTerm: term, currentPage: 1  }}
-        return { ...newState, ...calculateDerivedState(newState) },
-    loadMore: () = set(state =>){   };
+        goToPage: async (page) => {
+          await get().fetchDilemmas(page);
+        },
 
-newState = { ...state, currentPage: state.currentPage + 1  }}
-        return { ...newState, ...calculateDerivedState(newState) },
+        setPostsPerPage: (count) => {
+          set({ postsPerPage: count, currentPage: 1 });
+          get().fetchDilemmas(1, true);
+        },
 
-    openReportModal: (dilemmaId) = set({ reportingDilemmaId: dilemmaId, isReportModalOpen: true }),
-    closeReportModal: () = set({ reportingDilemmaId: null, isReportModalOpen: false }),
+        // UI actions
+        setSelectedDilemma: (id) => {
+          set({ selectedDilemmaId: id });
+        },
 
-    getDilemmaById: (id) = get().allDilemmas.find(d =>)d.id === id),
-  postDilemma: async (data, userToken) = { await ApiClient.dilemmas.postDilemma(data, userToken )}
-        await get().fetchDilemmas() },
+        setViewMode: (mode) => {
+          set({ viewMode: mode });
+        },
 
-    createDirectRequest: async (data, userToken, requestedHelperId) = { await ApiClient.dilemmas.createDirectRequest(data, userToken, requestedHelperId )}
-        await get().fetchDilemmas() },
+        toggleFilters: () => {
+          set(state => ({ showFilters: !state.showFilters }));
+        },
 
-    toggleSupport: async (dilemmaId) = {   }
-const updated = await ApiClient.dilemmas.toggleSupport(dilemmaId);
-        set(state =) {,
-const newAllDilemmas = state.allDilemmas.map(d =) d.id === updated.id ? updated : d };
-const newState = { ...state, allDilemmas: newAllDilemmas  };
-            return(...newState, ...calculateDerivedState(newState) )},
+        // Moderation actions
+        reportDilemma: async (id, reason) => {
+          try {
+            await mockDilemmaAPI.interactWithDilemma(id, 'report');
+            
+            const updateReport = (dilemmas: Dilemma[]) =>
+              dilemmas.map(d => 
+                d.id === id 
+                  ? { ...d, isReported: true, reportCount: d.reportCount + 1 }
+                  : d
+              );
+            
+            set(state => ({
+              allDilemmas: updateReport(state.allDilemmas),
+              forYouDilemmas: updateReport(state.forYouDilemmas),
+              myDilemmas: updateReport(state.myDilemmas),
+              bookmarkedDilemmas: updateReport(state.bookmarkedDilemmas),
+              trendingDilemmas: updateReport(state.trendingDilemmas),
+              isReportModalOpen: false,
+              reportingDilemmaId: null,
+              reportReason: ''
+            }));
+          } catch (error) {
+            set({ error: error instanceof Error ? error.message : 'Failed to report dilemma' });
+          }
+        },
 
-    reportDilemma: async (reason) = {}
-{ reportingDilemmaId } = get();
-        if (!reportingDilemmaId) return;
-const updated = await ApiClient.dilemmas.report(reportingDilemmaId, reason);
-        set(state =) { ,
-const newAllDilemmas = state.allDilemmas.map(d =) d.id === updated.id ? updated : d };
-const newState = { ...state, allDilemmas: newAllDilemmas, reportingDilemmaId: null  };
-            return(...newState, ...calculateDerivedState(newState) )},
+        blockUser: async (userId) => {
+          try {
+            await mockDilemmaAPI.interactWithDilemma(userId, 'block');
+            
+            set(state => ({
+              blockedUserIds: new Set([...state.blockedUserIds, userId])
+            }));
+          } catch (error) {
+            set({ error: error instanceof Error ? error.message : 'Failed to block user' });
+          }
+        },
 
-    acceptDilemma: async (dilemmaId) = {   }
-const helper = authState.helperProfile;
-        if (!helper) throw new Error("Helper profile not found");"''
-const result = await ApiClient.dilemmas.acceptDilemma(dilemmaId, helper.id);
+        unblockUser: async (userId) => {
+          try {
+            await mockDilemmaAPI.interactWithDilemma(userId, 'unblock');
+            
+            set(state => {
+              const newBlockedIds = new Set(state.blockedUserIds);
+              newBlockedIds.delete(userId);
+              return { blockedUserIds: newBlockedIds };
+            });
+          } catch (error) {
+            set({ error: error instanceof Error ? error.message : 'Failed to unblock user' });
+          }
+        },
 
-        set(state =) {;
-const newAllDilemmas = state.allDilemmas.map(d =) d.id === result.dilemma.id ? result.dilemma : d  };
-const newState = { ...state, allDilemmas: newAllDilemmas }}
-            return { ...newState, ...calculateDerivedState(newState) }
+        flagDilemma: async (id) => {
+          try {
+            await mockDilemmaAPI.interactWithDilemma(id, 'flag');
+            
+            const updateFlag = (dilemmas: Dilemma[]) =>
+              dilemmas.map(d => 
+                d.id === id 
+                  ? { ...d, isFlagged: true }
+                  : d
+              );
+            
+            set(state => ({
+              allDilemmas: updateFlag(state.allDilemmas),
+              forYouDilemmas: updateFlag(state.forYouDilemmas),
+              myDilemmas: updateFlag(state.myDilemmas),
+              bookmarkedDilemmas: updateFlag(state.bookmarkedDilemmas),
+              trendingDilemmas: updateFlag(state.trendingDilemmas)
+            }));
+          } catch (error) {
+            set({ error: error instanceof Error ? error.message : 'Failed to flag dilemma' });
+          }
+        },
 
-        if (result.updatedHelper) { authService.updateHelperProfile(result.updatedHelper) }
+        // Statistics
+        updateStats: () => {
+          const { allDilemmas } = get();
+          
+          const stats: DilemmaStats = {
+            total: allDilemmas.length,
+            byCategory: {},
+            byDifficulty: { easy: 0, medium: 0, hard: 0 },
+            bySensitivity: { low: 0, medium: 0, high: 0 },
+            resolved: 0,
+            unresolved: 0,
+            trending: [],
+            popular: []
+          };
+          
+          allDilemmas.forEach(dilemma => {
+            // Category stats
+            stats.byCategory[dilemma.category] = (stats.byCategory[dilemma.category] || 0) + 1;
+            
+            // Difficulty stats
+            stats.byDifficulty[dilemma.difficulty]++;
+            
+            // Sensitivity stats
+            stats.bySensitivity[dilemma.sensitivity]++;
+            
+            // Resolution stats
+            if (dilemma.isResolved) {
+              stats.resolved++;
+            } else {
+              stats.unresolved++;
+            }
+          });
+          
+          // Trending and popular
+          stats.trending = applySorting(allDilemmas, 'trending').slice(0, 10);
+          stats.popular = applySorting(allDilemmas, 'popular').slice(0, 10);
+          
+          set({ stats });
+        },
 
-        if (result.newAchievements && result.newAchievements.length ) 0 {
-            result.newAchievements.forEach(ach =) {
-                notificationService.addToast(`🏆 Achievement Unlocked: ${ach.name)!`, "success");'""'
-  }};
-useChatStore.getState().startChat(result.dilemma.id, "helper");'""'
-  ,
+        // Utility actions
+        refreshAll: async () => {
+          await Promise.all([
+            get().fetchDilemmas(1, true),
+            get().fetchForYouDilemmas(),
+            get().fetchTrendingDilemmas()
+          ]);
+        },
 
-    declineRequest: async (dilemmaId) = {   }
-const helper = authState.helperProfile;
-        if (!helper) throw new Error('Helper profile not found");""'
-const updatedDilemma = await ApiClient.dilemmas.declineRequest(dilemmaId, helper.id);
-        set(state => {;
-const newAllDilemmas = state.allDilemmas.map(d => d.id === updatedDilemma.id ? updatedDilemma : d );
-const newState = { ...state, allDilemmas: newAllDilemmas  };
-            return(...newState, ...calculateDerivedState(newState) )},
+        setError: (error) => {
+          set({ error });
+        },
 
-    resolveDilemma: async (dilemmaId, userToken) => {;
-const updated = await ApiClient.dilemmas.resolveBySeeker(dilemmaId, userToken);
-        set(state => {,
-const newAllDilemmas = state.allDilemmas.map(d => d.id === updated.id ? updated : d );
-const newState = { ...state, allDilemmas: newAllDilemmas  };
-            return(...newState, ...calculateDerivedState(newState) )},
-
-    summarizeDilemma: async (dilemmaId) => {;
-const dilemma = get().allDilemmas.find(d => d.id === dilemmaId  );
-        if (!dilemma) return,
-
-        set(state => ({ allDilemmas: state.allDilemmas.map(d => d.id === dilemmaId ? { ...d, summaryLoading: true ) : d) }));
-        try(;
-const summary = await ApiClient.ai.summarizeDilemma(dilemma.content );
-            set(state => ({ allDilemmas: state.allDilemmas.map(d => d.id === dilemmaId ? { ...d, summary, summaryLoading: false ) : d) }));
-  } catch (err) { console.error("Failed to summarize dilemma', err  );""''""'
-            set(state => ({ allDilemmas: state.allDilemmas.map(d => d.id === dilemmaId ? { ...d, summaryLoading: false ) : d) }));
-  };
-  },
-
-    dismissReport: async (dilemmaId) => {;
-const helper = authState.helperProfile;
-        if (!helper) throw new Error("Moderator profile not found");"'""'
-        await ApiClient.moderation.dismissReport(dilemmaId, helper  );
-        await get().fetchDilemmas() },
-
-    removePost: async (dilemmaId) = {   }
-const helper = authState.helperProfile;
-        if (!helper) throw new Error('Moderator profile not found");"''""''
-        await ApiClient.moderation.removePost(dilemmaId, helper  );
-        await get().fetchDilemmas() },;
+        clearError: () => {
+          set({ error: null });
+        }
+      }),
+      { name: 'dilemma-store' }
+    ),
+    {
+      name: 'dilemma-store',
+      partialize: (state) => ({
+        bookmarkedDilemmas: state.bookmarkedDilemmas,
+        activeFilter: state.activeFilter,
+        sortBy: state.sortBy,
+        viewMode: state.viewMode,
+        postsPerPage: state.postsPerPage,
+        blockedUserIds: Array.from(state.blockedUserIds) // Convert Set to Array for serialization
+      }),
+      onRehydrateStorage: () => (state) => {
+        if (state?.blockedUserIds && Array.isArray(state.blockedUserIds)) {
+          // Convert Array back to Set after rehydration
+          state.blockedUserIds = new Set(state.blockedUserIds);
+        }
+      }
+    }
   )
+);
 
-// Initial data fetch
-useDilemmaStore.getState().fetchDilemmas();
+// Initialize store
+if (typeof window !== 'undefined') {
+  // Load initial dilemmas
+  useStore.getState().fetchDilemmas();
+}
+
+export default useDilemmaStore;
