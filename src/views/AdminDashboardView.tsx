@@ -1,485 +1,581 @@
-import React, { useState(, useEffect, useCallback ) from 'react';"""'"'""'
-import { Helper, CommunityStats  } from '../types';""'"'""'
-import { AppButton  } from '../components/AppButton';""'"'"'
-import { Card  } from '../components/Card';"""'"'""'
-import { Modal  } from '../components/Modal';"""''""'
-import { AppTextArea  } from '../components/AppInput';""''""'""'
-import { formatTimeAgo  } from '../utils/formatTimeAgo';'"'"'""'
-import { demoDataService  } from '../services/demoDataService';'""''""""'
-import '../styles/admin-dashboard.css";"'""
-export const AdminDashboardView: React.FC<{ onUpdateApplicationStatus: (helperId: string, status: Helper["applicationStatus"], notes?: string) =} void >} = ({ onUpdateApplicationStatus }) = { ;'"}"'
-const [activeTab, setActiveTab] = useState<'overview" | "applications" | "moderation' | "analytics" | 'system">("overview");"
-const [applications, setApplications] = useState<Helper[]>([]);
-const [adminData, setAdminData] = useState<any>(null);
-const [stats, setStats] = useState<CommunityStats | null>(null);
-const [isLoading, setIsLoading] = useState(true);
-const [selectedApplicant, setSelectedApplicant] = useState<Helper | null>(null);
-const [applicantDetails, setApplicantDetails] = useState<any>(null);
-const [isModalOpen, setIsModalOpen] = useState(false);
-const [rejectionNotes, setRejectionNotes] = useState('");"'"
-const fetchAdminData = useCallback(async () =) {
-        setIsLoading(true);
-        try(// Get demo data for admin role)
-const demoData = demoDataService.getDemoData("admin");"'"'"'"""'
-            setAdminData(demoData);
-            setApplications(demoData.helperApplications || []  );
-            setStats(demoData.communityStats) ) catch(err) { console.error(err  );
-            alert("Failed to load admin data.') } finally(setIsLoading(false) );"'""
+import React, { useState, useEffect, useCallback } from 'react';
+import { Helper, CommunityStats } from '../types';
+import { AppButton } from '../components/AppButton';
+import { Card } from '../components/Card';
+import { Modal } from '../components/Modal';
+import { AppTextArea } from '../components/AppInput';
+import { formatTimeAgo } from '../utils/formatTimeAgo';
+import { useNotification } from '../contexts/NotificationContext';
+
+interface AdminDashboardViewProps {
+  onUpdateApplicationStatus: (helperId: string, status: Helper['applicationStatus'], notes?: string) => void;
+}
+
+interface SystemMetric {
+  id: string;
+  name: string;
+  value: string | number;
+  trend: 'up' | 'down' | 'stable';
+  description: string;
+}
+
+interface ModerationAction {
+  id: string;
+  type: 'warning' | 'suspension' | 'ban' | 'content_removal';
+  userId: string;
+  username: string;
+  reason: string;
+  moderatorId: string;
+  timestamp: string;
+  status: 'pending' | 'completed' | 'appealed';
+}
+
+export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ 
+  onUpdateApplicationStatus 
+}) => {
+  const { showNotification } = useNotification();
+  
+  const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'moderation' | 'analytics' | 'system'>('overview');
+  const [applications, setApplications] = useState<Helper[]>([]);
+  const [communityStats, setCommunityStats] = useState<CommunityStats | null>(null);
+  const [systemMetrics, setSystemMetrics] = useState<SystemMetric[]>([]);
+  const [moderationActions, setModerationActions] = useState<ModerationAction[]>([]);
+  const [selectedApplication, setSelectedApplication] = useState<Helper | null>(null);
+  const [showApplicationModal, setShowApplicationModal] = useState(false);
+  const [reviewNotes, setReviewNotes] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    loadDashboardData();
   }, []);
 
-    useEffect(() => { fetchAdminData() }, [fetchAdminData]);
-const handleViewApplicant = async (applicant: Helper) => { setSelectedApplicant(applicant );
-        setIsModalOpen(true ),
-        setApplicantDetails(applicant) };
-const handleApprove = () => { if (selectedApplicant) {
-            onUpdateApplicationStatus(selectedApplicant.id, "approved');""'""""
-            setIsModalOpen(false  );
-            fetchAdminData() };
+  const loadDashboardData = async () => {
+    try {
+      setIsLoading(true);
+      
+      // Mock data for demonstration
+      const mockApplications: Helper[] = [
+        {
+          id: 'helper-1',
+          userId: 'user-1',
+          displayName: 'Dr. Sarah Johnson',
+          bio: 'Licensed therapist with 10 years of experience in cognitive behavioral therapy.',
+          specializations: ['anxiety', 'depression', 'trauma'],
+          certifications: ['LCSW', 'CBT Certified'],
+          languages: ['English', 'Spanish'],
+          availability: {
+            timezone: 'EST',
+            schedule: {
+              monday: [{ start: '09:00', end: '17:00' }],
+              tuesday: [{ start: '09:00', end: '17:00' }],
+              wednesday: [{ start: '09:00', end: '17:00' }],
+              thursday: [{ start: '09:00', end: '17:00' }],
+              friday: [{ start: '09:00', end: '15:00' }],
+              saturday: [],
+              sunday: []
+            }
+          },
+          rating: 0,
+          totalSessions: 0,
+          responseTime: 'N/A',
+          isVerified: false,
+          joinedDate: new Date().toISOString(),
+          lastActive: new Date().toISOString(),
+          applicationStatus: 'pending',
+          applicationDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          yearsOfExperience: 10,
+          education: ['PhD Psychology - Harvard University', 'MA Clinical Psychology - Boston University']
+        },
+        {
+          id: 'helper-2',
+          userId: 'user-2',
+          displayName: 'Michael Chen',
+          bio: 'Peer counselor with lived experience in addiction recovery.',
+          specializations: ['addiction', 'recovery', 'peer-support'],
+          certifications: ['Certified Peer Recovery Specialist'],
+          languages: ['English', 'Mandarin'],
+          availability: {
+            timezone: 'PST',
+            schedule: {
+              monday: [{ start: '18:00', end: '22:00' }],
+              tuesday: [{ start: '18:00', end: '22:00' }],
+              wednesday: [{ start: '18:00', end: '22:00' }],
+              thursday: [{ start: '18:00', end: '22:00' }],
+              friday: [{ start: '18:00', end: '22:00' }],
+              saturday: [{ start: '10:00', end: '16:00' }],
+              sunday: [{ start: '10:00', end: '16:00' }]
+            }
+          },
+          rating: 0,
+          totalSessions: 0,
+          responseTime: 'N/A',
+          isVerified: false,
+          joinedDate: new Date().toISOString(),
+          lastActive: new Date().toISOString(),
+          applicationStatus: 'pending',
+          applicationDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+          yearsOfExperience: 3,
+          education: ['BA Social Work - UC Berkeley']
+        }
+      ];
 
-const handleReject = () = { if (selectedApplicant && rejectionNotes.trim()) {}
-            onUpdateApplicationStatus(selectedApplicant.id, 'rejected", rejectionNotes);"'"""
-            setIsModalOpen(false);
-            setRejectionNotes("'  );""'""""''
-            fetchAdminData() } else(alert("Please provide rejection notes.") );'""'
+      const mockStats: CommunityStats = {
+        totalUsers: 1247,
+        activeUsers: 892,
+        totalHelpers: 34,
+        activeHelpers: 28,
+        totalSessions: 2156,
+        averageRating: 4.7,
+        responseTime: '< 2 hours'
+      };
+
+      const mockMetrics: SystemMetric[] = [
+        {
+          id: '1',
+          name: 'Server Uptime',
+          value: '99.9%',
+          trend: 'stable',
+          description: 'System availability over the last 30 days'
+        },
+        {
+          id: '2',
+          name: 'Active Sessions',
+          value: 47,
+          trend: 'up',
+          description: 'Currently active support sessions'
+        },
+        {
+          id: '3',
+          name: 'Response Time',
+          value: '1.2s',
+          trend: 'stable',
+          description: 'Average API response time'
+        },
+        {
+          id: '4',
+          name: 'Error Rate',
+          value: '0.03%',
+          trend: 'down',
+          description: 'System error rate over the last 24 hours'
+        }
+      ];
+
+      const mockModerationActions: ModerationAction[] = [
+        {
+          id: '1',
+          type: 'warning',
+          userId: 'user-123',
+          username: 'TroublerUser',
+          reason: 'Inappropriate language in community chat',
+          moderatorId: 'mod-1',
+          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+          status: 'completed'
+        },
+        {
+          id: '2',
+          type: 'content_removal',
+          userId: 'user-456',
+          username: 'SpamAccount',
+          reason: 'Posting spam content in forums',
+          moderatorId: 'mod-2',
+          timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+          status: 'completed'
+        }
+      ];
+
+      setApplications(mockApplications);
+      setCommunityStats(mockStats);
+      setSystemMetrics(mockMetrics);
+      setModerationActions(mockModerationActions);
+      
+    } catch (error) {
+      console.error('Error loading dashboard data:', error);
+      showNotification('error', 'Failed to load dashboard data');
+    } finally {
+      setIsLoading(false);
+    }
   };
-const renderOverviewTab = () = (;
-        <div className="admin-overview">'"""'
-            {adminData?.profile && (}
-    <Card className="admin-profile-card'>""''""'}
-    <h3>👨‍💼 {adminData.profile.name}</h3)
-                    <p><strong}Role:</strong} {adminData.profile.role}</p
-                    <p><strongDepartment:</strong{adminData.profile.department}</p>
-                    <p><strongClearance:</strong{adminData.profile.clearanceLevel}</p>
-                    <p><strongExperience:</strong{adminData.profile.yearsWithPlatform} years</p>
-                </Card
-            
 
-            <div className="overview-metrics">"'""'
-                {adminData?.analytics && (
-                    <)
-                        <Card className='metric-card">"""''""'}
-    <h4>👥 Platform Users</h4>}
-    <div className="metric-number">{adminData.analytics.userMetrics.totalActiveUsers.toLocaleString()}</div}""'"'
-                            <small>+{adminData.analytics.userMetrics.newRegistrationsToday} today</small>
-                        </Card
-                        <Card className="metric-card'>"""'"'""'
-                            <h4>🌟 Active Helpers</h4>
-                            <div className='metric-number">{adminData.analytics.helperMetrics.totalActiveHelpers}</div"'""'"'
-                            <small>{adminData.analytics.helperMetrics.helpersOnline} online now</small>
-                        </Card
-                        <Card className="metric-card crisis'>""'""''
-                            <h4>🚨 Crisis Alerts Today</h4>
-                            <div className="metric-number">{adminData.analytics.crisisMetrics.crisisAlertsToday}</div'"'"""'"'
-                            <small>{adminData.analytics.crisisMetrics.crisisResolutionRate}% resolved</small>
-                        </Card
-                        <Card className="metric-card'>""'""'"'
-                            <h4>📊 System Health</h4>
-                            <div className="metric-number'>{adminData.analytics.platformHealth.systemUptime}%</div""""'
-                            <small>Uptime • {adminData.analytics.platformHealth.performanceScore}/100 score</small>
-                        </Card
-                    </
-            </div
+  const handleApplicationReview = useCallback(async (
+    helper: Helper, 
+    status: Helper['applicationStatus']
+  ) => {
+    try {
+      await onUpdateApplicationStatus(helper.id, status, reviewNotes);
+      
+      setApplications(prev => prev.map(app => 
+        app.id === helper.id 
+          ? { ...app, applicationStatus: status }
+          : app
+      ));
+      
+      showNotification('success', `Application ${status} successfully`);
+      setShowApplicationModal(false);
+      setSelectedApplication(null);
+      setReviewNotes('');
+      
+    } catch (error) {
+      console.error('Error updating application status:', error);
+      showNotification('error', 'Failed to update application status');
+    }
+  }, [onUpdateApplicationStatus, reviewNotes, showNotification]);
 
-            {adminData?.escalatedCases && adminData.escalatedCases.length } 0 && (
-                <Card className='urgent-alerts">"'""""'"'
-                    <h3>🚨 Urgent Items Requiring Attention</h3>
-                    {adminData.escalatedCases.filter((caseItem: any) =) caseItem.status === "urgent_intervention' || caseItem.priority === "urgent"}.map((urgentCase: any) =) (""''""'"
-                        <div key={urgentCase.id} className="urgent-item">"''""'"'
-                            <strong>{urgentCase.type.replace(/_/g, " ").toUpperCase()}</strong"'"'"'"'
-                            <p>{urgentCase.description}</p
-                            <small>Escalated: {new Date(urgentCase.escalationTime).toLocaleString()}</small
-                        </div
-                    
-                </Card
-            
+  const openApplicationModal = (helper: Helper) => {
+    setSelectedApplication(helper);
+    setShowApplicationModal(true);
+  };
 
-            {adminData?.recentActions && (}
-    <Card>}
-    <h3>📋 Recent Administrative Actions</h3>
-                    {adminData.recentActions.slice(0, 5).map((action: any) =) (}
-    <div key={action.id} className="action-item">"'""'
-                            <strong>{action.type.replace(/_/g, " ")}</strong): {action.description}""''""'"'
-                            <small>{new Date(action.timestamp).toLocaleString()}</small}
-                        </div)
-                    }}
-                </Card
-        </div;
-const renderApplicationsTab = () = (;
-        <Card>
-            <h3>Helper Applications Review</h3>
-            {isLoading ? <div className="loading-spinner"     /> : adminData?.profile?.helperApplications?.length } 0 ? ("''""''
-                <div className="applications-grid">""'""'"
-                    {adminData.profile.helperApplications.map((app: any) =) (}
-    <Card key={app.id} className={`application-card ${app.priority}`}>
-                            <div className="app-header">"''""'"'
-                                <h4>{app.applicantName}</h4)
-                                <span className={`status-badge ${app.status}`}>{app.status.replace(/_/g, " ")}</span}"'"'"'"'
-                            </div)
-                            <p><strong}Type:</strong {app.applicationType}</p)
-                            <p><strongSpecialties:</strong}{app.specialties.join(", ")}</p"''"
-                            <p><strongBackground Check:</strong> <span className={`status ${app.backgroundCheckStatus}`}app.backgroundCheckStatus}/span><p>
-                            <p><strongReferences:</strong{app.referencesVerified ? "✅ Verified" : "⏳ Pending'}</p>""'
-                            <p><strongRisk:</strong> <span className={`risk ${app.riskAssessment}`}app.riskAssessment}/span><p>
-                            {app.reviewNotes && <p><strong}Notes:</strong {app.reviewNotes}</p
-                            <small>Submitted: {new Date(app.submissionDate).toLocaleDateString()}</small
-                            <div className='app-actions">"""''""'"
-                                {
-  app.status === "pending_review" && ("'"'"'"""'}
-    <)}
-    <AppButton variant="success' className="btn-sm" onClick={() =} {'"
-}>Approve</AppButton>
-                                        <AppButton variant="danger" className="btn-sm' onClick= {""}'
-  () => {
-}}Reject</AppButton>
-                                    </
-                                
-                                <AppButton className='btn-sm" onClick= {""}'"
-  () => {
-}View Details</AppButton>
-                            </div
-                        </Card
-                    )
-                </div
-             : applications.length >0 ? (
-                <table style= {}
-  {width: '100%", borderCollapse: "collapse""'
-}>
-                    <thead>
-                        <tr style= {}
-  {borderBottom: "2px solid var(--border-color)"'"'
-}>
-                            <th style= {}
-  {padding: "0.75rem", textAlign: "left'""'
-}>Display Name</th>
-                            <th style= {}
-  {padding: '0.75rem", textAlign: "left""'
-}>Application Date</th>
-                            <th style= {}
-  {padding: "0.75rem", textAlign: 'left""'
-)Actions</th>
-                        </tr}
-    </thead}
-    <tbody>
-                        {applications.map(app =) ()}
-    <tr key={app.id} style= {}
-  {borderBottom: "1px solid var(--border-color)"'""'
-}>
-                                <td style= {}
-  {padding: "0.75rem"""''
-}>{app.displayName}</td}
-                                <td style= {}
-  {padding: "0.75rem"'"'
-}>{new Date(app.joinDate).toLocaleDateString()}</td
-                                <td style= {}
-  {padding: "0.75rem""''"
-}><AppButton className="btn-sm" onClick={() =} handleViewApplicant(app)>eview</AppButton></td>"'""'
-                            </tr
-                        )
-                    </tbody
-                </table
-             : <p>No pending applications.</p>
-        </Card;
-const renderModerationTab = () = (;
-        <div className='moderation-section">"'""
-            {adminData?.profile?.escalatedCases && (
-                <Card>}
-    <h3>🚨 Escalated Moderation Cases</h3>}
-    <div className='cases-grid">""'"'"'
-                        {adminData.profile.escalatedCases.map((caseItem: any) => (}
-    <Card key={caseItem.id} className={`case-card ${caseItem.status}`}>
-                                <div className="case-header">'"""'
-                                    <h4>{caseItem.type.replace(/_/g, " ')}</h4)""''""'
-                                    <span className={`status-badge ${caseItem.status}`}>{caseItem.status.replace(/_/g, " ")}</span"'""'
-                                </div
-                                <p>{caseItem.description}</p
-                                <p><strongReported by:</strong>{caseItem.reportedBy}</p>
-                                <p><strongEscalated:</strong>{new Date(caseItem.escalationTime).toLocaleString()}</p>
-                                {caseItem.actionsTaken.length } 0 && (
-                                    <div>
-                                        <strong>Actions Taken:</strong)
-                                        <ul>
-                                            {caseItem.actionsTaken.map((action: string, actionIndex: number) =) (}
-    <li key={`${caseItem.id}-action-${actionIndex}`}>{action}</li)
-                                            }}
-                                        </ul
-                                    </div
-                                <div className='case-actions">""'"'"'
-                                    <AppButton className="btn-sm" onClick= {'}"'
-  () =} {
-}>View Details</AppButton>
-                                    {}
-  caseItem.followUpRequired && <AppButton variant="secondary' className="btn-sm" onClick={() =} {'}>"
->Follow Up</AppButton>}
-                                </div
-                            </Card
-                        )
-                    </div
-                </Card
-            {adminData?.communityHealth && (
-                <Card>
-                    <h3>📊 Community Health Metrics</h3>
-                    <div className="health-metrics'>"'"'"'}
-    <div className="metric-item">""'""'}
-    <span>Total Posts:</span}
-                            <strong>{adminData.communityHealth.totalPosts}</strong>
-                        </div}
-                        <div className="metric-item">""'"'
-                            <span>Flagged Content:</span
-                            <strong className="warning'>{adminData.communityHealth.flaggedContent}</strong""""'
-                        </div
-                        <div className='metric-item'>""""
-                            <span>Positive Sentiment:</span
-                            <strong className='success">{adminData.communityHealth.positiveSentimentRate}%</strong"'""
-                        </div
-                        <div className="metric-item">'"'"'"'
-                            <span>Engagement Rate:</span
-                            <strong>{adminData.communityHealth.engagementRate}%</strong
-                        </div
-                    </div
-                </Card
-            
-        </div;
-const renderAnalyticsTab = () = (;
-        adminData?.analytics ? (
-            <div className="analytics-section">""'""'
-                <Card>
-                    <h3>👥 User Analytics</h3>
-                    <div className="analytics-grid'>""'""'"'
-                        <div className="analytic-item'>"""'"'""'
-                            <span>Total Active Users</span>
-                            <strong>{adminData.analytics.userMetrics.totalActiveUsers.toLocaleString()}</strong)
-                        </div)
-                        <div className="analytic-item">""''"
-                            <span>Daily Active Users</span>
-                            <strong>{adminData.analytics.userMetrics.dailyActiveUsers.toLocaleString()}</strong
-                        </div
-                        <div className="analytic-item">""''
-                            <span>Weekly Active Users</span>
-                            <strong>{adminData.analytics.userMetrics.weeklyActiveUsers.toLocaleString()}</strong
-                        </div
-                        <div className="analytic-item">""'""'
-                            <span>User Retention Rate</span>
-                            <strong>{adminData.analytics.userMetrics.userRetentionRate}%</strong>
-                        </div>
-                        <div className='analytic-item">"""''""'
-                            <span>Avg Session Duration</span>
-                            <strong>{adminData.analytics.userMetrics.averageSessionDuration} min</strong>
-                        </div
-                        <div className="analytic-item'>"""'
-                            <span>New Today</span>
-                            <strong>{adminData.analytics.userMetrics.newRegistrationsToday}</strong
-                        </div
-                    </div
-                </Card
+  const getTrendIcon = (trend: string) => {
+    switch (trend) {
+      case 'up': return '↗️';
+      case 'down': return '↘️';
+      case 'stable': return '➡️';
+      default: return '➡️';
+    }
+  };
 
-                <Card>
-                    <h3>🌟 Helper Analytics</h3>
-                    <div className="analytics-grid'>""''""'
-                        <div className="analytic-item">"'""'
-                            <span>Total Active Helpers</span>
-                            <strong>{adminData.analytics.helperMetrics.totalActiveHelpers}</strong
-                        </div
-                        <div className="analytic-item'>""'""'"'
-                            <span>Average Response Time</span>
-                            <strong>{adminData.analytics.helperMetrics.averageResponseTime} min</strong>
-                        </div
-                        <div className="analytic-item'>""""'
-                            <span>Helpers Online</span>
-                            <strong>{adminData.analytics.helperMetrics.helpersOnline}</strong
-                        </div
-                        <div className='analytic-item">"'""
-                            <span>Sessions Today</span>
-                            <strong>{adminData.analytics.helperMetrics.totalSessionsToday}</strong
-                        </div
-                        <div className="analytic-item'>"'""
-                            <span>Satisfaction Rating</span>
-                            <strong>{adminData.analytics.helperMetrics.helperSatisfactionRating}/5.0</strong>
-                        </div
-                        <div className="analytic-item">'"'"'"'
-                            <span>Utilization Rate</span>
-                            <strong>{adminData.analytics.helperMetrics.helperUtilizationRate}%</strong
-                        </div
-                    </div
-                </Card
+  const getTrendColor = (trend: string) => {
+    switch (trend) {
+      case 'up': return '#10b981';
+      case 'down': return '#ef4444';
+      case 'stable': return '#6b7280';
+      default: return '#6b7280';
+    }
+  };
 
-                <Card className="crisis-analytics">""'""'
-                    <h3>🚨 Crisis Support Analytics</h3>
-                    <div className="analytics-grid'>""""'
-                        <div className='analytic-item">"'""""
-                            <span>Crisis Alerts Today</span>
-                            <strong className='crisis">{adminData.analytics.crisisMetrics.crisisAlertsToday}</strong"'""""'"'
-                        </div
-                        <div className="analytic-item'>"'"'"'
-                            <span>Avg Response Time</span>
-                            <strong>{adminData.analytics.crisisMetrics.averageResponseTimeToCrisis} min</strong>
-                        </div
-                        <div className="analytic-item'>""'"'"'
-                            <span>Resolution Rate</span>
-                            <strong className="success'>{adminData.analytics.crisisMetrics.crisisResolutionRate}%</strong"'"""''
-                        </div>
-                        <div className="analytic-item">'""""'
-                            <span>Prevention Success</span>
-                            <strong className='success">{adminData.analytics.crisisMetrics.preventionSuccessRate}%</strong"''""'
-                        </div
-                        <div className="analytic-item">"'""'
-                            <span>Escalation Rate</span>
-                            <strong className='warning">{adminData.analytics.crisisMetrics.escalationRate}%</strong"""'
-                        </div
-                        <div className='analytic-item">"'""""
-                            <span>Emergency Contacts</span>
-                            <strong>{adminData.analytics.crisisMetrics.emergencyContactsActivated}</strong
-                        </div
-                    </div
-                </Card
-            </div
-         : (
-            isLoading ? <div className='loading-spinner"     /> : ("''""'
-                <div className="stats-grid">'"'"'"'
-                    <Card className="stat-card"><h3Active Dilemmas</h3><div className='stat-number")stats?.activeDilemmas)</div><Card"''""'
-                    <Card className="stat-card'><h3>Avg. Time to Support</h3><div className="stat-number text">{stats?.avgTimeToFirstSupport}</div></Card>'""
-                    <Card className="stat-card"><h3Total Helpers</h3><div className='stat-number"stats?.totalHelpers}/div><Card>"'"
-                    <Card className="stat-card"><h3>Most Common Category</h3><div className="stat-number text'>{stats?.mostCommonCategory}</div></Card>""''"""'
-                </div>
-            )
-        )
-    );
-const renderSystemTab = () => (;
-        <div className="system-section'>"'"'"'
-            {adminData?.analytics?.platformHealth && (
-                <Card>
-                    <h3>🔧 System Health</h3>
-                    <div className="health-grid">"'""'
-                        <div className='health-item">"'""}
-    <span>System Uptime</span>}
-    <strong className='success">{adminData.analytics.platformHealth.systemUptime}%</strong>""'"'"'
-                        </div>
-                        <div className="health-item">'"""'
-                            <span>Avg Page Load</span>
-                            <strong>{adminData.analytics.platformHealth.averagePageLoadTime}s</strong>
-                        </div)
-                        <div className="health-item'>""''""'
-                            <span>Error Rate</span>
-                            <strong className="success">{adminData.analytics.platformHealth.errorRate}%</strong}"''""'"'
-                        </div>
-                        <div className="health-item">"'"'"'"""'
-                            <span>Performance Score</span>
-                            <strong>{adminData.analytics.platformHealth.performanceScore}/100</strong>
-                        </div>
-                        <div className="health-item'>"''""'
-                            <span>Security Incidents</span>
-                            <strong className="success'>{adminData.analytics.platformHealth.securityIncidents}</strong""''""'
-                        </div
-                        <div className="health-item'>"'"'""'
-                            <span>Backup Status</span>
-                            <strong className="success">{adminData.analytics.platformHealth.dataBackupStatus}</strong'""''""'
-                        </div>
-                    </div>
-                </Card>
-            )}
-
-            {adminData?.profile?.systemAlerts && (}
-    <Card>}
-    <h3>⚠️ System Alerts</h3>
-                    {adminData.profile.systemAlerts.map((alert: any) => (}
-    <div key={alert.id} className={`alert-item ${alert.severity}`}>
-                            <div className="alert-header">"'""'
-                                <strong>{alert.type.toUpperCase()}</strong
-                                <span className={`severity-badge ${alert.severity}`}>{alert.severity}</span
-                            </div
-                            <p>{alert.message}</p
-                            <small>
-                                {new Date(alert.timestamp).toLocaleString()} •
-                                Status: <span className={`status ${alert.status}`}>{alert.status}</span
-                            </small
-                        </div
-                    
-                </Card
-            
-
-            {adminData?.qualityMetrics && (
-                <Card>
-                    <h3>📈 Quality Metrics</h3>
-                    <div className="quality-metrics'>""""'
-                        <div className='metric-item">"''""'}
-    <span>User Satisfaction</span>}
-    <strong>{adminData.qualityMetrics.userSatisfactionScore}/5.0</strong>
-                        </div>
-                        <div className="metric-item">"''""'"'
-                            <span>Helper Reviews</span>
-                            <strong>{adminData.qualityMetrics.helperPerformanceReviews}</strong>
-                        </div>
-                        <div className="metric-item">"'""'
-                            <span>Completed Audits</span>
-                            <strong>{adminData.qualityMetrics.completedAudits}</strong)
-                        </div}
-                        <div className='metric-item">""'"'"'
-                            <span>Pending Audits</span>
-                            <strong className='warning">{adminData.qualityMetrics.pendingAudits}</strong""'"'"'
-                        </div>
-                    </div>
-
-                    <h4>Feature Usage</h4>
-                    <div className="feature-usage">'"""'
-                        {Object.entries(adminData.qualityMetrics.platformFeatureUsage).map(([feature, usage]: [string, any]) => (}
-    <div key={feature} className="usage-item'>""''""'
-                                <span>{feature.replace(/([A-Z])/g, " ${1").toLowerCase()}</span"'""'
-                                <div className='usage-bar">""'"'"'
-                                    <div className="usage-fill" style={{width: }`${usage}%`}></div>'""'
-                                </div>
-                                <strong>{usage}%</strong>
-                            </div>
-                        ))}
-                    </div>
-                </Card>
-            )}
+  if (isLoading) {
+    return (
+      <div className="admin-dashboard">
+        <div className="loading-state">
+          <div className="spinner"></div>
+          <p>Loading admin dashboard...</p>
         </div>
+      </div>
     );
+  }
 
-    return(<>)
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={`Review Application: ${selectedApplicant?.displayName}`}>
-                {applicantDetails ? (
-                    <div>}
-    <h3>Applicant Details</h3>}
-    <p><strong>Bio:</strong> {applicantDetails.bio}</p>
-                        <p><strong>Expertise:</strong> {applicantDetails.expertise?.join(", ') || "Not specified"}</p>'""""
-                        <p><strongJoined:</strong}{formatTimeAgo(applicantDetails.joinDate)}</p)
-                        <hr style= {}
-  {margin: '1rem 0""'"
-}    />
-                        <h3>Performance Stats</h3>
-                        <p><strongTraining Completed:</strong>{applicantDetails.trainingCompleted ? Yes: "No"}</p>"'"'
-                        <p><strong}Reputation:</strong> {applicantDetails.reputation?.toFixed(2) || "N/A'} / 5.0</p>""'"'"'
-                        <p><strong}Training Quiz Score:</strong {applicantDetails.quizScore || 0}%</p>
-                         <hr style= {}
-  {margin: "1rem 0'""'
-  }    />
-                         <h3>Actions</h3>
-                         <AppTextArea label="Rejection Notes (if rejecting)" value={rejectionNotes} onChange={(e) =} setRejectionNotes(e.target.value)> rows={3} /'"'"'""'
-                        <div className="modal-actions">'""''""""'
-                            <AppButton variant='danger" onClick={handleReject}>Reject</AppButton>"''""'
-                            <AppButton variant='success" onClick={handleApprove}>Approve</AppButton>"'""
-                        </div
-                    </div
-                 : <div className='loading-spinner"    />}"'"'""'
-            </Modal
+  return (
+    <div className="admin-dashboard">
+      <div className="dashboard-header">
+        <h1>Admin Dashboard</h1>
+        <p>Manage the CoreV2 Mental Health Platform</p>
+      </div>
 
-            <div className="view-header">'""''""'
-                <h1>🛡️ Astral Admin Dashboard</h1>
-                <p className="view-subheader">Platform oversight, safety management, and community health monitoring.</p"'""'
+      <div className="dashboard-tabs">
+        <button
+          className={`tab ${activeTab === 'overview' ? 'active' : ''}`}
+          onClick={() => setActiveTab('overview')}
+        >
+          Overview
+        </button>
+        <button
+          className={`tab ${activeTab === 'applications' ? 'active' : ''}`}
+          onClick={() => setActiveTab('applications')}
+        >
+          Applications ({applications.filter(app => app.applicationStatus === 'pending').length})
+        </button>
+        <button
+          className={`tab ${activeTab === 'moderation' ? 'active' : ''}`}
+          onClick={() => setActiveTab('moderation')}
+        >
+          Moderation
+        </button>
+        <button
+          className={`tab ${activeTab === 'analytics' ? 'active' : ''}`}
+          onClick={() => setActiveTab('analytics')}
+        >
+          Analytics
+        </button>
+        <button
+          className={`tab ${activeTab === 'system' ? 'active' : ''}`}
+          onClick={() => setActiveTab('system')}
+        >
+          System
+        </button>
+      </div>
+
+      <div className="dashboard-content">
+        {activeTab === 'overview' && (
+          <div className="overview-section">
+            <div className="stats-grid">
+              <Card title="Community Stats" className="stats-card">
+                {communityStats && (
+                  <div className="stats-content">
+                    <div className="stat-item">
+                      <span className="stat-label">Total Users</span>
+                      <span className="stat-value">{communityStats.totalUsers.toLocaleString()}</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-label">Active Users</span>
+                      <span className="stat-value">{communityStats.activeUsers.toLocaleString()}</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-label">Total Helpers</span>
+                      <span className="stat-value">{communityStats.totalHelpers}</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-label">Active Helpers</span>
+                      <span className="stat-value">{communityStats.activeHelpers}</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-label">Total Sessions</span>
+                      <span className="stat-value">{communityStats.totalSessions.toLocaleString()}</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-label">Average Rating</span>
+                      <span className="stat-value">{communityStats.averageRating}</span>
+                    </div>
+                  </div>
+                )}
+              </Card>
+
+              <Card title="System Health" className="system-health-card">
+                <div className="metrics-grid">
+                  {systemMetrics.map(metric => (
+                    <div key={metric.id} className="metric-item">
+                      <div className="metric-header">
+                        <span className="metric-name">{metric.name}</span>
+                        <span 
+                          className="metric-trend"
+                          style={{ color: getTrendColor(metric.trend) }}
+                        >
+                          {getTrendIcon(metric.trend)}
+                        </span>
+                      </div>
+                      <div className="metric-value">{metric.value}</div>
+                      <div className="metric-description">{metric.description}</div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
             </div>
-            <div className="dashboard-tabs'>""""'
-                <AppButton className={activeTab === 'overview" ? active: "'} onClick={() => setActiveTab("overview")}>📊 Overview</AppButton>""'""'
-                <AppButton className={activeTab === "applications" ? active: ""} onClick={() =} setActiveTab('applications")>📝 Applications {adminData?.profile?.helperApplications?.length >}0 ? `(${adminData.profile.helperApplications.length})` : applications.length >0 ? `(${applications.length})` : "'}<AppButton>"""
-                <AppButton className={activeTab === "moderation' ? active: ""} onClick={() =} setActiveTab('moderation")>🚨 Moderation</AppButton>"""
-                <AppButton className={activeTab === 'analytics" ? active: "'} onClick={() =} setActiveTab("analytics")>📈 Analytics</AppButton>""'"'
-                <AppButton className={activeTab === "system" ? active: '"} onClick={() =} setActiveTab("system")>⚙️ System</AppButton>"''""'
-            </div
-            <div className='dashboard-content">""''""'
-                {activeTab === "overview' && renderOverviewTab()}""""'
-                {activeTab === 'applications" && renderApplicationsTab()}"'""""
-                {activeTab === 'moderation" && renderModerationTab()}"'"""
-                {activeTab === "analytics' && renderAnalyticsTab()}""'""""''
-                {activeTab === "system" && renderSystemTab()}'"'"'"'
-            </div
-        </;
-export default AdminDashboardView;
+
+            <div className="recent-activity">
+              <Card title="Recent Activity" className="activity-card">
+                <div className="activity-list">
+                  <div className="activity-item">
+                    <div className="activity-icon">👥</div>
+                    <div className="activity-content">
+                      <div className="activity-title">New Helper Application</div>
+                      <div className="activity-description">Dr. Sarah Johnson submitted an application</div>
+                      <div className="activity-time">2 hours ago</div>
+                    </div>
+                  </div>
+                  
+                  <div className="activity-item">
+                    <div className="activity-icon">⚠️</div>
+                    <div className="activity-content">
+                      <div className="activity-title">Moderation Action</div>
+                      <div className="activity-description">Warning issued to user for inappropriate content</div>
+                      <div className="activity-time">4 hours ago</div>
+                    </div>
+                  </div>
+                  
+                  <div className="activity-item">
+                    <div className="activity-icon">📊</div>
+                    <div className="activity-content">
+                      <div className="activity-title">System Update</div>
+                      <div className="activity-description">Platform updated to version 2.1.3</div>
+                      <div className="activity-time">1 day ago</div>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'applications' && (
+          <div className="applications-section">
+            <div className="section-header">
+              <h2>Helper Applications</h2>
+              <p>Review and approve new helper applications</p>
+            </div>
+
+            {applications.filter(app => app.applicationStatus === 'pending').length === 0 ? (
+              <Card className="empty-state">
+                <div className="empty-content">
+                  <h3>No pending applications</h3>
+                  <p>New helper applications will appear here for review.</p>
+                </div>
+              </Card>
+            ) : (
+              <div className="applications-list">
+                {applications
+                  .filter(app => app.applicationStatus === 'pending')
+                  .map(application => (
+                    <Card key={application.id} className="application-card">
+                      <div className="application-header">
+                        <div className="applicant-info">
+                          <h3>{application.displayName}</h3>
+                          <p>Applied {formatTimeAgo(application.applicationDate || '')}</p>
+                        </div>
+                        <div className="application-status">
+                          <span className="status-badge pending">Pending Review</span>
+                        </div>
+                      </div>
+
+                      <div className="application-content">
+                        <div className="bio-section">
+                          <h4>Bio</h4>
+                          <p>{application.bio}</p>
+                        </div>
+
+                        <div className="details-grid">
+                          <div className="detail-section">
+                            <h4>Specializations</h4>
+                            <div className="tags">
+                              {application.specializations.map(spec => (
+                                <span key={spec} className="tag">{spec}</span>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="detail-section">
+                            <h4>Certifications</h4>
+                            <ul>
+                              {application.certifications.map((cert, index) => (
+                                <li key={index}>{cert}</li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          <div className="detail-section">
+                            <h4>Languages</h4>
+                            <div className="tags">
+                              {application.languages.map(lang => (
+                                <span key={lang} className="tag">{lang}</span>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="detail-section">
+                            <h4>Experience</h4>
+                            <p>{application.yearsOfExperience} years</p>
+                          </div>
+                        </div>
+
+                        {application.education && (
+                          <div className="education-section">
+                            <h4>Education</h4>
+                            <ul>
+                              {application.education.map((edu, index) => (
+                                <li key={index}>{edu}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="application-actions">
+                        <AppButton
+                          variant="secondary"
+                          onClick={() => openApplicationModal(application)}
+                        >
+                          Review Application
+                        </AppButton>
+                      </div>
+                    </Card>
+                  ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'moderation' && (
+          <div className="moderation-section">
+            <Card title="Recent Moderation Actions" className="moderation-card">
+              <div className="moderation-list">
+                {moderationActions.map(action => (
+                  <div key={action.id} className="moderation-item">
+                    <div className="action-info">
+                      <div className="action-type">{action.type.replace('_', ' ').toUpperCase()}</div>
+                      <div className="action-user">User: {action.username}</div>
+                      <div className="action-reason">{action.reason}</div>
+                      <div className="action-time">{formatTimeAgo(action.timestamp)}</div>
+                    </div>
+                    <div className="action-status">
+                      <span className={`status-badge ${action.status}`}>
+                        {action.status}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {activeTab === 'analytics' && (
+          <div className="analytics-section">
+            <Card title="Platform Analytics" className="analytics-card">
+              <div className="analytics-content">
+                <h3>Coming Soon</h3>
+                <p>Detailed analytics and reporting features will be available here.</p>
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {activeTab === 'system' && (
+          <div className="system-section">
+            <Card title="System Management" className="system-card">
+              <div className="system-content">
+                <h3>System Tools</h3>
+                <div className="system-actions">
+                  <AppButton>Database Backup</AppButton>
+                  <AppButton variant="secondary">Clear Cache</AppButton>
+                  <AppButton variant="secondary">View Logs</AppButton>
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
+      </div>
+
+      {/* Application Review Modal */}
+      <Modal
+        isOpen={showApplicationModal}
+        onClose={() => {
+          setShowApplicationModal(false);
+          setSelectedApplication(null);
+          setReviewNotes('');
+        }}
+        title="Review Helper Application"
+      >
+        {selectedApplication && (
+          <div className="application-review-modal">
+            <div className="applicant-summary">
+              <h3>{selectedApplication.displayName}</h3>
+              <p>{selectedApplication.bio}</p>
+            </div>
+
+            <div className="review-section">
+              <AppTextArea
+                label="Review Notes (optional)"
+                value={reviewNotes}
+                onChange={(e) => setReviewNotes(e.target.value)}
+                placeholder="Add any notes about this application..."
+                rows={4}
+              />
+            </div>
+
+            <div className="modal-actions">
+              <AppButton
+                variant="danger"
+                onClick={() => handleApplicationReview(selectedApplication, 'rejected')}
+              >
+                Reject Application
+              </AppButton>
+              <AppButton
+                onClick={() => handleApplicationReview(selectedApplication, 'approved')}
+              >
+                Approve Application
+              </AppButton>
+            </div>
+          </div>
+        )}
+      </Modal>
+    </div>
+  );
+};
