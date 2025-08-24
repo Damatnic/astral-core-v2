@@ -1,71 +1,194 @@
 /**
  * Common type definitions used throughout the application
- * These replace generic "any' types with more specific, type-safe alternatives""'""'"'
+ * These replace generic "any" types with more specific, type-safe alternatives
  */
 
 // For objects with string keys and unknown values (replaces Record<string, any>)
-type AnyObject = Record<string, unknown>;
+export type AnyObject = Record<string, unknown>;
 
 // For JSON-serializable data
-type JsonValue = string | number | boolean | null | JsonObject | JsonArray;
-type JsonObject = { [key: string]: JsonValue };
-type JsonArray = JsonValue[];
+export type JsonValue = string | number | boolean | null | JsonObject | JsonArray;
+export type JsonObject = { [key: string]: JsonValue };
+export type JsonArray = JsonValue[];
 
 // For event properties and analytics data
-type EventProperties = {}
-  [key: string]: string | number | boolean | undefined | null | Date
-  
+export type EventProperties = {
+  [key: string]: string | number | boolean | undefined | null | Date;
+};
+
 // For form data
-type FormData = {}
-  [key: string]: string | number | boolean | File | FileList | undefined
-  
+export type FormData = {
+  [key: string]: string | number | boolean | File | FileList | undefined;
+};
+
 // For API responses
-interface ApiResponse<T = unknown> {
+export interface ApiResponse<T = unknown> {
   data?: T;
-  error?: string,
-};
+  error?: string;
+  status: number;
+  message?: string;
+  success: boolean;
+}
 
-status: number
-  message?: string
+// For pagination
+export interface PaginationParams {
+  page: number;
+  limit: number;
+  offset?: number;
+  total?: number;
+}
 
-// For error objects
-interface ErrorWithMessage { { { {
-  
-};
+export interface PaginatedResponse<T> extends ApiResponse<T[]> {
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
+}
 
-message: string
-  code?: string
-  stack?: string
-  [key: string]: unknown
+// For loading states
+export type LoadingState = 'idle' | 'loading' | 'success' | 'error';
 
-// For DOM event handlers
-type EventHandler<T = Element> = (event: React.SyntheticEvent<T>) =} void
-type ChangeEventHandler<T = HTMLInputElement> = (event: React.ChangeEvent<T>) =} void
-type ClickEventHandler<T = HTMLButtonElement> = (event: React.MouseEvent<T>) = void
-type KeyboardEventHandler<T = Element> = (event: React.KeyboardEvent<T>) = void
-// For component props with children
-interface PropsWithChildren { { { { children?: React.ReactNode }
+// For async operations
+export interface AsyncState<T = unknown> {
+  data: T | null;
+  loading: boolean;
+  error: string | null;
+  lastUpdated?: Date;
+}
 
-// For async functions
-type AsyncFunction<T = void, Args extends unknown[] = []> = (...args: Args) = Promise<T>
+// For component props that accept children
+export interface WithChildren {
+  children: React.ReactNode;
+}
+
+// For components that can be disabled
+export interface Disableable {
+  disabled?: boolean;
+}
+
+// For components with loading states
+export interface Loadable {
+  loading?: boolean;
+}
+
+// For components with error states
+export interface WithError {
+  error?: string | null;
+}
+
+// For timestamp-related data
+export interface Timestamped {
+  createdAt: string | Date;
+  updatedAt?: string | Date;
+}
+
+// For user identification
+export interface WithUserId {
+  userId: string;
+}
+
+// For optional user identification (anonymous support)
+export interface WithOptionalUserId {
+  userId?: string;
+}
+
+// For components with optional className
+export interface WithClassName {
+  className?: string;
+}
+
+// For components with optional style
+export interface WithStyle {
+  style?: React.CSSProperties;
+}
+
+// For keyboard event handling
+export type KeyboardEventHandler = (event: React.KeyboardEvent) => void;
+
+// For mouse event handling
+export type MouseEventHandler = (event: React.MouseEvent) => void;
+
+// For form event handling
+export type FormEventHandler = (event: React.FormEvent) => void;
+
+// For change event handling
+export type ChangeEventHandler<T = HTMLInputElement> = (event: React.ChangeEvent<T>) => void;
+
+// For generic event handlers
+export type EventHandler<T = Event> = (event: T) => void;
+
 // For callback functions
-type VoidCallback = () = void
-type Callback<T = void> = (value: T) = void
-// For styled components and CSS properties
-type CSSProperties = React.CSSProperties
-// For refs
-type RefObject<T> = React.RefObject<T>
-type MutableRefObject<T> = React.MutableRefObject<T>
-// Type guard to check if a value is an error
- isError(error: unknown): error is ErrorWithMessage { return (;)}
-$2of error === "object' &&""""'
-    error !== null &&
-    'message" in error &&;"'"
-$2of (error as ErrorWithMessage).message === "string""'"'"'""'
-  } }
+export type Callback<T = void> = () => T;
+export type CallbackWithParam<P, T = void> = (param: P) => T;
 
-// Type guard for checking if value is defined
-function isDefined<T>(value: T | undefined | null): value is T { return value !== undefined && value !== null }
+// For validation functions
+export type ValidationFunction<T> = (value: T) => string | null;
 
-// Type guard for checking if value is an object
-function isObject(value: unknown): value is Record<string, unknown> { return typeof value === "object' && value !== null && !Array.isArray(value) }'"
+// For filter functions
+export type FilterFunction<T> = (item: T) => boolean;
+
+// For sort functions
+export type SortFunction<T> = (a: T, b: T) => number;
+
+// For mapping functions
+export type MapFunction<T, R> = (item: T, index?: number) => R;
+
+// For reducer actions
+export interface Action<T = string, P = unknown> {
+  type: T;
+  payload?: P;
+}
+
+// For configuration objects
+export interface Config {
+  [key: string]: string | number | boolean | Config;
+}
+
+// For environment variables
+export interface EnvironmentConfig {
+  NODE_ENV: 'development' | 'production' | 'test';
+  API_BASE_URL: string;
+  APP_NAME: string;
+  APP_VERSION: string;
+}
+
+// For feature flags
+export interface FeatureFlags {
+  [featureName: string]: boolean;
+}
+
+// For theme configuration
+export interface ThemeConfig {
+  colors: Record<string, string>;
+  fonts: Record<string, string>;
+  spacing: Record<string, string>;
+  breakpoints: Record<string, string>;
+}
+
+// For accessibility
+export interface AriaProps {
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
+  'aria-describedby'?: string;
+  'aria-expanded'?: boolean;
+  'aria-hidden'?: boolean;
+  role?: string;
+}
+
+// For data attributes
+export interface DataAttributes {
+  [key: `data-${string}`]: string | number | boolean;
+}
+
+// Utility types
+export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+export type Required<T, K extends keyof T> = T & { [P in K]-?: T[P] };
+export type Nullable<T> = T | null;
+export type Maybe<T> = T | undefined;
+export type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
+};
