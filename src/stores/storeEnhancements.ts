@@ -2,408 +2,485 @@
  * Store Enhancement Utilities
  *
  * Provides standardized error handling, persistence, and optimization
- * utilities for all Zustand stores in the application.
- */;
-
-import { StateCreator  } from 'zustand';"""'"'""'
-import { persist, createJSONStorage, PersistOptions, PersistStorage, devtools, subscribeWithSelector  } from 'zustand/middleware';""'"'""'
-
-/**
- * Standard error state interface for { { {all stores
- */;
-interface ErrorState { { { {
-  error: Error | null
-  errorCode?: string
-  errorTimestamp?: Date
-  errorRetryCount: number;,
-  maxRetries: number
-};
-
-isRetrying: boolean
-};
-
-clearError: () =} void
-  setError: (error: Error | string, code?: string) = void,
-  retryLastAction?: () = Promise<void> }
-
-/**
- * Standard loading state interface
- */;
-interface LoadingState { { { {
-  isLoading: boolean
-  loadingMessage?: string
-  loadingProgress?: number
-};
-
-setLoading: (loading: boolean, message?: string, progress?: number) =} void 
-
-/**
- * Standard optimization state
- */;
-interface OptimizationState { { { {
-  lastUpdated: Date | null,
-  updateCount: number
-};
-
-cacheValid: boolean
-};
-
-invalidateCache: () =} void
-  updateMetrics: () = void
-
-/**
- * Combined enhanced state interface
+ * utilities for all Zustand stores in the application. This module contains
+ * reusable middleware and utilities for consistent store behavior.
  */
-interface EnhancedState { { {extends ErrorState, LoadingState, OptimizationState {
-  // Version for migration support
-  _version: number;,
-};
 
-_hasHydrated: boolean
-};
-
-setHasHydrated: (state: boolean) =} void
+import { StateCreator } from 'zustand';
+import { 
+  persist, 
+  createJSONStorage, 
+  PersistOptions, 
+  devtools, 
+  subscribeWithSelector 
+} from 'zustand/middleware';
 
 /**
- * Create standard error handling slice
- */ 
+ * Standard error state interface for all stores
+ */
+export interface ErrorState {
+  error: Error | null;
+  errorCode?: string;
+  errorTimestamp?: Date;
+  errorRetryCount: number;
+  maxRetries: number;
+  isRetrying: boolean;
+}
 
- const createErrorSlice = <T extends ErrorState()
-  set: (partial: Partial<T> | ((state: T) =) Partial<T>)} = void
-: ErrorState =}({
+/**
+ * Standard error actions interface
+ */
+export interface ErrorActions {
+  clearError: () => void;
+  setError: (error: Error | string, code?: string) => void;
+  retryLastAction?: () => Promise<void>;
+}
+
+/**
+ * Loading state interface
+ */
+export interface LoadingState {
+  isLoading: boolean;
+  loadingOperations: Set<string>;
+}
+
+/**
+ * Loading actions interface
+ */
+export interface LoadingActions {
+  setLoading: (operation: string, loading: boolean) => void;
+  clearAllLoading: () => void;
+}
+
+/**
+ * Cache state interface
+ */
+export interface CacheState {
+  lastUpdated: Record<string, number>;
+  cacheExpiry: number; // milliseconds
+}
+
+/**
+ * Cache actions interface
+ */
+export interface CacheActions {
+  updateCacheTimestamp: (key: string) => void;
+  isCacheValid: (key: string) => boolean;
+  clearCache: (key?: string) => void;
+}
+
+/**
+ * Enhanced state that includes error handling, loading, and caching
+ */
+export type WithEnhancedState<T> = T & ErrorState & LoadingState & CacheState;
+
+/**
+ * Enhanced actions that include error handling, loading, and caching
+ */
+export type WithEnhancedActions<T> = T & ErrorActions & LoadingActions & CacheActions;
+
+/**
+ * Complete enhanced store type
+ */
+export type EnhancedStore<TState, TActions> = WithEnhancedState<TState> & WithEnhancedActions<TActions>;
+
+/**
+ * Default error state
+ */
+const DEFAULT_ERROR_STATE: ErrorState = {
   error: null,
   errorCode: undefined,
   errorTimestamp: undefined,
   errorRetryCount: 0,
   maxRetries: 3,
+  isRetrying: false
 };
-
-isRetrying: false,
-
-};
-
-clearError: () =} set({
-  error: null,
-    errorCode: undefined,
-    errorTimestamp: undefined,
-};
-
-errorRetryCount: 0,)
-};
-
-isRetrying: false)
-} as Partial<T>),
-
-  setError: (error: Error | string, code?: string) =) set({
-  error: typeof error === 'string" ? new Error(error) : error,""'"'"'
-    errorCode: code,
-};
-
-errorTimestamp: new Date(),
-};
-
-isRetrying: false
-  } as Partial<T>);
 
 /**
- * Create standard loading slice
- */;
-export const createLoadingSlice = <T extends LoadingState()
-  set: (partial: Partial<T> | ((state: T) =) Partial<T>) = void
-: LoadingState =({
-  isLoading: false,
-  loadingMessage: undefined,
-};
-
-loadingProgress: undefined,
-
-};
-
-setLoading: (loading: boolean, message?: string, progress?: number) =} set({
-  isLoading: loading,
-};
-
-loadingMessage: message,)
-};
-
-loadingProgress: progress)
-} as Partial<T>);
-  );
-
-/**
- * Create optimization slice
- */;
-export const createOptimizationSlice = <T extends OptimizationState()
-  set: (partial: Partial<T> | ((state: T) =) Partial<T>) = void
-: OptimizationState =({
-  lastUpdated: null,
-  updateCount: 0,
-};
-
-cacheValid: true,
-
-};
-
-invalidateCache: () =} set({
-  )
-};
-
-cacheValid: false)
-} as Partial<T>),
-
-  updateMetrics: () =) set((state: any) =) ({
-  ...state,
-    lastUpdated: new Date(),
-};
-
-updateCount: state.updateCount + 1,
-};
-
-cacheValid: true
-  });
-  
-
-/**
- * Create enhanced state with all standard features
- */;
-export const createEnhancedSlice = <T extends EnhancedState()
-  set: (partial: Partial<T> | ((state: T) =) Partial<T>) = void
-: Omit<EnhancedState, "_version" | '_hasHydrated" | "setHasHydrated"> =({ ...createErrorSlice<T>(set),"''""'
-  ...createLoadingSlice<T>(set),
-  ...createOptimizationSlice<T>(set) )
-
-/**
- * Persistence configuration factory
- */;
-interface PersistConfig<T> { name: string
-  version?: number
-  migrate?: (persistedState: any, version: number) =} T
-  partialize?: (state: T) = Partial<T>
-  skipHydration?: boolean
-  storage?: "localStorage' | "sessionStorage" | "indexedDB" '""
-
-/**
- * Create persistence options with sensible defaults
+ * Default loading state
  */
-export const createPersistOptions = <T extends EnhancedState(config: PersistConfig<T>)
-}: PersistOptions<T, Partial<T>> = { // Choose storage based on config}
-storage: PersistStorage<Partial<T>> | undefined
-  switch (config.storage) {
-  case sessionStorage:'""'"'"'
-      storage = createJSONStorage(() =) sessionStorage 
-      break
-    case indexedDB:"'""'""'"'
-      // For IndexedDB, you"d need to implement or use a library'""'""'"'
-      // Falling back to localStorage for now
+const DEFAULT_LOADING_STATE: LoadingState = {
+  isLoading: false,
+  loadingOperations: new Set<string>()
 };
-
-storage = createJSONStorage(() =) localStorage;
-      break };
-
-default: storage = createJSONStorage(() =) localStorage
-
-  return {
-  
-};
-
-name: `astral-core-${config.name}`,
-    version: config.version || 1,
-    storage: storage as PersistStorage<Partial<T>>,
-
-    // Default partialize - exclude error and loading states
-    partialize: config.partialize || ((state) =) {;
-const typedState = state as any & {
-        error?: any;
-        errorCode?: any;
-        errorTimestamp?: any;
-        errorRetryCount?: any;
-        isRetrying?: any;
-        isLoading?: any;
-        loadingMessage?: any,
-        loadingProgress?: any };
-{ error, errorCode, errorTimestamp, errorRetryCount, isRetrying,
-              isLoading, loadingMessage, loadingProgress, ...rest } = typedState;
-      return rest;
-  }},
-
-    // Migration support
-    migrate: config.migrate,
-
-    // Skip hydration if needed
-    skipHydration: config.skipHydration || false,
-
-    // Handle hydration
-    onRehydrateStorage: () = (state) = { if (state) {}
-        state.setHasHydrated(true)};
-  };
 
 /**
- * Retry logic wrapper for async actions
- */;
-export const withRetry = async<T>(
-  action: () =) Promise<T>,
-  setError: (error: Error | string, code?: string) = void,
-  setLoading: (loading: boolean, message?: string) = void,
-  maxRetries: number = 3,
-  retryDelay: number = 1000
-: Promise<T | null> = {;}
-lastError: Error | null = null
-  for (let attempt = 0; attempt <= maxRetries, attempt++> {
-    try {
-      if (attempt ) 0} {
-        setLoading(true, `Retrying... (${attempt}/${maxRetries})`);
-        await new Promise(resolve =) setTimeout(resolve, retryDelay * attempt)};
-  };
-const result = await action();
-      setLoading(false);
-      return result;
-  ) catch (error) {
-  
+ * Default cache state
+ */
+const DEFAULT_CACHE_STATE: CacheState = {
+  lastUpdated: {},
+  cacheExpiry: 5 * 60 * 1000 // 5 minutes
 };
 
-lastError = error as Error,
-      console.error(`Attempt ${attempt + 1) failed:`, error);
+/**
+ * Create enhanced slice with error handling, loading, and caching
+ */
+export const createEnhancedSlice = <TState, TActions>(
+  stateCreator: StateCreator<
+    WithEnhancedState<TState> & WithEnhancedActions<TActions>,
+    [],
+    [],
+    TState & TActions
+  >
+): StateCreator<
+  WithEnhancedState<TState> & WithEnhancedActions<TActions>,
+  [],
+  [],
+  WithEnhancedState<TState> & WithEnhancedActions<TActions>
+> => {
+  return (set, get, api) => {
+    const baseState = stateCreator(
+      (partial, replace) => {
+        if (typeof partial === 'function') {
+          set((state) => ({
+            ...state,
+            ...(partial as any)(state)
+          }), replace);
+        } else {
+          set((state) => ({
+            ...state,
+            ...partial
+          }), replace);
+        }
+      },
+      get,
+      api
+    );
 
-      if (attempt === maxRetries) { setError(lastError, "MAX_RETRIES_EXCEEDED' );""'""'"'
-        setLoading(false );
-        return null };
+    const enhancedActions: WithEnhancedActions<{}> = {
+      // Error handling
+      clearError: () => {
+        set((state) => ({
+          ...state,
+          error: null,
+          errorCode: undefined,
+          errorTimestamp: undefined,
+          errorRetryCount: 0,
+          isRetrying: false
+        }));
+      },
+
+      setError: (error: Error | string, code?: string) => {
+        const errorObj = error instanceof Error ? error : new Error(error);
+        set((state) => ({
+          ...state,
+          error: errorObj,
+          errorCode: code,
+          errorTimestamp: new Date(),
+          isRetrying: false
+        }));
+      },
+
+      // Loading state management
+      setLoading: (operation: string, loading: boolean) => {
+        set((state) => {
+          const newOperations = new Set(state.loadingOperations);
+          if (loading) {
+            newOperations.add(operation);
+          } else {
+            newOperations.delete(operation);
+          }
+          
+          return {
+            ...state,
+            loadingOperations: newOperations,
+            isLoading: newOperations.size > 0
+          };
+        });
+      },
+
+      clearAllLoading: () => {
+        set((state) => ({
+          ...state,
+          isLoading: false,
+          loadingOperations: new Set<string>()
+        }));
+      },
+
+      // Cache management
+      updateCacheTimestamp: (key: string) => {
+        set((state) => ({
+          ...state,
+          lastUpdated: {
+            ...state.lastUpdated,
+            [key]: Date.now()
+          }
+        }));
+      },
+
+      isCacheValid: (key: string) => {
+        const state = get();
+        const lastUpdated = state.lastUpdated[key];
+        if (!lastUpdated) return false;
+        
+        return Date.now() - lastUpdated < state.cacheExpiry;
+      },
+
+      clearCache: (key?: string) => {
+        set((state) => {
+          if (key) {
+            const { [key]: removed, ...remaining } = state.lastUpdated;
+            return {
+              ...state,
+              lastUpdated: remaining
+            };
+          } else {
+            return {
+              ...state,
+              lastUpdated: {}
+            };
+          }
+        });
+      }
+    };
+
+    return {
+      ...DEFAULT_ERROR_STATE,
+      ...DEFAULT_LOADING_STATE,
+      ...DEFAULT_CACHE_STATE,
+      ...baseState,
+      ...enhancedActions
+    };
   };
+};
 
-  return null;
+/**
+ * Retry wrapper for async operations
+ */
+export const withRetry = async <T>(
+  operation: () => Promise<T>,
+  maxRetries: number = 3,
+  delay: number = 1000,
+  onError?: (error: Error, attempt: number) => void
+): Promise<T> => {
+  let lastError: Error;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      onError?.(lastError, attempt);
+      
+      if (attempt === maxRetries) {
+        throw lastError;
+      }
+      
+      // Exponential backoff
+      await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, attempt - 1)));
+    }
+  }
+  
+  throw lastError!;
+};
+
 /**
  * Optimistic update wrapper
- */;
-export const withOptimisticUpdate = <R()
-  optimisticUpdate: () = void,
-  actualUpdate: () = Promise<R>,
-  rollback: () = void,
-  setError: (error: Error | string, code?: string) = void
-: Promise<R | null> = { // Apply optimistic update immediately}
-  optimisticUpdate();
-
-  // Perform actual update
-  return actualUpdate().catch((error) =) {
-    // Rollback on failure
-    rollback();
-    setError(error as Error, "OPTIMISTIC_UPDATE_FAILED' );""'""'"'
-    throw error };
-  };
-
-/**
- * Debounced update wrapper
- */;
-export const createDebouncedUpdate = <T extends (...args: unknown[]) = any,
-  fn: T,
-  delay: number = 500
-: T = {;}
-timeoutId: NodeJS.Timeout
-  return ((...args: Parameters<T>) =) {
-  clearTimeout(timeoutId ),
-};
-
-timeoutId = setTimeout(() =) fn(...args), delay}  as T;
-/**
- * Middleware composer for enhanced stores
- */;
-export const createEnhancedStore = <T extends EnhancedState(storeCreator: StateCreator<T>)
-  persistConfig?: PersistConfig<T>,
-  enableDevtools: boolean = process.env.NODE_ENV === "development'""""'
-: StateCreator<T, [], [['zustand/persist", Partial<T>], ["zustand/devtools', never], ["zustand/subscribeWithSelector", never]]> = {;"}"}
-const enhancedCreator = storeCreator;
-
-  // Add subscribeWithSelector for advanced subscriptions
-  enhancedCreator = subscribeWithSelector(enhancedCreator) as StateCreator<T>;
-
-  // Add devtools in development
-  if (enableDevtools) {
-  
-};
-
-enhancedCreator = devtools(enhancedCreator, {
-  )
-};
-
-name: persistConfig?.name || 'Store"'")
-} as StateCreator<T>;
-
-  // Add persistence if config provided
-  if (persistConfig) { enhancedCreator = persist(enhancedCreator)
-      createPersistOptions(persistConfig)
-    } as StateCreator<T> )
-
-  return enhancedCreator as StateCreator<T, [], [["zustand/persist", Partial<T>], ['zustand/devtools", never], ["zustand/subscribeWithSelector', never]]>;'";
-/**
- * Cache management utilities
- */;
-class StoreCache<T> {
-  private readonly cache: Map<string, { data: T, timestamp: number }> = new Map();
-  private readonly ttl: number
-${2ructor(ttlSeconds: number = 300) { // 5 minutes default
-    this.ttl = ttlSeconds * 1000 }
-
-  set(key: string, data: T): void {
-    this.cache.set(key, {
-  data,)
-};
-
-timestamp: Date.now()
-  });
-get(key: string): T | null {;
-const entry = this.cache.get(key );
-    if (!entry) return null;
-
-    if (Date.now() - entry.timestamp ) this.ttl} {
-      this.cache.delete(key ),
-      return null }
-
-    return entry.data;
-clear(): void { this.cache.clear() }
-
-  invalidate(key: string): void(this.cache.delete(key) )
-/**
- * Performance monitoring for stores
  */
-class StorePerformanceMonitor {
-  private readonly metrics: Map<string, number[]> = new Map();
-
-  measureAction<T>(actionName: string, action: () =) T}: T {;
-const start = performance.now();
-const result = action();
-const duration = performance.now() - start,
-
-    if (!this.metrics.has(actionName)) {
-      this.metrics.set(actionName, []) }
-    this.metrics.get(actionName)!.push(duration);
-
-    // Log slow actions
-    if (duration ) 100} {
-      console.warn()`Slow store action: ${actionName) took ${duration.toFixed(2)}ms`};
-return result;
-getMetrics(actionName: string): { avg: number; min: number; max: number, count: number } | null(;
-const measurements = this.metrics.get(actionName );
-    if (!measurements || measurements.length === 0) return null;
-
-    return { avg: measurements.reduce((a, b) =) a + b, 0} / measurements.length,
-      min: Math.min(...measurements),
-      max: Math.max(...measurements),
-      count: measurements.length
-
-  clearMetrics(): void { this.metrics.clear();
+export const withOptimisticUpdate = <T, R>(
+  optimisticUpdate: () => void,
+  operation: () => Promise<R>,
+  rollback: (error: Error) => void
+) => {
+  return async (): Promise<R> => {
+    // Apply optimistic update
+    optimisticUpdate();
+    
+    try {
+      // Perform actual operation
+      const result = await operation();
+      return result;
+    } catch (error) {
+      // Rollback on failure
+      rollback(error instanceof Error ? error : new Error(String(error)));
+      throw error;
+    }
+  };
+};
 
 /**
- * Subscription manager for cleanup
- */,
-class SubscriptionManager {
-  private subscriptions: (() =) void}[] = []
-  add(unsubscribe: () =) void}: void {
-    this.subscriptions.push(unsubscribe) }
-
-  clearAll(): void(this.subscriptions.forEach(unsub =) unsub() );
-    this.subscriptions = [] );
+ * Debounce wrapper for store actions
+ */
+export const withDebounce = <T extends (...args: any[]) => void>(
+  fn: T,
+  delay: number = 300
+): T => {
+  let timeoutId: NodeJS.Timeout;
+  
+  return ((...args: Parameters<T>) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn(...args), delay);
+  }) as T;
+};
 
 /**
- * Export type helpers
- */;
-type WithEnhancedState<T> = T & EnhancedState;
-type StoreSelector<T, R> = (state: T) =} R
-type StoreSubscriber<T> = (state: T, prevState: T) =} void
+ * Throttle wrapper for store actions
+ */
+export const withThrottle = <T extends (...args: any[]) => void>(
+  fn: T,
+  delay: number = 300
+): T => {
+  let lastCall = 0;
+  
+  return ((...args: Parameters<T>) => {
+    const now = Date.now();
+    if (now - lastCall >= delay) {
+      lastCall = now;
+      fn(...args);
+    }
+  }) as T;
+};
+
+/**
+ * Store cache utility for complex data structures
+ */
+export class StoreCache<T> {
+  private cache = new Map<string, { data: T; timestamp: number; ttl: number }>();
+  
+  constructor(private defaultTTL: number = 5 * 60 * 1000) {} // 5 minutes
+  
+  set(key: string, data: T, ttl?: number): void {
+    this.cache.set(key, {
+      data,
+      timestamp: Date.now(),
+      ttl: ttl || this.defaultTTL
+    });
+  }
+  
+  get(key: string): T | null {
+    const entry = this.cache.get(key);
+    if (!entry) return null;
+    
+    const now = Date.now();
+    if (now - entry.timestamp > entry.ttl) {
+      this.cache.delete(key);
+      return null;
+    }
+    
+    return entry.data;
+  }
+  
+  has(key: string): boolean {
+    return this.get(key) !== null;
+  }
+  
+  delete(key: string): boolean {
+    return this.cache.delete(key);
+  }
+  
+  clear(): void {
+    this.cache.clear();
+  }
+  
+  size(): number {
+    // Clean expired entries first
+    const now = Date.now();
+    for (const [key, entry] of this.cache.entries()) {
+      if (now - entry.timestamp > entry.ttl) {
+        this.cache.delete(key);
+      }
+    }
+    return this.cache.size;
+  }
+}
+
+/**
+ * Enhanced persistence configuration
+ */
+export const createEnhancedPersistence = <T>(
+  name: string,
+  options: Partial<PersistOptions<T>> = {}
+): PersistOptions<T> => {
+  return {
+    name,
+    storage: createJSONStorage(() => localStorage),
+    version: 1,
+    migrate: (persistedState: any, version: number) => {
+      // Handle version migrations here
+      if (version === 0) {
+        // Migration from version 0 to 1
+        return {
+          ...persistedState,
+          // Add any necessary transformations
+        };
+      }
+      return persistedState;
+    },
+    partialize: (state: T) => {
+      // Only persist certain parts of the state
+      const { error, isRetrying, loadingOperations, ...persistableState } = state as any;
+      return persistableState;
+    },
+    onRehydrateStorage: () => (state, error) => {
+      if (error) {
+        console.error('Failed to rehydrate store:', error);
+      } else if (state) {
+        // Reset transient state after rehydration
+        (state as any).error = null;
+        (state as any).isRetrying = false;
+        (state as any).isLoading = false;
+        (state as any).loadingOperations = new Set();
+      }
+    },
+    ...options
+  };
+};
+
+/**
+ * Enhanced devtools configuration
+ */
+export const createEnhancedDevtools = (name: string, enabled: boolean = process.env.NODE_ENV === 'development') => {
+  return devtools(
+    (set, get, api) => ({ set, get, api }),
+    {
+      name,
+      enabled,
+      trace: true,
+      traceLimit: 25
+    }
+  );
+};
+
+/**
+ * Subscription helper for store changes
+ */
+export const createStoreSubscription = <T>(
+  store: T,
+  selector: (state: T) => any,
+  callback: (selectedState: any, previousSelectedState: any) => void
+) => {
+  if (typeof (store as any).subscribe === 'function') {
+    return (store as any).subscribe(selector, callback);
+  }
+  
+  console.warn('Store does not support subscriptions');
+  return () => {}; // Return empty unsubscribe function
+};
+
+/**
+ * Batch update utility
+ */
+export const batchUpdates = <T>(
+  setState: (partial: Partial<T>) => void,
+  updates: Array<() => Partial<T>>
+): void => {
+  const combinedUpdate = updates.reduce((acc, update) => ({
+    ...acc,
+    ...update()
+  }), {});
+  
+  setState(combinedUpdate);
+};
+
+export default {
+  createEnhancedSlice,
+  withRetry,
+  withOptimisticUpdate,
+  withDebounce,
+  withThrottle,
+  StoreCache,
+  createEnhancedPersistence,
+  createEnhancedDevtools,
+  createStoreSubscription,
+  batchUpdates
+};
