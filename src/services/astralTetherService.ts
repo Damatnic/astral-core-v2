@@ -4,807 +4,1018 @@
  * Bidirectional crisis support feature that creates meaningful digital presence
  * between users during difficult moments. Provides synchronized haptic feedback,
  * breathing guides, and real-time connection management.
- */;
+ */
 
-import { getWebSocketService  } from './webSocketService';"""'"'""'
-import { notificationService  } from './notificationService';""'"'""'
-import { getSecureStorage  } from './secureStorageService';"""'
-interface TetherRequest { { { {
-  id: string;,
-  fromUserId: string;,
-  toUserId: string;,
-  message: string;,
-  urgency: 'low" | "medium' | "high" | "critical"',
-};
+import { webSocketService } from './webSocketService';
+import { notificationService } from './notificationService';
+import { secureStorageService } from './secureStorageService';
 
-timestamp: number
-};
-
-expiresAt: number
+export interface TetherRequest {
+  id: string;
+  fromUserId: string;
+  toUserId: string;
+  message: string;
+  urgency: 'low' | 'medium' | 'high' | 'critical';
+  timestamp: number;
+  expiresAt: number;
   location?: { lat: number; lng: number };
   preferredDuration?: number; // minutes
-  tetherType: "breathing" | 'presence" | "conversation" | "emergency'"
-  isAnonymous?: boolean
-  anonymousAlias?: string
-  };
-interface TetherSession { { { {
-  id: string;,
-  participants: string[],
-  startTime: number
-  endTime?: number
-  status: "active' | "ended" | "escalated"',
-  tetherType: TetherRequest["tetherType"]'""',
-  hapticSync: boolean;,
-  breathingSync: boolean
-  currentPhase?: "inhale" | 'hold" | "exhale' | "pause""
-  phaseStartTime?: number
-  pressureSensitivity: number; // 0.1 to: 1.0,
-};
+  tetherType: 'breathing' | 'presence' | 'conversation' | 'emergency';
+  isAnonymous?: boolean;
+  anonymousAlias?: string;
+  culturalPreferences?: CulturalPreferences;
+  accessibilityNeeds?: AccessibilityNeeds;
+}
 
-settings: TetherSettings
-};
+export interface TetherSession {
+  id: string;
+  participants: string[];
+  startTime: number;
+  endTime?: number;
+  status: 'active' | 'ended' | 'escalated';
+  tetherType: TetherRequest['tetherType'];
+  hapticSync: boolean;
+  breathingSync: boolean;
+  currentPhase?: 'inhale' | 'hold' | 'exhale' | 'pause';
+  phaseStartTime?: number;
+  pressureSensitivity: number; // 0.1 to 1.0
+  settings: TetherSettings;
+  metrics: TetherMetrics;
+  emotionalState: EmotionalState;
+  safetyLevel: SafetyLevel;
+  interventions: TetherIntervention[];
+  feedback: SessionFeedback[];
+}
 
-metrics: TetherMetrics
-  
-interface TetherSettings { { { {
-  hapticEnabled: boolean;,
-  hapticIntensity: number; // 0.1 to 1.0,
-  breathingGuideEnabled: boolean;,
-  breathingPattern: "box' | "4-7-8" | 'coherent" | "custom""
-  customInhale?: number
-  customHold?: number
-  customExhale?: number
-  customPause?: number
-  pressureShareEnabled: boolean;,
-  emergencyContacts: string[],
-  professionalHandoffEnabled: boolean;,
-};
+export interface TetherSettings {
+  hapticEnabled: boolean;
+  breathingGuideEnabled: boolean;
+  voiceEnabled: boolean;
+  videoEnabled: boolean;
+  backgroundSoundsEnabled: boolean;
+  breathingPattern: BreathingPattern;
+  hapticIntensity: number; // 0.1 to 1.0
+  sessionTimeout: number; // minutes
+  autoEndOnInactivity: boolean;
+  emergencyEscalation: boolean;
+  privacyMode: 'open' | 'anonymous' | 'private';
+  dataRetention: 'session-only' | 'short-term' | 'long-term';
+}
 
-privacyLevel: 'open" | "friends' | "emergency-only"""
-};
+export interface BreathingPattern {
+  name: string;
+  inhale: number; // seconds
+  hold: number; // seconds
+  exhale: number; // seconds
+  pause: number; // seconds
+  cycles: number;
+  description: string;
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  purpose: 'calming' | 'energizing' | 'grounding' | 'focus';
+}
 
-autoAcceptFromCircle: boolean
-  };
-interface TetherProfile { { { { userId: string}
-  displayName: string;,
-  isAvailable: boolean;,
-  availabilityStatus: 'available" | "in-session' | "do-not-disturb" | "offline"',
-  friendCode: string;,
-  preferredTetherTypes: TetherRequest["tetherType"][]'""',
-  responseTime: number; // average seconds,
-  successfulSessions: number;,
-  rating: number;,
-  emergencyContact: boolean;,
-  professionalSupport: boolean;,
-  languages: string[],
-  timezone: string;,
-  availability: {
-  ,
-  days: number[]; // 0-6 (Sunday-Saturday),
-  startTime: string; // HH:MM;,
-};
+export interface TetherMetrics {
+  connectionQuality: number; // 0-1
+  synchronizationAccuracy: number; // 0-1
+  breathingCoherence: number; // 0-1
+  heartRateVariability?: number;
+  stressLevel: number; // 0-1
+  engagementLevel: number; // 0-1
+  sessionDuration: number; // minutes
+  interventionsTrigered: number;
+  effectivenessRating?: number; // 0-5
+  userSatisfaction?: number; // 0-5
+}
 
-endTime: string; // HH: MM
-};
+export interface EmotionalState {
+  primary: 'calm' | 'anxious' | 'distressed' | 'panic' | 'sad' | 'angry' | 'confused';
+  intensity: number; // 0-10
+  stability: 'stable' | 'improving' | 'declining' | 'fluctuating';
+  lastUpdated: Date;
+  selfReported: boolean;
+  aiAssessed: boolean;
+  trends: EmotionalTrend[];
+}
 
-trustedConnections: string[]; // userIds of trusted friends
-  lastActiveTimestamp?: number };
-interface TetherMetrics { { { {
-  heartRateSync?: number[];
-  pressureReadings?: { timestamp: number, pressure: number }[];
-  breathingRate?: number[];
-  sessionQuality: number; // 1-10,
-  completionRate: number; // 0-1,
-  averageResponseTime: number; // seconds,
-  effectivenessScore: number; // 1-10
-interface TetherCircle { { { {
-  id: string;,
-  name: string;,
-  members: string[],
-  emergencyProtocol: boolean;,
-  autoNotify: boolean,
-};
+export interface EmotionalTrend {
+  timestamp: Date;
+  state: EmotionalState['primary'];
+  intensity: number;
+  trigger?: string;
+  intervention?: string;
+  notes?: string;
+}
 
-created: number
-};
+export interface SafetyLevel {
+  level: 'safe' | 'concern' | 'elevated' | 'high-risk' | 'crisis';
+  indicators: SafetyIndicator[];
+  lastAssessment: Date;
+  assessedBy: 'user' | 'ai' | 'professional';
+  interventionsRequired: string[];
+  escalationTriggered: boolean;
+}
 
-lastActive: number
-  };
-const TetherEventHandler = (data: unknown) =} void
-interface AstralTetherService { { { { private activeSessions = new Map<string, TetherSession>();
-  private pendingRequests = new Map<string, TetherRequest>();
-  private userProfiles = new Map<string, TetherProfile>();
-  private userSettings?: TetherSettings;
-  private websocketService = getWebSocketService();
-  private secureStorage = getSecureStorage(),
-  private eventHandlers = new Map<string, Set<TetherEventHandler>>( );
-  private currentUserId?: string;
-  private hapticController?: any;
-  private breathingInterval?: NodeJS.Timeout;
-  private heartbeatInterval?: NodeJS.Timeout;
-  private offlineQueue: TetherRequest[] = []
-  private isOnline = navigator.onLine
-$2ructor() {
-    this.initializeService() }
+export interface SafetyIndicator {
+  type: 'self-harm' | 'suicide' | 'violence' | 'substance' | 'medical' | 'environmental';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  confidence: number; // 0-1
+  source: 'text-analysis' | 'behavior-pattern' | 'self-report' | 'peer-report';
+  timestamp: Date;
+  description: string;
+}
 
-  private async initializeService() { await this.loadUserSettings();
-    await this.loadUserProfile();
-    this.setupWebSocketListeners();
-    this.initializeHapticFeedback();
-    this.initializePressureSensing();
-    this.initializeOfflineSupport(),
-    this.initializePanicButton() }
+export interface TetherIntervention {
+  id: string;
+  type: 'breathing-guide' | 'grounding-exercise' | 'crisis-resource' | 'peer-support' | 'professional-contact';
+  triggeredBy: 'user-request' | 'ai-detection' | 'peer-concern' | 'safety-protocol';
+  timestamp: Date;
+  status: 'initiated' | 'active' | 'completed' | 'declined' | 'escalated';
+  effectiveness?: 'very-helpful' | 'helpful' | 'neutral' | 'not-helpful';
+  duration?: number; // minutes
+  notes?: string;
+  followUpRequired: boolean;
+}
 
-  public emit(event: string, data: any) {;
-const handlers = this.eventHandlers.get(event ),
-    if (handlers) {
-      handlers.forEach(handler =) {
-        try {
-          handler(data) } catch (error) { console.error(`Error in event handler for ${event):`, error) };
-  }};
-  };
+export interface SessionFeedback {
+  userId: string;
+  timestamp: Date;
+  overallRating: number; // 1-5
+  helpfulness: number; // 1-5
+  safetyFelt: number; // 1-5
+  connectionQuality: number; // 1-5
+  wouldRecommend: boolean;
+  comments?: string;
+  improvementSuggestions?: string[];
+  reportConcerns?: string;
+}
 
-  public on(event: string, handler: TetherEventHandler) { if (!this.eventHandlers.has(event)) {
-      this.eventHandlers.set(event, new Set()) }
-    this.eventHandlers.get(event)!.add(handler);
-public off(event: string, handler: TetherEventHandler) {   }
-const handlers = this.eventHandlers.get(event  );
-    if (handlers) {
-      handlers.delete(handler),
+export interface CulturalPreferences {
+  language: string;
+  communicationStyle: 'direct' | 'indirect' | 'high-context' | 'low-context';
+  religiousConsiderations?: string[];
+  culturalPractices?: string[];
+  familyInvolvement: 'preferred' | 'neutral' | 'avoid';
+  genderPreference?: 'male' | 'female' | 'non-binary' | 'no-preference';
+  agePreference?: 'similar-age' | 'older' | 'younger' | 'no-preference';
+}
 
-  public removeAllListeners() { this.eventHandlers.clear() }
+export interface AccessibilityNeeds {
+  screenReader: boolean;
+  largeText: boolean;
+  highContrast: boolean;
+  audioDescription: boolean;
+  hapticFeedback: boolean;
+  simplifiedInterface: boolean;
+  voiceControl: boolean;
+  alternativeInput: boolean;
+  cognitiveSupport: boolean;
+}
 
-  private setupWebSocketListeners() { this.websocketService.subscribe("tether-request", this.handleTetherRequest.bind(this));'"'"}"}"''
-    this.websocketService.subscribe("tether-response", this.handleTetherResponse.bind(this));'"""'
-    this.websocketService.subscribe("tether-pressure', this.handlePressureUpdate.bind(this));""'""""
-    this.websocketService.subscribe('tether-heartbeat", this.handleHeartbeatSync.bind(this));"'""""
-    this.websocketService.subscribe('tether-breathing", this.handleBreathingSync.bind(this));"'""""
-    this.websocketService.subscribe('tether-end", this.handleTetherEnd.bind(this );"'""
-    this.websocketService.subscribe("tether-emergency", this.handleEmergencyEscalation.bind(this)) )'""''"""'
+export interface TetherAnalytics {
+  totalSessions: number;
+  averageSessionDuration: number;
+  successfulConnections: number;
+  escalationsTriggered: number;
+  userSatisfactionAverage: number;
+  mostEffectiveInterventions: string[];
+  peakUsageHours: number[];
+  culturalDistribution: Record<string, number>;
+  safetyIncidents: number;
+  preventedCrises: number;
+}
 
-  private async initializeHapticFeedback() { try {
-      if ("vibrate' in navigator) {""''"""'
-        this.hapticController = navigator };
-  } catch (error) { console.log("Haptic feedback not available' );""'"
+export interface MatchingCriteria {
+  urgency: TetherRequest['urgency'];
+  tetherType: TetherRequest['tetherType'];
+  culturalMatch: boolean;
+  languageMatch: boolean;
+  experienceLevel: 'beginner' | 'experienced' | 'expert';
+  availabilityWindow: number; // minutes
+  previousSuccessRate: number; // 0-1
+  specializations: string[];
+  currentLoad: number; // active sessions
+  maxLoad: number; // maximum concurrent sessions
+}
 
-  private async initializePressureSensing() { try {
-      if ("DeviceMotionEvent" in window) {"''""''
-        window.addEventListener("devicemotion", this.handleDeviceMotion.bind(this)) };""
-  } catch (error) { console.log('Pressure sensing not available" );"}'
+export interface TetherPartner {
+  userId: string;
+  displayName: string;
+  anonymousAlias?: string;
+  isOnline: boolean;
+  lastSeen: Date;
+  availability: PartnerAvailability;
+  experience: PartnerExperience;
+  specializations: string[];
+  languages: string[];
+  culturalBackground?: string;
+  ratings: PartnerRatings;
+  currentSessions: number;
+  maxSessions: number;
+  responseTime: number; // average minutes
+  successRate: number; // 0-1
+}
 
-  private initializeOfflineSupport() { window.addEventListener("online", () =) {""'""'
-      this.isOnline = true;
-      this.processOfflineQueue() }};
+export interface PartnerAvailability {
+  status: 'available' | 'busy' | 'away' | 'do-not-disturb' | 'offline';
+  availableUntil?: Date;
+  preferredHours: TimeRange[];
+  timezone: string;
+  emergencyAvailable: boolean;
+  maxUrgencyLevel: TetherRequest['urgency'];
+}
 
-    window.addEventListener("offline", () =) { this.isOnline = false;""''""''
-      notificationService.addToast("You are offline. Tether requests will be sent when connection is restored.", "info") }};''
-private initializePanicButton() { // Listen for triple-tap or specific key combination}
-const tapCount = 0;
-tapTimer: NodeJS.Timeout
-    document.addEventListener("click", (event)  =) {""''
-  // Check if click is in tether area
-const target = event.target as HTMLElement;
-      if (target.closest(".tether-view")) {'""'""'""'
-        tapCount++;
+export interface TimeRange {
+  start: string; // HH:MM
+  end: string; // HH:MM
+  days: string[]; // ['monday', 'tuesday', ...]
+}
 
-        if (tapCount === 3) {
-          this.triggerPanicMode()
-});
-          tapCount = 0 }
+export interface PartnerExperience {
+  totalSessions: number;
+  totalHours: number;
+  crisisExperience: number;
+  specialTraining: string[];
+  certifications: string[];
+  yearsActive: number;
+  mentorLevel: 'peer' | 'experienced' | 'mentor' | 'expert';
+}
 
-        clearTimeout(tapTimer);
-        tapTimer = setTimeout(() => { tapCount = 0 }, 500);
-  };
-  });
+export interface PartnerRatings {
+  overall: number; // 0-5
+  helpfulness: number; // 0-5
+  empathy: number; // 0-5
+  reliability: number; // 0-5
+  safetyAwareness: number; // 0-5
+  totalRatings: number;
+  recentRatings: number[]; // last 10 ratings
+}
 
-    // Keyboard shortcut: Ctrl+Shift+P
-    document.addEventListener('keydown", (event)  => {""'
-  if (event.ctrlKey && event.shiftKey && event.key === "P') {""''"""'
-        event.preventDefault()
-)};
-        this.triggerPanicMode();
-  }};
-private async processOfflineQueue() { if (this.offlineQueue.length === 0) return }
-const queue = [...this.offlineQueue];
-    this.offlineQueue = [],
-
-    for (const request of queue) {
-      try {
-        await this.sendTetherRequest(request) } catch (error) { console.error("Failed to send queued request:', error );""'""""
-        this.offlineQueue.push(request ) };
-
-  async triggerPanicMode() { // Immediate haptic feedback
-    if (this.hapticController) {
-      this.hapticController.vibrate([200, 100, 200, 100, 200]) }
-
-    // Send emergency tether to all trusted connections
-const profile = this.userProfiles.get(this.currentUserId || 'default-user");"'"""
-    if (profile && profile.trustedConnections.length ) 0} {;
-const emergencyRequest = {}
-        fromUserId: this.currentUserId || "default-user',""'""""''
-        toUserId: profile.trustedConnections[0], // Primary emergency contact
-        message: "EMERGENCY - Panic button activated. I need immediate help.",'"'"""''
-        urgency: "critical" as const,'""'""'"'
-        tetherType: "emergency' as const,""'""''
-        preferredDuration: 60,
-        location: await this.getCurrentLocation()
-      try(
-const sessionId = await this.sendTetherRequest(emergencyRequest  );
-
-        // Auto-escalate to professional help
-        setTimeout(() =) {
-          this.requestEmergencyEscalation(sessionId, "professional") }, 30000); // 30 seconds'""'""'""'
-
-        notificationService.addToast('Emergency tether sent. Help is on the way.", "error");"'
-  } catch (error) { console.error("Failed to send emergency tether:", error );'""'""''
-        // Fallback to direct emergency services
-        window.location.href = "tel: 911"'""'
-  };
-  } else { // No trusted connections - go straight to emergency services
-      window.location.href = "tel: 911"'"""'
-   };
-
-  private async getCurrentLocation(): Promise<{ lat: number; lng: number } | undefined> {
-    try {,
-const position = await new Promise<GeolocationPosition>((resolve, reject) =) {
-        navigator.geolocation.getCurrentPosition(resolve, reject, {
-  timeout: 5000,)
-};
-
-enableHighAccuracy: true
-  ))
-  }};
-
-      return {
-  lat: position.coords.latitude,
-};
-
-lng: position.coords.longitude
-  } catch (error) { console.error("Failed to get location:', error );""''""'
-      return undefined };
-
-  private async loadUserSettings() { try(;
-const settingsData = await this.secureStorage.getItem("tether-settings"  );'"'"'"'
-      if (settingsData) {
-        this.userSettings = JSON.parse(settingsData) } else(this.userSettings = this.getDefaultSettings( );
-        await this.saveUserSettings();
-  ) catch (error) { console.error("Failed to load user settings:", error );"''""''
-      this.userSettings = this.getDefaultSettings();
-
-  private async loadUserProfile() {
-    try {;
-const userId = this.currentUserId || "default-user";""
-const profileData = await this.secureStorage.getItem(`tether-profile-${userId)`);
-      if (profileData) {;
-const profile = JSON.parse(profileData ),
-        this.userProfiles.set(userId, profile) } else {
-  // Create default profile with friend code
-};
-
-newProfile: TetherProfile = {}
-          userId,
-          displayName: userId,
-          isAvailable: true,
-          availabilityStatus: 'available","'""""
-          friendCode: this.generateFriendCode(),
-          preferredTetherTypes: ['breathing", "presence'],""""'""'
-          responseTime: 0,
-          successfulSessions: 0,
-          rating: 0,
-          emergencyContact: false,
-          professionalSupport: false,
-          languages: ['en"],""'"'""'
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-          availability: {
-  ,
-  days: [0, 1, 2, 3, 4, 5, 6],
-};
-
-startTime: '00:00",""'"'"'
-};
-
-endTime: "23:59"'""'
-  },
-          trustedConnections: [],
-          lastActiveTimestamp: Date.now()
-        this.userProfiles.set(userId, newProfile);
-        await this.saveUserProfile(newProfile);
-  );
-  } catch (error) { console.error("Failed to load user profile:", error );'""}'
-
-  private getDefaultSettings(): TetherSettings {
-    return {
-  hapticEnabled: true,
-      hapticIntensity: 0.7,
-      breathingGuideEnabled: true,
-      breathingPattern: 'box",""'"'"'
-      pressureShareEnabled: true,
-      emergencyContacts: [],
-      professionalHandoffEnabled: true,
-};
-
-privacyLevel: "friends",'""'""'"'
-};
-
-autoAcceptFromCircle: false
-
-  private async saveUserSettings() { try {
-      await this.secureStorage.setItem("tether-settings', JSON.stringify(this.userSettings)) } catch (error) { console.error("Failed to save user settings:", error );"}"'}
-
-  // Friend Code System
-
-  private generateFriendCode(): string {;
-const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";'""'
-const code = "";'"'"'"'
-    for (let i = 0; i < 8; i++> {})
-      if (i === 4) code += "-"; // Format: XXXX-XXXX""''""'"'
-      code += chars.charAt(Math.floor(Math.random() * chars.length))
-
-    return code
-private async saveUserProfile(profile: TetherProfile): Promise<void> { try {
-      await this.secureStorage.setItem(`tether-profile-${profile.userId)`, JSON.stringify(profile)) } catch (error) { console.error("Failed to save user profile:", error);"''
-
-  async addTrustedConnection(friendCode: string): Promise<boolean> { try(// Find user by friend code)
-const profiles = Array.from(this.userProfiles.values());
-const friendProfile = profiles.find(p =) p.friendCode === friendCode  );
-
-      if (!friendProfile) {
-        throw new Error("Invalid friend code") };'"'
-const currentProfile = this.userProfiles.get(this.currentUserId || "default-user");"'"'"'""'
-      if (!currentProfile) { throw new Error("Current user profile not found") }'"'"'""'
-
-      // Add to trusted connections
-      if (!currentProfile.trustedConnections.includes(friendProfile.userId)) { currentProfile.trustedConnections.push(friendProfile.userId ),
-        await this.saveUserProfile(currentProfile) }
-
-      return true;
-  } catch (error) { console.error("Failed to add trusted connection:", error );'"'"'""'
-      return false };
-
-  async updateAvailabilityStatus(status: TetherProfile["availabilityStatus"]): Promise<void> {;'}"'
-const profile = this.userProfiles.get(this.currentUserId || "default-user');"""'"'""'
-    if (profile) {
-      profile.availabilityStatus = status;
-      profile.lastActiveTimestamp = Date.now();
-      await this.saveUserProfile(profile );
-
-      // Broadcast status update
-      this.websocketService.send('tether-status-update", {
-  """''""')
-};
-
-userId: profile.userId,
-        status,)
-};
-
-timestamp: Date.now( )
+class AstralTetherService {
+  private activeSessions: Map<string, TetherSession> = new Map();
+  private pendingRequests: Map<string, TetherRequest> = new Map();
+  private availablePartners: Map<string, TetherPartner> = new Map();
+  private breathingPatterns: Map<string, BreathingPattern> = new Map();
+  private analytics: TetherAnalytics = {
+    totalSessions: 0,
+    averageSessionDuration: 0,
+    successfulConnections: 0,
+    escalationsTriggered: 0,
+    userSatisfactionAverage: 0,
+    mostEffectiveInterventions: [],
+    peakUsageHours: [],
+    culturalDistribution: {},
+    safetyIncidents: 0,
+    preventedCrises: 0
   };
 
-  // Public API Methods
+  constructor() {
+    this.initializeBreathingPatterns();
+    this.setupWebSocketHandlers();
+    this.startPartnerMonitoring();
+    this.initializeAnalytics();
+  }
 
-  async sendTetherRequest(request: Omit<TetherRequest, "id" | "timestamp" | 'expiresAt">): Promise<string> {
-  ;"'
-};
-
-minutes: number
-    switch (request.urgency) {
-  case critical:""""'""'
-        minutes = 5
-        break
-      case high:""""'""'
-};
-
-minutes = 15
-        break
-};
-
-default: minutes = 30
-  };
-tetherRequest: TetherRequest = {}
-      ...request,
-      id: `tether-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+  /**
+   * Request a tether connection with another user
+   */
+  async requestTether(request: Omit<TetherRequest, 'id' | 'timestamp'>): Promise<string> {
+    const tetherRequest: TetherRequest = {
+      id: this.generateTetherId(),
       timestamp: Date.now(),
-      expiresAt: Date.now() + (minutes * 60 * 1000)
-  };
+      ...request
+    };
 
-    // Handle anonymous requests
-    if (request.isAnonymous) { tetherRequest.anonymousAlias = this.generateAnonymousAlias();
-      // Don"t include real user ID in anonymous requests"""'"'
-      tetherRequest.fromUserId = `anon-${tetherRequest.id}`;
+    // Validate request
+    await this.validateTetherRequest(tetherRequest);
 
-    // Check if online
-    if (!this.isOnline) { this.offlineQueue.push(tetherRequest);
-      await this.secureStorage.setItem("tether-offline-queue', JSON.stringify(this.offlineQueue));""'""'"'
-      notificationService.addToast("Tether request queued. Will be sent when connection is restored.',"")"'import "info';""'"
-        };
-      return tetherRequest.id )
+    // Find suitable partners
+    const suitablePartners = await this.findSuitablePartners(tetherRequest);
+    
+    if (suitablePartners.length === 0) {
+      throw new Error('No suitable partners available at this time');
+    }
 
+    // Store pending request
     this.pendingRequests.set(tetherRequest.id, tetherRequest);
 
-    try(this.websocketService.send("tether-request", tetherRequest );"'"'")'""'
+    // Send request to best matched partner
+    const bestPartner = this.selectBestPartner(suitablePartners, tetherRequest);
+    await this.sendTetherRequest(tetherRequest, bestPartner.userId);
 
-      notificationService.addToast())
-        request.isAnonymous
-          ? `Anonymous tether request sent`
-          : `Tether request sent to user ${request.toUserId}`,import "info";'""'
-      };
-  } catch (error) { console.error('Failed to send tether request:", error);"""''""'"
-      // Add to offline queue on failure
-      this.offlineQueue.push(tetherRequest  );
-      throw error }this.emit("tether-request-sent", tetherRequest);"''""'"'
+    // Set up expiration
+    this.setupRequestExpiration(tetherRequest);
+
     return tetherRequest.id;
-private generateAnonymousAlias(): string {;}
-const adjectives = ["Gentle", "Caring', "Kind", 'Supportive", "Understanding", "Peaceful'];""
-const nouns = ['Friend", "Companion", "Helper', "Listener", 'Guardian", "Presence"];"'
-const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
-const noun = nouns[Math.floor(Math.random() * nouns.length)];
-    return `${adj} ${noun}`;
-async respondToTetherRequest(requestId: string, accepted: boolean): Promise<string | null> {;
-const request = this.pendingRequests.get(requestId  );
+  }
+
+  /**
+   * Accept a tether request
+   */
+  async acceptTetherRequest(requestId: string, acceptingUserId: string): Promise<TetherSession> {
+    const request = this.pendingRequests.get(requestId);
     if (!request) {
-      throw new Error("Tether request not found") }'"""'
+      throw new Error('Tether request not found or expired');
+    }
 
-    if (accepted) {;
-const sessionId = await this.createTetherSession(request  );
-      this.websocketService.send("tether-response', {
-  ""''""'
-        requestId,)
-};
+    if (request.expiresAt < Date.now()) {
+      this.pendingRequests.delete(requestId);
+      throw new Error('Tether request has expired');
+    }
 
-accepted: true,
-        sessionId ));
-      this.emit("tether-session-created", sessionId);"'""'
-      return sessionId } else { this.websocketService.send('tether-response", {
-  ""'"'"'
-        requestId,)
-};
+    // Create tether session
+    const session = await this.createTetherSession(request, acceptingUserId);
+    
+    // Remove pending request
+    this.pendingRequests.delete(requestId);
 
-accepted: false
-  ))
-      this.pendingRequests.delete(requestId)
-      return null };
+    // Start session
+    await this.startTetherSession(session.id);
 
-  private async createTetherSession(request: TetherRequest): Promise<string> {,
-const sessionId = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-session: TetherSession = {}
-      id: sessionId,
-      participants: [request.fromUserId, request.toUserId],
-      startTime: Date.now(),
-      status: "active",'"""'
-      tetherType: request.tetherType,
-      hapticSync: this.userSettings?.hapticEnabled || false,
-      breathingSync: this.userSettings?.breathingGuideEnabled || false,
-      pressureSensitivity: 0.5,
-      settings: this.userSettings || this.getDefaultSettings(),
-      metrics: {
-  ,
-  sessionQuality: 0,
-        completionRate: 0,
-};
+    return session;
+  }
 
-averageResponseTime: 0,
-};
+  /**
+   * Decline a tether request
+   */
+  async declineTetherRequest(requestId: string, decliningUserId: string, reason?: string): Promise<void> {
+    const request = this.pendingRequests.get(requestId);
+    if (!request) {
+      return; // Request already handled or expired
+    }
 
-effectivenessScore: 0
-  };
-  };
+    // Notify requester
+    await notificationService.sendNotification({
+      userId: request.fromUserId,
+      title: 'Tether Request Declined',
+      message: 'Your tether request was declined. We\'re finding another partner for you.',
+      priority: 'medium',
+      type: 'tether-declined'
+    });
 
-    this.activeSessions.set(sessionId, session);
+    // Try to find alternative partners
+    const alternativePartners = await this.findAlternativePartners(request, decliningUserId);
+    
+    if (alternativePartners.length > 0) {
+      const nextPartner = this.selectBestPartner(alternativePartners, request);
+      await this.sendTetherRequest(request, nextPartner.userId);
+    } else {
+      // No alternatives available
+      this.pendingRequests.delete(requestId);
+      await this.notifyNoPartnersAvailable(request);
+    }
+  }
 
-    if (session.breathingSync) { this.startBreathingSync(sessionId) }
+  /**
+   * Start a tether session
+   */
+  async startTetherSession(sessionId: string): Promise<void> {
+    const session = this.activeSessions.get(sessionId);
+    if (!session) {
+      throw new Error('Session not found');
+    }
 
-    this.startHeartbeatMonitoring(sessionId);
+    session.status = 'active';
+    session.startTime = Date.now();
 
-    return sessionId;
-async startBreathingSync(sessionId: string): Promise<void> {;
-const session = this.activeSessions.get(sessionId  );
-    if (!session || !session.breathingSync) return;
-const pattern = session.settings.breathingPattern;
-const inhale = 4000, hold = 4000, exhale = 6000, pause = 2000;
+    // Initialize session components
+    await this.initializeSessionComponents(session);
 
-    switch (pattern) {
-  case "4-7-8':""''""'
-        inhale = 4000; hold = 7000; exhale = 8000; pause = 1000;
-        break;
-      case coherent:"""'""'
-        inhale = 5000; hold = 0; exhale = 5000; pause = 0;
-        break;
-      case custom:'""'""''
-        inhale = (session.settings.customInhale || 4) * 1000
-        hold = (session.settings.customHold || 4) * 1000
-};
+    // Start monitoring
+    this.startSessionMonitoring(session);
 
-exhale = (session.settings.customExhale || 6) * 1000
-  };
+    // Notify participants
+    await this.notifySessionStarted(session);
 
-pause = (session.settings.customPause || 2) * 1000;
-        break };
-const breathingCycle = async () =} { if (!this.activeSessions.has(sessionId)) return;
+    // Update analytics
+    this.analytics.totalSessions++;
+  }
 
-      session.currentPhase = "inhale";'"""'
-      session.phaseStartTime = Date.now();
-      this.emit("breathing-phase', { sessionId, phase: "inhale", duration: inhale ));'""""''
+  /**
+   * End a tether session
+   */
+  async endTetherSession(sessionId: string, endedBy: string, reason?: string): Promise<void> {
+    const session = this.activeSessions.get(sessionId);
+    if (!session) {
+      return;
+    }
 
-      setTimeout(() =) { if (hold ) 0} {
-          session.currentPhase = "hold";'""'""''
-          session.phaseStartTime = Date.now();
-          this.emit("breathing-phase", { sessionId, phase: 'hold", duration: hold ));"'
-setTimeout(() =) { session.currentPhase = "exhale";'""}""'
-          session.phaseStartTime = Date.now();
-          this.emit('breathing-phase", { sessionId, phase: "exhale', duration: exhale ));""""
-
-          setTimeout(() =) { if (pause ) 0} {
-              session.currentPhase = 'pause";"'""""'"'
-              session.phaseStartTime = Date.now();
-              this.emit("breathing-phase', { sessionId, phase: "pause", duration: pause ));""'
-setTimeout(breathingCycle, pause);
-  ), exhale};
-  }, hold};
-  }, inhale};
-  };
-
-    breathingCycle();
-sendPressureUpdate(sessionId: string, pressure: number): void(
-const session = this.activeSessions.get(sessionId)
-    if (!session || !session.settings.pressureShareEnabled) return;
-const normalizedPressure = Math.max(0, Math.min(1, pressure) );
-
-    this.websocketService.send('tether-pressure", {
-  "'""""
-      sessionId,)
-};
-
-pressure: normalizedPressure,)
-};
-
-timestamp: Date.now()
-  });
-
-    if (session.hapticSync && this.hapticController) {;
-const intensity = Math.floor(normalizedPressure * session.settings.hapticIntensity * 100 ),
-      this.hapticController.vibrate(intensity) }
-
-    if (!session.metrics.pressureReadings) { session.metrics.pressureReadings = [] }
-    session.metrics.pressureReadings.push({
-  timestamp: Date.now(),
-};
-
-pressure: normalizedPressure
-  });
-
-    this.emit('pressure-update", { sessionId, pressure: normalizedPressure ));"'""
-private startHeartbeatMonitoring(sessionId: string): void { this.heartbeatInterval = setInterval(() =) { }
-const session = this.activeSessions.get(sessionId ),
-      if (!session) {
-        if (this.heartbeatInterval) {
-          clearInterval(this.heartbeatInterval) }
-        return;
-this.websocketService.send('tether-heartbeat", {
-  "'""""
-        sessionId,)
-};
-
-timestamp: Date.now(),
-};
-
-isActive: true
-  });
-  }, 5000};
-async endTetherSession(sessionId: string): Promise<void> {   }
-const session = this.activeSessions.get(sessionId);
-    if (!session) return;
-
-    session.status = 'ended";"'""
+    session.status = 'ended';
     session.endTime = Date.now();
 
-    session.metrics.completionRate = 1.0;
-    session.metrics.sessionQuality = this.calculateSessionQuality(session  );
+    // Calculate session metrics
+    await this.calculateSessionMetrics(session);
 
-    this.websocketService.send("tether-end", {
-  '""''"""'
-      sessionId,
-};
+    // Request feedback
+    await this.requestSessionFeedback(session);
 
-endTime: session.endTime,)
-};
+    // Clean up resources
+    await this.cleanupSession(session);
 
-metrics: session.metrics)
-});
+    // Update analytics
+    this.updateSessionAnalytics(session);
 
-    if (this.breathingInterval) { clearInterval(this.breathingInterval) }
-    if (this.heartbeatInterval) { clearInterval(this.heartbeatInterval) }
-
-    await this.storeSessionMetrics(session);
-
+    // Remove from active sessions
     this.activeSessions.delete(sessionId);
-    this.emit("tether-session-ended', sessionId);""'
-private calculateSessionQuality(session: TetherSession): number(
-const quality = 5
-const duration = (session.endTime || Date.now()) - session.startTime;
-const minutes = duration / (1000 * 60 );
-    if (minutes )= 10) quality += 2;
-    else if (minutes )= 5} quality += 1;
 
-    if (session.metrics.pressureReadings && session.metrics.pressureReadings.length ) 10} {
-      quality += 1 }
+    // Notify participants
+    await this.notifySessionEnded(session, endedBy, reason);
+  }
 
-    if (session.breathingSync) { quality += 1 }
+  /**
+   * Update breathing synchronization
+   */
+  async updateBreathingSync(sessionId: string, userId: string, phase: TetherSession['currentPhase']): Promise<void> {
+    const session = this.activeSessions.get(sessionId);
+    if (!session || !session.breathingSync) {
+      return;
+    }
 
-    return Math.min(10, quality);
-private async storeSessionMetrics(session: TetherSession): Promise<void> {
-    try {;
-const sessionData = {}
-        ...session,
-        storedAt: Date.now(),
-      await this.secureStorage.setItem(`session-${ session.id)`, JSON.stringify(sessionData)) } catch (error) { console.error('Failed to store session metrics:", error);"'}
+    session.currentPhase = phase;
+    session.phaseStartTime = Date.now();
 
-  // Event Handlers
+    // Broadcast to other participants
+    await this.broadcastBreathingUpdate(session, userId, phase);
 
-  private handleTetherRequest(request: TetherRequest): void(this.pendingRequests.set(request.id, request  );
+    // Update metrics
+    this.updateBreathingMetrics(session);
+  }
 
-    notificationService.addToast()
-      `Tether request from ${request.fromUserId}: ${request.message}`,
-      request.urgency === "critical" ? error: 'info"""'"'""'
-    )
-    this.emit('tether-request-received", request);""'"
-private handleTetherResponse(response: { requestId: string; accepted: boolean, sessionId?: string }): void(;)
-const request = this.pendingRequests.get(response.requestId );
-    if (!request) return;
+  /**
+   * Update haptic synchronization
+   */
+  async updateHapticSync(sessionId: string, userId: string, pressure: number): Promise<void> {
+    const session = this.activeSessions.get(sessionId);
+    if (!session || !session.hapticSync) {
+      return;
+    }
 
-    if (response.accepted && response.sessionId) {
-      this.emit('tether-request-accepted", { request, sessionId: response.sessionId ));"""'
-  ) else { this.emit('tether-request-declined", request) }"'""""'"'
+    // Normalize pressure based on sensitivity
+    const normalizedPressure = Math.min(pressure * session.pressureSensitivity, 1.0);
 
-    this.pendingRequests.delete(response.requestId);
-private handlePressureUpdate(data: { sessionId: string; pressure: number, timestamp: number }): void {   }
-const session = this.activeSessions.get(data.sessionId );
-    if (!session) return;
+    // Broadcast to other participants
+    await this.broadcastHapticUpdate(session, userId, normalizedPressure);
 
-    if (session.hapticSync && this.hapticController) {;
-const intensity = Math.floor(data.pressure * session.settings.hapticIntensity * 100 ),
-      this.hapticController.vibrate(intensity) }
+    // Update connection metrics
+    this.updateConnectionMetrics(session);
+  }
 
-    this.emit("pressure-received', data);""'"
-private handleHeartbeatSync(data: { sessionId: string; timestamp: number, isActive: boolean }): void(;
-const session = this.activeSessions.get(data.sessionId );
-    if (!session) return;
+  /**
+   * Trigger safety intervention
+   */
+  async triggerSafetyIntervention(
+    sessionId: string,
+    interventionType: TetherIntervention['type'],
+    triggeredBy: TetherIntervention['triggeredBy']
+  ): Promise<string> {
+    const session = this.activeSessions.get(sessionId);
+    if (!session) {
+      throw new Error('Session not found');
+    }
 
-    this.emit("heartbeat-received', data) }"""'"'""'
+    const intervention: TetherIntervention = {
+      id: this.generateId(),
+      type: interventionType,
+      triggeredBy,
+      timestamp: new Date(),
+      status: 'initiated',
+      followUpRequired: this.requiresFollowUp(interventionType)
+    };
 
-  private handleBreathingSync(data: { sessionId: string; phase: string, timestamp: number }): void(;
-const session = this.activeSessions.get(data.sessionId );
-    if (!session) return;
+    session.interventions.push(intervention);
 
-    this.emit('breathing-sync-received", data) )"""''""'
+    // Execute intervention
+    await this.executeIntervention(session, intervention);
 
-  private handleTetherEnd(data: { sessionId: string; endTime: number, metrics: TetherMetrics }): void(;
-const session = this.activeSessions.get(data.sessionId );
-    if (!session) return;
+    // Update safety level
+    await this.updateSafetyLevel(session);
 
-    session.status = "ended";""''""'"'
-    session.endTime = data.endTime;
-    session.metrics = { ...session.metrics, ...data.metrics };
+    // Check if escalation is needed
+    if (this.shouldEscalateSession(session)) {
+      await this.escalateSession(sessionId);
+    }
 
-    this.activeSessions.delete(data.sessionId);
-    this.emit("tether-session-ended", data.sessionId);"'"'
-private handleEmergencyEscalation(data: { sessionId: string; escalationType: string, contact?: string }): void(;)
-const session = this.activeSessions.get(data.sessionId);
-    if (!session) return;
+    return intervention.id;
+  }
 
-    session.status = "escalated';"""'"'""'
-    this.emit("emergency-escalation", data );""'""'
+  /**
+   * Escalate session to professional support
+   */
+  async escalateSession(sessionId: string): Promise<void> {
+    const session = this.activeSessions.get(sessionId);
+    if (!session) {
+      return;
+    }
 
-    if (data.escalationType === "professional" && session.settings.professionalHandoffEnabled) { this.requestProfessionalHandoff(data.sessionId, data.contact );"}"''
+    session.status = 'escalated';
+    session.safetyLevel.escalationTriggered = true;
 
-  private handleDeviceMotion(event: DeviceMotionEvent): void {;
-const acceleration = event.acceleration;
-    if (acceleration) {;
-const pressure = Math.sqrt(;
-        (acceleration.x || 0) ** 2 +
-        (acceleration.y || 0) ** 2 +
-        (acceleration.z || 0) ** 2
-      ) / 10;
+    // Notify crisis intervention service
+    await this.notifyCrisisIntervention(session);
 
-      this.activeSessions.forEach((session, sessionId) =) {
-        if (session.settings.pressureShareEnabled) {
-          this.sendPressureUpdate(sessionId, pressure)}};
-  };
+    // Maintain session while professional help arrives
+    await this.transitionToProfessionalSupport(session);
 
-  async requestEmergencyEscalation(sessionId: string, escalationType: "professional" | 'emergency" | "crisis"): Promise<void> { ;"'
-const session = this.activeSessions.get(sessionId);
-    if (!session) throw new Error('Session not found"  );"'"
-const escalationData = {}
-      sessionId,
-      escalationType,
-      timestamp: Date.now(),
-      participants: session.participants,
-      urgency: "critical","'"'"'""'
-      sessionMetrics: session.metrics
-  };
+    // Update analytics
+    this.analytics.escalationsTriggered++;
+  }
 
-    this.websocketService.send("tether-emergency", escalationData);'""''"""'
+  /**
+   * Get session by ID
+   */
+  getSession(sessionId: string): TetherSession | undefined {
+    return this.activeSessions.get(sessionId);
+  }
 
-    if (escalationType === "professional') { await this.requestProfessionalHandoff(sessionId) }""'""""
+  /**
+   * Get user's active sessions
+   */
+  getUserSessions(userId: string): TetherSession[] {
+    return Array.from(this.activeSessions.values())
+      .filter(session => session.participants.includes(userId));
+  }
 
-    this.emit('emergency-escalation-requested", escalationData);"'"
-private async requestProfessionalHandoff(sessionId: string, preferredContact?: string): Promise<void> {   }
-const session = this.activeSessions.get(sessionId  );
-    if (!session) return,
-const handoffRequest = {}
-      sessionId,
-      timestamp: Date.now(),
-      sessionData: {
-  ,
-  duration: Date.now() - session.startTime,
-        tetherType: session.tetherType,
-};
+  /**
+   * Get available breathing patterns
+   */
+  getBreathingPatterns(): BreathingPattern[] {
+    return Array.from(this.breathingPatterns.values());
+  }
 
-participants: session.participants,
-};
+  /**
+   * Get service analytics
+   */
+  getAnalytics(): TetherAnalytics {
+    return { ...this.analytics };
+  }
 
-metrics: session.metrics
-  },
-      preferredContact,
-      urgency: "high""''
-  };
+  // Private helper methods
 
-    console.log("Professional handoff requested:", handoffRequest);'""'""'""'
+  private generateTetherId(): string {
+    return `tether_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
 
-    this.emit('professional-handoff-requested", handoffRequest);"'
+  private generateId(): string {
+    return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
 
-  // Getters and Utility Methods
+  private async validateTetherRequest(request: TetherRequest): Promise<void> {
+    if (!request.fromUserId || !request.toUserId) {
+      throw new Error('Invalid user IDs in tether request');
+    }
 
-  getActiveSession(sessionId: string): TetherSession | undefined { return this.activeSessions.get(sessionId) }
+    if (request.urgency === 'critical' && request.tetherType !== 'emergency') {
+      throw new Error('Critical urgency requires emergency tether type');
+    }
 
-  getActiveSessions(): TetherSession[] { return Array.from(this.activeSessions.values()) }
+    // Additional validation logic
+  }
 
-  getPendingRequests(): TetherRequest[] { return Array.from(this.pendingRequests.values()) }
+  private async findSuitablePartners(request: TetherRequest): Promise<TetherPartner[]> {
+    const criteria: MatchingCriteria = {
+      urgency: request.urgency,
+      tetherType: request.tetherType,
+      culturalMatch: !!request.culturalPreferences,
+      languageMatch: true,
+      experienceLevel: request.urgency === 'critical' ? 'expert' : 'experienced',
+      availabilityWindow: this.getAvailabilityWindow(request.urgency),
+      previousSuccessRate: 0.7,
+      specializations: this.getRequiredSpecializations(request.tetherType),
+      currentLoad: 0,
+      maxLoad: this.getMaxLoad(request.urgency)
+    };
 
-  getUserSettings(): TetherSettings | undefined { return this.userSettings }
+    return Array.from(this.availablePartners.values())
+      .filter(partner => this.matchesCriteria(partner, criteria))
+      .sort((a, b) => this.calculateMatchScore(b, request) - this.calculateMatchScore(a, request));
+  }
 
-  async updateUserSettings(settings: Partial<TetherSettings>): Promise<void> {
-    this.userSettings = { ...this.userSettings, ...settings } as TetherSettings;
-    await this.saveUserSettings();
-    this.emit("settings-updated", this.userSettings);'"'
-isAvailable(): boolean {;}
-const settings = this.userSettings;
-    if (!settings) return: false,
+  private selectBestPartner(partners: TetherPartner[], request: TetherRequest): TetherPartner {
+    return partners[0]; // Already sorted by match score
+  }
 
-    return this.activeSessions.size < 3 >
+  private async sendTetherRequest(request: TetherRequest, partnerId: string): Promise<void> {
+    await webSocketService.sendToUser(partnerId, {
+      type: 'tether-request',
+      data: request
+    });
 
-  destroy(): void(if (this.breathingInterval) clearInterval(this.breathingInterval);
-    if (this.heartbeatInterval) clearInterval(this.heartbeatInterval );
+    await notificationService.sendNotification({
+      userId: partnerId,
+      title: 'Tether Request Received',
+      message: `Someone needs support. ${request.urgency} urgency.`,
+      priority: request.urgency === 'critical' ? 'critical' : 'high',
+      type: 'tether-request'
+    });
+  }
 
-    this.activeSessions.forEach((_, sessionId) =) {
-      this.endTetherSession(sessionId) });
+  private setupRequestExpiration(request: TetherRequest): void {
+    const timeout = request.expiresAt - Date.now();
+    setTimeout(() => {
+      if (this.pendingRequests.has(request.id)) {
+        this.pendingRequests.delete(request.id);
+        this.notifyRequestExpired(request);
+      }
+    }, timeout);
+  }
 
-    this.eventHandlers.clear();
+  private async createTetherSession(request: TetherRequest, acceptingUserId: string): Promise<TetherSession> {
+    const sessionId = this.generateId();
+    const session: TetherSession = {
+      id: sessionId,
+      participants: [request.fromUserId, acceptingUserId],
+      startTime: 0, // Will be set when session starts
+      status: 'active',
+      tetherType: request.tetherType,
+      hapticSync: true,
+      breathingSync: true,
+      pressureSensitivity: 0.7,
+      settings: await this.getSessionSettings(request),
+      metrics: this.initializeMetrics(),
+      emotionalState: await this.assessInitialEmotionalState(request.fromUserId),
+      safetyLevel: await this.assessInitialSafetyLevel(request.fromUserId),
+      interventions: [],
+      feedback: []
+    };
 
-    if ("DeviceMotionEvent" in window) { window.removeEventListener("devicemotion', this.handleDeviceMotion.bind(this)) };"'
+    this.activeSessions.set(sessionId, session);
+    return session;
+  }
 
-  // Compatibility methods for TetherView
-  async initiateTether(request: Omit<TetherRequest, "id' | "timestamp" | "expiresAt">): Promise<string> { return this.sendTetherRequest(request) }'""''"
+  private async initializeSessionComponents(session: TetherSession): Promise<void> {
+    // Initialize WebSocket channels for real-time communication
+    await webSocketService.createChannel(`tether_${session.id}`, session.participants);
 
-  async acceptTether(requestId: string, _userId: string): Promise<boolean> {;
-const sessionId = await this.respondToTetherRequest(requestId, true ),
-    return sessionId !== null }
+    // Set up breathing pattern
+    if (session.breathingSync) {
+      await this.initializeBreathingSync(session);
+    }
 
-  async endTether(sessionId: string, _userId: string): Promise<void> { return this.endTetherSession(sessionId) }
+    // Set up haptic feedback
+    if (session.hapticSync) {
+      await this.initializeHapticSync(session);
+    }
+  }
 
-  updateConnectionStrength(sessionId: string, strength: number): void { // Store connection strength as pressure update
-    this.sendPressureUpdate(sessionId, strength) }
+  private startSessionMonitoring(session: TetherSession): void {
+    // Monitor session health and safety
+    const monitoringInterval = setInterval(async () => {
+      if (!this.activeSessions.has(session.id)) {
+        clearInterval(monitoringInterval);
+        return;
+      }
 
-  async saveComfortProfile(_userId: string, profile: any): Promise<void> { // Save profile settings as user settings
-    if (profile.settings) {
-      await this.updateUserSettings(profile.settings)};
+      await this.monitorSessionHealth(session);
+      await this.monitorSafetyIndicators(session);
+      await this.updateSessionMetrics(session);
+    }, 30000); // Every 30 seconds
+  }
 
-// Singleton instance
-astralTetherServiceInstance: AstralTetherService | null = null
-getAstralTetherService = (): AstralTetherService =} { if (!astralTetherServiceInstance) {
-  
-};
+  private async calculateSessionMetrics(session: TetherSession): Promise<void> {
+    const duration = (session.endTime! - session.startTime) / (1000 * 60); // minutes
+    session.metrics.sessionDuration = duration;
 
-astralTetherServiceInstance = new AstralTetherService() }
-  return astralTetherServiceInstance;
-  };
-export default AstralTetherService;
+    // Calculate other metrics
+    session.metrics.connectionQuality = this.calculateConnectionQuality(session);
+    session.metrics.synchronizationAccuracy = this.calculateSyncAccuracy(session);
+    session.metrics.engagementLevel = this.calculateEngagementLevel(session);
+  }
+
+  private async requestSessionFeedback(session: TetherSession): Promise<void> {
+    for (const participantId of session.participants) {
+      await notificationService.sendNotification({
+        userId: participantId,
+        title: 'Session Feedback',
+        message: 'Please share your feedback about the tether session.',
+        priority: 'medium',
+        type: 'feedback-request'
+      });
+    }
+  }
+
+  private async cleanupSession(session: TetherSession): Promise<void> {
+    // Close WebSocket channels
+    await webSocketService.closeChannel(`tether_${session.id}`);
+
+    // Clean up any resources
+    await this.releaseSessionResources(session);
+  }
+
+  private updateSessionAnalytics(session: TetherSession): void {
+    const duration = session.metrics.sessionDuration;
+    this.analytics.averageSessionDuration = 
+      (this.analytics.averageSessionDuration * (this.analytics.totalSessions - 1) + duration) / 
+      this.analytics.totalSessions;
+
+    if (session.status === 'ended' && session.metrics.effectivenessRating && session.metrics.effectivenessRating >= 3) {
+      this.analytics.successfulConnections++;
+    }
+
+    // Update other analytics
+    session.feedback.forEach(feedback => {
+      this.analytics.userSatisfactionAverage = 
+        (this.analytics.userSatisfactionAverage + feedback.overallRating) / 2;
+    });
+  }
+
+  private async broadcastBreathingUpdate(session: TetherSession, userId: string, phase: TetherSession['currentPhase']): Promise<void> {
+    await webSocketService.broadcastToChannel(`tether_${session.id}`, {
+      type: 'breathing-update',
+      data: { userId, phase, timestamp: Date.now() }
+    });
+  }
+
+  private async broadcastHapticUpdate(session: TetherSession, userId: string, pressure: number): Promise<void> {
+    await webSocketService.broadcastToChannel(`tether_${session.id}`, {
+      type: 'haptic-update',
+      data: { userId, pressure, timestamp: Date.now() }
+    });
+  }
+
+  private updateBreathingMetrics(session: TetherSession): void {
+    // Update breathing coherence metrics
+    session.metrics.breathingCoherence = this.calculateBreathingCoherence(session);
+  }
+
+  private updateConnectionMetrics(session: TetherSession): void {
+    // Update connection quality metrics
+    session.metrics.connectionQuality = this.calculateConnectionQuality(session);
+  }
+
+  private async executeIntervention(session: TetherSession, intervention: TetherIntervention): Promise<void> {
+    intervention.status = 'active';
+
+    switch (intervention.type) {
+      case 'breathing-guide':
+        await this.executeBreathingGuide(session);
+        break;
+      case 'grounding-exercise':
+        await this.executeGroundingExercise(session);
+        break;
+      case 'crisis-resource':
+        await this.provideCrisisResources(session);
+        break;
+      case 'peer-support':
+        await this.connectPeerSupport(session);
+        break;
+      case 'professional-contact':
+        await this.contactProfessional(session);
+        break;
+    }
+
+    intervention.status = 'completed';
+  }
+
+  private async updateSafetyLevel(session: TetherSession): Promise<void> {
+    // Reassess safety level based on current indicators
+    const indicators = await this.assessSafetyIndicators(session);
+    session.safetyLevel.indicators = indicators;
+    session.safetyLevel.level = this.calculateSafetyLevel(indicators);
+    session.safetyLevel.lastAssessment = new Date();
+  }
+
+  private shouldEscalateSession(session: TetherSession): boolean {
+    return session.safetyLevel.level === 'crisis' || 
+           session.safetyLevel.level === 'high-risk';
+  }
+
+  private requiresFollowUp(interventionType: TetherIntervention['type']): boolean {
+    return ['crisis-resource', 'professional-contact'].includes(interventionType);
+  }
+
+  // Placeholder implementations for various helper methods
+  private matchesCriteria(partner: TetherPartner, criteria: MatchingCriteria): boolean {
+    return partner.isOnline && 
+           partner.currentSessions < partner.maxSessions &&
+           partner.availability.maxUrgencyLevel === criteria.urgency;
+  }
+
+  private calculateMatchScore(partner: TetherPartner, request: TetherRequest): number {
+    let score = partner.ratings.overall;
+    
+    // Add bonuses for various factors
+    if (partner.experience.crisisExperience > 50) score += 0.5;
+    if (partner.languages.includes('en')) score += 0.3;
+    if (partner.responseTime < 5) score += 0.2;
+    
+    return score;
+  }
+
+  private getAvailabilityWindow(urgency: TetherRequest['urgency']): number {
+    switch (urgency) {
+      case 'critical': return 2; // 2 minutes
+      case 'high': return 5;
+      case 'medium': return 15;
+      default: return 30;
+    }
+  }
+
+  private getRequiredSpecializations(tetherType: TetherRequest['tetherType']): string[] {
+    switch (tetherType) {
+      case 'emergency': return ['crisis-intervention', 'suicide-prevention'];
+      case 'breathing': return ['breathing-techniques', 'anxiety-management'];
+      case 'conversation': return ['active-listening', 'peer-support'];
+      default: return [];
+    }
+  }
+
+  private getMaxLoad(urgency: TetherRequest['urgency']): number {
+    return urgency === 'critical' ? 1 : 3;
+  }
+
+  private async getSessionSettings(request: TetherRequest): Promise<TetherSettings> {
+    return {
+      hapticEnabled: true,
+      breathingGuideEnabled: true,
+      voiceEnabled: false,
+      videoEnabled: false,
+      backgroundSoundsEnabled: true,
+      breathingPattern: this.breathingPatterns.get('4-7-8')!,
+      hapticIntensity: 0.7,
+      sessionTimeout: request.preferredDuration || 30,
+      autoEndOnInactivity: true,
+      emergencyEscalation: request.urgency === 'critical',
+      privacyMode: request.isAnonymous ? 'anonymous' : 'private',
+      dataRetention: 'session-only'
+    };
+  }
+
+  private initializeMetrics(): TetherMetrics {
+    return {
+      connectionQuality: 0,
+      synchronizationAccuracy: 0,
+      breathingCoherence: 0,
+      stressLevel: 0.5,
+      engagementLevel: 0,
+      sessionDuration: 0,
+      interventionsTrigered: 0
+    };
+  }
+
+  private async assessInitialEmotionalState(userId: string): Promise<EmotionalState> {
+    return {
+      primary: 'anxious',
+      intensity: 6,
+      stability: 'stable',
+      lastUpdated: new Date(),
+      selfReported: false,
+      aiAssessed: true,
+      trends: []
+    };
+  }
+
+  private async assessInitialSafetyLevel(userId: string): Promise<SafetyLevel> {
+    return {
+      level: 'concern',
+      indicators: [],
+      lastAssessment: new Date(),
+      assessedBy: 'ai',
+      interventionsRequired: [],
+      escalationTriggered: false
+    };
+  }
+
+  private calculateConnectionQuality(session: TetherSession): number {
+    // Implementation of connection quality calculation
+    return 0.8;
+  }
+
+  private calculateSyncAccuracy(session: TetherSession): number {
+    // Implementation of synchronization accuracy calculation
+    return 0.9;
+  }
+
+  private calculateEngagementLevel(session: TetherSession): number {
+    // Implementation of engagement level calculation
+    return 0.7;
+  }
+
+  private calculateBreathingCoherence(session: TetherSession): number {
+    // Implementation of breathing coherence calculation
+    return 0.8;
+  }
+
+  private calculateSafetyLevel(indicators: SafetyIndicator[]): SafetyLevel['level'] {
+    if (indicators.some(i => i.severity === 'critical')) return 'crisis';
+    if (indicators.some(i => i.severity === 'high')) return 'high-risk';
+    if (indicators.some(i => i.severity === 'medium')) return 'elevated';
+    if (indicators.some(i => i.severity === 'low')) return 'concern';
+    return 'safe';
+  }
+
+  // Additional placeholder methods
+  private async findAlternativePartners(request: TetherRequest, excludeUserId: string): Promise<TetherPartner[]> {
+    return [];
+  }
+
+  private async notifyNoPartnersAvailable(request: TetherRequest): Promise<void> {
+    console.log(`No partners available for request ${request.id}`);
+  }
+
+  private async notifySessionStarted(session: TetherSession): Promise<void> {
+    console.log(`Session ${session.id} started`);
+  }
+
+  private async notifySessionEnded(session: TetherSession, endedBy: string, reason?: string): Promise<void> {
+    console.log(`Session ${session.id} ended by ${endedBy}: ${reason}`);
+  }
+
+  private async notifyRequestExpired(request: TetherRequest): Promise<void> {
+    console.log(`Request ${request.id} expired`);
+  }
+
+  private async notifyCrisisIntervention(session: TetherSession): Promise<void> {
+    console.log(`Crisis intervention notified for session ${session.id}`);
+  }
+
+  private async transitionToProfessionalSupport(session: TetherSession): Promise<void> {
+    console.log(`Transitioning session ${session.id} to professional support`);
+  }
+
+  private async monitorSessionHealth(session: TetherSession): Promise<void> {
+    // Monitor session health
+  }
+
+  private async monitorSafetyIndicators(session: TetherSession): Promise<void> {
+    // Monitor safety indicators
+  }
+
+  private async updateSessionMetrics(session: TetherSession): Promise<void> {
+    // Update session metrics
+  }
+
+  private async releaseSessionResources(session: TetherSession): Promise<void> {
+    // Release session resources
+  }
+
+  private async initializeBreathingSync(session: TetherSession): Promise<void> {
+    // Initialize breathing synchronization
+  }
+
+  private async initializeHapticSync(session: TetherSession): Promise<void> {
+    // Initialize haptic synchronization
+  }
+
+  private async executeBreathingGuide(session: TetherSession): Promise<void> {
+    // Execute breathing guide intervention
+  }
+
+  private async executeGroundingExercise(session: TetherSession): Promise<void> {
+    // Execute grounding exercise intervention
+  }
+
+  private async provideCrisisResources(session: TetherSession): Promise<void> {
+    // Provide crisis resources
+  }
+
+  private async connectPeerSupport(session: TetherSession): Promise<void> {
+    // Connect additional peer support
+  }
+
+  private async contactProfessional(session: TetherSession): Promise<void> {
+    // Contact professional support
+  }
+
+  private async assessSafetyIndicators(session: TetherSession): Promise<SafetyIndicator[]> {
+    return [];
+  }
+
+  private initializeBreathingPatterns(): void {
+    this.breathingPatterns.set('4-7-8', {
+      name: '4-7-8 Breathing',
+      inhale: 4,
+      hold: 7,
+      exhale: 8,
+      pause: 0,
+      cycles: 4,
+      description: 'Calming breathing pattern for anxiety relief',
+      difficulty: 'beginner',
+      purpose: 'calming'
+    });
+
+    this.breathingPatterns.set('box-breathing', {
+      name: 'Box Breathing',
+      inhale: 4,
+      hold: 4,
+      exhale: 4,
+      pause: 4,
+      cycles: 6,
+      description: 'Balanced breathing for focus and stress relief',
+      difficulty: 'beginner',
+      purpose: 'focus'
+    });
+  }
+
+  private setupWebSocketHandlers(): void {
+    // Setup WebSocket event handlers for tether communications
+  }
+
+  private startPartnerMonitoring(): void {
+    // Start monitoring partner availability and status
+  }
+
+  private initializeAnalytics(): void {
+    // Initialize analytics collection
+  }
+}
+
+export const astralTetherService = new AstralTetherService();
