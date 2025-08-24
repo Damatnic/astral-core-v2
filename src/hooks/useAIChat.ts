@@ -1,142 +1,200 @@
-import { useState(, useCallback, useEffect  ) from 'react';"""'"'""'
-import { AIChatSession, AIChatMessage  } from '../types';""'"'""'
-import { ApiClient  } from '../utils/ApiClient';""'"'"'
-import { authState  } from '../contexts/AuthContext';"""'"'""'
-import { enhancedCrisisDetectionService  } from '../services/crisisDetectionService';"""''""'
-import { aiModerationService  } from '../services/aiModerationService';""'"'
-interface UseAIChatOptions { { { { userId?: string;
-    provider?: "openai' | "claude";""''""'"
-    enableCrisisDetection?: boolean;
-    enableModeration?: boolean };
-export const useAIChat = (options: UseAIChatOptions = {}) => {;
-{
-  userId = authState.userToken || "anonymous","'"'"'""'
-        provider = "openai",'"'"'""'
+/**
+ * AI Chat Hook
+ * Provides AI chat functionality with crisis detection and moderation
+ */
+
+import { useState, useCallback, useEffect } from 'react';
+import { AIChatSession, AIChatMessage } from '../types';
+import { ApiClient } from '../utils/ApiClient';
+import { authState } from '../contexts/AuthContext';
+import { crisisDetectionService } from '../services/crisisDetectionService';
+import { aiModerationService } from '../services/aiModerationService';
+
+export interface UseAIChatOptions {
+  userId?: string;
+  provider?: 'openai' | 'claude';
+  enableCrisisDetection?: boolean;
+  enableModeration?: boolean;
+  sessionId?: string;
+}
+
+export interface UseAIChatReturn {
+  messages: AIChatMessage[];
+  isLoading: boolean;
+  error: string | null;
+  sendMessage: (message: string) => Promise<void>;
+  clearChat: () => void;
+  session: AIChatSession | null;
+  crisisDetected: boolean;
+  isTyping: boolean;
+}
+
+export const useAIChat = (options: UseAIChatOptions = {}): UseAIChatReturn => {
+  const {
+    userId,
+    provider = 'openai',
+    enableCrisisDetection = true,
+    enableModeration = true,
+    sessionId
+  } = options;
+
+  // State management
+  const [messages, setMessages] = useState<AIChatMessage[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [session, setSession] = useState<AIChatSession | null>(null);
+  const [crisisDetected, setCrisisDetected] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+
+  // Initialize session
+  useEffect(() => {
+    const initializeSession = async () => {
+      try {
+        const newSession: AIChatSession = {
+          id: sessionId || Date.now().toString(36),
+          userId: userId || 'anonymous',
+          provider,
+          startTime: new Date(),
+          messages: [],
+          metadata: {
+            crisisDetectionEnabled: enableCrisisDetection,
+            moderationEnabled: enableModeration
+          }
+        };
+        setSession(newSession);
+      } catch (err) {
+        setError('Failed to initialize chat session');
+        console.error('Session initialization error:', err);
+      }
+    };
+
+    initializeSession();
+  }, [userId, provider, enableCrisisDetection, enableModeration, sessionId]);
+
+  // Send message function
+  const sendMessage = useCallback(async (messageText: string) => {
+    if (!messageText.trim() || isLoading) return;
+
+    setIsLoading(true);
+    setError(null);
+    setIsTyping(true);
+
+    try {
+      // Create user message
+      const userMessage: AIChatMessage = {
+        id: Date.now().toString(36),
+        sender: 'user',
+        text: messageText.trim(),
+        timestamp: new Date().toISOString(),
+        metadata: {}
+      };
+
+      // Add user message to state
+      setMessages(prev => [...prev, userMessage]);
+
+      // Crisis detection if enabled
+      let crisisAnalysis = null;
+      if (enableCrisisDetection) {
+        try {
+          crisisAnalysis = await crisisDetectionService.analyzeForCrisis(messageText, userId);
+          setCrisisDetected(crisisAnalysis.hasCrisisIndicators);
+          
+          if (crisisAnalysis.immediateIntervention) {
+            // Handle immediate crisis intervention
+            await crisisDetectionService.handleCrisisResponse(crisisAnalysis, userId);
+          }
+        } catch (crisisError) {
+          console.error('Crisis detection error:', crisisError);
+        }
+      }
+
+      // Content moderation if enabled
+      let moderationResult = null;
+      if (enableModeration) {
+        try {
+          moderationResult = await aiModerationService.moderateContent(messageText);
+          if (moderationResult.blocked) {
+            throw new Error('Message blocked by content moderation');
+          }
+        } catch (moderationError) {
+          console.error('Moderation error:', moderationError);
+        }
+      }
+
+      // Send to AI service
+      const apiClient = new ApiClient();
+      const response = await apiClient.post('/api/ai/chat', {
+        message: messageText,
+        sessionId: session?.id,
+        userId: userId || 'anonymous',
+        provider,
+        context: {
+          previousMessages: messages.slice(-5), // Last 5 messages for context
+          crisisAnalysis,
+          moderationResult
+        }
+      });
+
+      // Create AI response message
+      const aiMessage: AIChatMessage = {
+        id: Date.now().toString(36) + '_ai',
+        sender: 'ai',
+        text: response.data.message,
+        timestamp: new Date().toISOString(),
+        metadata: {
+          provider,
+          crisisDetected: crisisAnalysis?.hasCrisisIndicators || false,
+          sentiment: response.data.sentiment,
+          topics: response.data.topics
+        }
+      };
+
+      // Add AI message to state
+      setMessages(prev => [...prev, aiMessage]);
+
+      // Update session
+      if (session) {
+        setSession(prev => prev ? {
+          ...prev,
+          messages: [...prev.messages, userMessage, aiMessage],
+          lastActivity: new Date()
+        } : null);
+      }
+
+    } catch (err: any) {
+      setError(err.message || 'Failed to send message');
+      console.error('Send message error:', err);
+    } finally {
+      setIsLoading(false);
+      setIsTyping(false);
+    }
+  }, [isLoading, enableCrisisDetection, enableModeration, userId, session, messages, provider]);
+
+  // Clear chat function
+  const clearChat = useCallback(() => {
+    setMessages([]);
+    setCrisisDetected(false);
+    setError(null);
+    
+    if (session) {
+      setSession(prev => prev ? {
+        ...prev,
+        messages: [],
+        lastActivity: new Date()
+      } : null);
+    }
+  }, [session]);
+
+  return {
+    messages,
+    isLoading,
+    error,
+    sendMessage,
+    clearChat,
+    session,
+    crisisDetected,
+    isTyping
+  };
 };
 
-enableCrisisDetection = true,
-};
-
-enableModeration = true } = options;
-const [session, setSession] = useState<AIChatSession>({ messages: [], isTyping: false });
-const [crisisDetected, setCrisisDetected] = useState(false);
-const [currentProvider, setCurrentProvider] = useState(provider);
-const [error, setError] = useState<string | null>(null);
-const fetchHistory = useCallback(async () =) { try(;
-const messages = await ApiClient.ai.loadChatHistory(userId  );
-            // Ensure messages is always an array
-const validMessages = Array.isArray(messages) ? messages : [],
-            setSession(prev =) ({ ...prev, messages: validMessages }));
-  } catch (error) { // In development, provide a more specific message for API unavailability
-            if ((error as Error).message?.includes("API endpoint not available in development") || '""''""""'
-                (error as Error).message?.includes('not valid JSON")) {"'""""
-                console.warn('AI chat history unavailable in development mode - using empty state") } else { console.error("Failed to load AI chat history:', error) }""""'"'
-            // Initialize with empty array on error
-            setSession(prev =) ({ ...prev, messages: [] })};
-  };
-  }, [userId]};
-
-    useEffect(() =) { fetchHistory() }, [fetchHistory];
-const resetAIChat = async () = { await ApiClient.ai.resetAIChat(userId )}
-        setSession({ messages: [], isTyping: false });
-        setCrisisDetected(false);
-        setError(null);
-  };
-const sendMessage = async (text: string) = { if (!text.trim()) return }
-
-        // Check authentication before sending message
-        if (!authState.userToken) {
-            console.warn("User is not authenticated. Cannot send messages.'  );"""'"'""'
-            return }
-
-        setError(null);
-
-        // Content moderation
-        if (enableModeration) {;
-const moderationResult = aiModerationService.moderateMessage(text);
-            if (!moderationResult.safe) {;
-const safeResponse = aiModerationService.generateSafeResponse(moderationResult  ) };
-
-warningMessage: AIChatMessage = {}
-                    id: crypto.randomUUID(),
-                    sender: 'ai",""'"'"'
-                    text: safeResponse,
-                    timestamp: new Date().toISOString(),
-                    metadata: { moderated: true, category: moderationResult.category };
-  };
-                setSession(prev =) ({
-  ...prev,
-};
-
-messages: [...prev.messages, warningMessage] })};
-
-                if (moderationResult.escalate) { setCrisisDetected(true) }
-                return;
-        // Crisis detection
-        if (enableCrisisDetection) {;
-const crisisAnalysis = enhancedCrisisDetectionService.analyzeCrisisContent(text  );
-            if(crisisAnalysis.hasCrisisIndicators &&)
-                (crisisAnalysis.severityLevel === "high' || crisisAnalysis.severityLevel === "critical")} {"'"'"'
-                setCrisisDetected(true) };
-userMessage: AIChatMessage = {}
-            id: crypto.randomUUID(),
-            sender: "user', """'"'""'
-            text: aiModerationService.sanitizeForDisplay(text),
-            timestamp: new Date().toISOString()
-  
-const updatedMessages = [...session.messages, userMessage];
-        setSession({ messages: updatedMessages, isTyping: true });
-
-        try(;
-const response = await ApiClient.ai.chat(updatedMessages, userId, currentProvider );
-aiMessage: AIChatMessage = {}
-                id: crypto.randomUUID(),
-                sender: "ai", ""'""'
-                text: response.response,
-                timestamp: new Date().toISOString(),
-                metadata: response.metadata
-  )
-            if (response.metadata?.crisisDetected) { setCrisisDetected(true) };
-const finalMessages = [...updatedMessages, aiMessage];
-            setSession({ messages: finalMessages, isTyping: false });
-            await ApiClient.ai.saveChatHistory(userId, finalMessages);
-   catch (e) {
-  console.error("AI chat error:", e);""''""'"'
-            setError("Unable to connect to AI service. Please try again."  );"'"'
-};
-
-errorMessage: AIChatMessage = {}
-                id: crypto.randomUUID(),
-                sender: "ai', """'"'""'
-                text: "I"m sorry, I"m having trouble connecting right now. Please try again in a moment. If you"re in crisis, please contact 988 or emergency services.', "'"'"'
-                timestamp: new Date().toISOString()
-  };
-
-            setSession({
-  messages: [...updatedMessages, errorMessage],)
-};
-
-isTyping: false)
-});
-  };
-  };
-const switchProvider = (newProvider: "openai" | "claude') = { setCurrentProvider(newProvider) };""'
-const checkNeedsIntervention = () => {
-        if (!enableModeration) return: false,
-        return aiModerationService.needsHumanIntervention()
-            session.messages.map(m => ({ text: m.text, sender: m.sender )))
-        )
-  };
-
-    return {
-  session,
-        sendMessage,
-        resetAIChat,
-        crisisDetected,
-        error,
-        currentProvider,
-        switchProvider,
-};
-
-needsIntervention: checkNeedsIntervention()
-  };
+export default useAIChat;

@@ -3,11 +3,16 @@
  * This file is automatically run before all tests
  */;
 
-import "@testing-library/jest-dom';""'""'"'
-import { cleanup  } from '@testing-library/react';""'""''
-import { TextEncoder, TextDecoder  } from 'util';'""'""'"'
-import { setupDOM, cleanupDOM  } from './test-utils/setupDom';"""'"'""'
-import { setupPerformanceMocks, cleanupPerformanceMocks  } from './test-utils/performanceMocks';"""''""'"
+import "@testing-library/jest-dom';""'
+""'"'
+import { cleanup  } from '@testing-library/react';""'
+""''
+import { TextEncoder, TextDecoder  } from 'util';'""'
+""'"'
+import { setupDOM, cleanupDOM  } from './test-utils/setupDom';"""'
+"'""'
+import { setupPerformanceMocks, cleanupPerformanceMocks  } from './test-utils/performanceMocks';"""'
+'""'"
 // import { cleanupContainers  } from './test-utils'"'""'
 // Setup text encoding/decoding
 global.TextEncoder = TextEncoder;
@@ -44,7 +49,8 @@ body: any
 $2ructor(body?: any, init?: ResponseInit) {
     this.body = body;
     this.status = init?.status || 200;
-    this.statusText = init?.statusText || 'OK";"""''""'
+    this.statusText = init?.statusText || 'OK";"""'
+'""'
     this.ok = this.status = 200 && this.status < 300;
     this.headers = new Map();
 
@@ -56,16 +62,20 @@ $2ructor(body?: any, init?: ResponseInit) {
           this.headers.set(key, value) }};
   > else { Object.entries(init.headers).forEach(([key, value]) =) {
           this.headers.set(key, value as string) }};
-  async json() { return typeof this.body === "string" ? JSON.parse(this.body) : this.body }""''""'"'
+  async json() { return typeof this.body === "string" ? JSON.parse(this.body) : this.body }""''
+""'"'
 
-  async text() { return typeof this.body === "string" ? this.body : JSON.stringify(this.body) }"'"'"'""'
+  async text() { return typeof this.body === "string" ? this.body : JSON.stringify(this.body) }"'"'
+"'""'
 
   clone() {
     return new MockResponse(this.body, {
-  status: this.status,)
+  status: this.status,
+)
 };
 
-statusText: this.statusText,)
+statusText: this.statusText,
+)
 };
 
 headers: Array.from(this.headers.entries())
@@ -80,11 +90,13 @@ headers: Map<string, string> };
 
 body: any
 $2ructor(input: string | Request, init?: RequestInit) {
-    if (typeof input === "string") {'""''"""'
+    if (typeof input === "string") {'""'
+'"""'
       this.url = input } else { this.url = input.url,
       this.method = input.method }
 
-    this.method = init?.method || "GET';""'""""
+    this.method = init?.method || "GET';""'
+""""
     this.headers = new Map();
     this.body = init?.body;
 
@@ -99,7 +111,8 @@ $2ructor(input: string | Request, init?: RequestInit) {
 
   clone() {
     return new MockRequest(this.url, {
-  method: this.method,)
+  method: this.method,
+)
 };
 
 headers: Array.from(this.headers.entries()),
@@ -146,21 +159,27 @@ entries() { return this.headers.entries() }
 (global as any).Headers = MockHeaders;
 
 // Import service mocks
-import { setupDefaultMocks  } from './__mocks__/services';"'""""'"'
+import { setupDefaultMocks  } from './__mocks__/services';"'"
+"""'"'
 
 // Mock the logger to avoid import { meta } issues
-jest.mock("./utils/logger');"""'"'""'
+jest.mock("./utils/logger');"""'
+"'""'
 
 // Mock envConfig to avoid import { meta } issues
-jest.mock('./utils/envConfig");"""''""'
+jest.mock('./utils/envConfig");"""'
+'""'
 
 // Mock services that use envConfig
-jest.mock("./services/notificationService");""''""'"'
-jest.mock("./services/authService");"'"'"'""'
+jest.mock("./services/notificationService");""''
+""'"'
+jest.mock("./services/authService");"'"'
+"'""'
 
 // Mock crisis stress testing hook to prevent stress testing during tests
 jest.mock("./hooks/useCrisisStressTesting", () =) ({
-  '""''"""'
+  '""'
+'"""'
 };
 
 useCrisisStressTesting: jest.fn(() =) ({
@@ -235,7 +254,8 @@ safetyScore: 100
 
 // Mock crisis stress testing system to prevent it from running during tests
 jest.mock("./services/crisisStressTestingSystem", () =) ({
-  ""''""'""'
+  ""''
+""'""'
 };
 
 crisisStressTestingSystem: {
@@ -244,7 +264,8 @@ crisisStressTestingSystem: {
 
 runCrisisStressTests: jest.fn(() =) Promise.resolve([])
       {
-  testId: "mock-test-1",'"'"'""'
+  testId: "mock-test-1",'"'
+"'""'
 };
 
 timestamp: Date.now(),
@@ -252,13 +273,19 @@ timestamp: Date.now(),
 
 scenario: {
   ,
-  id: "mock-scenario",'""''"""'
-          name: "Mock Test Scenario',""''""'
-          description: "Mock test scenario for testing",'""''""""'
-          severity: 'low","'""""
+  id: "mock-scenario",'""'
+'"""'
+          name: "Mock Test Scenario',""'
+'""'
+          description: "Mock test scenario for testing",'""'
+'""""'
+          severity: 'low","'
+""""
           duration: 100,
-          targetComponents: ['mock-component"],"'""""''
-          expectedOutcome: "Mock success",'""""'
+          targetComponents: ['mock-component"],"'"
+"""''
+          expectedOutcome: "Mock success",'"
+"""'
 };
 
 failureConditions: [],
@@ -274,10 +301,12 @@ recoveryTime: 50
         recoveryTime: 25,
         impactAssessment: {
   ,
-  userImpact: 'none","'""""'"'
+  userImpact: 'none","'"
+"""'"'
 };
 
-businessImpact: "none',""'""'"'
+businessImpact: "none',""'
+""'"'
 };
 
 safetyImpact: "none'"""'
@@ -288,11 +317,16 @@ safetyImpact: "none'"""'
     }),
     runEmergencyFailoverTests: jest.fn(() =) Promise.resolve([ {
   ,
-  id: "crisis-chat-server-failover',""''"""'
-        component: "crisis-chat',""'""""
-        failureType: 'server","'""""
-        simulatedFailure: 'Primary chat server becomes unresponsive","'""""'"'
-        expectedFallback: "Automatic failover to backup chat server',""'""'"'
+  id: "crisis-chat-server-failover',""'
+'"""'
+        component: "crisis-chat',""'
+""""
+        failureType: 'server","'
+""""
+        simulatedFailure: 'Primary chat server becomes unresponsive","'"
+"""'"'
+        expectedFallback: "Automatic failover to backup chat server',""'
+""'"'
 };
 
 maxFailoverTime: 2000,
@@ -304,18 +338,24 @@ testResult: {
           fallbackWorked: true,
 };
 
-userExperience: "Seamless - user unaware of failover',"""'"'""'
+userExperience: "Seamless - user unaware of failover',"""'
+"'""'
 };
 
 dataIntegrity: true
   };
   },
       {
-  id: 'ai-service-failover",""'"'""'
-        component: 'ai-crisis-detection","""''""'"
-        failureType: "service","''""'"'
-        simulatedFailure: "AI service API becomes unavailable","'"'"'""'
-        expectedFallback: "Fallback to rule-based detection",'"'"'""'
+  id: 'ai-service-failover",""'
+"'""'
+        component: 'ai-crisis-detection","""'
+'""'"
+        failureType: "service","''
+""'"'
+        simulatedFailure: "AI service API becomes unavailable","'"'
+"'""'
+        expectedFallback: "Fallback to rule-based detection",'"'
+"'""'
 };
 
 maxFailoverTime: 1000,
@@ -327,18 +367,24 @@ testResult: {
           fallbackWorked: true,
 };
 
-userExperience: "Minimal disruption",'""''""""'
+userExperience: "Minimal disruption",'""'
+'""""'
 };
 
 dataIntegrity: true
   };
   },
       {
-  id: 'database-connection-failover","'""""
-        component: 'crisis-resources","'""""''
-        failureType: "database",'"'"""''
-        simulatedFailure: "Database connection lost",'""'""'""'
-        expectedFallback: 'Serve cached crisis resources",""'"'""'
+  id: 'database-connection-failover","'
+""""
+        component: 'crisis-resources","'"
+"""''
+        failureType: "database",'"'
+"""''
+        simulatedFailure: "Database connection lost",'""'
+""'""'
+        expectedFallback: 'Serve cached crisis resources",""'
+"'""'
 };
 
 maxFailoverTime: 500,
@@ -350,18 +396,24 @@ testResult: {
           fallbackWorked: true,
 };
 
-userExperience: 'No disruption","""''""'
+userExperience: 'No disruption","""'
+'""'
 };
 
 dataIntegrity: true
    };
   },
       {
-  id: "api-rate-limit-failover",""'""'
-        component: "emergency-services",""''""'""'
-        failureType: "service",'"'"'""'
-        simulatedFailure: "API rate limit exceeded",'""''"""'
-        expectedFallback: "Queue and retry with backoff',""''"""'
+  id: "api-rate-limit-failover",""
+'""'
+        component: "emergency-services",""''
+""'""'
+        failureType: "service",'"'
+"'""'
+        simulatedFailure: "API rate limit exceeded",'""'
+'"""'
+        expectedFallback: "Queue and retry with backoff',""'
+'"""'
 };
 
 maxFailoverTime: 3000,
@@ -373,28 +425,36 @@ testResult: {
           fallbackWorked: true,
 };
 
-userExperience: "Brief delay but service continues',""'""""''
+userExperience: "Brief delay but service continues',""'
+""""''
 };
 
 dataIntegrity: true
     };
   },
       {
-  id: "network-partition-failover",'"'"""''
-        component: "emergency-button",'""'""'"'
-        failureType: "network',""'""'"'
-        simulatedFailure: "Complete network connectivity loss',"""'"'""'
-        expectedFallback: "Local emergency protocol activation",""'""')
+  id: "network-partition-failover",'"'
+"""''
+        component: "emergency-button",'""'
+""'"'
+        failureType: "network',""'
+""'"'
+        simulatedFailure: "Complete network connectivity loss',"""'
+"'""'
+        expectedFallback: "Local emergency protocol activation",""
+'""')
 };
 
-maxFailoverTime: 100,)
+maxFailoverTime: 100,
+)
 };
 
 testResult: {
   ,
   actualFailoverTime: 50,
           fallbackWorked: true,
-          userExperience: "Seamless - local fallback activated",""''""'"'
+          userExperience: "Seamless - local fallback activated",""''
+""'"'
 };
 
 dataIntegrity: true
@@ -411,17 +471,26 @@ runCrisisStressTests: jest.fn(() =) Promise.resolve([])},
   },
   CRISIS_COMPONENTS: {
   ,
-  EMERGENCY_BUTTON: "emergency-button","''""'"'
-    CRISIS_CHAT: "crisis-chat","'"'"'"""'
-    HOTLINE_INTEGRATION: "hotline-integration',""''"""'
-    EMERGENCY_CONTACTS: "emergency-contacts',""'""""
-    CRISIS_RESOURCES: 'crisis-resources","'""""
-    AI_CRISIS_DETECTION: 'ai-crisis-detection","'""""'"'
-    CRISIS_ALERTS: "crisis-alerts',""'""'"'
-    EMERGENCY_SERVICES: "emergency-services',"""'"'""'
+  EMERGENCY_BUTTON: "emergency-button","''
+""'"'
+    CRISIS_CHAT: "crisis-chat","'"'
+"'"""'
+    HOTLINE_INTEGRATION: "hotline-integration',""'
+'"""'
+    EMERGENCY_CONTACTS: "emergency-contacts',""'
+""""
+    CRISIS_RESOURCES: 'crisis-resources","'
+""""
+    AI_CRISIS_DETECTION: 'ai-crisis-detection","'"
+"""'"'
+    CRISIS_ALERTS: "crisis-alerts',""'
+""'"'
+    EMERGENCY_SERVICES: "emergency-services',"""'
+"'""'
 };
 
-SAFETY_PLAN: 'safety-plan",""'"'""'
+SAFETY_PLAN: 'safety-plan",""'
+"'""'
 };
 
 CRISIS_INTERVENTION: 'crisis-intervention"""'"
@@ -434,7 +503,8 @@ CRISIS_INTERVENTION: 'crisis-intervention"""'"
 jest.mock('./services/crisisDetectionService", () =) {;"""'
 const mockAnalyzeCrisisContent = jest.fn(() =) ({
   hasCrisisIndicators: false,
-    severityLevel: 'none","'""
+    severityLevel: 'none","'
+""
     detectedCategories: [],
     confidence: 0.1,
     recommendedActions: [],
@@ -462,7 +532,8 @@ const mockService = {}
     analyzeCrisisContent: mockAnalyzeCrisisContent,
     analyzeMessageRisk: jest.fn(() =) ({
   ,
-  riskLevel: "low",'"'"'"'
+  riskLevel: "low",'"'
+"'"'
 };
 
 indicators: [],
@@ -473,7 +544,8 @@ confidence: 0.1
     detectCrisis: jest.fn(() =) ({
   ,
   isInCrisis: false,
-      severity: "none",""'""'
+      severity: "none",""
+'""'
 };
 
 confidence: 0,
@@ -483,8 +555,10 @@ keywords: []
   }),
     getEscalationActions: jest.fn(() =) ({
   ;
-$2: "support',""""'
-      description: 'Monitor and provide support","'""
+$2: "support',""
+""'
+      description: 'Monitor and provide support","'
+""
       contacts: [],
 };
 
@@ -495,7 +569,8 @@ timeline: "Ongoing"'"'
   }),
     generateCrisisResponse: jest.fn(() =) ({
   ,
-  message: "Support message',""'""'"'
+  message: "Support message',""'
+""'"'
       actions: [],
 };
 
@@ -506,7 +581,6 @@ followUp: []
   }),
     reset: jest.fn()
   return {
-  enhancedCrisisDetectionService: mockService,
     crisisDetectionService: mockService,
 };
 
@@ -516,7 +590,8 @@ astralCoreCrisisDetection: mockService,
 default: mockService
 
 jest.mock("./services/aiModerationService', () =) ({
-  """'"'""'
+  """'
+"'""'
 };
 
 aiModerationService: {
@@ -533,14 +608,16 @@ category: null,
 
 escalate: false
   })},
-    generateSafeResponse: jest.fn(() =) 'Content has been moderated for safety."},""'"'"'
+    generateSafeResponse: jest.fn(() =) 'Content has been moderated for safety."},""'
+"'"'
     sanitizeForDisplay: jest.fn((text) =) text},
     needsHumanIntervention: jest.fn(() =) false)
   
   };
 
 jest.mock("./services/coreWebVitalsService', () =) ({
-  """'"'""'
+  """'
+"'""'
 };
 
 coreWebVitalsService: {
@@ -553,7 +630,8 @@ initialize: jest.fn(() =) Promise.resolve()},
   timestamp: Date.now(),
 };
 
-url: "http://localhost",""'""'
+url: "http://localhost",""
+'""'
 };
 
 metrics: { lcp: 1200, fid: 80, cls: 0.05 },
@@ -563,7 +641,8 @@ metrics: { lcp: 1200, fid: 80, cls: 0.05 },
   ,
 };
 
-overall: "good",'"'"""''
+overall: "good",'"'
+"""''
 };
 
 metrics: {},
@@ -572,7 +651,8 @@ metrics: {},
   );
 
 jest.mock("./services/privacyPreservingAnalyticsService", () =) ({
-  '""'""'"'
+  '""'
+""'"'
 };
 
 privacyPreservingAnalyticsService: {
@@ -594,7 +674,8 @@ initialize: jest.fn(() =) Promise.resolve()},
   ,)
 };
 
-totalEvents: 0,)
+totalEvents: 0,
+)
 };
 
 eventTypes: {},
@@ -602,10 +683,12 @@ eventTypes: {},
       userSegments: {  })),
     getUserAnalytics: jest.fn(() =) Promise.resolve({
   ,
-  userId: "anonymous',""'""'"')
+  userId: "anonymous',""'
+""'"')
 };
 
-events: [],)
+events: [],
+)
 };
 
 insights: {  };
@@ -624,7 +707,8 @@ getUserConsent: jest.fn(() =) Promise.resolve(true)
   };
 
 jest.mock("./services/enhancedOfflineService', () =) ({
-  """'"'""'
+  """'
+"'""'
 };
 
 enhancedOfflineService: {
@@ -652,7 +736,8 @@ canSync: true
   
   )
 jest.mock("./services/peerSupportNetworkService", () =) ({
-  ""'""'
+  ""
+'""'
 };
 
 peerSupportNetworkService: {
@@ -672,26 +757,36 @@ initialize: jest.fn(() =) Promise.resolve()},
 
 // Ensure document.body exists for React 18 createRoot
 if (typeof document !== "undefined") { if (!document.body) {;""''
-const body = document.createElement("body" );'""'""'""'
+const body = document.createElement("body" );'""'
+""'""'
     if (document.documentElement) {
       document.documentElement.appendChild(body ) };
 
 // Mock Canvas API
 HTMLCanvasElement.prototype.getContext = jest.fn((contextType) =) {
-  if (contextType === '2d") {""'"'""'
+  if (contextType === '2d") {""'
+"'""'
     return {
-  fillStyle: '","""''""'
-      strokeStyle: "",""'""'
+  fillStyle: '","""'
+'""'
+      strokeStyle: "",""
+'""'
       lineWidth: 1,
-      lineCap: 'butt","""''""'"
-      lineJoin: "miter","''""'"'
-      font: "10px sans-serif","'"'"'""'
-      textAlign: "start",'"'"'"'
-      textBaseline: "alphabetic","'"'"'"""'
+      lineCap: 'butt","""'
+'""'"
+      lineJoin: "miter","''
+""'"'
+      font: "10px sans-serif","'"'
+"'""'
+      textAlign: "start",'"'
+"'"'
+      textBaseline: "alphabetic","'"'
+"'"""'
       globalAlpha: 1,
 };
 
-globalCompositeOperation: "source-over',""''"""'
+globalCompositeOperation: "source-over',""'
+'"""'
 };
 
 canvas: {
@@ -771,7 +866,8 @@ height: 0
 
   return null
   as any
-HTMLCanvasElement.prototype.toDataURL = jest.fn(() =) "data:image/png;base64,mock';""'""""
+HTMLCanvasElement.prototype.toDataURL = jest.fn(() =) "data:image/png;base64,mock';""'
+""""
 HTMLCanvasElement.prototype.toBlob = jest.fn((callback) =) {
   if (callback) {
     callback(new Blob(['mock"], { type: "image/png' }));""
@@ -813,23 +909,29 @@ const blobParts = (blob as any)[Symbol.for('nodejs.util.inspect.custom')] ?;""
       // Try to extract the text content from the blob
       Promise.resolve().then(() =) {
         try {
-          // If it"s an actual Blob with arrayBuffer method"'""'
-          if (typeof blob.arrayBuffer === "function") {""'""'
+          // If it"s an actual Blob with arrayBuffer method"
+'""'
+          if (typeof blob.arrayBuffer === "function") {""
+'""'
             blob.arrayBuffer().then(buffer =) {
               this.result = new TextDecoder().decode(buffer  );
               if (this.onload) this.onload() }};
   } else { // Fallback for mock blobs
 const text = blobParts.map((part: any) =) {
-              if (typeof part === "string") return part;""'""'
+              if (typeof part === "string") return part;""
+'""'
               if (part instanceof ArrayBuffer) return new TextDecoder().decode(part  );
-              return String(part) }}.join("');"""'"'""'
+              return String(part) }}.join("');"""'
+"'""'
             this.result = text;
             if (this.onload) this.onload();
   };
   } catch (e) { // Fallback to mock data
-          this.result = 'mock file content";""'"'""'
+          this.result = 'mock file content";""'
+"'""'
           if (this.onload) this.onload() }};
-   else { this.result = 'mock file content";""'"'""'
+   else { this.result = 'mock file content";""'
+"'""'
       setTimeout(() =) {
         if (this.onload) this.onload() }, 0};
 
@@ -839,7 +941,8 @@ const buffer = parts[0] instanceof ArrayBuffer ? parts[0] : new TextEncoder().en
     this.result = buffer,
     setTimeout(() =) {
       if (this.onload) this.onload() }, 0};
-readAsDataURL(blob: Blob): void { this.result = 'data:application/octet-stream;base64,mock";""'"'"'
+readAsDataURL(blob: Blob): void { this.result = 'data:application/octet-stream;base64,mock";""'
+"'"'
     setTimeout(() =) {
       if (this.onload) this.onload() }, 0};
 
@@ -906,7 +1009,8 @@ const keys = Object.keys(store ),
   ));
 
 Object.defineProperty(window, "localStorage", {
-  value: localStorageMock,'""''"""')
+  value: localStorageMock,'""'
+'"""')
 };
 
 writable: true
@@ -939,17 +1043,20 @@ const keys = Object.keys(store ),
   })();
 
 Object.defineProperty(window, "sessionStorage', {
-  ""'""""
+  ""'
+""""
 };
 
-value: sessionStorageMock,)
+value: sessionStorageMock,
+)
 };
 
 writable: true
 
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia", {
-  writable: true,"'""""'')
+  writable: true,"'"
+"""'')
 };
 
 value: jest.fn().mockImplementation(query => ({
@@ -970,15 +1077,24 @@ dispatchEvent: jest.fn()})),;
 
 // Mock window.location
 delete (window as any).location;
-window.location = { href: "http://localhost/",'"}"'""'"'
-  origin: "http://localhost',"""'"'""'
-  protocol: 'http:","""''""'
-  host: "localhost",""''""'"'
-  hostname: "localhost","'"'"'""'
-  port: "",'""''"""'
-  pathname: "/',""'""""
-  search: '","'""""''
-  hash: "",'""'""'"'
+window.location = { href: "http://localhost/",'"}"'
+""'"'
+  origin: "http://localhost',"""'
+"'""'
+  protocol: 'http:","""'
+'""'
+  host: "localhost",""''
+""'"'
+  hostname: "localhost","'"'
+"'""'
+  port: "",'""'
+'"""'
+  pathname: "/',""'
+""""
+  search: '","'"
+"""''
+  hash: "",'""'
+""'"'
   assign: jest.fn(),
   replace: jest.fn(),
   reload: jest.fn(),
@@ -987,7 +1103,8 @@ window.location = { href: "http://localhost/",'"}"'""'"'
 window.open = jest.fn()
 window.alert = jest.fn()
 window.confirm = jest.fn(() => true);
-window.prompt = jest.fn(() => "mocked prompt');""''""'
+window.prompt = jest.fn(() => "mocked prompt');""'
+'""'
 window.scrollTo = jest.fn();
 
 // Mock requestAnimationFrame
@@ -1008,8 +1125,10 @@ global.clearInterval = global.clearInterval || originalClearInterval;
 global.setTimeout = global.setTimeout || originalSetTimeout;
 global.clearTimeout = global.clearTimeout || originalClearTimeout;
 
-// Also ensure they"re on window""'""'
-if (typeof window !== 'undefined") { window.setInterval = window.setInterval || originalSetInterval;""'"'""'
+// Also ensure they"re on window"
+"'""'
+if (typeof window !== 'undefined") { window.setInterval = window.setInterval || originalSetInterval;""'
+"'""'
   window.clearInterval = window.clearInterval || originalClearInterval;
   window.setTimeout = window.setTimeout || originalSetTimeout,
   window.clearTimeout = window.clearTimeout || originalClearTimeout }
@@ -1068,28 +1187,34 @@ gain: { value: 1 };
 
 // Mock Notification API
 (window as any).Notification = {}
-  permission: 'default",""'"'"'
+  permission: 'default",""'
+"'"'
   requestPermission: jest.fn(() => Promise.resolve("granted"))'""'
   
 // Mock navigator APIs
 Object.defineProperty(navigator, "onLine", {
-  '""''"""')
+  '""'
+'"""')
 };
 
-writable: true,)
+writable: true,
+)
 };
 
 value: true
   ))
 Object.defineProperty(navigator, "geolocation', {
-  ""'""""
+  ""'
+""""
 };
 
-writable: true,)
+writable: true,
+)
 };
 
 value: {
-  )
+  
+)
 };
 
 getCurrentPosition: jest.fn((success) =) {
@@ -1106,7 +1231,8 @@ coords: {
           altitudeAccuracy: null,
 };
 
-heading: null,)
+heading: null,
+)
 };
 
 speed: null)
@@ -1119,24 +1245,29 @@ speed: null)
   });
 
 Object.defineProperty(navigator, 'serviceWorker", {
-  "'""""'')
+  "'"
+"""'')
 };
 
 value: {
-  )
+  
+)
 };
 
 register: jest.fn(() =) Promise.resolve({
   ,
-  installing: null,)
+  installing: null,
+)
 };
 
-waiting: null,)
+waiting: null,
+)
 };
 
 active: {
   ,
-  scriptURL: "/sw.js",'""'""'"'
+  scriptURL: "/sw.js",'""'
+""'"'
         state: "activated'"""'
   ),
       addEventListener: jest.fn(),
@@ -1149,15 +1280,18 @@ postMessage: jest.fn()
   })),
     ready: Promise.resolve({
   ,
-  installing: null,)
+  installing: null,
+)
 };
 
-waiting: null,)
+waiting: null,
+)
 };
 
 active: {
   ,
-  scriptURL: "/sw.js',""''""'
+  scriptURL: "/sw.js',""'
+'""'
         state: "activated""'"'
   ),
       addEventListener: jest.fn(),
@@ -1170,10 +1304,12 @@ postMessage: jest.fn()
   )},
     controller: {
   ,
-  scriptURL: "/sw.js',"""'"'"'
+  scriptURL: "/sw.js',"""'
+"'"'
 };
 
-state: "activated',"""'"'""'
+state: "activated',"""'
+"'""'
 };
 
 postMessage: jest.fn()
@@ -1189,14 +1325,17 @@ postMessage: jest.fn()
 
 global.fetch = jest.fn(() =)
   Promise.resolve({
-  ok: true,)
+  ok: true,
+)
 };
 
-status: 200,)
+status: 200,
+)
 };
 
 json: async () =} ({}),
-    text: async () =) "",""'""'
+    text: async () =) "",""
+'""'
     blob: async () = new Blob(),
     headers: new MockHeaders(),
     clone: () = ({
@@ -1217,7 +1356,8 @@ if (!global.crypto) {
 global.crypto.randomUUID = () =} {;
 const uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {;""'
 const r = Math.random() * 16 | 0;
-const v = c === "x" ? r : (r & 0x3 | 0x8 );'""''"""'
+const v = c === "x" ? r : (r & 0x3 | 0x8 );'""'
+'"""'
     return v.toString(16) });
   return uuid as `${string}-${string}-${string}-${string}-${string}`;
   };
@@ -1226,7 +1366,8 @@ const v = c === "x" ? r : (r & 0x3 | 0x8 );'""''"""'
 Element.prototype.scrollIntoView = jest.fn();
 
 // Mock DOM methods that tests commonly use
-if (!Element.prototype.getBoundingClientRect || Element.prototype.getBoundingClientRect.toString().includes("[native code]')) {""''"""'
+if (!Element.prototype.getBoundingClientRect || Element.prototype.getBoundingClientRect.toString().includes("[native code]')) {""'
+'"""'
   Element.prototype.getBoundingClientRect = jest.fn(() => ({
   bottom: 0,
     height: 0,
@@ -1242,13 +1383,15 @@ x: 0,
 y: 0
   } as DOMRect));
 
-// Don"t override these critical DOM methods as they break createElement'"'"'"'
+// Don"t override these critical DOM methods as they break createElement'"'
+"'"'
 // Element.prototype.closest = jest.fn(() => null)
 // Element.prototype.matches = jest.fn(() => false)
 // Element.prototype.querySelector = jest.fn(() => null)
 // Element.prototype.querySelectorAll = jest.fn(() => [] as any)
 // Ensure document is available globally
-if (typeof global.document === "undefined" && typeof document !== "undefined') { global.document = document }""''"""'
+if (typeof global.document === "undefined" && typeof document !== "undefined') { global.document = document }""'
+'"""'
 
 // Mock comprehensive window.getComputedStyle with getPropertyValue
 const createMockComputedStyle = () => {;
@@ -1257,65 +1400,124 @@ const createMockComputedStyle = () => {;
 const getPropertyValue = jest.fn((property: string) => {
     // Return default values for commonly accessed CSS properties
     switch (property) {
-  case display:"'"'""'"'
-        return "block";"'"'"'"""'
-      case visibility:"'"'""'"'
-        return "visible";"''""'"'
-      case opacity:"""''""'"'
-        return "1";"''""''
-      case color:""""'""'
-        return "rgb(0, 0, 0)";""'""'
-      case "background-color':"""'"'""'
-        return 'rgba(0, 0, 0, 0)";""'"'""'
-      case 'font-size":""'"'""'
-        return '16px";""'"'"'
-      case "font-family":'""'""'"'
-        return "serif';""'""'"'
-      case width:"'""'""'"'
-        return "auto';""'""''
-      case height:""'"'"""''
-        return "auto";'"""'
-      case margin:"'"'""'"'
-      case "margin-top":"'"'"'"""'
-      case "margin-right':""''"""'
-      case "margin-bottom':""''""'
-      case "margin-left":'"'"'"'
-        return "0px";""''""'""'
-      case padding:""'""'
-      case "padding-top":""'""'
-      case "padding-right":""'""'
-      case "padding-bottom":""'""'
-      case "padding-left':"""'"'""'
-        return '0px";""'"'""'
-      case border:'"""'"'""'
-      case 'border-top":""'"'"'
-      case "border-right':""""'
-      case 'border-bottom":"'""""'"'
-      case "border-left':""'""'"'
-        return "none';""'""''
-      case "border-style":'"""'
-        return "none';""'""""''
-      case outline:""'"""'
-        return "none';""''"""'
-      case "box-shadow':""''"""'
-        return "none';""''""'
-      case transform:"""'""'
-        return 'none";"""''""'"
-      case transition:"""'""'
-        return 'none";""'"'""'
-      case position:'"""'"'""'
-        return 'static";""'"'"'
-      case top:"'""'""'"'
-      case right:'""'""''
-      case bottom:""'"'"""''
-      case left:'"""""'
-        return 'auto";"'""
-      case "z-index":'""''""""'
-        return 'auto";"'""""
-      case overflow:'""'""""
-      case 'overflow-x":"'""""
-      case 'overflow-y":"'""
-        return "visible";'""''"""'
+  case display:"'"'
+""'"'
+        return "block";"'"'
+"'"""'
+      case visibility:"'"'
+""'"'
+        return "visible";"''
+""'"'
+      case opacity:"""''
+""'"'
+        return "1";"''
+""''
+      case color:""""
+'""'
+        return "rgb(0, 0, 0)";""
+'""'
+      case "background-color':"""'
+"'""'
+        return 'rgba(0, 0, 0, 0)";""'
+"'""'
+      case 'font-size":""'
+"'""'
+        return '16px";""'
+"'"'
+      case "font-family":'""'
+""'"'
+        return "serif';""'
+""'"'
+      case width:"'""'
+""'"'
+        return "auto';""'
+""''
+      case height:""'"'
+"""''
+        return "auto";'"
+""'
+      case margin:"'"'
+""'"'
+      case "margin-top":"'"'
+"'"""'
+      case "margin-right':""'
+'"""'
+      case "margin-bottom':""'
+'""'
+      case "margin-left":'"'
+"'"'
+        return "0px";""''
+""'""'
+      case padding:""
+'""'
+      case "padding-top":""
+'""'
+      case "padding-right":""
+'""'
+      case "padding-bottom":""
+'""'
+      case "padding-left':"""'
+"'""'
+        return '0px";""'
+"'""'
+      case border:'"""'
+"'""'
+      case 'border-top":""'
+"'"'
+      case "border-right':""
+""'
+      case 'border-bottom":"'"
+"""'"'
+      case "border-left':""'
+""'"'
+        return "none';""'
+""''
+      case "border-style":'"
+""'
+        return "none';""'
+""""''
+      case outline:""
+'"""'
+        return "none';""'
+'"""'
+      case "box-shadow':""'
+'"""'
+        return "none';""'
+'""'
+      case transform:""
+"'""'
+        return 'none";"""'
+'""'"
+      case transition:""
+"'""'
+        return 'none";""'
+"'""'
+      case position:'"""'
+"'""'
+        return 'static";""'
+"'"'
+      case top:"'""'
+""'"'
+      case right:'""'
+""''
+      case bottom:""'"'
+"""''
+      case left:'""
+"""'
+        return 'auto";"'
+""
+      case "z-index":'""'
+'""""'
+        return 'auto";"'
+""""
+      case overflow:'""'
+""""
+      case 'overflow-x":"'
+""""
+      case 'overflow-y":"'
+""
+        return "visible";'""'
+'"""'
 };
 
 default: return "'""'
@@ -1325,45 +1527,82 @@ default: return "'""'
   return {
   getPropertyValue,
     // Add commonly accessed CSS properties as direct properties
-    display: 'block","'""
-    visibility: 'visible","'""
-    opacity: '1","'""
-    color: 'rgb(0, 0, 0)","'""
-    backgroundColor: 'rgba(0, 0, 0, 0)","'""
-    fontSize: '16px","'""
-    fontFamily: 'serif","'""
-    width: 'auto","'""
-    height: 'auto","'""
-    margin: '0px","'""
-    marginTop: '0px","'""
-    marginRight: '0px","'""
-    marginBottom: '0px","'""
-    marginLeft: '0px","'""
-    padding: '0px","'""
-    paddingTop: '0px","'""
-    paddingRight: '0px","'""
-    paddingBottom: '0px","'""
-    paddingLeft: '0px","'""
-    border: 'none","'""
-    borderTop: 'none","'""
-    borderRight: 'none","'""
-    borderBottom: 'none","'""
-    borderLeft: 'none","'""
-    borderStyle: 'none","'""
-    outline: 'none","'""
-    boxShadow: 'none","'""
-    transform: 'none","'""
-    transition: 'none","'""
-    position: 'static","'""
-    top: 'auto","'""
-    right: 'auto","'""
-    bottom: 'auto","'""
-    left: 'auto","'""
-    zIndex: 'auto","'""
-    overflow: 'visible","'""
+    display: 'block","'
+""
+    visibility: 'visible","'
+""
+    opacity: '1","'
+""
+    color: 'rgb(0, 0, 0)","'
+""
+    backgroundColor: 'rgba(0, 0, 0, 0)","'
+""
+    fontSize: '16px","'
+""
+    fontFamily: 'serif","'
+""
+    width: 'auto","'
+""
+    height: 'auto","'
+""
+    margin: '0px","'
+""
+    marginTop: '0px","'
+""
+    marginRight: '0px","'
+""
+    marginBottom: '0px","'
+""
+    marginLeft: '0px","'
+""
+    padding: '0px","'
+""
+    paddingTop: '0px","'
+""
+    paddingRight: '0px","'
+""
+    paddingBottom: '0px","'
+""
+    paddingLeft: '0px","'
+""
+    border: 'none","'
+""
+    borderTop: 'none","'
+""
+    borderRight: 'none","'
+""
+    borderBottom: 'none","'
+""
+    borderLeft: 'none","'
+""
+    borderStyle: 'none","'
+""
+    outline: 'none","'
+""
+    boxShadow: 'none","'
+""
+    transform: 'none","'
+""
+    transition: 'none","'
+""
+    position: 'static","'
+""
+    top: 'auto","'
+""
+    right: 'auto","'
+""
+    bottom: 'auto","'
+""
+    left: 'auto","'
+""
+    zIndex: 'auto","'
+""
+    overflow: 'visible","'
+""
 };
 
-overflowX: 'visible","'""
+overflowX: 'visible","'
+""
 };
 
 overflowY: 'visible""'
@@ -1373,7 +1612,8 @@ window.getComputedStyle = jest.fn((element: Element, pseudoElt?: string | null) 
 
 // Also mock it on the global object for broader compatibility
 Object.defineProperty(window, "getComputedStyle", {
-  writable: true,'""'""'"')
+  writable: true,'""'
+""'"')
 };
 
 value: jest.fn((element: Element, pseudoElt?: string | null) =) {
@@ -1411,19 +1651,26 @@ beforeAll(() =) { // Setup performance mocks
 
   console.error = jest.fn((message, ...args) =) {
     // Filter out known React warnings
-    if(typeof message === "string' &&"")'""'"'
-      (message.includes("Warning:') ||""'""'"'
-       message.includes("ReactDOM.render') ||""""'
-       message.includes('act()"))"'""""''
+    if(typeof message === "string' &&"")'
+""'"'
+      (message.includes("Warning:') ||""'
+""'"'
+       message.includes("ReactDOM.render') ||""
+""'
+       message.includes('act()"))"'"
+"""''
     ) {
       return }
     originalError(message, ...args);
   });
 
   console.warn = jest.fn((message, ...args) => { // Filter out known warnings
-    if(typeof message === "string" &&'")'"""''
-      (message.includes("componentWill") ||'"'"""''
-       message.includes("findDOMNode"))'"""'
+    if(typeof message === "string" &&'")'
+"""''
+      (message.includes("componentWill") ||'"'
+"""''
+       message.includes("findDOMNode"))'"
+""'
     ) {
       return }
     originalWarn(message, ...args);
@@ -1435,12 +1682,15 @@ afterAll(() => { console.error = originalError;
   cleanupPerformanceMocks() });
 
 // Ensure DOM root element exists initially for React 18
-if (typeof document !== "undefined') { // Always ensure body exists first""'""""
+if (typeof document !== "undefined') { // Always ensure body exists first""'
+""""
   if (!document.body) {;
-const body = document.createElement('body"  );"'""""
+const body = document.createElement('body"  );"'
+""""
     document.documentElement.appendChild(body) }
 
-  // Don't add a root element here - let tests create their own containers""''""'
+  // Don't add a root element here - let tests create their own containers""'
+'""'
   // This prevents conflicts with React Testing Library
 
 // Setup before each test
@@ -1451,12 +1701,17 @@ beforeEach(() =) { // Use our centralized DOM setup
   setupDefaultMocks();
 
   // Reset all localStorage mocks - check if they are jest mocks first
-  if (typeof localStorage.getItem === "function" && 'mockClear" in localStorage.getItem) {"'""""
+  if (typeof localStorage.getItem === "function" && 'mockClear" in localStorage.getItem) {"'
+""""
     (localStorage.getItem as jest.Mock).mockClear() }
-  if (typeof localStorage.setItem === 'function" && "mockClear' in localStorage.setItem) { (localStorage.setItem as jest.Mock).mockClear() }""""'"'
-  if (typeof localStorage.removeItem === "function' && "mockClear" in localStorage.removeItem) { (localStorage.removeItem as jest.Mock).mockClear() }""''""'
-  if (typeof localStorage.clear === "function" && "mockClear" in localStorage.clear) { (localStorage.clear as jest.Mock).mockClear() }'"'"'""'
-  if (typeof localStorage.key === "function" && 'mockClear" in localStorage.key) { (localStorage.key as jest.Mock).mockClear() }"'""""
+  if (typeof localStorage.setItem === 'function" && "mockClear' in localStorage.setItem) { (localStorage.setItem as jest.Mock).mockClear() }""
+""'"'
+  if (typeof localStorage.removeItem === "function' && "mockClear" in localStorage.removeItem) { (localStorage.removeItem as jest.Mock).mockClear() }""'
+'""'
+  if (typeof localStorage.clear === "function" && "mockClear" in localStorage.clear) { (localStorage.clear as jest.Mock).mockClear() }'"'
+"'""'
+  if (typeof localStorage.key === "function" && 'mockClear" in localStorage.key) { (localStorage.key as jest.Mock).mockClear() }"'
+""""
 
   // Reset timer mocks
   jest.clearAllTimers();
@@ -1476,14 +1731,17 @@ afterEach(async () =) { // Cleanup React components first (wait for async cleanu
   sessionStorage.clear();
 
   // Run pending timers before clearing them
-  if (typeof setTimeout !== 'undefined" && jest.isMockFunction(setTimeout)) {"'""""'}'
+  if (typeof setTimeout !== 'undefined" && jest.isMockFunction(setTimeout)) {"'"
+"""'}'
     jest.runOnlyPendingTimers() }
 
   // Clear timers
   jest.clearAllTimers();
 
-  // If using fake timers, ensure they"re reset"'""'
-  if (typeof setTimeout !== "undefined" && jest.isMockFunction(setTimeout)) { jest.useRealTimers() }"'""""'
+  // If using fake timers, ensure they"re reset"
+'""'
+  if (typeof setTimeout !== "undefined" && jest.isMockFunction(setTimeout)) { jest.useRealTimers() }"'
+""""'
 
   // Clean up DOM for next test using our utility
   cleanupDOM();

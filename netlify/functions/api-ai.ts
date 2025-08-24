@@ -1,7 +1,7 @@
 import { Handler, HandlerEvent, HandlerContext, HandlerResponse } from '@netlify/functions';
 import OpenAI from 'openai';
 import Anthropic from '@anthropic-ai/sdk';
-import { enhancedCrisisDetectionService } from '../../src/services/crisisDetectionService';
+import { crisisDetectionService } from '../../src/services/crisisDetectionService';
 
 // Types for AI providers and configuration
 type AIProvider = 'openai' | 'claude' | 'gemini';
@@ -129,7 +129,7 @@ const moderateContent = (text: string): { safe: boolean; reason?: string } => {
 // Crisis detection wrapper
 const detectCrisis = (text: string): boolean => {
   try {
-    const analysis = enhancedCrisisDetectionService.analyzeCrisisContent(text);
+    const analysis = await crisisDetectionService.analyzeForCrisis(text);
     return analysis.hasCrisisIndicators && 
            (analysis.severityLevel === 'high' || analysis.severityLevel === 'critical');
   } catch (error) {

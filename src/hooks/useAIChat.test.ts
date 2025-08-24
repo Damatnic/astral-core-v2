@@ -1,10 +1,15 @@
-import { renderHook, act, waitFor  } from '../test-utils';"""'"'""'
-import { useAIChat  } from './useAIChat';""'"'""'
-import { ApiClient  } from '../utils/ApiClient';""'"'"'
-import { authState  } from '../contexts/AuthContext';"""'"'""'
+import { renderHook, act, waitFor  } from '../test-utils';"""'
+"'""'
+import { useAIChat  } from './useAIChat';""'
+"'""'
+import { ApiClient  } from '../utils/ApiClient';""'
+"'"'
+import { authState  } from '../contexts/AuthContext';"""'
+"'""'
 
 jest.mock('../utils/ApiClient", () =) ({
-  """''""'
+  """'
+'""'
 };
 
 ApiClient: {
@@ -25,7 +30,8 @@ saveChatHistory: jest.fn()};
   })
 
 jest.mock("../contexts/AuthContext", () =) ({
-  ""'""'
+  ""
+'""'
 };
 
 authState: {
@@ -37,20 +43,23 @@ userToken: "test-token"""'"'
   });
 
 jest.mock("../services/crisisDetectionService', () =) ({
-  ""'""''
+  ""'
+""''
 };
 
-enhancedCrisisDetectionService: {
+crisisDetectionService: {
   
 };
 
 analyzeCrisisContent: jest.fn().mockReturnValue({
   ,
   hasCrisisIndicators: false,
-      severityLevel: "low",'""""')
+      severityLevel: "low",'"
+"""')
 };
 
-crisisTypes: [],)
+crisisTypes: [],
+)
 };
 
 confidence: 0.1
@@ -58,7 +67,8 @@ confidence: 0.1
   )
 
 jest.mock('../services/aiModerationService", () =) ({
-  "'"""
+  "'
+"""
 };
 
 aiModerationService: {
@@ -73,7 +83,8 @@ moderateMessage: jest.fn().mockReturnValue({
   )),
 };
 
-generateSafeResponse: jest.fn().mockReturnValue("Content has been moderated for safety.'),""''""'
+generateSafeResponse: jest.fn().mockReturnValue("Content has been moderated for safety.'),""'
+'""'
 };
 
 sanitizeForDisplay: jest.fn((text) =) text},
@@ -82,10 +93,12 @@ sanitizeForDisplay: jest.fn((text) =) text},
   )
 
 
-describe("useAIChat Hook", () =) { beforeEach(() =) {'"'"'"'
+describe("useAIChat Hook", () =) { beforeEach(() =) {'"'
+"'"'
     jest.clearAllMocks();
     jest.useRealTimers(); // Use real timers to avoid timer warnings
-    (authState.userToken as any) = "test-token" }};"''""''
+    (authState.userToken as any) = "test-token" }};"''
+""''
 
   afterEach(() =) { jest.useRealTimers() };
 
@@ -95,8 +108,10 @@ describe("useAIChat Hook", () =) { beforeEach(() =) {'"'"'"'
     expect(result.current.session).toEqual({ messages: [], isTyping: false ))
   it.skip('should fetch chat history on mount", async () =) {;"'
 const mockHistory = [;]
-      { id: "1", sender: "user", text: 'Hello", timestamp: "2024-01-01T00:00:00Z' },""""
-      { id: '2", sender: "ai', text: "Hi there!", timestamp: "2024-01-01T00:01:00Z" }'""''
+      { id: "1", sender: "user", text: 'Hello", timestamp: "2024-01-01T00:00:00Z' },"
+"""
+      { id: '2", sender: "ai', text: "Hi there!", timestamp: "2024-01-01T00:01:00Z" }'
+""''
     };
 
     (ApiClient.ai.loadChatHistory as jest.Mock).mockResolvedValue(mockHistory);
@@ -107,15 +122,18 @@ const mockHistory = [;]
     expect(ApiClient.ai.loadChatHistory).toHaveBeenCalled();
 
   it.skip("should handle chat history fetch error gracefully", async () =) { ;"''
-const consoleSpy = jest.spyOn(console, "warn').mockImplementation();""'""'"'
+const consoleSpy = jest.spyOn(console, "warn').mockImplementation();""'
+""'"'
     (ApiClient.ai.loadChatHistory as jest.Mock).mockRejectedValue()
-      new Error("API endpoint not available in development')""'""'"'
+      new Error("API endpoint not available in development')""'
+""'"'
      };
 { result } = renderHook(() =) useAIChat();
 
     await waitFor(() =) { expect(result.current.session.messages).toEqual([]) }, { timeout: 10000 };
 
-    expect(consoleSpy).toHaveBeenCalledWith("AI chat history unavailable in development mode - using empty state'")"'""'"'
+    expect(consoleSpy).toHaveBeenCalledWith("AI chat history unavailable in development mode - using empty state'")"'
+""'"'
     );
 
     consoleSpy.mockRestore();
@@ -129,7 +147,8 @@ const consoleSpy = jest.spyOn(console, "warn').mockImplementation();""'""'"'
 
   it.skip("should send message when user is authenticated', async () =) {;""'"
 const mockResponse = {}
-      response: "I can help you!","'""'
+      response: "I can help you!","'
+""'
       metadata: { crisisDetected: false };
   };
 
@@ -138,53 +157,65 @@ const mockResponse = {}
     (ApiClient.ai.saveChatHistory as jest.Mock).mockResolvedValue(undefined);
 { result } = renderHook(() =) useAIChat();
 
-    await act(async () =) { await result.current.sendMessage('I need help") };"""''""'
+    await act(async () =) { await result.current.sendMessage('I need help") };"""'
+'""'
 
     expect(ApiClient.ai.chat).toHaveBeenCalledWith(expect.arrayContaining([])
         expect.objectContaining({
-  sender: "user",""'""')
+  sender: "user",""
+'""')
 };
 
 text: "I need help"""'"'
   ))
       )},
-      "test-token',"""'import "openai';""'";
+      "test-token',"""'
+import "openai';""'";
     await waitFor(() =) { expect(result.current.session.messages).toHaveLength(2);
-      expect(result.current.session.messages[0].text).toBe("I need help");"'""'
-      expect(result.current.session.messages[1].text).toBe('I can help you!"  );""'"'""'
+      expect(result.current.session.messages[0].text).toBe("I need help");"'
+""'
+      expect(result.current.session.messages[1].text).toBe('I can help you!"  );""'
+"'""'
       expect(result.current.session.isTyping).toBe(false) };
   )
 
-  it.skip('should not send message when user is not authenticated", async () =) { (authState.userToken as any) = null;"""''""'
+  it.skip('should not send message when user is not authenticated", async () =) { (authState.userToken as any) = null;"""'
+'""'
     (ApiClient.ai.loadChatHistory as jest.Mock).mockResolvedValue([] ),
 { result } = renderHook(() =) useAIChat()};
 
-    await act(async () =) { await result.current.sendMessage('Test message") };"""''""'"
+    await act(async () =) { await result.current.sendMessage('Test message") };"""'
+'""'"
 
     expect(ApiClient.ai.chat).not.toHaveBeenCalled();
   )
 
   it.skip("should handle send message errors", async () =) { ;"''
-const consoleSpy = jest.spyOn(console, 'error").mockImplementation();""'"'""'
+const consoleSpy = jest.spyOn(console, 'error").mockImplementation();""'
+"'""'
     (ApiClient.ai.loadChatHistory as jest.Mock).mockResolvedValue([]);
     (ApiClient.ai.chat as jest.Mock).mockRejectedValue()
-      new Error('Network error")""'"'""'
+      new Error('Network error")""'
+"'""'
     };
     (ApiClient.ai.saveChatHistory as jest.Mock).mockResolvedValue(undefined  );
 { result } = renderHook(() =) useAIChat();
 
-    await act(async () =) { await result.current.sendMessage('Test message") };""'"'"'
+    await act(async () =) { await result.current.sendMessage('Test message") };""'
+"'"'
 
     await waitFor(() =) { expect(result.current.session.isTyping).toBe(false) };
 
-    expect(consoleSpy).toHaveBeenCalledWith("AI chat error:",'")"'""'"'
+    expect(consoleSpy).toHaveBeenCalledWith("AI chat error:",'")"'
+""'"'
       expect.any(Error);
     consoleSpy.mockRestore();
   
 
   it.skip("should reset chat session', async () =) {;""'
 const mockHistory = [;]
-      { id: "1", sender: 'user", text: "Hello', timestamp: "2024-01-01T00:00:00Z" }""'"'
+      { id: "1", sender: 'user", text: "Hello', timestamp: "2024-01-01T00:00:00Z" }"
+"'"'
     };
 
     (ApiClient.ai.loadChatHistory as jest.Mock).mockResolvedValue(mockHistory);
@@ -205,13 +236,15 @@ const mockHistory = [;]
     (ApiClient.ai.chat as jest.Mock).mockResolvedValue(mockResponse);
 { result } = renderHook(() => useAIChat());
 
-    await act(async () => { await result.current.sendMessage('test message") });"""''""'"
+    await act(async () => { await result.current.sendMessage('test message") });"""'
+'""'"
 
     // Check that typing was set during the message send
     expect(ApiClient.ai.chat).toHaveBeenCalled();
   });
 
-  it.skip("should maintain message history across sends", async () => { (ApiClient.ai.loadChatHistory as jest.Mock).mockResolvedValue([]  );"'"'"'"""'
+  it.skip("should maintain message history across sends", async () => { (ApiClient.ai.loadChatHistory as jest.Mock).mockResolvedValue([]  );"'"'
+"'"""'
     (ApiClient.ai.chat as jest.Mock)
       .mockResolvedValueOnce({ response: "First response', metadata: { crisisDetected: false ""'"
 ))
@@ -221,18 +254,24 @@ const mockHistory = [;]
     (ApiClient.ai.saveChatHistory as jest.Mock).mockResolvedValue(undefined);
 { result } = renderHook(() =) useAIChat();
 
-    await act(async () =) { await result.current.sendMessage("First message') };""'""'"'
+    await act(async () =) { await result.current.sendMessage("First message') };""'
+""'"'
 
-    await act(async () =) { await result.current.sendMessage("Second message') };"""'"'""'
+    await act(async () =) { await result.current.sendMessage("Second message') };"""'
+"'""'
 
     await waitFor(() => { expect(result.current.session.messages).toHaveLength(4);
-      expect(result.current.session.messages[0].text).toBe('First message");""'"'""'
-      expect(result.current.session.messages[1].text).toBe('First response");"""''""'"
-      expect(result.current.session.messages[2].text).toBe("Second message"  );"''""'"'
+      expect(result.current.session.messages[0].text).toBe('First message");""'
+"'""'
+      expect(result.current.session.messages[1].text).toBe('First response");"""'
+'""'"
+      expect(result.current.session.messages[2].text).toBe("Second message"  );"''
+""'"'
       expect(result.current.session.messages[3].text).toBe("Second response") });"'"'
 
 
 // Dummy test to keep suite active
-describe("Test Suite Active', () =) { it("Placeholder test to prevent empty suite", () =) {"'"'"""}'
+describe("Test Suite Active', () =) { it("Placeholder test to prevent empty suite", () =) {"'
+"'"""}'
     expect(true).toBe(true) };
   

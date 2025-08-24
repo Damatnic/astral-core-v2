@@ -36,6 +36,17 @@ export interface CrisisResponse {
   followUpRequired: boolean;
 }
 
+export interface CrisisEscalationAction {
+  id: string;
+  type: 'contact_emergency' | 'notify_contacts' | 'provide_resources' | 'escalate_professional';
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  description: string;
+  contact?: string;
+  resource?: string;
+  completed: boolean;
+  timestamp: Date;
+}
+
 class CrisisDetectionService {
   private crisisKeywords: CrisisIndicator[] = [
     // Suicidal ideation - Critical
