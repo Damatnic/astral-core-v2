@@ -1,429 +1,447 @@
-import React, { useState(, useEffect, useRef ) from 'react';""""'
-import { HeartIcon, SparkleIcon, BookIcon, PlayIcon, PauseIcon   } from '../components/icons.dynamic';""'
-import { AppButton  } from '../components/AppButton';""''
-import { Card  } from '../components/Card';''"
-import { CalmingBackground  } from '../components/CalmingBackground';"'""'
-import { MeditationTimer  } from '../components/MeditationTimer';"""'
-import { BreathingWidget  } from '../components/BreathingWidget';"'"
-import "./QuietSpaceView.css";"'""'
-const BreathingPattern = {}
-    name: string;,
-  description: string;,
-  phases: Array<{phase: 'inhale" | "hold" | "exhale' | "pause", duration: number, text: string}>;'
+import React, { useState, useEffect, useRef } from 'react';
+import { HeartIcon, SparkleIcon, BookIcon, PlayIcon, PauseIcon } from '../components/icons.dynamic';
+import { AppButton } from '../components/AppButton';
+import { Card } from '../components/Card';
+import { useNotification } from '../contexts/NotificationContext';
+
+interface BreathingPattern {
+  name: string;
+  description: string;
+  phases: Array<{
+    phase: 'inhale' | 'hold' | 'exhale' | 'pause';
+    duration: number;
+    text: string;
+  }>;
+}
+
+interface MeditationSession {
+  id: string;
+  title: string;
+  description: string;
+  duration: number;
+  audioUrl?: string;
+  category: 'breathing' | 'mindfulness' | 'body-scan' | 'loving-kindness';
+}
+
+const QuietSpaceView: React.FC = () => {
+  const [activeSection, setActiveSection] = useState<'breathing' | 'meditation' | 'sounds'>('breathing');
+  const [selectedPattern, setSelectedPattern] = useState<BreathingPattern | null>(null);
+  const [selectedMeditation, setSelectedMeditation] = useState<MeditationSession | null>(null);
+  const [isBreathingActive, setIsBreathingActive] = useState(false);
+  const [isMeditationPlaying, setIsMeditationPlaying] = useState(false);
+  const [breathingPhase, setBreathingPhase] = useState(0);
+  const [breathingCycle, setBreathingCycle] = useState(0);
+  const [meditationTime, setMeditationTime] = useState(0);
+  const [selectedDuration, setSelectedDuration] = useState(5);
+  
+  const breathingTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const meditationTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  
+  const { showNotification } = useNotification();
+
+  const breathingPatterns: BreathingPattern[] = [
+    {
+      name: '4-7-8 Breathing',
+      description: 'Calming technique for anxiety and sleep',
+      phases: [
+        { phase: 'inhale', duration: 4000, text: 'Breathe in slowly through your nose' },
+        { phase: 'hold', duration: 7000, text: 'Hold your breath gently' },
+        { phase: 'exhale', duration: 8000, text: 'Exhale slowly through your mouth' },
+        { phase: 'pause', duration: 2000, text: 'Rest and prepare for the next breath' }
+      ]
+    },
+    {
+      name: 'Box Breathing',
+      description: 'Equal timing for focus and balance',
+      phases: [
+        { phase: 'inhale', duration: 4000, text: 'Breathe in for 4 counts' },
+        { phase: 'hold', duration: 4000, text: 'Hold for 4 counts' },
+        { phase: 'exhale', duration: 4000, text: 'Breathe out for 4 counts' },
+        { phase: 'hold', duration: 4000, text: 'Hold empty for 4 counts' }
+      ]
+    },
+    {
+      name: 'Coherent Breathing',
+      description: 'Simple 5-second rhythm for relaxation',
+      phases: [
+        { phase: 'inhale', duration: 5000, text: 'Breathe in slowly and deeply' },
+        { phase: 'exhale', duration: 5000, text: 'Breathe out slowly and completely' }
+      ]
+    }
+  ];
+
+  const meditationSessions: MeditationSession[] = [
+    {
+      id: '1',
+      title: 'Mindful Breathing',
+      description: 'Focus on your breath to center your mind',
+      duration: 300, // 5 minutes
+      category: 'breathing'
+    },
+    {
+      id: '2',
+      title: 'Body Scan Relaxation',
+      description: 'Progressive relaxation through body awareness',
+      duration: 600, // 10 minutes
+      category: 'body-scan'
+    },
+    {
+      id: '3',
+      title: 'Loving-Kindness Meditation',
+      description: 'Cultivate compassion for yourself and others',
+      duration: 900, // 15 minutes
+      category: 'loving-kindness'
+    },
+    {
+      id: '4',
+      title: 'Present Moment Awareness',
+      description: 'Simple mindfulness practice for beginners',
+      duration: 180, // 3 minutes
+      category: 'mindfulness'
+    }
+  ];
+
+  useEffect(() => {
+    return () => {
+      if (breathingTimerRef.current) {
+        clearTimeout(breathingTimerRef.current);
+      }
+      if (meditationTimerRef.current) {
+        clearInterval(meditationTimerRef.current);
+      }
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    };
+  }, []);
+
+  const startBreathingExercise = (pattern: BreathingPattern) => {
+    setSelectedPattern(pattern);
+    setIsBreathingActive(true);
+    setBreathingPhase(0);
+    setBreathingCycle(0);
+    runBreathingCycle(pattern, 0);
   };
-breathingPatterns: BreathingPattern[] = []
-    {
-  name: "4-7-8 Breathing",""''
-};
 
-description: "Calming technique for anxiety and sleep",'"""'
-};
+  const runBreathingCycle = (pattern: BreathingPattern, phaseIndex: number) => {
+    if (!isBreathingActive) return;
 
-phases: [
-            { phase: "inhale', duration: 4000, text: "Inhale... 4" },'"
-            { phase: "hold", duration: 7000, text: "Hold... 7' },"'
-            { phase: "exhale', duration: 8000, text: "Exhale... 8" },""'
-            { phase: 'pause", duration: 2000, text: "Rest' }""
-        };
-  ,
-    {
-  name: "Box Breathing",'"'
-};
+    const currentPhase = pattern.phases[phaseIndex];
+    setBreathingPhase(phaseIndex);
 
-description: "Navy SEAL technique for focus and calm',""'"
-};
-
-phases: [
-            { phase: "inhale', duration: 4000, text: "Inhale... 4" },""'
-            { phase: 'hold", duration: 4000, text: "Hold... 4' },""
-            { phase: "exhale", duration: 4000, text: 'Exhale... 4" },"'
-            { phase: "pause", duration: 4000, text: "Hold... 4" }''
-        ];
-  },
-    {
-  name: "Coherent Breathing",'""'
-};
-
-description: "Balance your nervous system",'""'
-};
-
-phases: [
-            { phase: "inhale", duration: 5000, text: 'Inhale... 5" },"'
-            { phase: "exhale", duration: 5000, text: "Exhale... 5" }''
-        ];
-
-];
-const stressReliefResources = [;]
-    {
-  title: "Headspace",""''
-        description: "Guided meditation and mindfulness",'"""'
-};
-
-url: "https://www.headspace.com',""'
-};
-
-icon: '🧘""""'
-  },
-    {
-  title: 'Calm","'""
-        description: 'Sleep stories and relaxation","'"
-};
-
-url: "https://www.calm.com","''
-};
-
-icon: "😴"'""'
-  },
-    {
-  title: "Insight Timer",'""'
-        description: "Free meditation community",'""'
-};
-
-url: "https://insighttimer.com",""
-};
-
-icon: '⏰""'"
-  },
-    {
-  title: "Progressive Muscle Relaxation","''"
-        description: "Physical tension release technique","'"'
-};
-
-url: "https://www.healthline.com/health/progressive-muscle-relaxation',""'
-};
-
-icon: "💪"''""
-  },
-    {
-  title: "7 Cups",'""'
-        description: 'Anonymous emotional support","""'
-};
-
-url: "https://www.7cups.com",'"'
-};
-
-icon: "☕""'"'
-  },
-    {
-  title: "Nature Sounds',""'"
-        description: "Calming ambient sounds',"""'
-};
-
-url: "https://www.noisli.com',""'
-};
-
-icon: '🌿"""'"
-
- const QuietSpaceView: React.FC = () = { const [isPlaying, setIsPlaying] = useState(false) }
-    const [selectedPattern, setSelectedPattern] = useState(0);
-    const [showChimes, setShowChimes] = useState(true);
-const chimeRef = useRef<HTMLAudioElement | null>(null);
-    const [breathingPhase, setBreathingPhase] = useState<'inhale" | "hold" | "exhale' | "pause">('pause");"
-    const [breathingText, setBreathingText] = useState("Begin");'"'
-    const [phaseProgress, setPhaseProgress] = useState(0);
-    const intervalRef = useRef<number | null>(null);
-    const phaseTimeoutRef = useRef<number | null>(null);
-    const [backgroundTheme, setBackgroundTheme] = useState<"ocean' | "forest" | "sky" | 'aurora">("ocean');""
-    const [showMeditation, setShowMeditation] = useState(false);
-
-    // Initialize Audio on mount
-    useEffect(() =) {
-        // Create chime sound using Web Audio API
-        if (!chimeRef.current && typeof AudioContext !== "undefined") {'""'
-            const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-
-            // Create a simple chime sound
-            const createChime = () =} {
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-
-                oscillator.frequency.value = 800;
-                oscillator.type = 'sine";""'
-
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-
-                oscillator.start(audioContext.currentTime );
-                oscillator.stop(audioContext.currentTime + 0.5 );
-
-            // Store the function to create chimes
-            (window as any).playChime = createChime;
-
-        // Cleanup on unmount
-        return () =} { if (intervalRef.current) {
-                clearInterval(intervalRef.current) }
-            if (phaseTimeoutRef.current) { clearTimeout(phaseTimeoutRef.current) }}, [];
-const toggleBreathing = () = { if (isPlaying) {}
-            stopBreathing() } else { startBreathingCycle() }
-        setIsPlaying(!isPlaying);
+    breathingTimerRef.current = setTimeout(() => {
+      const nextPhaseIndex = (phaseIndex + 1) % pattern.phases.length;
+      
+      if (nextPhaseIndex === 0) {
+        setBreathingCycle(prev => prev + 1);
+      }
+      
+      runBreathingCycle(pattern, nextPhaseIndex);
+    }, currentPhase.duration);
   };
-const stopBreathing = () = { if (intervalRef.current) clearInterval(intervalRef.current) }
-        if (phaseTimeoutRef.current) clearTimeout(phaseTimeoutRef.current);
-        setBreathingPhase("pause');"'""
-        setBreathingText("Begin'  );""'
-        setPhaseProgress(0);
-const startBreathingCycle = () = { const pattern = breathingPatterns[selectedPattern] }
-        let currentPhaseIndex = 0;
-const runPhase = () = {}
-            const currentPhase = pattern.phases[currentPhaseIndex];
-            setBreathingPhase(currentPhase.phase);
-            setBreathingText(currentPhase.text );
-            setPhaseProgress(0 ),
 
-            // Play chime at the start of each phase if enabled
-            if (showChimes && (window as any).playChime) {
-                (window as any).playChime() }
+  const stopBreathingExercise = () => {
+    setIsBreathingActive(false);
+    setSelectedPattern(null);
+    if (breathingTimerRef.current) {
+      clearTimeout(breathingTimerRef.current);
+    }
+  };
 
-            // Animate progress
-            let progress = 0;
-            const progressInterval = 50; // Update every 50ms
-            const steps = currentPhase.duration / progressInterval;
-            const increment = 100 / steps;
+  const startMeditation = (session: MeditationSession) => {
+    setSelectedMeditation(session);
+    setIsMeditationPlaying(true);
+    setMeditationTime(0);
+    
+    meditationTimerRef.current = setInterval(() => {
+      setMeditationTime(prev => {
+        if (prev >= session.duration) {
+          stopMeditation();
+          showNotification('success', 'Meditation session completed!');
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, 1000);
 
-            intervalRef.current = window.setInterval(() =) { progress += increment;
-                setPhaseProgress(Math.min(progress, 100),
+    if (session.audioUrl && audioRef.current) {
+      audioRef.current.src = session.audioUrl;
+      audioRef.current.play().catch(console.error);
+    }
+  };
 
-                if (progress )= 100) {
-                    clearInterval(intervalRef.current!) }, progressInterval};
+  const stopMeditation = () => {
+    setIsMeditationPlaying(false);
+    setSelectedMeditation(null);
+    setMeditationTime(0);
+    
+    if (meditationTimerRef.current) {
+      clearInterval(meditationTimerRef.current);
+    }
+    
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+  };
 
-            // Move to next phase
-            phaseTimeoutRef.current = window.setTimeout(() =) { currentPhaseIndex = (currentPhaseIndex + 1) % pattern.phases.length,
-                runPhase() }, currentPhase.duration};
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
-        runPhase();
-    return(<div className="quiet-space-container">"")
-            {/* Calming animated background */}
-            <CalmingBackground theme={backgroundTheme} intensity={0.3}     />
+  const getBreathingInstructions = (): string => {
+    if (!selectedPattern || !isBreathingActive) return 'Select a breathing pattern to begin';
+    return selectedPattern.phases[breathingPhase]?.text || '';
+  };
 
-            <div className='view-header">"'""
-                <h1>Astral Quiet Space</h1>
-                <p className='view-subheader">Your sanctuary for calm and mindfulness</p>"'
+  const getBreathingPhaseColor = (): string => {
+    if (!selectedPattern || !isBreathingActive) return '#e5e7eb';
+    
+    const phase = selectedPattern.phases[breathingPhase]?.phase;
+    switch (phase) {
+      case 'inhale': return '#10b981';
+      case 'hold': return '#3b82f6';
+      case 'exhale': return '#f59e0b';
+      case 'pause': return '#8b5cf6';
+      default: return '#e5e7eb';
+    }
+  };
 
-                {/* Theme Selector */}
-                <div className="theme-selector" style= {""}'"'
-  {
-  display: "flex',"""'
-                    alignItems: "center',""'
-                    gap: '1rem",""'"
-};
+  return (
+    <div className="quiet-space-view">
+      <div className="quiet-space-header">
+        <h1>
+          <SparkleIcon />
+          Quiet Space
+        </h1>
+        <p>Find peace and calm through guided breathing, meditation, and soothing sounds</p>
+      </div>
 
-justifyContent: 'center","""'
-};
+      <div className="space-navigation">
+        <button
+          className={`nav-button ${activeSection === 'breathing' ? 'active' : ''}`}
+          onClick={() => setActiveSection('breathing')}
+        >
+          <HeartIcon />
+          <span>Breathing</span>
+        </button>
+        <button
+          className={`nav-button ${activeSection === 'meditation' ? 'active' : ''}`}
+          onClick={() => setActiveSection('meditation')}
+        >
+          <BookIcon />
+          <span>Meditation</span>
+        </button>
+        <button
+          className={`nav-button ${activeSection === 'sounds' ? 'active' : ''}`}
+          onClick={() => setActiveSection('sounds')}
+        >
+          <PlayIcon />
+          <span>Calming Sounds</span>
+        </button>
+      </div>
 
-marginTop: '1rem""'""
-
-                    <span style= {}
-  { color: "#7f8c8d", fontSize: '0.9rem" "'
-})Ambiance:</span
-                    <div style= {}
-  { display: "flex", gap: "0.5rem" ''
->
-                        {[
-                            { theme: "ocean", emoji: '🌊", title: "Ocean waves" },"'
-                            { theme: "forest", emoji: '🌲", title: "Forest" },"'
-                            { theme: "sky", emoji: '☁️", title: "Sky" },"'
-                            { theme: "aurora", emoji: '🌌", title: "Aurora" }"'
-                        ].map(({
-  theme, emoji, title )) =) (}
-    <button
-};
-
-key={theme}
-                                className={`theme-btn ${backgroundTheme === theme ? active: ""}`}'""'
-                                onClick={() =} setBackgroundTheme(theme as "ocean" | 'forest" | "sky' | "aurora")}"
-                                title={title}
-                                style= {}
-  {
-  width: "40px',""'
-                                    height: "40px",""'"'
-                                    borderRadius: "50%',""'
-                                    border: backgroundTheme === theme ? "2px solid #667eea" : '2px solid transparent","'
-                                    background: backgroundTheme === theme ? white: "rgba(255, 255, 255, 0.8)",""
-                                    cursor: 'pointer","'"
-                                    fontSize: "1.25rem","''
-                                    display: "flex",'""'
-                                    alignItems: "center",'""'
-                                    justifyContent: "center",'""'
-};
-
-boxShadow: backgroundTheme === theme ? "0 4px 12px rgba(102, 126, 234, 0.3)" : "none",'"'
-};
-
-transition: "all 0.3s ease'""'
-}>
-                                {emoji}
-                            </button>
-                        ))}
-                    </div>
+      <div className="space-content">
+        {activeSection === 'breathing' && (
+          <div className="breathing-section">
+            {!isBreathingActive ? (
+              <div className="breathing-patterns">
+                <h2>Choose a Breathing Pattern</h2>
+                <div className="patterns-grid">
+                  {breathingPatterns.map((pattern, index) => (
+                    <Card key={index} className="pattern-card">
+                      <div className="pattern-info">
+                        <h3>{pattern.name}</h3>
+                        <p>{pattern.description}</p>
+                        <div className="pattern-phases">
+                          {pattern.phases.map((phase, phaseIndex) => (
+                            <span key={phaseIndex} className={`phase-indicator ${phase.phase}`}>
+                              {phase.phase}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <AppButton
+                        onClick={() => startBreathingExercise(pattern)}
+                        className="start-pattern-btn"
+                      >
+                        Start
+                      </AppButton>
+                    </Card>
+                  ))}
                 </div>
-            </div>
-
-            {/* Meditation Timer */}
-            {showMeditation && (}
-    <MeditationTimer onComplete={() => setShowMeditation(false)} />
+              </div>
+            ) : (
+              <div className="breathing-exercise">
+                <div className="breathing-visual">
+                  <div 
+                    className="breathing-circle"
+                    style={{ 
+                      backgroundColor: getBreathingPhaseColor(),
+                      transform: breathingPhase % 2 === 0 ? 'scale(1.2)' : 'scale(0.8)',
+                      transition: `transform ${selectedPattern?.phases[breathingPhase]?.duration || 1000}ms ease-in-out`
+                    }}
+                  />
+                </div>
+                
+                <div className="breathing-info">
+                  <h2>{selectedPattern?.name}</h2>
+                  <div className="breathing-instructions">
+                    {getBreathingInstructions()}
+                  </div>
+                  <div className="breathing-stats">
+                    <span>Cycle: {breathingCycle + 1}</span>
+                    <span>Phase: {selectedPattern?.phases[breathingPhase]?.phase}</span>
+                  </div>
+                </div>
+                
+                <AppButton
+                  variant="secondary"
+                  onClick={stopBreathingExercise}
+                  className="stop-breathing-btn"
+                >
+                  Stop Exercise
+                </AppButton>
+              </div>
             )}
+          </div>
+        )}
 
-            {/* Toggle for meditation timer */}
-            <div style= {}
-  { textAlign: "center", marginBottom: '2rem" '"
-}>
-                <button
-                    onClick={() =} setShowMeditation(!showMeditation)>
-                    style= {}
-  {
-  padding: "0.75rem 1.5rem",'""'
-                        background: 'linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%)",""'"
-                        color: 'white","""'
-                        border: 'none","'
-                        borderRadius: "25px",""''
-                        cursor: "pointer",""''
-                        fontSize: "1rem",'"""'
-};
-
-fontWeight: "500',""'
-};
-
-transition: 'all 0.3s ease""""'
-})
-                    {showMeditation ? '🧘 Hide Meditation Timer" : "🧘 Open Meditation Timer'}""
-                </button}
-            </div}
-
-            {/* Enhanced Breathing Widget */}
-            <div style= {}
-  { marginBottom: "2rem" '""'
-}>
-                <BreathingWidget     />
-            </div>
-
-            {/* Breathing Exercise Section */}
-            <Card className="breathing-section">"''
-                <h2 className="section-title'>"""'
-                    <SparkleIcon     />
-                    <span>Breathing Exercises</span>
-                </h2}
-
-                {/* Pattern Selection */}
-                <div className="breathing-patterns'>""'"
-                    {
-  breathingPatterns.map((pattern, index) =) (}
-    <button
-};
-
-key={index}
-                            className={`pattern-card ${selectedPattern === index ? active: ""}`}"'"'
-                            onClick={ () =} {
-                                setSelectedPattern(index ),
-                                if (isPlaying) {
-                                    stopBreathing() }
-                                // Add visual feedback for pattern change
-                                const allCards = document.querySelectorAll(".pattern-card');""'
-                                allCards.forEach(card => card.classList.add("transitioning"));''""
-                                setTimeout(() =) { allCards.forEach(card =) card.classList.remove("transitioning")} }, 300};'""'
-  }}
-                        >
-                            <h3>{pattern.name}</h3>
-                            <p>{pattern.description}</p>
-                        </button>
-                    ))}
+        {activeSection === 'meditation' && (
+          <div className="meditation-section">
+            {!isMeditationPlaying ? (
+              <div className="meditation-library">
+                <h2>Guided Meditations</h2>
+                <div className="meditations-grid">
+                  {meditationSessions.map(session => (
+                    <Card key={session.id} className="meditation-card">
+                      <div className="meditation-info">
+                        <h3>{session.title}</h3>
+                        <p>{session.description}</p>
+                        <div className="meditation-meta">
+                          <span className="duration">{formatTime(session.duration)}</span>
+                          <span className={`category ${session.category}`}>
+                            {session.category.replace('-', ' ')}
+                          </span>
+                        </div>
+                      </div>
+                      <AppButton
+                        onClick={() => startMeditation(session)}
+                        className="start-meditation-btn"
+                      >
+                        <PlayIcon />
+                        Start
+                      </AppButton>
+                    </Card>
+                  ))}
                 </div>
-
-                {/* Breathing Circle */}
-                <div className="breathing-circle-container">""
-                    <div className={`breathing-circle ${breathingPhase}`}>
-                        <div className='breathing-text">{breathingText}</div>"'
-                        <div className='phase-progress" style= {{""}'
-                            width: `${phaseProgress}%`,
-                            transition: "width 0.1s linear'"'""
-  }>  /
-                    </div
-                </div
-
-                <p className="quiet-space-instructions'>""'
-                    {isPlaying
-                        ? `Following ${breathingPatterns[selectedPattern].name} pattern`
-                        : "Select a pattern and press start to begin"}""''
-                </p>
-
-                {/* Controls */}
-                <div className="breathing-controls">""''
-                    <AppButton className="quiet-space-button" '"'
-                        onClick={toggleBreathing}
-                        variant="primary""'""'
-                    >
-                        {isPlaying ? <PauseIcon     /> : <PlayIcon     />}
-                        <span>{isPlaying ? Stop: 'Start"} Breathing</span>"'
-                    </AppButton>
-
-                    <label className="chime-toggle">'"'
-                        <input type="checkbox' ""'
-                            checked={showChimes}
-                            onChange={(e) =} setShowChimes(e.target.checked)>
+              </div>
+            ) : (
+              <div className="meditation-player">
+                <div className="meditation-visual">
+                  <div className="meditation-circle">
+                    <div className="progress-ring">
+                      <svg width="200" height="200">
+                        <circle
+                          cx="100"
+                          cy="100"
+                          r="90"
+                          fill="none"
+                          stroke="#e5e7eb"
+                          strokeWidth="8"
                         />
-                        <span>Play chimes</span>
-                    </label)
-                </div}
-            </Card
+                        <circle
+                          cx="100"
+                          cy="100"
+                          r="90"
+                          fill="none"
+                          stroke="#10b981"
+                          strokeWidth="8"
+                          strokeDasharray={`${2 * Math.PI * 90}`}
+                          strokeDashoffset={`${2 * Math.PI * 90 * (1 - meditationTime / (selectedMeditation?.duration || 1))}`}
+                          transform="rotate(-90 100 100)"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="meditation-info">
+                  <h2>{selectedMeditation?.title}</h2>
+                  <div className="meditation-timer">
+                    <div className="time-display">
+                      {formatTime(meditationTime)} / {formatTime(selectedMeditation?.duration || 0)}
+                    </div>
+                    <div className="time-remaining">
+                      {formatTime((selectedMeditation?.duration || 0) - meditationTime)} remaining
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="meditation-controls">
+                  <AppButton
+                    variant="secondary"
+                    onClick={stopMeditation}
+                  >
+                    <PauseIcon />
+                    Stop
+                  </AppButton>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
-            {/* Stress Relief Resources */}
-            <Card className="resources-section">""''
-                <h2 className="section-title">"''
-                    <HeartIcon     />
-                    <span>Stress Relief Resources</span>
-                </h2>
-                <p className="section-description'>""'
-                    Explore these helpful tools and communities for additional support
-                </p>
+        {activeSection === 'sounds' && (
+          <div className="sounds-section">
+            <h2>Calming Sounds</h2>
+            <div className="sounds-grid">
+              <Card className="sound-card">
+                <h3>Rain Sounds</h3>
+                <p>Gentle rainfall for relaxation</p>
+                <AppButton>
+                  <PlayIcon />
+                  Play
+                </AppButton>
+              </Card>
+              
+              <Card className="sound-card">
+                <h3>Ocean Waves</h3>
+                <p>Peaceful ocean sounds</p>
+                <AppButton>
+                  <PlayIcon />
+                  Play
+                </AppButton>
+              </Card>
+              
+              <Card className="sound-card">
+                <h3>Forest Ambience</h3>
+                <p>Birds and nature sounds</p>
+                <AppButton>
+                  <PlayIcon />
+                  Play
+                </AppButton>
+              </Card>
+              
+              <Card className="sound-card">
+                <h3>White Noise</h3>
+                <p>Consistent background sound</p>
+                <AppButton>
+                  <PlayIcon />
+                  Play
+                </AppButton>
+              </Card>
+            </div>
+          </div>
+        )}
+      </div>
 
-                <div className="resource-grid">'"'
-                    {
-  stressReliefResources.map((resource, index) => (}
-    <a
+      <audio ref={audioRef} />
+    </div>
+  );
 };
 
-key={index}
-                            href={resource.url}
-                            target="_blank'""'"
-                            rel="noopener noreferrer';""""'
-                            className='resource-card""'
-                        
-                            <span className="resource-icon">{resource.icon}</span""''
-                            <div className="resource-info">'"""'
-                                <h3>{resource.title}</h3
-                                <p>{resource.description}</p
-                            </div
-                            <span className="resource-arrow'>→</span""'
-                        </a>
-                    )}>
-                </div)
-            </Card}
-
-            {/* Additional Resources */}
-            <Card className='additional-section">"""'
-                <h2 className='section-title">"'""
-                    <BookIcon     />
-                    <span>Learn More</span>
-                </h2>
-                <div className="learn-more-buttons">''
-                    <AppButton variant="secondary" ""''
-                        onClick={() => window.open("https://www.healthline.com/health/breathing-exercises-for-anxiety", "_blank")}'"'
-                    
-                        Breathing Techniques Guide
-                    </AppButton
-                    <AppButton variant="secondary' ""'
-                        onClick={() =} window.open("https://www.mindful.org/meditation/mindfulness-getting-started/", '_blank")>"'
-                    
-                        Mindfulness for Beginners
-                    </AppButton
-                    <AppButton variant="secondary" ""'"'
-                        onClick={() =} window.open('https://www.sleepfoundation.org/sleep-hygiene", "_blank")>'"
-                    
-                        Better Sleep Tips
-                    </AppButton
-                </div
-            </Card
-        </div;
 export default QuietSpaceView;
