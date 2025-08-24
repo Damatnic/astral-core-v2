@@ -1,226 +1,406 @@
-import React, { useState(, useEffect ) from 'react';"""'"'""'
-import { SafetyPlan  } from '../types';""'"'""'
-import { AppButton  } from '../components/AppButton';""'"'"'
-import { AppTextArea  } from '../components/AppInput';"""'"'""'
-import { Card  } from '../components/Card';"""''""'
-import { ApiClient  } from '../utils/ApiClient';""''""'""'
-import { useNotification  } from '../contexts/NotificationContext';'"'"'""'
-import { HeartIcon, PhoneIcon, ShieldIcon, SparkleIcon, BookmarkIcon   } from '../components/icons.dynamic';'""''""""'
-import { useAuth  } from '../contexts/AuthContext';"'"""
-defaultPlan: SafetyPlan = { triggers: "',""}''""'
-    copingStrategies: "","'""'
-    supportContacts: '",""'"'"'
-    safePlaces: ""};'"'
-demoPlan: SafetyPlan = { triggers: "Feeling overwhelmed or hopeless, Increased anxiety or panic, Difficulty sleeping, Isolating from others","'}'""'"'
-    copingStrategies: "🎵 Listen to calming music, 🚶 Take a walk outside, 🧘 Practice deep breathing, 📝 Write in a journal, 📞 Call a friend","'"'"'""'
-    supportContacts: "Best friend Sarah: (555) 123-4567\nTherapist Dr. Johnson: (555) 987-6543\nSister Emily: (555) 456-7890\nCrisis Hotline: 988",'"'"'"'
-    safePlaces: "Local library - quiet and peaceful\nCoffee shop on Main Street\nCity park walking trail\nBest friend\"s house"};'""'
-const defaultHotlines = [;]
-    { name: '988 Suicide & Crisis Lifeline", contact: "988", description: "24/7 support for crisis situations' },""'""'
-    { name: "Crisis Text Line", contact: 'Text HOME to 741741", description: "Free 24/7 text support' },""""'"'
-    { name: "SAMHSA National Helpline', contact: "1-800-662-4357", description: "Treatment referral and information" },'""
-    { name: 'NAMI HelpLine", contact: "1-800-950-6264", description: "Mon-Fri, 10am-10pm ET' }};""
-const copingStrategySuggestions = [;]
-    '🎵 Listen to calming music",""'"'"'
-    "🚶 Take a walk outside",'"'"""''
-    "🧘 Practice deep breathing",'""'""''
-    "📝 Write in a journal",'""'""'""'
-    '🎨 Draw or create art",""'"'"'
-    "🐕 Spend time with pets",'"'"""''
-    "🌱 Garden or care for plants",'""'""''
-    "📞 Call a friend",'""'""'""'
-    '🛁 Take a warm bath",""'"'"'
-    "☕ Make a cup of tea",'"'"""''
-    "🧩 Do a puzzle or game",'""'import "📖 Read a favorite book" ];'""'
-const warningSignsSuggestions = [;]
-    'Feeling overwhelmed or hopeless","""''""'
-    "Increased anxiety or panic",""''""'"'
-    "Difficulty sleeping","'"'"'""'
-    "Isolating from others",'""''"""'
-    "Changes in appetite',""'""""
-    'Increased irritability","'""""''
-    "Difficulty concentrating",'""'import "Physical tension or pain" ];'""'
-export const SafetyPlanView: React.FC<{ userToken?: string | null }> = ({ userToken: propUserToken }) = {}
-{ userToken: contextUserToken } = useAuth();
-const userToken = propUserToken ?? contextUserToken;
-const [plan, setPlan] = useState<SafetyPlan>(defaultPlan);
-const [isEditing, setIsEditing] = useState(false);
-const [isLoading, setIsLoading] = useState(true);
-{ addToast } = useNotification();
+import React, { useState, useEffect } from 'react';
+import { SafetyPlan } from '../types';
+import { AppButton } from '../components/AppButton';
+import { AppTextArea } from '../components/AppInput';
+import { Card } from '../components/Card';
+import { useNotification } from '../contexts/NotificationContext';
+import { HeartIcon, PhoneIcon, ShieldIcon, SparkleIcon, BookmarkIcon } from '../components/icons.dynamic';
+import { useAuth } from '../contexts/AuthContext';
 
-    useEffect(() =) { if (!userToken) {
-            setIsLoading(false ),
-            return }
-        setIsLoading(true);
-        ApiClient.safetyPlan.get(userToken)
-            .then(savedPlan =) { if (savedPlan) {
-                    setPlan(savedPlan ),
-                    setIsEditing(false) } else { setIsEditing(true); // Default to edit mode if no plan exists)
-            .catch(error =) { console.error('Failed to load safety plan:", error  );"'""''
-                addToast("Could not load your safety plan.", 'error") }"""'
-            .finally(() =) { setIsLoading(false) }};
-  }, [addToast, userToken]};
-const handleSave = async () =] { if (!userToken) {
-            addToast('Cannot save plan without a user session.", "error'  );""""'"'
-            return 
-        setIsLoading(true);
-        try(await ApiClient.safetyPlan.save(plan, userToken);
-            setIsEditing(false );
-            addToast("Your safety plan has been saved!', "success") ) catch (error) { console.error("Failed to save safety plan:", error  );'""
-            addToast('Could not save your safety plan.", "error") } finally(setIsLoading(false) );"'
-  };
-const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) = { setPlan({}
-            ...plan,
-            [e.target.name]: e.target.value)};
-  };
-const loadDemoData = () = { setPlan(demoPlan  ) }
-        addToast("Demo safety plan loaded! Feel free to customize it.", 'success") };""'"'""'
-
-    if(isLoading) {
-  return <div className='loading-spinner" style= {{margin: "5rem auto""'"}"
-}}>
-
-    return(<)}
-            <div className='view-header">""'"'""'
-                <h1>My Astral Safety Plan</h1>
-                <p className='view-subheader">Your personalized crisis prevention toolkit - always here when you need it</p>""'"'""'
-            </div
-
-            {/* Quick Access Emergency Resources */}
-            <Card className='emergency-resources-card">""'"'""'
-                <div className='emergency-header">"'""'"'
-                    <ShieldIcon     />
-                    <h2>Immediate Help Available 24/7</h2>
-                </div>
-                <div className="hotlines-grid'>"'"""''
-                    {defaultHotlines.map(hotline =) ()}
-    <div key={hotline.name} className="hotline-card">'"'"""'"'
-                            <PhoneIcon     />
-                            <div className="hotline-info'>"'"""'"'
-                                <h3>{hotline.name}</h3>
-                                <p className="hotline-contact'>{hotline.contact}</p>""'""'"'
-                                <p className="hotline-description'>{hotline.description}</p>""'""'"'
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </Card>
-
-            <Card className="safety-plan-card'>""'""'"'
-                {!isEditing && (}
-    <div className="safety-plan-actions'>""'""'"'}
-    <AppButton variant="primary' onClick={() => setIsEditing(true)}>"'"""''
-                            <BookmarkIcon     />
-                            <span>Edit My Plan</span>
-                        </AppButton}
-                        <AppButton variant="secondary" onClick={() =} window.print()>'""""'
-                            Print Plan
-                        </AppButton>
-                    </div>
-                )}
-
-                {
-  isEditing && (!plan.triggers && !plan.copingStrategies && !plan.supportContacts && !plan.safePlaces) && (}
-    <div className='demo-data-prompt" style= {{ textAlign: "center', padding: "1rem", background: "linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%)", borderRadius: '12px", marginBottom: "1.5rem' ""}"
->
-                        <p style= {}
-  { marginBottom: "1rem', color: "#5a6c7d" '
-  >ew to safety planning? Start with our example template!</p>}
-    <AppButton variant="primary" onClick={loadDemoData}>""'""'
-                            <SparkleIcon     />
-                            <span>Load Example Safety Plan</span>
-                        </AppButton
-                    </div
-                {/* Warning Signs Section */}
-                <div className="safety-plan-section">""'""'
-                    <h2>
-                        <SparkleIcon     />
-                        <span>Warning Signs</span>
-                    </h2
-                    <p className="safety-plan-prompt">What changes in thoughts, feelings, or behaviors signal that you might need to use your safety plan?</p""'""'
-                    {isEditing ? (}
-    <)}
-    <AppTextArea name='triggers" value={plan.triggers} onChange={handleInputChange} placeholder="Describe warning signs that indicate you"re struggling..."  /}'""
-                            <div className='suggestion-chips">""'"'""'
-                                <p className="suggestion-label">Common warning signs:</p""'""'
-                                {
-  warningSignsSuggestions.map((sign, index) =) (}
-    <button
+const defaultPlan: SafetyPlan = {
+  triggers: '',
+  copingStrategies: '',
+  supportContacts: [],
+  professionalContacts: [],
+  safeEnvironment: '',
+  emergencyContacts: [],
+  reasonsToLive: '',
+  lastUpdated: new Date().toISOString()
 };
 
-key={index};
-className="suggestion-chip"""'""'
-                                        onClick={() =} setPlan({...plan, triggers: plan.triggers + (plan.triggers ? ", " : "") + sign})>'"'"'""'
-                                    )
-                                        {sign}
-                                    </button}
-                                >
-                            </div
-                        </
-                     : (
-                        <div className="safety-plan-content">{plan.triggers || 'No warning signs listed."}</div)"'""""
+interface Contact {
+  id: string;
+  name: string;
+  phone: string;
+  relationship: string;
+  isEmergency?: boolean;
+}
 
-                </div
+const SafetyPlanView: React.FC = () => {
+  const { user } = useAuth();
+  const { showNotification } = useNotification();
+  const [plan, setPlan] = useState<SafetyPlan>(defaultPlan);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [activeSection, setActiveSection] = useState('overview');
 
-                <div className='safety-plan-section">"'"""
-                    <h2>
-                        <HeartIcon     />
-                        <span>My Coping Strategies</span>
-                    </h2
-                    <p className="safety-plan-prompt'>Healthy activities that help you feel better when you"re struggling</p>"''""'
-                    {isEditing ? (}
-    <)}
-    <AppTextArea name="copingStrategies" value={plan.copingStrategies} onChange={handleInputChange} placeholder='List activities that help you cope with difficult emotions..."     />"''""'
-                            <div className="suggestion-chips">'""''""""'
-                                <p className='suggestion-label">Try these coping strategies:</p}"''""""'
-                                {
-  copingStrategySuggestions.map((strategy, index) =) (}
-    <button
-};
+  useEffect(() => {
+    loadSafetyPlan();
+  }, []);
 
-key={index};
-className='suggestion-chip""'""""
-                                        onClick={() =} setPlan({...plan, copingStrategies: plan.copingStrategies + (plan.copingStrategies ? '\n" : "') + strategy})>"""
-                                    
-                                        {strategy}
-                                    </button
-                                
-                            </div
-                        </
-                     : (
-                        <div className="safety-plan-content'>{plan.copingStrategies || "No strategies listed."}</div)'""
+  const loadSafetyPlan = async () => {
+    try {
+      // Simulate API call to load existing safety plan
+      const savedPlan = localStorage.getItem(`safetyPlan_${user?.id}`);
+      if (savedPlan) {
+        setPlan(JSON.parse(savedPlan));
+      } else {
+        // Initialize with default plan if none exists
+        setPlan(defaultPlan);
+        setIsEditing(true);
+      }
+    } catch (error) {
+      console.error('Error loading safety plan:', error);
+      showNotification('error', 'Failed to load safety plan');
+    }
+  };
 
-                </div
+  const saveSafetyPlan = async () => {
+    try {
+      setIsSaving(true);
+      
+      const updatedPlan = {
+        ...plan,
+        lastUpdated: new Date().toISOString()
+      };
+      
+      // Save to localStorage (replace with API call in production)
+      localStorage.setItem(`safetyPlan_${user?.id}`, JSON.stringify(updatedPlan));
+      
+      setPlan(updatedPlan);
+      setIsEditing(false);
+      showNotification('success', 'Safety plan saved successfully');
+    } catch (error) {
+      console.error('Error saving safety plan:', error);
+      showNotification('error', 'Failed to save safety plan');
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
-                <div className="safety-plan-section">'"'"'""'
-                    <h2>My Support Team</h2>
-                    <p className="safety-plan-prompt">Who are some trusted people you can contact for support?</p''""'"'
-                     {isEditing ? ()}
-                        <AppTextArea name="supportContacts" value={plan.supportContacts} onChange={handleInputChange} placeholder="e.g., My friend Alex (555-1234), my sister Sarah, my therapist's office..."   /"'">""
-                    > : (
-                        <div className="safety-plan-content'>{plan.supportContacts || "No contacts listed."}</div)'""""''
-                    }}
-                </div>
+  const addContact = (type: 'support' | 'professional' | 'emergency') => {
+    const newContact: Contact = {
+      id: Date.now().toString(),
+      name: '',
+      phone: '',
+      relationship: '',
+      isEmergency: type === 'emergency'
+    };
 
-                <div className="safety-plan-section">'""""'
-                    <h2>My Safe Places</h2>
-                    <p className='safety-plan-prompt">Where can you go to feel safe and calm?</p>"'""""''
-                    {isEditing ? (}
-    <AppTextArea name="safePlaces" value={plan.safePlaces} onChange={handleInputChange} placeholder='e.g., My bedroom, the local park, the library..."     />"""''""'"
-                    ) : (
-                        <div className="safety-plan-content">{plan.safePlaces || "No safe places listed.'}</div)""''""""'
+    setPlan(prev => ({
+      ...prev,
+      [`${type}Contacts`]: [...(prev[`${type}Contacts` as keyof SafetyPlan] as Contact[] || []), newContact]
+    }));
+  };
+
+  const updateContact = (type: 'support' | 'professional' | 'emergency', contactId: string, field: keyof Contact, value: string) => {
+    setPlan(prev => ({
+      ...prev,
+      [`${type}Contacts`]: (prev[`${type}Contacts` as keyof SafetyPlan] as Contact[] || []).map(contact =>
+        contact.id === contactId ? { ...contact, [field]: value } : contact
+      )
+    }));
+  };
+
+  const removeContact = (type: 'support' | 'professional' | 'emergency', contactId: string) => {
+    setPlan(prev => ({
+      ...prev,
+      [`${type}Contacts`]: (prev[`${type}Contacts` as keyof SafetyPlan] as Contact[] || []).filter(contact => contact.id !== contactId)
+    }));
+  };
+
+  const sections = [
+    { id: 'overview', title: 'Overview', icon: <SparkleIcon /> },
+    { id: 'triggers', title: 'Warning Signs', icon: <ShieldIcon /> },
+    { id: 'coping', title: 'Coping Strategies', icon: <HeartIcon /> },
+    { id: 'contacts', title: 'Support Contacts', icon: <PhoneIcon /> },
+    { id: 'environment', title: 'Safe Environment', icon: <BookmarkIcon /> },
+    { id: 'reasons', title: 'Reasons to Live', icon: <HeartIcon /> }
+  ];
+
+  const renderContactSection = (
+    title: string,
+    type: 'support' | 'professional' | 'emergency',
+    description: string
+  ) => {
+    const contacts = (plan[`${type}Contacts` as keyof SafetyPlan] as Contact[] || []);
+
+    return (
+      <Card title={title} className="contact-section">
+        <p className="section-description">{description}</p>
+        
+        {contacts.map(contact => (
+          <div key={contact.id} className="contact-item">
+            {isEditing ? (
+              <div className="contact-form">
+                <input
+                  type="text"
+                  placeholder="Name"
+                  value={contact.name}
+                  onChange={(e) => updateContact(type, contact.id, 'name', e.target.value)}
+                  className="contact-input"
+                />
+                <input
+                  type="tel"
+                  placeholder="Phone number"
+                  value={contact.phone}
+                  onChange={(e) => updateContact(type, contact.id, 'phone', e.target.value)}
+                  className="contact-input"
+                />
+                <input
+                  type="text"
+                  placeholder="Relationship"
+                  value={contact.relationship}
+                  onChange={(e) => updateContact(type, contact.id, 'relationship', e.target.value)}
+                  className="contact-input"
+                />
+                <button
+                  onClick={() => removeContact(type, contact.id)}
+                  className="remove-contact-btn"
+                  type="button"
+                >
+                  Remove
+                </button>
+              </div>
+            ) : (
+              <div className="contact-display">
+                <div className="contact-info">
+                  <div className="contact-name">{contact.name || 'Unnamed Contact'}</div>
+                  <div className="contact-details">
+                    <span className="contact-phone">{contact.phone}</span>
+                    {contact.relationship && (
+                      <span className="contact-relationship">({contact.relationship})</span>
                     )}
+                  </div>
                 </div>
-
-
-
-                 {isEditing && (}
-    <div className='safety-plan-actions">"''""""'}
-    <AppButton variant='success" onClick={handleSave} isLoading={isLoading}>Save My Plan</AppButton>"''""'
-                    </div>
-                 )}
-            </Card>
-        </>
+                <a href={`tel:${contact.phone}`} className="call-button">
+                  <PhoneIcon />
+                </a>
+              </div>
+            )}
+          </div>
+        ))}
+        
+        {isEditing && (
+          <AppButton
+            variant="secondary"
+            size="small"
+            onClick={() => addContact(type)}
+          >
+            Add Contact
+          </AppButton>
+        )}
+      </Card>
     );
   };
+
+  return (
+    <div className="safety-plan-view">
+      <div className="safety-plan-header">
+        <h1>
+          <ShieldIcon />
+          My Safety Plan
+        </h1>
+        <p>A personalized plan to help you stay safe during difficult times</p>
+        
+        <div className="header-actions">
+          {!isEditing ? (
+            <AppButton onClick={() => setIsEditing(true)}>
+              Edit Plan
+            </AppButton>
+          ) : (
+            <div className="edit-actions">
+              <AppButton 
+                variant="secondary" 
+                onClick={() => {
+                  setIsEditing(false);
+                  loadSafetyPlan(); // Reset changes
+                }}
+              >
+                Cancel
+              </AppButton>
+              <AppButton 
+                onClick={saveSafetyPlan}
+                loading={isSaving}
+              >
+                Save Plan
+              </AppButton>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="safety-plan-nav">
+        {sections.map(section => (
+          <button
+            key={section.id}
+            className={`nav-button ${activeSection === section.id ? 'active' : ''}`}
+            onClick={() => setActiveSection(section.id)}
+          >
+            {section.icon}
+            <span>{section.title}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="safety-plan-content">
+        {activeSection === 'overview' && (
+          <div className="overview-section">
+            <Card title="About Your Safety Plan" className="info-card">
+              <p>
+                A safety plan is a personalized, practical plan that can help you avoid dangerous situations 
+                and know how to react when you're in crisis. It includes your personal warning signs, 
+                coping strategies, people and social settings that provide distraction, people you can ask for help, 
+                professionals you can contact during a crisis, and ways to make your environment safe.
+              </p>
+              
+              {plan.lastUpdated && (
+                <div className="last-updated">
+                  <strong>Last updated:</strong> {new Date(plan.lastUpdated).toLocaleDateString()}
+                </div>
+              )}
+            </Card>
+
+            <Card title="Emergency Resources" className="emergency-resources">
+              <div className="emergency-grid">
+                <div className="emergency-item">
+                  <h3>National Suicide Prevention Lifeline</h3>
+                  <a href="tel:988" className="emergency-number">988</a>
+                  <p>24/7, free and confidential support</p>
+                </div>
+                
+                <div className="emergency-item">
+                  <h3>Crisis Text Line</h3>
+                  <div className="emergency-number">Text HOME to 741741</div>
+                  <p>Free, 24/7 crisis support via text</p>
+                </div>
+                
+                <div className="emergency-item">
+                  <h3>Emergency Services</h3>
+                  <a href="tel:911" className="emergency-number">911</a>
+                  <p>For immediate medical emergencies</p>
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {activeSection === 'triggers' && (
+          <Card title="Warning Signs & Triggers" className="section-card">
+            <p className="section-description">
+              Identify personal warning signs that a crisis may be developing. These might include 
+              thoughts, images, mood, situation, or behaviors that indicate you may be moving toward a crisis.
+            </p>
+            
+            {isEditing ? (
+              <AppTextArea
+                value={plan.triggers}
+                onChange={(e) => setPlan(prev => ({ ...prev, triggers: e.target.value }))}
+                placeholder="Describe your warning signs and triggers..."
+                rows={6}
+                className="plan-textarea"
+              />
+            ) : (
+              <div className="plan-content">
+                {plan.triggers || <em>No warning signs recorded yet.</em>}
+              </div>
+            )}
+          </Card>
+        )}
+
+        {activeSection === 'coping' && (
+          <Card title="Coping Strategies" className="section-card">
+            <p className="section-description">
+              List internal coping strategies - things you can do to take your mind off your problems 
+              without contacting another person (relaxation techniques, physical activity, hobbies, etc.).
+            </p>
+            
+            {isEditing ? (
+              <AppTextArea
+                value={plan.copingStrategies}
+                onChange={(e) => setPlan(prev => ({ ...prev, copingStrategies: e.target.value }))}
+                placeholder="Describe your coping strategies..."
+                rows={6}
+                className="plan-textarea"
+              />
+            ) : (
+              <div className="plan-content">
+                {plan.copingStrategies || <em>No coping strategies recorded yet.</em>}
+              </div>
+            )}
+          </Card>
+        )}
+
+        {activeSection === 'contacts' && (
+          <div className="contacts-section">
+            {renderContactSection(
+              'Support People',
+              'support',
+              'People and social settings that provide distraction and support.'
+            )}
+            
+            {renderContactSection(
+              'Professional Contacts',
+              'professional',
+              'Mental health professionals or agencies to contact during a crisis.'
+            )}
+            
+            {renderContactSection(
+              'Emergency Contacts',
+              'emergency',
+              'People to contact in case of emergency.'
+            )}
+          </div>
+        )}
+
+        {activeSection === 'environment' && (
+          <Card title="Making the Environment Safe" className="section-card">
+            <p className="section-description">
+              Ways to make your environment safe. This might include removing or securing potential 
+              means of harm, or identifying safe places to go.
+            </p>
+            
+            {isEditing ? (
+              <AppTextArea
+                value={plan.safeEnvironment}
+                onChange={(e) => setPlan(prev => ({ ...prev, safeEnvironment: e.target.value }))}
+                placeholder="Describe how to make your environment safe..."
+                rows={6}
+                className="plan-textarea"
+              />
+            ) : (
+              <div className="plan-content">
+                {plan.safeEnvironment || <em>No environment safety plan recorded yet.</em>}
+              </div>
+            )}
+          </Card>
+        )}
+
+        {activeSection === 'reasons' && (
+          <Card title="Reasons for Living" className="section-card">
+            <p className="section-description">
+              The most important reason to live or the most important thing that would be lost 
+              by dying. This is something that is dear to the person and would be gravely impacted if they died.
+            </p>
+            
+            {isEditing ? (
+              <AppTextArea
+                value={plan.reasonsToLive}
+                onChange={(e) => setPlan(prev => ({ ...prev, reasonsToLive: e.target.value }))}
+                placeholder="List your reasons for living..."
+                rows={6}
+                className="plan-textarea"
+              />
+            ) : (
+              <div className="plan-content">
+                {plan.reasonsToLive || <em>No reasons for living recorded yet.</em>}
+              </div>
+            )}
+          </Card>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export default SafetyPlanView;
