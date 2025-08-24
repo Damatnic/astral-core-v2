@@ -1,402 +1,572 @@
 /**
  * Crisis Detection Test Suite
- * Tests crisis keyword detection and resource matching
- */;
+ * 
+ * Comprehensive tests for crisis keyword detection, severity assessment,
+ * and resource matching functionality.
+ * 
+ * @fileoverview Tests for crisis detection utility functions
+ * @version 2.0.0
+ */
 
-import { detectCrisis, getCrisisResources, CrisisDetectionResult  } from './crisisDetection';"""'"'""'
+import {
+  detectCrisisKeywords,
+  detectCrisisPatterns,
+  calculateCrisisSeverity,
+  analyzeCrisisText,
+  generateCrisisRecommendations,
+  validateCrisisConfig,
+  CRISIS_KEYWORDS,
+  DEFAULT_CRISIS_CONFIG,
+  EMERGENCY_CONTACTS
+} from './crisisDetection';
 
-describe('crisisDetection", () =) { describe("detectCrisis", () =) {"'""'"'
-    describe("keyword detection", () =) {"''""''
-      it.skip("should detect suicide-related keywords", () =) {;""'"'
-const suicideTexts = [;]
-          "I want to kill myself',""'""'"'
-          "thinking about suicide',"""'"'""'
-          "my life is not worth living",""'""'
-          "I would be better off dead",""''""'"'
-          "I want to die","'"'import "I wish I was dead' };""""'
+import { CrisisLevel, CrisisIndicator, CrisisDetectionResult } from '../types';
 
-        suicideTexts.forEach(text =) {;
-const result = detectCrisis(text);
-          expect(result.isCrisis).toBe(true);
-          expect(result.keywords.length).toBeGreaterThan(0  );
-          expect(result.severity).toMatch(/medium|high/) };
-  )
+describe('Crisis Detection Utilities', () => {
+  describe('detectCrisisKeywords', () => {
+    describe('suicide keyword detection', () => {
+      it('should detect direct suicide keywords', () => {
+        const suicideTexts = [
+          'I want to kill myself',
+          'thinking about suicide',
+          'my life is not worth living',
+          'I would be better off dead',
+          'I want to die',
+          'I wish I was dead'
+        ];
 
-      it.skip('should detect self-harm keywords", () =) { ;"'
-const selfHarmTexts = [;]
-          "I want to hurt myself",""'""'
-          'thinking about self harm","""''""'"
-          "I have been cutting","''""'"'
-          "I want to harm myself","'"'import "I keep punishing myself' };""""'
+        suicideTexts.forEach(text => {
+          const indicators = detectCrisisKeywords(text);
+          expect(indicators.length).toBeGreaterThan(0);
+          expect(indicators[0].type).toBe('keyword');
+          expect(indicators[0].severity).toBeGreaterThanOrEqual(6);
+        });
+      });
 
-        selfHarmTexts.forEach(text =) {;
-const result = detectCrisis(text);
-          expect(result.isCrisis).toBe(true  );
-          expect(result.keywords.length).toBeGreaterThan(0) };
+      it('should detect variations and case insensitive matches', () => {
+        const variations = [
+          'KILL MYSELF',
+          'Kill Myself',
+          'end my life',
+          'END MY LIFE'
+        ];
 
-      it.skip('should detect immediate danger keywords", () =) { ;"'"
-const immediateTexts = [;]
-          "I am about to do it","'""'
-          'tonight is the night",""'"'"'
-          "I have made up my mind",'"""'
-          "I have a plan',""'import "I wrote a note" };""'""'
+        variations.forEach(text => {
+          const indicators = detectCrisisKeywords(text);
+          expect(indicators.length).toBeGreaterThan(0);
+        });
+      });
+    });
 
-        immediateTexts.forEach(text => {;
-const result = detectCrisis(text);
-          expect(result.isCrisis).toBe(true  );
-          expect(result.severity).toBe('high") });""'
-  };
+    describe('self-harm keyword detection', () => {
+      it('should detect self-harm keywords', () => {
+        const selfHarmTexts = [
+          'I want to hurt myself',
+          'thinking about self harm',
+          'I have been cutting',
+          'I want to harm myself',
+          'I keep punishing myself'
+        ];
 
-      it.skip("should detect severe distress keywords', () =) { ;"'""
-const distressTexts = [;]
-          "I cant breathe',""'""""
-          'having a panic attack","'""""''
-          "my heart is racing",'""'""'"'
-          "I am losing my mind',""'import "I havent slept in days" ;'"'"'"'
+        selfHarmTexts.forEach(text => {
+          const indicators = detectCrisisKeywords(text);
+          expect(indicators.length).toBeGreaterThan(0);
+          expect(indicators[0].type).toBe('keyword');
+          expect(indicators[0].severity).toBeGreaterThanOrEqual(4);
+        });
+      });
+    });
 
-        distressTexts.forEach(text =) {;
-const result = detectCrisis(text);
-          expect(result.isCrisis).toBe(true  );
-          expect(result.keywords.length).toBeGreaterThan(0) };
-  )
-  )
+    describe('hopelessness keyword detection', () => {
+      it('should detect hopelessness expressions', () => {
+        const hopelessTexts = [
+          'no hope left',
+          'feeling hopeless',
+          'everything is pointless',
+          'nothing matters anymore',
+          'I give up',
+          'no future for me'
+        ];
 
-    describe("past tense detection", () =) { it.skip("should detect past tense modifiers", () =) {;'"'
-const pastTenseTexts = [;]
-          "I used to think about suicide',"""'"'""'
-          'In the past I wanted to kill myself",""'"'""'
-          'Years ago I was suicidal",""'"'""'
-          'When I was younger I hurt myself",""'import "I recovered from those dark thoughts' ;"'"'"'
+        hopelessTexts.forEach(text => {
+          const indicators = detectCrisisKeywords(text);
+          expect(indicators.length).toBeGreaterThan(0);
+          expect(indicators[0].type).toBe('keyword');
+        });
+      });
+    });
 
-        pastTenseTexts.forEach(text =) {;
-const result = detectCrisis(text);
-          expect(result.isPastTense).toBe(true);
-          expect(result.isCrisis).toBe(false); // Should not be crisis if past tense))
-      it.skip("should reduce severity for past tense", () =) {;""
-const presentText = 'I want to kill myself";"'"
-const pastText = "I used to want to kill myself";"'""'
-const presentResult = detectCrisis(presentText);
-const pastResult = detectCrisis(pastText);
+    describe('isolation keyword detection', () => {
+      it('should detect isolation and worthlessness', () => {
+        const isolationTexts = [
+          'I am alone',
+          'nobody cares about me',
+          'I have no friends',
+          'feeling isolated',
+          'I am worthless',
+          'I am useless'
+        ];
 
-        expect(presentResult.severity).toBe('high");""'"'"'
-        expect(pastResult.severity).toBe("medium"  ); // Reduced from high'"'"""''
-        expect(pastResult.isPastTense).toBe(true) }};
-  )
+        isolationTexts.forEach(text => {
+          const indicators = detectCrisisKeywords(text);
+          expect(indicators.length).toBeGreaterThan(0);
+          expect(indicators[0].type).toBe('keyword');
+        });
+      });
+    });
 
-    describe("severity calculation", () =) { it.skip('should assign high severity for multiple high-risk keywords", () =) {;""'
-const text = "I want to kill myself and end my life';""'"
-const result = detectCrisis(text);
+    describe('non-crisis text', () => {
+      it('should not detect crisis in normal text', () => {
+        const normalTexts = [
+          'I had a great day today',
+          'Looking forward to the weekend',
+          'Just finished a good book',
+          'The weather is nice',
+          'Planning my vacation'
+        ];
 
-        expect(result.severity).toBe("high"  );"''""'"'
-        expect(result.keywords.length).toBeGreaterThanOrEqual(2) });
+        normalTexts.forEach(text => {
+          const indicators = detectCrisisKeywords(text);
+          expect(indicators.length).toBe(0);
+        });
+      });
+    });
 
-      it.skip("should assign high severity for specific high-risk keywords", () => { ;"''"
-const highRiskTexts = [;]
-          "I want to commit suicide","'"'"'""'
-          "I am going to kill myself",'"'import "I need to end my life' };""""'
+    describe('edge cases', () => {
+      it('should handle empty or null input', () => {
+        expect(detectCrisisKeywords('')).toEqual([]);
+        expect(detectCrisisKeywords(null as any)).toEqual([]);
+        expect(detectCrisisKeywords(undefined as any)).toEqual([]);
+      });
 
-        highRiskTexts.forEach(text =) {;
-const result = detectCrisis(text  );
-          expect(result.severity).toBe('high") }};"'"
+      it('should handle very long text', () => {
+        const longText = 'I want to kill myself. ' + 'This is filler text. '.repeat(1000);
+        const indicators = detectCrisisKeywords(longText);
+        expect(indicators.length).toBeGreaterThan(0);
+      });
+    });
   });
 
-      it.skip("should assign medium severity for moderate keyword count", () => { ;"''"
-const text = "I hurt myself and feel worthless";"'"'
-const result = detectCrisis(text  );
+  describe('detectCrisisPatterns', () => {
+    describe('method inquiry patterns', () => {
+      it('should detect searches for harmful methods', () => {
+        const methodTexts = [
+          'how to kill myself',
+          'ways to die',
+          'methods of suicide',
+          'how to hurt myself',
+          'ways to end it all'
+        ];
 
-        if (result.keywords.length )= 2} {
-          expect(result.severity).toMatch(/medium|high/) };
-  };
+        methodTexts.forEach(text => {
+          const indicators = detectCrisisPatterns(text);
+          expect(indicators.length).toBeGreaterThan(0);
+          expect(indicators[0].type).toBe('pattern');
+          expect(indicators[0].severity).toBeGreaterThanOrEqual(8);
+        });
+      });
+    });
 
-      it.skip("should assign low severity for single keyword', () =) { ;""'
-const text = "I feel like crying today";''""
-const result = detectCrisis(text  );
+    describe('goodbye message patterns', () => {
+      it('should detect goodbye messages', () => {
+        const goodbyeTexts = [
+          'goodbye everyone',
+          'this is goodbye',
+          'final message to all',
+          'goodbye cruel world',
+          'my final words'
+        ];
 
-        if (result.keywords.length === 1) {
-          expect(result.severity).toBe("low") };'""'
-  }};
-  ];
+        goodbyeTexts.forEach(text => {
+          const indicators = detectCrisisPatterns(text);
+          expect(indicators.length).toBeGreaterThan(0);
+          expect(indicators[0].type).toBe('pattern');
+          expect(indicators[0].severity).toBe(10);
+        });
+      });
+    });
 
-    describe('edge cases", () =) { it.skip("should handle empty text", () =) {;"'
-const result = detectCrisis("");'""'""'""'
-        expect(result.isCrisis).toBe(false);
-        expect(result.keywords).toEqual([]  );
-        expect(result.severity).toBe('low") }};""'"'"'
+    describe('time reference patterns', () => {
+      it('should detect time-specific crisis references', () => {
+        const timeTexts = [
+          'tonight it will be over',
+          'by tomorrow I will be gone',
+          'won\'t be here much longer',
+          'by morning I will be dead'
+        ];
 
-      it.skip("should handle non-crisis text", () =) { ;'"'
-const safeTexts = [;]
-          "I am having a great day","'"'"'""'
-          "Looking forward to the weekend",'"'"'""'
-          "Just finished a good book",'""'import 'Going out with friends tonight" };"'""'"'
+        timeTexts.forEach(text => {
+          const indicators = detectCrisisPatterns(text);
+          expect(indicators.length).toBeGreaterThan(0);
+          expect(indicators[0].type).toBe('pattern');
+          expect(indicators[0].severity).toBeGreaterThanOrEqual(7);
+        });
+      });
+    });
 
-        safeTexts.forEach(text =) {;
-const result = detectCrisis(text);
-          expect(result.isCrisis).toBe(false  );
-          expect(result.keywords).toEqual([]) };
+    describe('non-pattern text', () => {
+      it('should not detect patterns in normal text', () => {
+        const normalTexts = [
+          'How to cook dinner',
+          'Ways to improve my skills',
+          'Methods for studying',
+          'Goodbye for now',
+          'See you tomorrow'
+        ];
 
-      it.skip("should handle case insensitive matching', () =) { ;""""'
-const mixedCaseText = 'I Want To KILL MYSELF";'"
-const result = detectCrisis(mixedCaseText);
+        normalTexts.forEach(text => {
+          const indicators = detectCrisisPatterns(text);
+          expect(indicators.length).toBe(0);
+        });
+      });
+    });
+  });
 
-        expect(result.isCrisis).toBe(true  );
-        expect(result.keywords.length).toBeGreaterThan(0) };
+  describe('calculateCrisisSeverity', () => {
+    it('should return none level for empty indicators', () => {
+      const result = calculateCrisisSeverity([]);
+      expect(result.level).toBe('none');
+      expect(result.score).toBe(0);
+      expect(result.confidence).toBe(0);
+    });
 
-      it.skip("should handle text with punctuation", () =) { ;'"'
-const textWithPunctuation = 'I want to kill myself... I cant go on!";""'
-const result = detectCrisis(textWithPunctuation);
+    it('should calculate immediate level for high severity', () => {
+      const indicators: CrisisIndicator[] = [
+        {
+          type: 'keyword',
+          severity: 10,
+          confidence: 0.9,
+          description: 'Direct suicide reference'
+        },
+        {
+          type: 'pattern',
+          severity: 9,
+          confidence: 0.8,
+          description: 'Method inquiry'
+        }
+      ];
 
-        expect(result.isCrisis).toBe(true  );
-        expect(result.keywords.length).toBeGreaterThan(0) };
+      const result = calculateCrisisSeverity(indicators);
+      expect(result.level).toBe('immediate');
+      expect(result.score).toBeGreaterThan(15);
+      expect(result.confidence).toBeGreaterThan(0.8);
+    });
 
-      it.skip('should handle very long text", () =) { ;"'"
-const longText = "Lorem ipsum ".repeat(100) + "I want to kill myself ' + "dolor sit amet ".repeat(100);'"
-const result = detectCrisis(longText);
+    it('should calculate high level for moderate severity', () => {
+      const indicators: CrisisIndicator[] = [
+        {
+          type: 'keyword',
+          severity: 6,
+          confidence: 0.7,
+          description: 'Hopelessness'
+        },
+        {
+          type: 'keyword',
+          severity: 8,
+          confidence: 0.8,
+          description: 'Self-harm reference'
+        }
+      ];
 
-        expect(result.isCrisis).toBe(true  );
-        expect(result.keywords).toContain("kill myself") };"''""''
+      const result = calculateCrisisSeverity(indicators);
+      expect(result.level).toBe('high');
+      expect(result.score).toBeGreaterThanOrEqual(10);
+    });
 
-      it.skip("should handle text with numbers and special characters", () =) {;""'"'
-const text = "Day 365: I still want to kill myself @ 3AM...' }""'
+    it('should calculate moderate level for lower severity', () => {
+      const indicators: CrisisIndicator[] = [
+        {
+          type: 'keyword',
+          severity: 4,
+          confidence: 0.6,
+          description: 'Isolation'
+        },
+        {
+          type: 'keyword',
+          severity: 3,
+          confidence: 0.5,
+          description: 'Distress'
+        }
+      ];
 
- result = detectCrisis(text)
-        expect(result.isCrisis).toBe(true);
-        expect(result.keywords.length).toBeGreaterThan(0) };
-  
+      const result = calculateCrisisSeverity(indicators);
+      expect(result.level).toBe('moderate');
+      expect(result.score).toBeLessThan(15);
+    });
+  });
 
-    describe("keyword combinations", () =) { it.skip('should detect multiple different crisis keywords", () =) {;"'
-const text = "I want to hurt myself and I feel suicidal";""
-const result = detectCrisis(text);
+  describe('analyzeCrisisText', () => {
+    it('should perform comprehensive analysis', () => {
+      const text = 'I want to kill myself tonight. I have no hope left.';
+      const result = analyzeCrisisText(text);
 
-        expect(result.isCrisis).toBe(true);
-        expect(result.keywords.length).toBeGreaterThanOrEqual(2  );
-        expect(result.severity).toMatch(/medium|high/) };
+      expect(result.crisisLevel).not.toBe('none');
+      expect(result.indicators.length).toBeGreaterThan(0);
+      expect(result.recommendations.length).toBeGreaterThan(0);
+      expect(result.metadata).toBeDefined();
+      expect(result.metadata.textLength).toBe(text.length);
+      expect(result.metadata.analysisTime).toBeGreaterThan(0);
+    });
 
-      it.skip('should not double-count overlapping keywords", () =) { ;"'
-const text = "suicide suicide suicide";""
-const result = detectCrisis(text  );
+    it('should handle empty text', () => {
+      const result = analyzeCrisisText('');
+      expect(result.crisisLevel).toBe('none');
+      expect(result.indicators.length).toBe(0);
+      expect(result.metadata.textLength).toBe(0);
+    });
 
-        expect(result.keywords.filter(k =) k === 'suicide")}.toHaveLength(1) "'"
-  )
+    it('should truncate very long text', () => {
+      const longText = 'I want to kill myself. ' + 'x'.repeat(20000);
+      const result = analyzeCrisisText(longText, { maxAnalysisLength: 1000 });
+      
+      expect(result.metadata.textLength).toBe(1000);
+    });
 
-    describe("result structure", () =) { it.skip("should return correct result structure', () =) {;""'
-const result = detectCrisis('test text");"""''""'"
-
-        expect(result).toHaveProperty("isCrisis");"''""'"'
-        expect(result).toHaveProperty("severity");"'"'"'""'
-        expect(result).toHaveProperty("keywords");'"'"'"'
-        expect(result).toHaveProperty("isPastTense");"'"'"'"""'
-
-        expect(typeof result.isCrisis).toBe("boolean');""''"""'
-        expect(["low', "medium", 'high"]).toContain(result.severity);"""'"'
-        expect(Array.isArray(result.keywords)).toBe(true  );
-        expect(typeof result.isPastTense).toBe("boolean') }""'""'"'
-
-      it.skip("should satisfy CrisisDetectionResult interface', () =) {
-  ;""""'
-};
-
-result: CrisisDetectionResult = detectCrisis('test")"'
-        expect(result.isCrisis).toBeDefined()
-        expect(result.severity).toBeDefined()
-        expect(result.keywords).toBeDefined()
-        expect(result.isPastTense).toBeDefined() };
-  
-  
-
-  describe("getCrisisResources", () =) { describe("country-specific resources", () =) {'"'"'""}'
-      it.skip("should return US resources", () =) {;'"'
-const resources = getCrisisResources('US");""''""'
-
-        expect(resources.name).toBe('988 Suicide & Crisis Lifeline");""''""'
-        expect(resources.number).toBe('988");""''""'
-        expect(resources.text).toBe('Text HOME to 741741");""''""'
-        expect(resources.url).toBe('https: //988lifeline.org")}""'
-      it.skip('should return UK resources", () =) {;"'"}
-const resources = getCrisisResources("UK");"'"'"'"'
-
-        expect(resources.name).toBe("Samaritans");"'"'"'"""'
-        expect(resources.number).toBe("116 123');""''""'
-        expect(resources.text).toBe("Text SHOUT to 85258");"''""'"'
-        expect(resources.url).toBe("https: //www.samaritans.org")}"'""'
-      it.skip('should return Canadian resources", () =) {;""'
-const resources = getCrisisResources("CA');""'""""
-
-        expect(resources.name).toBe('Talk Suicide Canada");"'""""''
-        expect(resources.number).toBe("1-833-456-4566");'""'""'"'
-        expect(resources.text).toBe("Text 45645');"""'"'""'
-        expect(resources.url).toBe('https: //talksuicide.ca")}"""'
-      it.skip('should return Australian resources", () =) {;"'""
-const resources = getCrisisResources("AU");'"'"'"'
-
-        expect(resources.name).toBe("Lifeline Australia");""'""'
-        expect(resources.number).toBe("13 11 14");""''""''
-        expect(resources.text).toBe("Text 0477 13 11 14");""''""'""'
-        expect(resources.url).toBe("https: //www.lifeline.org.au")}};'"'"'"'
-
-    describe("fallback behavior", () =) {""'""'
-      it.skip("should return default resources for unknown country", () =) {;""'"'
-const resources = getCrisisResources("XYZ');""""'
-
-        expect(resources.name).toBe('International Crisis Lines");"'""""''
-        expect(resources.number).toBe("findahelpline.com");'"'"""''
-        expect(resources.text).toBe("Visit website for local resources");'"'"""''
-        expect(resources.url).toBe("https: //findahelpline.com")}'"'
-      it.skip("should return default resources when country is undefined", () =) {;"'"'
-const resources = getCrisisResources();
-
-        expect(resources.name).toBe("International Crisis Lines');""'""'"'
-        expect(resources.url).toBe("https: //findahelpline.com')}""'
-      it.skip("should return default resources for empty string", () =) {;''""
-const resources = getCrisisResources(""  );'"'"'""'
-
-        expect(resources.name).toBe("International Crisis Lines") }};'"'"'"'
-
-      it.skip("should return default resources for null", () =) { ;""''
-const resources = getCrisisResources(null as any  );
-
-        expect(resources.name).toBe("International Crisis Lines") }};'""'
-
-    describe("resource structure", () =) { it.skip('should return complete resource structure", () =) {;"'
-const resources = getCrisisResources('US");"""''""'"
-
-        expect(resources).toHaveProperty("name");"'"'"'"""'
-        expect(resources).toHaveProperty("number');""'""""''
-        expect(resources).toHaveProperty("text");'""'""'""'
-        expect(resources).toHaveProperty('url");"""''""'"
-
-        expect(typeof resources.name).toBe("string");"'"'"'"""'
-        expect(typeof resources.number).toBe("string');""'""""''
-        expect(typeof resources.text).toBe("string"  );'""'""'""'
-        expect(typeof resources.url).toBe('string") }};"""''""'"
-
-      it.skip("should have valid URLs for all countries", () =) { ;"'""'
-const countries = ['US", "UK", "CA', "AU"];'""""
-
-        countries.forEach(country =) {;
-const resources = getCrisisResources(country );
-          expect(resources.url).toMatch(/^https?:\/\//)) }
-  )};
-
-    describe('case sensitivity", () =) { it.skip(".skip($2should handle lowercase country codes', () =) {;""
-const resources = getCrisisResources("us");'""''""""'
-        expect(resources.name).toBe('International Crisis Lines"); // Should fallback for lowercase)'"
-      it.skip(".skip($2should handle mixed case country codes", () =) {;'"'
-const resources = getCrisisResources('Us");""''""'
-        expect(resources.name).toBe('International Crisis Lines" ); // Should fallback for mixed case) };""'
-  }};
-
-  describe('integration scenarios", () =) { it.skip("should provide appropriate resources for detected crisis', () =) {;""
-const crisisText = "I want to kill myself";'"'
-const detectionResult = detectCrisis(crisisText);
-
-      expect(detectionResult.isCrisis).toBe(true);
-const resources = getCrisisResources("US');""'""''
-      expect(resources.name).toBeDefined();
-      expect(resources.number).toBeDefined();
-      expect(resources.url).toBeDefined() }};
-
-    it.skip("should handle workflow for different severity levels", () =) {;'"""'
-const testCases = [;]
-        { text: "I feel sad', expectedCrisis: false },""''"""'
-        { text: "I hurt myself yesterday', expectedCrisis: true },""'""""''
-        { text: "I want to kill myself tonight", expectedCrisis: true, expectedSeverity: 'high" }"""'
+    it('should respect configuration options', () => {
+      const text = 'I want to hurt myself';
+      const config = {
+        enableKeywordDetection: false,
+        enablePatternMatching: true,
+        enableSentimentAnalysis: false,
+        severityThreshold: 8,
+        confidenceThreshold: 0.8,
+        maxAnalysisLength: 5000
       };
 
-      testCases.forEach(({ text, expectedCrisis, expectedSeverity )) =) {;
-const result = detectCrisis(text );
-        expect(result.isCrisis).toBe(expectedCrisis ),
+      const result = analyzeCrisisText(text, config);
+      expect(result.metadata.config).toEqual(config);
+    });
+  });
 
-        if (expectedSeverity) {
-          expect(result.severity).toBe(expectedSeverity) }
+  describe('generateCrisisRecommendations', () => {
+    it('should provide immediate intervention for immediate crisis', () => {
+      const recommendations = generateCrisisRecommendations('immediate', []);
+      
+      expect(recommendations).toContain('IMMEDIATE INTERVENTION REQUIRED');
+      expect(recommendations).toContain('Contact emergency services (911)');
+      expect(recommendations).toContain('988 Suicide & Crisis Lifeline');
+    });
 
-        if (result.isCrisis) { // Should be able to get resources for crisis situations
-const resources = getCrisisResources('US"  );"'"""
-          expect(resources.number).toBeDefined() };
-  }};
-  }};
+    it('should provide high priority recommendations for high crisis', () => {
+      const recommendations = generateCrisisRecommendations('high', []);
+      
+      expect(recommendations).toContain('HIGH PRIORITY');
+      expect(recommendations).toContain('urgent mental health appointment');
+      expect(recommendations).toContain('988 Suicide & Crisis Lifeline');
+    });
 
-    it.skip("should work with real-world crisis scenarios', () =) { ;""'
-const realWorldTexts = [;]
-        'I cant take this anymore. I want to end it all.",""'"'""'
-        'Nobody would miss me if I was gone. I have a plan.",""'"'""'
-        'The pain is too much. I wrote my goodbye letters.",""'"'"'
-        "I feel like I am drowning and cant breathe.",'""'import "I used to feel suicidal but I got help and feel better now." };''""''
+    it('should provide moderate recommendations for moderate crisis', () => {
+      const recommendations = generateCrisisRecommendations('moderate', []);
+      
+      expect(recommendations).toContain('Schedule mental health appointment within 1-2 days');
+      expect(recommendations).toContain('coping strategies');
+    });
 
-      realWorldTexts.forEach((text, index) =) {;
-const result = detectCrisis(text);
+    it('should provide low-level recommendations for low crisis', () => {
+      const recommendations = generateCrisisRecommendations('low', []);
+      
+      expect(recommendations).toContain('Consider scheduling mental health check-in');
+      expect(recommendations).toContain('emotional support');
+    });
 
-        if (index < 4> { // First 4 are current crisis
-          expect(result.isCrisis).toBe(true  );
-          expect(result.keywords.length).toBeGreaterThan(0) } else(// Last one is past tense)
-          expect(result.isPastTense).toBe(true );
-          expect(result.isCrisis).toBe(false) );
-  )};
+    it('should provide basic recommendations for no crisis', () => {
+      const recommendations = generateCrisisRecommendations('none', []);
+      
+      expect(recommendations).toContain('Continue providing supportive communication');
+    });
 
+    it('should add specific recommendations based on indicators', () => {
+      const indicators: CrisisIndicator[] = [
+        {
+          type: 'keyword',
+          severity: 4,
+          confidence: 0.7,
+          description: 'Social isolation',
+          details: { category: 'isolation' }
+        }
+      ];
 
-  describe("performance and reliability", () =) { it.skip("should handle large text efficiently", () =) {;'"'
-const largeText = "Normal text '.repeat(1000) + "I want to kill myself" + " more text".repeat(1000);'
-const startTime = performance.now();
-const result = detectCrisis(largeText);
-const endTime = performance.now();
+      const recommendations = generateCrisisRecommendations('moderate', indicators);
+      expect(recommendations).toContain('reducing isolation and building connections');
+    });
 
-      expect(endTime - startTime).toBeLessThan(50  ); // Should complete quickly
-      expect(result.isCrisis).toBe(true) }};
+    it('should add self-harm specific recommendations', () => {
+      const indicators: CrisisIndicator[] = [
+        {
+          type: 'keyword',
+          severity: 8,
+          confidence: 0.8,
+          description: 'Self-harm behaviors',
+          details: { category: 'selfHarm' }
+        }
+      ];
 
-    it.skip("should be consistent across multiple calls", () =) { ;'"""'
-const text = "I want to hurt myself and feel suicidal';""'
-const result1 = detectCrisis(text);
-const result2 = detectCrisis(text);
-const result3 = detectCrisis(text);
+      const recommendations = generateCrisisRecommendations('high', indicators);
+      expect(recommendations).toContain('Address self-harm behaviors with professional help');
+    });
+  });
 
-      expect(result1).toEqual(result2  );
-      expect(result2).toEqual(result3) };
+  describe('validateCrisisConfig', () => {
+    it('should return default config for empty input', () => {
+      const result = validateCrisisConfig({});
+      expect(result).toEqual(DEFAULT_CRISIS_CONFIG);
+    });
 
-    it.skip('should handle concurrent detection calls", () =) { ;""'
-const texts = [;]
-        "I want to kill myself',""''"""'
-        "I feel happy today',""'"""
-        "I am having panic attacks',""'import 'Life is great" };""'
-const promises = texts.map(text =) Promise.resolve(detectCrisis(text));
-
-      return Promise.all(promises).then(results =) {
-        expect(results[0].isCrisis).toBe(true);
-        expect(results[1].isCrisis).toBe(false);
-        expect(results[2].isCrisis).toBe(true  );
-        expect(results[3].isCrisis).toBe(false) };
-  )
-  )
-
-  describe("false positives and negatives', () =) { it.skip("should avoid false positives in medical contexts", () =) {;'"
-const medicalTexts = [;]
-        "The patient has a history of suicide attempts', // Clinical documentation""''""'
-        "Suicide rates have increased according to studies", // Academic discussion'""''""""'
-        'The character in the movie wanted to kill the villain" // Fiction reference"'""""
+    it('should merge partial config with defaults', () => {
+      const partialConfig = {
+        enableKeywordDetection: false,
+        severityThreshold: 7
       };
 
-      medicalTexts.forEach(text =) {;
-const result = detectCrisis(text );
-        // These might still trigger detection, but should be lower severity
-        if (result.isCrisis) {
-          expect(result.severity).not.toBe('high" );"'"
+      const result = validateCrisisConfig(partialConfig);
+      expect(result.enableKeywordDetection).toBe(false);
+      expect(result.severityThreshold).toBe(7);
+      expect(result.enablePatternMatching).toBe(DEFAULT_CRISIS_CONFIG.enablePatternMatching);
+    });
+
+    it('should clamp values to valid ranges', () => {
+      const invalidConfig = {
+        severityThreshold: 15, // Should be clamped to 10
+        confidenceThreshold: 1.5, // Should be clamped to 1
+        maxAnalysisLength: 50 // Should be clamped to 100
+      };
+
+      const result = validateCrisisConfig(invalidConfig);
+      expect(result.severityThreshold).toBe(10);
+      expect(result.confidenceThreshold).toBe(1);
+      expect(result.maxAnalysisLength).toBe(100);
+    });
+
+    it('should handle negative values', () => {
+      const invalidConfig = {
+        severityThreshold: -5,
+        confidenceThreshold: -0.5,
+        maxAnalysisLength: -100
+      };
+
+      const result = validateCrisisConfig(invalidConfig);
+      expect(result.severityThreshold).toBe(0);
+      expect(result.confidenceThreshold).toBe(0);
+      expect(result.maxAnalysisLength).toBe(100);
+    });
   });
+
+  describe('Crisis Keywords Database', () => {
+    it('should have all required keyword categories', () => {
+      expect(CRISIS_KEYWORDS).toHaveProperty('suicide');
+      expect(CRISIS_KEYWORDS).toHaveProperty('selfHarm');
+      expect(CRISIS_KEYWORDS).toHaveProperty('hopelessness');
+      expect(CRISIS_KEYWORDS).toHaveProperty('isolation');
+      expect(CRISIS_KEYWORDS).toHaveProperty('distress');
+      expect(CRISIS_KEYWORDS).toHaveProperty('depression');
+    });
+
+    it('should have properly structured keyword categories', () => {
+      Object.values(CRISIS_KEYWORDS).forEach(category => {
+        expect(category).toHaveProperty('keywords');
+        expect(category).toHaveProperty('weight');
+        expect(category).toHaveProperty('category');
+        expect(category).toHaveProperty('description');
+        expect(Array.isArray(category.keywords)).toBe(true);
+        expect(typeof category.weight).toBe('number');
+        expect(typeof category.description).toBe('string');
+      });
+    });
+
+    it('should have keywords in descending severity order', () => {
+      const categories = Object.values(CRISIS_KEYWORDS);
+      for (let i = 0; i < categories.length - 1; i++) {
+        expect(categories[i].weight).toBeGreaterThanOrEqual(categories[i + 1].weight);
+      }
+    });
   });
 
-    it.skip("should minimize false negatives for coded language", () => { ;"''
-const codedTexts = [;]
-        "I want to go to sleep forever",'"'"""''
-        "I want to disappear",'""'import "I cant do this anymore" };''""''
+  describe('Emergency Contacts', () => {
+    it('should have all required emergency contacts', () => {
+      expect(EMERGENCY_CONTACTS).toHaveProperty('suicide_lifeline');
+      expect(EMERGENCY_CONTACTS).toHaveProperty('crisis_text_line');
+      expect(EMERGENCY_CONTACTS).toHaveProperty('emergency');
+    });
 
-      // Note: Current implementation might not catch all coded language
-      // This test documents current behavior and can be updated as detection improves
-      codedTexts.forEach(text =) {;
-const result = detectCrisis(text  );
-        // Some coded language might not be detected by keyword matching
-        expect(result).toBeDefined() }};
-  }};
-  }};
-  }};
+    it('should have properly structured contact information', () => {
+      Object.values(EMERGENCY_CONTACTS).forEach(contact => {
+        expect(contact).toHaveProperty('name');
+        expect(contact).toHaveProperty('available');
+        expect(typeof contact.name).toBe('string');
+        expect(typeof contact.available).toBe('string');
+      });
+    });
 
-// Dummy test to keep suite active
-describe("Test Suite Active", () =) { it("Placeholder test to prevent empty suite", () =) {'"'"''"
-    expect(true).toBe(true) }};
-  
+    it('should have 24/7 availability for critical contacts', () => {
+      expect(EMERGENCY_CONTACTS.suicide_lifeline.available).toBe('24/7');
+      expect(EMERGENCY_CONTACTS.crisis_text_line.available).toBe('24/7');
+      expect(EMERGENCY_CONTACTS.emergency.available).toBe('24/7');
+    });
+  });
+
+  describe('Integration Tests', () => {
+    it('should handle complex crisis scenarios', () => {
+      const complexText = `
+        I've been feeling really hopeless lately. Nobody cares about me anymore.
+        I keep thinking about suicide and how to kill myself. Tonight might be the night.
+        I have a plan and I've been researching methods. This is my final message.
+        Goodbye everyone, I won't be here much longer.
+      `;
+
+      const result = analyzeCrisisText(complexText);
+      
+      expect(result.crisisLevel).toBe('immediate');
+      expect(result.indicators.length).toBeGreaterThan(5);
+      expect(result.confidence).toBeGreaterThan(0.8);
+      expect(result.recommendations).toContain('IMMEDIATE INTERVENTION REQUIRED');
+    });
+
+    it('should provide appropriate response for mild distress', () => {
+      const mildText = `
+        I've been feeling a bit down lately and overwhelmed with work.
+        Sometimes I feel alone but I know I have friends who care.
+        Just having a tough time right now.
+      `;
+
+      const result = analyzeCrisisText(mildText);
+      
+      expect(result.crisisLevel).toBeOneOf(['low', 'moderate', 'none']);
+      expect(result.recommendations).not.toContain('IMMEDIATE INTERVENTION REQUIRED');
+    });
+  });
+
+  describe('Performance Tests', () => {
+    it('should analyze text quickly', () => {
+      const text = 'I want to kill myself' + ' and hurt myself'.repeat(100);
+      const startTime = Date.now();
+      
+      analyzeCrisisText(text);
+      
+      const duration = Date.now() - startTime;
+      expect(duration).toBeLessThan(100); // Should complete in under 100ms
+    });
+
+    it('should handle concurrent analysis', async () => {
+      const texts = [
+        'I want to kill myself',
+        'I am feeling hopeless',
+        'Nobody cares about me',
+        'I want to hurt myself',
+        'This is my goodbye message'
+      ];
+
+      const promises = texts.map(text => 
+        Promise.resolve(analyzeCrisisText(text))
+      );
+
+      const results = await Promise.all(promises);
+      
+      expect(results.length).toBe(5);
+      results.forEach(result => {
+        expect(result).toHaveProperty('crisisLevel');
+        expect(result).toHaveProperty('indicators');
+        expect(result).toHaveProperty('recommendations');
+      });
+    });
+  });
+});
