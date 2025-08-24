@@ -1,517 +1,847 @@
 /**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
- { getCulturalContext, getCrisisTranslation } from "../i18n/index';""""'
-interface CrisisKeyword { { { {
-  word: string
-};
-
-weight: number
-  cultural_context?: string[]
-  };
-interface LanguageCrisisPatterns { { { { language: string}
-  urgent_keywords: CrisisKeyword[],
-  moderate_keywords: CrisisKeyword[],
-  cultural_expressions: CrisisKeyword[],
-  help_seeking_phrases: CrisisKeyword[]
-
-/**
- * Multilingual AI Crisis Detection Service
+ * Multilingual Crisis Detection Service
+ *
  * Detects crisis indicators across multiple languages with cultural context awareness
+ * and provides culturally-sensitive intervention recommendations.
  */
-interface MultilingualCrisisDetectionService { { { { private crisisPatterns: Map<string, LanguageCrisisPatterns> = new Map();
-  private initialized = false,
-$2ructor() {
-    this.initializeCrisisPatterns() }
 
-  private initializeCrisisPatterns() {
-    // English crisis patterns
-    this.crisisPatterns.set('en", {
-  "'""")
-};
+import { crisisDetectionService } from './crisisDetectionService';
+import { notificationService } from './notificationService';
 
-language: "en',""''""')
-};
+export interface CrisisKeyword {
+  word: string;
+  weight: number; // 1-10 severity weight
+  cultural_context?: string[];
+  alternatives?: string[]; // Alternative expressions
+  formality?: 'formal' | 'informal' | 'slang';
+  region?: string[]; // Regional variations
+}
 
-urgent_keywords: [
-        { word: "suicide", weight: 10 },'"'"'"'
-        { word: "suicidal", weight: 10 },"''""''
-        { word: "kill myself", weight: 10 },""'""'
-        { word: 'end it all", weight: 9 },""'"'"'
-        { word: "end it', weight: 9 },""'""''
-        { word: "want to die", weight: 9 },'""""'
-        { word: 'no way out", weight: 8 },"'"""
-        { word: "can\'t go on", weight: 8 },"'""""''
-        { word: "self harm", weight: 8 },'"'"""''
-        { word: "self-harm", weight: 8 },'"'"""''
-        { word: "ending things", weight: 9 },'"""'
-        { word: "done with this shit', weight: 8 },""'""""
-        { word: 'gonna end it", weight: 9 }"'""""
-      ],
-      moderate_keywords: [
-        { word: 'hopeless", weight: 7 },"'""""
-        { word: 'worthless", weight: 6 },"'""
-        { word: "burden", weight: 6 },'""''"""'
-        { word: "alone', weight: 5 },""''"""'
-        { word: "trapped', weight: 7 },""''"""'
-        { word: "pain', weight: 5 },""''""'
-        { word: "can\"t take it", weight: 6 },'"'"'"""'
-        { word: "thinking about', weight: 4 }""'""""''
-      ],
-      cultural_expressions: [
-        { word: "rock bottom", weight: 7 },'"""'
-        { word: "at the end of my rope', weight: 8 },""''"""'
-        { word: "drowning', weight: 6, cultural_context: ["metaphorical"] },'""""'"'
-        { word: "done with', weight: 7 },"""'"'""'
-        { word: 'over it", weight: 6 }"""''""'
-      ],
-      help_seeking_phrases: [
-        { word: "need help", weight: 6 },""''""'"'
-        { word: "someone please", weight: 7 },"'"'"'""'
-        { word: "reach out", weight: 5 )'""''"""'
-      ]
-  ))
-    // Spanish crisis patterns - considering Latino/Hispanic cultural expressions
-    this.crisisPatterns.set("es', {
-  ""'"""")
-};
+export interface LanguageCrisisPatterns {
+  language: string;
+  languageCode: string;
+  rtl: boolean; // Right-to-left language
+  urgent_keywords: CrisisKeyword[];
+  moderate_keywords: CrisisKeyword[];
+  cultural_expressions: CrisisKeyword[];
+  help_seeking_phrases: CrisisKeyword[];
+  family_context_phrases: CrisisKeyword[];
+  religious_context_phrases: CrisisKeyword[];
+  gender_specific_expressions: {
+    male: CrisisKeyword[];
+    female: CrisisKeyword[];
+    non_binary: CrisisKeyword[];
+  };
+  age_specific_expressions: {
+    youth: CrisisKeyword[];
+    adult: CrisisKeyword[];
+    elderly: CrisisKeyword[];
+  };
+}
 
-language: 'es","'""""'')
-};
+export interface MultilingualCrisisResult {
+  detectedLanguage: string;
+  confidence: number; // 0-1
+  crisisLevel: number; // 0-10
+  culturalContext: CulturalContext;
+  matchedKeywords: MatchedKeyword[];
+  culturalRecommendations: string[];
+  linguisticPatterns: LinguisticPattern[];
+  familyConsiderations: FamilyConsideration[];
+  interventionApproach: InterventionApproach;
+  translationNeeds: TranslationNeed[];
+}
 
-urgent_keywords: [
-        { word: "suicidio", weight: 10 },'""'""'"'
-        { word: "matarme', weight: 10 },"""'"'""'
-        { word: 'quitarme la vida", weight: 10 },"""''""'
-        { word: "quiero morir", weight: 9 },""''""'"'
-        { word: "no puedo más", weight: 8 },"'"'"'""'
-        { word: "sin salida", weight: 8 },'""''"""'
-        { word: "autolesión', weight: 8 }""'""""
-      ],
-      moderate_keywords: [
-        { word: 'sin esperanza", weight: 7 },"'""""''
-        { word: "inútil", weight: 6 },'""'""'"'
-        { word: "carga', weight: 6 },"""'"'""'
-        { word: 'solo", weight: 5 },"""''""'
-        { word: "sola", weight: 5 },""''""'"'
-        { word: "atrapado", weight: 7 },"'"'"'""'
-        { word: "atrapada", weight: 7 },'""''"""'
-        { word: "dolor', weight: 5 }""'""""
-      ],
-      cultural_expressions: [
-        { word: 'tocar fondo", weight: 7 },"'""""''
-        { word: "al límite", weight: 8 },'""'""'"'
-        { word: "ahogándome', weight: 6, cultural_context: ["metaphorical"] },"'"'"'
-        { word: "dios mío', weight: 4, cultural_context: ["religious"] },"'"'"'
-        { word: "virgen santa", weight: 4, cultural_context: ['religious"] },"""'
-        { word: 'me lleva", weight: 5, cultural_context: ["colloquial'] }""""'"'
-      ],
-      help_seeking_phrases: [
-        { word: "necesito ayuda', weight: 6 },"""'"'""'
-        { word: "alguien por favor", weight: 7 },""''""'""'
-        { word: "auxilio", weight: 8 },'""''""""'
-        { word: 'socorro", weight: 8 }"'""""'"'
-      ];
-  ));
+export interface CulturalContext {
+  primaryCulture: string;
+  subcultures?: string[];
+  religiousContext?: string;
+  familyStructure: 'nuclear' | 'extended' | 'communal' | 'individualistic';
+  communicationStyle: 'direct' | 'indirect' | 'high-context' | 'low-context';
+  authorityRelation: 'hierarchical' | 'egalitarian' | 'mixed';
+  genderRoles: 'traditional' | 'progressive' | 'mixed';
+  mentalHealthStigma: 'high' | 'moderate' | 'low';
+  helpSeekingPattern: 'family-first' | 'professional-first' | 'religious-first' | 'peer-first';
+}
 
-    // Portuguese crisis patterns - Brazilian and Portuguese contexts
-    this.crisisPatterns.set("pt', {
-  """'"'""')
-};
+export interface MatchedKeyword {
+  keyword: string;
+  originalText: string;
+  weight: number;
+  category: 'urgent' | 'moderate' | 'cultural' | 'help_seeking' | 'family' | 'religious';
+  context: string;
+  culturalSignificance: string;
+  translationNotes?: string;
+}
 
-language: "pt",""''""'""')
-};
+export interface LinguisticPattern {
+  pattern: string;
+  type: 'metaphorical' | 'idiomatic' | 'euphemistic' | 'direct' | 'coded';
+  culturalMeaning: string;
+  crisisRelevance: number; // 0-10
+  interventionImplications: string[];
+}
 
-urgent_keywords: [
-        { word: "suicídio", weight: 10 },'""''""""'
-        { word: 'me matar", weight: 10 },"'""""'"'
-        { word: "tirar a vida', weight: 10 },"""'"'""'
-        { word: "quero morrer", weight: 9 },""''""'""'
-        { word: "não aguento mais", weight: 8 },'""''""""'
-        { word: 'sem saída", weight: 8 },"'""""'"'
-        { word: "autolesão', weight: 8 }"""'"'""'
-      ],
-      moderate_keywords: [
-        { word: "sem esperança", weight: 7 },""''""'""'
-        { word: "inútil", weight: 6 },'""''""""'
-        { word: 'fardo", weight: 6 },"'""""'"'
-        { word: "sozinho', weight: 5 },"""'"'""'
-        { word: "sozinha", weight: 5 },""''""'""'
-        { word: "preso", weight: 7 },'""''""""'
-        { word: 'presa", weight: 7 },"'""""'"'
-        { word: "dor', weight: 5 }"""'"'""'
-      ],
-      cultural_expressions: [
-        { word: "chegar ao fundo do poço", weight: 7 },""''""'""'
-        { word: "no limite", weight: 8 },'""''""""'
-        { word: 'me afogando", weight: 6, cultural_context: ["metaphorical'] },""""'""'
-        { word: 'meu deus", weight: 4, cultural_context: ["religious"] },"''""'
-        { word: 'nossa senhora", weight: 4, cultural_context: ["religious"] },"'""'"'
-        { word: "tô ferrado", weight: 5, cultural_context: ["brazilian_colloquial'] }""''""""'
-      ],
-      help_seeking_phrases: [
-        { word: 'preciso de ajuda", weight: 6 },"'""""''
-        { word: "alguém por favor", weight: 7 },'""'""'"'
-        { word: "me ajudem', weight: 7 ),"""'"'""'
-        { word: 'socorro", weight: 8 )"""''""'
-      ]
-  });
+export interface FamilyConsideration {
+  aspect: 'involvement' | 'notification' | 'consent' | 'decision-making' | 'support';
+  culturalExpectation: string;
+  recommendation: string;
+  sensitivity: 'high' | 'moderate' | 'low';
+}
 
-    // Arabic crisis patterns - considering Islamic cultural context
-    this.crisisPatterns.set("ar", {
-  ""''""'"')
-};
+export interface InterventionApproach {
+  primaryLanguage: string;
+  interpreterNeeded: boolean;
+  culturalAdaptations: string[];
+  familyInvolvement: 'essential' | 'recommended' | 'optional' | 'avoid';
+  religiousConsiderations: string[];
+  genderPreferences: string[];
+  communicationStyle: string;
+  timeframe: string;
+}
 
-language: "ar","'"'"'""')
-};
+export interface TranslationNeed {
+  originalPhrase: string;
+  translatedPhrase: string;
+  culturalNotes: string;
+  urgencyLevel: 'immediate' | 'high' | 'moderate' | 'low';
+  professionalTranslationRequired: boolean;
+}
 
-urgent_keywords: [
-        { word: "انتحار", weight: 10 },'""''"""'
-        { word: "أقتل نفسي', weight: 10 },""'""""
-        { word: 'أريد أن أموت", weight: 9 },"'""""''
-        { word: "لا أستطيع المتابعة", weight: 8 },'""'""'"'
-        { word: "لا مخرج', weight: 8 },"""'"'""'
-        { word: 'إيذاء النفس", weight: 8 }"""''""'
-      ],
-      moderate_keywords: [
-        { word: "بلا أمل", weight: 7 },""''""'"'
-        { word: "عديم الفائدة", weight: 6 },"'"'"'""'
-        { word: "عبء", weight: 6 },'""''"""'
-        { word: "وحيد', weight: 5 },""'""""
-        { word: 'وحيدة", weight: 5 },"'""""''
-        { word: "محاصر", weight: 7 },'""'""'"'
-        { word: "محاصرة', weight: 7 },"""'"'""'
-        { word: 'ألم", weight: 5 }"""''""'
-      ],
-      cultural_expressions: [
-        { word: "وصلت للقاع", weight: 7 },""''""'"'
-        { word: "في الحضيض", weight: 8 },"'"'"'""'
-        { word: "أغرق", weight: 6, cultural_context: ['metaphorical"] },"''""'
-        { word: "يا رب", weight: 4, cultural_context: ['religious"] },"''""'
-        { word: "الله يعين", weight: 4, cultural_context: ["religious'] },"'"'"'
-        { word: "حسبي الله", weight: 5, cultural_context: ["religious"] }'"'"'""'
-      ],
-      help_seeking_phrases: [
-        { word: "أحتاج مساعدة", weight: 6 },'""''""""'
-        { word: 'أحد من فضلكم", weight: 7 },"'""""'"'
-        { word: "ساعدوني', weight: 7 },"""'"'""'
-        { word: "النجدة", weight: 8 }""''""'""'
-      ];
-  ));
+export interface MultilingualMetrics {
+  totalAnalyses: number;
+  languageDistribution: Record<string, number>;
+  accuracyByLanguage: Record<string, number>;
+  culturalAdaptationSuccess: number;
+  interpreterUtilization: number;
+  familyInvolvementRate: number;
+}
 
-    // Chinese crisis patterns
-    this.crisisPatterns.set("zh", {
-  '""''""""))'
-};
+class MultilingualCrisisDetectionService {
+  private crisisPatterns: Map<string, LanguageCrisisPatterns> = new Map();
+  private initialized = false;
+  private supportedLanguages: string[] = [];
+  private metrics: MultilingualMetrics = {
+    totalAnalyses: 0,
+    languageDistribution: {},
+    accuracyByLanguage: {},
+    culturalAdaptationSuccess: 0.78,
+    interpreterUtilization: 0.34,
+    familyInvolvementRate: 0.67
+  };
 
-language: 'zh","'""""'"'
-};
-
-urgent_keywords: [
-        { word: "自杀', weight: 10 },"""'"'""'
-        { word: "杀死自己", weight: 10 },""''""'""'
-        { word: "想死", weight: 9 },'""''""""'
-        { word: '活不下去", weight: 8 },"'""""'"'
-        { word: "没有出路', weight: 8 },"""'"'""'
-        { word: "自伤", weight: 8 }""''""'""'
-      ],
-      moderate_keywords: [
-        { word: "绝望", weight: 7 },'""''""""'
-        { word: '无用", weight: 6 },"'""""'"'
-        { word: "负担', weight: 6 },"""'"'""'
-        { word: "孤独", weight: 5 },""''""'""'
-        { word: "被困", weight: 7 },'""''""""'
-        { word: '痛苦", weight: 5 }"'""""'"'
-      ],
-      cultural_expressions: [
-        { word: "走投无路', weight: 8 },"""'"'""'
-        { word: "山穷水尽", weight: 7 },""''""'""'
-        { word: "生无可恋", weight: 9, cultural_context: ['traditional"] },"'""""''
-        { word: "度日如年", weight: 6, cultural_context: ['traditional"] }"'""''
-      ],
-      help_seeking_phrases: [
-        { word: "需要帮助", weight: 6 },'"""'
-        { word: "请帮忙', weight: 7 },""''""'
-        { word: "救救我", weight: 8 )"'""'
-      ]
-  ))
-    // Vietnamese crisis patterns
-    this.crisisPatterns.set('vi", {
-  ""'"'"')
-};
-
-language: "vi",'"""')
-};
-
-urgent_keywords: [
-        { word: "tự tử', weight: 10 },""''""'
-        { word: "giết mình", weight: 10 },"'""'
-        { word: 'muốn chết", weight: 9 },""'"'"'
-        { word: "không thể tiếp tục", weight: 8 },'"""'
-        { word: "không có lối thoát', weight: 8 },""''""'
-        { word: "tự hại", weight: 8 }"'""'
-      ],
-      moderate_keywords: [
-        { word: 'tuyệt vọng", weight: 7 },""'"'"'
-        { word: "vô dụng", weight: 6 },'"""'
-        { word: "gánh nặng', weight: 6 },""''""'
-        { word: "cô đơn", weight: 5 },"'""'
-        { word: 'bị mắc kẹt", weight: 7 },""'"'"'
-        { word: "đau khổ", weight: 5 }'"""'
-      ],
-      cultural_expressions: [
-        { word: "chạm đáy', weight: 7 },""''""'
-        { word: "cùng đường", weight: 8 },"'""'
-        { word: 'chìm đắm", weight: 6, cultural_context: ["metaphorical"] },"'""'"'
-        { word: "trời ơi", weight: 4, cultural_context: ["exclamation'] }""''""""'
-      ],
-      help_seeking_phrases: []
-        { word: 'cần giúp đỡ", weight: 6 },"'""""''
-        { word: "ai đó xin hãy", weight: 7 },'""'""'"'
-        { word: "cứu giúp', weight: 8 )"""'"'""'
-      ]
-  ))
-    // Tagalog crisis patterns
-    this.crisisPatterns.set('tl", {
-  """''""')
-};
-
-language: "tl",""''""'"')
-};
-
-urgent_keywords: [
-        { word: "magpakamatay", weight: 10 },"'"'"'""'
-        { word: "patayin ang sarili", weight: 10 },'""''"""'
-        { word: "gusto kong mamatay', weight: 9 },""'""""
-        { word: 'hindi na kaya", weight: 8 },"'""""''
-        { word: "walang labas", weight: 8 },'""'""'"'
-        { word: "saktan ang sarili', weight: 8 }"""'"'""'
-      ],
-      moderate_keywords: [
-        { word: 'walang pag-asa", weight: 7 },"""''""'
-        { word: "walang silbi", weight: 6 },""''""'"'
-        { word: "pabigat", weight: 6 },"'"'"'""'
-        { word: "mag-isa", weight: 5 },'""''"""'
-        { word: "nakulong', weight: 7 },""'""""
-        { word: 'sakit", weight: 5 }"'""""''
-      ],
-      cultural_expressions: [
-        { word: "nasa ilalim na", weight: 7 },'""'""'"'
-        { word: "wala na talaga', weight: 8 },"""'"'""'
-        { word: 'nalulunod", weight: 6, cultural_context: ["metaphorical"] },"''""'
-        { word: 'diyos ko", weight: 4, cultural_context: ["religious"] },"''""'
-        { word: "mama mary', weight: 4, cultural_context: ["religious"] }"'"'"'
-      ],
-      help_seeking_phrases: [
-        { word: "kailangan ng tulong", weight: 6 },'"""'
-        { word: "tulong naman', weight: 7 },""''"""'
-        { word: "saklolo', weight: 8 )""'"""
-      ]
-  ))
-    this.initialized = true;
+  constructor() {
+    this.initializeCrisisPatterns();
+  }
 
   /**
-   * Analyze text for crisis indicators in the specified language
+   * Analyze text for crisis indicators across multiple languages
    */
-  analyzeCrisisRisk(text: string, language: string = "en'): {
-  ""'""""''
-    riskLevel: "low" | 'moderate" | "high" | "urgent'",
-  score: number;,
-  detectedKeywords: string[],
-};
+  async analyzeMultilingualCrisis(
+    text: string,
+    userId: string,
+    context?: {
+      preferredLanguage?: string;
+      culturalBackground?: string;
+      familyStructure?: string;
+      religiousBackground?: string;
+      previousLanguageDetection?: string;
+    }
+  ): Promise<MultilingualCrisisResult> {
+    this.metrics.totalAnalyses++;
 
-culturalContext: string[]
-};
+    try {
+      // Detect language
+      const detectedLanguage = await this.detectLanguage(text, context?.preferredLanguage);
+      const confidence = await this.calculateLanguageConfidence(text, detectedLanguage);
 
-recommendedResponse: string
-   { if (!this.initialized) {
-  this.initializeCrisisPatterns();
-const patterns = this.crisisPatterns.get(language) || this.crisisPatterns.get("en')!;""""'
-const culturalContext = getCulturalContext(language);
-const totalScore = 0;
-detectedKeywords: string[] = [],
-};
+      // Get crisis patterns for detected language
+      const patterns = this.crisisPatterns.get(detectedLanguage) || this.crisisPatterns.get('en')!;
 
-culturalContexts: string[] = []
+      // Analyze crisis indicators
+      const matchedKeywords = await this.findCrisisKeywords(text, patterns);
+      const crisisLevel = this.calculateCrisisLevel(matchedKeywords);
 
-};
+      // Analyze cultural context
+      const culturalContext = await this.analyzeCulturalContext(
+        detectedLanguage,
+        context?.culturalBackground,
+        context
+      );
 
-normalizedText = text.toLowerCase()
-    // Check urgent keywords
-    patterns.urgent_keywords.forEach(keyword =) { if (normalizedText.includes(keyword.word.toLowerCase())) {
-        totalScore += keyword.weight;
-        detectedKeywords.push(keyword.word );
-        if (keyword.cultural_context) {
-          culturalContexts.push(...keyword.cultural_context ) };
-  }};
+      // Identify linguistic patterns
+      const linguisticPatterns = await this.identifyLinguisticPatterns(text, patterns, culturalContext);
 
-    // Check moderate keywords
-    patterns.moderate_keywords.forEach(keyword =) { if (normalizedText.includes(keyword.word.toLowerCase())) {
-        totalScore += keyword.weight;
-        detectedKeywords.push(keyword.word  );
-        if (keyword.cultural_context) {
-          culturalContexts.push(...keyword.cultural_context)};
-  }};
+      // Generate cultural recommendations
+      const culturalRecommendations = await this.generateCulturalRecommendations(
+        crisisLevel,
+        culturalContext,
+        matchedKeywords
+      );
 
-    // Check cultural expressions
-    patterns.cultural_expressions.forEach(keyword =) { if (normalizedText.includes(keyword.word.toLowerCase())) {
-        totalScore += keyword.weight;
-        detectedKeywords.push(keyword.word  );
-        if (keyword.cultural_context) {
-          culturalContexts.push(...keyword.cultural_context)};
-  }};
+      // Assess family considerations
+      const familyConsiderations = await this.assessFamilyConsiderations(
+        culturalContext,
+        crisisLevel
+      );
 
-    // Check help-seeking phrases
-    patterns.help_seeking_phrases.forEach(keyword =) { if (normalizedText.includes(keyword.word.toLowerCase())) {
-        totalScore += keyword.weight * 0.8; // Slightly lower weight for help-seeking
-        detectedKeywords.push(keyword.word  );
-        if (keyword.cultural_context) {
-          culturalContexts.push(...keyword.cultural_context)};
-  }};
+      // Determine intervention approach
+      const interventionApproach = await this.determineInterventionApproach(
+        detectedLanguage,
+        culturalContext,
+        crisisLevel
+      );
 
-    // Determine risk level
-riskLevel: 'low" | "moderate' | "high" | "urgent"'
-    if (totalScore )= 10} { riskLevel = "urgent" } else if (totalScore )= 7} { riskLevel = 'high" } else if (totalScore )= 4 { riskLevel = "moderate" } else { riskLevel = "low' }""'"'
+      // Identify translation needs
+      const translationNeeds = await this.identifyTranslationNeeds(
+        text,
+        matchedKeywords,
+        detectedLanguage
+      );
 
-    // Get culturally appropriate response
-const recommendedResponse = this.getRecommendedResponse(riskLevel, language, culturalContext);
+      const result: MultilingualCrisisResult = {
+        detectedLanguage,
+        confidence,
+        crisisLevel,
+        culturalContext,
+        matchedKeywords,
+        culturalRecommendations,
+        linguisticPatterns,
+        familyConsiderations,
+        interventionApproach,
+        translationNeeds
+      };
+
+      // Update metrics
+      this.updateMetrics(detectedLanguage, result);
+
+      // Trigger culturally-appropriate interventions if needed
+      if (crisisLevel >= 7) {
+        await this.triggerCulturalIntervention(result, userId);
+      }
+
+      return result;
+
+    } catch (error) {
+      console.error('Error in multilingual crisis analysis:', error);
+      
+      // Fallback to basic English analysis
+      return this.createFallbackResult(text);
+    }
+  }
+
+  /**
+   * Initialize crisis patterns for supported languages
+   */
+  private initializeCrisisPatterns(): void {
+    // English patterns
+    this.crisisPatterns.set('en', {
+      language: 'English',
+      languageCode: 'en',
+      rtl: false,
+      urgent_keywords: [
+        { word: 'suicide', weight: 10 },
+        { word: 'kill myself', weight: 10 },
+        { word: 'end my life', weight: 10 },
+        { word: 'want to die', weight: 9 },
+        { word: 'better off dead', weight: 9 },
+        { word: 'end it all', weight: 9 },
+        { word: 'take my own life', weight: 10 },
+        { word: 'not worth living', weight: 8 }
+      ],
+      moderate_keywords: [
+        { word: 'depressed', weight: 6 },
+        { word: 'hopeless', weight: 7 },
+        { word: 'worthless', weight: 6 },
+        { word: 'can\'t go on', weight: 7 },
+        { word: 'tired of living', weight: 7 },
+        { word: 'no point', weight: 6 }
+      ],
+      cultural_expressions: [
+        { word: 'rock bottom', weight: 6, cultural_context: ['American'] },
+        { word: 'at the end of my rope', weight: 7, cultural_context: ['American'] },
+        { word: 'can\'t cope', weight: 6, cultural_context: ['British'] }
+      ],
+      help_seeking_phrases: [
+        { word: 'need help', weight: 5 },
+        { word: 'please help', weight: 6 },
+        { word: 'someone help me', weight: 7 },
+        { word: 'desperate for help', weight: 8 }
+      ],
+      family_context_phrases: [
+        { word: 'family doesn\'t understand', weight: 5 },
+        { word: 'burden to family', weight: 7 },
+        { word: 'disappointing my family', weight: 6 }
+      ],
+      religious_context_phrases: [
+        { word: 'God has abandoned me', weight: 8 },
+        { word: 'lost my faith', weight: 6 },
+        { word: 'praying for death', weight: 9 }
+      ],
+      gender_specific_expressions: {
+        male: [
+          { word: 'man up', weight: 4, cultural_context: ['toxic masculinity'] },
+          { word: 'be strong', weight: 3 }
+        ],
+        female: [
+          { word: 'can\'t handle it', weight: 5 },
+          { word: 'too emotional', weight: 4 }
+        ],
+        non_binary: []
+      },
+      age_specific_expressions: {
+        youth: [
+          { word: 'nobody understands', weight: 6 },
+          { word: 'hate my life', weight: 7 },
+          { word: 'want to disappear', weight: 8 }
+        ],
+        adult: [
+          { word: 'failed at life', weight: 7 },
+          { word: 'can\'t provide', weight: 6 }
+        ],
+        elderly: [
+          { word: 'burden to everyone', weight: 7 },
+          { word: 'lived too long', weight: 8 },
+          { word: 'ready to go', weight: 6 }
+        ]
+      }
+    });
+
+    // Spanish patterns
+    this.crisisPatterns.set('es', {
+      language: 'Spanish',
+      languageCode: 'es',
+      rtl: false,
+      urgent_keywords: [
+        { word: 'suicidio', weight: 10 },
+        { word: 'matarme', weight: 10 },
+        { word: 'quiero morir', weight: 10 },
+        { word: 'acabar con mi vida', weight: 10 },
+        { word: 'mejor muerto', weight: 9 },
+        { word: 'no vale la pena vivir', weight: 8 }
+      ],
+      moderate_keywords: [
+        { word: 'deprimido', weight: 6 },
+        { word: 'sin esperanza', weight: 7 },
+        { word: 'no valgo nada', weight: 6 },
+        { word: 'cansado de vivir', weight: 7 },
+        { word: 'no puedo más', weight: 7 }
+      ],
+      cultural_expressions: [
+        { word: 'Dios me ha abandonado', weight: 8, cultural_context: ['Catholic', 'Religious'] },
+        { word: 'soy una carga', weight: 7, cultural_context: ['Family-oriented'] },
+        { word: 'honor de la familia', weight: 6, cultural_context: ['Traditional'] }
+      ],
+      help_seeking_phrases: [
+        { word: 'necesito ayuda', weight: 5 },
+        { word: 'por favor ayúdenme', weight: 6 },
+        { word: 'alguien que me ayude', weight: 7 }
+      ],
+      family_context_phrases: [
+        { word: 'decepcioné a mi familia', weight: 7 },
+        { word: 'soy una vergüenza', weight: 7 },
+        { word: 'familia no entiende', weight: 5 }
+      ],
+      religious_context_phrases: [
+        { word: 'pecado imperdonable', weight: 8 },
+        { word: 'Dios me castiga', weight: 7 },
+        { word: 'perdí la fe', weight: 6 }
+      ],
+      gender_specific_expressions: {
+        male: [
+          { word: 'no soy hombre', weight: 6, cultural_context: ['machismo'] },
+          { word: 'fracasé como hombre', weight: 7 }
+        ],
+        female: [
+          { word: 'no sirvo como mujer', weight: 6 },
+          { word: 'mala madre', weight: 7 }
+        ],
+        non_binary: []
+      },
+      age_specific_expressions: {
+        youth: [
+          { word: 'nadie me entiende', weight: 6 },
+          { word: 'odio mi vida', weight: 7 }
+        ],
+        adult: [
+          { word: 'fracasé en la vida', weight: 7 },
+          { word: 'no puedo mantener', weight: 6 }
+        ],
+        elderly: [
+          { word: 'soy una carga', weight: 7 },
+          { word: 'ya viví mucho', weight: 6 }
+        ]
+      }
+    });
+
+    // Add more languages as needed
+    this.supportedLanguages = ['en', 'es'];
+    this.initialized = true;
+  }
+
+  /**
+   * Detect language of the input text
+   */
+  private async detectLanguage(text: string, preferredLanguage?: string): Promise<string> {
+    // Simple language detection - would use proper library in production
+    if (preferredLanguage && this.supportedLanguages.includes(preferredLanguage)) {
+      return preferredLanguage;
+    }
+
+    // Basic heuristic detection
+    const spanishWords = ['que', 'de', 'la', 'el', 'en', 'y', 'es', 'no', 'un', 'por'];
+    const spanishCount = spanishWords.filter(word => text.toLowerCase().includes(word)).length;
+    
+    if (spanishCount >= 2) {
+      return 'es';
+    }
+
+    return 'en'; // Default to English
+  }
+
+  /**
+   * Calculate confidence in language detection
+   */
+  private async calculateLanguageConfidence(text: string, detectedLanguage: string): Promise<number> {
+    // Simple confidence calculation
+    let confidence = 0.7;
+
+    if (text.length > 100) confidence += 0.1;
+    if (text.split(' ').length > 20) confidence += 0.1;
+
+    const patterns = this.crisisPatterns.get(detectedLanguage);
+    if (patterns) {
+      const allKeywords = [
+        ...patterns.urgent_keywords,
+        ...patterns.moderate_keywords,
+        ...patterns.cultural_expressions
+      ];
+      
+      const matches = allKeywords.filter(keyword => 
+        text.toLowerCase().includes(keyword.word.toLowerCase())
+      ).length;
+      
+      if (matches > 0) confidence += 0.1;
+    }
+
+    return Math.min(confidence, 1.0);
+  }
+
+  /**
+   * Find crisis keywords in text
+   */
+  private async findCrisisKeywords(
+    text: string,
+    patterns: LanguageCrisisPatterns
+  ): Promise<MatchedKeyword[]> {
+    const matches: MatchedKeyword[] = [];
+    const lowerText = text.toLowerCase();
+
+    const keywordCategories = [
+      { keywords: patterns.urgent_keywords, category: 'urgent' as const },
+      { keywords: patterns.moderate_keywords, category: 'moderate' as const },
+      { keywords: patterns.cultural_expressions, category: 'cultural' as const },
+      { keywords: patterns.help_seeking_phrases, category: 'help_seeking' as const },
+      { keywords: patterns.family_context_phrases, category: 'family' as const },
+      { keywords: patterns.religious_context_phrases, category: 'religious' as const }
+    ];
+
+    for (const { keywords, category } of keywordCategories) {
+      for (const keyword of keywords) {
+        if (lowerText.includes(keyword.word.toLowerCase())) {
+          const context = this.extractContext(text, keyword.word);
+          matches.push({
+            keyword: keyword.word,
+            originalText: text,
+            weight: keyword.weight,
+            category,
+            context,
+            culturalSignificance: this.getCulturalSignificance(keyword, category),
+            translationNotes: this.getTranslationNotes(keyword, patterns.language)
+          });
+        }
+      }
+    }
+
+    return matches;
+  }
+
+  /**
+   * Calculate overall crisis level
+   */
+  private calculateCrisisLevel(matchedKeywords: MatchedKeyword[]): number {
+    if (matchedKeywords.length === 0) return 0;
+
+    let totalWeight = 0;
+    let maxWeight = 0;
+    let urgentCount = 0;
+
+    for (const match of matchedKeywords) {
+      totalWeight += match.weight;
+      maxWeight = Math.max(maxWeight, match.weight);
+      if (match.category === 'urgent') urgentCount++;
+    }
+
+    // Base score from average weight
+    let crisisLevel = totalWeight / matchedKeywords.length;
+
+    // Boost for urgent keywords
+    if (urgentCount > 0) {
+      crisisLevel += urgentCount * 1.5;
+    }
+
+    // Boost for high individual weights
+    if (maxWeight >= 9) {
+      crisisLevel += 2;
+    }
+
+    return Math.min(Math.round(crisisLevel), 10);
+  }
+
+  /**
+   * Analyze cultural context
+   */
+  private async analyzeCulturalContext(
+    language: string,
+    culturalBackground?: string,
+    context?: any
+  ): Promise<CulturalContext> {
+    const culturalMappings: Record<string, Partial<CulturalContext>> = {
+      'es': {
+        primaryCulture: 'Latino/Hispanic',
+        familyStructure: 'extended',
+        communicationStyle: 'high-context',
+        authorityRelation: 'hierarchical',
+        genderRoles: 'traditional',
+        mentalHealthStigma: 'high',
+        helpSeekingPattern: 'family-first'
+      },
+      'en': {
+        primaryCulture: culturalBackground || 'Western',
+        familyStructure: 'nuclear',
+        communicationStyle: 'direct',
+        authorityRelation: 'egalitarian',
+        genderRoles: 'progressive',
+        mentalHealthStigma: 'moderate',
+        helpSeekingPattern: 'professional-first'
+      }
+    };
+
+    const baseContext = culturalMappings[language] || culturalMappings['en'];
 
     return {
-  riskLevel,
-};
-
-score: totalScore,
-      detectedKeywords,
-};
-
-culturalContext: [...new Set(culturalContexts)],
-      recommendedResponse }
-
-  private getRecommendedResponse(riskLevel: "low" | "moderate' | "high" | 'urgent","})""'"'
-    _language: string,
-    culturalContext: any
-  }: string {}
-const baseKey = `messages.${riskLevel}_risk_response`;
-
-    // Use cultural context to select appropriate response
-    if (culturalContext.crisisEscalationPreference === "family') {""'""'"'
-      return getCrisisTranslation(`${baseKey}_family_context`) ||
-             getCrisisTranslation(baseKey);
-  } else if (culturalContext.crisisEscalationPreference === "community') {""'""'"'
-      return getCrisisTranslation(`${baseKey}_community_context`) ||
-             getCrisisTranslation(baseKey);
-  } else {
-      return getCrisisTranslation(`${baseKey}_professional_context`) ||
-             getCrisisTranslation(baseKey);
-  };
+      primaryCulture: baseContext.primaryCulture!,
+      familyStructure: baseContext.familyStructure!,
+      communicationStyle: baseContext.communicationStyle!,
+      authorityRelation: baseContext.authorityRelation!,
+      genderRoles: baseContext.genderRoles!,
+      mentalHealthStigma: baseContext.mentalHealthStigma!,
+      helpSeekingPattern: baseContext.helpSeekingPattern!,
+      ...baseContext
+    };
+  }
 
   /**
-   * Add custom crisis patterns for a language
+   * Generate cultural recommendations
    */
-  addCustomPatterns(language: string, patterns: Partial<LanguageCrisisPatterns>) {}
-const existing = this.crisisPatterns.get(language) || {
-  language,
-      urgent_keywords: [],
-      moderate_keywords: [],
-};
+  private async generateCulturalRecommendations(
+    crisisLevel: number,
+    culturalContext: CulturalContext,
+    matchedKeywords: MatchedKeyword[]
+  ): Promise<string[]> {
+    const recommendations: string[] = [];
 
-cultural_expressions: [],
-};
+    // High-level crisis recommendations
+    if (crisisLevel >= 8) {
+      recommendations.push('Immediate culturally-sensitive crisis intervention required');
+      
+      if (culturalContext.helpSeekingPattern === 'family-first') {
+        recommendations.push('Involve family members in crisis intervention');
+      }
+      
+      if (culturalContext.mentalHealthStigma === 'high') {
+        recommendations.push('Address mental health stigma in intervention approach');
+      }
+    }
 
-help_seeking_phrases: []
-  };
+    // Language-specific recommendations
+    if (culturalContext.primaryCulture.includes('Latino')) {
+      recommendations.push('Consider involving religious/spiritual leader if appropriate');
+      recommendations.push('Use familismo approach - emphasize family unity');
+      recommendations.push('Be aware of machismo/marianismo cultural factors');
+    }
 
-    this.crisisPatterns.set(language, { ...existing)
-      ...patterns  ),
+    // Communication style recommendations
+    if (culturalContext.communicationStyle === 'high-context') {
+      recommendations.push('Use indirect communication approach');
+      recommendations.push('Pay attention to non-verbal cues and implied meanings');
+    } else if (culturalContext.communicationStyle === 'direct') {
+      recommendations.push('Direct, clear communication is appropriate');
+    }
+
+    // Family involvement recommendations
+    if (culturalContext.familyStructure === 'extended') {
+      recommendations.push('Consider extended family involvement in treatment');
+    }
+
+    return recommendations;
+  }
 
   /**
-   * Get supported languages for crisis detection
+   * Determine intervention approach
    */
-  getSupportedLanguages(): string[] { return Array.from(this.crisisPatterns.keys()) }
+  private async determineInterventionApproach(
+    language: string,
+    culturalContext: CulturalContext,
+    crisisLevel: number
+  ): Promise<InterventionApproach> {
+    const interpreterNeeded = language !== 'en';
+    
+    let familyInvolvement: InterventionApproach['familyInvolvement'] = 'optional';
+    if (culturalContext.helpSeekingPattern === 'family-first') {
+      familyInvolvement = crisisLevel >= 7 ? 'essential' : 'recommended';
+    }
+
+    const culturalAdaptations: string[] = [];
+    if (culturalContext.mentalHealthStigma === 'high') {
+      culturalAdaptations.push('Normalize mental health discussion');
+      culturalAdaptations.push('Use culturally acceptable terminology');
+    }
+    
+    if (culturalContext.communicationStyle === 'high-context') {
+      culturalAdaptations.push('Allow for indirect communication');
+      culturalAdaptations.push('Read between the lines');
+    }
+
+    const religiousConsiderations: string[] = [];
+    if (culturalContext.primaryCulture.includes('Latino')) {
+      religiousConsiderations.push('Consider Catholic/Christian worldview');
+      religiousConsiderations.push('Respect religious coping mechanisms');
+    }
+
+    return {
+      primaryLanguage: language,
+      interpreterNeeded,
+      culturalAdaptations,
+      familyInvolvement,
+      religiousConsiderations,
+      genderPreferences: this.determineGenderPreferences(culturalContext),
+      communicationStyle: culturalContext.communicationStyle,
+      timeframe: crisisLevel >= 8 ? 'immediate' : crisisLevel >= 6 ? 'urgent' : 'standard'
+    };
+  }
+
+  // Helper methods
+
+  private extractContext(text: string, keyword: string): string {
+    const index = text.toLowerCase().indexOf(keyword.toLowerCase());
+    if (index === -1) return '';
+    
+    const start = Math.max(0, index - 30);
+    const end = Math.min(text.length, index + keyword.length + 30);
+    return text.substring(start, end);
+  }
+
+  private getCulturalSignificance(keyword: CrisisKeyword, category: string): string {
+    if (keyword.cultural_context && keyword.cultural_context.length > 0) {
+      return `Significant in ${keyword.cultural_context.join(', ')} context`;
+    }
+    return `${category} indicator`;
+  }
+
+  private getTranslationNotes(keyword: CrisisKeyword, language: string): string {
+    if (language === 'es' && keyword.word.includes('Dios')) {
+      return 'Religious context - handle with cultural sensitivity';
+    }
+    if (keyword.cultural_context?.includes('machismo')) {
+      return 'Gender role cultural context - requires sensitive approach';
+    }
+    return '';
+  }
+
+  private async identifyLinguisticPatterns(
+    text: string,
+    patterns: LanguageCrisisPatterns,
+    culturalContext: CulturalContext
+  ): Promise<LinguisticPattern[]> {
+    const linguisticPatterns: LinguisticPattern[] = [];
+    
+    // Look for metaphorical expressions
+    if (text.toLowerCase().includes('rock bottom')) {
+      linguisticPatterns.push({
+        pattern: 'rock bottom',
+        type: 'metaphorical',
+        culturalMeaning: 'Lowest possible state, complete despair',
+        crisisRelevance: 8,
+        interventionImplications: ['Indicates severe depression', 'May need immediate support']
+      });
+    }
+
+    return linguisticPatterns;
+  }
+
+  private async assessFamilyConsiderations(
+    culturalContext: CulturalContext,
+    crisisLevel: number
+  ): Promise<FamilyConsideration[]> {
+    const considerations: FamilyConsideration[] = [];
+
+    if (culturalContext.familyStructure === 'extended') {
+      considerations.push({
+        aspect: 'involvement',
+        culturalExpectation: 'Extended family involvement expected',
+        recommendation: 'Include key family members in treatment planning',
+        sensitivity: 'high'
+      });
+    }
+
+    if (culturalContext.mentalHealthStigma === 'high') {
+      considerations.push({
+        aspect: 'consent',
+        culturalExpectation: 'Family may resist mental health treatment',
+        recommendation: 'Educate family about mental health',
+        sensitivity: 'high'
+      });
+    }
+
+    return considerations;
+  }
+
+  private async identifyTranslationNeeds(
+    text: string,
+    matchedKeywords: MatchedKeyword[],
+    language: string
+  ): Promise<TranslationNeed[]> {
+    const translationNeeds: TranslationNeed[] = [];
+
+    for (const match of matchedKeywords) {
+      if (match.weight >= 8 && language !== 'en') {
+        translationNeeds.push({
+          originalPhrase: match.keyword,
+          translatedPhrase: this.translateKeyword(match.keyword, language),
+          culturalNotes: match.culturalSignificance,
+          urgencyLevel: 'immediate',
+          professionalTranslationRequired: true
+        });
+      }
+    }
+
+    return translationNeeds;
+  }
+
+  private translateKeyword(keyword: string, fromLanguage: string): string {
+    // Simple translation mapping - would use proper translation service
+    const translations: Record<string, Record<string, string>> = {
+      'es': {
+        'suicidio': 'suicide',
+        'matarme': 'kill myself',
+        'quiero morir': 'want to die',
+        'sin esperanza': 'hopeless'
+      }
+    };
+
+    return translations[fromLanguage]?.[keyword] || keyword;
+  }
+
+  private determineGenderPreferences(culturalContext: CulturalContext): string[] {
+    const preferences: string[] = [];
+
+    if (culturalContext.genderRoles === 'traditional') {
+      preferences.push('Consider same-gender counselor preference');
+      preferences.push('Be aware of gender role expectations');
+    }
+
+    return preferences;
+  }
+
+  private async triggerCulturalIntervention(
+    result: MultilingualCrisisResult,
+    userId: string
+  ): Promise<void> {
+    // Notify culturally-competent crisis team
+    await notificationService.sendNotification({
+      userId: 'cultural-crisis-team',
+      title: `Multilingual Crisis Detection - ${result.detectedLanguage}`,
+      message: `Crisis detected in ${result.detectedLanguage}. Cultural context: ${result.culturalContext.primaryCulture}`,
+      priority: 'critical',
+      type: 'crisis'
+    });
+
+    console.log(`Multilingual crisis detected for user ${userId}:`, {
+      language: result.detectedLanguage,
+      crisisLevel: result.crisisLevel,
+      culturalContext: result.culturalContext.primaryCulture
+    });
+  }
+
+  private createFallbackResult(text: string): MultilingualCrisisResult {
+    return {
+      detectedLanguage: 'en',
+      confidence: 0.5,
+      crisisLevel: 5,
+      culturalContext: {
+        primaryCulture: 'Unknown',
+        familyStructure: 'nuclear',
+        communicationStyle: 'direct',
+        authorityRelation: 'egalitarian',
+        genderRoles: 'progressive',
+        mentalHealthStigma: 'moderate',
+        helpSeekingPattern: 'professional-first'
+      },
+      matchedKeywords: [],
+      culturalRecommendations: ['Seek professional help', 'Consider cultural factors'],
+      linguisticPatterns: [],
+      familyConsiderations: [],
+      interventionApproach: {
+        primaryLanguage: 'en',
+        interpreterNeeded: false,
+        culturalAdaptations: [],
+        familyInvolvement: 'optional',
+        religiousConsiderations: [],
+        genderPreferences: [],
+        communicationStyle: 'direct',
+        timeframe: 'standard'
+      },
+      translationNeeds: []
+    };
+  }
+
+  private updateMetrics(language: string, result: MultilingualCrisisResult): void {
+    this.metrics.languageDistribution[language] = 
+      (this.metrics.languageDistribution[language] || 0) + 1;
+    
+    if (result.interventionApproach.interpreterNeeded) {
+      this.metrics.interpreterUtilization++;
+    }
+    
+    if (result.interventionApproach.familyInvolvement !== 'avoid') {
+      this.metrics.familyInvolvementRate++;
+    }
+  }
 
   /**
-   * Detect crisis with language auto-detection
+   * Get supported languages
    */
-  async detectCrisis(text: string, language?: string): Promise<{
-  riskLevel: string;,
-  confidence: number;,
-  triggers: string[],
-  culturalRecommendations: string[]
-};
-
-detectedLanguage: string
-};
-
-languageConfidence: number
-  }> {;
-const detectedLanguage = language || await this.detectLanguage(text);
-const result = this.analyzeCrisisRisk(text, detectedLanguage  );
-
-    // Calculate confidence ensuring minimum value for non-empty text
-const confidence = result.score / 10, // Normalize score to 0-1
-    if (text.trim().length ) 0 && confidence === 0} {
-  // If we have text but no keywords detected, still assign a minimal confidence
-};
-
-confidence = 0.1 }
-
-    return { riskLevel: result.riskLevel}
-      confidence,
-      triggers: result.detectedKeywords,
-      culturalRecommendations: [result.recommendedResponse],
-      detectedLanguage,
-      languageConfidence: 0.9 // Simplified for now
+  getSupportedLanguages(): string[] {
+    return [...this.supportedLanguages];
+  }
 
   /**
-   * Simple language detection (mock implementation)
+   * Get service metrics
    */
-  private async detectLanguage(text: string): Promise<string> {;}
-const textLower = text.toLowerCase();
-
-    // More comprehensive language detection
-    // Chinese characters
-    if (/[\u4e00-\u9fff]/.test(text)) return "zh';""""'
-
-    // Arabic characters
-    if (/[\u0600-\u06ff]/.test(text)) return 'ar";"'""""''
-
-    // Hebrew characters
-    if (/[\u0590-\u05ff]/.test(text)) return "he";'"'"""''
-
-    // Cyrillic (Russian)
-    if (/[\u0400-\u04ff]/.test(text)) return "ru";'"'"""''
-
-    // Hindi/Devanagari
-    if (/[\u0900-\u097f]/.test(text)) return "hi";'"""'
-
-    // Spanish indicators - check for common Spanish words and patterns
-    if (/\b(quiero|terminar|vida|morir|puedo|más|muy|triste)\b/.test(textLower) ||
-        /[áéíóúñü]/.test(textLower)) {
-      return "es' }""'""""
-
-    // French indicators - check for common French words and patterns
-    if (/\b(je|veux|mourir|plus|vivre|mal)\b/.test(textLower) ||
-        /[àâäéèêëîïôöùûüÿç]/.test(textLower)) { return 'fr" }"'""""
-
-    // German indicators
-    if (/\b(ich|nicht|mehr|leben|will|sterben)\b/.test(textLower) ||
-        /[äöüß]/.test(textLower)) { return 'de" }"'""""
-
-    // Portuguese indicators
-    if (/\b(não|aguento|mais|quero|morrer)\b/.test(textLower) ||
-        /[ãõáéíóúâê]/.test(textLower)) { return 'pt" }"'""
-
-    // Default to English
-    return "en";'""'
+  getMetrics(): MultilingualMetrics {
+    return { ...this.metrics };
+  }
 
   /**
-   * Reset service state for testing
+   * Add new language patterns
    */
-  reset(): void(this.initialized = false;
-    this.initializeCrisisPatterns( );
-    this.initialized = true );
-  };
+  addLanguagePatterns(patterns: LanguageCrisisPatterns): void {
+    this.crisisPatterns.set(patterns.languageCode, patterns);
+    if (!this.supportedLanguages.includes(patterns.languageCode)) {
+      this.supportedLanguages.push(patterns.languageCode);
+    }
+  }
+}
+
 export const multilingualCrisisDetectionService = new MultilingualCrisisDetectionService();
-export default multilingualCrisisDetectionService;
