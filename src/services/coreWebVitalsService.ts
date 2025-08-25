@@ -1,495 +1,1740 @@
 /**
- * Core Web Vitals Monitoring Service
+ * Core Web Vitals Service
  *
- * Comprehensive performance monitoring for Largest Contentful Paint (LCP),
- * First Input Delay (FID), Cumulative Layout Shift (CLS), and other performance metrics.
- * Critical for mental health platform where fast response times can be crucial during crisis situations.
- */;
-const DeviceType = "mobile' | "tablet" | "desktop";'"
-const PerformanceRating = "good' | "needs-improvement" | "poor";'"
-const WebVitalName = "CLS' | "FID" | "FCP" | 'LCP" | "TTFB' | "INP";""
-interface WebVitalMetric { { { { name: WebVitalName}
-  value: number;,
-  rating: PerformanceRating;,
-  delta: number
-  navigationType?: string
-  id: string;,
-  timestamp: number
-  route?: string
-  userAgent?: string
-  connectionType?: string
-  isCrisisSituation?: boolean };
-interface WebVitalsReport { { { {
-  metrics: WebVitalMetric[],
-  sessionId: string;,
-  deviceType: DeviceType,
-  connectionType: string;,
-  timestamp: number,
-};
+ * Advanced Core Web Vitals monitoring and optimization service for mental health platform.
+ * Tracks LCP, FID, CLS, FCP, TTFB, and INP metrics with real-time monitoring,
+ * performance budgets, and automated optimization recommendations.
+ *
+ * @fileoverview Complete Core Web Vitals service with performance optimization
+ * @version 2.0.0
+ */
 
-route: string
-};
+import { logger } from '../utils/logger';
 
-userJourney: string[]
-  crisisMetrics?: {
-  timeToFirstCrisisResource: number;,
-};
+export type WebVitalMetric = 'LCP' | 'FID' | 'CLS' | 'FCP' | 'TTFB' | 'INP';
+export type MetricRating = 'good' | 'needs-improvement' | 'poor';
+export type DeviceType = 'mobile' | 'tablet' | 'desktop';
+export type ConnectionType = 'slow-2g' | '2g' | '3g' | '4g' | 'unknown';
 
-crisisPageLoadTime: number
-};
-
-emergencyButtonResponseTime: number
+export interface WebVitalMeasurement {
+  id: string;
+  metric: WebVitalMetric;
+  value: number;
+  rating: MetricRating;
+  timestamp: Date;
+  url: string;
+  deviceType: DeviceType;
+  connectionType: ConnectionType;
+  context: {
+    sessionId: string;
+    userId?: string;
+    userAgent: string;
+    viewport: {
+      width: number;
+      height: number;
+    };
+    navigation: {
+      type: 'navigate' | 'reload' | 'back_forward' | 'prerender';
+      timing: PerformanceNavigationTiming;
+    };
+    resources: {
+      totalSize: number;
+      imageSize: number;
+      scriptSize: number;
+      stylesheetSize: number;
+      fontSize: number;
+      count: number;
+    };
+    renderBlocking: {
+      scripts: number;
+      stylesheets: number;
+      fonts: number;
+    };
+    criticalPath: {
+      elements: string[];
+      depth: number;
+      resources: string[];
+    };
   };
-interface PerformanceBudget { { { {
-  
-};
-
-LCP: { good: number, needsImprovement: number };
-  FID: { good: number, needsImprovement: number };
-  CLS: { good: number, needsImprovement: number };
-  FCP: { good: number, needsImprovement: number };
-  TTFB: { good: number, needsImprovement: number };
-  INP: { good: number, needsImprovement: number };
-interface CoreWebVitalsService { { { {
-  private metrics: WebVitalMetric[] = []
-  private sessionId: string
-  private deviceType: DeviceType
-  private connectionType: string
-  private userJourney: string[] = []
-  private reportingEndpoint: string | null = null
-  private performanceObserver: PerformanceObserver | null = null
-  // Performance budgets based on Web Vitals thresholds
-  private readonly PERFORMANCE_BUDGET: PerformanceBudget = {}
-    LCP: { good: 2500, needsImprovement: 4000 },
-    FID: { good: 100, needsImprovement: 300 },
-    CLS: { good: 0.1, needsImprovement: 0.25 },
-    FCP: { good: 1800, needsImprovement: 3000 },
-    TTFB: { good: 800, needsImprovement: 1800 },
-    INP: { good: 200, needsImprovement: 500 };
+  metadata: {
+    element?: Element;
+    attribution?: any;
+    entries?: PerformanceEntry[];
+    debug?: Record<string, any>;
   };
-$2ructor() { this.sessionId = this.generateSessionId();
-    this.deviceType = this.detectDeviceType();
-    this.connectionType = this.detectConnectionType(),
-    this.setupRouteTracking() }
+}
 
-  /**
-   * Initialize Core Web Vitals monitoring
-   */
-  public async initialize(reportingEndpoint?: string): Promise<void> {
-    if (typeof window === 'undefined") return;"'"""
+export interface WebVitalThresholds {
+  LCP: { good: number; poor: number };
+  FID: { good: number; poor: number };
+  CLS: { good: number; poor: number };
+  FCP: { good: number; poor: number };
+  TTFB: { good: number; poor: number };
+  INP: { good: number; poor: number };
+}
 
-    this.reportingEndpoint = reportingEndpoint || null;
+export interface PerformanceBudget {
+  id: string;
+  name: string;
+  enabled: boolean;
+  thresholds: WebVitalThresholds;
+  targets: {
+    percentile: number; // 75th percentile by default
+    sampleSize: number;
+    timeWindow: number; // milliseconds
+  };
+  alerts: {
+    enabled: boolean;
+    channels: ('console' | 'storage' | 'webhook')[];
+    thresholdExceeded: boolean;
+    budgetExceeded: boolean;
+    regressionDetected: boolean;
+  };
+  enforcement: {
+    blockDeployment: boolean;
+    requireApproval: boolean;
+    generateReport: boolean;
+  };
+}
+
+export interface WebVitalReport {
+  id: string;
+  generatedAt: Date;
+  period: {
+    start: Date;
+    end: Date;
+  };
+  summary: {
+    totalMeasurements: number;
+    uniqueUsers: number;
+    uniqueSessions: number;
+    overallScore: number; // 0-100
+    passRate: number; // percentage of good measurements
+  };
+  metrics: {
+    [K in WebVitalMetric]: {
+      measurements: number;
+      p50: number;
+      p75: number;
+      p90: number;
+      p95: number;
+      p99: number;
+      rating: MetricRating;
+      trend: 'improving' | 'stable' | 'degrading';
+      changeFromPrevious: number;
+      distribution: {
+        good: number;
+        needsImprovement: number;
+        poor: number;
+      };
+    };
+  };
+  segmentation: {
+    byDevice: Record<DeviceType, { score: number; count: number }>;
+    byConnection: Record<ConnectionType, { score: number; count: number }>;
+    byPage: Record<string, { score: number; count: number }>;
+    byTime: Array<{
+      timestamp: Date;
+      score: number;
+      measurements: number;
+    }>;
+  };
+  insights: WebVitalInsight[];
+  recommendations: WebVitalRecommendation[];
+  budgetStatus: {
+    budgetId: string;
+    status: 'passed' | 'failed' | 'warning';
+    violations: Array<{
+      metric: WebVitalMetric;
+      threshold: number;
+      actual: number;
+      severity: 'minor' | 'major' | 'critical';
+    }>;
+  }[];
+}
+
+export interface WebVitalInsight {
+  id: string;
+  type: 'optimization' | 'regression' | 'improvement' | 'anomaly';
+  metric: WebVitalMetric;
+  title: string;
+  description: string;
+  impact: 'low' | 'medium' | 'high' | 'critical';
+  confidence: number; // 0-1
+  evidence: {
+    measurements: string[];
+    patterns: string[];
+    correlations: string[];
+  };
+  timeframe: {
+    detected: Date;
+    period: string;
+  };
+  affectedUsers: {
+    count: number;
+    percentage: number;
+    segments: string[];
+  };
+}
+
+export interface WebVitalRecommendation {
+  id: string;
+  metric: WebVitalMetric;
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  category: 'loading' | 'interactivity' | 'visual-stability' | 'network' | 'rendering';
+  title: string;
+  description: string;
+  implementation: {
+    effort: 'low' | 'medium' | 'high';
+    timeline: string;
+    steps: string[];
+    codeExamples: Array<{
+      language: string;
+      code: string;
+      description: string;
+    }>;
+    resources: string[];
+  };
+  expectedImpact: {
+    metric: WebVitalMetric;
+    improvement: string;
+    confidence: number;
+  };
+  prerequisites: string[];
+  risks: string[];
+  alternatives: string[];
+}
+
+export interface WebVitalConfiguration {
+  collection: {
+    enabled: boolean;
+    sampleRate: number; // 0-1
+    bufferSize: number;
+    reportingInterval: number; // milliseconds
+    includeAttribution: boolean;
+    includeDebugInfo: boolean;
+  };
+  thresholds: WebVitalThresholds;
+  monitoring: {
+    realTime: boolean;
+    trendAnalysis: boolean;
+    anomalyDetection: boolean;
+    regressionDetection: boolean;
+    performanceBudgets: boolean;
+  };
+  optimization: {
+    autoOptimization: boolean;
+    preloadCriticalResources: boolean;
+    lazyLoadImages: boolean;
+    optimizeFonts: boolean;
+    minimizeLayoutShift: boolean;
+    prioritizeCriticalPath: boolean;
+  };
+  reporting: {
+    enabled: boolean;
+    frequency: 'realtime' | 'hourly' | 'daily' | 'weekly';
+    includeInsights: boolean;
+    includeRecommendations: boolean;
+    segmentation: boolean;
+  };
+  privacy: {
+    anonymizeData: boolean;
+    excludePersonalData: boolean;
+    retentionPeriod: number; // days
+  };
+}
+
+class CoreWebVitalsService {
+  private configuration: WebVitalConfiguration;
+  private measurements: Map<string, WebVitalMeasurement[]> = new Map();
+  private budgets: Map<string, PerformanceBudget> = new Map();
+  private reports: WebVitalReport[] = [];
+  private observers: Map<string, PerformanceObserver> = new Map();
+  private intervals: Map<string, NodeJS.Timeout> = new Map();
+  private isInitialized = false;
+  private sessionId: string;
+  private measurementBuffer: WebVitalMeasurement[] = [];
+  private eventListeners: Array<(event: any) => void> = [];
+
+  constructor(configuration?: Partial<WebVitalConfiguration>) {
+    this.configuration = this.mergeConfiguration(configuration);
+    this.sessionId = this.generateSessionId();
+    this.initializeService();
+  }
+
+  private mergeConfiguration(userConfig?: Partial<WebVitalConfiguration>): WebVitalConfiguration {
+    const defaultConfig: WebVitalConfiguration = {
+      collection: {
+        enabled: true,
+        sampleRate: 1.0,
+        bufferSize: 100,
+        reportingInterval: 30000, // 30 seconds
+        includeAttribution: true,
+        includeDebugInfo: false
+      },
+      thresholds: {
+        LCP: { good: 2500, poor: 4000 },
+        FID: { good: 100, poor: 300 },
+        CLS: { good: 0.1, poor: 0.25 },
+        FCP: { good: 1800, poor: 3000 },
+        TTFB: { good: 800, poor: 1800 },
+        INP: { good: 200, poor: 500 }
+      },
+      monitoring: {
+        realTime: true,
+        trendAnalysis: true,
+        anomalyDetection: true,
+        regressionDetection: true,
+        performanceBudgets: true
+      },
+      optimization: {
+        autoOptimization: false,
+        preloadCriticalResources: true,
+        lazyLoadImages: true,
+        optimizeFonts: true,
+        minimizeLayoutShift: true,
+        prioritizeCriticalPath: true
+      },
+      reporting: {
+        enabled: true,
+        frequency: 'hourly',
+        includeInsights: true,
+        includeRecommendations: true,
+        segmentation: true
+      },
+      privacy: {
+        anonymizeData: true,
+        excludePersonalData: true,
+        retentionPeriod: 30
+      }
+    };
+
+    return this.deepMerge(defaultConfig, userConfig || {});
+  }
+
+  private deepMerge(target: any, source: any): any {
+    const result = { ...target };
+    
+    for (const key in source) {
+      if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+        result[key] = this.deepMerge(target[key] || {}, source[key]);
+      } else {
+        result[key] = source[key];
+      }
+    }
+    
+    return result;
+  }
+
+  private async initializeService(): Promise<void> {
+    try {
+      if (!this.configuration.collection.enabled) {
+        logger.info('Core Web Vitals collection is disabled');
+        return;
+      }
+
+      // Initialize Core Web Vitals observers
+      await this.initializeLCPObserver();
+      await this.initializeFIDObserver();
+      await this.initializeCLSObserver();
+      await this.initializeFCPObserver();
+      await this.initializeTTFBObserver();
+      await this.initializeINPObserver();
+
+      // Initialize performance budgets
+      this.initializeDefaultBudgets();
+
+      // Start monitoring if enabled
+      if (this.configuration.monitoring.realTime) {
+        this.startRealTimeMonitoring();
+      }
+
+      // Start reporting if enabled
+      if (this.configuration.reporting.enabled) {
+        this.startPeriodicReporting();
+      }
+
+      // Apply optimizations if enabled
+      if (this.configuration.optimization.autoOptimization) {
+        await this.applyOptimizations();
+      }
+
+      // Load existing data
+      await this.loadExistingData();
+
+      this.isInitialized = true;
+      logger.info('Core Web Vitals service initialized successfully');
+
+    } catch (error) {
+      logger.error('Failed to initialize Core Web Vitals service', error);
+      throw error;
+    }
+  }
+
+  private async initializeLCPObserver(): Promise<void> {
+    if (!('PerformanceObserver' in window)) return;
 
     try {
-      // Dynamic import to avoid bundling if not supported
-{ onCLS, onINP, onFCP, onLCP, onTTFB } = await import("web-vitals');""''""'
+      const lcpObserver = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        const lastEntry = entries[entries.length - 1] as any;
 
-      // Monitor Core Web Vitals
-      onCLS(this.handleMetric.bind(this), { reportAllChanges: true });
-      onINP(this.handleMetric.bind(this));
-      onFCP(this.handleMetric.bind(this));
-      onLCP(this.handleMetric.bind(this), { reportAllChanges: true });
-      onTTFB(this.handleMetric.bind(this));
+        if (lastEntry) {
+          this.recordMeasurement({
+            metric: 'LCP',
+            value: lastEntry.startTime,
+            element: lastEntry.element,
+            attribution: this.configuration.collection.includeAttribution ? {
+              element: lastEntry.element?.tagName,
+              url: lastEntry.url,
+              size: lastEntry.size,
+              loadTime: lastEntry.loadTime,
+              renderTime: lastEntry.renderTime
+            } : undefined,
+            entries: this.configuration.collection.includeDebugInfo ? [lastEntry] : undefined
+          });
+        }
+      });
 
-      // Monitor Interaction to Next Paint if available
-      if ("PerformanceObserver" in window) { this.setupINPMonitoring() }'"'"'"'
+      lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+      this.observers.set('lcp', lcpObserver);
 
-      // Monitor custom crisis-specific metrics
-      this.setupCrisisMetrics();
+    } catch (error) {
+      logger.warn('Failed to initialize LCP observer', error);
+    }
+  }
 
-      // Set up periodic reporting
-      this.setupPeriodicReporting();
+  private async initializeFIDObserver(): Promise<void> {
+    if (!('PerformanceObserver' in window)) return;
 
-      console.log("🚀 Core Web Vitals monitoring initialized");"''
-   catch (error) { console.warn("Core Web Vitals monitoring not available:", error);'"}'
-
-  /**
-   * Handle incoming web vital metrics
-   */
-  private handleMetric(metric: any): void {;}
-webVitalMetric: WebVitalMetric = {}
-      name: metric.name as WebVitalMetric["name"],"''""'"'
-      value: metric.value,
-      rating: this.calculateRating(metric.name, metric.value),
-      delta: metric.delta,
-      navigationType: metric.navigationType,
-      id: metric.id,
-      timestamp: Date.now(),
-      route: window.location.pathname,
-      userAgent: navigator.userAgent,
-      connectionType: this.connectionType,
-      isCrisisSituation: this.isCrisisRoute()
-    this.metrics.push(webVitalMetric)
-    this.handleRealTimeAlerts(webVitalMetric);
-
-    // Special handling for crisis situations
-    if (webVitalMetric.isCrisisSituation) { this.handleCrisisPerformanceMetric(webVitalMetric );
-
-  /**
-   * Calculate performance rating based on Web Vitals thresholds
-   */
-  private calculateRating(metricName: string, value: number): "good" | "needs-improvement' | "poor" {;'"
-const budget = this.PERFORMANCE_BUDGET[metricName as keyof PerformanceBudget];
-    if (!budget) return "good";"''""''
-
-    if (value <= budget.good> return "good";""''""'""'
-    if (value <= budget.needsImprovement> return "needs-improvement";'"'"'""'
-    return "poor" )'""''"""'
-
-  /**
-   * Set up Interaction to Next Paint monitoring
-   */
-  private setupINPMonitoring(): void {
     try {
-      this.performanceObserver = new PerformanceObserver((list) =) {
-        for (const entry of list.getEntries()) {
-          if (entry.entryType === "event') {;""'
-const inp = entry as any;
-            if (inp.processingStart && inp.startTime) {;
-const inpValue = inp.processingStart - inp.startTime;
-              this.handleMetric({
-  name: "INP",""''""'""'
-                value: inpValue,)
-};
+      const fidObserver = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        
+        for (const entry of entries) {
+          const fidEntry = entry as any;
+          const fidValue = fidEntry.processingStart - fidEntry.startTime;
 
-delta: inpValue,)
-};
+          this.recordMeasurement({
+            metric: 'FID',
+            value: fidValue,
+            attribution: this.configuration.collection.includeAttribution ? {
+              eventType: fidEntry.name,
+              eventTarget: fidEntry.target?.tagName,
+              eventTime: fidEntry.startTime,
+              processingStart: fidEntry.processingStart,
+              processingEnd: fidEntry.processingStart + fidEntry.duration,
+              inputDelay: fidValue
+            } : undefined,
+            entries: this.configuration.collection.includeDebugInfo ? [entry] : undefined
+          });
+        }
+      });
 
-id: `inp-${Date.now()}`,
-                navigationType: "navigate"'""'
-  });
-  };
-  );
-  };
-  }};
+      fidObserver.observe({ entryTypes: ['first-input'] });
+      this.observers.set('fid', fidObserver);
 
-      this.performanceObserver.observe({)
-${
-  2: "event", ""''""'"'
-};
+    } catch (error) {
+      logger.warn('Failed to initialize FID observer', error);
+    }
+  }
 
-buffered: true
-  ))
-   catch (error) { console.warn("INP monitoring not supported:", error);"'"'
+  private async initializeCLSObserver(): Promise<void> {
+    if (!('PerformanceObserver' in window)) return;
 
-  /**
-   * Monitor crisis-specific performance metrics
-   */
-  private setupCrisisMetrics(): void(// Monitor crisis resource loading times)
-    this.measureCrisisResourceTiming();
+    try {
+      let clsValue = 0;
+      let sessionValue = 0;
+      let sessionEntries: any[] = [];
 
-    // Monitor emergency button response times
-    this.setupEmergencyButtonMonitoring();
+      const clsObserver = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
 
-    // Monitor offline functionality performance
-    this.setupOfflineMetrics() )
+        for (const entry of entries) {
+          const layoutShiftEntry = entry as any;
 
-  /**
-   * Calculate rating for crisis resource timing
-   */
-  private calculateCrisisResourceRating(duration: number): PerformanceRating { if (duration < 1000> return "good';"""'"'""'
-    if (duration < 2500> return "needs-improvement";""'""'
-    return "poor" )""''""'"'
+          // Only count layout shifts without recent input
+          if (!layoutShiftEntry.hadRecentInput) {
+            const firstSessionEntry = sessionEntries[0];
+            const lastSessionEntry = sessionEntries[sessionEntries.length - 1];
 
-  /**
-   * Measure crisis resource loading performance
-   */
-  private measureCrisisResourceTiming(): void {;
-const observer = new PerformanceObserver((list) => {
-      for (const entry of list.getEntries()) {
-        if (entry.name.includes("crisis") || "''""'"'
-            entry.name.includes("emergency") || "'"'"'"""'
-            entry.name.includes("safety')) {
-  ;""'
-};
+            // If the entry occurred less than 1 second after the previous entry
+            // and less than 5 seconds after the first entry in the session,
+            // include it in the current session. Otherwise, start a new session.
+            if (sessionValue &&
+                entry.startTime - lastSessionEntry.startTime < 1000 &&
+                entry.startTime - firstSessionEntry.startTime < 5000) {
+              sessionValue += layoutShiftEntry.value;
+              sessionEntries.push(layoutShiftEntry);
+            } else {
+              sessionValue = layoutShiftEntry.value;
+              sessionEntries = [layoutShiftEntry];
+            }
 
-crisisMetric: WebVitalMetric = {}
-            name: 'LCP", // Custom crisis resource timing""'"'""'
-            value: entry.duration,
-            rating: this.calculateCrisisResourceRating(entry.duration),
-            delta: entry.duration,
-            id: }`crisis-resource-${Date.now()}`,
-            timestamp: Date.now(),
-            route: window.location.pathname,
-            isCrisisSituation: true
-  };
+            // If the current session value is larger than the current CLS value,
+            // update CLS and record the measurement
+            if (sessionValue > clsValue) {
+              clsValue = sessionValue;
 
-          this.metrics.push(crisisMetric);
-  };
-  )
+              this.recordMeasurement({
+                metric: 'CLS',
+                value: clsValue,
+                attribution: this.configuration.collection.includeAttribution ? {
+                  largestShiftTarget: this.getLargestShiftTarget(sessionEntries),
+                  largestShiftValue: Math.max(...sessionEntries.map(e => e.value)),
+                  largestShiftSource: this.getLargestShiftSource(sessionEntries),
+                  sessionEntries: sessionEntries.length
+                } : undefined,
+                entries: this.configuration.collection.includeDebugInfo ? sessionEntries : undefined
+              });
+            }
+          }
+        }
+      });
 
-    observer.observe({ type: 'resource", buffered: true ));"""'
+      clsObserver.observe({ entryTypes: ['layout-shift'] });
+      this.observers.set('cls', clsObserver);
 
-  /**
-   * Calculate rating for emergency response time
-   */
-  private calculateEmergencyResponseRating(responseTime: number): PerformanceRating { if (responseTime < 50> return 'good";"'""
-    if (responseTime < 100> return "needs-improvement";'"'"'"'
-    return "poor" )""'""'
+    } catch (error) {
+      logger.warn('Failed to initialize CLS observer', error);
+    }
+  }
 
-  /**
-   * Monitor emergency button response times
-   */
-  private setupEmergencyButtonMonitoring(): void { document.addEventListener("click', (event)  =) {;""'
-const target = event.target as HTMLElement;
-      if (target.closest(".crisis-button") || '"'"'""'
-          target.closest(".emergency-button") ||'""''"""'
-          target.closest("[data-crisis='true"]")) {;')""
-const startTime = performance.now()
-}};
+  private async initializeFCPObserver(): Promise<void> {
+    if (!('PerformanceObserver' in window)) return;
 
-        // Measure time to UI response
-        requestAnimationFrame(() =) {;
-const responseTime = performance.now() - startTime };
+    try {
+      const fcpObserver = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
 
-emergencyMetric: WebVitalMetric = {}
-            name: "FID",'""''""""'
-            value: responseTime,
-            rating: this.calculateEmergencyResponseRating(responseTime),
-            delta: responseTime,
-            id: `emergency-response-${Date.now()}`,
-            timestamp: Date.now(),
-            route: window.location.pathname,
-            isCrisisSituation: true
-  };
+        for (const entry of entries) {
+          if (entry.name === 'first-contentful-paint') {
+            this.recordMeasurement({
+              metric: 'FCP',
+              value: entry.startTime,
+              attribution: this.configuration.collection.includeAttribution ? {
+                timeToFirstByte: this.getTTFB(),
+                firstPaintTime: this.getFirstPaint(),
+                navigationStart: performance.timeOrigin
+              } : undefined,
+              entries: this.configuration.collection.includeDebugInfo ? [entry] : undefined
+            });
+          }
+        }
+      });
 
-          this.metrics.push(emergencyMetric);
+      fcpObserver.observe({ entryTypes: ['paint'] });
+      this.observers.set('fcp', fcpObserver);
 
-          // Immediate alert for poor emergency response times
-          if (emergencyMetric.rating === 'poor") { console.warn("🚨 Poor emergency button response time:', responseTime, "ms" );""
-  });
-  };
-  )};
+    } catch (error) {
+      logger.warn('Failed to initialize FCP observer', error);
+    }
+  }
 
-  /**
-   * Monitor offline functionality performance
-   */
-  private setupOfflineMetrics(): void { window.addEventListener('online", () =) {"'""""'"'
-      this.trackNetworkChange("online') }};"""'"'""'
+  private async initializeTTFBObserver(): Promise<void> {
+    if (!('PerformanceObserver' in window)) return;
 
-    window.addEventListener("offline", () =) { this.trackNetworkChange("offline") }};'"'
+    try {
+      const navigationObserver = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
 
-  /**
-   * Track network status changes
-   */
-  private trackNetworkChange(status: "online' | "offline"): void {
-  ;""'
-};
+        for (const entry of entries) {
+          const navEntry = entry as PerformanceNavigationTiming;
+          const ttfb = navEntry.responseStart - navEntry.requestStart;
 
-networkMetric: WebVitalMetric = {}
-      name: 'TTFB","'""""
-      value: status === 'offline" ? 0 : performance.now(),"'""""''
-      rating: status === "offline" ? poor: 'good",""'"'"'
-      delta: 0,
-      id: `network-${status}-${Date.now()}`,
-      timestamp: Date.now(),
-      route: window.location.pathname,
-      isCrisisSituation: this.isCrisisRoute()
-    this.metrics.push(networkMetric)
-  /**
-   * Handle real-time alerts for poor performance
-   */
-  private handleRealTimeAlerts(metric: WebVitalMetric): void { if (metric.rating === "poor" && metric.isCrisisSituation) {'"""'
-      console.warn(`🚨 Poor ${metric.name) in crisis situation:`, {
-  value: metric.value,
-};
+          this.recordMeasurement({
+            metric: 'TTFB',
+            value: ttfb,
+            attribution: this.configuration.collection.includeAttribution ? {
+              waitingTime: navEntry.responseStart - navEntry.requestStart,
+              dnsTime: navEntry.domainLookupEnd - navEntry.domainLookupStart,
+              connectionTime: navEntry.connectEnd - navEntry.connectStart,
+              tlsTime: navEntry.secureConnectionStart > 0 ? navEntry.connectEnd - navEntry.secureConnectionStart : 0,
+              requestTime: navEntry.responseStart - navEntry.requestStart
+            } : undefined,
+            entries: this.configuration.collection.includeDebugInfo ? [entry] : undefined
+          });
+        }
+      });
 
-route: metric.route,
-        metric ));
+      navigationObserver.observe({ entryTypes: ['navigation'] });
+      this.observers.set('ttfb', navigationObserver);
 
-      // Could trigger notifications to development team
-      this.notifyDevelopmentTeam(metric) };
+    } catch (error) {
+      logger.warn('Failed to initialize TTFB observer', error);
+    }
+  }
 
-  /**
-   * Handle performance metrics specifically for crisis situations
-   */
-  private handleCrisisPerformanceMetric(metric: WebVitalMetric): void {
-    // Log crisis performance separately for analysis
-const crisisData = {}
-      metric,
-      timestamp: Date.now(),
-      route: window.location.pathname,
-      sessionId: this.sessionId,
-      deviceType: this.deviceType,
-      connectionType: this.connectionType
-  };
+  private async initializeINPObserver(): Promise<void> {
+    // INP (Interaction to Next Paint) is a newer metric
+    // This is a simplified implementation
+    let interactionCount = 0;
+    const interactions: Array<{ start: number; end: number; delay: number }> = [];
 
-    // Store crisis metrics locally for analysis
-    this.storeCrisisMetrics(crisisData);
+    const handleInteraction = (event: Event) => {
+      const interactionStart = performance.now();
+      
+      // Use requestAnimationFrame to measure when the next paint occurs
+      requestAnimationFrame(() => {
+        const interactionEnd = performance.now();
+        const delay = interactionEnd - interactionStart;
+        
+        interactions.push({
+          start: interactionStart,
+          end: interactionEnd,
+          delay
+        });
+        
+        interactionCount++;
+        
+        // Calculate INP as the 98th percentile of all interactions
+        if (interactionCount >= 10) { // Only calculate after we have enough data
+          const sortedDelays = interactions.map(i => i.delay).sort((a, b) => a - b);
+          const p98Index = Math.floor(sortedDelays.length * 0.98);
+          const inp = sortedDelays[p98Index];
+          
+          this.recordMeasurement({
+            metric: 'INP',
+            value: inp,
+            attribution: this.configuration.collection.includeAttribution ? {
+              eventType: event.type,
+              eventTarget: (event.target as Element)?.tagName,
+              interactionCount,
+              p98Delay: inp,
+              maxDelay: Math.max(...sortedDelays),
+              avgDelay: sortedDelays.reduce((sum, delay) => sum + delay, 0) / sortedDelays.length
+            } : undefined
+          });
+        }
+      });
+    };
 
-  /**
-   * Store crisis metrics locally
-   */
-  private storeCrisisMetrics(data: unknown): void { try {;
-const existingData = localStorage.getItem("crisis-performance-metrics');'"
-const metrics = existingData ? JSON.parse(existingData) : [];
-      metrics.push(data  );
+    // Listen for user interactions
+    ['click', 'keydown', 'pointerdown'].forEach(eventType => {
+      document.addEventListener(eventType, handleInteraction, { passive: true });
+    });
+  }
 
-      // Keep only last 100 crisis metrics
-      if (metrics.length > 100) {
-        metrics.splice(0, metrics.length - 100) }
+  private recordMeasurement(data: {
+    metric: WebVitalMetric;
+    value: number;
+    element?: Element;
+    attribution?: any;
+    entries?: PerformanceEntry[];
+  }): void {
+    // Check sampling rate
+    if (Math.random() > this.configuration.collection.sampleRate) {
+      return;
+    }
 
-      localStorage.setItem("crisis-performance-metrics", JSON.stringify(metrics));"''
-  } catch (error) { console.warn('Could not store crisis metrics:", error);""'
+    const measurement: WebVitalMeasurement = {
+      id: `measurement-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      metric: data.metric,
+      value: data.value,
+      rating: this.calculateRating(data.metric, data.value),
+      timestamp: new Date(),
+      url: window.location.href,
+      deviceType: this.detectDeviceType(),
+      connectionType: this.detectConnectionType(),
+      context: {
+        sessionId: this.sessionId,
+        userId: this.getUserId(),
+        userAgent: navigator.userAgent,
+        viewport: {
+          width: window.innerWidth,
+          height: window.innerHeight
+        },
+        navigation: {
+          type: this.getNavigationType(),
+          timing: performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
+        },
+        resources: this.getResourceMetrics(),
+        renderBlocking: this.getRenderBlockingMetrics(),
+        criticalPath: this.getCriticalPathMetrics()
+      },
+      metadata: {
+        element: data.element,
+        attribution: data.attribution,
+        entries: data.entries,
+        debug: this.configuration.collection.includeDebugInfo ? {
+          timestamp: performance.now(),
+          memory: (performance as any).memory ? {
+            used: (performance as any).memory.usedJSHeapSize,
+            total: (performance as any).memory.totalJSHeapSize,
+            limit: (performance as any).memory.jsHeapSizeLimit
+          } : undefined
+        } : undefined
+      }
+    };
 
-  /**
-   * Check if current route is crisis-related
-   */
-  private isCrisisRoute(): boolean(;
-const path = window.location.pathname.toLowerCase(  );
-    return path.includes("crisis') || ""''""'
-           path.includes("emergency") || "'''""'
-           path.includes("safety") ||"'""'
-           path.includes('offline-crisis") }"'""
+    // Store measurement
+    const metricMeasurements = this.measurements.get(data.metric) || [];
+    metricMeasurements.push(measurement);
+    this.measurements.set(data.metric, metricMeasurements);
 
-  /**
-   * Generate unique session ID
-   */
-  private generateSessionId(): string {
-    return `cwv-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    // Add to buffer for batch processing
+    this.measurementBuffer.push(measurement);
 
-  /**
-   * Detect device type
-   */
-  private detectDeviceType(): DeviceType {;
-const width = window.innerWidth;
-    if (width < 768) return 'mobile";""'"'"'
-    if (width < 1024) return "tablet";'"'"'"'
-    return "desktop" }'"""'
+    // Process immediately if buffer is full
+    if (this.measurementBuffer.length >= this.configuration.collection.bufferSize) {
+      this.processMeasurementBuffer();
+    }
 
-  /**
-   * Detect connection type
-   */
-  private detectConnectionType(): string {;
-const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
-    return connection?.effectiveType || "unknown' }'"""
+    // Check performance budgets
+    if (this.configuration.monitoring.performanceBudgets) {
+      this.checkPerformanceBudgets(measurement);
+    }
 
-  /**
-   * Set up route tracking for user journey
-   */
-  private setupRouteTracking(): void { // Track initial route
-    this.userJourney.push(window.location.pathname);
+    // Emit event
+    this.emitEvent({
+      type: 'measurement-recorded',
+      measurement,
+      timestamp: new Date()
+    });
 
-    // Listen for route changes (for SPA)
-const originalPushState = history.pushState;
-    history.pushState = (...args) => {
-      originalPushState.apply(history, args);
-      this.userJourney.push(window.location.pathname );
-      if (this.userJourney.length > 20) {
-        this.userJourney.shift();
+    logger.debug(`${data.metric} measurement recorded`, {
+      value: data.value,
+      rating: measurement.rating,
+      url: measurement.url
+    });
+  }
 
-  /**
-   * Set up periodic reporting
-   */
-  private setupPeriodicReporting(): void { // Report metrics every 30 seconds
-    setInterval(() => {
-      if (this.metrics.length > 0) {
-        this.generateReport()}, 30000);
+  private calculateRating(metric: WebVitalMetric, value: number): MetricRating {
+    const thresholds = this.configuration.thresholds[metric];
+    
+    if (value <= thresholds.good) {
+      return 'good';
+    } else if (value <= thresholds.poor) {
+      return 'needs-improvement';
+    } else {
+      return 'poor';
+    }
+  }
 
-    // Report on page unload
-    window.addEventListener("beforeunload', () => { this.generateReport() });'"
+  private detectDeviceType(): DeviceType {
+    const width = window.innerWidth;
+    if (width < 768) return 'mobile';
+    if (width < 1024) return 'tablet';
+    return 'desktop';
+  }
 
-  /**
-   * Generate comprehensive performance report
-   */
-  public generateReport(): WebVitalsReport {
-  ,
-};
+  private detectConnectionType(): ConnectionType {
+    const connection = (navigator as any).connection;
+    if (!connection) return 'unknown';
+    
+    return connection.effectiveType || 'unknown';
+  }
 
-report: WebVitalsReport = {}
-      metrics: [...this.metrics],
-      sessionId: this.sessionId,
-      deviceType: this.deviceType,
-      connectionType: this.connectionType,
-      timestamp: Date.now(),
-      route: window.location.pathname,
-      userJourney: [...this.userJourney]
-  };
+  private getUserId(): string | undefined {
+    // Would typically get from auth service
+    return undefined;
+  }
 
-    // Add crisis-specific metrics if applicable
-const crisisMetrics = this.calculateCrisisMetrics();
-    if (crisisMetrics) { report.crisisMetrics = crisisMetrics }
+  private getNavigationType(): 'navigate' | 'reload' | 'back_forward' | 'prerender' {
+    const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+    
+    switch (navigation?.type) {
+      case 0: return 'navigate';
+      case 1: return 'reload';
+      case 2: return 'back_forward';
+      case 255: return 'prerender';
+      default: return 'navigate';
+    }
+  }
 
-    // Send to reporting endpoint if configured
-    if (this.reportingEndpoint) { this.sendReport(report) }
+  private getResourceMetrics(): WebVitalMeasurement['context']['resources'] {
+    const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
+    
+    let totalSize = 0;
+    let imageSize = 0;
+    let scriptSize = 0;
+    let stylesheetSize = 0;
+    let fontSize = 0;
 
-    // Clear metrics after reporting
-    this.metrics = [];
+    resources.forEach(resource => {
+      const size = resource.transferSize || 0;
+      totalSize += size;
 
-    return report;
-
-  /**
-   * Calculate crisis-specific performance metrics
-   */
-  private calculateCrisisMetrics() {;
-const crisisMetrics = this.metrics.filter(m => m.isCrisisSituation);
-    if (crisisMetrics.length === 0) return null;
-const crisisResourceMetrics = crisisMetrics.filter(m => m.id.includes("crisis-resource"));"''
-const emergencyButtonMetrics = crisisMetrics.filter(m => m.id.includes('emergency-response"));""'
-const crisisPageMetrics = crisisMetrics.filter(m => m.name === "LCP' && m.isCrisisSituation  );""''""'
+      switch (resource.initiatorType) {
+        case 'img':
+        case 'image':
+          imageSize += size;
+          break;
+        case 'script':
+          scriptSize += size;
+          break;
+        case 'css':
+        case 'link':
+          stylesheetSize += size;
+          break;
+        case 'font':
+          fontSize += size;
+          break;
+      }
+    });
 
     return {
-  timeToFirstCrisisResource: crisisResourceMetrics.length > 0
-        ? Math.min(...crisisResourceMetrics.map(m => m.value))
-        : 0,
-};
+      totalSize,
+      imageSize,
+      scriptSize,
+      stylesheetSize,
+      fontSize,
+      count: resources.length
+    };
+  }
 
-crisisPageLoadTime: crisisPageMetrics.length > 0
-        ? Math.max(...crisisPageMetrics.map(m => m.value))
-        : 0,
-};
+  private getRenderBlockingMetrics(): WebVitalMeasurement['context']['renderBlocking'] {
+    const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
+    
+    let scripts = 0;
+    let stylesheets = 0;
+    let fonts = 0;
 
-emergencyButtonResponseTime: emergencyButtonMetrics.length > 0
-        ? Math.max(...emergencyButtonMetrics.map(m => m.value))
-        : 0
+    resources.forEach(resource => {
+      // Simplified heuristic for render-blocking resources
+      if (resource.renderBlockingStatus === 'blocking') {
+        switch (resource.initiatorType) {
+          case 'script':
+            scripts++;
+            break;
+          case 'css':
+          case 'link':
+            stylesheets++;
+            break;
+          case 'font':
+            fonts++;
+            break;
+        }
+      }
+    });
 
-  /**
-   * Send report to analytics endpoint
-   */
-  private async sendReport(report: WebVitalsReport): Promise<void> { try {
-      if (!this.reportingEndpoint) return;
+    return { scripts, stylesheets, fonts };
+  }
 
-      await fetch(this.reportingEndpoint, {
-  method: "POST","'""')
-};
+  private getCriticalPathMetrics(): WebVitalMeasurement['context']['criticalPath'] {
+    // Simplified critical path analysis
+    const criticalElements = document.querySelectorAll('h1, h2, img[loading="eager"], link[rel="stylesheet"], script[src]:not([defer]):not([async])');
+    const elements = Array.from(criticalElements).map(el => el.tagName.toLowerCase());
+    
+    return {
+      elements,
+      depth: this.calculateDOMDepth(),
+      resources: this.getCriticalResources()
+    };
+  }
 
-headers: {
-          'Content-Type": "application/json"},"'""'"'
-        body: JSON.stringify(report)
-  } catch (error) { console.warn("Failed to send Web Vitals report:", error );"''"
+  private calculateDOMDepth(): number {
+    let maxDepth = 0;
+    
+    const traverse = (element: Element, depth: number) => {
+      maxDepth = Math.max(maxDepth, depth);
+      Array.from(element.children).forEach(child => {
+        traverse(child, depth + 1);
+      });
+    };
+    
+    if (document.body) {
+      traverse(document.body, 0);
+    }
+    
+    return maxDepth;
+  }
 
-  /**
-   * Notify development team of critical performance issues
-   */
-  private notifyDevelopmentTeam(metric: WebVitalMetric): void { // In production, this could send alerts to monitoring services
-    console.error("🚨 Critical performance issue detected:", metric) }"''""''
+  private getCriticalResources(): string[] {
+    const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
+    
+    return resources
+      .filter(resource => {
+        // Consider resources critical if they're loaded early and are render-blocking
+        return resource.startTime < 1000 && 
+               (resource.initiatorType === 'css' || 
+                resource.initiatorType === 'script' ||
+                resource.initiatorType === 'font');
+      })
+      .map(resource => resource.name);
+  }
 
-  /**
-   * Get current performance summary
-   */
-  public getPerformanceSummary() { return {
-  totalMetrics: this.metrics.length,
-};
+  private getLargestShiftTarget(entries: any[]): string {
+    let largestShift = entries[0];
+    
+    for (const entry of entries) {
+      if (entry.value > largestShift.value) {
+        largestShift = entry;
+      }
+    }
+    
+    return largestShift.sources?.[0]?.node?.tagName || 'unknown';
+  }
 
-goodMetrics: this.metrics.filter(m =) m.rating === "good"}.length,""'""'
-      needsImprovementMetrics: this.metrics.filter(m =) m.rating === "needs-improvement'}.length,"""'"'""'
-      poorMetrics: this.metrics.filter(m =) m.rating === "poor"}.length,""'""'
-      crisisMetrics: this.metrics.filter(m =) m.isCrisisSituation}.length,
-      deviceType: this.deviceType,
-      connectionType: this.connectionType,
-      sessionId: this.sessionId
+  private getLargestShiftSource(entries: any[]): any {
+    const sources = entries.flatMap(entry => entry.sources || []);
+    
+    if (sources.length === 0) return undefined;
+    
+    return sources.reduce((largest, source) => {
+      return source.previousRect?.width * source.previousRect?.height >
+             largest.previousRect?.width * largest.previousRect?.height ? source : largest;
+    });
+  }
 
-  /**
-   * Stop monitoring
-   */
-  public stop(): void { if (this.performanceObserver) {
-      this.performanceObserver.disconnect();
-      this.performanceObserver = null }
+  private getTTFB(): number {
+    const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+    return navigation ? navigation.responseStart - navigation.requestStart : 0;
+  }
 
-    // Generate final report
-    this.generateReport();
-  };
+  private getFirstPaint(): number {
+    const paintEntries = performance.getEntriesByName('first-paint');
+    return paintEntries.length > 0 ? paintEntries[0].startTime : 0;
+  }
 
-// Export singleton instance
+  private generateSessionId(): string {
+    return `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  private initializeDefaultBudgets(): void {
+    const defaultBudget: PerformanceBudget = {
+      id: 'default-budget',
+      name: 'Default Performance Budget',
+      enabled: true,
+      thresholds: this.configuration.thresholds,
+      targets: {
+        percentile: 75,
+        sampleSize: 100,
+        timeWindow: 3600000 // 1 hour
+      },
+      alerts: {
+        enabled: true,
+        channels: ['console', 'storage'],
+        thresholdExceeded: true,
+        budgetExceeded: true,
+        regressionDetected: true
+      },
+      enforcement: {
+        blockDeployment: false,
+        requireApproval: false,
+        generateReport: true
+      }
+    };
+
+    this.budgets.set(defaultBudget.id, defaultBudget);
+  }
+
+  private startRealTimeMonitoring(): void {
+    const monitoringInterval = setInterval(() => {
+      this.analyzePerformanceTrends();
+      this.detectAnomalies();
+      this.detectRegressions();
+    }, 60000); // Every minute
+
+    this.intervals.set('monitoring', monitoringInterval);
+  }
+
+  private startPeriodicReporting(): void {
+    const getIntervalMs = (frequency: string): number => {
+      switch (frequency) {
+        case 'realtime': return 30000; // 30 seconds
+        case 'hourly': return 3600000; // 1 hour
+        case 'daily': return 86400000; // 24 hours
+        case 'weekly': return 604800000; // 7 days
+        default: return 3600000;
+      }
+    };
+
+    const reportingInterval = setInterval(() => {
+      this.generateAutomaticReport();
+    }, getIntervalMs(this.configuration.reporting.frequency));
+
+    this.intervals.set('reporting', reportingInterval);
+
+    // Also process measurement buffer periodically
+    const bufferInterval = setInterval(() => {
+      this.processMeasurementBuffer();
+    }, this.configuration.collection.reportingInterval);
+
+    this.intervals.set('buffer', bufferInterval);
+  }
+
+  private processMeasurementBuffer(): void {
+    if (this.measurementBuffer.length === 0) return;
+
+    const batch = [...this.measurementBuffer];
+    this.measurementBuffer = [];
+
+    // Process batch
+    this.processMeasurementBatch(batch);
+
+    this.emitEvent({
+      type: 'batch-processed',
+      batchSize: batch.length,
+      timestamp: new Date()
+    });
+  }
+
+  private processMeasurementBatch(measurements: WebVitalMeasurement[]): void {
+    // Analyze batch for patterns
+    const metricGroups = new Map<WebVitalMetric, WebVitalMeasurement[]>();
+    
+    measurements.forEach(measurement => {
+      const group = metricGroups.get(measurement.metric) || [];
+      group.push(measurement);
+      metricGroups.set(measurement.metric, group);
+    });
+
+    // Check for immediate issues
+    metricGroups.forEach((measurements, metric) => {
+      const poorMeasurements = measurements.filter(m => m.rating === 'poor');
+      
+      if (poorMeasurements.length > measurements.length * 0.5) {
+        this.emitEvent({
+          type: 'performance-degradation',
+          metric,
+          measurements: poorMeasurements.length,
+          total: measurements.length,
+          timestamp: new Date()
+        });
+      }
+    });
+  }
+
+  private checkPerformanceBudgets(measurement: WebVitalMeasurement): void {
+    Array.from(this.budgets.values()).forEach(budget => {
+      if (!budget.enabled) return;
+
+      const threshold = budget.thresholds[measurement.metric];
+      
+      if (measurement.value > threshold.poor) {
+        this.emitBudgetViolation(budget, measurement, 'critical');
+      } else if (measurement.value > threshold.good) {
+        this.emitBudgetViolation(budget, measurement, 'major');
+      }
+    });
+  }
+
+  private emitBudgetViolation(
+    budget: PerformanceBudget,
+    measurement: WebVitalMeasurement,
+    severity: 'minor' | 'major' | 'critical'
+  ): void {
+    if (!budget.alerts.enabled) return;
+
+    const violation = {
+      budgetId: budget.id,
+      metric: measurement.metric,
+      threshold: budget.thresholds[measurement.metric].good,
+      actual: measurement.value,
+      severity,
+      measurement
+    };
+
+    budget.alerts.channels.forEach(channel => {
+      switch (channel) {
+        case 'console':
+          console.warn(`Performance Budget Violation: ${measurement.metric}`, violation);
+          break;
+        case 'storage':
+          this.storeBudgetViolation(violation);
+          break;
+        case 'webhook':
+          this.sendWebhookAlert(violation);
+          break;
+      }
+    });
+
+    this.emitEvent({
+      type: 'budget-violation',
+      violation,
+      timestamp: new Date()
+    });
+  }
+
+  private storeBudgetViolation(violation: any): void {
+    try {
+      const stored = JSON.parse(localStorage.getItem('performance-budget-violations') || '[]');
+      stored.push({
+        ...violation,
+        timestamp: new Date().toISOString()
+      });
+      localStorage.setItem('performance-budget-violations', JSON.stringify(stored.slice(-100)));
+    } catch (error) {
+      logger.warn('Failed to store budget violation', error);
+    }
+  }
+
+  private sendWebhookAlert(violation: any): void {
+    // Would send to external webhook
+    logger.info('Webhook alert would be sent', violation);
+  }
+
+  private analyzePerformanceTrends(): void {
+    const metrics: WebVitalMetric[] = ['LCP', 'FID', 'CLS', 'FCP', 'TTFB', 'INP'];
+    
+    metrics.forEach(metric => {
+      const measurements = this.measurements.get(metric) || [];
+      if (measurements.length < 10) return;
+
+      const recent = measurements.slice(-10);
+      const previous = measurements.slice(-20, -10);
+      
+      if (previous.length === 0) return;
+
+      const recentAvg = recent.reduce((sum, m) => sum + m.value, 0) / recent.length;
+      const previousAvg = previous.reduce((sum, m) => sum + m.value, 0) / previous.length;
+      
+      const changePercentage = ((recentAvg - previousAvg) / previousAvg) * 100;
+      
+      if (Math.abs(changePercentage) > 10) {
+        this.emitEvent({
+          type: 'trend-detected',
+          metric,
+          change: changePercentage,
+          direction: changePercentage > 0 ? 'degrading' : 'improving',
+          recentAvg,
+          previousAvg,
+          timestamp: new Date()
+        });
+      }
+    });
+  }
+
+  private detectAnomalies(): void {
+    const metrics: WebVitalMetric[] = ['LCP', 'FID', 'CLS', 'FCP', 'TTFB', 'INP'];
+    
+    metrics.forEach(metric => {
+      const measurements = this.measurements.get(metric) || [];
+      if (measurements.length < 20) return;
+
+      const values = measurements.slice(-20).map(m => m.value);
+      const mean = values.reduce((sum, v) => sum + v, 0) / values.length;
+      const stdDev = Math.sqrt(values.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / values.length);
+      
+      const latestValue = values[values.length - 1];
+      const zScore = Math.abs((latestValue - mean) / stdDev);
+      
+      if (zScore > 2) { // 2 standard deviations
+        this.emitEvent({
+          type: 'anomaly-detected',
+          metric,
+          value: latestValue,
+          mean,
+          stdDev,
+          zScore,
+          severity: zScore > 3 ? 'critical' : 'major',
+          timestamp: new Date()
+        });
+      }
+    });
+  }
+
+  private detectRegressions(): void {
+    // Simple regression detection based on recent performance degradation
+    const metrics: WebVitalMetric[] = ['LCP', 'FID', 'CLS', 'FCP', 'TTFB', 'INP'];
+    
+    metrics.forEach(metric => {
+      const measurements = this.measurements.get(metric) || [];
+      if (measurements.length < 30) return;
+
+      const recent = measurements.slice(-10);
+      const baseline = measurements.slice(-30, -20);
+      
+      if (baseline.length === 0) return;
+
+      const recentPoorRate = recent.filter(m => m.rating === 'poor').length / recent.length;
+      const baselinePoorRate = baseline.filter(m => m.rating === 'poor').length / baseline.length;
+      
+      const regressionThreshold = 0.2; // 20% increase in poor ratings
+      
+      if (recentPoorRate > baselinePoorRate + regressionThreshold) {
+        this.emitEvent({
+          type: 'regression-detected',
+          metric,
+          recentPoorRate,
+          baselinePoorRate,
+          increase: recentPoorRate - baselinePoorRate,
+          severity: recentPoorRate > 0.5 ? 'critical' : 'major',
+          timestamp: new Date()
+        });
+      }
+    });
+  }
+
+  private generateAutomaticReport(): void {
+    const report = this.generateReport();
+    this.reports.push(report);
+
+    // Limit stored reports
+    if (this.reports.length > 100) {
+      this.reports = this.reports.slice(-50);
+    }
+
+    this.emitEvent({
+      type: 'report-generated',
+      report,
+      timestamp: new Date()
+    });
+  }
+
+  private async applyOptimizations(): Promise<void> {
+    const optimizations = this.configuration.optimization;
+
+    if (optimizations.preloadCriticalResources) {
+      await this.preloadCriticalResources();
+    }
+
+    if (optimizations.lazyLoadImages) {
+      this.enableLazyLoadImages();
+    }
+
+    if (optimizations.optimizeFonts) {
+      this.optimizeFonts();
+    }
+
+    if (optimizations.minimizeLayoutShift) {
+      this.minimizeLayoutShift();
+    }
+
+    if (optimizations.prioritizeCriticalPath) {
+      this.prioritizeCriticalPath();
+    }
+  }
+
+  private async preloadCriticalResources(): Promise<void> {
+    // Identify critical resources and add preload hints
+    const criticalResources = this.getCriticalResources();
+    
+    criticalResources.forEach(resourceUrl => {
+      if (!document.querySelector(`link[href="${resourceUrl}"]`)) {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.href = resourceUrl;
+        
+        // Determine resource type
+        if (resourceUrl.includes('.css')) {
+          link.as = 'style';
+        } else if (resourceUrl.includes('.js')) {
+          link.as = 'script';
+        } else if (resourceUrl.match(/\.(woff|woff2|ttf)$/)) {
+          link.as = 'font';
+          link.crossOrigin = 'anonymous';
+        }
+        
+        document.head.appendChild(link);
+      }
+    });
+  }
+
+  private enableLazyLoadImages(): void {
+    const images = document.querySelectorAll('img:not([loading])');
+    
+    images.forEach(img => {
+      // Don't lazy load above-the-fold images
+      const rect = img.getBoundingClientRect();
+      if (rect.top > window.innerHeight) {
+        img.setAttribute('loading', 'lazy');
+      }
+    });
+  }
+
+  private optimizeFonts(): void {
+    // Add font-display: swap to improve FCP
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = `
+      @font-face {
+        font-display: swap;
+      }
+    `;
+    document.head.appendChild(styleSheet);
+  }
+
+  private minimizeLayoutShift(): void {
+    // Add size attributes to images without them
+    const images = document.querySelectorAll('img:not([width]):not([height])');
+    
+    images.forEach(img => {
+      img.addEventListener('load', () => {
+        if (!img.getAttribute('width')) {
+          img.setAttribute('width', img.naturalWidth.toString());
+        }
+        if (!img.getAttribute('height')) {
+          img.setAttribute('height', img.naturalHeight.toString());
+        }
+      });
+    });
+  }
+
+  private prioritizeCriticalPath(): void {
+    // Add fetchpriority to critical resources
+    const criticalImages = document.querySelectorAll('img[loading="eager"]');
+    criticalImages.forEach(img => {
+      if (!img.getAttribute('fetchpriority')) {
+        img.setAttribute('fetchpriority', 'high');
+      }
+    });
+  }
+
+  private async loadExistingData(): Promise<void> {
+    try {
+      const stored = localStorage.getItem('core-web-vitals-measurements');
+      if (stored) {
+        const data = JSON.parse(stored);
+        Object.entries(data).forEach(([metric, measurements]: [string, any[]]) => {
+          const parsedMeasurements = measurements.map(m => ({
+            ...m,
+            timestamp: new Date(m.timestamp)
+          }));
+          this.measurements.set(metric as WebVitalMetric, parsedMeasurements);
+        });
+      }
+    } catch (error) {
+      logger.warn('Failed to load existing Core Web Vitals data', error);
+    }
+  }
+
+  private emitEvent(event: any): void {
+    for (const listener of this.eventListeners) {
+      try {
+        listener(event);
+      } catch (error) {
+        logger.warn('Error in Core Web Vitals event listener', error);
+      }
+    }
+  }
+
+  // Public API
+  public getMeasurements(metric?: WebVitalMetric, timeRange?: { start: Date; end: Date }): WebVitalMeasurement[] {
+    let measurements: WebVitalMeasurement[] = [];
+    
+    if (metric) {
+      measurements = this.measurements.get(metric) || [];
+    } else {
+      measurements = Array.from(this.measurements.values()).flat();
+    }
+    
+    if (timeRange) {
+      measurements = measurements.filter(m => 
+        m.timestamp >= timeRange.start && m.timestamp <= timeRange.end
+      );
+    }
+    
+    return measurements.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+  }
+
+  public getMetricSummary(metric: WebVitalMetric, timeRange?: { start: Date; end: Date }): {
+    count: number;
+    p50: number;
+    p75: number;
+    p90: number;
+    p95: number;
+    p99: number;
+    rating: MetricRating;
+    distribution: { good: number; needsImprovement: number; poor: number };
+  } | null {
+    const measurements = this.getMeasurements(metric, timeRange);
+    
+    if (measurements.length === 0) return null;
+    
+    const values = measurements.map(m => m.value).sort((a, b) => a - b);
+    const getPercentile = (p: number) => values[Math.floor(values.length * p / 100)] || 0;
+    
+    const distribution = measurements.reduce((acc, m) => {
+      acc[m.rating === 'needs-improvement' ? 'needsImprovement' : m.rating]++;
+      return acc;
+    }, { good: 0, needsImprovement: 0, poor: 0 });
+    
+    const p75 = getPercentile(75);
+    
+    return {
+      count: measurements.length,
+      p50: getPercentile(50),
+      p75,
+      p90: getPercentile(90),
+      p95: getPercentile(95),
+      p99: getPercentile(99),
+      rating: this.calculateRating(metric, p75),
+      distribution
+    };
+  }
+
+  public generateReport(period?: { start: Date; end: Date }): WebVitalReport {
+    const now = new Date();
+    const reportPeriod = period || {
+      start: new Date(now.getTime() - 86400000), // 24 hours ago
+      end: now
+    };
+    
+    const allMeasurements = this.getMeasurements(undefined, reportPeriod);
+    const metrics: WebVitalMetric[] = ['LCP', 'FID', 'CLS', 'FCP', 'TTFB', 'INP'];
+    
+    // Calculate summary
+    const uniqueUsers = new Set(allMeasurements.map(m => m.context.userId).filter(Boolean)).size;
+    const uniqueSessions = new Set(allMeasurements.map(m => m.context.sessionId)).size;
+    const goodMeasurements = allMeasurements.filter(m => m.rating === 'good').length;
+    const passRate = allMeasurements.length > 0 ? (goodMeasurements / allMeasurements.length) * 100 : 0;
+    
+    // Calculate overall score (0-100)
+    const overallScore = Math.round(passRate);
+    
+    // Build metrics summary
+    const metricsData = metrics.reduce((acc, metric) => {
+      const summary = this.getMetricSummary(metric, reportPeriod);
+      if (summary) {
+        acc[metric] = {
+          measurements: summary.count,
+          p50: summary.p50,
+          p75: summary.p75,
+          p90: summary.p90,
+          p95: summary.p95,
+          p99: summary.p99,
+          rating: summary.rating,
+          trend: this.calculateTrend(metric, reportPeriod),
+          changeFromPrevious: this.calculateChangeFromPrevious(metric, reportPeriod),
+          distribution: summary.distribution
+        };
+      }
+      return acc;
+    }, {} as WebVitalReport['metrics']);
+    
+    return {
+      id: `report-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      generatedAt: now,
+      period: reportPeriod,
+      summary: {
+        totalMeasurements: allMeasurements.length,
+        uniqueUsers,
+        uniqueSessions,
+        overallScore,
+        passRate
+      },
+      metrics: metricsData,
+      segmentation: this.calculateSegmentation(allMeasurements),
+      insights: this.generateInsights(allMeasurements, reportPeriod),
+      recommendations: this.generateRecommendations(allMeasurements),
+      budgetStatus: this.getBudgetStatus(reportPeriod)
+    };
+  }
+
+  private calculateTrend(metric: WebVitalMetric, period: { start: Date; end: Date }): 'improving' | 'stable' | 'degrading' {
+    const measurements = this.getMeasurements(metric, period);
+    if (measurements.length < 10) return 'stable';
+    
+    const midpoint = Math.floor(measurements.length / 2);
+    const firstHalf = measurements.slice(0, midpoint);
+    const secondHalf = measurements.slice(midpoint);
+    
+    const firstAvg = firstHalf.reduce((sum, m) => sum + m.value, 0) / firstHalf.length;
+    const secondAvg = secondHalf.reduce((sum, m) => sum + m.value, 0) / secondHalf.length;
+    
+    const changePercentage = ((secondAvg - firstAvg) / firstAvg) * 100;
+    
+    if (changePercentage < -5) return 'improving';
+    if (changePercentage > 5) return 'degrading';
+    return 'stable';
+  }
+
+  private calculateChangeFromPrevious(metric: WebVitalMetric, period: { start: Date; end: Date }): number {
+    const currentMeasurements = this.getMeasurements(metric, period);
+    const periodDuration = period.end.getTime() - period.start.getTime();
+    const previousPeriod = {
+      start: new Date(period.start.getTime() - periodDuration),
+      end: period.start
+    };
+    const previousMeasurements = this.getMeasurements(metric, previousPeriod);
+    
+    if (currentMeasurements.length === 0 || previousMeasurements.length === 0) return 0;
+    
+    const currentAvg = currentMeasurements.reduce((sum, m) => sum + m.value, 0) / currentMeasurements.length;
+    const previousAvg = previousMeasurements.reduce((sum, m) => sum + m.value, 0) / previousMeasurements.length;
+    
+    return ((currentAvg - previousAvg) / previousAvg) * 100;
+  }
+
+  private calculateSegmentation(measurements: WebVitalMeasurement[]): WebVitalReport['segmentation'] {
+    const byDevice = measurements.reduce((acc, m) => {
+      const device = m.deviceType;
+      if (!acc[device]) acc[device] = { score: 0, count: 0 };
+      acc[device].count++;
+      acc[device].score += m.rating === 'good' ? 100 : m.rating === 'needs-improvement' ? 50 : 0;
+      return acc;
+    }, {} as Record<DeviceType, { score: number; count: number }>);
+    
+    // Normalize scores
+    Object.values(byDevice).forEach(data => {
+      data.score = data.count > 0 ? data.score / data.count : 0;
+    });
+    
+    const byConnection = measurements.reduce((acc, m) => {
+      const connection = m.connectionType;
+      if (!acc[connection]) acc[connection] = { score: 0, count: 0 };
+      acc[connection].count++;
+      acc[connection].score += m.rating === 'good' ? 100 : m.rating === 'needs-improvement' ? 50 : 0;
+      return acc;
+    }, {} as Record<ConnectionType, { score: number; count: number }>);
+    
+    Object.values(byConnection).forEach(data => {
+      data.score = data.count > 0 ? data.score / data.count : 0;
+    });
+    
+    const byPage = measurements.reduce((acc, m) => {
+      const page = new URL(m.url).pathname;
+      if (!acc[page]) acc[page] = { score: 0, count: 0 };
+      acc[page].count++;
+      acc[page].score += m.rating === 'good' ? 100 : m.rating === 'needs-improvement' ? 50 : 0;
+      return acc;
+    }, {} as Record<string, { score: number; count: number }>);
+    
+    Object.values(byPage).forEach(data => {
+      data.score = data.count > 0 ? data.score / data.count : 0;
+    });
+    
+    // Calculate time-based segmentation (hourly)
+    const byTime = this.calculateTimeSegmentation(measurements);
+    
+    return {
+      byDevice,
+      byConnection,
+      byPage,
+      byTime
+    };
+  }
+
+  private calculateTimeSegmentation(measurements: WebVitalMeasurement[]): Array<{
+    timestamp: Date;
+    score: number;
+    measurements: number;
+  }> {
+    // Group by hour
+    const hourlyData = new Map<string, { score: number; count: number }>();
+    
+    measurements.forEach(m => {
+      const hour = new Date(m.timestamp);
+      hour.setMinutes(0, 0, 0);
+      const key = hour.toISOString();
+      
+      if (!hourlyData.has(key)) {
+        hourlyData.set(key, { score: 0, count: 0 });
+      }
+      
+      const data = hourlyData.get(key)!;
+      data.count++;
+      data.score += m.rating === 'good' ? 100 : m.rating === 'needs-improvement' ? 50 : 0;
+    });
+    
+    return Array.from(hourlyData.entries())
+      .map(([timestamp, data]) => ({
+        timestamp: new Date(timestamp),
+        score: data.count > 0 ? data.score / data.count : 0,
+        measurements: data.count
+      }))
+      .sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+  }
+
+  private generateInsights(measurements: WebVitalMeasurement[], period: { start: Date; end: Date }): WebVitalInsight[] {
+    const insights: WebVitalInsight[] = [];
+    
+    // Check for performance regressions
+    const metrics: WebVitalMetric[] = ['LCP', 'FID', 'CLS', 'FCP', 'TTFB', 'INP'];
+    
+    metrics.forEach(metric => {
+      const metricMeasurements = measurements.filter(m => m.metric === metric);
+      const poorRate = metricMeasurements.filter(m => m.rating === 'poor').length / metricMeasurements.length;
+      
+      if (poorRate > 0.25) { // More than 25% poor
+        insights.push({
+          id: `insight-${metric}-poor-rate-${Date.now()}`,
+          type: 'regression',
+          metric,
+          title: `High ${metric} Poor Rate`,
+          description: `${(poorRate * 100).toFixed(1)}% of ${metric} measurements are poor`,
+          impact: poorRate > 0.5 ? 'critical' : poorRate > 0.4 ? 'high' : 'medium',
+          confidence: 0.9,
+          evidence: {
+            measurements: metricMeasurements.filter(m => m.rating === 'poor').map(m => m.id),
+            patterns: [`${metric} consistently above thresholds`],
+            correlations: []
+          },
+          timeframe: {
+            detected: new Date(),
+            period: 'last 24 hours'
+          },
+          affectedUsers: {
+            count: new Set(metricMeasurements.filter(m => m.rating === 'poor').map(m => m.context.userId).filter(Boolean)).size,
+            percentage: poorRate * 100,
+            segments: []
+          }
+        });
+      }
+    });
+    
+    return insights;
+  }
+
+  private generateRecommendations(measurements: WebVitalMeasurement[]): WebVitalRecommendation[] {
+    const recommendations: WebVitalRecommendation[] = [];
+    
+    // Analyze each metric and generate recommendations
+    const lcpMeasurements = measurements.filter(m => m.metric === 'LCP');
+    const poorLCP = lcpMeasurements.filter(m => m.rating === 'poor');
+    
+    if (poorLCP.length > lcpMeasurements.length * 0.2) {
+      recommendations.push({
+        id: `rec-lcp-${Date.now()}`,
+        metric: 'LCP',
+        priority: 'high',
+        category: 'loading',
+        title: 'Optimize Largest Contentful Paint',
+        description: 'LCP is slower than recommended. Focus on optimizing the largest visible element.',
+        implementation: {
+          effort: 'medium',
+          timeline: '1-2 weeks',
+          steps: [
+            'Identify the LCP element using browser dev tools',
+            'Optimize images with proper sizing and compression',
+            'Preload critical resources',
+            'Remove render-blocking resources',
+            'Use a CDN for faster content delivery'
+          ],
+          codeExamples: [
+            {
+              language: 'html',
+              code: '<link rel="preload" as="image" href="hero-image.jpg">',
+              description: 'Preload critical images'
+            },
+            {
+              language: 'html',
+              code: '<img src="image.jpg" width="800" height="600" loading="eager" fetchpriority="high">',
+              description: 'Optimize critical images'
+            }
+          ],
+          resources: [
+            'https://web.dev/optimize-lcp/',
+            'https://web.dev/preload-critical-assets/'
+          ]
+        },
+        expectedImpact: {
+          metric: 'LCP',
+          improvement: '20-40% reduction in LCP time',
+          confidence: 0.8
+        },
+        prerequisites: ['Performance audit completed'],
+        risks: ['May increase initial bundle size'],
+        alternatives: ['Server-side rendering', 'Progressive image loading']
+      });
+    }
+    
+    return recommendations;
+  }
+
+  private getBudgetStatus(period: { start: Date; end: Date }): WebVitalReport['budgetStatus'] {
+    return Array.from(this.budgets.values()).map(budget => {
+      const violations: any[] = [];
+      
+      // Check each metric against budget thresholds
+      const metrics: WebVitalMetric[] = ['LCP', 'FID', 'CLS', 'FCP', 'TTFB', 'INP'];
+      
+      metrics.forEach(metric => {
+        const summary = this.getMetricSummary(metric, period);
+        if (summary) {
+          const threshold = budget.thresholds[metric];
+          const p75 = summary.p75;
+          
+          if (p75 > threshold.poor) {
+            violations.push({
+              metric,
+              threshold: threshold.poor,
+              actual: p75,
+              severity: 'critical' as const
+            });
+          } else if (p75 > threshold.good) {
+            violations.push({
+              metric,
+              threshold: threshold.good,
+              actual: p75,
+              severity: 'major' as const
+            });
+          }
+        }
+      });
+      
+      return {
+        budgetId: budget.id,
+        status: violations.length === 0 ? 'passed' : 
+                violations.some(v => v.severity === 'critical') ? 'failed' : 'warning',
+        violations
+      };
+    });
+  }
+
+  public createPerformanceBudget(budget: Omit<PerformanceBudget, 'id'>): string {
+    const id = `budget-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    this.budgets.set(id, { ...budget, id });
+    return id;
+  }
+
+  public updatePerformanceBudget(id: string, updates: Partial<PerformanceBudget>): boolean {
+    const budget = this.budgets.get(id);
+    if (!budget) return false;
+    
+    this.budgets.set(id, { ...budget, ...updates });
+    return true;
+  }
+
+  public deletePerformanceBudget(id: string): boolean {
+    return this.budgets.delete(id);
+  }
+
+  public getPerformanceBudgets(): PerformanceBudget[] {
+    return Array.from(this.budgets.values());
+  }
+
+  public getReports(): WebVitalReport[] {
+    return [...this.reports];
+  }
+
+  public getLatestReport(): WebVitalReport | null {
+    return this.reports.length > 0 ? this.reports[this.reports.length - 1] : null;
+  }
+
+  public updateConfiguration(newConfig: Partial<WebVitalConfiguration>): void {
+    this.configuration = this.mergeConfiguration(newConfig);
+    logger.info('Core Web Vitals configuration updated', newConfig);
+  }
+
+  public getConfiguration(): WebVitalConfiguration {
+    return { ...this.configuration };
+  }
+
+  public addEventListener(listener: (event: any) => void): void {
+    this.eventListeners.push(listener);
+  }
+
+  public removeEventListener(listener: (event: any) => void): void {
+    const index = this.eventListeners.indexOf(listener);
+    if (index > -1) {
+      this.eventListeners.splice(index, 1);
+    }
+  }
+
+  public destroy(): void {
+    // Disconnect observers
+    this.observers.forEach(observer => observer.disconnect());
+    this.observers.clear();
+    
+    // Clear intervals
+    this.intervals.forEach(interval => clearInterval(interval));
+    this.intervals.clear();
+    
+    // Clear data
+    this.measurements.clear();
+    this.budgets.clear();
+    this.reports = [];
+    this.measurementBuffer = [];
+    this.eventListeners = [];
+    
+    this.isInitialized = false;
+    logger.info('Core Web Vitals service destroyed');
+  }
+}
+
+// Create singleton instance
 export const coreWebVitalsService = new CoreWebVitalsService();
+
 export default coreWebVitalsService;

@@ -1,1026 +1,1748 @@
 /**
- * Comprehensive Performance Monitoring System
+ * Comprehensive Performance Monitor
  *
- * Advanced performance monitoring with real-time alerts, performance budgets,
- * bottleneck detection, and automated optimization recommendations for
- * the Astral Core mental health platform.
+ * Advanced performance monitoring system for HIPAA-compliant mental health platform.
+ * Tracks Core Web Vitals, runtime performance, user experience metrics,
+ * and provides real-time insights with privacy-compliant analytics.
  *
- * Features:
- * - Real-time performance monitoring with configurable thresholds
- * - Performance budgets and budget violation alerts
- * - Bottleneck detection and performance regression tracking
- * - Automated optimization recommendations
- * - Crisis intervention performance prioritization
- * - Mental health-specific performance considerations
- * - Historical performance trending
- * - Performance anomaly detection
+ * @fileoverview Complete performance monitoring with ML-powered insights
+ * @version 2.0.0
  */
 
- { getAnalyticsService } from "./analyticsService';""'""'"'
+import { logger } from '../utils/logger';
 
-// Performance alert severity levels
-type AlertSeverity = "low' | "medium" | "high" | 'critical";"'"""'
+export type PerformanceMetricType = 
+  | 'core-web-vitals' 
+  | 'runtime-performance' 
+  | 'user-experience' 
+  | 'network-performance' 
+  | 'memory-usage' 
+  | 'crisis-performance'
+  | 'accessibility-performance';
 
-// Performance alert types
-type AlertType = "budget_violation' | "bottleneck_detected" | 'regression" | "anomaly" | "critical_failure';""'""'
+export type MetricSeverity = 'good' | 'needs-improvement' | 'poor' | 'critical';
+export type PerformanceCategory = 'loading' | 'interactivity' | 'visual-stability' | 'runtime' | 'network' | 'memory';
 
-// Performance impact levels
-type ImpactLevel = "low" | 'medium" | "high' | "critical";""'""'
+export interface PerformanceMetric {
+  id: string;
+  name: string;
+  type: PerformanceMetricType;
+  category: PerformanceCategory;
+  value: number;
+  unit: string;
+  timestamp: Date;
+  severity: MetricSeverity;
+  threshold: {
+    good: number;
+    needsImprovement: number;
+    poor: number;
+  };
+  context: {
+    url: string;
+    userAgent: string;
+    connectionType?: string;
+    deviceType: 'mobile' | 'tablet' | 'desktop';
+    viewport: { width: number; height: number };
+  };
+  metadata: Record<string, any>;
+}
 
-// Priority levels
-type PriorityLevel = 'low" | "medium" | "high' | "critical";'""""''
+export interface CoreWebVitals {
+  lcp: PerformanceMetric; // Largest Contentful Paint
+  fid: PerformanceMetric; // First Input Delay
+  cls: PerformanceMetric; // Cumulative Layout Shift
+  fcp: PerformanceMetric; // First Contentful Paint
+  ttfb: PerformanceMetric; // Time to First Byte
+  inp: PerformanceMetric; // Interaction to Next Paint
+}
 
-// Difficulty levels
-type DifficultyLevel = "easy" | 'medium" | "hard";"'
-interface EnhancedPerformanceMetrics { { { {
-  // Core Web Vitals
-  firstContentfulPaint: number;,
-  largestContentfulPaint: number;,
-  firstInputDelay: number;,
-  cumulativeLayoutShift: number;,
-  timeToFirstByte: number
-  // Loading Performance
-  loadTime: number;,
-  domContentLoaded: number
-  // Bundle & Resource Metrics
-  bundleSize: number;,
-  chunkCount: number;,
-  cacheHitRate: number;,
-  totalResourceSize: number
-  // Memory & CPU
-  memoryUsage: number;,
-  cpuUsage: number
-  // Network Performance
-  networkLatency: number;,
-  bandwidth: number
-  // Mental Health Platform Specific
-  crisisDetectionResponseTime: number;,
-  chatMessageLatency: number;,
-  videoStreamingQuality: number;,
-  offlineCapabilityStatus: number
-  // User Experience Metrics
-  userEngagementScore: number;,
-  featureUsabilityScore: number
-};
+export interface RuntimePerformance {
+  memoryUsage: {
+    used: number;
+    total: number;
+    limit: number;
+    percentage: number;
+    leaks: MemoryLeak[];
+  };
+  cpuUsage: {
+    percentage: number;
+    longTasks: LongTask[];
+    mainThreadBlocking: number;
+  };
+  bundleSize: {
+    total: number;
+    javascript: number;
+    css: number;
+    images: number;
+    fonts: number;
+    other: number;
+  };
+  renderingMetrics: {
+    framesPerSecond: number;
+    droppedFrames: number;
+    renderingTime: number;
+    layoutThrashing: number;
+  };
+}
 
-accessibilityScore: number
-  // Timestamp for trending
-};
+export interface UserExperienceMetrics {
+  sessionDuration: number;
+  bounceRate: number;
+  timeToInteractive: number;
+  userFlows: UserFlowMetric[];
+  errorRate: number;
+  crisisResponseTime: number;
+  accessibilityScore: number;
+}
 
-timestamp: number
+export interface UserFlowMetric {
+  flowId: string;
+  name: string;
+  startTime: Date;
+  endTime: Date;
+  duration: number;
+  steps: FlowStep[];
+  completed: boolean;
+  abandonmentPoint?: string;
+  errorCount: number;
+  performanceScore: number;
+}
 
-// Performance budget configuration
-interface PerformanceBudget { { { {
-  // Core Web Vitals Budgets
-};
+export interface FlowStep {
+  id: string;
+  name: string;
+  startTime: Date;
+  duration: number;
+  success: boolean;
+  metrics: {
+    loadTime: number;
+    renderTime: number;
+    interactionDelay: number;
+  };
+  errors: string[];
+}
 
-firstContentfulPaint: { target: number; warning: number, critical: number };
-  largestContentfulPaint: { target: number; warning: number, critical: number };
-  firstInputDelay: { target: number; warning: number, critical: number };
-  cumulativeLayoutShift: { target: number; warning: number, critical: number };
+export interface NetworkPerformance {
+  connectionType: string;
+  effectiveType: string;
+  downlink: number;
+  rtt: number;
+  requestMetrics: {
+    totalRequests: number;
+    failedRequests: number;
+    averageResponseTime: number;
+    slowestEndpoint: string;
+    fastestEndpoint: string;
+  };
+  resourceTiming: ResourceTimingMetric[];
+  cachingEfficiency: {
+    hitRate: number;
+    missRate: number;
+    totalSize: number;
+    cachedSize: number;
+  };
+}
 
-  // Loading Budgets
-  loadTime: { target: number; warning: number, critical: number };
-  bundleSize: { target: number; warning: number, critical: number };
+export interface ResourceTimingMetric {
+  name: string;
+  type: 'script' | 'stylesheet' | 'image' | 'font' | 'fetch' | 'xmlhttprequest';
+  startTime: number;
+  duration: number;
+  size: number;
+  cached: boolean;
+  critical: boolean;
+}
 
-  // Mental Health Specific Budgets
-  crisisDetectionResponseTime: { target: number; warning: number, critical: number };
-  chatMessageLatency: { target: number; warning: number, critical: number };
+export interface MemoryLeak {
+  id: string;
+  timestamp: Date;
+  component: string;
+  leakSize: number;
+  description: string;
+  stackTrace: string;
+  severity: MetricSeverity;
+}
 
-  // Resource Budgets
-  memoryUsage: { target: number; warning: number, critical: number };
-  totalResourceSize: { target: number; warning: number, critical: number }
+export interface LongTask {
+  id: string;
+  startTime: number;
+  duration: number;
+  attribution: string;
+  blockingTime: number;
+  impact: 'low' | 'medium' | 'high';
+}
 
-// Performance alert interface interface { { {PerformanceAlert {
-  id: string
-$2: AlertType;,
-  severity: AlertSeverity;,
-  metric: string;,
-  currentValue: number;,
-  expectedValue: number;,
-  description: string;,
-  recommendations: string[],
-};
+export interface PerformanceAlert {
+  id: string;
+  timestamp: Date;
+  type: PerformanceMetricType;
+  severity: MetricSeverity;
+  metric: string;
+  value: number;
+  threshold: number;
+  message: string;
+  recommendation: string;
+  affectedUsers: number;
+  businessImpact: string;
+  autoResolved: boolean;
+  resolvedAt?: Date;
+}
 
-timestamp: number
-};
+export interface PerformanceReport {
+  id: string;
+  timestamp: Date;
+  period: {
+    start: Date;
+    end: Date;
+  };
+  summary: {
+    overallScore: number;
+    coreWebVitalsScore: number;
+    userExperienceScore: number;
+    performanceGrade: 'A' | 'B' | 'C' | 'D' | 'F';
+    totalIssues: number;
+    criticalIssues: number;
+    improvementOpportunities: string[];
+  };
+  metrics: {
+    coreWebVitals: CoreWebVitals;
+    runtime: RuntimePerformance;
+    userExperience: UserExperienceMetrics;
+    network: NetworkPerformance;
+  };
+  trends: PerformanceTrend[];
+  insights: PerformanceInsight[];
+  recommendations: PerformanceRecommendation[];
+  alerts: PerformanceAlert[];
+  comparisons: {
+    previousPeriod: number;
+    industry: number;
+    competitors: number;
+  };
+}
 
-isCrisisRelated: boolean
+export interface PerformanceTrend {
+  metric: string;
+  period: 'hour' | 'day' | 'week' | 'month';
+  data: Array<{
+    timestamp: Date;
+    value: number;
+    severity: MetricSeverity;
+  }>;
+  direction: 'improving' | 'stable' | 'degrading';
+  changePercentage: number;
+  significance: 'low' | 'medium' | 'high';
+}
 
-// Bottleneck detection result
-interface PerformanceBottleneck { { { {
-  component: string;,
-  metric: string;,
-  impact: ImpactLevel;,
-  description: string
-};
+export interface PerformanceInsight {
+  id: string;
+  type: 'optimization' | 'warning' | 'opportunity' | 'anomaly';
+  title: string;
+  description: string;
+  impact: 'low' | 'medium' | 'high';
+  confidence: number; // 0-1
+  metrics: string[];
+  timeframe: string;
+  actionable: boolean;
+  estimatedImprovement: {
+    metric: string;
+    improvement: number;
+    unit: string;
+  };
+}
 
-suggestions: string[]
-};
+export interface PerformanceRecommendation {
+  id: string;
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  category: PerformanceCategory;
+  title: string;
+  description: string;
+  implementation: {
+    effort: 'low' | 'medium' | 'high';
+    timeline: string;
+    steps: string[];
+    codeExamples: Array<{
+      language: string;
+      code: string;
+      description: string;
+    }>;
+    resources: string[];
+  };
+  expectedImpact: {
+    metric: string;
+    improvement: string;
+    userBenefit: string;
+    businessValue: string;
+  };
+  relatedMetrics: string[];
+  dependencies: string[];
+}
 
-estimatedImprovement: number
+export interface PerformanceConfiguration {
+  monitoring: {
+    enabled: boolean;
+    interval: number; // milliseconds
+    batchSize: number;
+    maxDataPoints: number;
+  };
+  thresholds: {
+    coreWebVitals: {
+      lcp: { good: number; needsImprovement: number };
+      fid: { good: number; needsImprovement: number };
+      cls: { good: number; needsImprovement: number };
+      fcp: { good: number; needsImprovement: number };
+      ttfb: { good: number; needsImprovement: number };
+      inp: { good: number; needsImprovement: number };
+    };
+    runtime: {
+      memoryUsage: { good: number; needsImprovement: number };
+      cpuUsage: { good: number; needsImprovement: number };
+      longTaskDuration: { good: number; needsImprovement: number };
+      framesPerSecond: { good: number; needsImprovement: number };
+    };
+    network: {
+      responseTime: { good: number; needsImprovement: number };
+      errorRate: { good: number; needsImprovement: number };
+      cacheHitRate: { good: number; needsImprovement: number };
+    };
+  };
+  alerting: {
+    enabled: boolean;
+    channels: ('console' | 'storage' | 'callback')[];
+    debounceTime: number;
+    severityFilter: MetricSeverity[];
+  };
+  privacy: {
+    anonymizeData: boolean;
+    retentionPeriod: number; // days
+    excludePersonalData: boolean;
+    consentRequired: boolean;
+  };
+  features: {
+    realTimeMonitoring: boolean;
+    automaticReporting: boolean;
+    performanceInsights: boolean;
+    crisisPerformanceTracking: boolean;
+    accessibilityMetrics: boolean;
+    userFlowTracking: boolean;
+  };
+}
 
-// Optimization recommendation
-interface OptimizationRecommendation { { { {
-  id: string;,
-  category: "bundle" | 'loading" | "runtime" | "memory' | "network" | 'ux" | "accessibility""',
-  priority: PriorityLevel;,
-  title: string;,
-  description: string;,
-  implementation: string;,
-  estimatedGain: string;,
-};
+class ComprehensivePerformanceMonitor {
+  private configuration: PerformanceConfiguration;
+  private metrics: Map<string, PerformanceMetric[]> = new Map();
+  private alerts: PerformanceAlert[] = [];
+  private reports: PerformanceReport[] = [];
+  private observers: Map<string, PerformanceObserver> = new Map();
+  private intervals: Map<string, NodeJS.Timeout> = new Map();
+  private isInitialized = false;
+  private userFlows: Map<string, UserFlowMetric> = new Map();
+  private sessionStartTime = Date.now();
+  private eventListeners: Array<(event: any) => void> = [];
 
-difficulty: DifficultyLevel
-};
-
-mentalHealthImpact: string
-
-// Performance monitoring configuration
-interface PerformanceMonitorConfig { { { {
-  enableRealTimeMonitoring: boolean;,
-  enableBudgetTracking: boolean;,
-  enableBottleneckDetection: boolean;,
-  enableOptimizationSuggestions: boolean;,
-  enableCrisisPrioritization: boolean;,
-  collectInterval: number; // milliseconds
-};
-
-alertThresholds: PerformanceBudget
-};
-
-retentionPeriod: number; // days
-interface ComprehensivePerformanceMonitor { { { { private config: PerformanceMonitorConfig
-  private performanceHistory: EnhancedPerformanceMetrics[] = []
-  private activeAlerts: PerformanceAlert[] = []
-  private observers: PerformanceObserver[] = []
-  private intervalId: number | null = null
-  private isMonitoring = false
-  private alertCallbacks: ((alert: PerformanceAlert) =) void}[] = []
-$2ructor(config?: Partial<PerformanceMonitorConfig>) {
-    this.config = {}
-      enableRealTimeMonitoring: true,
-      enableBudgetTracking: true,
-      enableBottleneckDetection: true,
-      enableOptimizationSuggestions: true,
-      enableCrisisPrioritization: true,
-      collectInterval: 5000, // 5 seconds
-      retentionPeriod: 30, // 30 days
-      alertThresholds: this.getDefaultBudgets(),
-      ...config };
-
+  constructor(configuration?: Partial<PerformanceConfiguration>) {
+    this.configuration = this.mergeConfiguration(configuration);
     this.initializeMonitoring();
+  }
 
-  /**
-   * Get default performance budgets optimized for mental health platform
-   */
-  private getDefaultBudgets(): PerformanceBudget {;
-const isMobile = window.innerWidth <= 768,
+  private mergeConfiguration(userConfig?: Partial<PerformanceConfiguration>): PerformanceConfiguration {
+    const defaultConfig: PerformanceConfiguration = {
+      monitoring: {
+        enabled: true,
+        interval: 5000,
+        batchSize: 100,
+        maxDataPoints: 10000
+      },
+      thresholds: {
+        coreWebVitals: {
+          lcp: { good: 2500, needsImprovement: 4000 },
+          fid: { good: 100, needsImprovement: 300 },
+          cls: { good: 0.1, needsImprovement: 0.25 },
+          fcp: { good: 1800, needsImprovement: 3000 },
+          ttfb: { good: 800, needsImprovement: 1800 },
+          inp: { good: 200, needsImprovement: 500 }
+        },
+        runtime: {
+          memoryUsage: { good: 50, needsImprovement: 80 },
+          cpuUsage: { good: 30, needsImprovement: 70 },
+          longTaskDuration: { good: 50, needsImprovement: 100 },
+          framesPerSecond: { good: 55, needsImprovement: 30 }
+        },
+        network: {
+          responseTime: { good: 200, needsImprovement: 500 },
+          errorRate: { good: 1, needsImprovement: 5 },
+          cacheHitRate: { good: 90, needsImprovement: 70 }
+        }
+      },
+      alerting: {
+        enabled: true,
+        channels: ['console', 'storage'],
+        debounceTime: 30000,
+        severityFilter: ['needs-improvement', 'poor', 'critical']
+      },
+      privacy: {
+        anonymizeData: true,
+        retentionPeriod: 30,
+        excludePersonalData: true,
+        consentRequired: false
+      },
+      features: {
+        realTimeMonitoring: true,
+        automaticReporting: true,
+        performanceInsights: true,
+        crisisPerformanceTracking: true,
+        accessibilityMetrics: true,
+        userFlowTracking: true
+      }
+    };
 
-    return {
-  
-};
+    return this.deepMerge(defaultConfig, userConfig || {});
+  }
 
-firstContentfulPaint: {
-  ,
-  target: isMobile ? 2000 : 1500,
-};
+  private deepMerge(target: any, source: any): any {
+    const result = { ...target };
+    
+    for (const key in source) {
+      if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+        result[key] = this.deepMerge(target[key] || {}, source[key]);
+      } else {
+        result[key] = source[key];
+      }
+    }
+    
+    return result;
+  }
 
-warning: isMobile ? 3000 : 2500,
-};
-
-critical: isMobile ? 4000 : 3500
-  },
-      largestContentfulPaint: {
-  ,
-  target: isMobile ? 3000 : 2500,
-};
-
-warning: isMobile ? 4000 : 3500,
-};
-
-critical: isMobile ? 5000 : 4500
-  },
-      firstInputDelay: {
-  ,
-  target: 50,
-};
-
-warning: 100,
-};
-
-critical: 200
-  },
-      cumulativeLayoutShift: {
-  ,
-  target: 0.05,
-};
-
-warning: 0.1,
-};
-
-critical: 0.25
-  },
-      loadTime: {
-  ,
-  target: isMobile ? 3000 : 2000,
-};
-
-warning: isMobile ? 5000 : 4000,
-};
-
-critical: isMobile ? 8000 : 6000
-  },
-      bundleSize: {
-  ,
-  target: isMobile ? 500000 : 800000, // 500KB mobile, 800KB desktop
-};
-
-warning: isMobile ? 750000 : 1200000,
-};
-
-critical: isMobile ? 1000000 : 1500000
-  },
-      crisisDetectionResponseTime: {
-  ,
-  target: 100, // Critical for mental health platform
-};
-
-warning: 300,
-};
-
-critical: 500
-  },
-      chatMessageLatency: {
-  ,
-  target: 200,
-};
-
-warning: 500,
-};
-
-critical: 1000
-  },
-      memoryUsage: {
-  ,
-  target: 50, // MB
-};
-
-warning: 100,
-};
-
-critical: 200
-  },
-      totalResourceSize: {
-  ,
-  target: isMobile ? 1000000 : 1500000, // 1MB mobile, 1.5MB desktop
-};
-
-warning: isMobile ? 1500000 : 2000000,
-};
-
-critical: isMobile ? 2000000 : 3000000
-  };
-
-  /**
-   * Initialize performance monitoring system
-   */
-  private initializeMonitoring(): void(if (typeof window === "undefined") return;'"""'
-
-    // Set up performance observers
-    this.setupPerformanceObservers( );
-
-    // Start real-time monitoring
-    if (this.config.enableRealTimeMonitoring) {
-      this.startRealTimeMonitoring() }
-
-    // Clean up old performance data
-    this.cleanupOldData();
-
-  /**
-   * Set up performance observers for real-time metrics collection
-   */
-  private setupPerformanceObservers(): void { if (!("PerformanceObserver' in window)) return;""'""""
-
-    // Core Web Vitals observers
+  private async initializeMonitoring(): Promise<void> {
     try {
-      // LCP Observer
-const lcpObserver = new PerformanceObserver((list) =) {;
-const entries = list.getEntries();
-const lastEntry = entries[entries.length - 1];
-        this.updateMetric('largestContentfulPaint", lastEntry.startTime) }"'""""
-      lcpObserver.observe({ entryTypes: ['largest-contentful-paint"] ));"'""""
-      this.observers.push(lcpObserver);
+      if (!this.configuration.monitoring.enabled) {
+        logger.info('Performance monitoring is disabled');
+        return;
+      }
 
-      // FID Observer
-const fidObserver = new PerformanceObserver((list) =) {;
-const entries = list.getEntries();
-        entries.forEach((entry: any) =) {;
-const fid = entry.processingStart - entry.startTime;
-          this.updateMetric('firstInputDelay", fid) }};"'
-  };
-      fidObserver.observe({ entryTypes: ["first-input"] ));""''""'"'
-      this.observers.push(fidObserver);
+      // Initialize Core Web Vitals monitoring
+      await this.initializeCoreWebVitals();
+      
+      // Initialize runtime performance monitoring
+      await this.initializeRuntimeMonitoring();
+      
+      // Initialize network performance monitoring
+      await this.initializeNetworkMonitoring();
+      
+      // Initialize user experience monitoring
+      await this.initializeUserExperienceMonitoring();
+      
+      // Initialize crisis performance tracking
+      if (this.configuration.features.crisisPerformanceTracking) {
+        await this.initializeCrisisPerformanceTracking();
+      }
+      
+      // Initialize accessibility metrics
+      if (this.configuration.features.accessibilityMetrics) {
+        await this.initializeAccessibilityMetrics();
+      }
+      
+      // Start real-time monitoring
+      if (this.configuration.features.realTimeMonitoring) {
+        this.startRealTimeMonitoring();
+      }
+      
+      // Start automatic reporting
+      if (this.configuration.features.automaticReporting) {
+        this.startAutomaticReporting();
+      }
 
-      // CLS Observer
-const clsObserver = new PerformanceObserver((list) =) {;
-const clsValue = 0,
-        list.getEntries().forEach((entry: any) =) {
-          if (!entry.hadRecentInput) {
-            clsValue += entry.value };
-  }};
-        this.updateMetric("cumulativeLayoutShift", clsValue);"'"'
+      this.isInitialized = true;
+      logger.info('Comprehensive performance monitoring initialized successfully');
+      
+    } catch (error) {
+      logger.error('Failed to initialize performance monitoring', error);
+      throw error;
+    }
+  }
 
-      clsObserver.observe({ entryTypes: ["layout-shift'] ));""'""'"'
-      this.observers.push(clsObserver);
+  private async initializeCoreWebVitals(): Promise<void> {
+    // Largest Contentful Paint (LCP)
+    if ('PerformanceObserver' in window) {
+      const lcpObserver = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        const lastEntry = entries[entries.length - 1] as any;
+        
+        this.recordMetric({
+          id: `lcp-${Date.now()}`,
+          name: 'Largest Contentful Paint',
+          type: 'core-web-vitals',
+          category: 'loading',
+          value: lastEntry.startTime,
+          unit: 'ms',
+          timestamp: new Date(),
+          severity: this.calculateSeverity(lastEntry.startTime, this.configuration.thresholds.coreWebVitals.lcp),
+          threshold: {
+            good: this.configuration.thresholds.coreWebVitals.lcp.good,
+            needsImprovement: this.configuration.thresholds.coreWebVitals.lcp.needsImprovement,
+            poor: Infinity
+          },
+          context: this.getPerformanceContext(),
+          metadata: {
+            element: lastEntry.element?.tagName,
+            url: lastEntry.url,
+            size: lastEntry.size
+          }
+        });
+      });
+      
+      lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+      this.observers.set('lcp', lcpObserver);
+    }
 
-      // Navigation observer for load metrics
-const navObserver = new PerformanceObserver((list) =) {;
-const entries = list.getEntries();
-        entries.forEach((entry) =) {
-          if (entry.entryType === "navigation') {;""'
-const navEntry = entry as PerformanceNavigationTiming;
-            this.updateMetric("loadTime", navEntry.loadEventEnd - navEntry.loadEventStart);'""''""""'
-            this.updateMetric('domContentLoaded", navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart );"'""
-            this.updateMetric("timeToFirstByte", navEntry.responseStart - navEntry.requestStart );'"'
-  }};
-  };
-      navObserver.observe({ entryTypes: ["navigation'] ));"""'"'""'
-      this.observers.push(navObserver) } catch (error) { console.warn('Failed to set up performance observers:", error );""'
+    // First Input Delay (FID)
+    if ('PerformanceObserver' in window) {
+      const fidObserver = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        for (const entry of entries) {
+          const fidEntry = entry as any;
+          
+          this.recordMetric({
+            id: `fid-${Date.now()}`,
+            name: 'First Input Delay',
+            type: 'core-web-vitals',
+            category: 'interactivity',
+            value: fidEntry.processingStart - fidEntry.startTime,
+            unit: 'ms',
+            timestamp: new Date(),
+            severity: this.calculateSeverity(
+              fidEntry.processingStart - fidEntry.startTime,
+              this.configuration.thresholds.coreWebVitals.fid
+            ),
+            threshold: {
+              good: this.configuration.thresholds.coreWebVitals.fid.good,
+              needsImprovement: this.configuration.thresholds.coreWebVitals.fid.needsImprovement,
+              poor: Infinity
+            },
+            context: this.getPerformanceContext(),
+            metadata: {
+              eventType: fidEntry.name,
+              target: fidEntry.target?.tagName,
+              cancelable: fidEntry.cancelable
+            }
+          });
+        }
+      });
+      
+      fidObserver.observe({ entryTypes: ['first-input'] });
+      this.observers.set('fid', fidObserver);
+    }
 
-  /**
-   * Start real-time performance monitoring
-   */
-  private startRealTimeMonitoring(): void { if (this.isMonitoring) return;
+    // Cumulative Layout Shift (CLS)
+    if ('PerformanceObserver' in window) {
+      let clsValue = 0;
+      const clsObserver = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        for (const entry of entries) {
+          const layoutShiftEntry = entry as any;
+          if (!layoutShiftEntry.hadRecentInput) {
+            clsValue += layoutShiftEntry.value;
+          }
+        }
+        
+        this.recordMetric({
+          id: `cls-${Date.now()}`,
+          name: 'Cumulative Layout Shift',
+          type: 'core-web-vitals',
+          category: 'visual-stability',
+          value: clsValue,
+          unit: 'score',
+          timestamp: new Date(),
+          severity: this.calculateSeverity(clsValue, this.configuration.thresholds.coreWebVitals.cls),
+          threshold: {
+            good: this.configuration.thresholds.coreWebVitals.cls.good,
+            needsImprovement: this.configuration.thresholds.coreWebVitals.cls.needsImprovement,
+            poor: Infinity
+          },
+          context: this.getPerformanceContext(),
+          metadata: {
+            sources: entries.map((e: any) => ({
+              node: e.sources?.[0]?.node?.tagName,
+              previousRect: e.sources?.[0]?.previousRect,
+              currentRect: e.sources?.[0]?.currentRect
+            }))
+          }
+        });
+      });
+      
+      clsObserver.observe({ entryTypes: ['layout-shift'] });
+      this.observers.set('cls', clsObserver);
+    }
 
-    this.isMonitoring = true;
-    this.intervalId = window.setInterval(() =) {
-      this.collectCurrentMetrics() }, this.config.collectInterval};
+    // First Contentful Paint (FCP)
+    if ('PerformanceObserver' in window) {
+      const fcpObserver = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        for (const entry of entries) {
+          if (entry.name === 'first-contentful-paint') {
+            this.recordMetric({
+              id: `fcp-${Date.now()}`,
+              name: 'First Contentful Paint',
+              type: 'core-web-vitals',
+              category: 'loading',
+              value: entry.startTime,
+              unit: 'ms',
+              timestamp: new Date(),
+              severity: this.calculateSeverity(entry.startTime, this.configuration.thresholds.coreWebVitals.fcp),
+              threshold: {
+                good: this.configuration.thresholds.coreWebVitals.fcp.good,
+                needsImprovement: this.configuration.thresholds.coreWebVitals.fcp.needsImprovement,
+                poor: Infinity
+              },
+              context: this.getPerformanceContext(),
+              metadata: {
+                entryType: entry.entryType,
+                startTime: entry.startTime
+              }
+            });
+          }
+        }
+      });
+      
+      fcpObserver.observe({ entryTypes: ['paint'] });
+      this.observers.set('fcp', fcpObserver);
+    }
 
-  /**
-   * Stop real-time performance monitoring
-   */
-  public stopMonitoring(): void { this.isMonitoring = false;
+    // Time to First Byte (TTFB)
+    if ('PerformanceObserver' in window) {
+      const navigationObserver = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        for (const entry of entries) {
+          const navEntry = entry as any;
+          const ttfb = navEntry.responseStart - navEntry.requestStart;
+          
+          this.recordMetric({
+            id: `ttfb-${Date.now()}`,
+            name: 'Time to First Byte',
+            type: 'core-web-vitals',
+            category: 'loading',
+            value: ttfb,
+            unit: 'ms',
+            timestamp: new Date(),
+            severity: this.calculateSeverity(ttfb, this.configuration.thresholds.coreWebVitals.ttfb),
+            threshold: {
+              good: this.configuration.thresholds.coreWebVitals.ttfb.good,
+              needsImprovement: this.configuration.thresholds.coreWebVitals.ttfb.needsImprovement,
+              poor: Infinity
+            },
+            context: this.getPerformanceContext(),
+            metadata: {
+              requestStart: navEntry.requestStart,
+              responseStart: navEntry.responseStart,
+              type: navEntry.type
+            }
+          });
+        }
+      });
+      
+      navigationObserver.observe({ entryTypes: ['navigation'] });
+      this.observers.set('navigation', navigationObserver);
+    }
+  }
 
-    if (this.intervalId) {
-      clearInterval(this.intervalId ),
-      this.intervalId = null }
+  private async initializeRuntimeMonitoring(): Promise<void> {
+    // Memory usage monitoring
+    const monitorMemory = () => {
+      if ('memory' in performance) {
+        const memory = (performance as any).memory;
+        const usedPercentage = (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100;
+        
+        this.recordMetric({
+          id: `memory-${Date.now()}`,
+          name: 'Memory Usage',
+          type: 'runtime-performance',
+          category: 'memory',
+          value: usedPercentage,
+          unit: '%',
+          timestamp: new Date(),
+          severity: this.calculateSeverity(usedPercentage, this.configuration.thresholds.runtime.memoryUsage),
+          threshold: {
+            good: this.configuration.thresholds.runtime.memoryUsage.good,
+            needsImprovement: this.configuration.thresholds.runtime.memoryUsage.needsImprovement,
+            poor: 100
+          },
+          context: this.getPerformanceContext(),
+          metadata: {
+            usedJSHeapSize: memory.usedJSHeapSize,
+            totalJSHeapSize: memory.totalJSHeapSize,
+            jsHeapSizeLimit: memory.jsHeapSizeLimit
+          }
+        });
+        
+        // Check for memory leaks
+        if (usedPercentage > 90) {
+          this.detectMemoryLeaks();
+        }
+      }
+    };
 
-    // Disconnect observers
-    this.observers.forEach(observer =) observer.disconnect()};
-    this.observers = [];
+    // Long task monitoring
+    if ('PerformanceObserver' in window) {
+      const longTaskObserver = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        for (const entry of entries) {
+          const longTaskEntry = entry as any;
+          
+          this.recordMetric({
+            id: `long-task-${Date.now()}`,
+            name: 'Long Task',
+            type: 'runtime-performance',
+            category: 'interactivity',
+            value: entry.duration,
+            unit: 'ms',
+            timestamp: new Date(),
+            severity: this.calculateSeverity(entry.duration, this.configuration.thresholds.runtime.longTaskDuration),
+            threshold: {
+              good: this.configuration.thresholds.runtime.longTaskDuration.good,
+              needsImprovement: this.configuration.thresholds.runtime.longTaskDuration.needsImprovement,
+              poor: Infinity
+            },
+            context: this.getPerformanceContext(),
+            metadata: {
+              attribution: longTaskEntry.attribution,
+              startTime: entry.startTime,
+              duration: entry.duration
+            }
+          });
+          
+          // Generate alert for critical long tasks
+          if (entry.duration > 200) {
+            this.generateAlert({
+              type: 'runtime-performance',
+              severity: 'critical',
+              metric: 'Long Task',
+              value: entry.duration,
+              threshold: 200,
+              message: `Critical long task detected: ${entry.duration}ms`,
+              recommendation: 'Consider code splitting or optimizing heavy computations',
+              affectedUsers: 1,
+              businessImpact: 'User interface may become unresponsive'
+            });
+          }
+        }
+      });
+      
+      longTaskObserver.observe({ entryTypes: ['longtask'] });
+      this.observers.set('longtask', longTaskObserver);
+    }
 
-  /**
-   * Collect current performance metrics
-   */
-  private async collectCurrentMetrics(): Promise<EnhancedPerformanceMetrics> {   };
+    // Frame rate monitoring
+    let frameCount = 0;
+    let lastTime = performance.now();
+    
+    const measureFrameRate = () => {
+      const currentTime = performance.now();
+      frameCount++;
+      
+      if (currentTime - lastTime >= 1000) {
+        const fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
+        
+        this.recordMetric({
+          id: `fps-${Date.now()}`,
+          name: 'Frames Per Second',
+          type: 'runtime-performance',
+          category: 'visual-stability',
+          value: fps,
+          unit: 'fps',
+          timestamp: new Date(),
+          severity: this.calculateSeverity(fps, this.configuration.thresholds.runtime.framesPerSecond, true),
+          threshold: {
+            good: this.configuration.thresholds.runtime.framesPerSecond.good,
+            needsImprovement: this.configuration.thresholds.runtime.framesPerSecond.needsImprovement,
+            poor: 0
+          },
+          context: this.getPerformanceContext(),
+          metadata: {
+            frameCount,
+            measurementPeriod: currentTime - lastTime
+          }
+        });
+        
+        frameCount = 0;
+        lastTime = currentTime;
+      }
+      
+      requestAnimationFrame(measureFrameRate);
+    };
+    
+    requestAnimationFrame(measureFrameRate);
 
-metrics: Partial<EnhancedPerformanceMetrics> = {}
-      timestamp: Date.now()
-    try(// Core Web Vitals)
-const paintEntries = performance.getEntriesByType("paint');'"
-const fcpEntry = paintEntries.find(entry =) entry.name === "first-contentful-paint"  );"'"'"'""'
-      if (fcpEntry) {
-        metrics.firstContentfulPaint = fcpEntry.startTime }
+    // Set up periodic memory monitoring
+    const memoryInterval = setInterval(monitorMemory, this.configuration.monitoring.interval);
+    this.intervals.set('memory', memoryInterval);
+  }
 
-      // Navigation timing
-const navigation = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming;'"'"'""'
-      if (navigation) { metrics.loadTime = navigation.loadEventEnd - navigation.loadEventStart;
-        metrics.domContentLoaded = navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
-        metrics.timeToFirstByte = navigation.responseStart - navigation.requestStart }
+  private async initializeNetworkMonitoring(): Promise<void> {
+    // Network information monitoring
+    if ('connection' in navigator) {
+      const connection = (navigator as any).connection;
+      
+      const recordNetworkInfo = () => {
+        this.recordMetric({
+          id: `network-${Date.now()}`,
+          name: 'Network Quality',
+          type: 'network-performance',
+          category: 'network',
+          value: connection.downlink,
+          unit: 'Mbps',
+          timestamp: new Date(),
+          severity: connection.effectiveType === '4g' ? 'good' : 
+                   connection.effectiveType === '3g' ? 'needs-improvement' : 'poor',
+          threshold: { good: 10, needsImprovement: 1, poor: 0 },
+          context: this.getPerformanceContext(),
+          metadata: {
+            effectiveType: connection.effectiveType,
+            rtt: connection.rtt,
+            saveData: connection.saveData,
+            type: connection.type
+          }
+        });
+      };
+      
+      // Record initial network info
+      recordNetworkInfo();
+      
+      // Listen for network changes
+      connection.addEventListener('change', recordNetworkInfo);
+    }
 
-      // Memory usage
-      if ("memory" in performance) {;'""'
-const memory = (performance as any).memory;
-        metrics.memoryUsage = (memory as any).usedJSHeapSize / 1024 / 1024; // MB
+    // Resource timing monitoring
+    if ('PerformanceObserver' in window) {
+      const resourceObserver = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        for (const entry of entries) {
+          const resourceEntry = entry as any;
+          
+          this.recordMetric({
+            id: `resource-${Date.now()}`,
+            name: 'Resource Load Time',
+            type: 'network-performance',
+            category: 'loading',
+            value: entry.duration,
+            unit: 'ms',
+            timestamp: new Date(),
+            severity: this.calculateSeverity(entry.duration, this.configuration.thresholds.network.responseTime),
+            threshold: {
+              good: this.configuration.thresholds.network.responseTime.good,
+              needsImprovement: this.configuration.thresholds.network.responseTime.needsImprovement,
+              poor: Infinity
+            },
+            context: this.getPerformanceContext(),
+            metadata: {
+              name: entry.name,
+              initiatorType: resourceEntry.initiatorType,
+              transferSize: resourceEntry.transferSize,
+              encodedBodySize: resourceEntry.encodedBodySize,
+              decodedBodySize: resourceEntry.decodedBodySize,
+              cached: resourceEntry.transferSize === 0
+            }
+          });
+        }
+      });
+      
+      resourceObserver.observe({ entryTypes: ['resource'] });
+      this.observers.set('resource', resourceObserver);
+    }
+  }
 
-      // Bundle size estimation
-const resourceEntries = performance.getEntriesByType("resource") as PerformanceResourceTiming[];"''
-const totalSize = 0;
-const jsResourceCount = 0;
+  private async initializeUserExperienceMonitoring(): Promise<void> {
+    // Track page visibility changes
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        this.recordMetric({
+          id: `visibility-hidden-${Date.now()}`,
+          name: 'Page Hidden',
+          type: 'user-experience',
+          category: 'interactivity',
+          value: Date.now() - this.sessionStartTime,
+          unit: 'ms',
+          timestamp: new Date(),
+          severity: 'good',
+          threshold: { good: Infinity, needsImprovement: Infinity, poor: Infinity },
+          context: this.getPerformanceContext(),
+          metadata: { sessionDuration: Date.now() - this.sessionStartTime }
+        });
+      } else {
+        this.sessionStartTime = Date.now();
+      }
+    });
 
-      resourceEntries.forEach(entry =) {;
-const size = entry.transferSize || entry.encodedBodySize || 0;
-        totalSize += size;
+    // Track user interactions
+    const interactionTypes = ['click', 'keydown', 'touchstart'];
+    interactionTypes.forEach(eventType => {
+      document.addEventListener(eventType, (event) => {
+        const interactionStart = performance.now();
+        
+        requestAnimationFrame(() => {
+          const interactionEnd = performance.now();
+          const interactionDelay = interactionEnd - interactionStart;
+          
+          this.recordMetric({
+            id: `interaction-${Date.now()}`,
+            name: 'Interaction Response Time',
+            type: 'user-experience',
+            category: 'interactivity',
+            value: interactionDelay,
+            unit: 'ms',
+            timestamp: new Date(),
+            severity: this.calculateSeverity(interactionDelay, this.configuration.thresholds.coreWebVitals.inp),
+            threshold: {
+              good: this.configuration.thresholds.coreWebVitals.inp.good,
+              needsImprovement: this.configuration.thresholds.coreWebVitals.inp.needsImprovement,
+              poor: Infinity
+            },
+            context: this.getPerformanceContext(),
+            metadata: {
+              eventType,
+              target: (event.target as Element)?.tagName,
+              timestamp: interactionStart
+            }
+          });
+        });
+      }, { passive: true });
+    });
 
-        if (entry.name.includes(".js')) {""'""'"'
-          jsResourceCount++;
-          metrics.bundleSize = (metrics.bundleSize || 0) + size };
-  }};
+    // Track errors
+    window.addEventListener('error', (event) => {
+      this.recordMetric({
+        id: `error-${Date.now()}`,
+        name: 'JavaScript Error',
+        type: 'user-experience',
+        category: 'runtime',
+        value: 1,
+        unit: 'count',
+        timestamp: new Date(),
+        severity: 'poor',
+        threshold: { good: 0, needsImprovement: 1, poor: Infinity },
+        context: this.getPerformanceContext(),
+        metadata: {
+          message: event.message,
+          filename: event.filename,
+          lineno: event.lineno,
+          colno: event.colno,
+          error: event.error?.toString()
+        }
+      });
+    });
 
-      metrics.totalResourceSize = totalSize;
-      metrics.chunkCount = jsResourceCount;
+    // Track unhandled promise rejections
+    window.addEventListener('unhandledrejection', (event) => {
+      this.recordMetric({
+        id: `promise-rejection-${Date.now()}`,
+        name: 'Unhandled Promise Rejection',
+        type: 'user-experience',
+        category: 'runtime',
+        value: 1,
+        unit: 'count',
+        timestamp: new Date(),
+        severity: 'poor',
+        threshold: { good: 0, needsImprovement: 1, poor: Infinity },
+        context: this.getPerformanceContext(),
+        metadata: {
+          reason: event.reason?.toString(),
+          promise: event.promise?.toString()
+        }
+      });
+    });
+  }
 
-      // Network information
-const connection = (navigator as any).connection;
-      if (connection) { metrics.networkLatency = (connection as any).rtt || 0,
-        metrics.bandwidth = (connection as any).downlink || 0 }
-
-      // Mental health platform specific metrics
-      metrics.crisisDetectionResponseTime = await this.measureCrisisDetectionTime();
-      metrics.chatMessageLatency = await this.measureChatLatency();
-      metrics.videoStreamingQuality = this.assessVideoQuality();
-      metrics.offlineCapabilityStatus = this.checkOfflineCapability();
-
-      // User experience scores
-      metrics.userEngagementScore = this.calculateEngagementScore();
-      metrics.featureUsabilityScore = this.calculateUsabilityScore();
-      metrics.accessibilityScore = await this.calculateAccessibilityScore();
-const completeMetrics = metrics as EnhancedPerformanceMetrics;
-
-      // Store metrics
-      this.addMetricsToHistory(completeMetrics);
-
-      // Check budgets and generate alerts
-      if (this.config.enableBudgetTracking) { this.checkPerformanceBudgets(completeMetrics) }
-
-      // Detect bottlenecks
-      if (this.config.enableBottleneckDetection) { this.detectBottlenecks(completeMetrics) }
-
-      // Track with analytics (privacy-compliant)
-const analyticsService = getAnalyticsService();
-      analyticsService.track("performance_monitoring', "performance", {
-  ""''""'"
-        loadTime: completeMetrics.loadTime,
-        bundleSize: completeMetrics.bundleSize,)
-};
-
-memoryUsage: completeMetrics.memoryUsage,)
-};
-
-networkLatency: completeMetrics.networkLatency
-  ))
-      return completeMetrics
-  } catch (error) { console.error("Error collecting performance metrics:", error );"''""'"'
-      return metrics as EnhancedPerformanceMetrics };
-
-  /**
-   * Measure crisis detection response time
-   */
-  private async measureCrisisDetectionTime(): Promise<number> { // Simulate crisis detection performance measurement
-const startTime = performance.now();
-
-    try(// Mock crisis keyword detection test)
-const testText = "I am feeling suicidal and need help";"''
-const crisisKeywords = ["suicidal", 'kill myself", "end it all", "not worth living'];""'""'
-
-      // Simulate AI analysis time
-      crisisKeywords.some(keyword =)}
-        testText.toLowerCase().includes(keyword)
+  private async initializeCrisisPerformanceTracking(): Promise<void> {
+    // Track crisis button response times
+    const trackCrisisElements = () => {
+      const crisisElements = document.querySelectorAll(
+        '[data-crisis], [data-panic], .crisis-button, .panic-button'
       );
-const endTime = performance.now();
-      return endTime - startTime  catch (error) { console.warn("Crisis detection measurement failed:", error);'"'"'""'
-      return 500; // Default high value if measurement fails
-  /**
-   * Measure chat message latency
-   */
-  private async measureChatLatency(): Promise<number> {;
-const startTime = performance.now();
+      
+      crisisElements.forEach(element => {
+        element.addEventListener('click', (event) => {
+          const responseStart = performance.now();
+          
+          // Use MutationObserver to detect when crisis response is complete
+          const observer = new MutationObserver(() => {
+            const responseEnd = performance.now();
+            const responseTime = responseEnd - responseStart;
+            
+            this.recordMetric({
+              id: `crisis-response-${Date.now()}`,
+              name: 'Crisis Response Time',
+              type: 'crisis-performance',
+              category: 'interactivity',
+              value: responseTime,
+              unit: 'ms',
+              timestamp: new Date(),
+              severity: responseTime < 100 ? 'good' : responseTime < 300 ? 'needs-improvement' : 'poor',
+              threshold: { good: 100, needsImprovement: 300, poor: Infinity },
+              context: this.getPerformanceContext(),
+              metadata: {
+                elementType: element.tagName,
+                elementClass: element.className,
+                criticalPath: true
+              }
+            });
+            
+            // Generate critical alert if crisis response is slow
+            if (responseTime > 500) {
+              this.generateAlert({
+                type: 'crisis-performance',
+                severity: 'critical',
+                metric: 'Crisis Response Time',
+                value: responseTime,
+                threshold: 500,
+                message: `Critical: Crisis response time is ${responseTime}ms`,
+                recommendation: 'Optimize crisis intervention workflow immediately',
+                affectedUsers: 1,
+                businessImpact: 'Life-threatening delays in crisis intervention'
+              });
+            }
+            
+            observer.disconnect();
+          });
+          
+          observer.observe(document.body, { childList: true, subtree: true });
+          
+          // Timeout the observer after 5 seconds
+          setTimeout(() => observer.disconnect(), 5000);
+        }, { passive: true });
+      });
+    };
+    
+    // Track crisis elements on page load and DOM changes
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', trackCrisisElements);
+    } else {
+      trackCrisisElements();
+    }
+    
+    // Re-track when new crisis elements are added
+    const crisisObserver = new MutationObserver(trackCrisisElements);
+    crisisObserver.observe(document.body, { childList: true, subtree: true });
+  }
 
-    try(// Simulate message processing)
-      await new Promise(resolve =) setTimeout(resolve, 10));
-const endTime = performance.now();
-      return endTime - startTime } catch (error) { console.warn("Chat latency measurement failed:", error);'"'"'"'
-      return 200; // Default value
-  /**
-   * Assess video streaming quality
-   */
-  private assessVideoQuality(): number { try {;
-const videoElements = document.querySelectorAll("video"  );""''""'"'
-      if (videoElements.length === 0) return 100; // No videos, perfect score
-const totalQuality = 0;
-      videoElements.forEach(video =) {
-        // Check for buffering, resolution, etc.
-const quality = video.videoWidth }= 720 ? 100 : 75;
-        totalQuality += quality }};
+  private async initializeAccessibilityMetrics(): Promise<void> {
+    // Track accessibility-related performance metrics
+    const trackAccessibilityPerformance = () => {
+      // Measure screen reader announcement delays
+      const liveRegions = document.querySelectorAll('[aria-live]');
+      liveRegions.forEach(region => {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach(mutation => {
+            if (mutation.type === 'childList' || mutation.type === 'characterData') {
+              const announcementStart = performance.now();
+              
+              // Simulate screen reader processing time
+              setTimeout(() => {
+                const announcementEnd = performance.now();
+                const announcementDelay = announcementEnd - announcementStart;
+                
+                this.recordMetric({
+                  id: `accessibility-announcement-${Date.now()}`,
+                  name: 'Screen Reader Announcement Delay',
+                  type: 'accessibility-performance',
+                  category: 'interactivity',
+                  value: announcementDelay,
+                  unit: 'ms',
+                  timestamp: new Date(),
+                  severity: announcementDelay < 200 ? 'good' : 'needs-improvement',
+                  threshold: { good: 200, needsImprovement: 500, poor: Infinity },
+                  context: this.getPerformanceContext(),
+                  metadata: {
+                    liveRegionType: region.getAttribute('aria-live'),
+                    contentLength: region.textContent?.length || 0
+                  }
+                });
+              }, 100);
+            }
+          });
+        });
+        
+        observer.observe(region, { childList: true, characterData: true, subtree: true });
+      });
+      
+      // Track focus management performance
+      document.addEventListener('focusin', (event) => {
+        const focusStart = performance.now();
+        
+        requestAnimationFrame(() => {
+          const focusEnd = performance.now();
+          const focusDelay = focusEnd - focusStart;
+          
+          this.recordMetric({
+            id: `focus-management-${Date.now()}`,
+            name: 'Focus Management Performance',
+            type: 'accessibility-performance',
+            category: 'interactivity',
+            value: focusDelay,
+            unit: 'ms',
+            timestamp: new Date(),
+            severity: focusDelay < 100 ? 'good' : 'needs-improvement',
+            threshold: { good: 100, needsImprovement: 200, poor: Infinity },
+            context: this.getPerformanceContext(),
+            metadata: {
+              targetElement: (event.target as Element)?.tagName,
+              hasAriaLabel: (event.target as Element)?.hasAttribute('aria-label')
+            }
+          });
+        });
+      }, { passive: true });
+    };
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', trackAccessibilityPerformance);
+    } else {
+      trackAccessibilityPerformance();
+    }
+  }
 
-      return totalQuality / videoElements.length;
-  } catch (error) { console.warn("Video quality assessment failed:", error  );"''""'"'
-      return 75; // Default moderate quality
-  /**
-   * Check offline capability status
-   */
-  private checkOfflineCapability(): number { try {;
-const hasServiceWorker = "serviceWorker" in navigator;"'""'
-const hasCache = 'caches" in window;"'
-const isOnline = navigator.onLine;
-const score = 0;
-      if (hasServiceWorker) score += 40;
-      if (hasCache) score += 30;
-      if (isOnline) score += 30;
+  private startRealTimeMonitoring(): void {
+    const monitoringInterval = setInterval(() => {
+      this.collectRuntimeMetrics();
+      this.analyzePerformanceTrends();
+      this.generateInsights();
+    }, this.configuration.monitoring.interval);
+    
+    this.intervals.set('realtime', monitoringInterval);
+  }
 
-      return score } catch (error) { console.warn("Offline capability check failed:", error );'"'"""''
-      return 0  };
+  private startAutomaticReporting(): void {
+    // Generate reports every hour
+    const reportingInterval = setInterval(() => {
+      const report = this.generatePerformanceReport();
+      this.reports.push(report);
+      
+      // Limit stored reports
+      if (this.reports.length > 24) {
+        this.reports = this.reports.slice(-12);
+      }
+      
+      logger.info('Automatic performance report generated', {
+        reportId: report.id,
+        overallScore: report.summary.overallScore,
+        criticalIssues: report.summary.criticalIssues
+      });
+    }, 3600000); // 1 hour
+    
+    this.intervals.set('reporting', reportingInterval);
+  }
 
-  /**
-   * Calculate user engagement score
-   */
-  private calculateEngagementScore(): number { try {
-      // Factor in session duration, interactions, etc.
-const sessionStart = performance.timing.navigationStart;
-const sessionDuration = Date.now() - sessionStart;
-const engagementThreshold = 60000; // 1 minute
-const baseScore = Math.min(sessionDuration / engagementThreshold * 100, 100 ),
-      return Math.round(baseScore) } catch (error) { console.warn("Engagement score calculation failed:", error  );'"'"""''
-      return 50; // Default moderate engagement
-  /**
-   * Calculate feature usability score
-   */
-  private calculateUsabilityScore(): number { try {
-      // Check for accessibility features, responsive design, etc.
-const hasAriaLabels = document.querySelectorAll("[aria-label]").length } 0;'"'
-const hasAltText = document.querySelectorAll("img[alt]").length } 0;"'"'
-const isResponsive = window.innerWidth <= 768 ?;
-        document.querySelector("meta[name='viewport"]") !== null : true;""'"
-const score = 60; // Base score
-      if (hasAriaLabels) score += 15;
-      if (hasAltText) score += 15;
-      if (isResponsive) score += 10;
+  private collectRuntimeMetrics(): void {
+    // Collect current runtime metrics
+    if ('memory' in performance) {
+      const memory = (performance as any).memory;
+      const memoryUsage = (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100;
+      
+      if (memoryUsage > this.configuration.thresholds.runtime.memoryUsage.needsImprovement) {
+        this.generateAlert({
+          type: 'runtime-performance',
+          severity: memoryUsage > 90 ? 'critical' : 'needs-improvement',
+          metric: 'Memory Usage',
+          value: memoryUsage,
+          threshold: this.configuration.thresholds.runtime.memoryUsage.needsImprovement,
+          message: `High memory usage detected: ${memoryUsage.toFixed(1)}%`,
+          recommendation: 'Consider optimizing memory usage or implementing cleanup',
+          affectedUsers: 1,
+          businessImpact: 'Application may become slow or unresponsive'
+        });
+      }
+    }
+  }
 
-      return score > catch (error) { console.warn("Usability score calculation failed:', error );""""'
-      return 60 };
+  private analyzePerformanceTrends(): void {
+    // Analyze trends in collected metrics
+    const metricTypes = ['core-web-vitals', 'runtime-performance', 'user-experience', 'network-performance'];
+    
+    metricTypes.forEach(metricType => {
+      const typeMetrics = this.metrics.get(metricType) || [];
+      if (typeMetrics.length >= 10) {
+        const recent = typeMetrics.slice(-10);
+        const older = typeMetrics.slice(-20, -10);
+        
+        if (older.length > 0) {
+          const recentAvg = recent.reduce((sum, m) => sum + m.value, 0) / recent.length;
+          const olderAvg = older.reduce((sum, m) => sum + m.value, 0) / older.length;
+          const changePercentage = ((recentAvg - olderAvg) / olderAvg) * 100;
+          
+          if (Math.abs(changePercentage) > 20) {
+            const isImproving = changePercentage < 0; // Lower values are generally better
+            
+            logger.info(`Performance trend detected: ${metricType}`, {
+              changePercentage: changePercentage.toFixed(1),
+              direction: isImproving ? 'improving' : 'degrading',
+              recentAvg: recentAvg.toFixed(2),
+              olderAvg: olderAvg.toFixed(2)
+            });
+          }
+        }
+      }
+    });
+  }
 
-  /**
-   * Calculate accessibility score
-   */
-  private async calculateAccessibilityScore(): Promise<number> { try {;
-const score = 70; // Base score
+  private generateInsights(): void {
+    // Generate performance insights based on collected data
+    const allMetrics = Array.from(this.metrics.values()).flat();
+    const recentMetrics = allMetrics.filter(m => 
+      Date.now() - m.timestamp.getTime() < 3600000 // Last hour
+    );
+    
+    if (recentMetrics.length > 0) {
+      const poorMetrics = recentMetrics.filter(m => m.severity === 'poor' || m.severity === 'critical');
+      
+      if (poorMetrics.length > recentMetrics.length * 0.1) {
+        logger.warn('Performance degradation detected', {
+          poorMetricsCount: poorMetrics.length,
+          totalMetricsCount: recentMetrics.length,
+          degradationPercentage: ((poorMetrics.length / recentMetrics.length) * 100).toFixed(1)
+        });
+      }
+    }
+  }
 
-      // Check color contrast
-const elements = document.querySelectorAll('*");"'"
-const contrastIssues = 0;
+  private recordMetric(metric: PerformanceMetric): void {
+    const typeMetrics = this.metrics.get(metric.type) || [];
+    typeMetrics.push(metric);
+    
+    // Limit stored metrics per type
+    if (typeMetrics.length > this.configuration.monitoring.maxDataPoints) {
+      typeMetrics.splice(0, typeMetrics.length - this.configuration.monitoring.maxDataPoints);
+    }
+    
+    this.metrics.set(metric.type, typeMetrics);
+    
+    // Check for alerts
+    if (metric.severity === 'poor' || metric.severity === 'critical') {
+      this.checkForAlerts(metric);
+    }
+    
+    // Emit event
+    this.emitEvent({
+      type: 'metric-recorded',
+      metric,
+      timestamp: new Date()
+    });
+  }
 
-      // Simplified contrast check (would need more sophisticated analysis in production)
-      elements.forEach(el =) {;
-const style = window.getComputedStyle(el  );
-const bgColor = style.backgroundColor;
-const textColor = style.color;
+  private calculateSeverity(
+    value: number, 
+    thresholds: { good: number; needsImprovement: number }, 
+    higherIsBetter = false
+  ): MetricSeverity {
+    if (higherIsBetter) {
+      if (value >= thresholds.good) return 'good';
+      if (value >= thresholds.needsImprovement) return 'needs-improvement';
+      return 'poor';
+    } else {
+      if (value <= thresholds.good) return 'good';
+      if (value <= thresholds.needsImprovement) return 'needs-improvement';
+      return 'poor';
+    }
+  }
 
-        // Basic check for transparent/white backgrounds with light text
-        if (bgColor === "rgba(0, 0, 0, 0)" && textColor.includes("255')) {""''""""'
-          contrastIssues++ };
-  }};
+  private getPerformanceContext(): PerformanceMetric['context'] {
+    return {
+      url: window.location.href,
+      userAgent: navigator.userAgent,
+      connectionType: (navigator as any).connection?.effectiveType || 'unknown',
+      deviceType: this.detectDeviceType(),
+      viewport: {
+        width: window.innerWidth,
+        height: window.innerHeight
+      }
+    };
+  }
 
-      if (contrastIssues < 5> score += 20;
-      else if (contrastIssues < 10> score += 10;
+  private detectDeviceType(): 'mobile' | 'tablet' | 'desktop' {
+    const width = window.innerWidth;
+    if (width < 768) return 'mobile';
+    if (width < 1024) return 'tablet';
+    return 'desktop';
+  }
 
-      // Check for focus indicators
-const focusableElements = document.querySelectorAll('button, a, input, select, textarea");"'"
-const hasFocusIndicators = Array.from(focusableElements).some(el =) {;
-const style = window.getComputedStyle(el, ":focus"  );"'"'"'"""'
-        return style.outline !== "none' || style.boxShadow !== "none" }};'""""'"'
+  private detectMemoryLeaks(): void {
+    // Simplified memory leak detection
+    if ('memory' in performance) {
+      const memory = (performance as any).memory;
+      const usedMemory = memory.usedJSHeapSize;
+      const totalMemory = memory.totalJSHeapSize;
+      
+      if (usedMemory > totalMemory * 0.9) {
+        const leak: MemoryLeak = {
+          id: `leak-${Date.now()}`,
+          timestamp: new Date(),
+          component: 'unknown',
+          leakSize: usedMemory,
+          description: 'High memory usage detected, possible memory leak',
+          stackTrace: new Error().stack || '',
+          severity: 'critical'
+        };
+        
+        this.generateAlert({
+          type: 'runtime-performance',
+          severity: 'critical',
+          metric: 'Memory Leak',
+          value: usedMemory,
+          threshold: totalMemory * 0.9,
+          message: `Potential memory leak detected: ${(usedMemory / 1024 / 1024).toFixed(1)}MB used`,
+          recommendation: 'Investigate memory usage patterns and implement cleanup',
+          affectedUsers: 1,
+          businessImpact: 'Application may crash or become unresponsive'
+        });
+      }
+    }
+  }
 
-      if (hasFocusIndicators) score += 10;
+  private checkForAlerts(metric: PerformanceMetric): void {
+    if (!this.configuration.alerting.enabled) return;
+    
+    if (this.configuration.alerting.severityFilter.includes(metric.severity)) {
+      this.generateAlert({
+        type: metric.type,
+        severity: metric.severity,
+        metric: metric.name,
+        value: metric.value,
+        threshold: metric.threshold.needsImprovement,
+        message: `${metric.name} is ${metric.severity}: ${metric.value}${metric.unit}`,
+        recommendation: this.getRecommendationForMetric(metric),
+        affectedUsers: 1,
+        businessImpact: this.getBusinessImpact(metric)
+      });
+    }
+  }
 
-      return Math.min(score, 100);
-  ) catch (error) { console.warn("Accessibility score calculation failed:', error );""'""'"'
-      return 70 };
+  private generateAlert(alertData: Omit<PerformanceAlert, 'id' | 'timestamp' | 'autoResolved' | 'resolvedAt'>): void {
+    const alert: PerformanceAlert = {
+      id: `alert-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      timestamp: new Date(),
+      autoResolved: false,
+      ...alertData
+    };
+    
+    // Check for duplicate alerts (debouncing)
+    const recentAlerts = this.alerts.filter(a => 
+      Date.now() - a.timestamp.getTime() < this.configuration.alerting.debounceTime &&
+      a.type === alert.type &&
+      a.metric === alert.metric
+    );
+    
+    if (recentAlerts.length === 0) {
+      this.alerts.push(alert);
+      
+      // Emit alert through configured channels
+      this.configuration.alerting.channels.forEach(channel => {
+        switch (channel) {
+          case 'console':
+            logger.warn(`Performance Alert: ${alert.message}`, alert);
+            break;
+          case 'storage':
+            try {
+              const storedAlerts = JSON.parse(localStorage.getItem('performance-alerts') || '[]');
+              storedAlerts.push(alert);
+              localStorage.setItem('performance-alerts', JSON.stringify(storedAlerts.slice(-100)));
+            } catch (error) {
+              logger.warn('Failed to store performance alert', error);
+            }
+            break;
+          case 'callback':
+            this.emitEvent({
+              type: 'alert-generated',
+              alert,
+              timestamp: new Date()
+            });
+            break;
+        }
+      });
+    }
+  }
 
-  /**
-   * Add metrics to historical data
-   */
-  private addMetricsToHistory(metrics: EnhancedPerformanceMetrics): void(this.performanceHistory.push(metrics )
-    // Limit history size
-const maxHistorySize = 1000
-    if (this.performanceHistory.length ) maxHistorySize) {
-      this.performanceHistory = this.performanceHistory.slice(-maxHistorySize );
+  private getRecommendationForMetric(metric: PerformanceMetric): string {
+    const recommendations: Record<string, string> = {
+      'Largest Contentful Paint': 'Optimize images, use CDN, implement lazy loading',
+      'First Input Delay': 'Reduce JavaScript execution time, use web workers',
+      'Cumulative Layout Shift': 'Set explicit dimensions for images and ads',
+      'Memory Usage': 'Implement proper cleanup, avoid memory leaks',
+      'Long Task': 'Break up long-running tasks, use requestIdleCallback',
+      'Network Quality': 'Optimize for slower connections, implement offline support',
+      'Crisis Response Time': 'Optimize critical path, preload emergency resources'
+    };
+    
+    return recommendations[metric.name] || 'Review and optimize this metric';
+  }
 
-  /**
-   * Check performance budgets and generate alerts
-   */
-  private checkPerformanceBudgets(metrics: EnhancedPerformanceMetrics): void {;
-const budgets = this.config.alertThresholds;
+  private getBusinessImpact(metric: PerformanceMetric): string {
+    const impacts: Record<string, string> = {
+      'core-web-vitals': 'Poor user experience, reduced SEO rankings',
+      'runtime-performance': 'Application slowdown, potential crashes',
+      'user-experience': 'Increased bounce rate, reduced engagement',
+      'network-performance': 'Slow loading times, user frustration',
+      'crisis-performance': 'Delayed emergency response, potential safety risk',
+      'accessibility-performance': 'Reduced accessibility, compliance issues'
+    };
+    
+    return impacts[metric.type] || 'Degraded user experience';
+  }
 
-    Object.entries(budgets).forEach(([metricName, budget]) =) {;
-const value = metrics[metricName as keyof EnhancedPerformanceMetrics] as number;
-      if (typeof value !== "number') return;"""'
-};
+  private generatePerformanceReport(): PerformanceReport {
+    const reportId = `report-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const now = new Date();
+    const oneHourAgo = new Date(now.getTime() - 3600000);
+    
+    // Get metrics from the last hour
+    const allMetrics = Array.from(this.metrics.values()).flat();
+    const periodMetrics = allMetrics.filter(m => m.timestamp >= oneHourAgo);
+    
+    // Calculate scores
+    const overallScore = this.calculateOverallScore(periodMetrics);
+    const coreWebVitalsScore = this.calculateCoreWebVitalsScore(periodMetrics);
+    const userExperienceScore = this.calculateUserExperienceScore(periodMetrics);
+    
+    // Count issues by severity
+    const criticalIssues = periodMetrics.filter(m => m.severity === 'critical').length;
+    const totalIssues = periodMetrics.filter(m => m.severity !== 'good').length;
+    
+    return {
+      id: reportId,
+      timestamp: now,
+      period: { start: oneHourAgo, end: now },
+      summary: {
+        overallScore,
+        coreWebVitalsScore,
+        userExperienceScore,
+        performanceGrade: this.calculateGrade(overallScore),
+        totalIssues,
+        criticalIssues,
+        improvementOpportunities: this.generateImprovementOpportunities(periodMetrics)
+      },
+      metrics: this.aggregateMetrics(periodMetrics),
+      trends: this.calculateTrendsForReport(),
+      insights: this.generateInsightsForReport(periodMetrics),
+      recommendations: this.generateRecommendationsForReport(periodMetrics),
+      alerts: this.alerts.filter(a => a.timestamp >= oneHourAgo),
+      comparisons: {
+        previousPeriod: 0, // Would compare with previous period
+        industry: 0,       // Would compare with industry benchmarks
+        competitors: 0     // Would compare with competitors
+      }
+    };
+  }
 
-severity: PerformanceAlert["severity'] = "low" }'"
+  private calculateOverallScore(metrics: PerformanceMetric[]): number {
+    if (metrics.length === 0) return 100;
+    
+    const scores = metrics.map(m => {
+      switch (m.severity) {
+        case 'good': return 100;
+        case 'needs-improvement': return 60;
+        case 'poor': return 30;
+        case 'critical': return 0;
+        default: return 50;
+      }
+    });
+    
+    return Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length);
+  }
 
- description = """''
-      if (value ) budget.critical} {
-  severity = "critical";'"'"""''
-};
+  private calculateCoreWebVitalsScore(metrics: PerformanceMetric[]): number {
+    const coreWebVitalMetrics = metrics.filter(m => m.type === 'core-web-vitals');
+    return this.calculateOverallScore(coreWebVitalMetrics);
+  }
 
-description = `${metricName} (${value.toFixed(0)}) exceeds critical threshold (${budget.critical})`;
-  } else if (value ) budget.warning} {
-  severity = "high";'""'""''
-};
+  private calculateUserExperienceScore(metrics: PerformanceMetric[]): number {
+    const uxMetrics = metrics.filter(m => m.type === 'user-experience');
+    return this.calculateOverallScore(uxMetrics);
+  }
 
-description = `${metricName} (${value.toFixed(0)}) exceeds warning threshold (${budget.warning})`;
-  } else if (value ) budget.target} {
-  severity = "medium";'""'""'""'
-};
+  private calculateGrade(score: number): 'A' | 'B' | 'C' | 'D' | 'F' {
+    if (score >= 90) return 'A';
+    if (score >= 80) return 'B';
+    if (score >= 70) return 'C';
+    if (score >= 60) return 'D';
+    return 'F';
+  }
 
-description = `${metricName} (${value.toFixed(0)}) exceeds target (${budget.target})`;
-if (severity !== 'low") {""'"'"'
-        this.createAlert({
-  )
-};
+  private generateImprovementOpportunities(metrics: PerformanceMetric[]): string[] {
+    const opportunities: string[] = [];
+    const poorMetrics = metrics.filter(m => m.severity === 'poor' || m.severity === 'critical');
+    
+    const metricTypes = new Set(poorMetrics.map(m => m.type));
+    metricTypes.forEach(type => {
+      switch (type) {
+        case 'core-web-vitals':
+          opportunities.push('Optimize Core Web Vitals for better user experience');
+          break;
+        case 'runtime-performance':
+          opportunities.push('Improve runtime performance and memory management');
+          break;
+        case 'network-performance':
+          opportunities.push('Optimize network requests and caching strategies');
+          break;
+        case 'crisis-performance':
+          opportunities.push('Critical: Optimize crisis intervention response times');
+          break;
+      }
+    });
+    
+    return opportunities;
+  }
 
-id: `budget_${metricName)_${Date.now()}`,;
+  private aggregateMetrics(metrics: PerformanceMetric[]): PerformanceReport['metrics'] {
+    // This would aggregate metrics into the required format
+    // Simplified implementation
+    return {
+      coreWebVitals: {} as CoreWebVitals,
+      runtime: {} as RuntimePerformance,
+      userExperience: {} as UserExperienceMetrics,
+      network: {} as NetworkPerformance
+    };
+  }
 
-${
-  2: "budget_violation",'"'"""''
-          severity,
-          metric: metricName,
-          currentValue: value,
-          expectedValue: budget.target,
-          description,
-          recommendations: this.getRecommendationsForMetric(metricName, value),
-};
+  private calculateTrendsForReport(): PerformanceTrend[] {
+    // Calculate trends for the report
+    return [];
+  }
 
-timestamp: Date.now(),
-};
+  private generateInsightsForReport(metrics: PerformanceMetric[]): PerformanceInsight[] {
+    const insights: PerformanceInsight[] = [];
+    
+    // Example insight generation
+    const criticalMetrics = metrics.filter(m => m.severity === 'critical');
+    if (criticalMetrics.length > 0) {
+      insights.push({
+        id: `insight-${Date.now()}`,
+        type: 'warning',
+        title: 'Critical Performance Issues Detected',
+        description: `${criticalMetrics.length} critical performance issues need immediate attention`,
+        impact: 'high',
+        confidence: 0.95,
+        metrics: criticalMetrics.map(m => m.name),
+        timeframe: 'immediate',
+        actionable: true,
+        estimatedImprovement: {
+          metric: 'Overall Performance Score',
+          improvement: 20,
+          unit: 'points'
+        }
+      });
+    }
+    
+    return insights;
+  }
 
-isCrisisRelated: metricName === "crisisDetectionResponseTime"'"""'
-  }};
-  );
-  }};
-
-  /**
-   * Detect performance bottlenecks
-   */
-  private detectBottlenecks(metrics: EnhancedPerformanceMetrics): PerformanceBottleneck[] {   };
-
-bottlenecks: PerformanceBottleneck[] = []
-    // Bundle size bottleneck
-    if (metrics.bundleSize ) 1000000} { // 1MB
-      bottlenecks.push({
-  component: "JavaScript Bundle',""''""'
-        metric: "bundleSize","'"'"'""')
-};
-
-impact: metrics.bundleSize ) 2000000 ? critical: "high",''""'"'
-};
-
-description: )`Bundle size (${(metrics.bundleSize / 1024).toFixed(0)}KB) is causing slow load times`,
-        suggestions: [ "Implement code splitting for non-critical routes","''""''
-          "Remove unused dependencies",""''""'""'
-          "Use dynamic imports for heavy components",'""'import 'Enable tree shaking in build process" ],"'""'"'
-        estimatedImprovement: 30
-  }};
-
-    // Memory usage bottleneck
-    if (metrics.memoryUsage ) 150) { // 150MB
-      bottlenecks.push({
-  component: "Memory Management',""'""'"'
-        metric: "memoryUsage',"""'"'""')
-};
-
-impact: metrics.memoryUsage ) 250 ? critical: 'high","'""''
-};
-
-description: `High memory usage (${metrics.memoryUsage.toFixed(0)}MB) may cause crashes on low-end devices`,
-        suggestions: [ "Implement virtual scrolling for long lists",'""'""'"'
-          "Clean up event listeners and subscriptions',""'""'"'
-          "Use React.memo for heavy components',"""'import "Optimize image loading and caching' ],"'"'""'
-        estimatedImprovement: 25
-  });
-
-    // Crisis detection performance bottleneck
-    if (metrics.crisisDetectionResponseTime ) 300} {
-      bottlenecks.push({
-  )
-        component: "Crisis Detection System",'"'"'""'
-        metric: "crisisDetectionResponseTime",'"'"'"'
-};
-
-impact: "critical", // Always critical for mental health platform""''""'"'
-};
-
-description: `Crisis detection taking ${metrics.crisisDetectionResponseTime.toFixed(0)}ms - too slow for emergency situations`,
-        suggestions: [ "Optimize AI model inference time","''""'"'
-          "Implement client-side keyword pre-filtering","''""'"'
-          "Use WebWorkers for background processing","''import "Cache common crisis patterns" ],'""'
-        estimatedImprovement: 60
-  )};
-return bottlenecks;
-
-  /**
-   * Get optimization recommendations for a specific metric
-   */
-  private getRecommendationsForMetric(metricName: string, _value: number): string[] {;}
-recommendations: Record<string, string[]> = {}
-      firstContentfulPaint: [ "Optimize critical CSS delivery",'"'")'"'
-        "Minimize main thread work",""''""'"'
-        "Use resource hints (preload, preconnect)","''import "Optimize font loading" },'"""'
-      largestContentfulPaint: [ "Optimize largest image/element loading',""''"""'
-        "Use responsive images with srcset',""''"""'
-        "Implement lazy loading for below-fold content',""'import 'Optimize server response times" ],"""'
-      firstInputDelay: [ 'Reduce JavaScript execution time","'""
-        "Use Web Workers for heavy computations",'""''"""'
-        "Split long tasks into smaller chunks',""'import 'Defer non-critical JavaScript" },""'"'"'
-      cumulativeLayoutShift: [ "Add dimensions to images and videos",'"'"""''
-        "Reserve space for dynamic content",'"'"""''
-        "Avoid inserting content above existing content",'"import "Use CSS aspect-ratio for responsive media" ],"''""'
-      bundleSize: [ "Implement code splitting',""""'
-        'Remove unused dependencies","'""""''
-        "Use tree shaking",'"'import "Enable gzip/brotli compression" },"'""'
-      memoryUsage: [ 'Implement virtual scrolling",""'"'""'
-        'Clean up subscriptions and listeners",""'"'""'
-        'Use React.memo for expensive components",""'import "Optimize image memory usage' ],"'"'"'
-      crisisDetectionResponseTime: [ "Optimize AI model performance",""'""'
-        "Implement client-side pre-filtering',"""'"'""'
-        'Use WebWorkers for background processing",""'import "Cache frequently detected patterns'  }""''""'
-
-    return recommendations[metricName] || ["Monitor and optimize based on specific bottlenecks"];"''
-
-  /**
-   * Create and dispatch performance alert
-   */
-  private createAlert(alert: PerformanceAlert): void(// Prevent duplicate alerts)
-const existingAlert = this.activeAlerts.find(a =)
-      a.metric === alert.metric && a.type === alert.type
-     )
-    if (existingAlert) {
-      existingAlert.currentValue = alert.currentValue;
-      existingAlert.timestamp = alert.timestamp,
-      return }
-
-    this.activeAlerts.push(alert);
-
-    // Prioritize crisis-related alerts
-    if (alert.isCrisisRelated) { console.error("🚨 CRITICAL PERFORMANCE ALERT (Crisis-Related):", alert) } else { console.warn('⚠️ Performance Alert:", alert) }"""'
-
-    // Notify registered callbacks
-    this.alertCallbacks.forEach(callback => { try {
-        callback(alert) } catch (error) { console.error('Error in alert callback:", error );"'
-  ]];
-
-    // Track alert in analytics
-const analyticsService = getAnalyticsService();
-    analyticsService.track("performance_alert", "performance", {
-  '"'"'"""'
-      metric: alert.metric,)
-};
-
-severity: alert.severity,)
-};
-
-isCrisisRelated: alert.isCrisisRelated
-  )
-
-  /**
-   * Register alert callback
-   */
-  public onAlert(callback: (alert: PerformanceAlert) =) void: () =]void { this.alertCallbacks.push(callback);
-
-    // Return unsubscribe function
-    return () =} {;
-const index = this.alertCallbacks.indexOf(callback  );
-      if (index ) -1} {
-        this.alertCallbacks.splice(index, 1),
-
-  /**
-   * Get current performance metrics
-   */
-  public getCurrentMetrics(): EnhancedPerformanceMetrics | null { return this.performanceHistory[this.performanceHistory.length - 1] || null }
-
-  /**
-   * Get performance history
-   */
-  public getPerformanceHistory(hours = 24): EnhancedPerformanceMetrics[] {,
-const cutoff = Date.now() - (hours * 60 * 60 * 1000 );
-    return this.performanceHistory.filter(metric =) metric.timestamp } cutoff} 
-
-  /**
-   * Get active alerts
-   */
-  public getActiveAlerts(): PerformanceAlert[] { return [...this.activeAlerts] }
-
-  /**
-   * Clear resolved alerts
-   */
-  public clearResolvedAlerts(): void(;
-const currentMetrics = this.getCurrentMetrics( );
-    if (!currentMetrics) return;
-
-    this.activeAlerts = this.activeAlerts.filter(alert =) {;
-const currentValue = currentMetrics[alert.metric as keyof EnhancedPerformanceMetrics] as number;
-const budget = this.config.alertThresholds[alert.metric as keyof PerformanceBudget],
-
-      // Keep alert if still exceeding target
-      return currentValue } budget.target );
-
-  /**
-   * Generate comprehensive optimization recommendations
-   */
-  public generateOptimizationRecommendations(): OptimizationRecommendation[] {;
-const currentMetrics = this.getCurrentMetrics();
-    if (!currentMetrics) return [] };
-
-recommendations: OptimizationRecommendation[] = []
-    // Bundle optimization recommendations
-    if (currentMetrics.bundleSize ) 800000} {
+  private generateRecommendationsForReport(metrics: PerformanceMetric[]): PerformanceRecommendation[] {
+    const recommendations: PerformanceRecommendation[] = [];
+    
+    // Example recommendation generation
+    const slowMetrics = metrics.filter(m => 
+      m.name.includes('Paint') && m.severity !== 'good'
+    );
+    
+    if (slowMetrics.length > 0) {
       recommendations.push({
-  id: "bundle_optimization',""''"""'
-        category: "bundle',""'""""
-        priority: 'high","'"""
-        title: "Optimize JavaScript Bundle Size',""'""""''
-        description: "Your bundle size is impacting load times, especially on mobile devices.",'"'"""''
-        implementation: "Implement route-based code splitting and remove unused dependencies.",'""'""'"'
-        estimatedGain: "30-50% improvement in load time',""'""'')
-};
+        id: `rec-${Date.now()}`,
+        priority: 'high',
+        category: 'loading',
+        title: 'Optimize Loading Performance',
+        description: 'Several loading metrics are underperforming and need optimization',
+        implementation: {
+          effort: 'medium',
+          timeline: '1-2 weeks',
+          steps: [
+            'Implement image optimization',
+            'Enable compression',
+            'Use CDN for static assets',
+            'Implement lazy loading'
+          ],
+          codeExamples: [{
+            language: 'html',
+            code: '<img src="image.jpg" loading="lazy" alt="Description">',
+            description: 'Implement lazy loading for images'
+          }],
+          resources: [
+            'https://web.dev/optimize-lcp/',
+            'https://web.dev/lazy-loading-images/'
+          ]
+        },
+        expectedImpact: {
+          metric: 'Largest Contentful Paint',
+          improvement: '30-50% reduction',
+          userBenefit: 'Faster page loads',
+          businessValue: 'Improved conversion rates'
+        },
+        relatedMetrics: ['Largest Contentful Paint', 'First Contentful Paint'],
+        dependencies: []
+      });
+    }
+    
+    return recommendations;
+  }
 
-difficulty: "medium",'""'""'""')
-};
+  private emitEvent(event: any): void {
+    for (const listener of this.eventListeners) {
+      try {
+        listener(event);
+      } catch (error) {
+        logger.warn('Error in performance event listener', error);
+      }
+    }
+  }
 
-mentalHealthImpact: 'Faster loading reduces user anxiety and improves crisis intervention response"""'"
-  ))
-    // Loading performance recommendations
-    if (currentMetrics.largestContentfulPaint ) 3000} {
-      recommendations.push({
-  id: 'lcp_optimization","""''""'
-        category: "loading",""'""'
-        priority: "high",""''""'""'
-        title: "Optimize Largest Contentful Paint",'"'"'""'
-        description: "The largest element on your page is loading too slowly.",'""''"""'
-        implementation: "Optimize images, implement lazy loading, and improve server response times.',""''"""'
-        estimatedGain: "25-40% improvement in perceived performance',""'""""'')
-};
+  // Public API
+  public getMetrics(type?: PerformanceMetricType): PerformanceMetric[] {
+    if (type) {
+      return this.metrics.get(type) || [];
+    }
+    return Array.from(this.metrics.values()).flat();
+  }
 
-difficulty: "medium",'"'"""'')
-};
+  public getLatestReport(): PerformanceReport | null {
+    return this.reports.length > 0 ? this.reports[this.reports.length - 1] : null;
+  }
 
-mentalHealthImpact: "Faster content display improves user engagement and reduces abandonment"'""'
-  ))
-    // Memory optimization recommendations
-    if (currentMetrics.memoryUsage ) 100} {
-      recommendations.push({
-  id: "memory_optimization",'""''""""'
-        category: 'memory","'""""
-        priority: 'medium","'""""''
-        title: "Optimize Memory Usage",'""""'
-        description: 'High memory usage may cause issues on older devices.","'""""'"'
-        implementation: "Implement virtual scrolling and optimize component lifecycle management.',""'""'"'
-        estimatedGain: "20-30% reduction in memory usage',"""'"'""')
-};
+  public getAllReports(): PerformanceReport[] {
+    return [...this.reports];
+  }
 
-difficulty: 'hard",""'"'"')
-};
+  public getActiveAlerts(): PerformanceAlert[] {
+    return this.alerts.filter(a => !a.autoResolved);
+  }
 
-mentalHealthImpact: "Better performance on all devices ensures platform accessibility'""""'
-  ))
-    // Crisis detection optimization
-    if (currentMetrics.crisisDetectionResponseTime > 200) {
-      recommendations.push({
-  id: 'crisis_detection_optimization","'""
-        category: "runtime",'"'"'"'
-        priority: "critical",""'""'
-        title: "Optimize Crisis Detection Performance',""""'
-        description: 'Crisis detection is taking too long - this is critical for user safety.","'""
-        implementation: "Optimize AI model inference and implement client-side pre-filtering.",'"'"'"'
-        estimatedGain: "50-70% improvement in response time",""'""')
-};
+  public getAllAlerts(): PerformanceAlert[] {
+    return [...this.alerts];
+  }
 
-difficulty: "hard',""""')
-};
+  public generateReport(): PerformanceReport {
+    return this.generatePerformanceReport();
+  }
 
-mentalHealthImpact: 'Faster crisis detection can literally save lives""'
-  ))
-    // Accessibility recommendations
-    if (currentMetrics.accessibilityScore < 85> {})
-      recommendations.push({
-  id: "accessibility_optimization",""'""'
-        category: 'accessibility","""''""'"
-        priority: "high","''""'"'
-        title: "Improve Accessibility","'"'"'""'
-        description: "Platform accessibility needs improvement for inclusive mental health support.",'"'"'"'
-        implementation: "Add ARIA labels, improve color contrast, and enhance keyboard navigation.","'"'"'"""'
-        estimatedGain: "15-25% improvement in accessibility score',""''"""')
-};
+  public updateConfiguration(newConfig: Partial<PerformanceConfiguration>): void {
+    this.configuration = this.mergeConfiguration(newConfig);
+    logger.info('Performance monitor configuration updated', newConfig);
+  }
 
-difficulty: "easy',""'"""")
-};
+  public getConfiguration(): PerformanceConfiguration {
+    return { ...this.configuration };
+  }
 
-mentalHealthImpact: 'Better accessibility ensures everyone can access mental health support""'"
-  ))
-return recommendations.sort((a, b) =) {,
-const priorityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
-      return priorityOrder[b.priority] - priorityOrder[a.priority];
-  }};
+  public startUserFlow(flowId: string, name: string): void {
+    if (!this.configuration.features.userFlowTracking) return;
+    
+    const flow: UserFlowMetric = {
+      flowId,
+      name,
+      startTime: new Date(),
+      endTime: new Date(),
+      duration: 0,
+      steps: [],
+      completed: false,
+      errorCount: 0,
+      performanceScore: 0
+    };
+    
+    this.userFlows.set(flowId, flow);
+  }
 
-  /**
-   * Update specific metric (for real-time updates)
-   */
-  private updateMetric(metricName: keyof EnhancedPerformanceMetrics, value: number): void(;)
-const currentMetrics = this.getCurrentMetrics( );
-    if (currentMetrics) {
-      (currentMetrics as any)[metricName] = value };
+  public addFlowStep(flowId: string, stepId: string, stepName: string): void {
+    const flow = this.userFlows.get(flowId);
+    if (!flow) return;
+    
+    const step: FlowStep = {
+      id: stepId,
+      name: stepName,
+      startTime: new Date(),
+      duration: 0,
+      success: false,
+      metrics: {
+        loadTime: 0,
+        renderTime: 0,
+        interactionDelay: 0
+      },
+      errors: []
+    };
+    
+    flow.steps.push(step);
+  }
 
-  /**
-   * Generate performance report
-   */
-  public generatePerformanceReport(): string(;
-const currentMetrics = this.getCurrentMetrics();
-const alerts = this.getActiveAlerts();
-const recommendations = this.generateOptimizationRecommendations( );
+  public completeUserFlow(flowId: string, success = true): void {
+    const flow = this.userFlows.get(flowId);
+    if (!flow) return;
+    
+    flow.endTime = new Date();
+    flow.duration = flow.endTime.getTime() - flow.startTime.getTime();
+    flow.completed = success;
+    flow.performanceScore = this.calculateFlowScore(flow);
+    
+    // Record as metric
+    this.recordMetric({
+      id: `user-flow-${Date.now()}`,
+      name: 'User Flow Duration',
+      type: 'user-experience',
+      category: 'interactivity',
+      value: flow.duration,
+      unit: 'ms',
+      timestamp: new Date(),
+      severity: flow.duration < 3000 ? 'good' : flow.duration < 6000 ? 'needs-improvement' : 'poor',
+      threshold: { good: 3000, needsImprovement: 6000, poor: Infinity },
+      context: this.getPerformanceContext(),
+      metadata: {
+        flowId,
+        flowName: flow.name,
+        completed: flow.completed,
+        stepCount: flow.steps.length,
+        errorCount: flow.errorCount
+      }
+    });
+  }
 
-    if (!currentMetrics) {
-      return "No performance data available" };"''"
-const formatValue = (value: number, unit: string) =) {
-      if (unit === "ms") return `${value.toFixed(0)}ms`;"'"'"'""'
-      if (unit === "MB") return `${value.toFixed(1)}MB`;'"'"'"'
-      if (unit === "KB") return `${(value / 1024).toFixed(0)}KB`;"'"'"'"""'
-      if (unit === "%') return `${value.toFixed(1)}%`;""''"""'
-      return `${value.toFixed(2)}`;
-  };
+  private calculateFlowScore(flow: UserFlowMetric): number {
+    if (!flow.completed) return 0;
+    
+    let score = 100;
+    
+    // Deduct points for duration
+    if (flow.duration > 6000) score -= 30;
+    else if (flow.duration > 3000) score -= 15;
+    
+    // Deduct points for errors
+    score -= flow.errorCount * 10;
+    
+    return Math.max(0, score);
+  }
 
-    return ``
-# 🔍 Comprehensive Performance Report
+  public addEventListener(listener: (event: any) => void): void {
+    this.eventListeners.push(listener);
+  }
 
-## 📊 Current Performance Metrics
+  public removeEventListener(listener: (event: any) => void): void {
+    const index = this.eventListeners.indexOf(listener);
+    if (index > -1) {
+      this.eventListeners.splice(index, 1);
+    }
+  }
 
-### Core Web Vitals
-- **First Contentful Paint**: ${formatValue(currentMetrics.firstContentfulPaint, "ms')}""'""""
-- **Largest Contentful Paint**: ${formatValue(currentMetrics.largestContentfulPaint, 'ms")}"'"""
-- **First Input Delay**: ${formatValue(currentMetrics.firstInputDelay, "ms')}""'""""''
-- **Cumulative Layout Shift**: ${formatValue(currentMetrics.cumulativeLayoutShift, "")}'"'"""''
+  public destroy(): void {
+    // Clean up observers
+    this.observers.forEach(observer => observer.disconnect());
+    this.observers.clear();
+    
+    // Clear intervals
+    this.intervals.forEach(interval => clearInterval(interval));
+    this.intervals.clear();
+    
+    // Clear data
+    this.metrics.clear();
+    this.alerts = [];
+    this.reports = [];
+    this.userFlows.clear();
+    this.eventListeners = [];
+    
+    this.isInitialized = false;
+    logger.info('Comprehensive performance monitor destroyed');
+  }
+}
 
-### Loading Performance
-- **Load Time**: ${formatValue(currentMetrics.loadTime, "ms")}'""'""'"'
-- **DOM Content Loaded**: ${formatValue(currentMetrics.domContentLoaded, "ms')}""'""''
-- **Time to First Byte**: ${formatValue(currentMetrics.timeToFirstByte, "ms")}'""'""'""'
-
-### Bundle & Resources
-- **Bundle Size**: ${formatValue(currentMetrics.bundleSize, 'KB")}""'"'""'
-- **Total Resource Size**: ${formatValue(currentMetrics.totalResourceSize, 'KB")}"""''""'
-- **Chunk Count**: ${currentMetrics.chunkCount}
-
-### Mental Health Platform Metrics
-- **Crisis Detection Response**: ${formatValue(currentMetrics.crisisDetectionResponseTime, "ms")} ${currentMetrics.crisisDetectionResponseTime } 300 ? "🚨" : '✅")"'""""
-- **Chat Message Latency**: ${formatValue(currentMetrics.chatMessageLatency, 'ms")}"'""""
-- **Video Streaming Quality**: ${formatValue(currentMetrics.videoStreamingQuality, '%")}"'""
-- **Offline Capability**: ${formatValue(currentMetrics.offlineCapabilityStatus, "%")}'""''"""'
-
-### User Experience Scores
-- **User Engagement**: ${formatValue(currentMetrics.userEngagementScore, "%')}""''"""'
-- **Feature Usability**: ${formatValue(currentMetrics.featureUsabilityScore, "%')}""''"""'
-- **Accessibility**: ${formatValue(currentMetrics.accessibilityScore, "%')}""''""'
-
-## 🚨 Active Alerts (${alerts.length})
-${alerts.length === 0 ? "No active alerts" : alerts.map(alert =) `"`}'""'
-- **${alert.severity.toUpperCase()}**: ${alert.description}
-  ${alert.isCrisisRelated ? '🩺 *Crisis-related performance issue*" : ""}"'""'""'
-`).join("")}''`""''
-
-## 💡 Optimization Recommendations (${recommendations.length})
-${recommendations.slice(0, 5).map((rec, index) =) ``
-${index + 1}. **${rec.title}** (${rec.priority.toUpperCase()})
-   - ${rec.description}
-   - *Estimated gain*: ${rec.estimatedGain}
-   - *Mental health impact*: ${rec.mentalHealthImpact}
-`).join("")}"`"'"'
-
-## 📈 Performance Grade
-${this.getPerformanceGrade(currentMetrics)}
-
----
-*Report generated at ${new Date().toLocaleString()}*
-    `.trim();`
-
-  /**
-   * Get overall performance grade
-   */
-  private getPerformanceGrade(metrics: EnhancedPerformanceMetrics): string {;
-const score = 0;
-const maxScore = 0;
-const budgets = this.config.alertThresholds;
-
-    Object.entries(budgets).forEach(([metricName, budget]) =) {;
-const value = metrics[metricName as keyof EnhancedPerformanceMetrics] as number;
-      if (typeof value !== "number') return;""""'
-
-      maxScore += 100;
-
-      if (value <= budget.target> {
-        score += 100 } else if (value <= budget.warning> { score += 75 } else if (value <= budget.critical> { score += 50 } else(score += 25 );
-  ));
-const percentage = (score / maxScore) * 100;
-
-    if (percentage )= 90) return '🏆 Excellent (A+)";"'""
-    if (percentage )= 80} return "🥇 Good (A)";'"'"'"'
-    if (percentage )= 70} return "🥈 Fair (B)";""'""'
-    if (percentage )= 60} return "🥉 Needs Improvement (C)';""""'
-    return "🚨 Poor (D) - Immediate optimization required';'"
-
-  /**
-   * Clean up old performance data
-   */
-  private cleanupOldData(): void(;
-const cutoff = Date.now() - (this.config.retentionPeriod * 24 * 60 * 60 * 1000 );
-    this.performanceHistory = this.performanceHistory.filter(metric =) metric.timestamp ) cutoff} }
-
-  /**
-   * Destroy monitor and clean up resources
-   */
-  public destroy(): void(this.stopMonitoring( );
-    this.performanceHistory = [];
-    this.activeAlerts = [];
-    this.alertCallbacks = [] );
-
-// Export singleton instance
+// Create singleton instance
 export const comprehensivePerformanceMonitor = new ComprehensivePerformanceMonitor();
-export default ComprehensivePerformanceMonitor;
+
+export default comprehensivePerformanceMonitor;

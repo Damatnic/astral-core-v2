@@ -1,996 +1,1266 @@
 /**
  * Cultural Family Support Service
  *
- * Provides culturally-appropriate family support tools and communication features
- * for crisis situations, respecting different cultural approaches to family
- * involvement in mental health crises.
+ * Comprehensive cultural and family support system for diverse mental health needs.
+ * Provides culturally-sensitive interventions, family therapy coordination,
+ * multilingual support, and community-based healing approaches.
  *
- * @license Apache-2.0
- */;
+ * @fileoverview Complete cultural family support with community integration
+ * @version 2.0.0
+ */
 
-import { CulturalContext  } from './culturalContextService';"""'"'""'
-import { enhancedOfflineService  } from './enhancedOfflineService';""'"'""'
-import { privacyPreservingAnalyticsService  } from './privacyPreservingAnalyticsService';"""'
-interface FamilyMember { { { {
-  id: string;,
-  name: string;,
-  relationship: 'parent" | "sibling' | "spouse" | "child" | 'grandparent" | "aunt_uncle' | "cousin" | "guardian" | 'other"",
-  contactMethod: 'phone" | "email" | "sms' | "emergency_only"',
-  culturalRole: "primary_decision_maker" | "emotional_support" | 'practical_support" | "spiritual_guide' | "community_liaison" | "backup_contact"'",
-  languages: string[],
-  timezone: string;,
-  emergencyContact: boolean
-};
+import { logger } from '../utils/logger';
 
-consentGiven: boolean
-};
+export type CulturalBackground = 
+  | 'african-american' 
+  | 'hispanic-latino' 
+  | 'asian-american' 
+  | 'native-american' 
+  | 'middle-eastern' 
+  | 'european-american' 
+  | 'pacific-islander' 
+  | 'mixed-heritage' 
+  | 'other';
 
-notificationPreferences: {
-  ,
-  dailyWellness: boolean;,
-  crisisAlerts: boolean,
-};
+export type FamilyStructure = 
+  | 'nuclear' 
+  | 'extended' 
+  | 'single-parent' 
+  | 'blended' 
+  | 'multi-generational' 
+  | 'chosen-family' 
+  | 'communal' 
+  | 'other';
 
-progressUpdates: boolean
-};
+export type SupportType = 
+  | 'individual-therapy' 
+  | 'family-therapy' 
+  | 'group-therapy' 
+  | 'cultural-healing' 
+  | 'community-support' 
+  | 'peer-support' 
+  | 'spiritual-guidance' 
+  | 'crisis-intervention';
 
-emergencyOnly: boolean
+export type InterventionApproach = 
+  | 'western-psychology' 
+  | 'traditional-healing' 
+  | 'integrative' 
+  | 'community-based' 
+  | 'faith-based' 
+  | 'holistic' 
+  | 'trauma-informed' 
+  | 'strengths-based';
+
+export interface CulturalProfile {
+  id: string;
+  userId: string;
+  primaryCulture: CulturalBackground;
+  secondaryCultures: CulturalBackground[];
+  languages: {
+    primary: string;
+    secondary: string[];
+    preferred: string;
+    proficiency: Record<string, 'basic' | 'intermediate' | 'fluent' | 'native'>;
   };
-  culturalConsiderations?: { preferredCommunicationStyle: "formal' | "informal" | "respectful" | 'casual""}'
-    religiousConsiderations?: string[]
-    genderConsiderations?: "same_gender_only" | "no_restrictions" | 'elder_mediated" };"'
-interface FamilySupport { { { {
-  id: string;,
-  userId: string;,
-  culturalContext: CulturalContext;,
-  primaryLanguage: string;,
-  familyStructure: 'nuclear" | "extended" | "multigenerational' | "single_parent" | 'communal" | "chosen_family""',
-  supportLevel: "individual_only" | 'family_aware" | "family_involved" | "community_centered'"
-};
-
-familyMembers: FamilyMember[]
-};
-
-emergencyProtocol: {
-  ,
-};
-
-enabled: boolean
-};
-
-escalationLevels: Array<{
-  ,
-  level: number;,
-  triggerConditions: string[],
-  actions: string[]
-};
-
-contactsToNotify: string[]
-};
-
-culturalProtocols: string[]
-  }>;
+  religiousBackground: {
+    affiliation: string;
+    practices: string[];
+    importance: 'low' | 'medium' | 'high' | 'very-high';
+    accommodations: string[];
   };
-  communicationGuidelines: {
-  ,
-  familyMeetingFormat: "individual_sessions' | "group_sessions" | "elder_mediated" | 'structured_hierarchy""
-};
-
-crisisDisclosureProtocol: 'immediate_family" | "extended_family" | "community_elders' | "gradual_disclosure"'
-};
-
-decisionMakingProcess: "individual" | "family_consensus" | 'elder_decision" | "community_input'"
+  culturalValues: {
+    collectivism: number; // 1-10 scale
+    individualism: number;
+    hierarchyRespect: number;
+    familyOrientation: number;
+    spirituality: number;
+    traditionalism: number;
+    modernism: number;
   };
-  privacySettings: {
-  ,
-  shareWithFamily: boolean;,
-  shareProgressReports: boolean,
-};
-
-shareEmergencyAlerts: boolean
-};
-
-culturalPrivacyPreferences: string[]
+  communicationStyle: {
+    directness: 'direct' | 'indirect' | 'contextual';
+    emotionalExpression: 'open' | 'reserved' | 'selective';
+    conflictResolution: 'confrontational' | 'harmonious' | 'avoidant';
+    authorityRelation: 'egalitarian' | 'hierarchical' | 'respectful';
   };
-  createdAt: string;,
-  lastUpdated: string
+  culturalStressors: string[];
+  culturalStrengths: string[];
+  acculturationLevel: 'traditional' | 'bicultural' | 'assimilated' | 'marginalized';
+  generationStatus: 'first' | 'second' | 'third-plus' | 'immigrant';
+  preferences: {
+    therapistCulture: 'same' | 'similar' | 'any' | 'culturally-competent';
+    treatmentApproach: InterventionApproach[];
+    languagePreference: string;
+    genderPreference: 'same' | 'opposite' | 'any';
+    familyInvolvement: 'minimal' | 'moderate' | 'extensive';
   };
-interface CrisisNotification { { { {
-  id: string;,
-  userId: string;,
-  crisisType: "mild_concern" | "moderate_risk' | "high_risk" | 'immediate_danger"",
-};
+}
 
-culturalEscalation: "direct" | 'gradual" | "authority_based'""
-};
-
-notificationsSent: Array<{
-  ,
-  familyMemberId: string;,
-  method: string,
-  timestamp: string
-};
-
-culturalMessage: string
-};
-
-responseStatus: "sent" | 'delivered" | "read' | "responded""
-  }};
-  culturalProtocolsActivated: string[],
-  emergencyServicesAlerted: boolean;,
-  timestamp: string
+export interface FamilyStructureProfile {
+  id: string;
+  userId: string;
+  structure: FamilyStructure;
+  members: FamilyMember[];
+  dynamics: {
+    cohesion: number; // 1-10 scale
+    flexibility: number;
+    communication: number;
+    conflictResolution: number;
+    supportiveness: number;
+    boundaries: 'rigid' | 'clear' | 'diffuse' | 'chaotic';
   };
-interface CulturalGuidance { { { {
-  region: string
-};
-
-familyInvolvementGuidelines: {
-  ,
-  whenToInvolveFamily: string[],
-  howToApproachFamily: string[],
-};
-
-culturalSensitivities: string[]
-};
-
-communicationTips: string[]
+  roles: {
+    decisionMaker: string[];
+    caregiver: string[];
+    provider: string[];
+    mediator: string[];
+    supporter: string[];
   };
-  crisisManagement: {
-  ,
-  escalationApproach: string;,
-  authorityInvolvement: string[],
-};
-
-familyRoles: Record<string, string[]>,
-};
-
-communityResources: string[]
+  stressors: FamilyStressor[];
+  strengths: string[];
+  supportSystems: {
+    internal: string[];
+    external: string[];
+    community: string[];
+    professional: string[];
   };
-  communicationTemplates: Record<string, {
-  subject: string;,
-  body: string
-};
-
-tone: "formal' | "caring" | 'urgent" | "respectful""
-};
-
-culturalElements: string[]
-  }>;
+  treatmentHistory: {
+    previousTherapy: boolean;
+    familyTherapyExperience: boolean;
+    culturalHealingExperience: boolean;
+    outcomes: string[];
+    preferences: string[];
   };
-interface CulturalFamilySupportService { { { { private familySupports: Map<string, FamilySupport> = new Map()}
-  private crisisNotifications: Map<string, CrisisNotification[]> = new Map();
-  private culturalGuidance: Record<string, CulturalGuidance> = { };
-$2ructor() { this.initializeCulturalGuidance(),
-    this.loadFamilySupportData() }
+}
 
-  /**
-   * Load family support data from storage
-   */
-  private async loadFamilySupportData(): Promise<void> { console.log('[Family Support] Loading family support data...");"'"""}"''
-    // In production, this would load from persistent storage
-    // For now, we initialize with empty maps
-
-  /**
-   * Save family support data to storage
-   */
-  private async saveFamilySupportData(): Promise<void> {
-    console.log("[Family Support] Saving family support data..."  );'""'""'"'
-    // In production, this would save to persistent storage
-    // For now, we keep data in memory
-
-  /**
-   * Initialize cultural guidance for different regions
-   */
-  private initializeCulturalGuidance(): void { this.culturalGuidance = {}
-      Western: {"'"""}"'
-        region: 'Western","'"""
-        familyInvolvementGuidelines: {
-  ,
-  whenToInvolveFamily: [ "When user explicitly requests family involvement',""''""'
-            "During moderate to high crisis levels with consent",'""'import 'For long-term support planning" ],"'""''
-          howToApproachFamily: [ "Direct communication about mental health concerns",'"""'
-            "Focus on individual autonomy and choice',""'import 'Respect privacy and confidentiality boundaries" ],"""'
-          culturalSensitivities: [ 'Respect individual decision-making',""""
-            'Be mindful of family dynamics and boundaries","'import "Consider professional therapeutic relationships" ],""'"'
-};
-
-communicationTips: [ "Use clear, direct language",'"'""]"''
-            "Provide specific action steps",'""'import "Offer resources and professional support options" ,''""'"'
-};
-
-crisisManagement: { escalationApproach: "Direct contact with emergency services and immediate family","'"'"'}""'
-          authorityInvolvement: ["Emergency services for immediate danger", 'Mental health professionals"],"'""""''
-          familyRoles: {
-  ,
-  parent: ["Emergency contact", 'Medical decision support"],"'""''
-};
-
-spouse: ["Primary support", 'Emergency contact"],"""'
-};
-
-sibling: ['Emotional support", "Backup contact'] },"""
-          communityResources: ["Crisis hotlines', "Mental health centers", 'Support groups"];"
-  ,
-        communicationTemplates: { mild_concern: {
-  ""'""'
-            subject: "Wellness Check-in",""''
-            body: "We wanted to reach out because [name] has been going through a difficult time. They are safe, but we thought you should know so you can offer support.",""'""'
-};
-
-tone: 'caring",""''""'
-};
-
-culturalElements: ["Respect for privacy', "Focus on support"] },"'"'"'
-          crisis_alert: {
-  ,
-  subject: "Urgent: Support Needed',""'""'"'
-            body: "We are contacting you because [name] is experiencing a mental health crisis and needs immediate family support. Please contact them or us as soon as possible.',""'""'"'
-};
-
-tone: "urgent',""'""''
-};
-
-culturalElements: ["Direct communication", 'Clear action needed"] };"'
+export interface FamilyMember {
+  id: string;
+  relationship: string;
+  age?: number;
+  role: string[];
+  involvement: 'primary' | 'secondary' | 'peripheral' | 'estranged';
+  supportLevel: 'high' | 'medium' | 'low' | 'conflicted';
+  culturalInfluence: 'strong' | 'moderate' | 'weak';
+  mentalHealthConcerns: string[];
+  strengths: string[];
+  availability: {
+    sessions: boolean;
+    crisis: boolean;
+    ongoing: boolean;
+    limitations: string[];
   };
-  },
-      "Hispanic/Latino": {
-  region: 'Hispanic/Latino","'""""
-};
+}
 
-familyInvolvementGuidelines: {
-  ,
-  whenToInvolveFamily: [ 'Family should be involved early in the support process","'""""'"'
-            "Extended family may need to be considered',""'import "Community and spiritual leaders may play important roles" ],'"'"'"'
-          howToApproachFamily: [ "Approach with respect for family hierarchy",""''""'""'
-            "Consider involving elders or matriarchs first",'""'import 'Acknowledge familismo values and collective responsibility" ,"'""'"'
-          culturalSensitivities: [ "Respect for authority figures within family',""""'
-            'Consider stigma around mental health","'""
-            "Honor religious and spiritual beliefs",'""'import 'Be sensitive to economic challenges" ,"'""'"'
-};
-
-communicationTips: [ "Use respectful, formal language initially',""""'
-            'Acknowledge family strength and unity","'""""
-            'Provide information in Spanish when needed","'import "Consider cultural metaphors and explanations" ,""'""'
-};
-
-crisisManagement: {
-  ,
-  escalationApproach: "Gradual involvement starting with family, then community supports',"""'"'""'
-};
-
-authorityInvolvement: ['Family decision makers first", "Religious leaders", "Community advocates'],""'""'
-};
-
-familyRoles: {
-  ,
-  parent: ["Primary decision maker", "Family coordinator'],"'"'""'
-            grandparent: ["Wisdom provider", 'Family advocate"],"''""'
-};
-
-sibling: ["Peer support', "Family communication'],"""
-};
-
-aunt_uncle: ["Extended support', "Cultural guidance"] },'""
-          communityResources: ["Iglesias and religious communities", 'Community health workers", "Bilingual mental health services'];"
-  ,
-        communicationTemplates: { family_meeting: {
-  """''""'"'
-            subject: "Reunión Familiar Importante","'''""'
-            body: "Estimada familia, necesitamos reunirnos para apoyar a [name] durante este momento difícil. Su unidad familiar es muy importante para su recuperación.","'""'
-};
-
-tone: 'respectful","'""
-};
-
-culturalElements: ['Family unity", "Collective responsibility", "Respect for hierarchy'] };""
+export interface FamilyStressor {
+  id: string;
+  type: 'financial' | 'health' | 'relationship' | 'cultural' | 'generational' | 'environmental' | 'trauma';
+  severity: 'low' | 'moderate' | 'high' | 'crisis';
+  duration: 'acute' | 'chronic' | 'episodic';
+  description: string;
+  impact: {
+    individual: string[];
+    family: string[];
+    community: string[];
   };
-  },
-      Arabic: {
-  ,
-};
-
-region: 'Arabic","'""
-};
-
-familyInvolvementGuidelines: {
-  
-};
-
-whenToInvolveFamily: [ 'Family involvement is generally expected and necessary",""'"'"'
-            "Consider gender-appropriate family representatives",'""'import "Religious guidance may be important" },''""'"'
-          howToApproachFamily: [ "Approach male head of household first in traditional families","'""]'
-            'Show respect for family honor and reputation",""'import "Consider involving religious leaders for guidance' ,"'"'"'
-          culturalSensitivities: [ "High stigma around mental health in many communities",'"'"']"'
-            "Gender roles and expectations",'"'"'"'
-            "Religious considerations and beliefs about mental health",""import 'Importance of family reputation and honor" ,"''""'
-          communicationTips: [ "Use formal, respectful language","''""'"'
-            "Acknowledge family wisdom and strength","'"'"'"'
-            "Frame mental health in culturally acceptable terms",""import 'Provide Arabic language support when needed" ,"'""
-        crisisManagement: {
-  ,
-  escalationApproach: "Authority-based through family hierarchy and religious guidance",'""''""""'
-};
-
-authorityInvolvement: ['Family patriarch/matriarch", "Religious leaders', "Community elders"],""'"'
-};
-
-familyRoles: {
-  ,
-  parent: ["Primary authority", 'Religious guidance seeker"],""'"'""'
-            spouse: ['Gender-appropriate support", "Family liaison"],"'''""
-};
-
-grandparent: ["Wisdom provider", "Prayer support'],"'"'""'
-};
-
-sibling: ["Same-gender support", 'Family communication"] },"''""'
-          communityResources: ["Mosques and Islamic centers', "Arabic-speaking mental health professionals', "Community imams"];"
-  ,
-        communicationTemplates: { respectful_approach: {
-  "'""''"""'
-            subject: "Family Support Request',""''""'
-            body: "Peace be upon you. We are reaching out with great respect to discuss how we can support [name] during this challenging time, with guidance from Allah and family wisdom.","'''""'
-};
-
-tone: "formal","'""'
-};
-
-culturalElements: ['Religious greetings", "Respect for authority', "Divine guidance"] };'"
+  copingStrategies: {
+    current: string[];
+    effective: string[];
+    ineffective: string[];
+    cultural: string[];
   };
-  ],
-      Chinese: { region: "Chinese',""''"}"'
-        familyInvolvementGuidelines: {
-  
-};
-
-whenToInvolveFamily: [ "Family involvement is typically expected',""''""'
-            "Consider saving face and family reputation","''import "Multi-generational family input may be important" },'""'
-          howToApproachFamily: [ "Approach with respect for age and generation hierarchy",'"'"'""'
-            "Consider face-saving ways to discuss mental health",'"'import "Honor family harmony and collective well-being' ,""""'
-          culturalSensitivities: [ 'Significant stigma around mental health","'""""''
-            "Importance of academic and professional success",'""'""'"'
-            "Respect for elders and their decisions',""'import "Concept of face and family reputation" ,'"'"'"'
-          communicationTips: [ "Use indirect communication when appropriate",""'""'
-            'Frame as health concern rather than mental illness","""''""'"
-            "Acknowledge family achievements and strength","'"'import "Provide Mandarin/Cantonese language support' ,"'"""''
-        crisisManagement: {
-  ,
-  escalationApproach: "Gradual approach through family hierarchy",'"""'
-};
-
-authorityInvolvement: ["Family elders', "Traditional healers", 'Trusted community leaders"],"""
-};
-
-familyRoles: {
-  ,
-  grandparent: ['Primary decision maker", "Family wisdom'],"""
-            parent: ["Family coordinator', "Honor protector"],'""
-            spouse: ["Daily support", 'Family mediator"],"'""""
-            sibling: ['Peer support", "Achievement motivation'] ],""'"'
-};
-
-communityResources: ["Chinese community centers', "Traditional Chinese medicine practitioners", "Bilingual counselors"];''
-  ,
-};
-
-communicationTemplates: { harmony_approach: {
-  """"'""'
-            subject: 'Family Harmony and Support","'""
-            body: 'Honorable family, we seek your wisdom in supporting [name] to restore family harmony and well-being during this challenging period.",""'"'"'
-};
-
-tone: "respectful",'"'"'"'
-};
-
-culturalElements: ["Honor and respect", 'Family harmony", "Collective wisdom"] };"'
+  resources: {
+    needed: string[];
+    available: string[];
+    barriers: string[];
   };
+}
+
+export interface CulturalIntervention {
+  id: string;
+  name: string;
+  type: SupportType;
+  approach: InterventionApproach;
+  culturalBackground: CulturalBackground[];
+  description: string;
+  objectives: string[];
+  methods: {
+    techniques: string[];
+    activities: string[];
+    rituals: string[];
+    practices: string[];
   };
-
-  /**
-   * Create family support configuration
-   */
-  async createFamilySupport(userId: string),
-  culturalContext: CulturalContext,
-    primaryLanguage: string,
-    familyStructure: FamilySupport['familyStructure"],""'"'"'
-    supportLevel: FamilySupport['supportLevel"]""'"'"'
-  ): Promise<FamilySupport> {
-  ,
-};
-
-familySupport: FamilySupport = {}
-      id: `family_${userId}_${Date.now()}`,
-      userId,
-      culturalContext,
-      primaryLanguage,
-      familyStructure,
-      supportLevel,
-      familyMembers: [],
-      emergencyProtocol: {
-  ,
-};
-
-enabled: false,
-};
-
-escalationLevels: this.getDefaultEscalationLevels(culturalContext)
-  },
-      communicationGuidelines: this.getDefaultCommunicationGuidelines(culturalContext),
-      privacySettings: {
-  ,
-  shareWithFamily: supportLevel !== "individual_only",'"""'
-        shareProgressReports: supportLevel === "family_involved' || supportLevel === 'community_centered","""
-};
-
-shareEmergencyAlerts: true,
-};
-
-culturalPrivacyPreferences: []
-  },
-      createdAt: new Date().toISOString(),
-      lastUpdated: new Date().toISOString()
+  duration: {
+    sessions: number;
+    frequency: 'daily' | 'weekly' | 'biweekly' | 'monthly';
+    totalWeeks: number;
   };
-
-    this.familySupports.set(userId, familySupport);
-    await this.saveFamilySupportData();
-
-    // Track family support setup in privacy-preserving analytics
-    privacyPreservingAnalyticsService.recordInterventionOutcome({
-  )
-};
-
-sessionId: `family_support_${
-  userId)`,
-      userToken: userId,
-      language: primaryLanguage,
-      interventionType: 'peer-support',""""
-      initialRiskLevel: 0.5,
-      finalRiskLevel: 0.3,
-};
-
-sessionDuration: 15,
-};
-
-feedback: 4
-  }).catch(error =) { console.warn('Failed to record family support analytics:', error) }];""""
-
-    return familySupport;
-
-  /**
-   * Add family member
-   */
-  async addFamilyMember(userId: string, familyMember: Omit<FamilyMember, 'id'>): Promise<void> { ;""
-const familySupport = this.familySupports.get(userId  );
-    if (!familySupport) {
-      throw new Error("Family support not found") };''""
-newMember: FamilyMember = {}
-      ...familyMember,
-      id: `member_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  participants: {
+    individual: boolean;
+    family: boolean;
+    group: boolean;
+    community: boolean;
   };
-
-    familySupport.familyMembers.push(newMember);
-    familySupport.lastUpdated = new Date().toISOString();
-
-    await this.saveFamilySupportData();
-
-    // Track family member addition using console logging for now
-    console.log(`[Family Support] Added family member with relationship: ${familyMember.relationship), role: ${
-  familyMember.culturalRole)`);
-
-  /**
-   * Get culturally-appropriate crisis notification strategy
-   */
-  private getCrisisNotificationStrategy(familySupport: FamilySupport)
-};
-
-crisisLevel: "mild_concern" | 'moderate_risk" | "high_risk' | "immediate_danger"""'"'
-  ]: {
-  contactsToNotify: FamilyMember[],
-};
-
-escalationOrder: string[]
-};
-
-culturalProtocols: string[]
-  } {,
-{ culturalContext, familyMembers } = familySupport;
-contactsToNotify: FamilyMember[] = [],
-  escalationOrder: string[] = [],
-  culturalProtocols: string[] = []
-    switch (culturalContext.familyInvolvement) { case individual:"'"""'
-        if (crisisLevel === "immediate_danger') {
-  "'""
-};
-
-contactsToNotify = familyMembers.filter(m =) m.emergencyContact  };
-          escalationOrder = ["emergency_services", 'immediate_family"] } else if (crisisLevel === "high_risk') { contactsToNotify = familyMembers.filter(m =) ")"""''
-            m.culturalRole === "primary_decision_maker" || m.emergencyContact'""'""'"'
-          } }
-        culturalProtocols = ["respect_individual_autonomy', "direct_communication"];"'"'"'
-        break;
-
-      case "family-centered':""""'
-        if (crisisLevel === 'mild_concern") { contactsToNotify = familyMembers.filter(m =) "'}""
-            m.culturalRole === 'emotional_support" || m.culturalRole === "primary_decision_maker'""""'"'
-          ] ] else { contactsToNotify = familyMembers.filter(m =)}
-            m.culturalRole !== "backup_contact'"""'"'""'
-          ] }
-        escalationOrder = ["primary_family", "extended_family", 'community_supports"];"''""'
-        culturalProtocols = ["respect_family_hierarchy", "gradual_disclosure', "collective_decision_making"];'""
-        break;
-
-      case "community-based":'"'"'"'
-        contactsToNotify = familyMembers;
-        escalationOrder = ["family_elders", "community_leaders", 'religious_guides", "emergency_services'];"""
-        culturalProtocols = ["honor_community_wisdom', "respect_cultural_authorities", 'preserve_family_honor"];"""'"'
-        break;
-return { contactsToNotify, escalationOrder, culturalProtocols  }
-
-  /**
-   * Send crisis notification to family
-   */
-  async sendCrisisNotification(userId: string),
-  crisisType: CrisisNotification["crisisType'],"""'"'"'
-    crisisDetails: {
-  ,
-  message: string
-};
-
-severity: number
-};
-
-timestamp: string
-      location?: string
-
-  ): Promise<void> {;
-const familySupport = this.familySupports.get(userId ),
-    if (!familySupport || !familySupport.emergencyProtocol.enabled) {
-      return };
-const strategy = this.getCrisisNotificationStrategy(familySupport, crisisType);
-    // Get guidance for message generation
-const guidance = this.culturalGuidance[familySupport.culturalContext.region];
-notification: CrisisNotification = {}
-      id: `crisis_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
-      userId,
-      crisisType,
-      culturalEscalation: familySupport.culturalContext.crisisEscalation === "authority-based" ? authority_based: familySupport.culturalContext.crisisEscalation,'""'
-      notificationsSent: [],
-      culturalProtocolsActivated: strategy.culturalProtocols,
-      emergencyServicesAlerted: crisisType === "immediate_danger',"'""
-      timestamp: new Date().toISOString()
+  requirements: {
+    languages: string[];
+    culturalKnowledge: string[];
+    specialTraining: string[];
+    resources: string[];
   };
-
-    // Send notifications based on cultural approach
-    for (const member of strategy.contactsToNotify) { if (!member.consentGiven || !member.notificationPreferences.crisisAlerts) {
-        continue };
-const culturalMessage = this.generateCulturalMessage(;
-        member,
-        crisisType,
-        crisisDetails,
-        guidance,
-        familySupport.culturalContext
-      );
-
-      try(await this.sendNotificationToMember(member, culturalMessage, crisisType );
-
-        notification.notificationsSent.push({
-  familyMemberId: member.id,
-          method: member.contactMethod,)
-};
-
-timestamp: new Date().toISOString(),
-          culturalMessage,
-};
-
-responseStatus: "sent'"'
+  outcomes: {
+    expected: string[];
+    measures: string[];
+    indicators: string[];
   };
-   catch (error) { console.error(`Failed to send crisis notification to ${member.id):`, error) };
-
-    // Store notification
-const userNotifications = this.crisisNotifications.get(userId) || [];
-    userNotifications.push(notification);
-    this.crisisNotifications.set(userId, userNotifications);
-
-    // Track crisis notification in analytics
-    console.log(`[Family Support] Crisis notification sent: ${crisisType), region: ${familySupport.culturalContext.region), count: ${notification.notificationsSent.length)`);
-
-    // Save to offline storage for reliability
-    if (enhancedOfflineService) {
-      await enhancedOfflineService.addToSyncQueue({;
-${
-  2: "crisis-event",""'""')
-};
-
-data: { userId, notifications: userNotifications },
-        priority: 1,
-        culturalContext: familySupport.culturalContext.region,
-        language: familySupport.primaryLanguage)
-});
-  );
-
-  /**
-   * Generate culturally-appropriate crisis message
-   */
-  private generateCulturalMessage(member: FamilyMember),
-  crisisType: CrisisNotification["crisisType'],""'"'"'
-    _crisisDetails: any,
-    guidance: CulturalGuidance,
-    culturalContext: CulturalContext
-  }: string {,
-const templates = guidance?.communicationTemplates || {};
-
-    // Get the appropriate template based on crisis type
-const template = templates[crisisType] || templates["crisis_alert'] || templates["mild_concern"];"'"'""'
-
-    // Default template if none found
-    if (!template) { template = {}
-        subject: 'Family Support Notification",""'"'"'
-        body: }`We are reaching out regarding [name] who may need family support during this time.`,
-        tone: 'caring" as const,""'"'"'
-        culturalElements: []
-
-    // Customize message based on cultural considerations }
-
- message = template.body
-    // Add cultural greetings and respect markers
-    if (culturalContext.region === "Arabic") { message = 'السلام عليكم ورحمة الله وبركاته\n\n" + message } else if (culturalContext.region === "Chinese") { message = "尊敬的家人，\n\n' + message } else if (culturalContext.region === "Hispanic/Latino") { message = 'Estimado/a familia,\n\n" + message }"""''
-
-    // Add role-specific instructions
-    if (member.culturalRole === "primary_decision_maker") { message += '\n\nAs the family decision maker, your guidance is especially important during this time." } else if (member.culturalRole === "spiritual_guide") { message += "\n\nYour spiritual guidance and prayers are deeply needed.' } else if (member.culturalRole === "emotional_support") { message += '\n\nYour emotional support and presence would be very meaningful." }"""''
-
-    return message;
-
-  /**
-   * Get family support configuration for a user
-   */
-  getFamilySupport(userId: string): FamilySupport | undefined { return this.familySupports.get(userId) }
-
-  /**
-   * Get cultural guidance for a region
-   */
-  getCulturalGuidance(region: string): CulturalGuidance | undefined { return this.culturalGuidance[region] }
-
-  /**
-   * Get family support analytics
-   */
-  async getFamilySupportAnalytics(userId: string): Promise<{
-  ,
-  supportEngagement: number;,
-  familyResponseRate: number,
-};
-
-crisisResolutionTime: number
-};
-
-culturalProtocolsUsed: string[]
-  }> {;
-const familySupport = this.familySupports.get(userId ),
-    if (!familySupport) {
-      return {
-  supportEngagement: 0,
-        familyResponseRate: 0,
-};
-
-crisisResolutionTime: 0,
-};
-
-culturalProtocolsUsed: []
+  adaptations: {
+    age: Record<string, string[]>;
+    gender: Record<string, string[]>;
+    culture: Record<string, string[]>;
+    family: Record<string, string[]>;
   };
-const consentingMembers = familySupport.familyMembers.filter(m =) m.consentGiven}.length;
-const totalMembers = familySupport.familyMembers.length;
-const supportEngagement = totalMembers } 0 ? consentingMembers / totalMembers : 0;
-
-    // Calculate response rate from notifications
-const notifications = this.crisisNotifications.get(userId) || [];
-const totalSent = 0;
-const totalResponded = 0;
-
-    notifications.forEach(notification =) { notification.notificationsSent.forEach(sent =) {
-        totalSent++;
-        if (sent.responseStatus === "responded") {'"""'
-          totalResponded++ };
+  contraindications: string[];
+  evidence: {
+    researchBased: boolean;
+    culturallyValidated: boolean;
+    communityTested: boolean;
+    effectiveness: 'high' | 'moderate' | 'emerging' | 'traditional';
   };
-  }};
-const familyResponseRate = totalSent } 0 ? totalResponded / totalSent : 0;
+}
 
-    // Average resolution time (placeholder - would need actual tracking)
-    // Default to 24 hours if there are family members but no crisis events yet
-const crisisResolutionTime = familySupport.familyMembers.length } 0 && notifications.length === 0 ? 24 : 0;
+export interface SupportPlan {
+  id: string;
+  userId: string;
+  familyId?: string;
+  culturalProfile: CulturalProfile;
+  familyProfile?: FamilyStructureProfile;
+  assessmentDate: Date;
+  planDate: Date;
+  lastUpdate: Date;
+  status: 'active' | 'on-hold' | 'completed' | 'discontinued';
+  goals: {
+    primary: string[];
+    secondary: string[];
+    cultural: string[];
+    family: string[];
+  };
+  interventions: {
+    individual: CulturalIntervention[];
+    family: CulturalIntervention[];
+    group: CulturalIntervention[];
+    community: CulturalIntervention[];
+  };
+  providers: {
+    primary: Provider;
+    cultural: Provider[];
+    family: Provider[];
+    community: Provider[];
+  };
+  schedule: {
+    sessions: SessionSchedule[];
+    milestones: Milestone[];
+    reviews: Date[];
+  };
+  progress: {
+    individual: ProgressMetric[];
+    family: ProgressMetric[];
+    cultural: ProgressMetric[];
+    overall: number; // 0-100
+  };
+  adaptations: {
+    made: string[];
+    needed: string[];
+    barriers: string[];
+  };
+  resources: {
+    educational: string[];
+    community: string[];
+    spiritual: string[];
+    practical: string[];
+  };
+  emergencyPlan: {
+    culturalContacts: string[];
+    familyContacts: string[];
+    communitySupports: string[];
+    culturalCoping: string[];
+  };
+}
 
-    // Get unique cultural protocols used
-const culturalProtocolsUsed = [...new Set(;]
-      notifications.flatMap(n =) n.culturalProtocolsActivated)
+export interface Provider {
+  id: string;
+  name: string;
+  type: 'therapist' | 'counselor' | 'healer' | 'elder' | 'peer' | 'spiritual-leader' | 'community-worker';
+  specializations: string[];
+  culturalCompetencies: CulturalBackground[];
+  languages: string[];
+  approaches: InterventionApproach[];
+  experience: {
+    years: number;
+    populations: string[];
+    specializations: string[];
+  };
+  availability: {
+    days: string[];
+    times: string[];
+    emergency: boolean;
+    remote: boolean;
+  };
+  credentials: {
+    licenses: string[];
+    certifications: string[];
+    training: string[];
+    culturalEndorsements: string[];
+  };
+  ratings: {
+    clinical: number;
+    cultural: number;
+    family: number;
+    communication: number;
+    overall: number;
+  };
+  contact: {
+    phone: string;
+    email: string;
+    address: string;
+    languages: string[];
+  };
+}
+
+export interface SessionSchedule {
+  id: string;
+  type: SupportType;
+  provider: string;
+  participants: string[];
+  date: Date;
+  duration: number;
+  location: 'office' | 'home' | 'community' | 'virtual' | 'spiritual-center';
+  language: string;
+  culturalAdaptations: string[];
+  objectives: string[];
+  status: 'scheduled' | 'completed' | 'cancelled' | 'rescheduled';
+  notes?: string;
+}
+
+export interface Milestone {
+  id: string;
+  name: string;
+  description: string;
+  targetDate: Date;
+  completionDate?: Date;
+  status: 'pending' | 'in-progress' | 'completed' | 'delayed';
+  criteria: string[];
+  culturalMarkers: string[];
+  familyMarkers: string[];
+  progress: number; // 0-100
+  barriers: string[];
+  supports: string[];
+}
+
+export interface ProgressMetric {
+  id: string;
+  domain: string;
+  metric: string;
+  baseline: number;
+  current: number;
+  target: number;
+  trend: 'improving' | 'stable' | 'declining';
+  culturalContext: string;
+  familyContext: string;
+  lastUpdated: Date;
+  notes: string;
+}
+
+export interface CommunityResource {
+  id: string;
+  name: string;
+  type: 'cultural-center' | 'religious-org' | 'community-group' | 'support-group' | 'healing-circle' | 'educational' | 'advocacy';
+  culturalFocus: CulturalBackground[];
+  services: string[];
+  languages: string[];
+  population: string[];
+  accessibility: {
+    physical: boolean;
+    linguistic: boolean;
+    cultural: boolean;
+    financial: boolean;
+  };
+  contact: {
+    phone: string;
+    email: string;
+    website: string;
+    address: string;
+  };
+  hours: {
+    regular: Record<string, string>;
+    emergency: boolean;
+    appointments: boolean;
+  };
+  eligibility: string[];
+  cost: string;
+  referralRequired: boolean;
+  waitTime: string;
+  ratings: {
+    quality: number;
+    cultural: number;
+    accessibility: number;
+    overall: number;
+  };
+  reviews: string[];
+}
+
+export interface CulturalAssessment {
+  id: string;
+  userId: string;
+  assessorId: string;
+  date: Date;
+  type: 'initial' | 'ongoing' | 'crisis' | 'discharge';
+  domains: {
+    cultural: {
+      identity: number;
+      values: number;
+      practices: number;
+      stressors: number;
+      strengths: number;
+    };
+    family: {
+      structure: number;
+      dynamics: number;
+      support: number;
+      communication: number;
+      resilience: number;
+    };
+    community: {
+      connection: number;
+      support: number;
+      resources: number;
+      participation: number;
+      belonging: number;
+    };
+    acculturation: {
+      level: number;
+      stress: number;
+      adaptation: number;
+      bicultural: number;
+      identity: number;
+    };
+  };
+  recommendations: {
+    cultural: string[];
+    family: string[];
+    community: string[];
+    clinical: string[];
+  };
+  priorities: {
+    immediate: string[];
+    shortTerm: string[];
+    longTerm: string[];
+  };
+  risks: {
+    cultural: string[];
+    family: string[];
+    community: string[];
+    clinical: string[];
+  };
+  strengths: {
+    cultural: string[];
+    family: string[];
+    community: string[];
+    personal: string[];
+  };
+  notes: string;
+  nextReview: Date;
+}
+
+class CulturalFamilySupportService {
+  private culturalProfiles: Map<string, CulturalProfile> = new Map();
+  private familyProfiles: Map<string, FamilyStructureProfile> = new Map();
+  private supportPlans: Map<string, SupportPlan> = new Map();
+  private providers: Map<string, Provider> = new Map();
+  private interventions: Map<string, CulturalIntervention> = new Map();
+  private communityResources: Map<string, CommunityResource> = new Map();
+  private assessments: Map<string, CulturalAssessment[]> = new Map();
+  private isInitialized = false;
+
+  constructor() {
+    this.initializeService();
+  }
+
+  private async initializeService(): Promise<void> {
+    try {
+      // Load cultural interventions database
+      await this.loadCulturalInterventions();
+      
+      // Load provider network
+      await this.loadProviderNetwork();
+      
+      // Load community resources
+      await this.loadCommunityResources();
+      
+      // Load existing profiles and plans
+      await this.loadExistingData();
+      
+      this.isInitialized = true;
+      logger.info('Cultural family support service initialized successfully');
+    } catch (error) {
+      logger.error('Failed to initialize cultural family support service', error);
+      throw error;
+    }
+  }
+
+  private async loadCulturalInterventions(): Promise<void> {
+    // Load evidence-based cultural interventions
+    const interventions: CulturalIntervention[] = [
+      {
+        id: 'narrative-therapy-hispanic',
+        name: 'Narrative Therapy for Hispanic Families',
+        type: 'family-therapy',
+        approach: 'integrative',
+        culturalBackground: ['hispanic-latino'],
+        description: 'Family-centered narrative therapy incorporating Latino cultural values and storytelling traditions',
+        objectives: [
+          'Strengthen family narratives and identity',
+          'Address intergenerational trauma',
+          'Enhance cultural pride and resilience',
+          'Improve family communication'
+        ],
+        methods: {
+          techniques: ['storytelling', 'family genograms', 'cultural mapping', 'strength identification'],
+          activities: ['family story circles', 'cultural celebrations', 'ancestor honoring', 'community connections'],
+          rituals: ['blessing ceremonies', 'gratitude practices', 'family prayers', 'cultural traditions'],
+          practices: ['daily check-ins', 'family meetings', 'cultural education', 'community service']
+        },
+        duration: {
+          sessions: 12,
+          frequency: 'weekly',
+          totalWeeks: 12
+        },
+        participants: {
+          individual: false,
+          family: true,
+          group: false,
+          community: true
+        },
+        requirements: {
+          languages: ['Spanish', 'English'],
+          culturalKnowledge: ['Latino family structures', 'Cultural values', 'Immigration experiences'],
+          specialTraining: ['Narrative therapy', 'Family systems', 'Cultural competency'],
+          resources: ['Bilingual materials', 'Cultural artifacts', 'Community connections']
+        },
+        outcomes: {
+          expected: ['Improved family cohesion', 'Reduced cultural stress', 'Enhanced resilience'],
+          measures: ['Family Assessment Device', 'Cultural Stress Scale', 'Resilience Scale'],
+          indicators: ['Increased family meetings', 'Cultural pride expressions', 'Community engagement']
+        },
+        adaptations: {
+          age: {
+            'children': ['Play therapy elements', 'Art activities', 'Simple language'],
+            'adolescents': ['Identity exploration', 'Peer integration', 'Future planning'],
+            'adults': ['Career counseling', 'Parenting support', 'Relationship counseling'],
+            'elderly': ['Life review', 'Legacy building', 'Wisdom sharing']
+          },
+          gender: {
+            'mixed': ['Gender role exploration', 'Equality discussions', 'Respect practices'],
+            'male-focused': ['Machismo deconstruction', 'Emotional expression', 'Vulnerability acceptance'],
+            'female-focused': ['Empowerment themes', 'Self-advocacy', 'Independence building']
+          },
+          culture: {
+            'mexican': ['Day of the Dead integration', 'Virgin Mary devotion', 'Extended family emphasis'],
+            'puerto-rican': ['Espiritismo elements', 'Island connections', 'Colonial history'],
+            'salvadoran': ['War trauma processing', 'Community solidarity', 'Survival strengths']
+          },
+          family: {
+            'nuclear': ['Parent-child focus', 'Boundary setting', 'Role clarity'],
+            'extended': ['Multi-generational healing', 'Elder respect', 'Collective decisions'],
+            'single-parent': ['Support network building', 'Resource mobilization', 'Strength identification']
+          }
+        },
+        contraindications: ['Active substance abuse', 'Severe mental illness', 'Family violence'],
+        evidence: {
+          researchBased: true,
+          culturallyValidated: true,
+          communityTested: true,
+          effectiveness: 'high'
+        }
+      },
+      
+      {
+        id: 'healing-circles-native',
+        name: 'Traditional Healing Circles',
+        type: 'cultural-healing',
+        approach: 'traditional-healing',
+        culturalBackground: ['native-american'],
+        description: 'Traditional Native American healing circles incorporating tribal wisdom and community support',
+        objectives: [
+          'Reconnect with cultural identity',
+          'Process historical and intergenerational trauma',
+          'Strengthen community bonds',
+          'Restore spiritual balance'
+        ],
+        methods: {
+          techniques: ['circle talking', 'smudging', 'prayer offerings', 'medicine wheel teachings'],
+          activities: ['drumming circles', 'sweat lodge', 'vision quests', 'seasonal ceremonies'],
+          rituals: ['sage cleansing', 'pipe ceremonies', 'ancestor calling', 'earth connections'],
+          practices: ['daily prayers', 'nature walks', 'tribal language', 'traditional crafts']
+        },
+        duration: {
+          sessions: 8,
+          frequency: 'weekly',
+          totalWeeks: 8
+        },
+        participants: {
+          individual: true,
+          family: true,
+          group: true,
+          community: true
+        },
+        requirements: {
+          languages: ['English', 'Tribal languages'],
+          culturalKnowledge: ['Tribal traditions', 'Ceremony protocols', 'Spiritual practices'],
+          specialTraining: ['Traditional healing', 'Trauma-informed care', 'Cultural protocols'],
+          resources: ['Sacred spaces', 'Ceremonial items', 'Elder guidance']
+        },
+        outcomes: {
+          expected: ['Cultural reconnection', 'Trauma healing', 'Community belonging'],
+          measures: ['Cultural Identity Scale', 'Historical Trauma Scale', 'Community Connection Index'],
+          indicators: ['Ceremony participation', 'Language use', 'Elder engagement']
+        },
+        adaptations: {
+          age: {
+            'children': ['Story circles', 'Nature play', 'Cultural games'],
+            'adolescents': ['Identity quests', 'Mentor connections', 'Leadership training'],
+            'adults': ['Healing journeys', 'Parenting wisdom', 'Career guidance'],
+            'elderly': ['Wisdom sharing', 'Legacy ceremonies', 'Ancestor honoring']
+          },
+          gender: {
+            'mixed': ['Gender balance teachings', 'Complementary roles', 'Mutual respect'],
+            'male-focused': ['Warrior healing', 'Provider roles', 'Strength ceremonies'],
+            'female-focused': ['Mother earth connections', 'Nurturing roles', 'Moon ceremonies']
+          },
+          culture: {
+            'plains': ['Buffalo ceremonies', 'Sun dance elements', 'Vision quests'],
+            'woodland': ['Tree ceremonies', 'Seasonal cycles', 'Forest medicines'],
+            'southwest': ['Desert wisdom', 'Corn ceremonies', 'Pottery healing']
+          },
+          family: {
+            'traditional': ['Clan connections', 'Extended kinship', 'Tribal responsibilities'],
+            'urban': ['Cultural maintenance', 'Identity preservation', 'Community building'],
+            'mixed-heritage': ['Multiple traditions', 'Identity integration', 'Cultural bridges']
+          }
+        },
+        contraindications: ['Disrespect for traditions', 'Substance abuse during ceremonies'],
+        evidence: {
+          researchBased: false,
+          culturallyValidated: true,
+          communityTested: true,
+          effectiveness: 'traditional'
+        }
+      }
     ];
 
-    return { supportEngagement,
-      familyResponseRate,
-      crisisResolutionTime,
-      culturalProtocolsUsed }
+    interventions.forEach(intervention => {
+      this.interventions.set(intervention.id, intervention);
+    });
+  }
 
-  /**
-   * Get default escalation levels based on cultural context
-   */
-  private getDefaultEscalationLevels(culturalContext: CulturalContext): FamilySupport["emergencyProtocol']["escalationLevels"] {;'"
-const escalationLevels = [;]
+  private async loadProviderNetwork(): Promise<void> {
+    // Load culturally competent provider network
+    const providers: Provider[] = [
       {
-  level: 1,
-        triggerConditions: ["Mild depression indicators', "Initial anxiety symptoms"],'"""
-        actions: ["Monitor closely', 'Encourage self-care"],"""
-};
-
-contactsToNotify: [],
-};
-
-culturalProtocols: []
-  },
-      {
-  level: 2,
-        triggerConditions: ['Moderate distress", "Consistent symptoms'],"""
-        actions: ["Professional consultation', "Family awareness"],'""
-};
-
-contactsToNotify: ["emotional_support"],'"'"'"'
-};
-
-culturalProtocols: culturalContext.crisisEscalation === "gradual" ? ["extended_family_consultation"] : []''
-  },
-      {
-  level: 3,
-        triggerConditions: ["High risk indicators", 'Crisis escalation"],""'"'""'
-        actions: ['Crisis intervention", "Family involvement"],"'""'"'
-};
-
-contactsToNotify: ["primary_decision_maker", "emergency_contact'],""''"""'
-};
-
-culturalProtocols: culturalContext.crisisEscalation === "authority-based' ? ["elder_decision_making"] : ['community_support"]""
-  },
-      {
-  level: 4,
-        triggerConditions: ["Immediate danger', "Severe crisis"],'""""''
-        actions: ["Emergency services", 'Full family alert"],"'"'"'
-};
-
-contactsToNotify: ['all"],""'"'"'
-};
-
-culturalProtocols: culturalContext.crisisEscalation === 'authority-based" ? ["religious_guidance"] : ["immediate_intervention']'"
-
-    return escalationLevels
-  /**
-   * Get default communication guidelines based on cultural context
-   */
-  private getDefaultCommunicationGuidelines(culturalContext: CulturalContext): FamilySupport["communicationGuidelines"] {;"}'"'
-familyMeetingFormat: FamilySupport["communicationGuidelines']["familyMeetingFormat"] = "individual_sessions"',
-  crisisDisclosureProtocol: FamilySupport["communicationGuidelines"]['crisisDisclosureProtocol"] = "immediate_family""',
-  decisionMakingProcess: FamilySupport["communicationGuidelines"]['decisionMakingProcess"] = "individual""'
-    if (culturalContext.familyInvolvement === 'family-centered") {
-  "'""""
-      familyMeetingFormat = culturalContext.communicationStyle === 'indirect" ? elder_mediated: "group_sessions';""""
-};
-
-crisisDisclosureProtocol = 'extended_family';""""
-};
-
-decisionMakingProcess = 'family_consensus" } else if (culturalContext.familyInvolvement === "community-based') {
-  familyMeetingFormat = "elder_mediated";""'"'
-};
-
-crisisDisclosureProtocol = "community_elders";'"""'
-};
-
-decisionMakingProcess = "community_input' }""'""""''
-
-    return { familyMeetingFormat,
-      crisisDisclosureProtocol,
-      decisionMakingProcess }
-
-  /**
-   * Send notification to family member
-   */
-  private async sendNotificationToMember(member: FamilyMember),
-  message: string,
-    crisisType: CrisisNotification["crisisType"]'"'"""''
-  ): Promise<void> {
-    // This would integrate with actual notification services
-    // For now, we"ll simulate the notification sending"'"""'
-    console.log(`Sending ${crisisType) notification to ${member.name) (${member.contactMethod)):`, message);
-
-    // In a real implementation, this would:
-    // - Send SMS via Twilio or similar service
-    // - Send email via SendGrid or similar service
-    // - Make phone calls for immediate danger situations
-    // - Send push notifications to family member"s app'"'""'"'
-
-    // Store in offline storage for reliability
-    if (enhancedOfflineService) { await enhancedOfflineService.addToSyncQueue({)}
-$2: "analytics","''""''
-        data: {
-  ,
-  memberId: member.id,
-          message,
-};
-
-timestamp: new Date().toISOString(),
-};
-
-method: member.contactMethod,
-          crisisType },
-        priority: 2,
-        culturalContext: "global",""'""'
-        language: member.languages[0] || "en'""'"
-  };
-  );
-
-  /**
-   * Get default escalation levels based on cultural context
-   */
-  private getDefaultEscalationLevels(culturalContext: CulturalContext): FamilySupport["emergencyProtocol']["escalationLevels"] {;""'
-const baseEscalation = [;]
-      {
-  level: 1,
-        triggerConditions: ['Mild depression indicators", "Stress signals'],""""
-        actions: ['Notify emotional support contacts", "Offer family check-in'],""""
-};
-
-contactsToNotify: ['emotional_support"],"'""
-};
-
-culturalProtocols: ["gentle_approach", 'family_awareness"] },"'""""
-      {
-  level: 2,
-        triggerConditions: ['Moderate crisis indicators", "Withdrawal from family'],""""'"'
-        actions: ["Notify primary decision makers', "Coordinate family support"],""''""'
-};
-
-contactsToNotify: ["primary_decision_maker", "emotional_support"],'"'"'""'
-};
-
-culturalProtocols: ["family_coordination", 'gradual_intervention"] },"'""""
-      {
-  level: 3,
-        triggerConditions: ['High crisis risk", "Suicidal ideation'],""""'"'
-        actions: ["Emergency family meeting', "Professional intervention"],""''""'
-};
-
-contactsToNotify: ["primary_decision_maker", "emergency_contact"],'"'"'""'
-};
-
-culturalProtocols: ["immediate_family_involvement", 'professional_support"] },"'""""
-      {
-  level: 4,
-        triggerConditions: ['Immediate danger", "Suicide attempt'],""""'"'
-        actions: ["Emergency services', "All family notification"],""''""'
-};
-
-contactsToNotify: ["all_members"],""''
-};
-
-culturalProtocols: ["emergency_protocols", "authority_involvement"] }''""'"'
+        id: 'provider-001',
+        name: 'Dr. Maria Rodriguez',
+        type: 'therapist',
+        specializations: ['Family Therapy', 'Trauma', 'Immigration Stress'],
+        culturalCompetencies: ['hispanic-latino', 'mixed-heritage'],
+        languages: ['Spanish', 'English'],
+        approaches: ['integrative', 'trauma-informed', 'strengths-based'],
+        experience: {
+          years: 15,
+          populations: ['Hispanic families', 'Immigrants', 'Adolescents'],
+          specializations: ['Intergenerational trauma', 'Acculturation stress', 'Family conflict']
+        },
+        availability: {
+          days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday'],
+          times: ['9:00 AM - 5:00 PM'],
+          emergency: true,
+          remote: true
+        },
+        credentials: {
+          licenses: ['LMFT', 'LCSW'],
+          certifications: ['Trauma-Informed Care', 'Family Systems'],
+          training: ['Narrative Therapy', 'Cultural Competency', 'Bilingual Therapy'],
+          culturalEndorsements: ['Latino Mental Health Association', 'Hispanic Therapist Network']
+        },
+        ratings: {
+          clinical: 4.8,
+          cultural: 4.9,
+          family: 4.7,
+          communication: 4.8,
+          overall: 4.8
+        },
+        contact: {
+          phone: '555-0123',
+          email: 'mrodriguez@example.com',
+          address: '123 Main St, City, State',
+          languages: ['Spanish', 'English']
+        }
+      }
     ];
 
-    // Customize based on cultural approach
-    switch (culturalContext.crisisEscalation) { case "authority-based":"'""'
-        baseEscalation[2].culturalProtocols.push('elder_decision_making");"'""
-        baseEscalation[3].culturalProtocols.push('religious_guidance");""'"'"'
-        break;
-      case gradual:""'"""'
-        baseEscalation[1].culturalProtocols.push("extended_family_consultation');""''"""'
-        baseEscalation[2].culturalProtocols.push("community_support');""''""'
-        break;
-      case direct:""'"'"'""'
-        baseEscalation[2].actions.push("Direct professional referral");'"'"'"'
-        baseEscalation[3].actions.push("Immediate emergency contact"  );""''
-        break }
+    providers.forEach(provider => {
+      this.providers.set(provider.id, provider);
+    });
+  }
 
-    return baseEscalation;
+  private async loadCommunityResources(): Promise<void> {
+    // Load community resources database
+    const resources: CommunityResource[] = [
+      {
+        id: 'resource-001',
+        name: 'Centro Cultural Latino',
+        type: 'cultural-center',
+        culturalFocus: ['hispanic-latino'],
+        services: ['Cultural programs', 'Support groups', 'Educational workshops', 'Crisis support'],
+        languages: ['Spanish', 'English'],
+        population: ['All ages', 'Families', 'Immigrants'],
+        accessibility: {
+          physical: true,
+          linguistic: true,
+          cultural: true,
+          financial: true
+        },
+        contact: {
+          phone: '555-0456',
+          email: 'info@centrolatino.org',
+          website: 'www.centrolatino.org',
+          address: '456 Cultural Ave, City, State'
+        },
+        hours: {
+          regular: {
+            'Monday': '9:00 AM - 6:00 PM',
+            'Tuesday': '9:00 AM - 6:00 PM',
+            'Wednesday': '9:00 AM - 6:00 PM',
+            'Thursday': '9:00 AM - 6:00 PM',
+            'Friday': '9:00 AM - 6:00 PM',
+            'Saturday': '10:00 AM - 4:00 PM'
+          },
+          emergency: false,
+          appointments: true
+        },
+        eligibility: ['Latino heritage', 'Community members', 'Families in need'],
+        cost: 'Free or sliding scale',
+        referralRequired: false,
+        waitTime: '1-2 weeks',
+        ratings: {
+          quality: 4.6,
+          cultural: 4.8,
+          accessibility: 4.4,
+          overall: 4.6
+        },
+        reviews: ['Excellent cultural programs', 'Very welcoming staff', 'Great family support']
+      }
+    ];
 
-  /**
-   * Get default communication guidelines
-   */
-  private getDefaultCommunicationGuidelines(culturalContext: CulturalContext): FamilySupport["communicationGuidelines"] {
-  ;""
-};
+    resources.forEach(resource => {
+      this.communityResources.set(resource.id, resource);
+    });
+  }
 
-guidelines: FamilySupport['communicationGuidelines"] = {"'}""
-      familyMeetingFormat: "individual_sessions",'"'"'"'
-      crisisDisclosureProtocol: "immediate_family",""''
-      decisionMakingProcess: "individual""''
-  };
+  private async loadExistingData(): Promise<void> {
+    try {
+      // Load from localStorage or API
+      const storedProfiles = localStorage.getItem('cultural-profiles');
+      if (storedProfiles) {
+        const profiles = JSON.parse(storedProfiles);
+        profiles.forEach((profile: CulturalProfile) => {
+          this.culturalProfiles.set(profile.id, profile);
+        });
+      }
 
-    switch (culturalContext.familyInvolvement) {
-  case "family-centered':""""'
-};
+      const storedFamilyProfiles = localStorage.getItem('family-profiles');
+      if (storedFamilyProfiles) {
+        const profiles = JSON.parse(storedFamilyProfiles);
+        profiles.forEach((profile: FamilyStructureProfile) => {
+          this.familyProfiles.set(profile.id, profile);
+        });
+      }
 
-guidelines = {}
-          familyMeetingFormat: 'group_sessions',""""
-          crisisDisclosureProtocol: 'extended_family","'""
-          decisionMakingProcess: "family_consensus"'"'
-  };
-        break;
-      case 'community-based":""''""'
-        guidelines = {}
-          familyMeetingFormat: 'elder_mediated",""''""'
-          crisisDisclosureProtocol: 'community_elders",""''""'
-          decisionMakingProcess: 'community_input"""'
-  )
-        break
-if (culturalContext.communicationStyle === 'indirect") { guidelines.familyMeetingFormat = "elder_mediated' }""""
+      const storedSupportPlans = localStorage.getItem('support-plans');
+      if (storedSupportPlans) {
+        const plans = JSON.parse(storedSupportPlans);
+        plans.forEach((plan: SupportPlan) => {
+          this.supportPlans.set(plan.id, plan);
+        });
+      }
+    } catch (error) {
+      logger.warn('Failed to load existing cultural family support data', error);
+    }
+  }
 
-    return guidelines;
+  // Public API Methods
 
-  /**
-   * Get family support for user
-   */
-  getFamilySupport(userId: string): FamilySupport | undefined { return this.familySupports.get(userId) }
-
-  /**
-   * Get cultural guidance for region
-   */
-  getCulturalGuidance(region: string): CulturalGuidance | undefined { return this.culturalGuidance[region] }
-
-  /**
-   * Load family support data from storage
-   */
-  private async loadFamilySupportData(): Promise<void> { try {
-      // Data loading would be implemented with actual storage methods
-      console.log('[Family Support] Loading family support data...") } catch (error) { console.error("Failed to load family support data:', error );"}
-
-  /**
-   * Save family support data to storage
-   */
-  private async saveFamilySupportData(): Promise<void> { try {
-      // Data saving would be implemented with actual storage methods
-      console.log("[Family Support] Saving family support data...") } catch (error) { console.error("Failed to save family support data:', error );"'
-
-  /**
-   * Hash user ID for privacy
-   */
-
-  /**
-   * Get family support analytics
-   */
-  async getFamilySupportAnalytics(userId: string): Promise<{
-  ,
-  supportEngagement: number;,
-  familyResponseRate: number,
-};
-
-crisisResolutionTime: number
-};
-
-culturalProtocolsUsed: string[]
-  }> {;
-const familySupport = this.familySupports.get(userId  );
-const notifications = this.crisisNotifications.get(userId) || [],
-
-    if (!familySupport) {
-      return {
-  supportEngagement: 0,
-        familyResponseRate: 0,
-};
-
-crisisResolutionTime: 0,
-};
-
-culturalProtocolsUsed: []
-  };
-const totalNotifications = notifications.reduce((sum, n) =) sum + n.notificationsSent.length, 0};
-const responsiveNotifications = notifications.reduce((sum, n) =);
-      sum + n.notificationsSent.filter(ns =) ns.responseStatus === 'responded"}.length, 0""''""'
+  public async createCulturalProfile(userId: string, profileData: Partial<CulturalProfile>): Promise<CulturalProfile> {
+    const profile: CulturalProfile = {
+      id: `cultural-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      userId,
+      primaryCulture: profileData.primaryCulture || 'other',
+      secondaryCultures: profileData.secondaryCultures || [],
+      languages: {
+        primary: profileData.languages?.primary || 'English',
+        secondary: profileData.languages?.secondary || [],
+        preferred: profileData.languages?.preferred || 'English',
+        proficiency: profileData.languages?.proficiency || {}
+      },
+      religiousBackground: {
+        affiliation: profileData.religiousBackground?.affiliation || '',
+        practices: profileData.religiousBackground?.practices || [],
+        importance: profileData.religiousBackground?.importance || 'medium',
+        accommodations: profileData.religiousBackground?.accommodations || []
+      },
+      culturalValues: {
+        collectivism: profileData.culturalValues?.collectivism || 5,
+        individualism: profileData.culturalValues?.individualism || 5,
+        hierarchyRespect: profileData.culturalValues?.hierarchyRespect || 5,
+        familyOrientation: profileData.culturalValues?.familyOrientation || 5,
+        spirituality: profileData.culturalValues?.spirituality || 5,
+        traditionalism: profileData.culturalValues?.traditionalism || 5,
+        modernism: profileData.culturalValues?.modernism || 5
+      },
+      communicationStyle: {
+        directness: profileData.communicationStyle?.directness || 'direct',
+        emotionalExpression: profileData.communicationStyle?.emotionalExpression || 'open',
+        conflictResolution: profileData.communicationStyle?.conflictResolution || 'harmonious',
+        authorityRelation: profileData.communicationStyle?.authorityRelation || 'respectful'
+      },
+      culturalStressors: profileData.culturalStressors || [],
+      culturalStrengths: profileData.culturalStrengths || [],
+      acculturationLevel: profileData.acculturationLevel || 'bicultural',
+      generationStatus: profileData.generationStatus || 'second',
+      preferences: {
+        therapistCulture: profileData.preferences?.therapistCulture || 'culturally-competent',
+        treatmentApproach: profileData.preferences?.treatmentApproach || ['integrative'],
+        languagePreference: profileData.preferences?.languagePreference || 'English',
+        genderPreference: profileData.preferences?.genderPreference || 'any',
+        familyInvolvement: profileData.preferences?.familyInvolvement || 'moderate'
+      }
     };
 
-    return { supportEngagement: familySupport.familyMembers.filter(m =) m.consentGiven}.length / Math.max(familySupport.familyMembers.length, 1),
-      familyResponseRate: totalNotifications } 0 ? responsiveNotifications / totalNotifications : 0,
-      crisisResolutionTime: notifications.length } 0 ? this.calculateAverageResolutionTime(notifications) : 0,
-      culturalProtocolsUsed: [...new Set(notifications.flatMap(n =) n.culturalProtocolsActivated)]}
+    this.culturalProfiles.set(profile.id, profile);
+    await this.saveProfiles();
 
-  /**
-   * Calculate average crisis resolution time
-   */
-  private calculateAverageResolutionTime(_notifications: CrisisNotification[]): number {
-    // This would calculate based on when crisis was detected vs. when it was resolved
-    // For now, return a placeholder
-    return 24; // hours
-export default CulturalFamilySupportService;
+    logger.info('Cultural profile created', { profileId: profile.id, userId });
+    return profile;
+  }
+
+  public async createFamilyProfile(userId: string, profileData: Partial<FamilyStructureProfile>): Promise<FamilyStructureProfile> {
+    const profile: FamilyStructureProfile = {
+      id: `family-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      userId,
+      structure: profileData.structure || 'nuclear',
+      members: profileData.members || [],
+      dynamics: {
+        cohesion: profileData.dynamics?.cohesion || 5,
+        flexibility: profileData.dynamics?.flexibility || 5,
+        communication: profileData.dynamics?.communication || 5,
+        conflictResolution: profileData.dynamics?.conflictResolution || 5,
+        supportiveness: profileData.dynamics?.supportiveness || 5,
+        boundaries: profileData.dynamics?.boundaries || 'clear'
+      },
+      roles: {
+        decisionMaker: profileData.roles?.decisionMaker || [],
+        caregiver: profileData.roles?.caregiver || [],
+        provider: profileData.roles?.provider || [],
+        mediator: profileData.roles?.mediator || [],
+        supporter: profileData.roles?.supporter || []
+      },
+      stressors: profileData.stressors || [],
+      strengths: profileData.strengths || [],
+      supportSystems: {
+        internal: profileData.supportSystems?.internal || [],
+        external: profileData.supportSystems?.external || [],
+        community: profileData.supportSystems?.community || [],
+        professional: profileData.supportSystems?.professional || []
+      },
+      treatmentHistory: {
+        previousTherapy: profileData.treatmentHistory?.previousTherapy || false,
+        familyTherapyExperience: profileData.treatmentHistory?.familyTherapyExperience || false,
+        culturalHealingExperience: profileData.treatmentHistory?.culturalHealingExperience || false,
+        outcomes: profileData.treatmentHistory?.outcomes || [],
+        preferences: profileData.treatmentHistory?.preferences || []
+      }
+    };
+
+    this.familyProfiles.set(profile.id, profile);
+    await this.saveFamilyProfiles();
+
+    logger.info('Family profile created', { profileId: profile.id, userId });
+    return profile;
+  }
+
+  public async conductCulturalAssessment(userId: string, assessorId: string): Promise<CulturalAssessment> {
+    const assessment: CulturalAssessment = {
+      id: `assessment-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      userId,
+      assessorId,
+      date: new Date(),
+      type: 'initial',
+      domains: {
+        cultural: {
+          identity: 0,
+          values: 0,
+          practices: 0,
+          stressors: 0,
+          strengths: 0
+        },
+        family: {
+          structure: 0,
+          dynamics: 0,
+          support: 0,
+          communication: 0,
+          resilience: 0
+        },
+        community: {
+          connection: 0,
+          support: 0,
+          resources: 0,
+          participation: 0,
+          belonging: 0
+        },
+        acculturation: {
+          level: 0,
+          stress: 0,
+          adaptation: 0,
+          bicultural: 0,
+          identity: 0
+        }
+      },
+      recommendations: {
+        cultural: [],
+        family: [],
+        community: [],
+        clinical: []
+      },
+      priorities: {
+        immediate: [],
+        shortTerm: [],
+        longTerm: []
+      },
+      risks: {
+        cultural: [],
+        family: [],
+        community: [],
+        clinical: []
+      },
+      strengths: {
+        cultural: [],
+        family: [],
+        community: [],
+        personal: []
+      },
+      notes: '',
+      nextReview: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+    };
+
+    // Store assessment
+    const userAssessments = this.assessments.get(userId) || [];
+    userAssessments.push(assessment);
+    this.assessments.set(userId, userAssessments);
+
+    logger.info('Cultural assessment created', { assessmentId: assessment.id, userId });
+    return assessment;
+  }
+
+  public async createSupportPlan(
+    userId: string,
+    culturalProfileId: string,
+    familyProfileId?: string
+  ): Promise<SupportPlan> {
+    const culturalProfile = this.culturalProfiles.get(culturalProfileId);
+    if (!culturalProfile) {
+      throw new Error('Cultural profile not found');
+    }
+
+    const familyProfile = familyProfileId ? this.familyProfiles.get(familyProfileId) : undefined;
+
+    // Find appropriate interventions based on cultural background
+    const matchingInterventions = Array.from(this.interventions.values()).filter(intervention =>
+      intervention.culturalBackground.includes(culturalProfile.primaryCulture) ||
+      intervention.culturalBackground.some(bg => culturalProfile.secondaryCultures.includes(bg))
+    );
+
+    // Find appropriate providers
+    const matchingProviders = Array.from(this.providers.values()).filter(provider =>
+      provider.culturalCompetencies.includes(culturalProfile.primaryCulture) ||
+      provider.culturalCompetencies.some(comp => culturalProfile.secondaryCultures.includes(comp)) ||
+      provider.languages.includes(culturalProfile.languages.preferred)
+    );
+
+    const supportPlan: SupportPlan = {
+      id: `plan-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      userId,
+      familyId: familyProfileId,
+      culturalProfile,
+      familyProfile,
+      assessmentDate: new Date(),
+      planDate: new Date(),
+      lastUpdate: new Date(),
+      status: 'active',
+      goals: {
+        primary: ['Improve mental health outcomes', 'Strengthen cultural identity'],
+        secondary: ['Enhance family relationships', 'Build community connections'],
+        cultural: ['Address cultural stressors', 'Leverage cultural strengths'],
+        family: ['Improve family communication', 'Strengthen family bonds']
+      },
+      interventions: {
+        individual: matchingInterventions.filter(i => i.participants.individual).slice(0, 2),
+        family: matchingInterventions.filter(i => i.participants.family).slice(0, 2),
+        group: matchingInterventions.filter(i => i.participants.group).slice(0, 1),
+        community: matchingInterventions.filter(i => i.participants.community).slice(0, 1)
+      },
+      providers: {
+        primary: matchingProviders[0] || ({} as Provider),
+        cultural: matchingProviders.filter(p => p.type === 'healer' || p.type === 'spiritual-leader'),
+        family: matchingProviders.filter(p => p.specializations.includes('Family Therapy')),
+        community: matchingProviders.filter(p => p.type === 'community-worker')
+      },
+      schedule: {
+        sessions: [],
+        milestones: [],
+        reviews: [
+          new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+          new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days
+          new Date(Date.now() + 180 * 24 * 60 * 60 * 1000)  // 180 days
+        ]
+      },
+      progress: {
+        individual: [],
+        family: [],
+        cultural: [],
+        overall: 0
+      },
+      adaptations: {
+        made: [],
+        needed: [],
+        barriers: []
+      },
+      resources: {
+        educational: [],
+        community: [],
+        spiritual: [],
+        practical: []
+      },
+      emergencyPlan: {
+        culturalContacts: [],
+        familyContacts: [],
+        communitySupports: [],
+        culturalCoping: []
+      }
+    };
+
+    this.supportPlans.set(supportPlan.id, supportPlan);
+    await this.saveSupportPlans();
+
+    logger.info('Support plan created', { planId: supportPlan.id, userId });
+    return supportPlan;
+  }
+
+  public async findCulturallyMatchedProviders(
+    culturalBackground: CulturalBackground,
+    language: string,
+    specialization?: string
+  ): Promise<Provider[]> {
+    const matchingProviders = Array.from(this.providers.values()).filter(provider => {
+      const culturalMatch = provider.culturalCompetencies.includes(culturalBackground);
+      const languageMatch = provider.languages.includes(language);
+      const specializationMatch = !specialization || 
+        provider.specializations.some(spec => 
+          spec.toLowerCase().includes(specialization.toLowerCase())
+        );
+      
+      return culturalMatch && languageMatch && specializationMatch;
+    });
+
+    // Sort by ratings
+    return matchingProviders.sort((a, b) => b.ratings.overall - a.ratings.overall);
+  }
+
+  public async findCommunityResources(
+    culturalBackground: CulturalBackground,
+    resourceType?: string,
+    location?: string
+  ): Promise<CommunityResource[]> {
+    const matchingResources = Array.from(this.communityResources.values()).filter(resource => {
+      const culturalMatch = resource.culturalFocus.includes(culturalBackground);
+      const typeMatch = !resourceType || resource.type === resourceType;
+      const locationMatch = !location || resource.contact.address.includes(location);
+      
+      return culturalMatch && typeMatch && locationMatch;
+    });
+
+    // Sort by ratings
+    return matchingResources.sort((a, b) => b.ratings.overall - a.ratings.overall);
+  }
+
+  public async updateProgressMetric(
+    planId: string,
+    domain: string,
+    metric: string,
+    value: number,
+    notes: string
+  ): Promise<void> {
+    const plan = this.supportPlans.get(planId);
+    if (!plan) {
+      throw new Error('Support plan not found');
+    }
+
+    const progressMetric: ProgressMetric = {
+      id: `metric-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      domain,
+      metric,
+      baseline: 0, // Would be set from initial assessment
+      current: value,
+      target: 8, // Would be set based on goals
+      trend: value > 5 ? 'improving' : value < 5 ? 'declining' : 'stable',
+      culturalContext: plan.culturalProfile.primaryCulture,
+      familyContext: plan.familyProfile?.structure || 'individual',
+      lastUpdated: new Date(),
+      notes
+    };
+
+    // Add to appropriate progress array
+    if (domain === 'individual') {
+      plan.progress.individual.push(progressMetric);
+    } else if (domain === 'family') {
+      plan.progress.family.push(progressMetric);
+    } else if (domain === 'cultural') {
+      plan.progress.cultural.push(progressMetric);
+    }
+
+    // Update overall progress
+    const allMetrics = [
+      ...plan.progress.individual,
+      ...plan.progress.family,
+      ...plan.progress.cultural
+    ];
+    
+    if (allMetrics.length > 0) {
+      plan.progress.overall = Math.round(
+        allMetrics.reduce((sum, metric) => sum + (metric.current / metric.target) * 100, 0) / allMetrics.length
+      );
+    }
+
+    plan.lastUpdate = new Date();
+    await this.saveSupportPlans();
+
+    logger.info('Progress metric updated', { planId, domain, metric, value });
+  }
+
+  public async scheduleSession(
+    planId: string,
+    sessionData: Partial<SessionSchedule>
+  ): Promise<SessionSchedule> {
+    const plan = this.supportPlans.get(planId);
+    if (!plan) {
+      throw new Error('Support plan not found');
+    }
+
+    const session: SessionSchedule = {
+      id: `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      type: sessionData.type || 'individual-therapy',
+      provider: sessionData.provider || plan.providers.primary.id,
+      participants: sessionData.participants || [plan.userId],
+      date: sessionData.date || new Date(),
+      duration: sessionData.duration || 60,
+      location: sessionData.location || 'office',
+      language: sessionData.language || plan.culturalProfile.languages.preferred,
+      culturalAdaptations: sessionData.culturalAdaptations || [],
+      objectives: sessionData.objectives || [],
+      status: 'scheduled',
+      notes: sessionData.notes
+    };
+
+    plan.schedule.sessions.push(session);
+    plan.lastUpdate = new Date();
+    await this.saveSupportPlans();
+
+    logger.info('Session scheduled', { sessionId: session.id, planId });
+    return session;
+  }
+
+  // Data persistence methods
+  private async saveProfiles(): Promise<void> {
+    try {
+      const profiles = Array.from(this.culturalProfiles.values());
+      localStorage.setItem('cultural-profiles', JSON.stringify(profiles));
+    } catch (error) {
+      logger.warn('Failed to save cultural profiles', error);
+    }
+  }
+
+  private async saveFamilyProfiles(): Promise<void> {
+    try {
+      const profiles = Array.from(this.familyProfiles.values());
+      localStorage.setItem('family-profiles', JSON.stringify(profiles));
+    } catch (error) {
+      logger.warn('Failed to save family profiles', error);
+    }
+  }
+
+  private async saveSupportPlans(): Promise<void> {
+    try {
+      const plans = Array.from(this.supportPlans.values());
+      localStorage.setItem('support-plans', JSON.stringify(plans));
+    } catch (error) {
+      logger.warn('Failed to save support plans', error);
+    }
+  }
+
+  // Getter methods
+  public getCulturalProfile(profileId: string): CulturalProfile | undefined {
+    return this.culturalProfiles.get(profileId);
+  }
+
+  public getFamilyProfile(profileId: string): FamilyStructureProfile | undefined {
+    return this.familyProfiles.get(profileId);
+  }
+
+  public getSupportPlan(planId: string): SupportPlan | undefined {
+    return this.supportPlans.get(planId);
+  }
+
+  public getUserSupportPlan(userId: string): SupportPlan | undefined {
+    return Array.from(this.supportPlans.values()).find(plan => plan.userId === userId);
+  }
+
+  public getAvailableInterventions(): CulturalIntervention[] {
+    return Array.from(this.interventions.values());
+  }
+
+  public getProviderNetwork(): Provider[] {
+    return Array.from(this.providers.values());
+  }
+
+  public getCommunityResources(): CommunityResource[] {
+    return Array.from(this.communityResources.values());
+  }
+
+  public getUserAssessments(userId: string): CulturalAssessment[] {
+    return this.assessments.get(userId) || [];
+  }
+
+  public destroy(): void {
+    this.culturalProfiles.clear();
+    this.familyProfiles.clear();
+    this.supportPlans.clear();
+    this.providers.clear();
+    this.interventions.clear();
+    this.communityResources.clear();
+    this.assessments.clear();
+    this.isInitialized = false;
+    
+    logger.info('Cultural family support service destroyed');
+  }
+}
+
+// Create singleton instance
 export const culturalFamilySupportService = new CulturalFamilySupportService();
+
+export default culturalFamilySupportService;
