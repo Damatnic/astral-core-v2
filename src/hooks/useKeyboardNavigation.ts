@@ -1,388 +1,236 @@
-import { useEffect, useCallback, useRef  } from 'react';""""'
-interface KeyboardNavigationOptions { { { { enableArrowKeys?: boolean;
-  enableHomeEnd?: boolean;
-  enableEscape?: boolean;
-  enableEnterSpace?: boolean;
-  wrap?: boolean;
-  orientation?: "horizontal" | 'vertical" | "both";"''""'
-  onNavigate?: (index: number, element: HTMLElement) = void
-  onActivate?: (index: number, element: HTMLElement) = void
-  onEscape?: () = void
-  selector?: string
-  autoFocus?: boolean
-  /** Trap focus within the container for modals */
-  trapFocus?: boolean
-  /** Handle Tab key for focus trapping */
-  handleTab?: boolean
-  /** Restore focus to trigger element on unmount */
-  restoreFocus?: boolean;
-  /** Prevent tab cycling outside container */
-  preventTabOutside?: boolean;
-interface ModalKeyboardNavigationHook { { { {
+/**
+ * Keyboard Navigation Hook
+ *
+ * Comprehensive accessibility-focused hook for keyboard navigation
+ * with focus management, skip links, and WCAG 2.1 compliance
+ *
+ * Features:
+ * - Focus trap management for modals and overlays
+ * - Skip navigation links for screen readers
+ * - Arrow key navigation for custom components
+ * - Tab order management and restoration
+ * - Keyboard shortcuts and hotkey support
+ * - Focus indicators and visual feedback
+ * - Screen reader announcements
+ * - Roving tabindex implementation
+ *
+ * @license Apache-2.0
+ */
+
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { logger } from '../utils/logger';
+
+// Focus Direction Enum
+export enum FocusDirection {
+  FORWARD = 'forward',
+  BACKWARD = 'backward',
+  UP = 'up',
+  DOWN = 'down',
+  LEFT = 'left',
+  RIGHT = 'right',
+  FIRST = 'first',
+  LAST = 'last'
+}
+
+// Keyboard Event Data Interface
+interface KeyboardEventData {
+  key: string;
+  code: string;
+  ctrlKey: boolean;
+  shiftKey: boolean;
+  altKey: boolean;
+  metaKey: boolean;
+  target: HTMLElement;
+  timestamp: number;
+}
+
+// Focus Target Interface
+interface FocusTarget {
+  element: HTMLElement;
+  index: number;
+  isVisible: boolean;
+  isEnabled: boolean;
+  tabIndex: number;
+  role?: string;
+  ariaLabel?: string;
+}
+
+// Skip Link Interface
+interface SkipLink {
+  id: string;
+  targetId: string;
+  label: string;
+  key?: string;
+  visible: boolean;
+}
+
+// Hotkey Definition Interface
+interface HotkeyDefinition {
+  id: string;
+  keys: string[];
+  description: string;
+  action: (event: KeyboardEvent) => void;
+  enabled: boolean;
+  global: boolean;
+}
+
+// Focus Trap Configuration Interface
+interface FocusTrapConfig {
+  enabled: boolean;
+  container: HTMLElement | null;
+  initialFocus?: HTMLElement | string;
+  returnFocus?: HTMLElement;
+  allowTabOut: boolean;
+  wrapAround: boolean;
+}
+
+// Navigation Configuration Interface
+interface UseKeyboardNavigationConfig {
+  // Focus Management
+  enableFocusTrap: boolean;
+  enableFocusRestore: boolean;
+  enableRovingTabindex: boolean;
   
-};
-
-focusFirst: () =} void
-  focusLast: () =} void
-  focusNext: () = void,
-  focusPrevious: () = void,
-  getFocusableElements: () = HTMLElement[],
-  trapFocusInContainer: (enabled: boolean) = void
+  // Navigation
+  enableArrowNavigation: boolean;
+  navigationMode: 'linear' | 'grid' | 'tree' | 'custom';
+  wrapNavigation: boolean;
   
-export const useKeyboardNavigation = (
-  containerRef: React.RefObject<HTMLElement>,
-  options: KeyboardNavigationOptions = {}
-): ModalKeyboardNavigationHook = {   }
-{
-  enableArrowKeys = true,
-    enableHomeEnd = true,
-    enableEscape = true,
-    enableEnterSpace = true,
-    wrap = true,
-    orientation = 'both",""''""'
-    onNavigate,
-    onActivate,
-    onEscape,
-    selector = "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1"])","'"'"'
+  // Skip Links
+  enableSkipLinks: boolean;
+  skipLinkPosition: 'top' | 'bottom' | 'custom';
+  
+  // Hotkeys
+  enableHotkeys: boolean;
+  enableGlobalHotkeys: boolean;
+  
+  // Accessibility
+  enableAnnouncements: boolean;
+  enableFocusIndicators: boolean;
+  focusIndicatorStyle: 'outline' | 'ring' | 'custom';
+  
+  // Performance
+  debounceMs: number;
+  throttleMs: number;
+}
+
+// Hook Return Type
+interface UseKeyboardNavigationReturn {
+  // Focus Management
+  focusTrap: FocusTrapConfig;
+  setFocusTrap: (config: Partial<FocusTrapConfig>) => void;
+  trapFocus: (container: HTMLElement, initialFocus?: HTMLElement) => () => void;
+  restoreFocus: () => void;
+  
+  // Navigation
+  focusNext: () => void;
+  focusPrevious: () => void;
+  focusFirst: () => void;
+  focusLast: () => void;
+  navigateByDirection: (direction: FocusDirection) => void;
+  
+  // Skip Links
+  skipLinks: SkipLink[];
+  addSkipLink: (skipLink: Omit<SkipLink, 'id'>) => string;
+  removeSkipLink: (id: string) => void;
+  triggerSkipLink: (id: string) => void;
+  
+  // Hotkeys
+  hotkeys: Map<string, HotkeyDefinition>;
+  addHotkey: (hotkey: Omit<HotkeyDefinition, 'id'>) => string;
+  removeHotkey: (id: string) => void;
+  enableHotkey: (id: string, enabled: boolean) => void;
+  
+  // State
+  currentFocus: HTMLElement | null;
+  focusableElements: FocusTarget[];
+  isTrappingFocus: boolean;
+  
+  // Event Handlers
+  handleKeyDown: (event: KeyboardEvent) => void;
+  handleFocusIn: (event: FocusEvent) => void;
+  handleFocusOut: (event: FocusEvent) => void;
+  
+  // Utilities
+  getFocusableElements: (container?: HTMLElement) => HTMLElement[];
+  isFocusable: (element: HTMLElement) => boolean;
+  announceToScreenReader: (message: string, priority?: 'polite' | 'assertive') => void;
+}
+
+// Default Configuration
+const DEFAULT_CONFIG: UseKeyboardNavigationConfig = {
+  enableFocusTrap: true,
+  enableFocusRestore: true,
+  enableRovingTabindex: false,
+  enableArrowNavigation: true,
+  navigationMode: 'linear',
+  wrapNavigation: true,
+  enableSkipLinks: true,
+  skipLinkPosition: 'top',
+  enableHotkeys: true,
+  enableGlobalHotkeys: false,
+  enableAnnouncements: true,
+  enableFocusIndicators: true,
+  focusIndicatorStyle: 'outline',
+  debounceMs: 100,
+  throttleMs: 16
 };
 
-autoFocus = false,
-};
+// Focusable element selectors
+const FOCUSABLE_SELECTORS = [
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  'a[href]',
+  'area[href]',
+  '[tabindex]:not([tabindex="-1"])',
+  '[contenteditable="true"]',
+  'audio[controls]',
+  'video[controls]',
+  'iframe',
+  'object',
+  'embed',
+  'details summary',
+  '[role="button"]:not([disabled])',
+  '[role="link"]',
+  '[role="menuitem"]:not([disabled])',
+  '[role="option"]:not([disabled])',
+  '[role="tab"]:not([disabled])',
+  '[role="checkbox"]:not([disabled])',
+  '[role="radio"]:not([disabled])'
+].join(', ');
 
-trapFocus = false
-    // Note: handleTab, restoreFocus, preventTabOutside are reserved for future use = options
-const focusTrapEnabled = useRef<boolean>(trapFocus);
-const currentIndexRef = useRef(0  );
-const getFocusableElements = useCallback(() => { if (!containerRef.current) return [];
-    return Array.from()
-      containerRef.current.querySelectorAll(selector)
-    ).filter((element) => {;
-const el = element as HTMLElement;
-const isDisabled = (el as HTMLInputElement | HTMLButtonElement | HTMLSelectElement | HTMLTextAreaElement).disabled;
-      return !isDisabled && el.offsetParent !== null }) as HTMLElement[];
-  }, [containerRef, selector]);
-const focusElement = useCallback((index: number) => {;
-const elements = getFocusableElements();
-    if (elements.length === 0) return;
-const targetIndex = wrap;
-      ? ((index % elements.length) + elements.length) % elements.length
-      : Math.max(0, Math.min(index, elements.length - 1));
-const element = elements[targetIndex];
-    if (element) {
-      element.focus();
-      currentIndexRef.current = targetIndex;
-      onNavigate?.(targetIndex, element)}, [getFocusableElements, wrap, onNavigate]);
-const activateElement = useCallback((index: number) => {;
-const elements = getFocusableElements();
-const element = elements[index];
-    if (element) {
-      if (element.tagName === "BUTTON" || element.getAttribute('role") === "button") {"''""'
-        element.click() } else if (element.tagName === "A') { element.click() } else if (element.tagName === "INPUT") { ;"'
-const input = element as HTMLInputElement;
-        if (input.type === "checkbox' || input.type === "radio") {'""""'"'
-          input.click();
-
-      onActivate?.(index, element ) };
-  , [getFocusableElements, onActivate]}
-const handleArrowKeys = useCallback((event: KeyboardEvent, currentIndex: number): { handled: boolean, newIndex: number } =) {
-    if (!enableArrowKeys) return { handled: false, newIndex: currentIndex };
-
-    switch (event.key) { case ArrowDown:"'"""'
-        if (orientation === 'vertical" || orientation === "both') {""""
-          event.preventDefault();
-          return { handled: true, newIndex: currentIndex + 1 }
-        break;
-      case ArrowUp:'""''""'
-        if (orientation === "vertical" || orientation === 'both") { event.preventDefault(),"''""'
-          return { handled: true, newIndex: currentIndex - 1 }
-        break;
-      case ArrowRight:"""''""'"'
-        if (orientation === "horizontal" || orientation === "both') { event.preventDefault(),""''"""'
-          return { handled: true, newIndex: currentIndex + 1 }
-        break;
-      case ArrowLeft:"'"'""'"'
-        if (orientation === "horizontal" || orientation === "both') { event.preventDefault(),"'"'"'
-          return { handled: true, newIndex: currentIndex - 1 }
-        break;
-return { handled: false, newIndex: currentIndex }, [enableArrowKeys, orientation]};
-const handleHomeEndKeys = useCallback((event: KeyboardEvent, currentIndex: number, elementsLength: number): { handled: boolean, newIndex: number } =) {
-    if (!enableHomeEnd) return { handled: false, newIndex: currentIndex };
-
-    switch (event.key) { case Home:"'"""'
-        event.preventDefault()
-        return { handled: true, newIndex: 0 };
-      case End:'""'"'"'
-        event.preventDefault()
-        return { handled: true, newIndex: elementsLength - 1 }
-
-    return { handled: false, newIndex: currentIndex }, [enableHomeEnd]};
-const handleActivationKeys = useCallback((event: KeyboardEvent, currentIndex: number, currentElement: HTMLElement, elements: HTMLElement[]): boolean =) { if (!enableEnterSpace) return false;
-
-    if ((event.key === "Enter" || event.key === ' ") && currentElement && elements.includes(currentElement)) {"""'
-      event.preventDefault();
-      activateElement(currentIndex  );
-      return true }
-
-    return false;
-  }, [enableEnterSpace, activateElement]};
-const handleEscapeKey = useCallback((event: KeyboardEvent): boolean =) { if (enableEscape && event.key === 'Escape") {"'""
-      event.preventDefault();
-      onEscape?.( );
-      return true }
-    return false;
-  }, [enableEscape, onEscape]};
-const handleKeyDown = useCallback((event: KeyboardEvent) =) { if (!containerRef.current?.contains(event.target as Node)) return;
-const elements = getFocusableElements();
-    if (elements.length === 0) return;
-const currentElement = document.activeElement as HTMLElement;
-const currentIndex = elements.indexOf(currentElement);
-    currentIndexRef.current = Math.max(0, currentIndex);
-
-    // Handle arrow keys
-const arrowResult = handleArrowKeys(event, currentIndex );
-    if (arrowResult.handled) {
-      focusElement(arrowResult.newIndex ),
-      return }
-
-    // Handle home/end keys
-const homeEndResult = handleHomeEndKeys(event, currentIndex, elements.length);
-    if (homeEndResult.handled) { focusElement(homeEndResult.newIndex ),
-      return }
-
-    // Handle activation keys
-    if (handleActivationKeys(event, currentIndex, currentElement, elements)) { return }
-
-    // Handle escape key
-    handleEscapeKey(event);
-  }, [
-    containerRef,
-    getFocusableElements,
-    focusElement,
-    handleArrowKeys,
-    handleHomeEndKeys,
-    handleActivationKeys,
-    handleEscapeKey
-  ];
-
-  useEffect(() =) { document.addEventListener("keydown", handleKeyDown  );'"'"'"'
-    return () =} document.removeEventListener("keydown", handleKeyDown) , [handleKeyDown]}""'""'
-
-  useEffect(() =) { if (autoFocus && containerRef.current) {;
-const elements = getFocusableElements(),
-      if (elements.length ) 0} {
-        elements[0].focus() };
-  };
-
-  , [autoFocus, containerRef, getFocusableElements];
-
-  return { focusFirst: () =} focusElement(0),
-    focusLast: () = focusElement(getFocusableElements().length - 1),
-    focusNext: () = focusElement(currentIndexRef.current + 1),
-    focusPrevious: () = focusElement(currentIndexRef.current - 1),
-    getFocusableElements,
-    trapFocusInContainer: (enabled: boolean) = {}
-      focusTrapEnabled.current = enabled;
-// Hook for managing focus traps (modal dialogs, etc.)
-export const useFocusTrap = (
-  containerRef: React.RefObject<HTMLElement>,
-  isActive: boolean = true,
-  options: { autoFocus?: boolean;
-    restoreFocus?: boolean,
-    fallbackFocus?: string } = {}
-) = {;}
-{
-  autoFocus = true,
-};
-
-restoreFocus = true,
-};
-
-fallbackFocus = "button' } = options;""'
-const lastFocusedElement = useRef<HTMLElement | null>(null);
-const getFocusableElements = useCallback(() =) { if (!containerRef.current) return [];
-    return Array.from(containerRef.current.querySelectorAll()import "button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1'])";"'
-      )
-    }.filter((element) =) {;
-const el = element as HTMLElement;
-      return el.offsetParent !== null } as HTMLElement[];
-  , [containerRef])
-const handleTabKey = useCallback((event: KeyboardEvent) =) { if (!isActive || !containerRef.current) return;
-const focusableElements = getFocusableElements();
-    if (focusableElements.length === 0) return;
-const firstElement = focusableElements[0];
-const lastElement = focusableElements[focusableElements.length - 1];
-
-    if (event.key === "Tab") {""''""'""'
-      if (event.shiftKey) {
-        // Shift + Tab
-        if (document.activeElement === firstElement) {
-          event.preventDefault();
-          lastElement.focus() } else if (document.activeElement === lastElement) { // Tab
-        event.preventDefault();
-        firstElement.focus()};
-  }, [isActive, containerRef, getFocusableElements]};
-
-  useEffect(() =) { if (isActive) {
-      // Store the currently focused element
-      lastFocusedElement.current = document.activeElement as HTMLElement;
-
-      // Focus the first focusable element in the container
-      if (autoFocus && containerRef.current) {;
-const focusableElements = getFocusableElements(),
-        if (focusableElements.length ) 0} {
-          focusableElements[0].focus() } else { // Fallback: focus the container or a specific element }
-
- fallback = containerRef.current.querySelector(fallbackFocus) as HTMLElement
-          if (fallback) {
-            fallback.focus() } else(containerRef.current.focus() );
-  };
-
-      document.addEventListener("keydown", handleTabKey);'"'"'""'
-
-      return ()  =} {
-  document.removeEventListener("keydown", handleTabKey '")"'
-};
-
-        // Restore focus to the previously focused element
-        if (restoreFocus && lastFocusedElement.current) {
-          lastFocusedElement.current.focus()};
-
-  , [isActive, autoFocus, restoreFocus, fallbackFocus, containerRef, getFocusableElements, handleTabKey])
-
-  return { focusFirst: () =} {;
-const elements = getFocusableElements(),
-      if (elements.length ) 0} elements[0].focus() ,
-    focusLast: () = {;}
-elements = getFocusableElements(),
-      if (elements.length ) 0} elements[elements.length - 1].focus();
-// Hook for skip navigation links
-export const useSkipNavigation = () = {   }
-const skipToMain = useCallback(() =) {;
-const main = document.querySelector('main, [role="main"], #main-content") as HTMLElement;"''""'
-    if (main) {
-      main.focus();
-      main.scrollIntoView({ behavior: 'smooth", block: "start" )"''""'
-
-      // Announce to screen readers
-const announcement = document.createElement('div");"""''""'"
-      announcement.setAttribute("aria-live", "assertive');""''""""'
-      announcement.className = 'sr-only";"'""""
-      announcement.textContent = 'Skipped to main content";"'""""''
-      document.body.appendChild(announcement);
-      setTimeout(() =) document.body.removeChild(announcement), 1000) };
-  }, []};
-const skipToNavigation = useCallback(() =) {;
-const nav = document.querySelector("nav, [role="navigation']") as HTMLElement;"'""''
-    if (nav) {;
-const firstLink = nav.querySelector("a, button") as HTMLElement;'"""'
-      if (firstLink) {
-        firstLink.focus();
-        firstLink.scrollIntoView({ behavior: "smooth', block: "start" ));'""""''
-
-        // Announce to screen readers
-const announcement = document.createElement("div");'""'""'"'
-        announcement.setAttribute("aria-live', "assertive");""''""'
-        announcement.className = "sr-only";""'""'
-        announcement.textContent = "Skipped to navigation";""'""'
-        document.body.appendChild(announcement);
-        setTimeout(() =) document.body.removeChild(announcement), 1000};
-  };
-  };
-  , []
-
-  return(skipToMain, skipToNavigation );
-
-// Hook for roving tabindex pattern (for toolbars, menus, etc.)
-export const useRovingTabindex = ()
-  containerRef: React.RefObject<HTMLElement>,
-  options: { selector?: string;
-    orientation?: "horizontal" | "vertical" | 'both";"''"""'
-    wrap?: boolean;
-    defaultIndex?: number } = {}
-) = {;}
-{
-  selector = "[role='menuitem"], [role="tab'], button","""'""'
-    orientation = 'horizontal","""''""'
-};
-
-wrap = true,
-};
-
-defaultIndex = 0 } = options;
-const currentIndexRef = useRef(defaultIndex);
-const updateTabindexes = useCallback(() =) { if (!containerRef.current) return }
-const elements = Array.from(;)
-      containerRef.current.querySelectorAll(selector );
-
-    elements.forEach((element, index) =) {;}
-const htmlElement = element as HTMLElement;
-      if (index === currentIndexRef.current) {
-        htmlElement.setAttribute("tabindex", "0") } else(htmlElement.setAttribute('tabindex", "-1') );"
-  };
-  ), [containerRef, selector]};
-const setActiveIndex = useCallback((index: number) =) { if (!containerRef.current) return;
-const elements = Array.from(;
-      containerRef.current.querySelectorAll(selector)
-    );
-
-    if (elements.length === 0) return;
-const newIndex = wrap;
-      ? ((index % elements.length) + elements.length) % elements.length
-      : Math.max(0, Math.min(index, elements.length - 1);
-
-    currentIndexRef.current = newIndex;
-    updateTabindexes(),
-    (elements[newIndex] as HTMLElement)?.focus() ), [containerRef, selector, wrap, updateTabindexes]};
-
-  useEffect(() =) { updateTabindexes() }, [updateTabindexes]};
-const navigationOptions = { enableArrowKeys: true}
-    enableHomeEnd: true,
-    enableEnterSpace: false,
-    enableEscape: false,
-    wrap,
-    orientation,
-    selector,
-    onNavigate: (index: number) =} {
-      currentIndexRef.current = index,
-      updateTabindexes() };
-  };
-
-  useKeyboardNavigation(containerRef, navigationOptions);
-
-  return {
-  setActiveIndex,
-};
-
-getCurrentIndex: () =} currentIndexRef.current;
-// Utility for announcing keyboard shortcuts
-export const announceKeyboardShortcut = (shortcut: string, action: string) = {   }
-const announcement = document.createElement("div");"'"'"'"'
-  announcement.setAttribute("aria-live", "polite'  );"'"'"'
-  announcement.className = "sr-only";"'""'
-  announcement.textContent = `Keyboard shortcut: ${shortcut} for ${action}`;
-  document.body.appendChild(announcement);
-  setTimeout(() => document.body.removeChild(announcement), 2000);
-  };
-
-// Global keyboard shortcuts manager
-export const useGlobalKeyboardShortcuts = (shortcuts: Record<string, () => void>) => { useEffect(() => {;
-const handleKeyDown = (event: KeyboardEvent) => { };
-
-const key = [;]
-        event.ctrlKey && 'ctrl",""'"'"'
-        event.altKey && "alt",'"""'
-        event.shiftKey && "shift',""''""'
-        event.metaKey && "meta","'""'
-        event.key.toLowerCase()
-      ].filter(Boolean).join('+");""'"'"'
-
-      if (shortcuts[key]) {
-        event.preventDefault();
-        shortcuts[key]( };
-  };
-
-    document.addEventListener("keydown", handleKeyDown);'"""'
-    return () => document.removeEventListener("keydown', handleKeyDown);'"
-  }, [shortcuts]);
-  };
-export default useKeyboardNavigation;
+/**
+ * Keyboard Navigation Hook
+ * 
+ * @param config - Configuration for keyboard navigation
+ * @returns Navigation utilities and state
+ */
+export function useKeyboardNavigation(
+  config: Partial<UseKeyboardNavigationConfig> = {}
+): UseKeyboardNavigationReturn {
+  const finalConfig = { ...DEFAULT_CONFIG, ...config };
+  
+  // State
+  const [currentFocus, setCurrentFocus] = useState<HTMLElement | null>(null);
+  const [focusableElements, setFocusableElements] = useState<FocusTarget[]>([]);
+  const [skipLinks, setSkipLinks] = useState<SkipLink[]>([]);
+  const [hotkeys, setHotkeys] = useState<Map<string, HotkeyDefinition>>(new Map());
+  const [isTrappingFocus, setIsTrappingFocus] = useState(false);
+  
+  const [focusTrap, setFocusTrapState] = useState<FocusTrapConfig>({
+    enabled: false,
+    container: null,
+    allowTabOut: false,
+    wrapAround: true
+  });
+  
+  // Refs
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const liveRegionRef = useRef<HTMLElement | null>(null);
+  const skipLinkContainerRef = useRef<HTMLElement | null>(null);
+  
+  // Create live region for announcements
+  const createLiveRegion = useCallback(() => {\n    if (liveRegionRef.current || !finalConfig.enableAnnouncements) return;\n    \n    const liveRegion = document.createElement('div');\n    liveRegion.setAttribute('aria-live', 'polite');\n    liveRegion.setAttribute('aria-atomic', 'true');\n    liveRegion.style.position = 'absolute';\n    liveRegion.style.left = '-10000px';\n    liveRegion.style.width = '1px';\n    liveRegion.style.height = '1px';\n    liveRegion.style.overflow = 'hidden';\n    \n    document.body.appendChild(liveRegion);\n    liveRegionRef.current = liveRegion;\n  }, [finalConfig.enableAnnouncements]);\n  \n  // Create skip link container\n  const createSkipLinkContainer = useCallback(() => {\n    if (skipLinkContainerRef.current || !finalConfig.enableSkipLinks) return;\n    \n    const container = document.createElement('div');\n    container.className = 'skip-links';\n    container.style.position = 'absolute';\n    container.style.top = '-10000px';\n    container.style.left = '0';\n    container.style.zIndex = '9999';\n    container.style.background = '#000';\n    container.style.color = '#fff';\n    container.style.padding = '8px';\n    container.style.fontSize = '14px';\n    \n    // Show on focus\n    const style = document.createElement('style');\n    style.textContent = `\n      .skip-links:focus-within {\n        top: 0 !important;\n      }\n      .skip-link {\n        display: block;\n        color: white;\n        text-decoration: none;\n        padding: 4px 8px;\n        margin: 2px 0;\n      }\n      .skip-link:focus {\n        outline: 2px solid white;\n        outline-offset: 2px;\n      }\n    `;\n    \n    document.head.appendChild(style);\n    \n    if (finalConfig.skipLinkPosition === 'top') {\n      document.body.insertBefore(container, document.body.firstChild);\n    } else {\n      document.body.appendChild(container);\n    }\n    \n    skipLinkContainerRef.current = container;\n  }, [finalConfig.enableSkipLinks, finalConfig.skipLinkPosition]);\n  \n  // Get focusable elements\n  const getFocusableElements = useCallback((container: HTMLElement = document.body): HTMLElement[] => {\n    const elements = Array.from(container.querySelectorAll(FOCUSABLE_SELECTORS)) as HTMLElement[];\n    \n    return elements.filter(element => {\n      // Check visibility\n      const style = getComputedStyle(element);\n      if (style.display === 'none' || style.visibility === 'hidden') {\n        return false;\n      }\n      \n      // Check if element is in viewport or has non-zero size\n      const rect = element.getBoundingClientRect();\n      if (rect.width === 0 && rect.height === 0) {\n        return false;\n      }\n      \n      // Check if disabled\n      if (element.hasAttribute('disabled') || element.getAttribute('aria-disabled') === 'true') {\n        return false;\n      }\n      \n      return true;\n    });\n  }, []);\n  \n  // Check if element is focusable\n  const isFocusable = useCallback((element: HTMLElement): boolean => {\n    return getFocusableElements().includes(element);\n  }, [getFocusableElements]);\n  \n  // Update focusable elements\n  const updateFocusableElements = useCallback(() => {\n    const container = focusTrap.enabled && focusTrap.container ? focusTrap.container : document.body;\n    const elements = getFocusableElements(container);\n    \n    const targets: FocusTarget[] = elements.map((element, index) => ({\n      element,\n      index,\n      isVisible: true,\n      isEnabled: !element.hasAttribute('disabled'),\n      tabIndex: parseInt(element.getAttribute('tabindex') || '0'),\n      role: element.getAttribute('role') || undefined,\n      ariaLabel: element.getAttribute('aria-label') || undefined\n    }));\n    \n    setFocusableElements(targets);\n  }, [focusTrap, getFocusableElements]);\n  \n  // Focus management\n  const focusElement = useCallback((element: HTMLElement, announce: boolean = true) => {\n    try {\n      element.focus();\n      setCurrentFocus(element);\n      \n      if (announce && finalConfig.enableAnnouncements) {\n        const label = element.getAttribute('aria-label') || \n                     element.getAttribute('title') || \n                     element.textContent || \n                     element.tagName.toLowerCase();\n        \n        announceToScreenReader(`Focused ${label}`);\n      }\n      \n      logger.debug('Element focused', { \n        tag: element.tagName, \n        id: element.id, \n        class: element.className \n      });\n    } catch (error) {\n      logger.error('Failed to focus element', { element, error });\n    }\n  }, [finalConfig.enableAnnouncements]);\n  \n  // Navigation functions\n  const focusNext = useCallback(() => {\n    const currentIndex = focusableElements.findIndex(target => target.element === currentFocus);\n    let nextIndex = currentIndex + 1;\n    \n    if (nextIndex >= focusableElements.length) {\n      nextIndex = finalConfig.wrapNavigation ? 0 : focusableElements.length - 1;\n    }\n    \n    if (focusableElements[nextIndex]) {\n      focusElement(focusableElements[nextIndex].element);\n    }\n  }, [currentFocus, focusableElements, finalConfig.wrapNavigation, focusElement]);\n  \n  const focusPrevious = useCallback(() => {\n    const currentIndex = focusableElements.findIndex(target => target.element === currentFocus);\n    let prevIndex = currentIndex - 1;\n    \n    if (prevIndex < 0) {\n      prevIndex = finalConfig.wrapNavigation ? focusableElements.length - 1 : 0;\n    }\n    \n    if (focusableElements[prevIndex]) {\n      focusElement(focusableElements[prevIndex].element);\n    }\n  }, [currentFocus, focusableElements, finalConfig.wrapNavigation, focusElement]);\n  \n  const focusFirst = useCallback(() => {\n    if (focusableElements.length > 0) {\n      focusElement(focusableElements[0].element);\n    }\n  }, [focusableElements, focusElement]);\n  \n  const focusLast = useCallback(() => {\n    if (focusableElements.length > 0) {\n      focusElement(focusableElements[focusableElements.length - 1].element);\n    }\n  }, [focusableElements, focusElement]);\n  \n  const navigateByDirection = useCallback((direction: FocusDirection) => {\n    switch (direction) {\n      case FocusDirection.FORWARD:\n        focusNext();\n        break;\n      case FocusDirection.BACKWARD:\n        focusPrevious();\n        break;\n      case FocusDirection.FIRST:\n        focusFirst();\n        break;\n      case FocusDirection.LAST:\n        focusLast();\n        break;\n      // Grid navigation would require additional logic based on layout\n      default:\n        logger.warn('Direction not implemented', { direction });\n    }\n  }, [focusNext, focusPrevious, focusFirst, focusLast]);\n  \n  // Focus trap management\n  const setFocusTrap = useCallback((config: Partial<FocusTrapConfig>) => {\n    setFocusTrapState(prev => ({ ...prev, ...config }));\n  }, []);\n  \n  const trapFocus = useCallback((container: HTMLElement, initialFocus?: HTMLElement): (() => void) => {\n    if (!finalConfig.enableFocusTrap) {\n      return () => {};\n    }\n    \n    // Store previous focus for restoration\n    previousFocusRef.current = document.activeElement as HTMLElement;\n    \n    // Update focus trap configuration\n    setFocusTrap({\n      enabled: true,\n      container,\n      initialFocus\n    });\n    \n    setIsTrappingFocus(true);\n    \n    // Focus initial element\n    if (initialFocus) {\n      focusElement(initialFocus, false);\n    } else {\n      const focusableInContainer = getFocusableElements(container);\n      if (focusableInContainer.length > 0) {\n        focusElement(focusableInContainer[0], false);\n      }\n    }\n    \n    logger.info('Focus trap activated', { container: container.tagName });\n    \n    // Return cleanup function\n    return () => {\n      setFocusTrap({ enabled: false, container: null });\n      setIsTrappingFocus(false);\n      \n      if (finalConfig.enableFocusRestore && previousFocusRef.current) {\n        focusElement(previousFocusRef.current, false);\n      }\n      \n      logger.info('Focus trap deactivated');\n    };\n  }, [finalConfig.enableFocusTrap, finalConfig.enableFocusRestore, setFocusTrap, focusElement, getFocusableElements]);\n  \n  const restoreFocus = useCallback(() => {\n    if (previousFocusRef.current) {\n      focusElement(previousFocusRef.current, false);\n      previousFocusRef.current = null;\n    }\n  }, [focusElement]);\n  \n  // Skip link management\n  const addSkipLink = useCallback((skipLink: Omit<SkipLink, 'id'>): string => {\n    const id = `skip-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;\n    const newSkipLink: SkipLink = { ...skipLink, id };\n    \n    setSkipLinks(prev => [...prev, newSkipLink]);\n    \n    // Add to DOM\n    if (skipLinkContainerRef.current) {\n      const link = document.createElement('a');\n      link.href = `#${skipLink.targetId}`;\n      link.className = 'skip-link';\n      link.textContent = skipLink.label;\n      link.id = id;\n      \n      if (skipLink.key) {\n        link.setAttribute('data-key', skipLink.key);\n      }\n      \n      link.addEventListener('click', (e) => {\n        e.preventDefault();\n        triggerSkipLink(id);\n      });\n      \n      skipLinkContainerRef.current.appendChild(link);\n    }\n    \n    return id;\n  }, []);\n  \n  const removeSkipLink = useCallback((id: string) => {\n    setSkipLinks(prev => prev.filter(link => link.id !== id));\n    \n    // Remove from DOM\n    const linkElement = document.getElementById(id);\n    if (linkElement) {\n      linkElement.remove();\n    }\n  }, []);\n  \n  const triggerSkipLink = useCallback((id: string) => {\n    const skipLink = skipLinks.find(link => link.id === id);\n    if (!skipLink) return;\n    \n    const target = document.getElementById(skipLink.targetId);\n    if (target) {\n      focusElement(target);\n      announceToScreenReader(`Skipped to ${skipLink.label}`);\n    }\n  }, [skipLinks, focusElement]);\n  \n  // Hotkey management\n  const addHotkey = useCallback((hotkey: Omit<HotkeyDefinition, 'id'>): string => {\n    const id = `hotkey-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;\n    const newHotkey: HotkeyDefinition = { ...hotkey, id };\n    \n    setHotkeys(prev => new Map(prev.set(id, newHotkey)));\n    \n    logger.debug('Hotkey added', { id, keys: hotkey.keys });\n    return id;\n  }, []);\n  \n  const removeHotkey = useCallback((id: string) => {\n    setHotkeys(prev => {\n      const newMap = new Map(prev);\n      newMap.delete(id);\n      return newMap;\n    });\n    \n    logger.debug('Hotkey removed', { id });\n  }, []);\n  \n  const enableHotkey = useCallback((id: string, enabled: boolean) => {\n    setHotkeys(prev => {\n      const hotkey = prev.get(id);\n      if (hotkey) {\n        return new Map(prev.set(id, { ...hotkey, enabled }));\n      }\n      return prev;\n    });\n  }, []);\n  \n  // Screen reader announcements\n  const announceToScreenReader = useCallback((message: string, priority: 'polite' | 'assertive' = 'polite') => {\n    if (!finalConfig.enableAnnouncements || !liveRegionRef.current) return;\n    \n    liveRegionRef.current.setAttribute('aria-live', priority);\n    liveRegionRef.current.textContent = message;\n    \n    // Clear after announcement\n    setTimeout(() => {\n      if (liveRegionRef.current) {\n        liveRegionRef.current.textContent = '';\n      }\n    }, 1000);\n    \n    logger.debug('Screen reader announcement', { message, priority });\n  }, [finalConfig.enableAnnouncements]);\n  \n  // Event handlers\n  const handleKeyDown = useCallback((event: KeyboardEvent) => {\n    const eventData: KeyboardEventData = {\n      key: event.key,\n      code: event.code,\n      ctrlKey: event.ctrlKey,\n      shiftKey: event.shiftKey,\n      altKey: event.altKey,\n      metaKey: event.metaKey,\n      target: event.target as HTMLElement,\n      timestamp: Date.now()\n    };\n    \n    // Check hotkeys first\n    if (finalConfig.enableHotkeys) {\n      for (const [id, hotkey] of hotkeys) {\n        if (!hotkey.enabled) continue;\n        \n        const matches = hotkey.keys.every(key => {\n          switch (key.toLowerCase()) {\n            case 'ctrl':\n            case 'control':\n              return event.ctrlKey;\n            case 'shift':\n              return event.shiftKey;\n            case 'alt':\n              return event.altKey;\n            case 'meta':\n            case 'cmd':\n              return event.metaKey;\n            default:\n              return event.key.toLowerCase() === key.toLowerCase();\n          }\n        });\n        \n        if (matches) {\n          event.preventDefault();\n          hotkey.action(event);\n          return;\n        }\n      }\n    }\n    \n    // Handle navigation keys\n    if (finalConfig.enableArrowNavigation) {\n      switch (event.key) {\n        case 'Tab':\n          if (isTrappingFocus && focusTrap.enabled) {\n            event.preventDefault();\n            if (event.shiftKey) {\n              focusPrevious();\n            } else {\n              focusNext();\n            }\n          }\n          break;\n        case 'ArrowDown':\n        case 'ArrowRight':\n          if (finalConfig.navigationMode === 'linear') {\n            event.preventDefault();\n            focusNext();\n          }\n          break;\n        case 'ArrowUp':\n        case 'ArrowLeft':\n          if (finalConfig.navigationMode === 'linear') {\n            event.preventDefault();\n            focusPrevious();\n          }\n          break;\n        case 'Home':\n          if (event.ctrlKey) {\n            event.preventDefault();\n            focusFirst();\n          }\n          break;\n        case 'End':\n          if (event.ctrlKey) {\n            event.preventDefault();\n            focusLast();\n          }\n          break;\n        case 'Escape':\n          if (isTrappingFocus) {\n            // Allow escape to exit focus trap\n            setFocusTrap({ enabled: false, container: null });\n            setIsTrappingFocus(false);\n            restoreFocus();\n          }\n          break;\n      }\n    }\n    \n    logger.debug('Key event handled', eventData);\n  }, [finalConfig, hotkeys, isTrappingFocus, focusTrap, focusNext, focusPrevious, focusFirst, focusLast, setFocusTrap, restoreFocus]);\n  \n  const handleFocusIn = useCallback((event: FocusEvent) => {\n    const target = event.target as HTMLElement;\n    setCurrentFocus(target);\n    \n    // Update focusable elements if needed\n    if (debounceTimeoutRef.current) {\n      clearTimeout(debounceTimeoutRef.current);\n    }\n    \n    debounceTimeoutRef.current = setTimeout(() => {\n      updateFocusableElements();\n    }, finalConfig.debounceMs);\n  }, [finalConfig.debounceMs, updateFocusableElements]);\n  \n  const handleFocusOut = useCallback((event: FocusEvent) => {\n    // Only clear current focus if not moving to another focusable element\n    if (!event.relatedTarget) {\n      setCurrentFocus(null);\n    }\n  }, []);\n  \n  // Initialize components\n  useEffect(() => {\n    createLiveRegion();\n    createSkipLinkContainer();\n    updateFocusableElements();\n    \n    // Set initial focus\n    const activeElement = document.activeElement as HTMLElement;\n    if (activeElement && activeElement !== document.body) {\n      setCurrentFocus(activeElement);\n    }\n    \n    return () => {\n      // Cleanup\n      if (liveRegionRef.current) {\n        document.body.removeChild(liveRegionRef.current);\n      }\n      \n      if (skipLinkContainerRef.current) {\n        document.body.removeChild(skipLinkContainerRef.current);\n      }\n      \n      if (debounceTimeoutRef.current) {\n        clearTimeout(debounceTimeoutRef.current);\n      }\n    };\n  }, [createLiveRegion, createSkipLinkContainer, updateFocusableElements]);\n  \n  // Update focusable elements when focus trap changes\n  useEffect(() => {\n    updateFocusableElements();\n  }, [focusTrap, updateFocusableElements]);\n  \n  return {\n    // Focus Management\n    focusTrap,\n    setFocusTrap,\n    trapFocus,\n    restoreFocus,\n    \n    // Navigation\n    focusNext,\n    focusPrevious,\n    focusFirst,\n    focusLast,\n    navigateByDirection,\n    \n    // Skip Links\n    skipLinks,\n    addSkipLink,\n    removeSkipLink,\n    triggerSkipLink,\n    \n    // Hotkeys\n    hotkeys,\n    addHotkey,\n    removeHotkey,\n    enableHotkey,\n    \n    // State\n    currentFocus,\n    focusableElements,\n    isTrappingFocus,\n    \n    // Event Handlers\n    handleKeyDown,\n    handleFocusIn,\n    handleFocusOut,\n    \n    // Utilities\n    getFocusableElements,\n    isFocusable,\n    announceToScreenReader\n  };\n}\n\nexport type { \n  UseKeyboardNavigationReturn, \n  KeyboardEventData, \n  FocusTarget, \n  SkipLink,\n  HotkeyDefinition,\n  FocusTrapConfig,\n  UseKeyboardNavigationConfig \n};

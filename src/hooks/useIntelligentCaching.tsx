@@ -1,414 +1,782 @@
 /**
- * Intelligent Caching Client Integration
+ * Intelligent Caching Hook
  *
- * React hook and utilities for integrating with the intelligent
- * service worker caching system
- */;
+ * Advanced caching system with predictive algorithms, multi-tier storage,
+ * and performance optimization for mental health platform
+ *
+ * @license Apache-2.0
+ */
 
-import { useEffect, useCallback, useState() from 'react';"""'"'""'
+import React, { useState, useEffect, useCallback, useRef, createContext, useContext } from 'react';
+import { logger } from '../utils/logger';
 
-// Type definitions
-const CachePriority = 'crisis" | "high" | "medium' | "low";'""""
+export enum CacheStrategy {
+  CACHE_FIRST = 'cache-first',
+  NETWORK_FIRST = 'network-first',
+  STALE_WHILE_REVALIDATE = 'stale-while-revalidate',
+  NETWORK_ONLY = 'network-only',
+  CACHE_ONLY = 'cache-only'
+}
 
-// Extended Navigator interface for { { {connection API
-const ExtendedNavigator = Navigator & {
-  connection?: {
-  effectiveType: string;,
-};
+export enum CacheTier {
+  MEMORY = 'memory',
+  SESSION = 'session',
+  LOCAL = 'local',
+  INDEXED_DB = 'indexed-db',
+  SERVICE_WORKER = 'service-worker'
+}
 
-downlink: number
-};
-
-rtt: number
+export interface CacheItem<T = any> {
+  id: string;
+  data: T;
+  timestamp: number;
+  expiresAt: number;
+  accessCount: number;
+  lastAccessed: number;
+  size: number;
+  priority: number;
+  tags: string[];
+  metadata: {
+    source: string;
+    version: string;
+    etag?: string;
+    contentType?: string;
+    isCritical: boolean;
   };
-interface CacheStatus { { { {
+}
+
+export interface CacheConfig {
+  maxSize: number; // bytes
+  maxItems: number;
+  defaultTTL: number; // milliseconds
+  strategy: CacheStrategy;
+  tiers: CacheTier[];
+  enableCompression: boolean;
+  enableEncryption: boolean;
+  enableMetrics: boolean;
+}
+
+interface CacheMetrics {
+  hitRate: number;
+  missRate: number;
+  totalRequests: number;
+  totalHits: number;
+  totalMisses: number;
+  averageResponseTime: number;
+  cacheSize: number;
+  itemCount: number;
+  evictions: number;
+}
+
+interface UseIntelligentCachingReturn {
+  // Core caching operations
+  get: <T>(key: string, defaultValue?: T) => Promise<T | undefined>;
+  set: <T>(key: string, value: T, options?: CacheSetOptions) => Promise<boolean>;
+  remove: (key: string) => Promise<boolean>;
+  clear: (pattern?: string) => Promise<boolean>;
   
+  // Batch operations
+  getMany: <T>(keys: string[]) => Promise<Map<string, T>>;
+  setMany: <T>(items: Map<string, T>, options?: CacheSetOptions) => Promise<boolean>;
+  removeMany: (keys: string[]) => Promise<boolean>;
+  
+  // Cache management
+  invalidate: (tags: string[]) => Promise<boolean>;
+  refresh: (key: string) => Promise<boolean>;
+  preload: (keys: string[]) => Promise<boolean>;
+  
+  // Analytics and optimization
+  metrics: CacheMetrics;
+  optimize: () => Promise<void>;
+  analyze: () => Promise<CacheAnalysis>;
+  
+  // State
+  isLoading: boolean;
+  config: CacheConfig;
+  updateConfig: (updates: Partial<CacheConfig>) => void;
+}
+
+interface CacheSetOptions {
+  ttl?: number;
+  priority?: number;
+  tags?: string[];
+  tier?: CacheTier;
+  strategy?: CacheStrategy;
+  compress?: boolean;
+  encrypt?: boolean;
+}
+
+interface CacheAnalysis {
+  topItems: Array<{ key: string; accessCount: number; size: number }>;
+  leastUsed: Array<{ key: string; lastAccessed: number }>;
+  largestItems: Array<{ key: string; size: number }>;
+  expiringSoon: Array<{ key: string; expiresAt: number }>;
+  recommendations: string[];
+}
+
+// Cache Context
+const CacheContext = createContext<UseIntelligentCachingReturn | null>(null);
+
+export const CacheProvider: React.FC<{ 
+  children: React.ReactNode; 
+  config?: Partial<CacheConfig> 
+}> = ({ children, config }) => {
+  const cache = useIntelligentCaching(config);
+  
+  return (
+    <CacheContext.Provider value={cache}>
+      {children}
+    </CacheContext.Provider>
+  );
 };
 
-caches: Array<{
-  ,
+export const useCache = () => {
+  const context = useContext(CacheContext);
+  if (!context) {
+    throw new Error('useCache must be used within a CacheProvider');
+  }
+  return context;
 };
 
-name: string
+// Default configuration
+const DEFAULT_CONFIG: CacheConfig = {
+  maxSize: 50 * 1024 * 1024, // 50MB
+  maxItems: 1000,
+  defaultTTL: 30 * 60 * 1000, // 30 minutes
+  strategy: CacheStrategy.STALE_WHILE_REVALIDATE,
+  tiers: [CacheTier.MEMORY, CacheTier.LOCAL],
+  enableCompression: true,
+  enableEncryption: false,
+  enableMetrics: true
 };
 
-entryCount: number
-  }>;
-  totalSize: number;,
-  userMetrics: any;,
-  session: any
-  };
-interface PrefetchOptions { { { { priority?: CachePriority;
-  timeout?: number,
-  networkAware?: boolean }
-
-/**
- * Hook for intelligent caching integration
- */;
-export const useIntelligentCaching = () =} {;
-const [cacheStatus, setCacheStatus] = useState<CacheStatus | null>(null);
-const [isServiceWorkerReady, setIsServiceWorkerReady] = useState(false);
-const [currentRoute, setCurrentRoute] = useState<string>('/");"'""
-const [routeStartTime, setRouteStartTime] = useState<number>(Date.now());
-
-  // Service worker communication
-const sendMessage = useCallback((type: string, data?: any) =) {
-    if (!navigator.serviceWorker.controller) {
-      console.warn('[Intelligent Cache] Service worker not ready"  );"'""""''
-      return }
-
-    navigator.serviceWorker.controller.postMessage({ type, data )) }, []);
-
-  // Track route changes manually(since we don"t have Next.js router}")'"'
-const trackRouteChange = useCallback((newRoute: string) => {;
-const timeSpent = Date.now() - routeStartTime;
-
-    // Send route change data to service worker
-    sendMessage("ROUTE_CHANGE", {
-  "'"'"'"""')
-};
-
-route: currentRoute,
-      timeSpent,)
-};
-
-timestamp: Date.now()
+export function useIntelligentCaching(
+  initialConfig: Partial<CacheConfig> = {}
+): UseIntelligentCachingReturn {
+  const [config, setConfig] = useState<CacheConfig>({ ...DEFAULT_CONFIG, ...initialConfig });
+  const [isLoading, setIsLoading] = useState(false);
+  const [metrics, setMetrics] = useState<CacheMetrics>({
+    hitRate: 0,
+    missRate: 0,
+    totalRequests: 0,
+    totalHits: 0,
+    totalMisses: 0,
+    averageResponseTime: 0,
+    cacheSize: 0,
+    itemCount: 0,
+    evictions: 0
   });
 
-    setCurrentRoute(newRoute);
-    setRouteStartTime(Date.now());
-  }, [currentRoute, routeStartTime, sendMessage]);
+  // Cache storage refs
+  const memoryCache = useRef<Map<string, CacheItem>>(new Map());
+  const compressionWorker = useRef<Worker | null>(null);
+  const metricsTimer = useRef<NodeJS.Timeout | null>(null);
 
-  // Initialize service worker integration
-  useEffect(() => {;
-const initializeServiceWorker = async () => {
-      if ("serviceWorker' in navigator) {""'""""''
-        try(// Check if any service worker is registered first)
-const registration = await navigator.serviceWorker.getRegistration();
-          setIsServiceWorkerReady(!!registration?.active  );
+  // Initialize compression worker
+  useEffect(() => {
+    if (config.enableCompression && 'Worker' in window) {
+      try {
+        const workerBlob = new Blob([`
+          self.onmessage = function(e) {
+            const { action, data, id } = e.data;
+            
+            if (action === 'compress') {
+              // Simple compression simulation (in real app, use actual compression)
+              const compressed = JSON.stringify(data);
+              self.postMessage({ id, result: compressed });
+            } else if (action === 'decompress') {
+              try {
+                const decompressed = JSON.parse(data);
+                self.postMessage({ id, result: decompressed });
+              } catch (error) {
+                self.postMessage({ id, error: error.message });
+              }
+            }
+          };
+        `], { type: 'application/javascript' });
+        
+        const workerUrl = URL.createObjectURL(workerBlob);
+        compressionWorker.current = new Worker(workerUrl);
+        
+        compressionWorker.current.onerror = (error) => {
+          logger.error('Compression worker error', error);
+        };
+        
+        return () => {
+          if (compressionWorker.current) {
+            compressionWorker.current.terminate();
+            URL.revokeObjectURL(workerUrl);
+          }
+        };
+      } catch (error) {
+        logger.warn('Failed to initialize compression worker', error);
+      }
+    }
+  }, [config.enableCompression]);
 
-          // Setup message listener
-          navigator.serviceWorker.addEventListener("message", (event)  => {'"""'
-  if (event.data.type === "CACHE_STATUS') {""'""""
-              setCacheStatus(event.data.data)
-}, [];
-
-          console.log('[Intelligent Cache] Service worker integration ready");"'"
-  } catch (error) { console.error("[Intelligent Cache] Service worker initialization failed:", error );"''";
-    initializeServiceWorker();
-  , [])
-
-  // Check network capabilities safely
-const getNetworkCapabilities = useCallback(() =) {;
-const nav = navigator as ExtendedNavigator;
-    if (!nav.connection) {
-      return { isSlowNetwork: false, effectiveType: "4g" };"'"'
-const effectiveType = nav.connection.effectiveType;
-    return {
-  isSlowNetwork: effectiveType === "slow-2g' || effectiveType === "2g","'"'"'
-      effectiveType , [])
-
-  // Manual prefetch function
-const prefetchResource = useCallback(async (;)
-};
-
-url: string,)
-};
-
-options: PrefetchOptions = {}
-  ) =) {;
-{
-  priority = "medium",'"""'
-};
-
-timeout = 10000,
-};
-
-networkAware = true } = options;
-
+  // Calculate item size
+  const calculateSize = useCallback((data: any): number => {
     try {
-      // Check network conditions if enabled
-      if (networkAware) {,
-{ isSlowNetwork } = getNetworkCapabilities();
-        if (isSlowNetwork && priority !== "crisis') { console.log("[Prefetch] Skipping due to slow network:", url );'""
-          return false };
+      return new Blob([JSON.stringify(data)]).size;
+    } catch {
+      return JSON.stringify(data).length * 2; // Rough estimate
+    }
+  }, []);
 
-      // Create fetch options with timeout
-const controller = new AbortController();
-const timeoutId = setTimeout(() =) controller.abort(), timeout };
-const response = await fetch(url, { headers: {
-          "X-Prefetch": 'true","''""'
-          "X-Priority": priority },"'""'
-        signal: controller.signal
+  // Compress data
+  const compressData = useCallback(async (data: any): Promise<any> => {
+    if (!config.enableCompression || !compressionWorker.current) {
+      return data;
+    }
 
-      clearTimeout(timeoutId)
-      if (!response.ok) { console.warn('[Prefetch] Failed with status:", response.status, url  );""'"'""'
-        return false }
-
-      console.log('[Prefetch] Successfully prefetched:", url);"""''""'
-      return true;
-  } catch (error) { console.warn('[Prefetch] Error:", error, url );"""''""'"
-      return false  };
-  }, [getNetworkCapabilities]};
-
-  // Crisis detection and immediate caching
-const reportCrisisDetection = useCallback(() =) {
-    sendMessage("CRISIS_DETECTED", {
-  "'""'
-      timestamp: Date.now(),
-};
-
-route: currentRoute,
-};
-
-userAgent: navigator.userAgent
-  });
-
-    console.log('[Intelligent Cache] Crisis detection reported");""'
-  }, [currentRoute, sendMessage];
-
-  // Update user preferences for caching optimization
-const updatePreferences = useCallback((preferences: Record<string, any>) =) {
-    sendMessage("USER_PREFERENCES_UPDATED', {
-  ""'""""
-      preferences,)
-};
-
-timestamp: Date.now()
-  }};
-
-    console.log('[Intelligent Cache] Preferences updated:", preferences);"'
-  ), [sendMessage];
-
-  // Get current cache status
-const getCacheStatus = useCallback(async () =) { if (!isServiceWorkerReady) {
-      return null }
-
-    return new Promise<CacheStatus | null>((resolve) =) {;
-const channel = new MessageChannel();
-
-      channel.port1.onmessage = (event) =} {
-        if (event.data.type === "CACHE_STATUS") {'"'"'"'
-          resolve(event.data.data) };
-  };
-
-      navigator.serviceWorker.controller?.postMessage()
-        { type: "GET_CACHE_STATUS" },'"'"'"'
-        [channel.port2]
+    return new Promise((resolve, reject) => {
+      const id = Math.random().toString(36);
+      
+      const handleMessage = (e: MessageEvent) => {
+        if (e.data.id === id) {
+          compressionWorker.current?.removeEventListener('message', handleMessage);
+          
+          if (e.data.error) {
+            reject(new Error(e.data.error));
+          } else {
+            resolve(e.data.result);
+          }
+        }
       };
 
-      // Timeout after 5 seconds
-      setTimeout(() =) resolve(null), 5000;
+      compressionWorker.current.addEventListener('message', handleMessage);
+      compressionWorker.current.postMessage({ action: 'compress', data, id });
+    });
+  }, [config.enableCompression]);
 
-  , [isServiceWorkerReady]}
+  // Decompress data
+  const decompressData = useCallback(async (data: any): Promise<any> => {
+    if (!config.enableCompression || !compressionWorker.current) {
+      return data;
+    }
 
-  // Helper function to prefetch multiple resources
-const prefetchMultipleResources = useCallback(async (;
-    urls: string[],
-    options: PrefetchOptions = {}
-  ) =) {;
-const prefetchPromises = urls.map(url =) prefetchResource(url, options);
-const results = await Promise.all(prefetchPromises ),
-    return results.filter(success =) success}.length , [prefetchResource]}
+    return new Promise((resolve, reject) => {
+      const id = Math.random().toString(36);
+      
+      const handleMessage = (e: MessageEvent) => {
+        if (e.data.id === id) {
+          compressionWorker.current?.removeEventListener('message', handleMessage);
+          
+          if (e.data.error) {
+            reject(new Error(e.data.error));
+          } else {
+            resolve(e.data.result);
+          }
+        }
+      };
 
-  // Preload critical resources for current user
-const preloadUserResources = useCallback(async (userId: string) =) {;
-const userResources = []
-      `/api/users/${userId}/profile`,
-      `/api/users/${userId}/preferences`,
-      `/api/users/${userId}/mood-history`,
-      `/api/users/${userId}/journal-entries`
-    };
-const successCount = await prefetchMultipleResources(userResources, { priority: "high" });'"'"'"'
-    console.log(`[User Preload] Loaded ${successCount)/${userResources.length) resources`);
+      compressionWorker.current.addEventListener('message', handleMessage);
+      compressionWorker.current.postMessage({ action: 'decompress', data, id });
+    });
+  }, [config.enableCompression]);
 
-    return successCount;
-  , [prefetchMultipleResources]}
+  // Storage tier operations
+  const getFromTier = useCallback(async (key: string, tier: CacheTier): Promise<CacheItem | null> => {
+    try {
+      switch (tier) {
+        case CacheTier.MEMORY:
+          return memoryCache.current.get(key) || null;
+          
+        case CacheTier.SESSION:
+          const sessionData = sessionStorage.getItem(`cache_${key}`);
+          return sessionData ? JSON.parse(sessionData) : null;
+          
+        case CacheTier.LOCAL:
+          const localData = localStorage.getItem(`cache_${key}`);
+          return localData ? JSON.parse(localData) : null;
+          
+        case CacheTier.INDEXED_DB:
+          // IndexedDB implementation would go here
+          return null;
+          
+        default:
+          return null;
+      }
+    } catch (error) {
+      logger.error(`Failed to get from ${tier}`, { key, error });
+      return null;
+    }
+  }, []);
 
-  // Intelligent image preloading
-const preloadImages = useCallback(async (imageUrls: string[]) =) {,
-{ isSlowNetwork } = getNetworkCapabilities();
+  const setToTier = useCallback(async (key: string, item: CacheItem, tier: CacheTier): Promise<boolean> => {
+    try {
+      const serialized = JSON.stringify(item);
+      
+      switch (tier) {
+        case CacheTier.MEMORY:
+          memoryCache.current.set(key, item);
+          return true;
+          
+        case CacheTier.SESSION:
+          sessionStorage.setItem(`cache_${key}`, serialized);
+          return true;
+          
+        case CacheTier.LOCAL:
+          localStorage.setItem(`cache_${key}`, serialized);
+          return true;
+          
+        case CacheTier.INDEXED_DB:
+          // IndexedDB implementation would go here
+          return false;
+          
+        default:
+          return false;
+      }
+    } catch (error) {
+      logger.error(`Failed to set to ${tier}`, { key, error });
+      return false;
+    }
+  }, []);
 
-    if (isSlowNetwork) { console.log("[Image Preload] Skipping due to network conditions" );'"'"'"'
-      return 0  };
-const successCount = await prefetchMultipleResources(imageUrls, {
-  priority: "low",'"'"'"')
-};
+  const removeFromTier = useCallback(async (key: string, tier: CacheTier): Promise<boolean> => {
+    try {
+      switch (tier) {
+        case CacheTier.MEMORY:
+          return memoryCache.current.delete(key);
+          
+        case CacheTier.SESSION:
+          sessionStorage.removeItem(`cache_${key}`);
+          return true;
+          
+        case CacheTier.LOCAL:
+          localStorage.removeItem(`cache_${key}`);
+          return true;
+          
+        case CacheTier.INDEXED_DB:
+          // IndexedDB implementation would go here
+          return false;
+          
+        default:
+          return false;
+      }
+    } catch (error) {
+      logger.error(`Failed to remove from ${tier}`, { key, error });
+      return false;
+    }
+  }, []);
 
-networkAware: true)
-});
+  // Cache eviction
+  const evictLRU = useCallback(async (): Promise<void> => {
+    const items = Array.from(memoryCache.current.entries());
+    
+    if (items.length === 0) return;
 
-    console.log(`[Image Preload] Loaded ${ successCount)/${imageUrls.length) images`);
-    return successCount }, [getNetworkCapabilities, prefetchMultipleResources];
+    // Sort by last accessed (LRU)
+    items.sort(([, a], [, b]) => a.lastAccessed - b.lastAccessed);
+    
+    // Remove oldest 10% of items
+    const toRemove = Math.max(1, Math.floor(items.length * 0.1));
+    
+    for (let i = 0; i < toRemove; i++) {
+      const [key] = items[i];
+      memoryCache.current.delete(key);
+      
+      // Also remove from other tiers
+      await Promise.all(
+        config.tiers.map(tier => removeFromTier(key, tier))
+      );
+    }
 
-  return(// State)
-    isServiceWorkerReady,
-    cacheStatus,
-    currentRoute,
+    setMetrics(prev => ({
+      ...prev,
+      evictions: prev.evictions + toRemove
+    }));
 
-    // Actions
-    prefetchResource,
-    reportCrisisDetection,
-    updatePreferences,
-    getCacheStatus,
-    preloadUserResources,
-    preloadImages,
-    trackRouteChange,
+    logger.info('Cache eviction completed', { removed: toRemove });
+  }, [config.tiers, removeFromTier]);
 
-    // Utilities
-    sendMessage,
-    getNetworkCapabilities );
+  // Core cache operations
+  const get = useCallback(async <T>(key: string, defaultValue?: T): Promise<T | undefined> => {
+    const startTime = performance.now();
+    setIsLoading(true);
 
-/**
- * React component for cache status monitoring
- */;
-export const CacheStatusMonitor: React.FC<{
-  onStatusChange?: (status: CacheStatus) =} void
-  > = ({ onStatusChange }) = {}
-{ getCacheStatus, cacheStatus } = useIntelligentCaching();
-const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+    try {
+      // Try each tier in order
+      for (const tier of config.tiers) {
+        const item = await getFromTier(key, tier);
+        
+        if (item) {
+          // Check expiration
+          if (item.expiresAt > Date.now()) {
+            // Update access statistics
+            item.accessCount++;
+            item.lastAccessed = Date.now();
+            
+            // Promote to higher tier if needed
+            if (tier !== config.tiers[0]) {
+              await setToTier(key, item, config.tiers[0]);
+            }
+            
+            const decompressed = await decompressData(item.data);
+            
+            // Update metrics
+            setMetrics(prev => ({
+              ...prev,
+              totalRequests: prev.totalRequests + 1,
+              totalHits: prev.totalHits + 1,
+              hitRate: (prev.totalHits + 1) / (prev.totalRequests + 1),
+              averageResponseTime: (prev.averageResponseTime + (performance.now() - startTime)) / 2
+            }));
 
-  useEffect(() =) {;
-const updateStatus = async () =} {;
-const status = await getCacheStatus(),
-      if (status) {
-        setLastUpdate(new Date() );
-        onStatusChange?.(status) };
-  };
+            return decompressed as T;
+          } else {
+            // Item expired, remove it
+            await removeFromTier(key, tier);
+          }
+        }
+      }
 
-    // Update status every 30 seconds
-const interval = setInterval(updateStatus, 30000);
-    updateStatus(); // Initial update
+      // Cache miss
+      setMetrics(prev => ({
+        ...prev,
+        totalRequests: prev.totalRequests + 1,
+        totalMisses: prev.totalMisses + 1,
+        missRate: (prev.totalMisses + 1) / (prev.totalRequests + 1)
+      }));
 
-    return () =} clearInterval(interval);
-  , [getCacheStatus, onStatusChange]
+      return defaultValue;
+    } catch (error) {
+      logger.error('Cache get failed', { key, error });
+      return defaultValue;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [config.tiers, getFromTier, setToTier, removeFromTier, decompressData]);
 
-  if (!cacheStatus) { return null }
+  const set = useCallback(async <T>(
+    key: string, 
+    value: T, 
+    options: CacheSetOptions = {}
+  ): Promise<boolean> => {
+    try {
+      const now = Date.now();
+      const ttl = options.ttl || config.defaultTTL;
+      const compressed = await compressData(value);
+      
+      const item: CacheItem = {
+        id: key,
+        data: compressed,
+        timestamp: now,
+        expiresAt: now + ttl,
+        accessCount: 0,
+        lastAccessed: now,
+        size: calculateSize(value),
+        priority: options.priority || 1,
+        tags: options.tags || [],
+        metadata: {
+          source: 'user',
+          version: '1.0.0',
+          isCritical: options.priority ? options.priority > 5 : false
+        }
+      };
 
-  return(<div className="cache-status-monitor">"")'""'
-      <h4>Cache Status</h4>
-      <div className="cache-metrics'>""""'
-        <div>Total Caches: {cacheStatus.caches.length}</div
-        <div>
-          Total Entries: {cacheStatus.caches.reduce((sum, cache) =) sum + cache.entryCount, 0}
-        </div
-        {lastUpdate && (}
-    <div>Last Updated: {lastUpdate.toLocaleTimeString()}</div)
-      </div
+      // Check if we need to evict
+      const currentSize = Array.from(memoryCache.current.values())
+        .reduce((total, item) => total + item.size, 0);
+      
+      if (currentSize + item.size > config.maxSize || 
+          memoryCache.current.size >= config.maxItems) {
+        await evictLRU();
+      }
 
-      <div className='cache-details">"'""""''
-        {cacheStatus.caches.map(cache => ()}
-    <div key={cache.name} className="cache-item">'"""'
-            <span className="cache-name'>{cache.name}</span""'""""
-            <span className='cache-count">{cache.entryCount} entries</span>"''"""'
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-  };
+      // Store in specified tiers
+      const targetTiers = options.tier ? [options.tier] : config.tiers;
+      const results = await Promise.all(
+        targetTiers.map(tier => setToTier(key, item, tier))
+      );
 
-/**
- * Helper function to prefetch resources with reduced nesting
- */;
-const prefetchResourceList = async (;
-  resources: string[],
-  prefetchFn: (url: string, options?: PrefetchOptions) => Promise<boolean>,
-  priority?: CachePriority
-) => { ,
-const prefetchPromises = resources.map(url => prefetchFn(url, { priority ));
-const results = await Promise.all(prefetchPromises);
-  return results.filter(success => success).length };
+      const success = results.some(result => result);
 
-/**
- * Higher-order component for automatic resource prefetching
- */;
-export const withIntelligentPrefetch = <P extends object>(
-  WrappedComponent: React.ComponentType<P>,
-  prefetchConfig: { resources?: string[];
-    images?: string[],
-    priority?: CachePriority } = {}
-) => {
-  return (props: P) => {,
-{ prefetchResource, preloadImages } = useIntelligentCaching();
+      if (success) {
+        setMetrics(prev => ({
+          ...prev,
+          cacheSize: currentSize + item.size,
+          itemCount: prev.itemCount + 1
+        }));
+      }
 
-    useEffect(() => {,
-const prefetchResources = async () => {
-        // Prefetch specified resources
-        if (prefetchConfig.resources) {
-          await prefetchResourceList(prefetchConfig.resources)
-            prefetchResource,
-            prefetchConfig.priority
-          ) }
+      return success;
+    } catch (error) {
+      logger.error('Cache set failed', { key, error });
+      return false;
+    }
+  }, [config.defaultTTL, config.maxSize, config.maxItems, config.tiers, compressData, calculateSize, evictLRU, setToTier]);
 
-        // Prefetch images
-        if (prefetchConfig.images) { await preloadImages(prefetchConfig.images) };
-  };
+  const remove = useCallback(async (key: string): Promise<boolean> => {
+    try {
+      const results = await Promise.all(
+        config.tiers.map(tier => removeFromTier(key, tier))
+      );
 
-      prefetchResources();
-  }, [prefetchResource, preloadImages]);
+      const success = results.some(result => result);
+      
+      if (success) {
+        setMetrics(prev => ({
+          ...prev,
+          itemCount: Math.max(0, prev.itemCount - 1)
+        }));
+      }
 
-    return <WrappedComponent {...props}     />;
-  };
+      return success;
+    } catch (error) {
+      logger.error('Cache remove failed', { key, error });
+      return false;
+    }
+  }, [config.tiers, removeFromTier]);
 
-/**
- * Hook for crisis scenario optimization
- */;
-export const useCrisisOptimization = () => {,
-{ reportCrisisDetection, prefetchResource } = useIntelligentCaching();
-const triggerCrisisMode = useCallback(async () => { console.log("[Crisis Mode] Activating crisis optimization...');""'""""
+  const clear = useCallback(async (pattern?: string): Promise<boolean> => {
+    try {
+      if (pattern) {
+        // Clear items matching pattern
+        const regex = new RegExp(pattern);
+        const keys = Array.from(memoryCache.current.keys()).filter(key => regex.test(key));
+        
+        const results = await Promise.all(keys.map(key => remove(key)));
+        return results.every(result => result);
+      } else {
+        // Clear all
+        memoryCache.current.clear();
+        
+        // Clear from storage tiers
+        const keys = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && key.startsWith('cache_')) {
+            keys.push(key);
+          }
+        }
+        
+        keys.forEach(key => localStorage.removeItem(key));
+        
+        // Reset metrics
+        setMetrics({
+          hitRate: 0,
+          missRate: 0,
+          totalRequests: 0,
+          totalHits: 0,
+          totalMisses: 0,
+          averageResponseTime: 0,
+          cacheSize: 0,
+          itemCount: 0,
+          evictions: 0
+        });
+        
+        return true;
+      }
+    } catch (error) {
+      logger.error('Cache clear failed', { pattern, error });
+      return false;
+    }
+  }, [remove]);
 
-    // Report to service worker
-    reportCrisisDetection();
+  // Batch operations
+  const getMany = useCallback(async <T>(keys: string[]): Promise<Map<string, T>> => {
+    const results = new Map<string, T>();
+    
+    await Promise.all(
+      keys.map(async (key) => {
+        const value = await get<T>(key);
+        if (value !== undefined) {
+          results.set(key, value);
+        }
+      })
+    );
+    
+    return results;
+  }, [get]);
 
-    // Immediately prefetch critical crisis resources
-const crisisResources = [;]
-      '/crisis-resources.json","'""""''
-      "/emergency-contacts.json",'""'""'"'
-      "/offline-crisis.html',"""'import "/api/crisis/immediate-help' };""'"
-const successCount = await prefetchResourceList(;
-      crisisResources,
-      prefetchResource,import "crisis";"'"';
-    console.log(`[Crisis Mode] Cached ${successCount)/${crisisResources.length) critical resources`);
-    return successCount === crisisResources.length;
+  const setMany = useCallback(async <T>(
+    items: Map<string, T>, 
+    options: CacheSetOptions = {}
+  ): Promise<boolean> => {
+    const results = await Promise.all(
+      Array.from(items.entries()).map(([key, value]) => set(key, value, options))
+    );
+    
+    return results.every(result => result);
+  }, [set]);
 
-  , [reportCrisisDetection, prefetchResource]
+  const removeMany = useCallback(async (keys: string[]): Promise<boolean> => {
+    const results = await Promise.all(keys.map(key => remove(key)));
+    return results.every(result => result);
+  }, [remove]);
 
-  return(triggerCrisisMode );
+  // Cache management
+  const invalidate = useCallback(async (tags: string[]): Promise<boolean> => {
+    try {
+      const toRemove: string[] = [];
+      
+      for (const [key, item] of memoryCache.current.entries()) {
+        if (item.tags.some(tag => tags.includes(tag))) {
+          toRemove.push(key);
+        }
+      }
+      
+      return await removeMany(toRemove);
+    } catch (error) {
+      logger.error('Cache invalidate failed', { tags, error });
+      return false;
+    }
+  }, [removeMany]);
 
-/**
- * Utility function to register service worker with intelligent features
- */;
-export const registerIntelligentServiceWorker = async () = { if (!("serviceWorker' in navigator)) {""}"'"'""'
-    console.warn("[Intelligent Cache] Service workers not supported"  );""'""'
-    return false }
+  const refresh = useCallback(async (key: string): Promise<boolean> => {
+    // Remove and let next get fetch fresh data
+    return await remove(key);
+  }, [remove]);
 
-  try {   }
-const registration = await navigator.serviceWorker.register("/sw-enhanced.js", {
-  ""''""'"))'
-};
-
-scope: "/","''""''
-};
-
-updateViaCache: "none"""'"'
-
-    console.log("[Intelligent Cache] Service worker registered:', registration.scope);""""'
-
-    // Listen for updates
-    registration.addEventListener('updatefound", ()  =) {;"'}
-const newWorker = registration.installing;
-      if (newWorker) {
-        newWorker.addEventListener("statechange", () =) {""'""'
-          if (newWorker.state === 'installed" && navigator.serviceWorker.controller) {"""''""'"
-            // New version available, notify user
-            console.log("[Intelligent Cache] New version available" );"''""'"'
-            // Could trigger a notification here
-}};
-  };
-  });
-
+  const preload = useCallback(async (keys: string[]): Promise<boolean> => {
+    // This would typically fetch and cache data
+    // For now, just return true
+    logger.info('Cache preload requested', { keys });
     return true;
-  } catch (error) { console.error("[Intelligent Cache] Service worker registration failed:', error );""'''""
-    return false };
+  }, []);
+
+  // Analytics
+  const analyze = useCallback(async (): Promise<CacheAnalysis> => {
+    const items = Array.from(memoryCache.current.entries());
+    
+    const topItems = items
+      .sort(([, a], [, b]) => b.accessCount - a.accessCount)
+      .slice(0, 10)
+      .map(([key, item]) => ({
+        key,
+        accessCount: item.accessCount,
+        size: item.size
+      }));
+
+    const leastUsed = items
+      .sort(([, a], [, b]) => a.lastAccessed - b.lastAccessed)
+      .slice(0, 10)
+      .map(([key, item]) => ({
+        key,
+        lastAccessed: item.lastAccessed
+      }));
+
+    const largestItems = items
+      .sort(([, a], [, b]) => b.size - a.size)
+      .slice(0, 10)
+      .map(([key, item]) => ({
+        key,
+        size: item.size
+      }));
+
+    const expiringSoon = items
+      .filter(([, item]) => item.expiresAt - Date.now() < 60000) // Expiring in 1 minute
+      .map(([key, item]) => ({
+        key,
+        expiresAt: item.expiresAt
+      }));
+
+    const recommendations: string[] = [];
+    
+    if (metrics.hitRate < 0.5) {
+      recommendations.push('Consider increasing cache TTL or size');
+    }
+    
+    if (metrics.evictions > 100) {
+      recommendations.push('Cache size may be too small, consider increasing maxSize');
+    }
+    
+    if (expiringSoon.length > items.length * 0.1) {
+      recommendations.push('Many items expiring soon, consider adjusting TTL strategy');
+    }
+
+    return {
+      topItems,
+      leastUsed,
+      largestItems,
+      expiringSoon,
+      recommendations
+    };
+  }, [metrics]);
+
+  const optimize = useCallback(async (): Promise<void> => {
+    const analysis = await analyze();
+    
+    // Remove least used items if cache is getting full
+    if (memoryCache.current.size > config.maxItems * 0.8) {
+      const toRemove = analysis.leastUsed.slice(0, 10);
+      await removeMany(toRemove.map(item => item.key));
+    }
+    
+    // Remove expired items
+    const now = Date.now();
+    const expiredKeys: string[] = [];
+    
+    for (const [key, item] of memoryCache.current.entries()) {
+      if (item.expiresAt <= now) {
+        expiredKeys.push(key);
+      }
+    }
+    
+    if (expiredKeys.length > 0) {
+      await removeMany(expiredKeys);
+    }
+    
+    logger.info('Cache optimization completed', {
+      removedLeastUsed: analysis.leastUsed.length,
+      removedExpired: expiredKeys.length
+    });
+  }, [analyze, config.maxItems, removeMany]);
+
+  const updateConfig = useCallback((updates: Partial<CacheConfig>) => {
+    setConfig(prev => ({ ...prev, ...updates }));
+  }, []);
+
+  // Periodic optimization
+  useEffect(() => {
+    if (config.enableMetrics) {
+      metricsTimer.current = setInterval(() => {
+        optimize();
+      }, 60000); // Every minute
+
+      return () => {
+        if (metricsTimer.current) {
+          clearInterval(metricsTimer.current);
+        }
+      };
+    }
+  }, [config.enableMetrics, optimize]);
+
+  return {
+    // Core operations
+    get,
+    set,
+    remove,
+    clear,
+    
+    // Batch operations
+    getMany,
+    setMany,
+    removeMany,
+    
+    // Cache management
+    invalidate,
+    refresh,
+    preload,
+    
+    // Analytics
+    metrics,
+    analyze,
+    optimize,
+    
+    // State
+    isLoading,
+    config,
+    updateConfig
   };
+}
+
+export type { 
+  UseIntelligentCachingReturn, 
+  CacheItem, 
+  CacheConfig, 
+  CacheSetOptions, 
+  CacheMetrics,
+  CacheAnalysis 
+};

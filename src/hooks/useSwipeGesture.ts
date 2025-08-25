@@ -1,224 +1,789 @@
-import { useEffect, useRef, useState() from 'react';""""'
-interface TouchPosition { { { {
-  x: number
-};
+/**
+ * Swipe Gesture Hook
+ *
+ * Comprehensive React hook for handling swipe gestures across mobile and desktop devices
+ * with advanced touch detection, gesture recognition, and accessibility support
+ *
+ * Features:
+ * - Multi-directional swipe detection (up, down, left, right)
+ * - Configurable sensitivity and thresholds
+ * - Velocity-based gesture recognition
+ * - Touch, mouse, and pointer event support
+ * - Accessibility compliance with keyboard navigation
+ * - Gesture prevention and custom event handling
+ * - Multi-touch support and gesture conflicts resolution
+ * - Performance optimized with RAF and debouncing
+ *
+ * @license Apache-2.0
+ */
 
-y: number
-  };
-interface SwipeGesture { { { {
-  direction: "left" | 'right" | "up" | "down' | null",
-  distance: number
-};
+import { useCallback, useRef, useEffect, useState } from 'react';
+import { logger } from '../utils/logger';
 
-velocity: number
-};
+// Swipe Direction Enum
+export enum SwipeDirection {
+  UP = 'up',
+  DOWN = 'down',
+  LEFT = 'left',
+  RIGHT = 'right'
+}
 
-duration: number
+// Touch Point Interface
+interface TouchPoint {
+  x: number;
+  y: number;
+  timestamp: number;
+  identifier?: number;
+}
+
+// Swipe Event Data Interface
+interface SwipeEventData {
+  direction: SwipeDirection;
+  distance: number;
+  velocity: number;
+  duration: number;
+  startPoint: TouchPoint;
+  endPoint: TouchPoint;
+  element: HTMLElement;
+  originalEvent: TouchEvent | MouseEvent | PointerEvent;
+}
+
+// Swipe Configuration Interface
+interface SwipeConfig {
+  // Sensitivity Settings
+  minDistance: number; // Minimum distance in pixels
+  maxDistance: number; // Maximum distance in pixels
+  minVelocity: number; // Minimum velocity in px/ms
+  maxDuration: number; // Maximum duration in milliseconds
   
-interface UseSwipeGestureOptions { { { {
-  threshold?: number; // Minimum distance for swipe
-  velocityThreshold?: number; // Minimum velocity for swipe
-  preventDefaultTouchMove?: boolean,
-  onSwipeLeft?: (gesture: SwipeGesture) =} void
-  onSwipeRight?: (gesture: SwipeGesture) = void
-  onSwipeUp?: (gesture: SwipeGesture) = void
-  onSwipeDown?: (gesture: SwipeGesture) = void
-  onSwipe?: (gesture: SwipeGesture) = void
+  // Direction Settings
+  enabledDirections: SwipeDirection[];
+  preventDefaultEvents: boolean;
+  stopPropagation: boolean;
   
-export const useSwipeGesture = (options: UseSwipeGestureOptions = {}) = { const {}
-    threshold = 50,
-    velocityThreshold = 0.3,
-    preventDefaultTouchMove = false,
-    onSwipeLeft,
-    onSwipeRight,
-    onSwipeUp,
-    onSwipeDown,
-    onSwipe} = options;
-const touchStartRef = useRef<TouchPosition | null>(null);
-  const touchEndRef = useRef<TouchPosition | null>(null);
-  const startTimeRef = useRef<number>(0);
-  const trackingRef = useRef<boolean>(false);
-  const [isTracking, setIsTracking] = useState(false);
-const handleTouchStart = (e: TouchEvent) =} {
-    if (e.touches.length !== 1) return;
-const touch = e.touches[0],
-    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
-    touchEndRef.current = null; // Reset end position
-    startTimeRef.current = Date.now();
-    trackingRef.current = true;
-    setIsTracking(true);
-  };
-const handleTouchMove = (e: TouchEvent) = { if (!trackingRef.current || !touchStartRef.current || e.touches.length !== 1) return }
+  // Touch Settings
+  touchThreshold: number; // Minimum touch movement to register
+  multiTouchSupport: boolean;
+  ignoreMultiTouch: boolean;
+  
+  // Mouse/Pointer Settings
+  enableMouseEvents: boolean;
+  enablePointerEvents: boolean;
+  mouseButtonMask: number; // Which mouse buttons to listen for
+  
+  // Accessibility Settings
+  enableKeyboardSupport: boolean;
+  keyboardMapping: Record<string, SwipeDirection>;
+  announceGestures: boolean;
+  
+  // Performance Settings
+  useRAF: boolean; // Use requestAnimationFrame for updates
+  debounceMs: number; // Debounce gesture events
+  throttleMs: number; // Throttle move events
+}
 
-    if (preventDefaultTouchMove) {
-      e.preventDefault();
-const touch = e.touches[0],
-    touchEndRef.current = { x: touch.clientX, y: touch.clientY };
-const handleTouchEnd = () =} { if (!touchStartRef.current || !trackingRef.current) {
-      trackingRef.current = false;
-      setIsTracking(false  );
-      touchStartRef.current = null;
-      touchEndRef.current = null,
-      return }
+// Gesture State Interface
+interface GestureState {
+  isActive: boolean;
+  startPoint: TouchPoint | null;
+  currentPoint: TouchPoint | null;
+  lastMoveTime: number;
+  gestureId: string | null;
+  touchCount: number;
+  isPrevented: boolean;
+}
 
-    // Use the last touch position if we have it, otherwise use start position
-    const endPosition = touchEndRef.current || touchStartRef.current;
-const deltaX = endPosition.x - touchStartRef.current.x;
-    const deltaY = endPosition.y - touchStartRef.current.y;
+// Hook Configuration Type
+interface UseSwipeGestureConfig extends Partial<SwipeConfig> {
+  onSwipe?: (data: SwipeEventData) => void;
+  onSwipeStart?: (startPoint: TouchPoint, element: HTMLElement) => void;
+  onSwipeMove?: (currentPoint: TouchPoint, startPoint: TouchPoint, element: HTMLElement) => void;
+  onSwipeEnd?: (endPoint: TouchPoint, startPoint: TouchPoint, element: HTMLElement) => void;
+  onSwipeCancel?: (reason: string, element: HTMLElement) => void;
+}
+
+// Hook Return Type
+interface UseSwipeGestureReturn {
+  // Event Handlers
+  onTouchStart: (event: TouchEvent) => void;
+  onTouchMove: (event: TouchEvent) => void;
+  onTouchEnd: (event: TouchEvent) => void;
+  onTouchCancel: (event: TouchEvent) => void;
+  onMouseDown: (event: MouseEvent) => void;
+  onMouseMove: (event: MouseEvent) => void;
+  onMouseUp: (event: MouseEvent) => void;
+  onPointerDown: (event: PointerEvent) => void;
+  onPointerMove: (event: PointerEvent) => void;
+  onPointerUp: (event: PointerEvent) => void;
+  onKeyDown: (event: KeyboardEvent) => void;
+  
+  // State
+  isGestureActive: boolean;
+  currentDirection: SwipeDirection | null;
+  gestureProgress: number; // 0-1
+  
+  // Controls
+  cancelGesture: () => void;
+  preventNextGesture: () => void;
+  resetGesture: () => void;
+  
+  // Utilities
+  isDirectionEnabled: (direction: SwipeDirection) => boolean;
+  getGestureData: () => SwipeEventData | null;
+}
+
+// Default Configuration
+const DEFAULT_CONFIG: SwipeConfig = {
+  minDistance: 30,
+  maxDistance: 1000,
+  minVelocity: 0.1,
+  maxDuration: 1000,
+  enabledDirections: [SwipeDirection.UP, SwipeDirection.DOWN, SwipeDirection.LEFT, SwipeDirection.RIGHT],
+  preventDefaultEvents: true,
+  stopPropagation: false,
+  touchThreshold: 10,
+  multiTouchSupport: false,
+  ignoreMultiTouch: true,
+  enableMouseEvents: true,
+  enablePointerEvents: true,
+  mouseButtonMask: 1, // Left mouse button only
+  enableKeyboardSupport: true,
+  keyboardMapping: {
+    'ArrowUp': SwipeDirection.UP,
+    'ArrowDown': SwipeDirection.DOWN,
+    'ArrowLeft': SwipeDirection.LEFT,
+    'ArrowRight': SwipeDirection.RIGHT
+  },
+  announceGestures: false,
+  useRAF: true,
+  debounceMs: 50,
+  throttleMs: 16 // ~60fps
+};
+
+/**
+ * Swipe Gesture Hook
+ * 
+ * @param config - Configuration for swipe gesture detection
+ * @returns Gesture event handlers and state
+ */
+export function useSwipeGesture(config: UseSwipeGestureConfig = {}): UseSwipeGestureReturn {
+  const finalConfig = { ...DEFAULT_CONFIG, ...config };
+  
+  // State
+  const [gestureState, setGestureState] = useState<GestureState>({
+    isActive: false,
+    startPoint: null,
+    currentPoint: null,
+    lastMoveTime: 0,
+    gestureId: null,
+    touchCount: 0,
+    isPrevented: false
+  });
+  
+  const [currentDirection, setCurrentDirection] = useState<SwipeDirection | null>(null);
+  const [gestureProgress, setGestureProgress] = useState(0);
+  
+  // Refs
+  const rafRef = useRef<number | null>(null);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastMoveTimeRef = useRef(0);
+  const gestureDataRef = useRef<SwipeEventData | null>(null);
+  
+  // Calculate gesture direction and distance
+  const calculateGestureData = useCallback((
+    startPoint: TouchPoint, 
+    endPoint: TouchPoint, 
+    element: HTMLElement,
+    originalEvent: TouchEvent | MouseEvent | PointerEvent
+  ): SwipeEventData | null => {
+    const deltaX = endPoint.x - startPoint.x;
+    const deltaY = endPoint.y - startPoint.y;
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-    const duration = Date.now() - startTimeRef.current;
-    const velocity = duration } 0 ? distance / duration : 0;
-
-    // Reset tracking
-    trackingRef.current = false;
-    setIsTracking(false);
-    touchStartRef.current = null;
-    touchEndRef.current = null;
-
-    // Check if gesture meets thresholds
-    if (distance < threshold || velocity < velocityThreshold> { return }
-
+    const duration = endPoint.timestamp - startPoint.timestamp;
+    
+    // Check minimum distance
+    if (distance < finalConfig.minDistance) {
+      return null;
+    }
+    
+    // Check maximum distance
+    if (distance > finalConfig.maxDistance) {
+      return null;
+    }
+    
+    // Check maximum duration
+    if (duration > finalConfig.maxDuration) {
+      return null;
+    }
+    
+    // Calculate velocity
+    const velocity = distance / Math.max(duration, 1);
+    
+    // Check minimum velocity
+    if (velocity < finalConfig.minVelocity) {
+      return null;
+    }
+    
     // Determine direction
+    let direction: SwipeDirection;
     const absDeltaX = Math.abs(deltaX);
     const absDeltaY = Math.abs(deltaY);
-direction: SwipeGesture["direction'] = null""'
-    if (absDeltaX ) absDeltaY> {
-  // Horizontal swipe
-};
-
-direction = deltaX } 0 ? right: "left" ) else {
-  // Vertical swipe''
-};
-
-direction = deltaY } 0 ? down: "up" };'"'
-gesture: SwipeGesture = { direction}
+    
+    if (absDeltaX > absDeltaY) {
+      // Horizontal swipe
+      direction = deltaX > 0 ? SwipeDirection.RIGHT : SwipeDirection.LEFT;
+    } else {
+      // Vertical swipe
+      direction = deltaY > 0 ? SwipeDirection.DOWN : SwipeDirection.UP;
+    }
+    
+    // Check if direction is enabled
+    if (!finalConfig.enabledDirections.includes(direction)) {
+      return null;
+    }
+    
+    return {
+      direction,
       distance,
       velocity,
-      duration};
-
-    // Call appropriate callbacks
-    onSwipe?.(gesture);
-
-    switch (direction) { case left:"""''
-        onSwipeLeft?.(gesture)
-        break
-      case right:""'"'
-        onSwipeRight?.(gesture)
-        break
-      case up:""
-        onSwipeUp?.(gesture )
-        break
-      case down:"''"
-        onSwipeDown?.(gesture )
-        break };
-const attachListeners = (element: HTMLElement) = {}
-    element.addEventListener("touchstart", handleTouchStart, { passive: true ));"''"
-    element.addEventListener("touchmove", handleTouchMove, { passive: !preventDefaultTouchMove ));"'"'
-    element.addEventListener("touchend', handleTouchEnd, { passive: true ));""'
-  };
-const detachListeners = (element: HTMLElement) = { element.removeEventListener("touchstart", handleTouchStart);''}""
-    element.removeEventListener("touchmove", handleTouchMove );'""'
-    element.removeEventListener('touchend", handleTouchEnd );"""'
-
-  return { attachListeners,
-    detachListeners,
-    isTracking}
-
-// React ref-based hook for easier integration
-export const useSwipeRef = <T extends HTMLElement()
-  options: UseSwipeGestureOptions = {}
- = { const elementRef = useRef<T>(null })
-  const { attachListeners, detachListeners, isTracking } = useSwipeGesture(options);
-
-  useEffect(() =) { const element = elementRef.current;
-    if (!element) return;
-
-    attachListeners(element ),
-
-    return () =} {
-      detachListeners(element) }, [attachListeners, detachListeners];
-
-  return { ref: elementRef,
-    isTracking}
-
-// Hook for handling pull-to-refresh gesture
-export const usePullToRefresh = (
-  onRefresh: () =) void | Promise<void>,
-  options: { threshold?: number;
-    resistance?: number,
-    enabled?: boolean } = {}
- = {}
-  const { threshold = 80, resistance = 0.5, enabled = true } = options;
-const [isPulling, setIsPulling] = useState(false);
-  const [pullDistance, setPullDistance] = useState(0);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const elementRef = useRef<HTMLDivElement>(null);
-const touchStartRef = useRef<{ x: number; y: number, scrollTop: number } | null>(null);
-  const touchMoveRef = useRef<{ x: number, y: number } | null>(null);
-  const pullDistanceRef = useRef<number>(0);
-  const isRefreshingRef = useRef<boolean>(false);
-
-  useEffect(() =) { const element = elementRef.current;
-    if (!element || !enabled) return;
-const handleTouchStart = (e: TouchEvent) =} {
-      if (e.touches.length !== 1 || isRefreshingRef.current) return;
-const touch = e.touches[0];
-      const scrollTop = element.scrollTop || window.scrollY;
-
-      // Only start pull-to-refresh if we"re at the top"'"'
-      if (scrollTop <= 0> {
-        touchStartRef.current = {}
-          x: touch.clientX,
-          y: touch.clientY,
-          scrollTop };
-const handleTouchMove = (e: TouchEvent) =) {
-      if (!touchStartRef.current || isRefreshingRef.current || e.touches.length !== 1) return;
-const touch = e.touches[0],
-      touchMoveRef.current = { x: touch.clientX, y: touch.clientY };
-const deltaY = touch.clientY - touchStartRef.current.y;
-      const scrollTop = element.scrollTop || window.scrollY;
-
-      // Only pull-to-refresh when at top and pulling down
-      if (scrollTop <= 0 && deltaY > 0) { const distance = Math.min(deltaY * resistance, threshold * 1.5);
-        pullDistanceRef.current = distance;
-        setPullDistance(distance );
-        setIsPulling(distance ) 10 },
-
-        // Prevent default scrolling when pulling
-        if (distance ) 20} {
-          e.preventDefault() }};
-const handleTouchEnd = async () =} { if (!touchStartRef.current || !touchMoveRef.current || isRefreshingRef.current) {
-        resetPull(),
-        return }
-
-      if (pullDistanceRef.current )= threshold && !isRefreshingRef.current} { isRefreshingRef.current = true;
-        setIsRefreshing(true ),
-        try {
-          await onRefresh() } finally(isRefreshingRef.current = false;
-          setIsRefreshing(false );
-          resetPull() )else(resetPull() );
-const resetPull = () =} { pullDistanceRef.current = 0;
-      setPullDistance(0),
-      setIsPulling(false );
-      touchStartRef.current = null;
-      touchMoveRef.current = null  };
-
-    element.addEventListener("touchstart", handleTouchStart, { passive: true }"''
-    element.addEventListener("touchmove", handleTouchMove, { passive: false ));'""'
-    element.addEventListener("touchend", handleTouchEnd, { passive: true ));'""'
-    element.addEventListener("touchcancel", resetPull, { passive: true ));'""'
-
-    return ()  =) { element.removeEventListener("touchstart", handleTouchStart);""
-      element.removeEventListener('touchmove", handleTouchMove );"'"
-      element.removeEventListener("touchend", handleTouchEnd "')""'
-);
-      element.removeEventListener('touchcancel', resetPull)  [enabled, threshold, resistance, onRefresh]""
-
+      duration,
+      startPoint,
+      endPoint,
+      element,
+      originalEvent
+    };
+  }, [finalConfig]);
+  
+  // Handle gesture start
+  const handleGestureStart = useCallback((
+    point: TouchPoint, 
+    element: HTMLElement,
+    gestureId?: string
+  ) => {
+    // Cancel any existing gesture
+    if (gestureState.isActive) {
+      cancelGesture();
+    }
+    
+    setGestureState(prev => ({
+      ...prev,
+      isActive: true,
+      startPoint: point,
+      currentPoint: point,
+      lastMoveTime: point.timestamp,
+      gestureId: gestureId || `gesture_${Date.now()}`,
+      touchCount: 1,
+      isPrevented: false
+    }));
+    
+    setCurrentDirection(null);
+    setGestureProgress(0);
+    
+    // Call onSwipeStart callback
+    config.onSwipeStart?.(point, element);
+    
+    logger.debug('Gesture started', { point, gestureId });
+  }, [gestureState.isActive, config]);
+  
+  // Handle gesture move
+  const handleGestureMove = useCallback((
+    point: TouchPoint,
+    element: HTMLElement
+  ) => {
+    if (!gestureState.isActive || !gestureState.startPoint) {
+      return;
+    }
+    
+    // Throttle move events
+    const now = Date.now();
+    if (now - lastMoveTimeRef.current < finalConfig.throttleMs) {
+      return;
+    }
+    lastMoveTimeRef.current = now;
+    
+    // Update gesture state
+    setGestureState(prev => ({
+      ...prev,
+      currentPoint: point,
+      lastMoveTime: point.timestamp
+    }));
+    
+    // Calculate current direction and progress
+    const deltaX = point.x - gestureState.startPoint.x;
+    const deltaY = point.y - gestureState.startPoint.y;
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    
+    // Update progress (0-1 based on min/max distance)
+    const progress = Math.min(
+      Math.max((distance - finalConfig.minDistance) / (finalConfig.maxDistance - finalConfig.minDistance), 0),
+      1
+    );
+    setGestureProgress(progress);
+    
+    // Update current direction
+    if (distance > finalConfig.touchThreshold) {
+      const absDeltaX = Math.abs(deltaX);
+      const absDeltaY = Math.abs(deltaY);
+      
+      let direction: SwipeDirection;
+      if (absDeltaX > absDeltaY) {
+        direction = deltaX > 0 ? SwipeDirection.RIGHT : SwipeDirection.LEFT;
+      } else {
+        direction = deltaY > 0 ? SwipeDirection.DOWN : SwipeDirection.UP;
+      }
+      
+      setCurrentDirection(direction);
+    }
+    
+    // Call onSwipeMove callback
+    config.onSwipeMove?.(point, gestureState.startPoint, element);
+  }, [gestureState.isActive, gestureState.startPoint, finalConfig, config]);
+  
+  // Handle gesture end
+  const handleGestureEnd = useCallback((
+    point: TouchPoint,
+    element: HTMLElement,
+    originalEvent: TouchEvent | MouseEvent | PointerEvent
+  ) => {
+    if (!gestureState.isActive || !gestureState.startPoint) {
+      return;
+    }
+    
+    // Calculate gesture data
+    const gestureData = calculateGestureData(
+      gestureState.startPoint,
+      point,
+      element,
+      originalEvent
+    );
+    
+    // Store gesture data for reference
+    gestureDataRef.current = gestureData;
+    
+    // Reset gesture state
+    setGestureState(prev => ({
+      ...prev,
+      isActive: false,
+      startPoint: null,
+      currentPoint: null,
+      gestureId: null,
+      touchCount: 0
+    }));
+    
+    setCurrentDirection(null);
+    setGestureProgress(0);
+    
+    // Call callbacks
+    config.onSwipeEnd?.(point, gestureState.startPoint, element);
+    
+    if (gestureData && !gestureState.isPrevented) {
+      // Debounce gesture events
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+      
+      debounceTimeoutRef.current = setTimeout(() => {
+        config.onSwipe?.(gestureData);
+        
+        // Announce gesture for accessibility
+        if (finalConfig.announceGestures) {
+          announceGesture(gestureData.direction);
+        }
+      }, finalConfig.debounceMs);
+    }
+    
+    logger.debug('Gesture ended', { 
+      gestureData, 
+      prevented: gestureState.isPrevented 
+    });
+  }, [gestureState, calculateGestureData, finalConfig, config]);
+  
+  // Cancel gesture
+  const cancelGesture = useCallback(() => {
+    if (!gestureState.isActive) return;
+    
+    const element = document.activeElement as HTMLElement;
+    
+    setGestureState(prev => ({
+      ...prev,
+      isActive: false,
+      startPoint: null,
+      currentPoint: null,
+      gestureId: null,
+      touchCount: 0
+    }));
+    
+    setCurrentDirection(null);
+    setGestureProgress(0);
+    
+    // Clear timeouts
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+      debounceTimeoutRef.current = null;
+    }
+    
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+    
+    config.onSwipeCancel?.('cancelled', element);
+    
+    logger.debug('Gesture cancelled');
+  }, [gestureState.isActive, config]);
+  
+  // Prevent next gesture
+  const preventNextGesture = useCallback(() => {
+    setGestureState(prev => ({ ...prev, isPrevented: true }));
+  }, []);
+  
+  // Reset gesture
+  const resetGesture = useCallback(() => {
+    cancelGesture();
+    gestureDataRef.current = null;
+  }, [cancelGesture]);
+  
+  // Touch Event Handlers
+  const onTouchStart = useCallback((event: TouchEvent) => {
+    if (!event.target) return;
+    
+    const element = event.target as HTMLElement;
+    const touch = event.touches[0];
+    
+    // Handle multi-touch
+    if (event.touches.length > 1) {
+      if (finalConfig.ignoreMultiTouch) {
+        cancelGesture();
+        return;
+      } else if (!finalConfig.multiTouchSupport) {
+        return;
+      }
+    }
+    
+    const point: TouchPoint = {
+      x: touch.clientX,
+      y: touch.clientY,
+      timestamp: Date.now(),
+      identifier: touch.identifier
+    };
+    
+    handleGestureStart(point, element, `touch_${touch.identifier}`);
+    
+    if (finalConfig.preventDefaultEvents) {
+      event.preventDefault();
+    }
+    
+    if (finalConfig.stopPropagation) {
+      event.stopPropagation();
+    }
+  }, [finalConfig, handleGestureStart, cancelGesture]);
+  
+  const onTouchMove = useCallback((event: TouchEvent) => {
+    if (!gestureState.isActive || !event.target) return;
+    
+    const element = event.target as HTMLElement;
+    const touch = Array.from(event.touches).find(
+      t => t.identifier === gestureState.startPoint?.identifier
+    ) || event.touches[0];
+    
+    const point: TouchPoint = {
+      x: touch.clientX,
+      y: touch.clientY,
+      timestamp: Date.now(),
+      identifier: touch.identifier
+    };
+    
+    if (finalConfig.useRAF) {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+      rafRef.current = requestAnimationFrame(() => {
+        handleGestureMove(point, element);
+      });
+    } else {
+      handleGestureMove(point, element);
+    }
+    
+    if (finalConfig.preventDefaultEvents) {
+      event.preventDefault();
+    }
+  }, [gestureState, finalConfig, handleGestureMove]);
+  
+  const onTouchEnd = useCallback((event: TouchEvent) => {
+    if (!gestureState.isActive || !event.target) return;
+    
+    const element = event.target as HTMLElement;
+    const touch = Array.from(event.changedTouches).find(
+      t => t.identifier === gestureState.startPoint?.identifier
+    ) || event.changedTouches[0];
+    
+    const point: TouchPoint = {
+      x: touch.clientX,
+      y: touch.clientY,
+      timestamp: Date.now(),
+      identifier: touch.identifier
+    };
+    
+    handleGestureEnd(point, element, event);
+    
+    if (finalConfig.preventDefaultEvents) {
+      event.preventDefault();
+    }
+  }, [gestureState, finalConfig, handleGestureEnd]);
+  
+  const onTouchCancel = useCallback((event: TouchEvent) => {
+    cancelGesture();
+    
+    if (finalConfig.preventDefaultEvents) {
+      event.preventDefault();
+    }
+  }, [cancelGesture, finalConfig]);
+  
+  // Mouse Event Handlers
+  const onMouseDown = useCallback((event: MouseEvent) => {
+    if (!finalConfig.enableMouseEvents || !event.target) return;
+    
+    // Check mouse button
+    if (!(event.buttons & finalConfig.mouseButtonMask)) return;
+    
+    const element = event.target as HTMLElement;
+    const point: TouchPoint = {
+      x: event.clientX,
+      y: event.clientY,
+      timestamp: Date.now()
+    };
+    
+    handleGestureStart(point, element, 'mouse');
+    
+    if (finalConfig.preventDefaultEvents) {
+      event.preventDefault();
+    }
+  }, [finalConfig, handleGestureStart]);
+  
+  const onMouseMove = useCallback((event: MouseEvent) => {
+    if (!finalConfig.enableMouseEvents || !gestureState.isActive || !event.target) return;
+    
+    const element = event.target as HTMLElement;
+    const point: TouchPoint = {
+      x: event.clientX,
+      y: event.clientY,
+      timestamp: Date.now()
+    };
+    
+    handleGestureMove(point, element);
+    
+    if (finalConfig.preventDefaultEvents) {
+      event.preventDefault();
+    }
+  }, [finalConfig, gestureState.isActive, handleGestureMove]);
+  
+  const onMouseUp = useCallback((event: MouseEvent) => {
+    if (!finalConfig.enableMouseEvents || !gestureState.isActive || !event.target) return;
+    
+    const element = event.target as HTMLElement;
+    const point: TouchPoint = {
+      x: event.clientX,
+      y: event.clientY,
+      timestamp: Date.now()
+    };
+    
+    handleGestureEnd(point, element, event);
+    
+    if (finalConfig.preventDefaultEvents) {
+      event.preventDefault();
+    }
+  }, [finalConfig, gestureState.isActive, handleGestureEnd]);
+  
+  // Pointer Event Handlers
+  const onPointerDown = useCallback((event: PointerEvent) => {
+    if (!finalConfig.enablePointerEvents || !event.target) return;
+    
+    const element = event.target as HTMLElement;
+    const point: TouchPoint = {
+      x: event.clientX,
+      y: event.clientY,
+      timestamp: Date.now(),
+      identifier: event.pointerId
+    };
+    
+    handleGestureStart(point, element, `pointer_${event.pointerId}`);
+    
+    if (finalConfig.preventDefaultEvents) {
+      event.preventDefault();
+    }
+  }, [finalConfig, handleGestureStart]);
+  
+  const onPointerMove = useCallback((event: PointerEvent) => {
+    if (!finalConfig.enablePointerEvents || !gestureState.isActive || !event.target) return;
+    
+    const element = event.target as HTMLElement;
+    const point: TouchPoint = {
+      x: event.clientX,
+      y: event.clientY,
+      timestamp: Date.now(),
+      identifier: event.pointerId
+    };
+    
+    handleGestureMove(point, element);
+    
+    if (finalConfig.preventDefaultEvents) {
+      event.preventDefault();
+    }
+  }, [finalConfig, gestureState.isActive, handleGestureMove]);
+  
+  const onPointerUp = useCallback((event: PointerEvent) => {
+    if (!finalConfig.enablePointerEvents || !gestureState.isActive || !event.target) return;
+    
+    const element = event.target as HTMLElement;
+    const point: TouchPoint = {
+      x: event.clientX,
+      y: event.clientY,
+      timestamp: Date.now(),
+      identifier: event.pointerId
+    };
+    
+    handleGestureEnd(point, element, event);
+    
+    if (finalConfig.preventDefaultEvents) {
+      event.preventDefault();
+    }
+  }, [finalConfig, gestureState.isActive, handleGestureEnd]);
+  
+  // Keyboard Event Handler
+  const onKeyDown = useCallback((event: KeyboardEvent) => {
+    if (!finalConfig.enableKeyboardSupport || !event.target) return;
+    
+    const direction = finalConfig.keyboardMapping[event.key];
+    if (!direction || !finalConfig.enabledDirections.includes(direction)) return;
+    
+    const element = event.target as HTMLElement;
+    const rect = element.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    // Simulate swipe gesture
+    const startPoint: TouchPoint = {
+      x: centerX,
+      y: centerY,
+      timestamp: Date.now()
+    };
+    
+    const distance = finalConfig.minDistance + 10;
+    let endX = centerX;
+    let endY = centerY;
+    
+    switch (direction) {
+      case SwipeDirection.UP:
+        endY -= distance;
+        break;
+      case SwipeDirection.DOWN:
+        endY += distance;
+        break;
+      case SwipeDirection.LEFT:
+        endX -= distance;
+        break;
+      case SwipeDirection.RIGHT:
+        endX += distance;
+        break;
+    }
+    
+    const endPoint: TouchPoint = {
+      x: endX,
+      y: endY,
+      timestamp: Date.now() + 100 // 100ms duration
+    };
+    
+    const gestureData = calculateGestureData(startPoint, endPoint, element, event as any);
+    
+    if (gestureData) {
+      config.onSwipe?.(gestureData);
+      
+      if (finalConfig.announceGestures) {
+        announceGesture(direction);
+      }
+    }
+    
+    if (finalConfig.preventDefaultEvents) {
+      event.preventDefault();
+    }
+  }, [finalConfig, calculateGestureData, config]);
+  
+  // Utility Functions
+  const isDirectionEnabled = useCallback((direction: SwipeDirection): boolean => {
+    return finalConfig.enabledDirections.includes(direction);
+  }, [finalConfig.enabledDirections]);
+  
+  const getGestureData = useCallback((): SwipeEventData | null => {
+    return gestureDataRef.current;
+  }, []);
+  
+  // Announce gesture for accessibility
+  const announceGesture = useCallback((direction: SwipeDirection) => {
+    try {
+      const message = `Swiped ${direction}`;
+      
+      // Use ARIA live region if available
+      const liveRegion = document.querySelector('[aria-live]') as HTMLElement;
+      if (liveRegion) {
+        liveRegion.textContent = message;
+        setTimeout(() => {
+          liveRegion.textContent = '';
+        }, 1000);
+      }
+      
+      logger.debug('Gesture announced', { direction, message });
+    } catch (error) {
+      logger.error('Failed to announce gesture', { direction, error });
+    }
+  }, []);
+  
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+      
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, []);
+  
   return {
-  ref: elementRef,
-    isPulling,
-    pullDistance,
-    isRefreshing,
-};
+    // Event Handlers
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd,
+    onTouchCancel,
+    onMouseDown,
+    onMouseMove,
+    onMouseUp,
+    onPointerDown,
+    onPointerMove,
+    onPointerUp,
+    onKeyDown,
+    
+    // State
+    isGestureActive: gestureState.isActive,
+    currentDirection,
+    gestureProgress,
+    
+    // Controls
+    cancelGesture,
+    preventNextGesture,
+    resetGesture,
+    
+    // Utilities
+    isDirectionEnabled,
+    getGestureData
+  };
+}
 
-pullProgress: Math.min(pullDistance / threshold, 1)}
+export type { 
+  UseSwipeGestureReturn, 
+  SwipeEventData, 
+  SwipeConfig, 
+  UseSwipeGestureConfig,
+  TouchPoint 
+};
