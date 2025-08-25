@@ -1,482 +1,502 @@
-// Secure storage wrapper with automatic encryption for sensitive data
-// Provides a drop-in replacement for localStorage with HIPAA compliance
-import { getEncryptionService  } from './encryptionService';""""'
-interface SecureStorageOptions { { { { enableEncryption?: boolean;
+/**
+ * Secure Storage Service
+ *
+ * Provides a drop-in replacement for localStorage with automatic encryption,
+ * HIPAA compliance, audit logging, and data retention management for the
+ * mental health platform. Ensures sensitive user data is protected.
+ *
+ * @fileoverview Secure storage wrapper with encryption and compliance features
+ * @version 2.0.0
+ */
+
+import { getEncryptionService } from './encryptionService';
+
+/**
+ * Configuration options for secure storage
+ */
+export interface SecureStorageOptions {
+  enableEncryption?: boolean;
   enableAuditLogging?: boolean;
-  enableDataRetention?: boolean,
-  maxRetentionDays?: number };
-interface StorageMetadata { { { {
-  timestamp: number
-$2ification: string;,
-  encrypted: boolean;,
-  size: number;,
-};
+  enableDataRetention?: boolean;
+  maxRetentionDays?: number;
+  compressionLevel?: number;
+}
 
-accessCount: number
-};
+/**
+ * Metadata stored with each item
+ */
+export interface StorageMetadata {
+  timestamp: number;
+  classification: string;
+  encrypted: boolean;
+  size: number;
+  accessCount: number;
+  lastAccessed: number;
+  expiresAt?: number;
+  version: string;
+}
 
-lastAccessed: number
-  };
-interface SecureStorageService { { { { private encryptionService = getEncryptionService();
-  private options: Required<SecureStorageOptions>
-  private accessLog: Map<string, StorageMetadata> = new Map(),
-$2ructor(options: SecureStorageOptions = {}) { this.options = {}
+/**
+ * Storage item with metadata
+ */
+export interface SecureStorageItem {
+  key: string;
+  value: any;
+  metadata: StorageMetadata;
+}
+
+/**
+ * Audit log entry for compliance tracking
+ */
+export interface AuditLogEntry {
+  timestamp: number;
+  action: 'read' | 'write' | 'delete' | 'expire';
+  key: string;
+  userId?: string;
+  ipAddress?: string;
+  userAgent?: string;
+  success: boolean;
+  error?: string;
+}
+
+/**
+ * Storage statistics and quota information
+ */
+export interface StorageStats {
+  totalItems: number;
+  totalSize: number;
+  encryptedItems: number;
+  unencryptedItems: number;
+  expiredItems: number;
+  quotaUsed: number;
+  quotaRemaining: number;
+  oldestItem?: Date;
+  newestItem?: Date;
+}
+
+/**
+ * Data classification levels for HIPAA compliance
+ */
+export enum DataClassification {
+  PUBLIC = 'public',
+  INTERNAL = 'internal',
+  CONFIDENTIAL = 'confidential',
+  RESTRICTED = 'restricted'
+}
+
+/**
+ * Secure Storage Service Implementation
+ */
+export class SecureStorageService {
+  private encryptionService = getEncryptionService();
+  private options: SecureStorageOptions;
+  private auditLog: AuditLogEntry[] = [];
+  private readonly METADATA_PREFIX = '__secure_meta_';
+  private readonly AUDIT_LOG_KEY = '__secure_audit_log';
+  private readonly VERSION = '2.0.0';
+
+  constructor(options: SecureStorageOptions = {}) {
+    this.options = {
       enableEncryption: true,
       enableAuditLogging: true,
       enableDataRetention: true,
-      maxRetentionDays: 2555, // 7 years for HIPAA compliance
-      ...options };
+      maxRetentionDays: 365,
+      compressionLevel: 1,
+      ...options
+    };
 
-    this.loadAccessLog();
-    this.scheduleDataRetentionCleanup();
-
-  /**
-   * Load access log from localStorage
-   */
-  private loadAccessLog(): void { try {;
-const storedLog = localStorage.getItem("_secure_storage_log");'"""'
-      if (storedLog) {;
-const parsed = JSON.parse(storedLog  );
-        this.accessLog = new Map(Object.entries(parsed)) };
-  } catch (error) { console.warn("Failed to load access log:', error);""'
+    // Load existing audit log
+    this.loadAuditLog();
+    
+    // Clean up expired items on initialization
+    this.cleanupExpiredItems();
+  }
 
   /**
-   * Save access log to localStorage
+   * Store an item with optional encryption and metadata
    */
-  private saveAccessLog(): void { try {;
-const logObject = Object.fromEntries(this.accessLog  );
-      localStorage.setItem('_secure_storage_log", JSON.stringify(logObject)) } catch (error) {
-  console.warn("Failed to save access log:", error);"'
+  async setItem(
+    key: string, 
+    value: any, 
+    classification: DataClassification = DataClassification.INTERNAL,
+    expiresInDays?: number
+  ): Promise<void> {
+    try {
+      const shouldEncrypt = this.options.enableEncryption && 
+        (classification === DataClassification.CONFIDENTIAL || 
+         classification === DataClassification.RESTRICTED);
+
+      let processedValue = value;
+      
+      // Serialize value
+      const serializedValue = JSON.stringify(value);
+      
+      // Encrypt if required
+      if (shouldEncrypt) {
+        processedValue = await this.encryptionService.encrypt(serializedValue);
+      } else {
+        processedValue = serializedValue;
+      }
+
+      // Create metadata
+      const metadata: StorageMetadata = {
+        timestamp: Date.now(),
+        classification,
+        encrypted: shouldEncrypt,
+        size: new Blob([processedValue]).size,
+        accessCount: 0,
+        lastAccessed: Date.now(),
+        version: this.VERSION,
+        expiresAt: expiresInDays ? Date.now() + (expiresInDays * 24 * 60 * 60 * 1000) : undefined
+      };
+
+      // Store the item and metadata
+      localStorage.setItem(key, processedValue);
+      localStorage.setItem(this.METADATA_PREFIX + key, JSON.stringify(metadata));
+
+      // Log the action
+      this.logAction('write', key, true);
+
+    } catch (error) {
+      this.logAction('write', key, false, error instanceof Error ? error.message : 'Unknown error');
+      throw new Error(`Failed to store item: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
 
   /**
-   * Update metadata for a key
+   * Retrieve an item with automatic decryption
    */
-  private updateMetadata(key: string, data: string, isRead: boolean = false): void(if (!this.options.enableAuditLogging) return
-const existing = this.accessLog.get(key)
-const now = Date.now()
-  };
+  async getItem<T = any>(key: string): Promise<T | null> {
+    try {
+      const rawValue = localStorage.getItem(key);
+      if (!rawValue) {
+        return null;
+      }
 
-metadata: StorageMetadata = {}
-      timestamp: existing?.timestamp || now,;
+      const metadata = this.getMetadata(key);
+      if (!metadata) {
+        // Handle legacy items without metadata
+        this.logAction('read', key, true);
+        return JSON.parse(rawValue);
+      }
 
-$2ification: this.getDataClassification(key),
-      encrypted: this.shouldEncrypt(key),
-      size: data.length,
-      accessCount: (existing?.accessCount || 0) + (isRead ? 1 : 0),
-      lastAccessed: now
-  )
-    this.accessLog.set(key, metadata);
-    this.saveAccessLog();
+      // Check if item has expired
+      if (metadata.expiresAt && Date.now() > metadata.expiresAt) {
+        await this.removeItem(key);
+        return null;
+      }
+
+      // Update access tracking
+      metadata.accessCount++;
+      metadata.lastAccessed = Date.now();
+      this.updateMetadata(key, metadata);
+
+      let processedValue = rawValue;
+
+      // Decrypt if encrypted
+      if (metadata.encrypted) {
+        processedValue = await this.encryptionService.decrypt(rawValue);
+      }
+
+      // Parse and return
+      const result = JSON.parse(processedValue);
+      this.logAction('read', key, true);
+      return result;
+
+    } catch (error) {
+      this.logAction('read', key, false, error instanceof Error ? error.message : 'Unknown error');
+      throw new Error(`Failed to retrieve item: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
 
   /**
-   * Get data classification for a key
+   * Remove an item and its metadata
    */
-  private getDataClassification(key: string): string { // Crisis data
-    if (key.includes("crisis") || key.includes('emergency")) {""'"'""'
-      return "crisis" ""''""'"'
-
-    // Health data
-    if (key.includes("mood") || key.includes("safety') || key.includes("health")) { return 'health" }"""''
-
-    // Communication data
-    if (key.includes("chat") || key.includes('message")) { return "communication" }"''""'
-
-    // Personal data
-    if (key.includes("user') || key.includes("token") || key.includes("profile")) { return 'personal" }"'""""'
-
-    return 'general";"'""
+  async removeItem(key: string): Promise<void> {
+    try {
+      localStorage.removeItem(key);
+      localStorage.removeItem(this.METADATA_PREFIX + key);
+      this.logAction('delete', key, true);
+    } catch (error) {
+      this.logAction('delete', key, false, error instanceof Error ? error.message : 'Unknown error');
+      throw new Error(`Failed to remove item: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
 
   /**
-   * Determine if data should be encrypted
+   * Check if an item exists
    */
-  private shouldEncrypt(key: string): boolean(if (!this.options.enableEncryption) return false
-const classification = this.getDataClassification(key )
-    return ["crisis", 'health", "communication', "personal"].includes(classification) )""'""'
+  hasItem(key: string): boolean {
+    const item = localStorage.getItem(key);
+    if (!item) return false;
+
+    const metadata = this.getMetadata(key);
+    if (metadata?.expiresAt && Date.now() > metadata.expiresAt) {
+      // Item has expired
+      this.removeItem(key);
+      return false;
+    }
+
+    return true;
+  }
 
   /**
-   * Schedule automatic data retention cleanup
+   * Get all keys (excluding metadata keys)
    */
-  private scheduleDataRetentionCleanup(): void(if (!this.options.enableDataRetention) return;
-
-    // Run cleanup immediately
-    this.performDataRetentionCleanup( );
-
-    // Schedule daily cleanup
-    setInterval(() =) {
-      this.performDataRetentionCleanup() }, 24 * 60 * 60 * 1000); // 24 hours
-
-  /**
-   * Perform data retention cleanup based on age and classification
-   */
-  private performDataRetentionCleanup(): void {;
-const now = Date.now();
-const maxAge = this.options.maxRetentionDays * 24 * 60 * 60 * 1000;
-const cleanedCount = 0;
-
-    this.accessLog.forEach((metadata, key) =) {;
-const age = now - metadata.timestamp;
-
-      // Check if data exceeds retention period
-      if (age ) maxAge} {
-        this.removeItem(key),
-        this.accessLog.delete(key );
-        cleanedCount++  };
-  }};
-
-    if (cleanedCount ) 0} { console.log(`Data retention cleanup: removed ${cleanedCount) expired items`);
-      this.saveAccessLog() };
-
-  /**
-   * Securely store data with automatic encryption for sensitive data
-   */
-  public async setItem(key: string, value: string): Promise<void> { try(// Update metadata before storing)
-      this.updateMetadata(key, value);
-
-      // Use encryption service for secure storage
-      await this.encryptionService.secureSetItem(key, value  );
-
-      // Log storage event
-      if (this.options.enableAuditLogging) {
-        this.logStorageEvent('data_stored", {
-  ""'"'""'
-          key,)
-};
-
-size: value.length,)
-};
-
-encrypted: this.shouldEncrypt(key),;
-
-${2ification: this.getDataClassification(key)
-  }};
-  );
-  } catch (error) { console.error('SecureStorage: Failed to store data:", error  );""'"'""'
-      throw new Error()`Failed to store data for key: ${key}`};
-  );
-
-  /**
-   * Securely retrieve data with automatic decryption
-   */
-  public async getItem(key: string): Promise<string | null> { try {
-      // Retrieve data using encryption service
-const value = await this.encryptionService.secureGetItem(key);
-
-      if (value !== null) {
-        // Update access metadata
-        this.updateMetadata(key, value, true  );
-
-        // Log access event
-        if (this.options.enableAuditLogging) {
-          this.logStorageEvent('data_accessed", {
-  ""'"'"'
-            key,)
-};
-
-size: value.length,;
-)
-};
-
-$2ification: this.getDataClassification(key)
-  });
-  };
-
-      return value;
-  } catch (error) { console.error("SecureStorage: Failed to retrieve data:", error );'""'""'"'
-      // Return null instead of throwing to maintain localStorage compatibility
-      return null;
-  /**
-   * Remove data and update metadata
-   */
-  public removeItem(key: string): void { try {
-      // Remove from localStorage
-      this.encryptionService.secureRemoveItem(key);
-
-      // Update metadata
-      this.accessLog.delete(key);
-      this.saveAccessLog();
-
-      // Log removal event
-      if (this.options.enableAuditLogging) {
-        this.logStorageEvent("data_removed', {
-  ""'""'"'
-          key,;
-)
-};
-
-$2ification: this.getDataClassification(key)
-  });
-  };
-  } catch (error) { console.error("SecureStorage: Failed to remove data:', error);""}""'
-
-  /**
-   * Clear all data and metadata
-   */
-  public clear(): void { try {
-      // Clear localStorage
-      localStorage.clear();
-
-      // Clear metadata
-      this.accessLog.clear();
-
-      // Log clear event
-      if (this.options.enableAuditLogging) {
-        this.logStorageEvent('storage_cleared", {));'"
-  };
-  } catch (error) { console.error("SecureStorage: Failed to clear storage:", error );'"}'
-
-  /**
-   * Get the number of items in storage
-   */
-  public get length(): number { return localStorage.length }
-
-  /**
-   * Get key at specific index
-   */
-  public key(index: number): string | null { return localStorage.key(index) }
-
-  /**
-   * Check if a key exists
-   */
-  public hasItem(key: string): boolean { return localStorage.getItem(key) !== null }
-
-  /**
-   * Get all keys in storage
-   */
-  public getAllKeys(): string[] {   }
-keys: string[] = []
-    for (let i = 0; i < localStorage.length; i++> {;})
-const key = localStorage.key(i );
-      if (key) { keys.push(key );
-
+  getAllKeys(): string[] {
+    const keys: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && !key.startsWith(this.METADATA_PREFIX) && key !== this.AUDIT_LOG_KEY) {
+        keys.push(key);
+      }
+    }
     return keys;
+  }
 
   /**
    * Get storage statistics
    */
-  public getStorageStats(): {
-  totalKeys: number;,
-  encryptedKeys: number;,
-  totalSize: number;,
-};
+  async getStorageStats(): Promise<StorageStats> {
+    const keys = this.getAllKeys();
+    let totalSize = 0;
+    let encryptedItems = 0;
+    let unencryptedItems = 0;
+    let expiredItems = 0;
+    let oldestTimestamp = Date.now();
+    let newestTimestamp = 0;
 
-byClassification: Record<string, number> };
+    for (const key of keys) {
+      const metadata = this.getMetadata(key);
+      if (metadata) {
+        totalSize += metadata.size;
+        
+        if (metadata.encrypted) {
+          encryptedItems++;
+        } else {
+          unencryptedItems++;
+        }
 
-byEncryption: { encrypted: number, plaintext: number } {,
-const stats = {}
-      totalKeys: 0,
-      encryptedKeys: 0,
-      totalSize: 0,
-      byClassification: {} as Record<string, number>,
-      byEncryption: { encrypted: 0, plaintext: 0 };
-  };
+        if (metadata.expiresAt && Date.now() > metadata.expiresAt) {
+          expiredItems++;
+        }
 
-    this.accessLog.forEach((metadata, _key) =) { stats.totalKeys++;
-      stats.totalSize += metadata.size;
+        if (metadata.timestamp < oldestTimestamp) {
+          oldestTimestamp = metadata.timestamp;
+        }
+        if (metadata.timestamp > newestTimestamp) {
+          newestTimestamp = metadata.timestamp;
+        }
+      }
+    }
 
-      if (metadata.encrypted) {
-        stats.encryptedKeys++,
-        stats.byEncryption.encrypted++ } else { stats.byEncryption.plaintext++ }
+    // Get quota information
+    const quota = await navigator.storage?.estimate() || { usage: 0, quota: 0 };
 
-      stats.byClassification[metadata.classification] =
-        (stats.byClassification[metadata.classification] || 0) + 1;
-  }};
-
-    return stats;
-
-  /**
-   * Get access metadata for a key
-   */
-  public getMetadata(key: string): StorageMetadata | null { return this.accessLog.get(key) || null }
-
-  /**
-   * Get all metadata
-   */
-  public getAllMetadata(): Map<string, StorageMetadata> { return new Map(this.accessLog) }
-
-  /**
-   * Validate data integrity for all encrypted data
-   */
-  public async validateIntegrity(): Promise<{
-  valid: number;,
-};
-
-invalid: number
-};
-
-errors: string[]
-  }> { return await this.encryptionService.validateDataIntegrity() }
+    return {
+      totalItems: keys.length,
+      totalSize,
+      encryptedItems,
+      unencryptedItems,
+      expiredItems,
+      quotaUsed: quota.usage || 0,
+      quotaRemaining: (quota.quota || 0) - (quota.usage || 0),
+      oldestItem: oldestTimestamp < Date.now() ? new Date(oldestTimestamp) : undefined,
+      newestItem: newestTimestamp > 0 ? new Date(newestTimestamp) : undefined
+    };
+  }
 
   /**
-   * Migrate existing data to encrypted format
+   * Clean up expired items
    */
-  public async migrateToEncrypted(): Promise<void> { await this.encryptionService.migrateExistingData();
-    // Update metadata for migrated data
-    for (let i = 0; i < localStorage.length; i++> { })
-const key = localStorage.key(i);
-      if (key && this.shouldEncrypt(key)) {;
-const value = await this.getItem(key  );
-        if (value) {
-          this.updateMetadata(key, value)};
-  };
+  async cleanupExpiredItems(): Promise<number> {
+    const keys = this.getAllKeys();
+    let cleanedCount = 0;
+
+    for (const key of keys) {
+      const metadata = this.getMetadata(key);
+      if (metadata?.expiresAt && Date.now() > metadata.expiresAt) {
+        await this.removeItem(key);
+        this.logAction('expire', key, true);
+        cleanedCount++;
+      }
+    }
+
+    return cleanedCount;
+  }
 
   /**
-   * Perform HIPAA compliance check
+   * Clean up items older than retention period
    */
-  public performHIPAAComplianceCheck(): {
-  compliant: boolean;,
-};
+  async cleanupByRetention(): Promise<number> {
+    if (!this.options.enableDataRetention || !this.options.maxRetentionDays) {
+      return 0;
+    }
 
-violations: string[]
-};
+    const keys = this.getAllKeys();
+    const retentionCutoff = Date.now() - (this.options.maxRetentionDays * 24 * 60 * 60 * 1000);
+    let cleanedCount = 0;
 
-recommendations: string[]
-  } { return this.encryptionService.performHIPAAComplianceCheck() }
+    for (const key of keys) {
+      const metadata = this.getMetadata(key);
+      if (metadata && metadata.timestamp < retentionCutoff) {
+        await this.removeItem(key);
+        this.logAction('expire', key, true);
+        cleanedCount++;
+      }
+    }
+
+    return cleanedCount;
+  }
 
   /**
-   * Export data for backup or migration
+   * Export all data for backup or migration
    */
-  public async exportData(includeMetadata: boolean = true): Promise<{
-  ,
-  data: Record<string, string>;
-    metadata?: Record<string, StorageMetadata>,
-};
+  async exportData(): Promise<SecureStorageItem[]> {
+    const keys = this.getAllKeys();
+    const items: SecureStorageItem[] = [];
 
-$2Time: string
-};
+    for (const key of keys) {
+      const value = await this.getItem(key);
+      const metadata = this.getMetadata(key);
+      
+      if (value !== null && metadata) {
+        items.push({
+          key,
+          value,
+          metadata
+        });
+      }
+    }
 
-version: string
-  }> {}
-exportData: Record<string, string> = {};
-const keys = this.getAllKeys();
-
-    for (const key of keys) {;
-const value = await this.getItem(key  );
-      if (value !== null) {,
-${2Data[key] = value };
-  };
-result: { data: Record<string, string>}
-${
-  2Time: string
-};
-
-version: string
-      metadata?: Record<string, StorageMetadata> } = {}
-      data: exportData,;
-
-${
-  2Time: new Date().toISOString(),
-};
-
-version: '1.0"""'
-  };
-
-    if (includeMetadata) { result.metadata = Object.fromEntries(this.accessLog) }
-
-    return result;
+    return items;
+  }
 
   /**
    * Import data from backup
    */
-  public async importData(backup: { data: Record<string, string>,
-    metadata?: Record<string, StorageMetadata> }): Promise<void> {;}
-importedKeys: string[] = []
-    try {
-      // Import data
-      for (const [key, value] of Object.entries(backup.data)) {
-        await this.setItem(key, value ),
-        importedKeys.push(key) }
-
-      // Import metadata if available
-      if (backup.metadata) { for (const [key, metadata] of Object.entries(backup.metadata)) {
-          this.accessLog.set(key, metadata) }
-        this.saveAccessLog();
-this.logStorageEvent('data_imported", {
-  "'""""'))'
-};
-
-importedCount: importedKeys.length,
-};
-
-keys: importedKeys
-  ))
-  } catch (error) { console.error("SecureStorage: Failed to import data:", error);'"'"""''
-      throw new Error("Data import failed"  );'"""'
+  async importData(items: SecureStorageItem[]): Promise<void> {
+    for (const item of items) {
+      await this.setItem(
+        item.key, 
+        item.value, 
+        item.metadata.classification as DataClassification,
+        item.metadata.expiresAt ? Math.ceil((item.metadata.expiresAt - Date.now()) / (24 * 60 * 60 * 1000)) : undefined
+      );
+    }
+  }
 
   /**
-   * Log storage events for audit trail
+   * Clear all stored data
    */
-  private logStorageEvent(event: string, details: any): void {
+  async clearAll(): Promise<void> {
+    const keys = this.getAllKeys();
+    
+    for (const key of keys) {
+      await this.removeItem(key);
+    }
+
+    // Clear audit log
+    localStorage.removeItem(this.AUDIT_LOG_KEY);
+    this.auditLog = [];
+  }
+
+  /**
+   * Get audit log entries
+   */
+  getAuditLog(): AuditLogEntry[] {
+    return [...this.auditLog];
+  }
+
+  /**
+   * Export audit log for compliance reporting
+   */
+  exportAuditLog(): string {
+    return JSON.stringify(this.auditLog, null, 2);
+  }
+
+  /**
+   * Get metadata for a key
+   */
+  private getMetadata(key: string): StorageMetadata | null {
+    try {
+      const metadataJson = localStorage.getItem(this.METADATA_PREFIX + key);
+      return metadataJson ? JSON.parse(metadataJson) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Update metadata for a key
+   */
+  private updateMetadata(key: string, metadata: StorageMetadata): void {
+    localStorage.setItem(this.METADATA_PREFIX + key, JSON.stringify(metadata));
+  }
+
+  /**
+   * Log an action for audit purposes
+   */
+  private logAction(action: AuditLogEntry['action'], key: string, success: boolean, error?: string): void {
     if (!this.options.enableAuditLogging) return;
-const logEntry = {}
-      timestamp: new Date().toISOString(),
-      event: }}}`secure_storage_${event}`,
-      details: {
-  ...details,
-};
 
-userAgent: navigator.userAgent,
-};
+    const entry: AuditLogEntry = {
+      timestamp: Date.now(),
+      action,
+      key,
+      success,
+      error
+    };
 
-url: window.location.href
-  },
-      severity: "info' as const'"
-  };
+    this.auditLog.push(entry);
 
-    // Store in security logs
-    try(;
-const logs = JSON.parse(localStorage.getItem("security_logs") || "[]');""''"""'
-      logs.push(logEntry );
+    // Keep only last 1000 entries to prevent unbounded growth
+    if (this.auditLog.length > 1000) {
+      this.auditLog = this.auditLog.slice(-1000);
+    }
 
-      // Keep only last 100 logs
-      if (logs.length ) 100) {
-        logs.splice(0, logs.length - 100) }
+    // Persist audit log
+    this.saveAuditLog();
+  }
 
-      localStorage.setItem("security_logs', JSON.stringify(logs));""'
-  } catch (error) { console.warn('Failed to log storage event:', error );""""
-  };
+  /**
+   * Load audit log from storage
+   */
+  private loadAuditLog(): void {
+    try {
+      const auditLogJson = localStorage.getItem(this.AUDIT_LOG_KEY);
+      if (auditLogJson) {
+        this.auditLog = JSON.parse(auditLogJson);
+      }
+    } catch {
+      this.auditLog = [];
+    }
+  }
 
-// Singleton instance
-secureStorageInstance: SecureStorageService | null = null
-/**
- * Get the singleton secure storage instance
- */
-getSecureStorage = (options?: SecureStorageOptions): SecureStorageService =} { if (!secureStorageInstance) {
-  
-};
+  /**
+   * Save audit log to storage
+   */
+  private saveAuditLog(): void {
+    try {
+      localStorage.setItem(this.AUDIT_LOG_KEY, JSON.stringify(this.auditLog));
+    } catch {
+      // Handle quota exceeded or other storage errors
+      console.warn('Failed to save audit log');
+    }
+  }
+}
 
-secureStorageInstance = new SecureStorageService(options) }
-  return secureStorageInstance;
-  };
+// Create and export singleton instance
+export const secureStorage = new SecureStorageService();
 
-/**
- * React hook for using secure storage
- */;
-export const useSecureStorage = () =} {;
-const storage = getSecureStorage();
-const setSecureItem = async (key: string, value: string) =} {
-    await storage.setItem(key, value);
-const getSecureItem = async (key: string) =} { return await storage.getItem(key);
-const removeSecureItem = (key: string) =} { storage.removeItem(key);
-const clearSecureStorage = () =} { storage.clear();
+// Export convenience methods
+export const setSecureItem = (key: string, value: any, classification?: DataClassification, expiresInDays?: number) =>
+  secureStorage.setItem(key, value, classification, expiresInDays);
 
-  return {
-  setItem: setSecureItem,
-    getItem: getSecureItem,
-    removeItem: removeSecureItem,
-};
+export const getSecureItem = <T = any>(key: string) => secureStorage.getItem<T>(key);
 
-clear: clearSecureStorage,
-};
+export const removeSecureItem = (key: string) => secureStorage.removeItem(key);
 
-hasItem: (key: string) =} storage.hasItem(key),
-    getAllKeys: () =} storage.getAllKeys(),
-    getStats: () =} storage.getStorageStats(),
-    getMetadata: (key: string) =) storage.getMetadata(key),
-    validateIntegrity: () = storage.validateIntegrity(),
-    migrateToEncrypted: () = storage.migrateToEncrypted(),
-    checkHIPAACompliance: () = storage.performHIPAAComplianceCheck(),;
+export const hasSecureItem = (key: string) => secureStorage.hasItem(key);
 
-$2Data: (includeMetadata?: boolean) = storage.exportData(includeMetadata),
-    importData: (backup: any) = storage.importData(backup),
-{ SecureStorageService };
-export default SecureStorageService;
+export default secureStorage;

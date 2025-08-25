@@ -1,695 +1,683 @@
 /**
- * Push Notification Service for Astral Core Mental Health Platform
+ * Push Notification Service
  *
  * Handles push notification subscriptions, crisis alerts, helper notifications,
- * and background communication with service worker
- */;
+ * and background communication with service worker for the Astral Core mental
+ * health platform. Provides comprehensive notification management with
+ * priority handling and user preferences.
+ *
+ * @fileoverview Push notification service with crisis alert capabilities
+ * @version 2.0.0
+ */
 
-import { ENV  } from '../utils/envConfig';"""'"'""'
+import { ENV } from '../utils/envConfig';
 
 // VAPID public key from environment configuration
-const VAPID_PUBLIC_KEY = ENV.VAPID_PUBLIC_KEY;
-interface PushSubscription { { { {
-  endpoint: string
-};
+const VAPID_PUBLIC_KEY = ENV.VAPID_PUBLIC_KEY || 'default-vapid-key';
 
-keys: {
-  ,
-};
-
-p256dh: string
-};
-
-auth: string
+/**
+ * Push subscription interface
+ */
+export interface PushSubscription {
+  endpoint: string;
+  keys: {
+    p256dh: string;
+    auth: string;
   };
-interface NotificationPayload { { { { title: string}
-  body: string
-$2: 'crisis_alert" | "helper_request" | "system_update' | "general"'
+  expirationTime?: number;
+}
+
+/**
+ * Notification types with priority levels
+ */
+export type NotificationType = 
+  | 'crisis-alert'      // Highest priority
+  | 'safety-reminder'   // High priority
+  | 'check-in'         // Medium priority
+  | 'helper-match'     // Medium priority
+  | 'message'          // Normal priority
+  | 'milestone'        // Low priority
+  | 'system';          // Variable priority
+
+/**
+ * Notification priority levels
+ */
+export type NotificationPriority = 'critical' | 'high' | 'medium' | 'low';
+
+/**
+ * Notification payload interface
+ */
+export interface NotificationPayload {
+  id: string;
+  type: NotificationType;
+  priority: NotificationPriority;
+  title: string;
+  body: string;
+  icon?: string;
+  badge?: string;
+  image?: string;
+  tag?: string;
   data?: Record<string, any>;
+  actions?: NotificationAction[];
   requireInteraction?: boolean;
-interface NotificationPreferences { { { {
-  quietHours?: {
-  start: number
-};
+  silent?: boolean;
+  timestamp: number;
+  expiresAt?: number;
+  userId?: string;
+}
 
-end: number
+/**
+ * Notification action interface
+ */
+export interface NotificationAction {
+  action: string;
+  title: string;
+  icon?: string;
+}
+
+/**
+ * User notification preferences
+ */
+export interface NotificationPreferences {
+  userId: string;
+  enabled: boolean;
+  types: {
+    crisisAlert: boolean;
+    safetyReminder: boolean;
+    checkIn: boolean;
+    helperMatch: boolean;
+    message: boolean;
+    milestone: boolean;
+    system: boolean;
   };
-  enabled?: boolean;
-$2s?: string[];
+  quietHours: {
+    enabled: boolean;
+    start: string; // HH:MM format
+    end: string;   // HH:MM format
   };
-interface PushNotificationService { { { { private subscription: PushSubscription | null = null}
-  private isSupported: boolean = false
-  private permissionStatus: NotificationPermission = "default"""'"'
-  private notificationPreferences: Map<string, any> = new Map();
-$2ructor() {
-    this.checkSupport();
-    this.initializeServiceWorkerMessaging() }
+  frequency: {
+    checkIn: 'daily' | 'twice-daily' | 'weekly' | 'disabled';
+    reminders: 'immediate' | 'batched' | 'disabled';
+  };
+  sound: boolean;
+  vibration: boolean;
+  updatedAt: string;
+}
+
+/**
+ * Subscription status interface
+ */
+export interface SubscriptionStatus {
+  isSubscribed: boolean;
+  isSupported: boolean;
+  subscription: PushSubscription | null;
+  lastUpdated?: string;
+  error?: string;
+}
+
+/**
+ * Notification delivery result
+ */
+export interface DeliveryResult {
+  success: boolean;
+  messageId?: string;
+  error?: string;
+  timestamp: number;
+}
+
+/**
+ * Push Notification Service Implementation
+ */
+export class PushNotificationService {
+  private subscription: PushSubscription | null = null;
+  private preferences: NotificationPreferences | null = null;
+  private isInitialized = false;
+  private serviceWorkerRegistration: ServiceWorkerRegistration | null = null;
 
   /**
    * Initialize the push notification service
    */
-  public async initialize(): Promise<{ supported: boolean }> { this.checkSupport()}
-    if (!this.isSupported) {
-      return { supported: false }
-
+  async initialize(): Promise<SubscriptionStatus> {
     try {
-      await navigator.serviceWorker.ready,
-      return { supported: true } catch (error) { console.error("[Push] Failed to initialize:', error );"""}"'
-      return { supported: false };
+      // Check for service worker support
+      if (!('serviceWorker' in navigator)) {
+        return {
+          isSubscribed: false,
+          isSupported: false,
+          subscription: null,
+          error: 'Service workers not supported'
+        };
+      }
 
-  /**
-   * Subscribe to push notifications (wrapper for subscribeToPush)
-   */
-  public async subscribe(): Promise<PushSubscription | null> { if (this.permissionStatus !== 'granted") {;"}'"
-const granted = await this.requestPermission();
-      if (!granted) {
-        return null };
+      // Check for push notification support
+      if (!('PushManager' in window)) {
+        return {
+          isSubscribed: false,
+          isSupported: false,
+          subscription: null,
+          error: 'Push notifications not supported'
+        };
+      }
 
-    await this.subscribeToPush();
-    return this.subscription;
+      // Get service worker registration
+      this.serviceWorkerRegistration = await navigator.serviceWorker.ready;
 
-  /**
-   * Subscribe user to crisis alerts
-   */
-  public async subscribeToCrisisAlerts(userId: string): Promise<{
-  ,
-};
+      // Check existing subscription
+      const existingSubscription = await this.serviceWorkerRegistration.pushManager.getSubscription();
+      
+      if (existingSubscription) {
+        this.subscription = this.convertSubscription(existingSubscription);
+      }
 
-subscribed: boolean
-};
+      this.isInitialized = true;
 
-alertTypes: string[]
-  }> {;
-const subscription = await this.subscribe(),
-    if (!subscription) {
       return {
-  subscribed: false,
-};
-
-alertTypes: []
-
-    // Store crisis alert subscription }
-
- alertTypes = ["crisis_immediate", "crisis_warning', "crisis_support"];'""
-    this.notificationPreferences.set(`${userId)_crisis_alerts`, alertTypes);
-
-    return { subscribed: true,
-      alertTypes }
+        isSubscribed: !!this.subscription,
+        isSupported: true,
+        subscription: this.subscription,
+        lastUpdated: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Failed to initialize push notifications:', error);
+      return {
+        isSubscribed: false,
+        isSupported: false,
+        subscription: null,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
+  }
 
   /**
-   * Send crisis notification to user
+   * Request permission and subscribe to push notifications
    */
-  public async sendCrisisNotification(userId: string),
-  notification: {;
-${
-  2: string;,
-};
+  async subscribe(): Promise<SubscriptionStatus> {
+    if (!this.isInitialized) {
+      await this.initialize();
+    }
 
-message: string
-};
-
-urgency: string
-
-  }: Promise<void> {;
-const registration = await navigator.serviceWorker.getRegistration();
-    if (!registration) {
-      console.warn("[Push] No service worker registration for crisis notification"  );'"'"'"'
-      return }
-
-    await registration.showNotification("Crisis Support Alert", {
-  ""'""'
-      body: notification.message,
-      icon: "/icon-192.png',""""'
-      badge: '/icon-192.png","'""
-};
-
-tag: notification.type,
-};
-
-data: {
-  ,)
-};
-
-urgency: notification.urgency,
-        userId,)
-};
-
-timestamp: Date.now()
-  },
-      requireInteraction: notification.urgency === "high"'"'"'"'
-      // Note: "actions" are part of service worker notification API, not available in browser context""
-  /**
-   * Send safety check notification
-   */
-  public async sendSafetyCheckNotification()
-    userId: string,
-    data: { message: string
-${2: string
-
-  }: Promise<void> {;}
-const registration = await navigator.serviceWorker.getRegistration();
-    if (!registration) {
-      console.warn('[Push] No service worker registration for safety check"  );"'"""
-      return }
-
-    await registration.showNotification("Daily Safety Check', {""'"})"""''
-      body: data.message,
-      icon: "/icon-192.png",'"'"""''
-      badge: "/icon-192.png",'""'""'"'
-      tag: "safety_check',""'""''
-      data: {;)
-${
-  2: data.type,
-        userId,
-};
-
-timestamp: Date.now()
-
-      // Note: "actions" are part of service worker notification API, not available in browser context)'"""'
-  /**
-   * Update user notification preferences
-   */
-  public async updateNotificationPreferences(userId: string)
-};
-
-preferences: any
-  ): Promise<void> {
-    this.notificationPreferences.set()}}`${userId)_preferences`, preferences);
-
-    // Persist to localStorage as backup
     try {
-      localStorage.setItem()
-        `notification_prefs_${userId}`,
-        JSON.stringify(preferences)
-      );
-  } catch (error) { console.error("[Push] Failed to persist preferences:', error );"}"'
+      // Request notification permission
+      const permission = await Notification.requestPermission();
+      
+      if (permission !== 'granted') {
+        return {
+          isSubscribed: false,
+          isSupported: true,
+          subscription: null,
+          error: 'Permission denied'
+        };
+      }
 
-  /**
-   * Get user notification preferences
-   */
-  public async getNotificationPreferences(userId: string): Promise<NotificationPreferences> { // Try to get from memory first
-const preferences = this.notificationPreferences.get(`${userId)_preferences`);
+      // Subscribe to push notifications
+      const subscription = await this.serviceWorkerRegistration!.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: this.urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+      });
 
-    // Fallback to localStorage
-    if (!preferences) {
-      try {,
-const stored = localStorage.getItem(`notification_prefs_${userId)`);
-        if (stored) { preferences = JSON.parse(stored ),
-          this.notificationPreferences.set(`${userId)_preferences`, preferences) };
-  } catch (error) { console.error('[Push] Failed to retrieve preferences:", error );"""'
-
-    return preferences || {}
-
-  /**
-   * Check if notification should be sent based on preferences
-   */
-  public async shouldSendNotification()
-    userId: string,;
-
-${2: string
-  }: Promise<boolean> {   }
-const preferences = await this.getNotificationPreferences(userId);
-
-    // Check quiet hours
-    if (preferences.quietHours) {;
-const now = new Date();
-const currentHour = now.getHours(),
-{ start, end } = preferences.quietHours;
-
-      // Handle overnight quiet hours
-      if (start ) end} { if (currentHour )= start || currentHour < end> {
-          return false };
-  } else { if (currentHour )= start && currentHour < end> {
-          return false };
-  };
-
-    // Check if this notification type is enabled
-    if (type === 'non_urgent" && preferences.quietHours) { return false }"'""""'"'
-
-    return true;
-
-  /**
-   * Check if push notifications are supported
-   */
-  private checkSupport(): void { this.isSupported =
-      "serviceWorker' in navigator &&"""'"'""'
-      "PushManager" in window &&""''""'""'
-      "Notification" in window;'""''""""'
-
-    if (this.isSupported) {
-      this.permissionStatus = Notification.permission;
-      console.log('[Push] Push notifications supported, permission:", this.permissionStatus) } else(console.warn("[Push] Push notifications not supported in this browser') );""
-
-  /**
-   * Initialize service worker messaging
-   */
-  private initializeServiceWorkerMessaging(): void {
-    if (!("serviceWorker" in navigator)) return;'"'"'""'
-
-    navigator.serviceWorker.addEventListener("message", (event) =) {;'"'
-{ type, payload } = event.data || {};
-
-      switch (type) { case REQUEST_NOTIFICATION_PERMISSION_UI:"'""}"'
-          this.requestPermissionWithUI();
-          break;
-
-        case PUSH_SUBSCRIPTION_SUCCESS:""'"'"'""'
-          this.handleSubscriptionSuccess(payload.subscription)
-          break
-        case PUSH_SUBSCRIPTION_ERROR:""'""'
-          this.handleSubscriptionError(payload.error)
-          break
-        case CRISIS_MODE_READY:"'""'""'"'
-          console.log("[Push] Crisis mode ready in service worker' );"""'"'""'
-          break;
-
-        default:
-          console.log('[Push] Unknown service worker message:", type );"""'
-  }};
-
-  /**
-   * Request notification permission with user-friendly UI
-   */
-  public async requestPermission(): Promise<boolean> { if (!this.isSupported) {
-      console.warn('[Push] Push notifications not supported"  );"'""""
-      return false }
-
-    // Skip push notifications if explicitly disabled in development
-    if (process.env.VITE_DISABLE_PUSH_NOTIFICATIONS === 'true") { console.log("[Push] Push notifications disabled in development mode'  );""""
-      return false }
-
-    // Skip push notifications in development if no valid VAPID key
-    if (process.env.NODE_ENV === 'development" && !process.env.VITE_VAPID_PUBLIC_KEY) { console.log("[Push] Push notifications disabled in development - no VAPID key configured'  );""""
-      return false }
-
-    if (this.permissionStatus === 'granted") { return true }"'""
-
-    if (this.permissionStatus === "denied") { console.warn('[Push] Notification permission denied"  );"'""""
-      return false }
-
-    try {;
-const permission = await Notification.requestPermission();
-      this.permissionStatus = permission;
-
-      if (permission === 'granted") {"'""""''
-        console.log("[Push] Notification permission granted");'"'"""''
-        await this.subscribeToPush();
-        return true } else(console.warn("[Push] Notification permission denied by user" );'"'"""''
-        return false );
-  } catch (error) { console.error("[Push] Error requesting notification permission:", error );'"""'
-      return false };
-
-  /**
-   * Request permission with custom UI explanation
-   */
-  private async requestPermissionWithUI(): Promise<void> { // Show custom modal explaining why notifications are important
-const userConsent = await this.showNotificationConsentModal();
-
-    if (userConsent) {
-      await this.requestPermission();
-
-  /**
-   * Show notification consent modal
-   */
-  private async showNotificationConsentModal(): Promise<boolean> { return new Promise((resolve) =) {
-      // Create custom modal
-const modal = document.createElement("div'  );""'""""
-      modal.className = 'notification-consent-modal";"'""""
-      modal.innerHTML = }``
-        <div class='modal-overlay">"''""""'
-          <div class='modal-content">"'""""
-            <h3>🔔 Enable Crisis Alerts</h3>
-            <p>Astral Core can send you important notifications to help:</p}
-            <ul>
-              <li>🚨 Receive immediate crisis support requests</li>
-              <li>💬 Get notified when someone needs help</li>
-              <li>🔄 Stay updated on system improvements</li>
-            </ul}
-            <p>Your privacy is protected - notifications are sent securely and you can disable them anytime.</p}
-            <div class='modal-actions">"'""""
-              <button class='btn-secondary" id="decline-notifications'>Not Now</button>""""'""'
-              <button class='btn-primary" id="enable-notifications">Enable Notifications</button>"'""'"'
-            </div}
-          </div}
-        </div}
-      `
-      // Add styles }
-
- style = document.createElement("style")"''
-      style.textContent = ``
-        .notification-consent-modal { position: fixed}
-          top: 0;,
-  left: 0;,
-  right: 0;,
-  bottom: 0
-          z-index: 10000;,
-  display: flex
-          align-items: center
-          justify-content: center
-
-        .notification-consent-modal .modal-overlay {
-  background: rgba(0, 0, 0, 0.5 ),
-          position: absolute;,
-  top: 0;,
-  left: 0;,
-};
-
-right: 0
-};
-
-bottom: 0
-
-        .notification-consent-modal .modal-content {
-  background: white;,
-};
-
-padding: 2rem
-          border-radius: 12px
-          max-width: 400px
-};
-
-position: relative
-          z-index: 1
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) }
-        .notification-consent-modal h3 { margin: 0 0 1rem 0}
-          color: #667eea
-
-        .notification-consent-modal ul {
-  text-align: left
-};
-
-margin: 1rem 0
-
-        .notification-consent-modal li {
-  
-};
-
-margin: 0.5rem 0
-
-        .notification-consent-modal .modal-actions {
-  display: flex
-};
-
-gap: 1rem
-          justify-content: flex-end
-          margin-top: 1.5rem
-
-        .notification-consent-modal button {
-  padding: 0.75rem 1.5rem,
-};
-
-border: none
-          border-radius: 6px
-};
-
-cursor: pointer
-          font-weight: 500
-
-        .notification-consent-modal .btn-secondary {
-  background: #f5f5f5
-};
-
-color: #666
-
-        .notification-consent-modal .btn-primary {
-  background: #667eea
-};
-
-color: white
-
-      `
-      document.head.appendChild(style)
-      document.body.appendChild(modal)
-      // Handle button clicks
-      modal.querySelector("#enable-notifications")?.addEventListener('click", ()  =) {"'
-  document.body.removeChild(modal );
-        document.head.removeChild(style)
-});
-        resolve(true) }};
-
-      modal.querySelector("#decline-notifications")?.addEventListener('click", ()  =) {"'
-  document.body.removeChild(modal),
-        document.head.removeChild(style)
-}};
-        resolve(false) }};
-
-      // Handle overlay click
-      modal.querySelector(".modal-overlay")?.addEventListener("click", ()  =) {'}"'
-  document.body.removeChild(modal),
-        document.head.removeChild(style)
-}};
-        resolve(false) };
-  )
-
-  /**
-   * Subscribe to push notifications
-   */
-  private async subscribeToPush(): Promise<void> { if (!this.isSupported || this.permissionStatus !== "granted') {"""'"'""'
-      return }
-
-    // Skip push notifications if explicitly disabled in development
-    if (process.env.VITE_DISABLE_PUSH_NOTIFICATIONS === "true") { console.log("[Push] Push notifications disabled in development mode"  );'"'"'"""'
-      return }
-
-    // Skip push subscription in development if VAPID key is not valid
-    if (process.env.NODE_ENV === "development' && !process.env.VITE_VAPID_PUBLIC_KEY) { console.warn("[Push] Skipping push subscription in development - no valid VAPID key"  );'""""'"'
-      return }
-
-    try { // Check if any service worker is registered first
-const registration = await navigator.serviceWorker.getRegistration();
-      if (!registration) {
-        console.log("[Push] No service worker registered - push notifications disabled' );""'""'"'
-        return  };
-const vapidKey = process.env.VITE_VAPID_PUBLIC_KEY || VAPID_PUBLIC_KEY;
-const subscription = await registration.pushManager.subscribe({
-  userVisibleOnly: true,)
-};
-
-applicationServerKey: this.urlBase64ToUint8Array(vapidKey)
-  });
-
-      this.subscription = {}
-        endpoint: subscription.endpoint,
-        keys: {
-  ,
-};
-
-p256dh: this.arrayBufferToBase64(subscription.getKey("p256dh')),"""'"'""'
-};
-
-auth: this.arrayBufferToBase64(subscription.getKey('auth"))"""'
-  };
-  };
+      this.subscription = this.convertSubscription(subscription);
 
       // Send subscription to server
       await this.sendSubscriptionToServer(this.subscription);
 
-      console.log('[Push] Successfully subscribed to push notifications");"'""
-  } catch (error) { console.error('[Push] Failed to subscribe to push notifications:", error );"'""""'}'
-      throw error  };
-
-  /**
-   * Send subscription to server
-   */
-  private async sendSubscriptionToServer(subscription: PushSubscription): Promise<void> { try {;
-const response = await fetch("/.netlify/functions/push-subscribe", {
-  '""""'
-};
-
-method: 'POST","'""""'"'
-};
-
-headers: {
-          "Content-Type': "application/json"},""''""'"
-        body: JSON.stringify({
-  subscription,)
-};
-
-userAgent: navigator.userAgent,)
-};
-
-timestamp: new Date().toISOString()
-  });
-  });
-
-      if (!response.ok) {
-        throw new Error(`Server responded with ${response.status}`);
-  };
-const result = await response.json();
-      console.log("[Push] Subscription sent to server:", result);"''"
-  } catch (error) { console.error("[Push] Failed to send subscription to server:", error);"'"'"'""'
-      // Don"t throw here - app should still work without server subscription"'"'
-  /**
-   * Handle successful subscription
-   */
-  private handleSubscriptionSuccess(subscription: PushSubscription): void {
-    this.subscription = subscription;
-    console.log("[Push] Push subscription successful');"""'"'""'
-
-    // Dispatch custom event for app to handle
-    window.dispatchEvent(new CustomEvent("pushSubscriptionSuccess", {
-  ""''""'""')
-};
-
-detail: { subscription   };
-  )));
-
-  /**
-   * Handle subscription error
-   */
-  private handleSubscriptionError(error: string): void { console.error("[Push] Push subscription error:", error);'""''""""}'
-
-    // Dispatch custom event for app to handle
-    window.dispatchEvent(new CustomEvent('pushSubscriptionError", {
-  "'""""'"')
-};
-
-detail: { error   };
-  )));
-
-  /**
-   * Send crisis mode activation to service worker
-   */
-  public async activateCrisisMode(payload?: Record<string, any>): Promise<void> { if (!("serviceWorker' in navigator)) return;"""'"'""'}
-
-    try {
-      // Check if any service worker is registered first
-const registration = await navigator.serviceWorker.getRegistration();
-      if (registration && registration.active) {
-        registration.active.postMessage({
-  ;)
-};
-
-$2: "CRISIS_MODE_ACTIVATED",""''""'""')
-};
-
-payload: payload || {  };
-  ));
-  } else { console.log("[Push] No active service worker found for crisis mode activation") }'""''""""'
-
-      console.log('[Push] Crisis mode activated in service worker");"'""
-  } catch (error) { console.error("[Push] Failed to activate crisis mode:", error);'""'
-
-  /**
-   * Send test notification (for debugging)
-   */
-  public async sendTestNotification(): Promise<void> { if (!this.isSupported || this.permissionStatus !== 'granted") {""'"'""'
-      console.warn('[Push] Cannot send test notification - not supported or no permission"  );"""''""'
-      return }
-
-    try(// Check if any service worker is registered first)
-const registration = await navigator.serviceWorker.getRegistration( );
-      if (registration) {
-        await registration.showNotification("Astral Core Test", {
-  ""'""')
-          body: "Push notifications are working correctly!",""''""'""'
-};
-
-icon: "/icon-192.png",'"'"'""'
-};
-
-tag: "test-notification"'""'
-  ))
-  } else(console.log('[Push] No service worker registered for test notification") );"""'
-  } catch (error) { console.error("[Push] Error sending test notification:", error );'"'
+      return {
+        isSubscribed: true,
+        isSupported: true,
+        subscription: this.subscription,
+        lastUpdated: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Failed to subscribe to push notifications:', error);
+      return {
+        isSubscribed: false,
+        isSupported: true,
+        subscription: null,
+        error: error instanceof Error ? error.message : 'Subscription failed'
+      };
+    }
+  }
 
   /**
    * Unsubscribe from push notifications
    */
-  public async unsubscribe(): Promise<boolean> { if (!this.subscription) {
-      return true }
+  async unsubscribe(): Promise<boolean> {
+    try {
+      if (!this.serviceWorkerRegistration) {
+        return false;
+      }
 
-    try { // Check if any service worker is registered first
-const registration = await navigator.serviceWorker.getRegistration();
-      if (!registration) {
-        console.log("[Push] No service worker registered for unsubscription" );"''""''
-        this.subscription = null;
-        return true };
-const subscription = await registration.pushManager.getSubscription();
-
-      if (subscription) {;
-const result = await subscription.unsubscribe();
-        if (result) {
+      const subscription = await this.serviceWorkerRegistration.pushManager.getSubscription();
+      
+      if (subscription) {
+        const success = await subscription.unsubscribe();
+        
+        if (success) {
           this.subscription = null;
-          console.log("[Push] Successfully unsubscribed from push notifications"  );""''""'""'
-
-          // Notify server about unsubscription
-          await this.notifyServerUnsubscription() }
-        return result;
-return true;
-  } catch (error) { console.error("[Push] Failed to unsubscribe from push notifications:", error );'"'"'""'
-      return false  };
+          // Notify server of unsubscription
+          await this.removeSubscriptionFromServer();
+        }
+        
+        return success;
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Failed to unsubscribe from push notifications:', error);
+      return false;
+    }
+  }
 
   /**
-   * Notify server about unsubscription
+   * Send a push notification
    */
-  private async notifyServerUnsubscription(): Promise<void> { try {
-      await fetch("/.netlify/functions/push-unsubscribe", {
-  '""''"""'
-};
+  async sendNotification(payload: NotificationPayload): Promise<DeliveryResult> {
+    try {
+      // Check if notifications are enabled and type is allowed
+      if (!this.canSendNotification(payload.type)) {
+        return {
+          success: false,
+          error: 'Notification type disabled or blocked',
+          timestamp: Date.now()
+        };
+      }
 
-method: "POST',""''""')
-};
+      // Check quiet hours for non-critical notifications
+      if (payload.priority !== 'critical' && this.isInQuietHours()) {
+        return {
+          success: false,
+          error: 'Currently in quiet hours',
+          timestamp: Date.now()
+        };
+      }
 
-headers: {
-          "Content-Type": 'application/json"},"''""'
+      // Send to server for delivery
+      const response = await fetch('/.netlify/functions/send-push-notification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
-  )
-};
+          subscription: this.subscription,
+          payload
+        })
+      });
 
-timestamp: new Date().toISOString()
-  });
-  });
-  } catch (error) { console.error("[Push] Failed to notify server about unsubscription:", error );'""'}
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      return {
+        success: true,
+        messageId: result.messageId,
+        timestamp: Date.now()
+      };
+    } catch (error) {
+      console.error('Failed to send push notification:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Send failed',
+        timestamp: Date.now()
+      };
+    }
+  }
+
+  /**
+   * Send crisis alert notification (highest priority)
+   */
+  async sendCrisisAlert(
+    title: string,
+    body: string,
+    data?: Record<string, any>
+  ): Promise<DeliveryResult> {
+    const payload: NotificationPayload = {
+      id: `crisis-${Date.now()}`,
+      type: 'crisis-alert',
+      priority: 'critical',
+      title,
+      body,
+      icon: '/icons/crisis-alert.png',
+      badge: '/icons/badge-crisis.png',
+      tag: 'crisis-alert',
+      requireInteraction: true,
+      silent: false,
+      data: {
+        ...data,
+        url: '/crisis-support',
+        timestamp: Date.now()
+      },
+      actions: [
+        {
+          action: 'get-help',
+          title: 'Get Help Now',
+          icon: '/icons/help.png'
+        },
+        {
+          action: 'call-crisis',
+          title: 'Call 988',
+          icon: '/icons/phone.png'
+        }
+      ],
+      timestamp: Date.now()
+    };
+
+    return this.sendNotification(payload);
+  }
+
+  /**
+   * Send safety plan reminder
+   */
+  async sendSafetyReminder(
+    title: string,
+    body: string,
+    safetyPlanId: string
+  ): Promise<DeliveryResult> {
+    const payload: NotificationPayload = {
+      id: `safety-${safetyPlanId}-${Date.now()}`,
+      type: 'safety-reminder',
+      priority: 'high',
+      title,
+      body,
+      icon: '/icons/safety-plan.png',
+      tag: 'safety-reminder',
+      data: {
+        safetyPlanId,
+        url: `/safety-plan/${safetyPlanId}`,
+        timestamp: Date.now()
+      },
+      actions: [
+        {
+          action: 'view-plan',
+          title: 'View Safety Plan'
+        },
+        {
+          action: 'check-in',
+          title: 'Quick Check-in'
+        }
+      ],
+      timestamp: Date.now()
+    };
+
+    return this.sendNotification(payload);
+  }
+
+  /**
+   * Send check-in reminder
+   */
+  async sendCheckInReminder(
+    title: string = 'Daily Check-in',
+    body: string = 'How are you feeling today?'
+  ): Promise<DeliveryResult> {
+    const payload: NotificationPayload = {
+      id: `checkin-${Date.now()}`,
+      type: 'check-in',
+      priority: 'medium',
+      title,
+      body,
+      icon: '/icons/check-in.png',
+      tag: 'check-in',
+      data: {
+        url: '/check-in',
+        timestamp: Date.now()
+      },
+      actions: [
+        {
+          action: 'quick-checkin',
+          title: 'Quick Check-in'
+        }
+      ],
+      timestamp: Date.now()
+    };
+
+    return this.sendNotification(payload);
+  }
+
+  /**
+   * Send helper match notification
+   */
+  async sendHelperMatchNotification(
+    helperName: string,
+    matchScore: number
+  ): Promise<DeliveryResult> {
+    const payload: NotificationPayload = {
+      id: `helper-match-${Date.now()}`,
+      type: 'helper-match',
+      priority: 'medium',
+      title: 'New Helper Match Found!',
+      body: `${helperName} is a ${Math.round(matchScore * 100)}% match for you`,
+      icon: '/icons/helper-match.png',
+      data: {
+        helperName,
+        matchScore,
+        url: '/helpers',
+        timestamp: Date.now()
+      },
+      actions: [
+        {
+          action: 'view-helper',
+          title: 'View Profile'
+        },
+        {
+          action: 'connect',
+          title: 'Connect Now'
+        }
+      ],
+      timestamp: Date.now()
+    };
+
+    return this.sendNotification(payload);
+  }
+
+  /**
+   * Send message notification
+   */
+  async sendMessageNotification(
+    senderName: string,
+    messagePreview: string,
+    conversationId: string
+  ): Promise<DeliveryResult> {
+    const payload: NotificationPayload = {
+      id: `message-${conversationId}-${Date.now()}`,
+      type: 'message',
+      priority: 'medium',
+      title: `Message from ${senderName}`,
+      body: messagePreview,
+      icon: '/icons/message.png',
+      tag: `conversation-${conversationId}`,
+      data: {
+        senderName,
+        conversationId,
+        url: `/messages/${conversationId}`,
+        timestamp: Date.now()
+      },
+      actions: [
+        {
+          action: 'reply',
+          title: 'Reply'
+        },
+        {
+          action: 'view',
+          title: 'View Message'
+        }
+      ],
+      timestamp: Date.now()
+    };
+
+    return this.sendNotification(payload);
+  }
 
   /**
    * Get current subscription status
    */
-  public getStatus(): {
-  isSupported: boolean;,
-  hasPermission: boolean
-};
-
-isSubscribed: boolean
-};
-
-subscription: PushSubscription | null
-  } { return { isSupported: this.isSupported}
-      hasPermission: this.permissionStatus === "granted",""'""'
+  getSubscriptionStatus(): SubscriptionStatus {
+    return {
       isSubscribed: !!this.subscription,
+      isSupported: 'serviceWorker' in navigator && 'PushManager' in window,
       subscription: this.subscription
+    };
+  }
 
   /**
-   * Utility: Convert URL-safe base64 to Uint8Array
+   * Update user notification preferences
    */
-  private urlBase64ToUint8Array(base64String: string): ArrayBuffer {;}
-const padding = "='.repeat((4 - base64String.length % 4) % 4);""'
-const base64 = (base64String + padding);
-      .replace(/-/g, "+")'"'"'"'
-      .replace(/_/g, "/");"'""'
-const rawData = window.atob(base64);
-const outputArray = new Uint8Array(rawData.length  );
+  async updatePreferences(preferences: Partial<NotificationPreferences>): Promise<void> {
+    this.preferences = {
+      ...this.preferences,
+      ...preferences,
+      updatedAt: new Date().toISOString()
+    } as NotificationPreferences;
+
+    // Save to server
+    try {
+      await fetch('/.netlify/functions/update-notification-preferences', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.preferences)
+      });
+    } catch (error) {
+      console.error('Failed to update notification preferences:', error);
+    }
+  }
+
+  /**
+   * Get current notification preferences
+   */
+  getPreferences(): NotificationPreferences | null {
+    return this.preferences;
+  }
+
+  /**
+   * Check if a notification type can be sent
+   */
+  private canSendNotification(type: NotificationType): boolean {
+    if (!this.preferences) return true; // Default to allowing if no preferences set
+
+    if (!this.preferences.enabled) return false;
+
+    // Crisis alerts always allowed regardless of preferences
+    if (type === 'crisis-alert') return true;
+
+    // Check type-specific preferences
+    const typeMap: Record<NotificationType, keyof NotificationPreferences['types']> = {
+      'crisis-alert': 'crisisAlert',
+      'safety-reminder': 'safetyReminder',
+      'check-in': 'checkIn',
+      'helper-match': 'helperMatch',
+      'message': 'message',
+      'milestone': 'milestone',
+      'system': 'system'
+    };
+
+    return this.preferences.types[typeMap[type]] !== false;
+  }
+
+  /**
+   * Check if currently in quiet hours
+   */
+  private isInQuietHours(): boolean {
+    if (!this.preferences?.quietHours.enabled) return false;
+
+    const now = new Date();
+    const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    
+    const { start, end } = this.preferences.quietHours;
+    
+    // Handle same-day quiet hours
+    if (start <= end) {
+      return currentTime >= start && currentTime <= end;
+    }
+    
+    // Handle overnight quiet hours (e.g., 22:00 to 08:00)
+    return currentTime >= start || currentTime <= end;
+  }
+
+  /**
+   * Convert browser PushSubscription to our interface
+   */
+  private convertSubscription(subscription: globalThis.PushSubscription): PushSubscription {
+    return {
+      endpoint: subscription.endpoint,
+      keys: {
+        p256dh: this.arrayBufferToBase64(subscription.getKey('p256dh')!),
+        auth: this.arrayBufferToBase64(subscription.getKey('auth')!)
+      },
+      expirationTime: subscription.expirationTime || undefined
+    };
+  }
+
+  /**
+   * Send subscription to server
+   */
+  private async sendSubscriptionToServer(subscription: PushSubscription): Promise<void> {
+    try {
+      await fetch('/.netlify/functions/register-push-subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(subscription)
+      });
+    } catch (error) {
+      console.error('Failed to send subscription to server:', error);
+    }
+  }
+
+  /**
+   * Remove subscription from server
+   */
+  private async removeSubscriptionFromServer(): Promise<void> {
+    try {
+      await fetch('/.netlify/functions/unregister-push-subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ endpoint: this.subscription?.endpoint })
+      });
+    } catch (error) {
+      console.error('Failed to remove subscription from server:', error);
+    }
+  }
+
+  /**
+   * Convert URL-safe base64 to Uint8Array
+   */
+  private urlBase64ToUint8Array(base64String: string): Uint8Array {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+      .replace(/-/g, '+')
+      .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
 
     for (let i = 0; i < rawData.length; ++i) {
-      outputArray[i] = rawData.charCodeAt(i) }
-    return outputArray.buffer;
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  }
 
   /**
-   * Utility: Convert ArrayBuffer to base64 string
+   * Convert ArrayBuffer to base64
    */
-  private arrayBufferToBase64(buffer: ArrayBuffer | null): string(if (!buffer) return '";""'
-const bytes = new Uint8Array(buffer );
-const binary = "';""""'
-
-    for (let i = 0; i < bytes.byteLength; i++) {
-      binary += String.fromCharCode(bytes[i]) }
-
+  private arrayBufferToBase64(buffer: ArrayBuffer): string {
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    bytes.forEach(byte => binary += String.fromCharCode(byte));
     return window.btoa(binary);
-  };
+  }
+}
 
-// Export the class for testing(PushNotificationService )
-// Create singleton instance
+// Create and export singleton instance
 export const pushNotificationService = new PushNotificationService();
 
-// Export types for use in other modules
-interface type { { {(PushSubscription, NotificationPayload );
+// Export convenience methods
+export const initializePushNotifications = () => pushNotificationService.initialize();
+export const subscribeToPushNotifications = () => pushNotificationService.subscribe();
+export const sendCrisisAlert = (title: string, body: string, data?: Record<string, any>) =>
+  pushNotificationService.sendCrisisAlert(title, body, data);
+
+export default pushNotificationService;

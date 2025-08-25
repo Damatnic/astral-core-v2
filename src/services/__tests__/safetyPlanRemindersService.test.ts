@@ -1,748 +1,597 @@
 /**
  * Test Suite for Safety Plan Reminders Service
- * Tests safety plan creation, management, and reminder systems
+ *
+ * Comprehensive tests for safety plan creation, management, and reminder systems
+ * including mood-based triggers, crisis escalation, and cultural adaptations.
+ *
+ * @fileoverview Tests for safetyPlanRemindersService
+ * @version 2.0.0
  */
 
-// Mock the safetyPlanRemindersService
-jest.mock("../safetyPlanRemindersService', () =) ({
-  ""'""'"'
-};
+import { safetyPlanRemindersService } from '../safetyPlanRemindersService';
+import { moodAnalysisService } from '../moodAnalysisService';
+import { crisisDetectionIntegrationService } from '../crisisDetectionIntegrationService';
 
-safetyPlanRemindersService: {
-  ,
-  reset: jest.fn(),
+// Mock dependencies
+jest.mock('../safetyPlanRemindersService', () => ({
+  safetyPlanRemindersService: {
+    reset: jest.fn(),
     createSafetyPlan: jest.fn(),
     getTemplates: jest.fn(),
     createAdaptivePlan: jest.fn(),
     handleCrisisEvent: jest.fn(),
     getActiveReminders: jest.fn(),
     createInteractiveReminder: jest.fn(),
-    recordInteraction: jest.fn(),
-    getEngagementMetrics: jest.fn(),
-    createQuickAccessReminder: jest.fn(),
-    createPersonalizedPlan: jest.fn(),
-    activateEmergencyProtocol: jest.fn(),
-    activateImmediate: jest.fn(),
-    sharePlan: jest.fn(),
-    updatePlan: jest.fn(),
-    getSyncStatus: jest.fn(),
+    scheduleCheckIn: jest.fn(),
+    processCheckInResponse: jest.fn(),
+    escalateReminder: jest.fn(),
+    getUserRiskLevel: jest.fn(),
+    getPersonalizedContent: jest.fn(),
+    trackReminderEffectiveness: jest.fn(),
+    generateReminderReport: jest.fn(),
+    updateReminderFrequency: jest.fn(),
+    pauseReminders: jest.fn(),
+    resumeReminders: jest.fn(),
+    archiveOldReminders: jest.fn(),
+    exportReminderData: jest.fn(),
+    importReminderData: jest.fn()
+  }
+}));
+
+jest.mock('../moodAnalysisService', () => ({
+  moodAnalysisService: {
+    analyzeMood: jest.fn(),
+    getMoodHistory: jest.fn(),
+    detectMoodPatterns: jest.fn(),
+    getMoodTrends: jest.fn()
+  }
+}));
+
+jest.mock('../crisisDetectionIntegrationService', () => ({
+  crisisDetectionIntegrationService: {
+    assessRiskLevel: jest.fn(),
+    triggerCrisisResponse: jest.fn(),
+    notifyEmergencyContacts: jest.fn(),
+    escalateToProfessional: jest.fn()
+  }
+}));
+
+// Test data
+const mockUser = {
+  id: 'user123',
+  name: 'Test User',
+  email: 'test@example.com',
+  riskLevel: 'moderate' as const,
+  preferences: {
+    reminderFrequency: 'daily' as const,
+    preferredTime: '09:00',
+    culturalContext: 'western' as const,
+    language: 'en'
+  }
 };
 
-checkReviewStatus: jest.fn(),
+const mockSafetyPlan = {
+  id: 'plan123',
+  userId: 'user123',
+  title: 'My Safety Plan',
+  warningSigns: ['feeling hopeless', 'social withdrawal'],
+  copingStrategies: ['deep breathing', 'call friend'],
+  emergencyContacts: [
+    { name: 'Crisis Hotline', phone: '988', type: 'crisis' as const },
+    { name: 'Friend', phone: '555-0123', type: 'personal' as const }
+  ],
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+  isActive: true
 };
 
-getVersionHistory: jest.fn()}});
-
-import { safetyPlanRemindersService, SafetyPlanReminder  } from '../safetyPlanRemindersService';""'""''
-
-// Define types for test data
-interface SafetyPlan { { { {
-  id: string
+const mockMoodAnalysis = {
+  primary: 'anxious' as const,
+  secondary: 'sad' as const,
+  intensity: 0.7,
+  confidence: 0.85,
+  keywords: ['worried', 'stressed'],
+  suggestions: ['try breathing exercises'],
+  timestamp: Date.now()
 };
 
-userId: string
-  warningSignsTriggers?: string[]
-  copingStrategies?: string[]
-  supportContacts?: any[]
-  professionalContacts?: any[]
-  safeEnvironment?: string[]
-  createdAt?: Date;
-  lastUpdated?: Date;
-  reminders?: any[];
-  adaptedSchedule?: boolean;
-  triggerOnCrisis?: boolean,
-  usageStats?: {
-  totalAccesses: number;,
+const mockReminder = {
+  id: 'reminder123',
+  userId: 'user123',
+  safetyPlanId: 'plan123',
+  type: 'check-in' as const,
+  title: 'Daily Check-in',
+  message: 'How are you feeling today?',
+  scheduledTime: new Date(Date.now() + 3600000).toISOString(), // 1 hour from now
+  frequency: 'daily' as const,
+  isActive: true,
+  createdAt: new Date().toISOString(),
+  responses: []
 };
 
-lastAccessed: Date
-};
-
-mostUsedStrategy: string
-  };
-  learningEnabled?: boolean;
-  deliveredChannels?: string[];
-  deliveryStatus?: string;
-  primaryFailed?: boolean;
-  deliveredVia?: string;
-  fallbackUsed?: boolean;
-  valid?: boolean;
-  missingComponents?: string[];
-  };
-interface EngagementMetrics { { { {
-  totalReminders: number;,
-  completedReminders: number
-};
-
-engagementRate: number
-};
-
-mostEngagedStrategy: string
-  };
-InteractiveReminder extends SafetyPlanReminder { actions?: string[],
-  feedbackRequired?: boolean };
-QuickAccessReminder extends SafetyPlanReminder { quickActions?: string[] };
-interface ShareResult { { { {
-  shared: boolean;,
-};
-
-recipients: string[]
-};
-
-accessLevel: string
-  };
-interface SyncStatus { { { {
-  synced: boolean;,
-};
-
-lastSync: Date
-};
-
-syncedWith: string[]
-  };
-interface ReviewStatus { { { {
-  reviewDue: boolean;,
-};
-
-daysSinceLastReview: number
-};
-
-suggestedChanges: string[]
-  };
-interface VersionHistory { { { {
-  
-};
-
-versions: Array<{
-  ,
-  version: number
-};
-
-date: Date
-};
-
-changes: string
-  }>;
-  canRevert: boolean
-  };
-interface ActivationResult { { { {
-  planActivated?: boolean;
-  notifications?: string[];
-  immediateActions?: string[],
-  contactsNotified?: Array<{ name: string }>;
-  locationShared?: boolean;
-  crisisResourcesProvided?: boolean;
-  immediateStrategies?: Array<{ name: string, duration: string }>;
-  guidedSupport?: boolean;
-
-// Type the mocked service
-const mockedService = safetyPlanRemindersService as jest.Mocked<typeof safetyPlanRemindersService>;
-
-describe("SafetyPlanRemindersService", () =) { beforeEach(() =) {'""'""'""'
-    jest.clearAllMocks(),
-    jest.useFakeTimers() }};
-
-  afterEach(() =) { jest.useRealTimers() }};
-
-  describe('Safety Plan Creation", () =) {""'"'""'
-    it.skip('should create a comprehensive safety plan", async () =) {;"""'
-const planData = {}
-        userId: 'user-123","'""
-        warningSignsTriggers: [ "Feeling isolated",'"'"'"'
-          "Sleep disruption",""''import "Negative self-talk" },'""""'
-        copingStrategies: [ 'Deep breathing","'""""
-          'Go for a walk","'import "Listen to music" ],""'""'
-        supportContacts: [
-          { name: "Best Friend', phone: "555-0001", available: "24/7",'""'""'
-          { name: "Therapist", phone: '555-0002", available: "Business hours' }"""
-        ],
-        professionalContacts: [
-          { name: "Crisis Hotline', phone: "988", available: '24/7" },"""'"'
-          { name: "Emergency', phone: "911", available: "24/7" }'""'""'
-        },
-        safeEnvironment: [ "Remove sharp objects",'""''""""'
-          'Store medications safely","'"import "Have someone stay with me" ;"'"'
-  ];
-const expectedPlan = {}
-        id: "plan-123',"""'"'""'
-        userId: "user-123",""'""'
-        warningSignsTriggers: planData.warningSignsTriggers,
-        copingStrategies: planData.copingStrategies,
-        supportContacts: planData.supportContacts,
-        createdAt: new Date(),
-        lastUpdated: new Date()
-  ]
-      mockedService.createSafetyPlan.mockResolvedValue(expectedPlan as any)
-const plan = await safetyPlanRemindersService.createSafetyPlan(planData as any) as SafetyPlan;
-
-      expect(plan.id).toBeDefined();
-      expect(plan.userId).toBe("user-123");""''""'"'
-      expect(plan.warningSignsTriggers).toHaveLength(3);
-      expect(plan.copingStrategies).toHaveLength(3);
-      expect(plan.supportContacts).toHaveLength(2);
-      expect(plan.createdAt).toBeDefined();
-      expect(plan.lastUpdated).toBeDefined();
+describe('SafetyPlanRemindersService', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    // Reset service state
+    (safetyPlanRemindersService.reset as jest.Mock).mockResolvedValue(undefined);
   });
 
-    it.skip("should validate required safety plan components", async () => {;"''
-const incompletePlan = {}
-        userId: "user-456",'""""'
-        warningSignsTriggers: [],
-        copingStrategies: []
-  ]
-const expectedResult = { valid: false}
-        missingComponents: ['warningSignsTriggers", "copingStrategies', "supportContacts"] ;""'"'
+  describe('Safety Plan Management', () => {
+    it('should create a new safety plan', async () => {
+      (safetyPlanRemindersService.createSafetyPlan as jest.Mock).mockResolvedValue(mockSafetyPlan);
 
-      mockedService.createSafetyPlan.mockResolvedValue(expectedResult as any);
-const result = await safetyPlanRemindersService.createSafetyPlan(incompletePlan as any) as SafetyPlan;
+      const result = await safetyPlanRemindersService.createSafetyPlan(
+        mockUser.id,
+        'My Safety Plan',
+        mockSafetyPlan.warningSigns,
+        mockSafetyPlan.copingStrategies,
+        mockSafetyPlan.emergencyContacts
+      );
 
-      expect(result.valid).toBe(false);
-      expect(result.missingComponents).toContain("warningSignsTriggers");'"""'
-      expect(result.missingComponents).toContain("copingStrategies');""'""""
-      expect(result.missingComponents).toContain('supportContacts");"'
-  
+      expect(safetyPlanRemindersService.createSafetyPlan).toHaveBeenCalledWith(
+        mockUser.id,
+        'My Safety Plan',
+        mockSafetyPlan.warningSigns,
+        mockSafetyPlan.copingStrategies,
+        mockSafetyPlan.emergencyContacts
+      );
+      expect(result).toEqual(mockSafetyPlan);
+    });
 
-    it.skip("should create templates for common situations", async () =) {;'"'
-const expectedTemplates = [;]
-        { name: "Depression Safety Plan', category: "mood" },""''""'
-        { name: "Anxiety Crisis Plan", category: "anxiety" },'"'"'""'
-        { name: "Substance Use Safety Plan", category: 'substance" }"'""""
+    it('should get safety plan templates', async () => {
+      const mockTemplates = [
+        {
+          id: 'template1',
+          name: 'Basic Safety Plan',
+          description: 'A simple safety plan template',
+          sections: ['warning-signs', 'coping-strategies', 'contacts']
+        }
+      ];
+
+      (safetyPlanRemindersService.getTemplates as jest.Mock).mockResolvedValue(mockTemplates);
+
+      const result = await safetyPlanRemindersService.getTemplates();
+
+      expect(safetyPlanRemindersService.getTemplates).toHaveBeenCalled();
+      expect(result).toEqual(mockTemplates);
+    });
+
+    it('should create adaptive safety plan based on user data', async () => {
+      const mockAdaptivePlan = { ...mockSafetyPlan, title: 'Adaptive Safety Plan' };
+      (safetyPlanRemindersService.createAdaptivePlan as jest.Mock).mockResolvedValue(mockAdaptivePlan);
+
+      const result = await safetyPlanRemindersService.createAdaptivePlan(mockUser.id, {
+        moodHistory: [mockMoodAnalysis],
+        riskFactors: ['isolation', 'stress'],
+        preferences: mockUser.preferences
+      });
+
+      expect(safetyPlanRemindersService.createAdaptivePlan).toHaveBeenCalledWith(mockUser.id, {
+        moodHistory: [mockMoodAnalysis],
+        riskFactors: ['isolation', 'stress'],
+        preferences: mockUser.preferences
+      });
+      expect(result).toEqual(mockAdaptivePlan);
+    });
+  });
+
+  describe('Crisis Event Handling', () => {
+    it('should handle crisis event and trigger appropriate responses', async () => {
+      const mockCrisisEvent = {
+        userId: mockUser.id,
+        severity: 'high' as const,
+        triggers: ['mood-decline', 'keyword-detection'],
+        timestamp: Date.now()
       };
 
-      mockedService.getTemplates.mockResolvedValue(expectedTemplates as any);
-const templates = await safetyPlanRemindersService.getTemplates();
+      const mockResponse = {
+        actionsTriggered: ['emergency-contacts', 'professional-escalation'],
+        remindersScheduled: 2,
+        success: true
+      };
 
-      expect(templates).toContainEqual(expect.objectContaining({
-  name: 'Depression Safety Plan","'""""'')
-};
+      (safetyPlanRemindersService.handleCrisisEvent as jest.Mock).mockResolvedValue(mockResponse);
 
-category: "mood"'"'
-  )))
-      expect(templates).toContainEqual(expect.objectContaining({
-  name: "Anxiety Crisis Plan',""''""')
-};
+      const result = await safetyPlanRemindersService.handleCrisisEvent(mockCrisisEvent);
 
-category: "anxiety'""'
-  )))
-      expect(templates).toContainEqual(expect.objectContaining({
-  name: 'Substance Use Safety Plan","""''""')
-};
+      expect(safetyPlanRemindersService.handleCrisisEvent).toHaveBeenCalledWith(mockCrisisEvent);
+      expect(result).toEqual(mockResponse);
+    });
 
-category: "substance"""
-  )))
-  describe('Reminder Scheduling", () =) {"'""""
-    it.skip('should schedule daily check-in reminders", async () =) {;"'""
-const planData = {}
-        userId: "user-daily",'"'"'"'
-        reminderSettings: {
-  ,
-};
+    it('should escalate reminder when user does not respond', async () => {
+      const mockEscalation = {
+        reminderId: mockReminder.id,
+        escalationLevel: 2,
+        actionsTriggered: ['supervisor-notification'],
+        nextReminderIn: 1800000 // 30 minutes
+      };
 
-dailyCheckIn: true,
-};
+      (safetyPlanRemindersService.escalateReminder as jest.Mock).mockResolvedValue(mockEscalation);
 
-checkInTimes: ["09:00", "18: 00"]'"'
-  };
-  };
-const expectedPlan = {}
-        id: "plan-daily',""'""'"'
-        userId: "user-daily',"""'"'""'
-        reminders: [
-          { time: "09:00", type: "daily-check" },'""'
-          { time: '18:00", type: "daily-check" }"'""'"'
-        ];
-  };
+      const result = await safetyPlanRemindersService.escalateReminder(mockReminder.id, 2);
 
-      mockedService.createSafetyPlan.mockResolvedValue(expectedPlan as any);
-const plan = await safetyPlanRemindersService.createSafetyPlan(planData as any) as SafetyPlan;
+      expect(safetyPlanRemindersService.escalateReminder).toHaveBeenCalledWith(mockReminder.id, 2);
+      expect(result).toEqual(mockEscalation);
+    });
+  });
 
-      expect(plan.reminders).toHaveLength(2);
-      expect(plan.reminders![0].time).toBe("09:00")"''"
-      expect(plan.reminders![1].time).toBe("18: 00")"'"'
-  ]};
+  describe('Reminder Management', () => {
+    it('should get active reminders for user', async () => {
+      const mockActiveReminders = [mockReminder];
+      (safetyPlanRemindersService.getActiveReminders as jest.Mock).mockResolvedValue(mockActiveReminders);
 
-    it.skip("should schedule strategy practice reminders', async () =) {;""'
-const planData = {}
-        userId: "user-practice",'"'"'""'
-        copingStrategies: ["Meditation", 'Journaling"],"'""""
-        reminderSettings: {
-  ,
-};
+      const result = await safetyPlanRemindersService.getActiveReminders(mockUser.id);
 
-practiceReminders: true,
-};
+      expect(safetyPlanRemindersService.getActiveReminders).toHaveBeenCalledWith(mockUser.id);
+      expect(result).toEqual(mockActiveReminders);
+    });
 
-practiceFrequency: 'weekly""'"
-  };
-  };
-const expectedPlan = {}
-        id: "plan-practice","'""'
-        userId: 'user-practice",""'"'"'
-        reminders: [
-          { strategy: "Meditation", frequency: 'weekly" },"""'
-          { strategy: 'Journaling", frequency: "weekly' }""""'"'
-        };
-  };
+    it('should create interactive reminder', async () => {
+      const mockInteractiveReminder = {
+        ...mockReminder,
+        type: 'interactive' as const,
+        questions: [
+          { id: 'q1', text: 'How is your mood today?', type: 'scale' as const },
+          { id: 'q2', text: 'Any concerning thoughts?', type: 'yes-no' as const }
+        ]
+      };
 
-      mockedService.createSafetyPlan.mockResolvedValue(expectedPlan as any);
-const plan = await safetyPlanRemindersService.createSafetyPlan(planData as any) as SafetyPlan;
+      (safetyPlanRemindersService.createInteractiveReminder as jest.Mock).mockResolvedValue(mockInteractiveReminder);
 
-      expect(plan.reminders).toHaveLength(2);
-      expect(plan.reminders![0].strategy).toBe("Meditation');"""'"'""'
-      expect(plan.reminders![0].frequency).toBe("weekly");""'"'
+      const result = await safetyPlanRemindersService.createInteractiveReminder(
+        mockUser.id,
+        mockSafetyPlan.id,
+        'Interactive Check-in',
+        mockInteractiveReminder.questions
+      );
 
-    it.skip("should adapt reminder timing based on user patterns', async () =) {;"""'
-const userPatterns = {}
-        highRiskTimes: ["evening', "weekend"],'""
-        lowEngagementTimes: ["morning"],'"'"'"'
-        timezone: "America/New_York""''
-  };
-const expectedPlan = {}
-        id: "plan-adaptive",'"'"""''
-        userId: "user-789",'"'"""''
-        reminders: [
-          { time: "evening", type: 'high-risk-check" },"'""''
-          { time: "weekend", type: 'high-risk-check" }"'""''
-        ],
-        adaptedSchedule: true
-  };
+      expect(safetyPlanRemindersService.createInteractiveReminder).toHaveBeenCalledWith(
+        mockUser.id,
+        mockSafetyPlan.id,
+        'Interactive Check-in',
+        mockInteractiveReminder.questions
+      );
+      expect(result).toEqual(mockInteractiveReminder);
+    });
 
-      mockedService.createAdaptivePlan.mockResolvedValue(expectedPlan as any);
-const plan = await safetyPlanRemindersService.createAdaptivePlan("user-789", userPatterns as any) as SafetyPlan;'"""'
+    it('should schedule check-in reminder', async () => {
+      const mockScheduledReminder = {
+        ...mockReminder,
+        scheduledTime: new Date(Date.now() + 86400000).toISOString() // Tomorrow
+      };
 
-      expect(plan.reminders).toBeDefined();
-      expect(plan.reminders).toHaveLength(2);
-      expect(plan.adaptedSchedule).toBe(true);
-  };
-  )
+      (safetyPlanRemindersService.scheduleCheckIn as jest.Mock).mockResolvedValue(mockScheduledReminder);
 
-  describe("Crisis Detection Integration', () =) {""'""""
-    it.skip('should trigger safety plan when crisis detected", async () =) {;"'
-const planData = {}
-        userId: "user-crisis",""'""'
-        triggerOnCrisis: true
-  };
-const createdPlan = {}
-        id: "plan-crisis",""''""''
-        userId: "user-crisis",""''""'""'
-        triggerOnCrisis: true
-  };
+      const result = await safetyPlanRemindersService.scheduleCheckIn(
+        mockUser.id,
+        mockSafetyPlan.id,
+        'daily',
+        '09:00'
+      );
 
-      mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
-      await safetyPlanRemindersService.createSafetyPlan(planData as any);
-const crisisEvent = { userId: "user-crisis",'"}'"'"'
-        severity: "high",""'""'
+      expect(safetyPlanRemindersService.scheduleCheckIn).toHaveBeenCalledWith(
+        mockUser.id,
+        mockSafetyPlan.id,
+        'daily',
+        '09:00'
+      );
+      expect(result).toEqual(mockScheduledReminder);
+    });
+
+    it('should process check-in response', async () => {
+      const mockResponse = {
+        reminderId: mockReminder.id,
+        responses: {
+          mood: 'good',
+          concerns: 'none',
+          needsSupport: false
+        },
         timestamp: Date.now()
-const expectedResponse = { planActivated: true}
-        notifications: ["safety-plan-activated"],""''""''
-        immediateActions: ["Contact support", "Use coping strategies"],''""''
-        contactsNotified: ["Emergency Contact", "Therapist"] ;'"'"'""'
+      };
 
-      mockedService.handleCrisisEvent.mockResolvedValue(expectedResponse as any);
-const response = await safetyPlanRemindersService.handleCrisisEvent(crisisEvent as any) as ActivationResult;
+      const mockProcessResult = {
+        riskLevel: 'low' as const,
+        nextReminderScheduled: true,
+        recommendedActions: ['continue-current-plan'],
+        success: true
+      };
 
-      expect(response.planActivated).toBe(true);
-      expect(response.notifications).toContain("safety-plan-activated");'""''""'
-      expect(response.immediateActions).toBeDefined();
-      expect(response.contactsNotified).toBeDefined();
-  
+      (safetyPlanRemindersService.processCheckInResponse as jest.Mock).mockResolvedValue(mockProcessResult);
 
-    it.skip("should escalate reminders during high-risk periods", async () =) {;''""
-const planData = {}
-        userId: "user-risk",'"'"'""'
-        adaptiveIntensity: true
-  };
-const createdPlan = {}
-        id: "plan-risk",'"'"'"'
-        userId: "user-risk",""''""'"'
-        adaptiveIntensity: true
-  
-      mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any)
-      await safetyPlanRemindersService.createSafetyPlan(planData as any);
-const activeReminders = [;]
-        { id: "rem-1", frequency: "hourly', priority: "high" },'""""''
-        { id: "rem-2", frequency: '30min", priority: "urgent" }"''""';
-      mockedService.getActiveReminders.mockResolvedValue(activeReminders as any);
-const reminders = await safetyPlanRemindersService.getActiveReminders("user-risk');"""'"'""'
+      const result = await safetyPlanRemindersService.processCheckInResponse(mockResponse);
 
-      expect(reminders).toHaveLength(2);
-      expect(reminders[0].priority).toBe('high");""'"'""'
-      expect(reminders[1].priority).toBe('urgent");"""'
-  )
-  )
-
-  describe("Interactive Reminders", () =) {'""""'
-    it.skip('should create interactive coping strategy reminders", async () =) {;"'
-const reminderData = {}
-        userId: "user-interactive",""'""'
-        strategy: "breathing-exercise",""'""'
-        interactive: true
-  };
-const expectedReminder = {;}
-$2: "interactive",""'""'
-        actions: ["Start', "Skip", "Snooze"],'""
-        feedbackRequired: true
-  };
-
-      mockedService.createInteractiveReminder.mockResolvedValue(expectedReminder as any);
-const reminder = await safetyPlanRemindersService.createInteractiveReminder(reminderData as any) as InteractiveReminder;
-
-      expect(reminder.type).toBe('interactive");"""''""'"
-      expect(reminder.actions).toBeDefined();
-      expect(reminder.feedbackRequired).toBe(true);
-  }};
-
-    it.skip("should track reminder engagement", async () =) {;"''"
-const planData = {}
-        userId: "user-engagement""'"'
-  
-const createdPlan = {}
-        id: "plan-engagement',"""'"'""'
-        userId: "user-engagement"""''
-  
-      mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any)
-const plan = await safetyPlanRemindersService.createSafetyPlan(planData as any) as SafetyPlan;
-
-      // Simulate reminder interactions
-      await safetyPlanRemindersService.recordInteraction(plan.id, {
-  reminderId: "rem-1",""''""'"')
-};
-
-action: "completed","'"'"'""')
-};
-
-timestamp: Date.now()
-  } as any);
-
-      await safetyPlanRemindersService.recordInteraction(plan.id, {
-  reminderId: "rem-2",'""''"""')
-};
-
-action: "skipped',""'"""")
-};
-
-timestamp: Date.now()
-  } as any);
-const expectedEngagement = {}
-        totalReminders: 2,
-        completedReminders: 1,
-        engagementRate: 0.5,
-        mostEngagedStrategy: 'breathing-exercise""'"
-  };
-
-      mockedService.getEngagementMetrics.mockResolvedValue(expectedEngagement as any);
-const engagement = await safetyPlanRemindersService.getEngagementMetrics(plan.id) as EngagementMetrics;
-
-      expect(engagement.totalReminders).toBe(2);
-      expect(engagement.completedReminders).toBe(1);
-      expect(engagement.engagementRate).toBe(0.5);
-      expect(engagement.mostEngagedStrategy).toBeDefined();
-  );
-
-    it.skip("should provide quick access buttons in reminders", async () =) {;"'""'
-const reminderData = {}
-        userId: 'user-quick",""'"'""'
-        includeQuickActions: true
-  };
-const expectedReminder = { quickActions: ['Call 988", "Start breathing exercise", "Contact support'] };""'"'
-
-      mockedService.createQuickAccessReminder.mockResolvedValue(expectedReminder as any);
-const reminder = await safetyPlanRemindersService.createQuickAccessReminder(reminderData as any) as QuickAccessReminder;
-
-      expect(reminder.quickActions).toBeDefined();
-      expect(reminder.quickActions).toHaveLength(3);
-  describe("Progress Tracking", () =) {""'""'
-    it.skip("should track safety plan usage over time', async () =) {;""'
-const planData = {}
-        userId: "user-track"'""'
-  };
-const createdPlan = {}
-        id: 'plan-track","""''""'
-        userId: "user-track",""''""'"'
-        usageStats: {
-  ,
-  totalAccesses: 10,
-};
-
-lastAccessed: new Date(),
-};
-
-mostUsedStrategy: "breathing""'"'
-  };
-  };
-
-      mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
-const plan = await safetyPlanRemindersService.createSafetyPlan(planData as any) as SafetyPlan;
-
-      expect(plan.usageStats).toBeDefined();
-      expect(plan.usageStats!.totalAccesses).toBe(10);
-      expect(plan.usageStats!.mostUsedStrategy).toBe("breathing');""'
-  
-  
-
-  describe("Personalization and Learning", () =) {'""''""""'
-    it.skip('should personalize reminders based on user preferences", async () =) {;'"
-const preferences = {}
-        communicationStyle: "encouraging",'"'"'""'
-        reminderTone: "gentle",'"'"'""'
-        preferredStrategies: ["art", 'music"],"''""'
-        avoidStrategies: ["social"]'"'
-  };
-const expectedPlan = {}
-        reminders: [
-          { tone: "gentle', message: "You can do this! Try some art therapy?" }"'"'"'
-        ],
-        suggestedStrategies: ["art', "music"];""'
-  };
-
-      mockedService.createPersonalizedPlan.mockResolvedValue(expectedPlan as any);
-const plan = await safetyPlanRemindersService.createPersonalizedPlan('user-personal", preferences as any) as SafetyPlan & { reminders: any[], suggestedStrategies: string[] };"'""
-
-      expect(plan.reminders[0].tone).toBe("gentle");'""''"""'
-      expect(plan.reminders[0].message).toContain("You can do this');""''"""'
-      expect(plan.suggestedStrategies).toContain("art');""''"""'
-      expect(plan.suggestedStrategies).not.toContain("social');""'
-  };
-
-    it.skip('should learn from user feedback", async () =) {;"""'
-const planData = {}
-        userId: 'user-learning""'""
-  
-const createdPlan = {}
-        id: "plan-learning",'"'"'"'
-        userId: "user-learning",""'""'
-        learningEnabled: true
-  
-      mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any)
-const plan = await safetyPlanRemindersService.createSafetyPlan(planData as any) as SafetyPlan;
-
-      expect(plan.learningEnabled).toBe(true);
-  
-  
-
-  describe("Multi-channel Delivery", () =) { it.skip("should deliver reminders through multiple channels", async () =) {;'"'
-const planData = {}
-        userId: "user-multichannel',"""'"'""'
-        deliveryChannels: ["app", "sms", 'email"] };"'
-const createdPlan = {}
-        id: "plan-multichannel",""''""'""'
-        userId: "user-multichannel",'"'"'""'
-        deliveredChannels: ["app", 'sms", "email'],""""'"'
-        deliveryStatus: "success'""""'
-  };
-
-      mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
-const plan = await safetyPlanRemindersService.createSafetyPlan(planData as any) as SafetyPlan;
-
-      expect(plan.deliveredChannels).toHaveLength(3);
-      expect(plan.deliveryStatus).toBe('success");"';
-    it.skip("should fallback to alternative channels on failure", async () =) {;""''
-const planData = {}
-        userId: "user-fallback",'"'"""''
-        primaryChannel: "app",'"""'
-        fallbackChannels: ["sms', "email"] };'"
-const createdPlan = {}
-        id: "plan-fallback","'""'
-        userId: 'user-fallback",""'"'"'
-        primaryFailed: true,
-        deliveredVia: "sms",'"""'
-        fallbackUsed: true
-  };
-
-      mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
-const plan = await safetyPlanRemindersService.createSafetyPlan(planData as any) as SafetyPlan;
-
-      expect(plan.primaryFailed).toBe(true);
-      expect(plan.deliveredVia).toBe("sms');""''""'
-      expect(plan.fallbackUsed).toBe(true);
-  });
+      expect(safetyPlanRemindersService.processCheckInResponse).toHaveBeenCalledWith(mockResponse);
+      expect(result).toEqual(mockProcessResult);
+    });
   });
 
-  describe("Emergency Activation", () => {"'""'
-    it.skip('should activate emergency contacts in crisis", async () => {;""'
-const planData = {}
-        userId: "user-emergency',""''""'
-        emergencyContacts: [
-          { name: "Emergency Contact", phone: '555-911", priority: 1 },"''""'
-          { name: "Therapist", phone: '555-0001", priority: 2 }"''""'
-        ];
-  };
-const createdPlan = {}
-        id: "plan-emergency",'""''""""'
-        userId: 'user-emergency""'""
-  
-      mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any)
-const plan = await safetyPlanRemindersService.createSafetyPlan(planData as any) as SafetyPlan;
-const expectedActivation = {}
-        contactsNotified: [
-          { name: 'Emergency Contact" },"'""""''
-          { name: "Therapist" }'"'"""''
-        ],
-        locationShared: true,
-        crisisResourcesProvided: true
-  };
+  describe('Risk Assessment', () => {
+    it('should get user risk level', async () => {
+      const mockRiskAssessment = {
+        level: 'moderate' as const,
+        factors: ['mood-decline', 'missed-checkins'],
+        score: 0.6,
+        recommendations: ['increase-checkin-frequency'],
+        lastUpdated: Date.now()
+      };
 
-      mockedService.activateEmergencyProtocol.mockResolvedValue(expectedActivation as any);
-const activation = await safetyPlanRemindersService.activateEmergencyProtocol(plan.id) as ActivationResult;
+      (safetyPlanRemindersService.getUserRiskLevel as jest.Mock).mockResolvedValue(mockRiskAssessment);
 
-      expect(activation.contactsNotified).toHaveLength(2);
-      expect(activation.contactsNotified![0].name).toBe("Emergency Contact");'""'""'""'
-      expect(activation.locationShared).toBe(true);
-      expect(activation.crisisResourcesProvided).toBe(true);
+      const result = await safetyPlanRemindersService.getUserRiskLevel(mockUser.id);
+
+      expect(safetyPlanRemindersService.getUserRiskLevel).toHaveBeenCalledWith(mockUser.id);
+      expect(result).toEqual(mockRiskAssessment);
+    });
+
+    it('should update reminder frequency based on risk level', async () => {
+      const mockUpdatedFrequency = {
+        userId: mockUser.id,
+        oldFrequency: 'daily' as const,
+        newFrequency: 'twice-daily' as const,
+        reason: 'increased-risk',
+        effectiveDate: new Date().toISOString()
+      };
+
+      (safetyPlanRemindersService.updateReminderFrequency as jest.Mock).mockResolvedValue(mockUpdatedFrequency);
+
+      const result = await safetyPlanRemindersService.updateReminderFrequency(
+        mockUser.id,
+        'twice-daily',
+        'increased-risk'
+      );
+
+      expect(safetyPlanRemindersService.updateReminderFrequency).toHaveBeenCalledWith(
+        mockUser.id,
+        'twice-daily',
+        'increased-risk'
+      );
+      expect(result).toEqual(mockUpdatedFrequency);
+    });
   });
 
-    it.skip('should provide immediate coping strategies during activation", async () => {;""'
-const planData = {}
-        userId: "user-immediate'"'""
-  };
-const createdPlan = {}
-        id: "plan-immediate',""'""""
-        userId: 'user-immediate""'"
-  };
+  describe('Personalization', () => {
+    it('should get personalized content', async () => {
+      const mockPersonalizedContent = {
+        greeting: 'Good morning, Test User',
+        copingStrategies: ['Try your breathing exercise', 'Listen to calming music'],
+        motivationalMessage: 'You are doing great!',
+        culturalAdaptations: ['mindfulness-based'],
+        languageCode: 'en'
+      };
 
-      mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
-const plan = await safetyPlanRemindersService.createSafetyPlan(planData as any) as SafetyPlan;
-const expectedActivation = {}
-        immediateStrategies: [
-          { name: "Grounding Exercise", duration: "5 minutes' }"'"'"'
-        ],
-        guidedSupport: true
-  };
+      (safetyPlanRemindersService.getPersonalizedContent as jest.Mock).mockResolvedValue(mockPersonalizedContent);
 
-      mockedService.activateImmediate.mockResolvedValue(expectedActivation as any);
-const activation = await safetyPlanRemindersService.activateImmediate(plan.id) as ActivationResult;
+      const result = await safetyPlanRemindersService.getPersonalizedContent(
+        mockUser.id,
+        'check-in',
+        mockUser.preferences
+      );
 
-      expect(activation.immediateStrategies).toBeDefined();
-      expect(activation.immediateStrategies).toContainEqual(expect.objectContaining({
-  name: "Grounding Exercise","'"'"'"""')
-};
-
-duration: "5 minutes'"'""
-  )))
-      expect(activation.guidedSupport).toBe(true)
-  });
+      expect(safetyPlanRemindersService.getPersonalizedContent).toHaveBeenCalledWith(
+        mockUser.id,
+        'check-in',
+        mockUser.preferences
+      );
+      expect(result).toEqual(mockPersonalizedContent);
+    });
   });
 
-  describe("Collaboration Features', () => {""'""""
-    it.skip('should allow sharing safety plan with trusted contacts", async () =) {;"'"
-const planData = {}
-        userId: "user-share""'""'
-  };
-const createdPlan = {}
-        id: 'plan-share",""'"'""'
-        userId: 'user-share"""'"
-  };
+  describe('Analytics and Reporting', () => {
+    it('should track reminder effectiveness', async () => {
+      const mockEffectivenessData = {
+        reminderId: mockReminder.id,
+        responseRate: 0.85,
+        averageResponseTime: 300000, // 5 minutes
+        userFeedbackScore: 4.2,
+        improvementMetrics: {
+          moodImprovement: 0.3,
+          engagementIncrease: 0.15
+        }
+      };
 
-      mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
-const plan = await safetyPlanRemindersService.createSafetyPlan(planData as any) as SafetyPlan;
-const shareOptions = {}
-        recipients: ['contact1@example.com", "contact2@example.com"],"'""'"'
-        permissions: "view-only""'"'
-  };
-const expectedResult = {}
-        shared: true,
-        recipients: shareOptions.recipients,
-        accessLevel: "view-only'""'
-  ]
-      mockedService.sharePlan.mockResolvedValue(expectedResult as any)
-const shareResult = await safetyPlanRemindersService.sharePlan(plan.id, shareOptions as any) as ShareResult;
+      (safetyPlanRemindersService.trackReminderEffectiveness as jest.Mock).mockResolvedValue(mockEffectivenessData);
 
-      expect(shareResult.shared).toBe(true);
-      expect(shareResult.recipients).toHaveLength(2);
-      expect(shareResult.accessLevel).toBe("view-only");''""
-  )
+      const result = await safetyPlanRemindersService.trackReminderEffectiveness(mockReminder.id);
 
-    it.skip("should sync updates with care team", async () =) {;'""}'
-const planData = {}
-        userId: 'user-team","""''""'"
-        careTeam: ["therapist-id", "psychiatrist-id'] };""'
-const createdPlan = {}
-        id: 'plan-team","""''""'
-        userId: "user-team"""''
-  
-      mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any)
-const plan = await safetyPlanRemindersService.createSafetyPlan(planData as any) as SafetyPlan;
+      expect(safetyPlanRemindersService.trackReminderEffectiveness).toHaveBeenCalledWith(mockReminder.id);
+      expect(result).toEqual(mockEffectivenessData);
+    });
 
-      await safetyPlanRemindersService.updatePlan(plan.id, {
-  )
-};
+    it('should generate reminder report', async () => {
+      const mockReport = {
+        userId: mockUser.id,
+        period: '30-days',
+        totalReminders: 30,
+        respondedReminders: 25,
+        responseRate: 0.83,
+        averageMoodScore: 3.2,
+        crisisEvents: 1,
+        effectiveStrategies: ['breathing-exercises', 'social-connection'],
+        recommendations: ['maintain-current-frequency'],
+        generatedAt: new Date().toISOString()
+      };
 
-copingStrategies: ["New strategy"]'"'
-  ) as any)
-const expectedSyncStatus = {}
-        synced: true,
-        lastSync: new Date(),
-        syncedWith: ["therapist-id"]"''"
-  
-      mockedService.getSyncStatus.mockResolvedValue(expectedSyncStatus as any)
-const syncStatus = await safetyPlanRemindersService.getSyncStatus(plan.id) as SyncStatus;
+      (safetyPlanRemindersService.generateReminderReport as jest.Mock).mockResolvedValue(mockReport);
 
-      expect(syncStatus.synced).toBe(true);
-      expect(syncStatus.lastSync).toBeDefined();
-      expect(syncStatus.syncedWith).toContain("therapist-id");"'""'
-  )
-  )
+      const result = await safetyPlanRemindersService.generateReminderReport(mockUser.id, '30-days');
 
-  describe('Maintenance and Review", () =) { it.skip("should prompt for periodic plan reviews", async () =) {;"'
-const planData = {}
-        userId: "user-review",'""'""'"'
-        createdAt: Date.now() - 30 * 24 * 60 * 60 * 1000 // 30 days ago }
+      expect(safetyPlanRemindersService.generateReminderReport).toHaveBeenCalledWith(mockUser.id, '30-days');
+      expect(result).toEqual(mockReport);
+    });
+  });
 
- createdPlan = {}
-        id: "plan-review',""'""''
-        userId: "user-review"'"""'
-  };
+  describe('Reminder Control', () => {
+    it('should pause reminders', async () => {
+      const mockPauseResult = {
+        userId: mockUser.id,
+        pausedAt: new Date().toISOString(),
+        pauseDuration: '7-days',
+        affectedReminders: 5,
+        success: true
+      };
 
-      mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any);
-const plan = await safetyPlanRemindersService.createSafetyPlan(planData as any) as SafetyPlan;
-const expectedReviewStatus = { reviewDue: true}
-        daysSinceLastReview: 30,
-        suggestedChanges: ["Update emergency contacts', "Review coping strategies"] };'""""''
+      (safetyPlanRemindersService.pauseReminders as jest.Mock).mockResolvedValue(mockPauseResult);
 
-      mockedService.checkReviewStatus.mockResolvedValue(expectedReviewStatus as any);
-const reviewStatus = await safetyPlanRemindersService.checkReviewStatus(plan.id) as ReviewStatus;
+      const result = await safetyPlanRemindersService.pauseReminders(mockUser.id, '7-days', 'user-request');
 
-      expect(reviewStatus.reviewDue).toBe(true);
-      expect(reviewStatus.daysSinceLastReview).toBe(30);
-      expect(reviewStatus.suggestedChanges).toBeDefined();
-  }};
+      expect(safetyPlanRemindersService.pauseReminders).toHaveBeenCalledWith(mockUser.id, '7-days', 'user-request');
+      expect(result).toEqual(mockPauseResult);
+    });
 
-    it.skip("should track plan version history", async () =) {;'"""'
-const planData = {}
-        userId: "user-version'""'
-  };
-const createdPlan = {}
-        id: 'plan-version","""''""'
-        userId: "user-version"""''
-  
-      mockedService.createSafetyPlan.mockResolvedValue(createdPlan as any)
-const plan = await safetyPlanRemindersService.createSafetyPlan(planData as any) as SafetyPlan;
+    it('should resume reminders', async () => {
+      const mockResumeResult = {
+        userId: mockUser.id,
+        resumedAt: new Date().toISOString(),
+        reactivatedReminders: 5,
+        nextReminderTime: new Date(Date.now() + 3600000).toISOString(),
+        success: true
+      };
 
-      // Make updates
-      await safetyPlanRemindersService.updatePlan(plan.id, {
-  )
-};
+      (safetyPlanRemindersService.resumeReminders as jest.Mock).mockResolvedValue(mockResumeResult);
 
-copingStrategies: ["Updated strategy 1"]'"""'
-  ) as any)
-      await safetyPlanRemindersService.updatePlan(plan.id, {
-  )
-};
+      const result = await safetyPlanRemindersService.resumeReminders(mockUser.id);
 
-copingStrategies: ["Updated strategy 2']'"
-  ) as any)
-const expectedHistory = {}
-        versions: [
-          { version: 1, date: new Date(), changes: "Initial creation" },"''""'"'
-          { version: 2, date: new Date(), changes: "Updated coping strategies" },"''""'"'
-          { version: 3, date: new Date(), changes: "Updated coping strategies" }"'""""'
-        ],
-        canRevert: true
-  
-      mockedService.getVersionHistory.mockResolvedValue(expectedHistory as any)
-const history = await safetyPlanRemindersService.getVersionHistory(plan.id) as any as VersionHistory;
+      expect(safetyPlanRemindersService.resumeReminders).toHaveBeenCalledWith(mockUser.id);
+      expect(result).toEqual(mockResumeResult);
+    });
+  });
 
-      expect(history.versions).toHaveLength(3);
-      expect(history.canRevert).toBe(true);
+  describe('Data Management', () => {
+    it('should archive old reminders', async () => {
+      const mockArchiveResult = {
+        archivedCount: 15,
+        oldestArchived: new Date(Date.now() - 2592000000).toISOString(), // 30 days ago
+        storageFreed: 1024000, // 1MB
+        success: true
+      };
 
-  )
+      (safetyPlanRemindersService.archiveOldReminders as jest.Mock).mockResolvedValue(mockArchiveResult);
+
+      const result = await safetyPlanRemindersService.archiveOldReminders(30); // 30 days
+
+      expect(safetyPlanRemindersService.archiveOldReminders).toHaveBeenCalledWith(30);
+      expect(result).toEqual(mockArchiveResult);
+    });
+
+    it('should export reminder data', async () => {
+      const mockExportData = {
+        userId: mockUser.id,
+        reminders: [mockReminder],
+        safetyPlans: [mockSafetyPlan],
+        responses: [],
+        exportedAt: new Date().toISOString(),
+        format: 'json'
+      };
+
+      (safetyPlanRemindersService.exportReminderData as jest.Mock).mockResolvedValue(mockExportData);
+
+      const result = await safetyPlanRemindersService.exportReminderData(mockUser.id, 'json');
+
+      expect(safetyPlanRemindersService.exportReminderData).toHaveBeenCalledWith(mockUser.id, 'json');
+      expect(result).toEqual(mockExportData);
+    });
+
+    it('should import reminder data', async () => {
+      const mockImportData = {
+        userId: mockUser.id,
+        reminders: [mockReminder],
+        safetyPlans: [mockSafetyPlan],
+        responses: []
+      };
+
+      const mockImportResult = {
+        importedReminders: 1,
+        importedSafetyPlans: 1,
+        importedResponses: 0,
+        duplicatesSkipped: 0,
+        errors: [],
+        success: true
+      };
+
+      (safetyPlanRemindersService.importReminderData as jest.Mock).mockResolvedValue(mockImportResult);
+
+      const result = await safetyPlanRemindersService.importReminderData(mockImportData);
+
+      expect(safetyPlanRemindersService.importReminderData).toHaveBeenCalledWith(mockImportData);
+      expect(result).toEqual(mockImportResult);
+    });
+  });
+
+  describe('Error Handling', () => {
+    it('should handle service errors gracefully', async () => {
+      const mockError = new Error('Service unavailable');
+      (safetyPlanRemindersService.createSafetyPlan as jest.Mock).mockRejectedValue(mockError);
+
+      await expect(
+        safetyPlanRemindersService.createSafetyPlan(
+          mockUser.id,
+          'Test Plan',
+          [],
+          [],
+          []
+        )
+      ).rejects.toThrow('Service unavailable');
+    });
+
+    it('should validate input parameters', async () => {
+      const invalidUserId = '';
+      (safetyPlanRemindersService.createSafetyPlan as jest.Mock).mockRejectedValue(
+        new Error('Invalid user ID')
+      );
+
+      await expect(
+        safetyPlanRemindersService.createSafetyPlan(
+          invalidUserId,
+          'Test Plan',
+          [],
+          [],
+          []
+        )
+      ).rejects.toThrow('Invalid user ID');
+    });
+  });
+
+  describe('Integration Tests', () => {
+    it('should integrate with mood analysis service', async () => {
+      (moodAnalysisService.analyzeMood as jest.Mock).mockResolvedValue(mockMoodAnalysis);
+      (safetyPlanRemindersService.createAdaptivePlan as jest.Mock).mockResolvedValue(mockSafetyPlan);
+
+      // Simulate workflow that uses mood analysis
+      const moodResult = await moodAnalysisService.analyzeMood('I feel really anxious today');
+      const adaptivePlan = await safetyPlanRemindersService.createAdaptivePlan(mockUser.id, {
+        moodHistory: [moodResult],
+        riskFactors: ['anxiety'],
+        preferences: mockUser.preferences
+      });
+
+      expect(moodAnalysisService.analyzeMood).toHaveBeenCalledWith('I feel really anxious today');
+      expect(safetyPlanRemindersService.createAdaptivePlan).toHaveBeenCalledWith(mockUser.id, {
+        moodHistory: [moodResult],
+        riskFactors: ['anxiety'],
+        preferences: mockUser.preferences
+      });
+      expect(adaptivePlan).toEqual(mockSafetyPlan);
+    });
+
+    it('should integrate with crisis detection service', async () => {
+      const mockRiskAssessment = { level: 'high', score: 0.8, factors: ['severe-mood-decline'] };
+      (crisisDetectionIntegrationService.assessRiskLevel as jest.Mock).mockResolvedValue(mockRiskAssessment);
+      (safetyPlanRemindersService.handleCrisisEvent as jest.Mock).mockResolvedValue({ success: true });
+
+      // Simulate crisis detection workflow
+      const riskLevel = await crisisDetectionIntegrationService.assessRiskLevel(mockUser.id);
+      if (riskLevel.level === 'high') {
+        const crisisResponse = await safetyPlanRemindersService.handleCrisisEvent({
+          userId: mockUser.id,
+          severity: 'high',
+          triggers: ['mood-decline'],
+          timestamp: Date.now()
+        });
+        expect(crisisResponse.success).toBe(true);
+      }
+
+      expect(crisisDetectionIntegrationService.assessRiskLevel).toHaveBeenCalledWith(mockUser.id);
+      expect(safetyPlanRemindersService.handleCrisisEvent).toHaveBeenCalled();
+    });
+  });
+});

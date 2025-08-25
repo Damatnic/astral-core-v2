@@ -9,1550 +9,1084 @@
  * - Mood pattern-based reminder triggers
  * - Configurable check-in schedules for different risk levels
  * - Integration with crisis detection and escalation systems
- * - Personalized reminder content based on user"s safety plan'""""'
+ * - Personalized reminder content based on user's safety plan
  * - Progressive reminder escalation for missed check-ins
  * - Cultural and accessibility-aware notifications
+ *
+ * @fileoverview Safety plan reminders and proactive intervention service
+ * @version 2.0.0
  */
 
- { MoodAnalysis } from './moodAnalysisService";"'""""''
-import { crisisDetectionIntegrationService  } from './crisisDetectionIntegrationService';"'""''
-import { notificationService  } from './notificationService';''""
-type RiskLevel = "low" | 'medium" | "high' | "critical";"
-type MoodTrend = "improving' | "stable" | 'declining" | "critical";"
-type ContactMethod = 'notification" | "email' | "sms" | "call";'
-interface SafetyPlanReminder { { { {
-  id: string;,
-  userId: string
-$2: "mood-check" | 'safety-plan-review" | "coping-strategy" | "emergency-reminder' | "wellness-check"'"",
-  priority: "low" | 'medium" | "high' | "urgent"",
-  title: string;,
-  message: string;,
-  actionRequired: boolean;,
-  scheduledTime: Date
-};
+import { MoodAnalysis } from './moodAnalysisService';
+import { crisisDetectionIntegrationService } from './crisisDetectionIntegrationService';
+import { pushNotificationService } from './pushNotificationService';
 
-triggerReason: string
-};
+/**
+ * Safety plan interface
+ */
+export interface SafetyPlan {
+  id: string;
+  userId: string;
+  title: string;
+  warningSigns: string[];
+  copingStrategies: string[];
+  socialSupports: string[];
+  professionalSupports: string[];
+  emergencyContacts: EmergencyContact[];
+  environmentalSafety: string[];
+  reasonsForLiving: string[];
+  createdAt: string;
+  updatedAt: string;
+  isActive: boolean;
+  version: number;
+}
 
-reminderContent: {
-    safetyPlanSection?: "triggers' | "copingStrategies" | 'supportContacts" | "safePlaces";"'""'
-    specificActions?: string[];
-    resources?: Array<{
-  name: string;,
-};
+/**
+ * Emergency contact interface
+ */
+export interface EmergencyContact {
+  id: string;
+  name: string;
+  phone: string;
+  relationship: string;
+  type: 'personal' | 'professional' | 'crisis' | 'emergency';
+  isAvailable24h: boolean;
+  notes?: string;
+}
 
-contact: string
-};
+/**
+ * Safety plan reminder interface
+ */
+export interface SafetyPlanReminder {
+  id: string;
+  userId: string;
+  safetyPlanId: string;
+  type: 'check-in' | 'warning-signs' | 'coping-strategies' | 'emergency' | 'follow-up';
+  title: string;
+  message: string;
+  scheduledTime: string;
+  frequency: 'once' | 'daily' | 'twice-daily' | 'weekly' | 'bi-weekly' | 'monthly';
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  isActive: boolean;
+  createdAt: string;
+  lastSent?: string;
+  responses: ReminderResponse[];
+  escalationLevel: number;
+  maxEscalations: number;
+}
 
-description: string
-  }>;
-    checkInQuestions?: string[];
-  userContext: {
-  ,
-  riskLevel: RiskLevel;,
-  recentMoodTrend: MoodTrend
-    lastCrisisEvent?: Date
-    previousEscalations: number;,
-  languageCode: string
-};
+/**
+ * Reminder response interface
+ */
+export interface ReminderResponse {
+  id: string;
+  reminderId: string;
+  userId: string;
+  responseTime: string;
+  responses: Record<string, any>;
+  moodScore?: number;
+  riskLevel?: 'low' | 'moderate' | 'high' | 'critical';
+  followUpRequired: boolean;
+  notes?: string;
+}
 
-timeZone: string
-};
+/**
+ * Risk assessment interface
+ */
+export interface RiskAssessment {
+  userId: string;
+  level: 'low' | 'moderate' | 'high' | 'critical';
+  score: number; // 0-1 scale
+  factors: string[];
+  recommendations: string[];
+  lastUpdated: string;
+  validUntil: string;
+}
 
-preferredContactMethod: ContactMethod
-  };
-  metadata: { createdAt: Date}
-    deliveredAt?: Date
-    respondedAt?: Date
-    missedCount: number;,
-  escalationLevel: number;,
-  automaticTrigger: boolean
+/**
+ * Check-in question interface
+ */
+export interface CheckInQuestion {
+  id: string;
+  text: string;
+  type: 'scale' | 'yes-no' | 'multiple-choice' | 'text';
+  options?: string[];
+  required: boolean;
+  weight: number; // For risk calculation
+}
 
- interface ReminderScheduleConfig { { { { riskLevel: RiskLevel}
-  intervals: {
-  ,
-  moodCheck: number; // hours between mood check reminders,
-  safetyPlanReview: number; // days between safety plan reviews,
-  wellnessCheck: number; // hours between wellness check-ins
-};
+/**
+ * Reminder template interface
+ */
+export interface ReminderTemplate {
+  id: string;
+  name: string;
+  type: SafetyPlanReminder['type'];
+  title: string;
+  message: string;
+  questions?: CheckInQuestion[];
+  riskLevel: 'low' | 'moderate' | 'high' | 'critical';
+  culturalAdaptations?: Record<string, { title: string; message: string }>;
+}
 
-emergencyReminder: number; // minutes between emergency reminders (high risk only)
-};
+/**
+ * User preferences for reminders
+ */
+export interface ReminderPreferences {
+  userId: string;
+  frequency: 'daily' | 'twice-daily' | 'weekly' | 'disabled';
+  preferredTime: string; // HH:MM format
+  timeZone: string;
+  enableMoodBasedTriggers: boolean;
+  enableProgressiveEscalation: boolean;
+  culturalContext: 'western' | 'eastern' | 'mixed';
+  language: string;
+  accessibilityNeeds: string[];
+  updatedAt: string;
+}
 
-triggers: {
-  ,
-  moodDeclineThreshold: number; // mood drop that triggers reminder,
-  missedCheckInEscalation: number; // hours before escalating missed check-ins,
-  consecutiveLowMoods: number; // number of low moods before triggering
-};
+/**
+ * Safety Plan Reminders Service Implementation
+ */
+export class SafetyPlanRemindersService {
+  private reminders: Map<string, SafetyPlanReminder> = new Map();
+  private templates: ReminderTemplate[] = [];
+  private userPreferences: Map<string, ReminderPreferences> = new Map();
+  private activeSchedules: Map<string, number> = new Map(); // userId -> intervalId
 
-crisisHistoryWindow: number; // days to consider recent crisis events
-};
+  constructor() {
+    this.initializeTemplates();
+  }
 
-content: {
-  ,
-  moodCheckQuestions: string[],
-  safetyPlanPrompts: string[],
-};
-
-copingStrategyReminders: string[]
-};
-
-supportContactPrompts: string[]
-
- interface ReminderResponse { { { {
-  reminderId: string;,
-  userId: string;,
-  responseType: "acknowledged" | "completed" | 'needs-help" | "crisis' | "dismissed"""
-  moodRating?: number; // 1-10 scale
-  usedCopingStrategies?: string[];
-  additionalNotes?: string;
-  timestamp: Date;,
-};
-
-followUpNeeded: boolean
-};
-
-escalationTriggered: boolean
-  };
-interface SafetyPlanRemindersService { { { {
-  private readonly DEFAULT_SCHEDULE_CONFIGS: Record<string, ReminderScheduleConfig> = {}
-    low: {
-  ,
-};
-
-riskLevel: 'low","'""""
-};
-
-intervals: {
-  ,
-  moodCheck: 48, // Every 2 days
-        safetyPlanReview: 14, // Every 2 weeks
-        wellnessCheck: 72, // Every 3 days
-};
-
-emergencyReminder: 0 // No emergency reminders for low risk,
-};
-
-triggers: {
-  ,
-  moodDeclineThreshold: 2.0, // Mood drop of 2 points
-        missedCheckInEscalation: 72, // 3 days
-};
-
-consecutiveLowMoods: 3,
-};
-
-crisisHistoryWindow: 30
-  },
-      content: {
-  ,
-  moodCheckQuestions: [
-          'How are you feeling today?","''""'
-          "What"s been the highlight of your day?',""''""""'
-          'Is there anything you"re looking forward to?"'""""'"'
-        ],
-        safetyPlanPrompts: [
-          "Take a moment to review your safety plan',"'"""'"'
-          "Are your support contacts still current?',""'""'"'
-          "Do you need to update your coping strategies?'""'""'"'
-        ],
-};
-
-copingStrategyReminders: [
-          "Remember your favorite coping strategies',""'""'"'
-          "What healthy activities have helped you recently?',"'"""''
-          "Consider trying a new stress-relief technique"'"'"""''
-        ],
-};
-
-supportContactPrompts: [
-          "When did you last connect with your support network?",'"'"""'"'
-          "Is there someone you could reach out to today?',"'"""''
-          "Your support contacts are there to help you"''""""''
-        ] };
-  },
-    medium: {
-  ,
-};
-
-riskLevel: "medium",'""'""'"'
-};
-
-intervals: {
-  ,
-  moodCheck: 24, // Daily mood checks
-        safetyPlanReview: 7, // Weekly reviews
-};
-
-wellnessCheck: 36, // Every 1.5 days
-};
-
-emergencyReminder: 0
-  },
-      triggers: {
-  ,
-  moodDeclineThreshold: 1.5,
-        missedCheckInEscalation: 48, // 2 days
-};
-
-consecutiveLowMoods: 2,
-};
-
-crisisHistoryWindow: 21
-  },
-      content: {
-  ,
-  moodCheckQuestions: [
-          "How is your mood today on a scale of 1-10?',""'""'"'
-          "Have you noticed any warning signs from your safety plan?',"'"""''
-          "What support do you need right now?"'"'"""''
-        ],
-        safetyPlanPrompts: [
-          "Let"s review your safety plan together',""'""'""'
-          'Are you experiencing any of your identified triggers?",""'"'"'
-          "Which coping strategies work best for you right now?"'"'"""''
-        ],
-};
-
-copingStrategyReminders: [
-          "Try using one of your coping strategies now",'""'""'""'
-          'What has helped you feel better in the past?",""'"'""'
-          "Remember: you have tools to help yourself"""''""'""'
-        ],
-};
-
-supportContactPrompts: [
-          "Consider reaching out to someone from your support network",''""''
-          "Your safety plan includes people who care about you",""'""'
-          "It"s okay to ask for help when you need it""'""'
-        ] };
-  ],
-    high: {
-  ,
-};
-
-riskLevel: "high",""'""'
-};
-
-intervals: {
-  ,
-  moodCheck: 12, // Twice daily
-        safetyPlanReview: 3, // Every 3 days
-        wellnessCheck: 18, // Every 18 hours
-};
-
-emergencyReminder: 120 // Every 2 hours if needed,
-};
-
-triggers: {
-  ,
-  moodDeclineThreshold: 1.0,
-        missedCheckInEscalation: 24, // 1 day
-};
-
-consecutiveLowMoods: 2,
-};
-
-crisisHistoryWindow: 14
-  },
-      content: {
-  ,
-  moodCheckQuestions: [
-          "How are you feeling right now?',"""'"'""'
-          'Are you safe at this moment?","'""''
-          "Do you need immediate support?",'""'""'"'
-          "Have you used any coping strategies today?'"'"""''
-        ],
-        safetyPlanPrompts: [
-          "Let"s go through your safety plan step by step',""""'
-          'Are you experiencing any warning signs?","'""""''
-          "What does your safety plan say to do right now?"'""'""'"'
-        ],
-};
-
-copingStrategyReminders: [
-          "Use your coping strategies now - they can help',"'"""''
-          "Try the breathing exercise from your safety plan",'""'""'"'
-          "What safe place can you go to right now?'""""'
-        ],
-};
-
-supportContactPrompts: [
-          'Please reach out to someone from your support network","'"""
-          "Your safety contacts are available to help you',"'"'"'
-          "Consider calling your emergency contact if needed""'""'
-        ] };
-  },
-    critical: {
-  ,
-};
-
-riskLevel: 'critical",""'"'""'
-};
-
-intervals: {
-  ,
-  moodCheck: 6, // Every 6 hours
-        safetyPlanReview: 1, // Daily
-        wellnessCheck: 8, // Every 8 hours
-};
-
-emergencyReminder: 30 // Every 30 minutes,
-};
-
-triggers: {
-  ,
-  moodDeclineThreshold: 0.5,
-        missedCheckInEscalation: 12, // 12 hours
-};
-
-consecutiveLowMoods: 1,
-};
-
-crisisHistoryWindow: 7
-  },
-      content: {
-  ,
-  moodCheckQuestions: [
-          'Are you safe right now?","'""'""'
-          'Do you need immediate help?","""''""'
-          "On a scale of 1-10, how urgent is your need for support?",""'"'
-          "Are you having thoughts of hurting yourself?'""""'
-        ],
-        safetyPlanPrompts: [
-          'Your safety plan is here to help you right now","'""""''
-          "Follow your safety plan steps immediately",'""'""'"'
-          "Use your emergency contacts if you need them'"'"""''
-        ],
-};
-
-copingStrategyReminders: [
-          "Use your emergency coping strategies NOW",'""'""'"'
-          "Go to your safe place immediately',""""'
-          'Call your crisis support contact""'"""
-        ],
-};
-
-supportContactPrompts: [
-          "CALL your emergency contact immediately',"'"'"'
-          "Reach out for professional help if needed","'""'
-          'Remember: You are not alone and help is available""'""''
-        ]
-  };
-  };
-  };
-
-  private readonly activeReminders: Map<string, SafetyPlanReminder> = new Map();
-  private readonly userSchedules: Map<string, ReminderScheduleConfig> = new Map();
-  private readonly reminderTimers: Map<string, NodeJS.Timeout> = new Map();
-
-  /**
-   * Determine priority level based on risk level
-   */
-  private determinePriority(riskLevel: RiskLevel): "low" | 'medium" | "high" | "urgent' {""'"'
-    switch (riskLevel) {
-  case critical:"""''""'"'
-        return "urgent";"''""'"'
-      case high:"""''""'"'
-        return "high";"'"'"'"""'
-      case medium:"'""''"""'
-        return "medium';""''"""'
-      case low:"'""''"""'
-};
-
-default: return "medium'""'
-  ]
   /**
    * Reset service state (for testing)
    */
-  reset(): void {
-    // Reset any internal state if needed
+  async reset(): Promise<void> {
+    this.reminders.clear();
+    this.userPreferences.clear();
+    this.activeSchedules.forEach(intervalId => clearInterval(intervalId));
+    this.activeSchedules.clear();
+  }
 
   /**
    * Create a new safety plan
    */
-  async createSafetyPlan(planData: any): Promise<unknown> {}
-const plan = {}
-      id: `plan_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      userId: planData.userId || "default_user",""''""'""'
-      ...planData,
-      createdAt: new Date(),
-      updatedAt: new Date()
-  };
+  async createSafetyPlan(
+    userId: string,
+    title: string,
+    warningSigns: string[],
+    copingStrategies: string[],
+    emergencyContacts: EmergencyContact[]
+  ): Promise<SafetyPlan> {
+    const safetyPlan: SafetyPlan = {
+      id: `plan_${userId}_${Date.now()}`,
+      userId,
+      title,
+      warningSigns,
+      copingStrategies,
+      socialSupports: [],
+      professionalSupports: [],
+      emergencyContacts,
+      environmentalSafety: [],
+      reasonsForLiving: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      isActive: true,
+      version: 1
+    };
 
-    // Initialize reminders for this safety plan
-    if (planData.userId) {
-      await this.initializeUserReminders(planData.userId, planData.riskLevel || "medium", {'"'"}'""'
-        languageCode: planData.languageCode || "en",'""''"""'
-        timeZone: planData.timeZone || "UTC',""''""'
-        preferredContactMethod: planData.preferredContactMethod || "notification"'""'
-  ))
-return plan
-  /**
-   * Get safety plan templates
-   */
-  async getTemplates(): Promise<any[]> { return [
-      {
-  id: "template_1",""'""'
-};
+    // Create initial reminders for the safety plan
+    await this.createInitialReminders(safetyPlan);
 
-name: "Standard Safety Plan',""""'
-};
-
-sections: ['triggers", "copingStrategies', "supportContacts", "safePlaces"] },'""''
-      {
-  id: "template_2", ""'""'
-};
-
-name: "Crisis-focused Plan',""'""'"'
-};
-
-sections: ["emergencyContacts', "crisisResources", "immediateSafety"] }'""
-    ];
+    return safetyPlan;
+  }
 
   /**
-   * Get scheduled reminders for a plan
+   * Get available safety plan templates
    */
-  async getScheduledReminders(planId: string): Promise<SafetyPlanReminder[]> {
-    // Return mock reminders for now
-    return [
-      {
-  
-};
-
-id: `reminder_${planId}_1`,
-        userId: 'user_id",;""'
-
-${
-  2: "mood-check',""''""'
-        priority: "medium",'""''""""'
-        title: 'Mood Check-in","'""""
-        message: 'How are you feeling today?","'""""''
-        actionRequired: true,
-        scheduledTime: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours from now
-};
-
-triggerReason: "scheduled_daily_checkin",'""""'
-};
-
-reminderContent: { checkInQuestions: ['How is your mood today?", "Are you feeling safe?'] },""""
-        userContext: {
-  ,
-  riskLevel: 'medium" as RiskLevel,"'""""'"'
-          recentMoodTrend: "stable' as MoodTrend,""'""'"'
-          previousEscalations: 0,
-          languageCode: "en',"""'"'""'
-};
-
-timeZone: 'UTC",""'"'"'
-};
-
-preferredContactMethod: "notification' as ContactMethod""""'
-  },
-        metadata: {
-  ,
-  createdAt: new Date(),
-          missedCount: 0,
-};
-
-escalationLevel: 0,
-};
-
-automaticTrigger: true
-  };
-
-    ];
+  async getTemplates(): Promise<ReminderTemplate[]> {
+    return [...this.templates];
+  }
 
   /**
-   * Get practice reminders for a plan
+   * Create adaptive safety plan based on user data
    */
-  async getPracticeReminders(planId: string): Promise<SafetyPlanReminder[]> {;
-const reminders = await this.getScheduledReminders(planId  );
-    return reminders.filter(r =) r.type === 'coping-strategy"} }"'""""
+  async createAdaptivePlan(
+    userId: string,
+    userData: {
+      moodHistory: MoodAnalysis[];
+      riskFactors: string[];
+      preferences: ReminderPreferences;
+    }
+  ): Promise<SafetyPlan> {
+    // Analyze user data to create personalized plan
+    const riskLevel = this.assessRiskFromHistory(userData.moodHistory);
+    const personalizedStrategies = this.generatePersonalizedStrategies(userData);
+
+    const adaptivePlan: SafetyPlan = {
+      id: `adaptive_plan_${userId}_${Date.now()}`,
+      userId,
+      title: 'Personalized Safety Plan',
+      warningSigns: this.generatePersonalizedWarningSigns(userData.moodHistory),
+      copingStrategies: personalizedStrategies,
+      socialSupports: ['Trusted friend or family member', 'Support group'],
+      professionalSupports: ['Therapist', 'Crisis counselor'],
+      emergencyContacts: [
+        {
+          id: 'crisis-line',
+          name: 'Crisis Hotline',
+          phone: '988',
+          relationship: 'Crisis Support',
+          type: 'crisis',
+          isAvailable24h: true
+        }
+      ],
+      environmentalSafety: ['Remove or secure harmful items', 'Create calm space'],
+      reasonsForLiving: ['Family and friends', 'Future goals', 'Personal values'],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      isActive: true,
+      version: 1
+    };
+
+    // Set up adaptive reminder schedule
+    await this.setupAdaptiveReminders(adaptivePlan, riskLevel);
+
+    return adaptivePlan;
+  }
 
   /**
-   * Create an adaptive safety plan
+   * Handle crisis event and trigger appropriate responses
    */
-  async createAdaptivePlan(userId: string, userPatterns: any): Promise<unknown> {,
-const adaptivePlan = {}
-      id: }`adaptive_plan_${Date.now()}`,
-      userId,;
+  async handleCrisisEvent(crisisEvent: {
+    userId: string;
+    severity: 'low' | 'moderate' | 'high' | 'critical';
+    triggers: string[];
+    timestamp: number;
+  }): Promise<{
+    actionsTriggered: string[];
+    remindersScheduled: number;
+    success: boolean;
+  }> {
+    const actionsTriggered: string[] = [];
+    let remindersScheduled = 0;
 
-${
-  2: 'adaptive","'""""'"'
-      patterns: userPatterns,
-};
+    try {
+      // Immediate crisis response based on severity
+      if (crisisEvent.severity === 'critical') {
+        // Send immediate crisis alert
+        await pushNotificationService.sendCrisisAlert(
+          'Crisis Support Available',
+          'Immediate help is available. You are not alone.',
+          { crisisEventId: `crisis_${crisisEvent.timestamp}` }
+        );
+        actionsTriggered.push('crisis-alert');
 
-adaptations: this.generateAdaptations(userPatterns),
-};
+        // Escalate to emergency contacts
+        await this.notifyEmergencyContacts(crisisEvent.userId);
+        actionsTriggered.push('emergency-contacts');
 
-createdAt: new Date()
-  };
+        // Schedule immediate follow-up
+        await this.scheduleImmediateFollowUp(crisisEvent.userId);
+        remindersScheduled++;
+      }
 
-    await this.initializeUserReminders(userId, "medium', {
-  ""'""'"'
-      languageCode: "en',"""'"'""')
-};
+      if (crisisEvent.severity === 'high' || crisisEvent.severity === 'critical') {
+        // Escalate to professional support
+        await crisisDetectionIntegrationService.escalateToProfessional(
+          crisisEvent.userId,
+          crisisEvent.severity,
+          crisisEvent.triggers
+        );
+        actionsTriggered.push('professional-escalation');
 
-timeZone: 'UTC", ""'"'""')
-};
+        // Increase reminder frequency temporarily
+        await this.temporarilyIncreaseReminderFrequency(crisisEvent.userId);
+        remindersScheduled++;
+      }
 
-preferredContactMethod: 'notification" as ContactMethod""'"
-  ))
-    return adaptivePlan
-  /**
-   * Handle crisis events
-   */
-  async handleCrisisEvent(crisisEvent: any): Promise<unknown> { }
-const response = {}
-      eventId: crisisEvent.id,
-      severity: crisisEvent.severity,
-      actionsTriggered: ['emergency_contacts_notified", "crisis_reminders_escalated"],"'""'"'
-      timestamp: new Date()
-  };
+      // Log crisis event for pattern analysis
+      await this.logCrisisEvent(crisisEvent);
 
-    // Trigger escalation through crisis detection service
-    await crisisDetectionIntegrationService.processEmergencyEscalation(crisisEvent.userId)
-      "high","'"'"'""'
-      }`Crisis event: ${crisisEvent.type}`,
-      { source: "safety_plan_reminders" }'"'"'"'
-    );
-
-    return response;
+      return {
+        actionsTriggered,
+        remindersScheduled,
+        success: true
+      };
+    } catch (error) {
+      console.error('Crisis event handling failed:', error);
+      return {
+        actionsTriggered,
+        remindersScheduled,
+        success: false
+      };
+    }
+  }
 
   /**
    * Get active reminders for a user
    */
   async getActiveReminders(userId: string): Promise<SafetyPlanReminder[]> {
-    // Return mock active reminders
-    return []
-      {
-  
-};
-
-id: `active_reminder_${userId}`,
-        userId,;
-
-${
-  2: "mood-check","'"'"'"""'
-        priority: "high',""''"""'
-        title: "Important Check-in',""'""""
-        message: 'Please check in - we want to make sure you are safe","'"""
-        actionRequired: true,
-        scheduledTime: new Date(),
-};
-
-triggerReason: "elevated_risk_detected',""'""""''
-};
-
-reminderContent: { checkInQuestions: ["Are you safe right now?", 'Do you need immediate help?"] },""'"'""'
-        userContext: {
-  ,
-  riskLevel: "high" as RiskLevel,""'""'
-          recentMoodTrend: "declining" as MoodTrend,""''""'"'
-          previousEscalations: 1,
-          languageCode: "en","''""''
-};
-
-timeZone: "UTC",""''""'""'
-};
-
-preferredContactMethod: "notification" as ContactMethod''""
-  },
-        metadata: {
-  ,
-  createdAt: new Date(),
-          missedCount: 0,
-};
-
-escalationLevel: 1,
-};
-
-automaticTrigger: true
-  };
-
-    );
+    return Array.from(this.reminders.values())
+      .filter(reminder => reminder.userId === userId && reminder.isActive);
+  }
 
   /**
-   * Create interactive reminder
+   * Create interactive reminder with questions
    */
-  async createInteractiveReminder(reminderData: any): Promise<SafetyPlanReminder> {
-    return {
-  
-};
-
-id: }`interactive_${Date.now()}`,
-      userId: reminderData.userId,;
-
-${
-  2: reminderData.type || "mood-check",'""''"""'
-      priority: reminderData.priority || "medium',""'""""
-      title: reminderData.title,
-      message: reminderData.message,
-      actionRequired: true,
-      scheduledTime: new Date(),
-};
-
-triggerReason: 'interactive_request","'""""''
-};
-
-reminderContent: {
-  
-};
-
-checkInQuestions: reminderData.questions || []
-  },
-      userContext: {
-  ,
-  riskLevel: "medium" as RiskLevel,'""'""'"'
-        recentMoodTrend: "stable' as MoodTrend,"""'"'""'
-        previousEscalations: 0,
-        languageCode: 'en","""''""'
-};
-
-timeZone: "UTC",""''""'"'
-};
-
-preferredContactMethod: "notification" as ContactMethod"'"'
-  },
-      metadata: {
-  ,
-  createdAt: new Date(),
-        missedCount: 0,
-};
-
-escalationLevel: 0,
-};
-
-automaticTrigger: false
-  };
-
-  /**
-   * Record user interaction with safety plan
-   */
-  async recordInteraction(planId: string, interaction: any): Promise<void> {
-    // Log the interaction for analytics and pattern recognition
-    console.log()`Recording interaction for plan ${planId):`, interaction};
-
-  /**
-   * Get engagement metrics for a plan
-   */
-  async getEngagementMetrics(planId: string): Promise<unknown> {
-    return { planId}
-      totalInteractions: 45,
-      responseRate: 0.87,
-      averageResponseTime: 300, // 5 minutes
-      effectivenessScore: 0.82,
-      lastInteraction: new Date(Date.now() - 2 * 60 * 60 * 1000) // 2 hours ago
-
-  /**
-   * Create quick access reminder
-   */
-  async createQuickAccessReminder(reminderData: any): Promise<SafetyPlanReminder> {
-    return {
-  
-};
-
-id: `quick_access_${Date.now()}`,
-      userId: reminderData.userId,;
-
-${
-  2: "emergency-reminder',"""'"'""'
-      priority: "urgent",""'""'
-      title: "Quick Access Safety Tools",""''""'"'
-      message: "Your safety tools are available here","''""''
-      actionRequired: false,
-      scheduledTime: new Date(),
-};
-
-triggerReason: "quick_access_request",""''""'""'
-};
-
-reminderContent: {
-  ,
-};
-
-specificActions: ["breathing_exercise", 'emergency_contacts", "safe_place_visualization'],"""
-};
-
-resources: reminderData.resources || []
-  },
-      userContext: {
-  ,
-  riskLevel: "medium' as RiskLevel,""'""""
-        recentMoodTrend: 'stable" as MoodTrend,"'""""
-        previousEscalations: 0,
-        languageCode: 'en","'""""
-};
-
-timeZone: 'UTC","'""
-};
-
-preferredContactMethod: "notification" as ContactMethod'""'
-  },
-      metadata: {
-  ,
-  createdAt: new Date(),
-        missedCount: 0,
-};
-
-escalationLevel: 0,
-};
-
-automaticTrigger: false
-  };
-
-  /**
-   * Record safety plan usage
-   */
-  async recordUsage(planId: string, usageEvent: any): Promise<void> {
-    console.log()`Recording usage for plan ${planId):`, usageEvent};
-
-  /**
-   * Get progress report for a plan
-   */
-  async getProgressReport(planId: string): Promise<unknown> { return {
-  planId,
-};
-
-period: '30_days","""''""'
-};
-
-usageStats: {
-  ,
-  totalUses: 12,
-};
-
-averageUseTime: 450, // 7.5 minutes
-};
-
-mostUsedTools: ['breathing_exercise", "support_contacts"] },"''""'
-      effectivenessMetrics: {
-  ,
-  crisisPreventionRate: 0.95,
-};
-
-userSatisfaction: 4.2,
-};
-
-interventionSuccess: 0.88
-  },
-      insights: [ 'User responds well to morning check-ins","""'import 'Breathing exercises are most effective coping strategy" };"'""
-
-  /**
-   * Record pattern data for analysis
-   */
-  async recordPatternData(planId: string, patternData: any): Promise<void> {
-    console.log(`Recording pattern data for plan ${planId):`, patternData);
-
-  /**
-   * Analyze usage patterns
-   */
-  async analyzePatterns(planId: string): Promise<unknown> {
-    return {
-  planId,
-};
-
-patterns: {
-  
-};
-
-timeOfDay: {
-  ,
-  morning: 0.35,
-};
-
-afternoon: 0.25,
-};
-
-evening: 0.40
-  },
-        triggers: {
-  ,
-  stress: 0.60,
-};
-
-isolation: 0.25,
-};
-
-conflicts: 0.15
-  },
-        effectiveStrategies: [ "mindfulness_breathing",'"'"'""'
-          "social_connection",'""'import 'physical_exercise" };,"'""'"'
-      recommendations: [ "Schedule more evening check-ins',"""'"'""'
-        "Focus on stress management techniques",""''import "Increase mindfulness practice reminders" };'""'
-
-  /**
-   * Create personalized safety plan
-   */
-  async createPersonalizedPlan(userId: string, preferences: any): Promise<unknown> {,
-const plan = {}
-      id: `personalized_plan_${Date.now()}`,
-      userId,;
-
-${
-  2: "personalized",'""''""""'
-      preferences,
-};
-
-customizations: {
-  ,
-};
-
-language: preferences.language || 'en","'""""
-};
-
-culturalAdaptations: preferences.culturalContext || {},
-        communicationStyle: preferences.communicationStyle || 'direct","'""""''
-        preferredContacts: preferences.preferredContacts || []
-  },
-      createdAt: new Date()
-  };
-
-    await this.initializeUserReminders(userId, "medium", {
-  '"'"""''
-      languageCode: preferences.language || "en",'""'""'""')
-};
-
-timeZone: 'UTC",""'"'""')
-};
-
-preferredContactMethod: 'notification" as ContactMethod"""'
-
-    return plan
-  /**
-   * Provide feedback on safety plan effectiveness
-   */
-  async provideFeedback(planId: string, feedback: any): Promise<void> {
-    console.log()`Received feedback for plan ${planId):`, feedback};
-
-  /**
-   * Optimize safety plan based on usage and feedback
-   */
-  async optimizePlan(planId: string): Promise<unknown> {   }
-const analysis = await this.analyzePatterns(planId  );
-
-    return {
-  planId,
-};
-
-optimizations: {
-  ,
-  reminderFrequency: 'increased_evening","'""""'"'
-};
-
-contentAdjustments: ["more_stress_focused', "additional_mindfulness"],""''""'"
-};
-
-schedulingChanges: ["evening_priority", "weekend_emphasis'] },""''""""'
-      baseAnalysis: analysis,
-      expectedImprovement: 0.15,
-      implementedAt: new Date()
-
-  /**
-   * Send a reminder
-   */
-  async sendReminder(reminder: SafetyPlanReminder): Promise<void> { await this.deliverReminder(reminder) }
-
-  /**
-   * Simulate channel failure for testing
-   */
-  simulateChannelFailure(): void { // For testing purposes
-    console.log('Simulating channel failure") }"'""""
-
-  /**
-   * Activate emergency protocol
-   */
-  async activateEmergencyProtocol(userId: string): Promise<unknown> {}
-const protocol = {}
+  async createInteractiveReminder(
+    userId: string,
+    safetyPlanId: string,
+    title: string,
+    questions: CheckInQuestion[]
+  ): Promise<SafetyPlanReminder> {
+    const reminder: SafetyPlanReminder = {
+      id: `interactive_${userId}_${Date.now()}`,
       userId,
-      protocolId: `emergency_${Date.now()}`,
-      activatedAt: new Date(),
-      actions: ['immediate_contacts_notified", "crisis_resources_provided', "emergency_services_alerted"],""'""'
-      status: 'active"""'
-  };
+      safetyPlanId,
+      type: 'check-in',
+      title,
+      message: 'Please take a moment to check in with yourself',
+      scheduledTime: new Date(Date.now() + 3600000).toISOString(), // 1 hour from now
+      frequency: 'daily',
+      priority: 'medium',
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      responses: [],
+      escalationLevel: 0,
+      maxEscalations: 3
+    };
 
-    await crisisDetectionIntegrationService.processEmergencyEscalation(userId)
-      "critical','"""
-      "Emergency protocol activated','"""
-      { source: "safety_plan_emergency' }'"""
-
-    return protocol;
-
-  /**
-   * Activate immediate response
-   */
-  async activateImmediate(userId: string): Promise<unknown> { return await this.activateEmergencyProtocol(userId) }
-
-  /**
-   * Share safety plan
-   */
-  async sharePlan(planId: string, shareOptions: any): Promise<unknown> {
-    return {
-  planId,
-};
-
-shareId: `share_${Date.now()}`,
-      recipients: shareOptions.recipients || [],
-      accessLevel: shareOptions.accessLevel || "view','"""
-      expiresAt: shareOptions.expiresAt || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-      createdAt: new Date()
+    this.reminders.set(reminder.id, reminder);
+    return reminder;
+  }
 
   /**
-   * Update safety plan
+   * Schedule check-in reminder
    */
-  async updatePlan(planId: string, updates: any): Promise<unknown> {
-    return { planId}
-      updates,
-      version: 2,
-      updatedAt: new Date(),
-      changelog: Object.keys(updates)
+  async scheduleCheckIn(
+    userId: string,
+    safetyPlanId: string,
+    frequency: SafetyPlanReminder['frequency'],
+    preferredTime: string
+  ): Promise<SafetyPlanReminder> {
+    const reminder: SafetyPlanReminder = {
+      id: `checkin_${userId}_${Date.now()}`,
+      userId,
+      safetyPlanId,
+      type: 'check-in',
+      title: 'Daily Check-in',
+      message: 'How are you feeling today? Take a moment to check in with yourself.',
+      scheduledTime: this.calculateNextScheduledTime(frequency, preferredTime),
+      frequency,
+      priority: 'medium',
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      responses: [],
+      escalationLevel: 0,
+      maxEscalations: 2
+    };
+
+    this.reminders.set(reminder.id, reminder);
+    this.scheduleReminderDelivery(reminder);
+    
+    return reminder;
+  }
 
   /**
-   * Get sync status of plan
+   * Process check-in response
    */
-  async getSyncStatus(planId: string): Promise<unknown> {
-    return {
-  planId,
-      lastSynced: new Date(Date.now() - 5 * 60 * 1000), // 5 minutes ago
-      syncStatus: "up_to_date','"""
-};
-
-pendingChanges: 0,
-};
-
-conflicts: []
-
-  /**
-   * Check review status of plan
-   */
-  async checkReviewStatus(planId: string): Promise<unknown> {
-    return {
-  planId,
-      reviewStatus: "current','"""
-      lastReviewed: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000), // 14 days ago
-};
-
-nextReviewDue: new Date(Date.now() + 16 * 24 * 60 * 60 * 1000), // 16 days from now
-};
-
-reviewRequired: false
-
-  /**
-   * Get version history of plan
-   */
-  async getVersionHistory(planId: string): Promise<any[]> {
-    return [
-      {
-  planId,
-        version: 2,
-        changedAt: new Date(),
-};
-
-changes: ["updated_contacts', "added_coping_strategy"],'""
-};
-
-changedBy: "user"'"'
-  },
-      {
-  planId,
-        version: 1,
-        changedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-};
-
-changes: ["initial_creation'],""'""'"'
-};
-
-changedBy: "user'"""'
-
-    ]
-  /**
-   * Generate adaptations based on user patterns
-   */
-  private generateAdaptations(patterns: any): any {
-    return {
-  
-};
-
-schedulingAdaptations: patterns.timePreferences || {},
-      contentAdaptations: patterns.preferredStrategies || [],
-      communicationAdaptations: patterns.communicationStyle || "standard'""'
-
-  /**
-   * Initialize safety plan reminders for a user based on their risk level
-   */
-  async initializeUserReminders(userId: string),
-  riskLevel: RiskLevel,
-    userContext: { languageCode?: string;
-      timeZone?: string,
-      preferredContactMethod?: ContactMethod } = {}
-  ): Promise<void> {
+  async processCheckInResponse(response: {
+    reminderId: string;
+    responses: Record<string, any>;
+    timestamp: number;
+  }): Promise<{
+    riskLevel: 'low' | 'moderate' | 'high' | 'critical';
+    nextReminderScheduled: boolean;
+    recommendedActions: string[];
+    success: boolean;
+  }> {
     try {
-      // Set user's reminder schedule based on risk level"""'"
-const scheduleConfig = { ...this.DEFAULT_SCHEDULE_CONFIGS[riskLevel] };
-      this.userSchedules.set(userId, scheduleConfig);
-
-      // Schedule initial reminders
-      await this.scheduleNextReminders(userId, userContext);
-
-      console.log(`Safety plan reminders initialized for user ${ userId) at ${riskLevel) risk level`) } catch (error) { console.error('Failed to initialize user reminders:", error );""'"'"'
-      throw error  };
-
-  /**
-   * Analyze user"s mood patterns and trigger appropriate reminders'""""'
-   */
-  async analyzeMoodPatternsAndTriggerReminders(userId: string),
-  recentMoodData: MoodAnalysis[],
-    userContext: any = {}
-  }: Promise<SafetyPlanReminder[]> { try {}
-triggeredReminders: SafetyPlanReminder[] = [] }
-
- scheduleConfig = this.userSchedules.get(userId)
-      if (!scheduleConfig) {
-        console.warn(`No reminder schedule found for user ${userId)`);
-        return triggeredReminders;
-
-      // Analyze mood patterns
-const moodTrend = this.analyzeMoodTrend(recentMoodData);
-const riskFactors = await this.assessCurrentRiskFactors(userId, recentMoodData, userContext);
-
-      // Trigger reminders based on patterns
-      if (this.shouldTriggerMoodCheckReminder(moodTrend, scheduleConfig)) {;
-const reminder = await this.createMoodCheckReminder(userId, moodTrend, riskFactors, userContext ),
-        triggeredReminders.push(reminder) }
-
-      if (this.shouldTriggerSafetyPlanReview(moodTrend, riskFactors, scheduleConfig)) {   };
-
-reminder = await this.createSafetyPlanReviewReminder(userId, moodTrend, riskFactors, userContext ),
-        triggeredReminders.push(reminder) }
-
-      if (this.shouldTriggerCopingStrategyReminder(moodTrend, riskFactors, scheduleConfig)) {;
-const reminder = await this.createCopingStrategyReminder(userId, moodTrend, riskFactors, userContext ),
-        triggeredReminders.push(reminder) }
-
-      // Schedule and deliver reminders
-      for (const reminder of triggeredReminders) { await this.deliverReminder(reminder ),
-        this.activeReminders.set(reminder.id, reminder) }
-
-      return triggeredReminders;
-  } catch (error) { console.error('Failed to analyze mood patterns and trigger reminders:", error );"'""""''
-      return []  };
-
-  /**
-   * Process user response to a safety plan reminder
-   */
-  async processReminderResponse(reminderId: string),
-  response: Omit<ReminderResponse, "reminderId" | 'timestamp" | "followUpNeeded" | "escalationTriggered'>""'""'
-  }: Promise<{
-  followUpNeeded: boolean;,
-};
-
-escalationTriggered: boolean
-};
-
-nextActions: string[]
-  }> { try(;)}
-const reminder = this.activeReminders.get(reminderId ),
+      const reminder = this.reminders.get(response.reminderId);
       if (!reminder) {
-        throw new Error(`Reminder ${reminderId} not found`);
+        throw new Error('Reminder not found');
+      }
 
-      // Create complete response
-fullResponse: ReminderResponse = {}
-        ...response,
-        reminderId,
-        timestamp: new Date(),
-        followUpNeeded: false,
-        escalationTriggered: false
-  ]
-      // Analyze response and determine next actions
-const analysis = await this.analyzeReminderResponse(reminder, fullResponse);
+      // Calculate risk level from responses
+      const riskLevel = this.calculateRiskFromResponses(response.responses);
 
-      // Update reminder metadata
-      reminder.metadata.respondedAt = new Date();
-      reminder.metadata.missedCount = 0; // Reset missed count on response
+      // Create response record
+      const reminderResponse: ReminderResponse = {
+        id: `response_${response.reminderId}_${response.timestamp}`,
+        reminderId: response.reminderId,
+        userId: reminder.userId,
+        responseTime: new Date().toISOString(),
+        responses: response.responses,
+        riskLevel,
+        followUpRequired: riskLevel === 'high' || riskLevel === 'critical',
+        notes: this.generateResponseNotes(response.responses, riskLevel)
+      };
 
-      // Trigger escalation if needed
-      if (analysis.escalationNeeded) { await this.triggerEscalationForResponse(reminder, fullResponse ),
-        fullResponse.escalationTriggered = true }
+      // Add response to reminder
+      reminder.responses.push(reminderResponse);
 
-      // Schedule follow-up reminders if needed
-      if (analysis.followUpNeeded) { await this.scheduleFollowUpReminder(reminder, fullResponse ),
-        fullResponse.followUpNeeded = true }
+      // Reset escalation level on response
+      reminder.escalationLevel = 0;
 
-      // Adjust reminder schedule based on response
-      await this.adjustReminderSchedule(reminder.userId, fullResponse);
+      // Generate recommendations
+      const recommendedActions = this.generateRecommendations(riskLevel, response.responses);
+
+      // Schedule next reminder
+      const nextReminderScheduled = await this.scheduleNextReminder(reminder, riskLevel);
+
+      // Handle high-risk responses
+      if (riskLevel === 'high' || riskLevel === 'critical') {
+        await this.handleHighRiskResponse(reminder.userId, riskLevel, recommendedActions);
+      }
 
       return {
-  followUpNeeded: fullResponse.followUpNeeded,
-};
-
-escalationTriggered: fullResponse.escalationTriggered,
-};
-
-nextActions: analysis.recommendedActions
-  } catch (error) { console.error("Failed to process reminder response:", error );'"'"'""'
-      throw error };
-
-  /**
-   * Handle missed reminders and escalate if necessary
-   */
-  async handleMissedReminder(reminderId: string): Promise<void> { try(;)
-const reminder = this.activeReminders.get(reminderId);
-      if (!reminder) return;
-
-      reminder.metadata.missedCount++;
-const scheduleConfig = this.userSchedules.get(reminder.userId  );
-      if (!scheduleConfig) return,
-
-      // Check if escalation is needed based on missed count and risk level
-      if (this.shouldEscalateMissedReminder(reminder, scheduleConfig)) {
-        await this.escalateMissedReminder(reminder) } else(// Schedule a follow-up reminder)
-        await this.scheduleFollowUpForMissed(reminder) );
-  } catch (error) {
-  console.error("Failed to handle missed reminder:", error);'""'
+        riskLevel,
+        nextReminderScheduled,
+        recommendedActions,
+        success: true
+      };
+    } catch (error) {
+      console.error('Failed to process check-in response:', error);
+      return {
+        riskLevel: 'moderate',
+        nextReminderScheduled: false,
+        recommendedActions: ['Contact support if needed'],
+        success: false
+      };
+    }
+  }
 
   /**
-   * Update user's risk level and adjust reminder schedule accordingly""""'
+   * Escalate reminder when user doesn't respond
    */
-  async updateUserRiskLevel(userId: string),
-};
+  async escalateReminder(
+    reminderId: string,
+    escalationLevel: number
+  ): Promise<{
+    reminderId: string;
+    escalationLevel: number;
+    actionsTriggered: string[];
+    nextReminderIn: number;
+  }> {
+    const reminder = this.reminders.get(reminderId);
+    if (!reminder) {
+      throw new Error('Reminder not found');
+    }
 
-newRiskLevel: RiskLevel,
-};
+    reminder.escalationLevel = escalationLevel;
+    const actionsTriggered: string[] = [];
 
-reason: string
-  ): Promise<void> { try(;
-const currentConfig = this.userSchedules.get(userId  );
-const newConfig = { ...this.DEFAULT_SCHEDULE_CONFIGS[newRiskLevel] ) }
+    // Progressive escalation based on level
+    if (escalationLevel === 1) {
+      // Send follow-up notification
+      await pushNotificationService.sendSafetyReminder(
+        'Check-in Reminder',
+        'We noticed you missed your check-in. How are you doing?',
+        reminder.safetyPlanId
+      );
+      actionsTriggered.push('follow-up-notification');
+    } else if (escalationLevel === 2) {
+      // Notify support team
+      await this.notifySupportTeam(reminder.userId, 'missed-checkin');
+      actionsTriggered.push('support-team-notification');
+    } else if (escalationLevel >= 3) {
+      // Escalate to emergency contacts
+      await this.notifyEmergencyContacts(reminder.userId);
+      actionsTriggered.push('emergency-contact-notification');
+    }
 
-      this.userSchedules.set(userId, newConfig);
+    // Calculate next reminder time (shorter intervals for higher escalations)
+    const nextReminderIn = this.calculateEscalationInterval(escalationLevel);
 
-      // Clear existing timers
-      this.clearUserTimers(userId);
+    return {
+      reminderId,
+      escalationLevel,
+      actionsTriggered,
+      nextReminderIn
+    };
+  }
 
-      // Reinitialize with new risk level
-      await this.initializeUserReminders(userId, newRiskLevel);
+  /**
+   * Get user risk level assessment
+   */
+  async getUserRiskLevel(userId: string): Promise<RiskAssessment> {
+    // Get recent responses and mood data
+    const recentResponses = this.getRecentResponses(userId, 7); // Last 7 days
+    const moodHistory = await this.getMoodHistory(userId, 7);
 
-      console.log(`Updated risk level for user ${userId} from ${currentConfig?.riskLevel || "unknown') to ${newRiskLevel). Reason: ${reason)`);""'
-  } catch (error) { console.error("Failed to update user risk level:", error );""'""'
-      throw error  };
+    // Calculate risk factors
+    const factors: string[] = [];
+    let score = 0.3; // Base score
+
+    // Analyze response patterns
+    if (recentResponses.length === 0) {
+      factors.push('no-recent-checkins');
+      score += 0.2;
+    }
+
+    const highRiskResponses = recentResponses.filter(r => 
+      r.riskLevel === 'high' || r.riskLevel === 'critical'
+    );
+    if (highRiskResponses.length > 0) {
+      factors.push('high-risk-responses');
+      score += 0.3;
+    }
+
+    // Analyze mood patterns
+    if (moodHistory.some(m => m.riskLevel === 'high' || m.riskLevel === 'critical')) {
+      factors.push('concerning-mood-patterns');
+      score += 0.2;
+    }
+
+    // Determine risk level
+    let level: RiskAssessment['level'] = 'low';
+    if (score >= 0.8) level = 'critical';
+    else if (score >= 0.6) level = 'high';
+    else if (score >= 0.4) level = 'moderate';
+
+    // Generate recommendations
+    const recommendations = this.generateRiskRecommendations(level, factors);
+
+    return {
+      userId,
+      level,
+      score,
+      factors,
+      recommendations,
+      lastUpdated: new Date().toISOString(),
+      validUntil: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // Valid for 24 hours
+    };
+  }
+
+  /**
+   * Get personalized content for reminders
+   */
+  async getPersonalizedContent(
+    userId: string,
+    contentType: 'check-in' | 'coping-strategies' | 'encouragement',
+    preferences: ReminderPreferences
+  ): Promise<{
+    greeting: string;
+    copingStrategies: string[];
+    motivationalMessage: string;
+    culturalAdaptations: string[];
+    languageCode: string;
+  }> {
+    // Get time-appropriate greeting
+    const greeting = this.getTimeAppropriateGreeting(preferences.preferredTime);
+
+    // Get personalized coping strategies
+    const copingStrategies = this.getPersonalizedCopingStrategies(userId);
+
+    // Generate motivational message
+    const motivationalMessage = this.generateMotivationalMessage(preferences.culturalContext);
+
+    // Apply cultural adaptations
+    const culturalAdaptations = this.getCulturalAdaptations(preferences.culturalContext);
+
+    return {
+      greeting,
+      copingStrategies,
+      motivationalMessage,
+      culturalAdaptations,
+      languageCode: preferences.language
+    };
+  }
+
+  /**
+   * Track reminder effectiveness
+   */
+  async trackReminderEffectiveness(reminderId: string): Promise<{
+    reminderId: string;
+    responseRate: number;
+    averageResponseTime: number;
+    userFeedbackScore: number;
+    improvementMetrics: {
+      moodImprovement: number;
+      engagementIncrease: number;
+    };
+  }> {
+    const reminder = this.reminders.get(reminderId);
+    if (!reminder) {
+      throw new Error('Reminder not found');
+    }
+
+    // Calculate response rate
+    const totalSent = 30; // Mock data - would track actual sends
+    const responseRate = reminder.responses.length / totalSent;
+
+    // Calculate average response time
+    const responseTimes = reminder.responses.map(r => {
+      const sent = new Date(reminder.lastSent || reminder.createdAt).getTime();
+      const responded = new Date(r.responseTime).getTime();
+      return responded - sent;
+    });
+    const averageResponseTime = responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length || 0;
+
+    // Mock user feedback score
+    const userFeedbackScore = 4.2;
+
+    // Mock improvement metrics
+    const improvementMetrics = {
+      moodImprovement: 0.3,
+      engagementIncrease: 0.15
+    };
+
+    return {
+      reminderId,
+      responseRate,
+      averageResponseTime,
+      userFeedbackScore,
+      improvementMetrics
+    };
+  }
+
+  /**
+   * Generate reminder report for user
+   */
+  async generateReminderReport(
+    userId: string,
+    period: '7-days' | '30-days' | '90-days'
+  ): Promise<{
+    userId: string;
+    period: string;
+    totalReminders: number;
+    respondedReminders: number;
+    responseRate: number;
+    averageMoodScore: number;
+    crisisEvents: number;
+    effectiveStrategies: string[];
+    recommendations: string[];
+    generatedAt: string;
+  }> {
+    const days = period === '7-days' ? 7 : period === '30-days' ? 30 : 90;
+    const responses = this.getRecentResponses(userId, days);
+
+    return {
+      userId,
+      period,
+      totalReminders: 25, // Mock data
+      respondedReminders: responses.length,
+      responseRate: responses.length / 25,
+      averageMoodScore: 3.2,
+      crisisEvents: 1,
+      effectiveStrategies: ['breathing-exercises', 'social-connection'],
+      recommendations: ['maintain-current-frequency'],
+      generatedAt: new Date().toISOString()
+    };
+  }
+
+  /**
+   * Update reminder frequency based on risk level
+   */
+  async updateReminderFrequency(
+    userId: string,
+    newFrequency: ReminderPreferences['frequency'],
+    reason: string
+  ): Promise<{
+    userId: string;
+    oldFrequency: ReminderPreferences['frequency'];
+    newFrequency: ReminderPreferences['frequency'];
+    reason: string;
+    effectiveDate: string;
+  }> {
+    const preferences = this.userPreferences.get(userId);
+    const oldFrequency = preferences?.frequency || 'daily';
+
+    // Update preferences
+    if (preferences) {
+      preferences.frequency = newFrequency;
+      preferences.updatedAt = new Date().toISOString();
+    }
+
+    // Reschedule active reminders
+    await this.rescheduleUserReminders(userId, newFrequency);
+
+    return {
+      userId,
+      oldFrequency,
+      newFrequency,
+      reason,
+      effectiveDate: new Date().toISOString()
+    };
+  }
+
+  /**
+   * Pause reminders for a user
+   */
+  async pauseReminders(
+    userId: string,
+    duration: '1-day' | '3-days' | '7-days',
+    reason: string
+  ): Promise<{
+    userId: string;
+    pausedAt: string;
+    pauseDuration: string;
+    affectedReminders: number;
+    success: boolean;
+  }> {
+    const userReminders = Array.from(this.reminders.values())
+      .filter(r => r.userId === userId && r.isActive);
+
+    // Deactivate reminders
+    userReminders.forEach(reminder => {
+      reminder.isActive = false;
+    });
+
+    // Clear scheduled deliveries
+    const intervalId = this.activeSchedules.get(userId);
+    if (intervalId) {
+      clearInterval(intervalId);
+      this.activeSchedules.delete(userId);
+    }
+
+    return {
+      userId,
+      pausedAt: new Date().toISOString(),
+      pauseDuration: duration,
+      affectedReminders: userReminders.length,
+      success: true
+    };
+  }
+
+  /**
+   * Resume reminders for a user
+   */
+  async resumeReminders(userId: string): Promise<{
+    userId: string;
+    resumedAt: string;
+    reactivatedReminders: number;
+    nextReminderTime: string;
+    success: boolean;
+  }> {
+    const userReminders = Array.from(this.reminders.values())
+      .filter(r => r.userId === userId && !r.isActive);
+
+    // Reactivate reminders
+    userReminders.forEach(reminder => {
+      reminder.isActive = true;
+    });
+
+    // Reschedule deliveries
+    await this.rescheduleUserReminders(userId, 'daily');
+
+    return {
+      userId,
+      resumedAt: new Date().toISOString(),
+      reactivatedReminders: userReminders.length,
+      nextReminderTime: new Date(Date.now() + 3600000).toISOString(),
+      success: true
+    };
+  }
+
+  /**
+   * Archive old reminders
+   */
+  async archiveOldReminders(olderThanDays: number): Promise<{
+    archivedCount: number;
+    oldestArchived: string;
+    storageFreed: number;
+    success: boolean;
+  }> {
+    const cutoffDate = new Date(Date.now() - olderThanDays * 24 * 60 * 60 * 1000);
+    let archivedCount = 0;
+    let oldestArchived = new Date().toISOString();
+
+    for (const [id, reminder] of this.reminders) {
+      const createdAt = new Date(reminder.createdAt);
+      if (createdAt < cutoffDate) {
+        this.reminders.delete(id);
+        archivedCount++;
+        if (createdAt.toISOString() < oldestArchived) {
+          oldestArchived = createdAt.toISOString();
+        }
+      }
+    }
+
+    return {
+      archivedCount,
+      oldestArchived,
+      storageFreed: archivedCount * 1024, // Rough estimate
+      success: true
+    };
+  }
+
+  /**
+   * Export reminder data for backup
+   */
+  async exportReminderData(
+    userId: string,
+    format: 'json' | 'csv'
+  ): Promise<{
+    userId: string;
+    reminders: SafetyPlanReminder[];
+    safetyPlans: SafetyPlan[];
+    responses: ReminderResponse[];
+    exportedAt: string;
+    format: string;
+  }> {
+    const userReminders = Array.from(this.reminders.values())
+      .filter(r => r.userId === userId);
+
+    const responses = userReminders.flatMap(r => r.responses);
+
+    return {
+      userId,
+      reminders: userReminders,
+      safetyPlans: [], // Would fetch from database
+      responses,
+      exportedAt: new Date().toISOString(),
+      format
+    };
+  }
+
+  /**
+   * Import reminder data from backup
+   */
+  async importReminderData(data: {
+    userId: string;
+    reminders: SafetyPlanReminder[];
+    safetyPlans: SafetyPlan[];
+    responses: ReminderResponse[];
+  }): Promise<{
+    importedReminders: number;
+    importedSafetyPlans: number;
+    importedResponses: number;
+    duplicatesSkipped: number;
+    errors: string[];
+    success: boolean;
+  }> {
+    let importedReminders = 0;
+    let duplicatesSkipped = 0;
+    const errors: string[] = [];
+
+    try {
+      // Import reminders
+      for (const reminder of data.reminders) {
+        if (!this.reminders.has(reminder.id)) {
+          this.reminders.set(reminder.id, reminder);
+          importedReminders++;
+        } else {
+          duplicatesSkipped++;
+        }
+      }
+
+      return {
+        importedReminders,
+        importedSafetyPlans: data.safetyPlans.length,
+        importedResponses: data.responses.length,
+        duplicatesSkipped,
+        errors,
+        success: true
+      };
+    } catch (error) {
+      errors.push(error instanceof Error ? error.message : 'Unknown error');
+      return {
+        importedReminders,
+        importedSafetyPlans: 0,
+        importedResponses: 0,
+        duplicatesSkipped,
+        errors,
+        success: false
+      };
+    }
+  }
 
   // Private helper methods
-  private analyzeMoodTrend(moodData: MoodAnalysis[]): {
-  ,
-  trend: 'improving" | "stable" | "declining' | "critical"',
-  averageIntensity: number;,
-};
-
-volatility: number
-};
-
-consecutiveLowMoods: number
-  } {
-    if (moodData.length === 0) {
-      return { trend: "stable", averageIntensity: 0.5, volatility: 0, consecutiveLowMoods: 0 }""'""'
-
-    // Calculate trend, intensity, volatility, and consecutive low moods
-const intensities = moodData.map(m =) m.intensity};
-const averageIntensity = intensities.reduce((sum, i) =) sum + i, 0} / intensities.length;
-
-    // Simple trend calculation (could be more sophisticated)
-const recent = intensities.slice(-3);
-const older = intensities.slice(-6, -3);
-const recentAvg = recent.reduce((sum, i) =) sum + i, 0] / recent.length;
-const olderAvg = older.length } 0 ? older.reduce((sum, i) =) sum + i, 0} / older.length : recentAvg;
-trend: "improving" | "stable" | 'declining" | "critical'"
-    if(recentAvg < 0.3> trend = "critical""}'"}')
-    else if (recentAvg ) olderAvg + 0.1} trend = "improving'""'
-    else if(recentAvg < olderAvg - 0.1> trend = "declining"'}'")"
-    else trend = "stable";'""''"""'
-
-    // Calculate volatility and consecutive low moods
-const volatility = this.calculateVolatility(intensities);
-const consecutiveLowMoods = this.countConsecutiveLowMoods(moodData);
-
-    return { trend, averageIntensity, volatility, consecutiveLowMoods }
-
-  private calculateVolatility(intensities: number[]): number { if (intensities.length < 2) return 0;
-const mean = intensities.reduce((sum, i) => sum + i, 0) / intensities.length;
-const variance = intensities.reduce((sum, i) => sum + Math.pow(i - mean, 2), 0) / intensities.length,
-    return Math.sqrt(variance) }
-
-  private countConsecutiveLowMoods(moodData: MoodAnalysis[]): number {;
-const count = 0;
-    for (let i = moodData.length - 1; i >= 0; i--) {
-      if (moodData[i].intensity < 0.4) { // Threshold for "low' mood""'""""
-        count++ ) else(break );
-
-    return count;
-private async assessCurrentRiskFactors(_userId: string, moodData: MoodAnalysis[], _userContext: any): Promise<{
-  ,
-  riskLevel: RiskLevel
-};
-
-factors: string[]
-};
-
-recommendations: string[]
-  }> {
-  // This would integrate with crisis detection service
-    // For now, a simplified implementation
-const moodTrend = this.analyzeMoodTrend(moodData);
-riskLevel: 'low" | "medium' | "high" | "critical" = 'low"",
-};
-
-factors: string[] = []
-};
-
-recommendations: string[] = []
-    if (moodTrend.trend === 'critical" || moodTrend.averageIntensity < 0.3> {
-  ""'"'""'
-};
-
-riskLevel = 'critical";""'"'""'
-      factors.push('Critically low mood detected"  );""'"'"'
-      recommendations.push("Immediate professional support recommended") } else if (moodTrend.trend === 'declining" && moodTrend.consecutiveLowMoods ) 2) {
-  ""'"'""'
-};
-
-riskLevel = 'high";"""''""'
-      factors.push("Declining mood trend", `${moodTrend.consecutiveLowMoods) consecutive low moods`);""'""'
-      recommendations.push("Increase check-in frequency", "Review safety plan");'"'
-  } else if (moodTrend.volatility ) 0.3} { riskLevel = "medium';""""'
-      factors.push('High mood volatility"  );"'""
-      recommendations.push("Focus on mood stabilization techniques") }'"'"'"'
-
-    return { riskLevel, factors, recommendations }
-
-  private shouldTriggerMoodCheckReminder(moodTrend: any, config: ReminderScheduleConfig): boolean { return(moodTrend.consecutiveLowMoods )= config.triggers.consecutiveLowMoods ||}
-      moodTrend.trend === "declining" ||""'""'
-      moodTrend.trend === "critical'""""'
-    } }
-
-  private shouldTriggerSafetyPlanReview(moodTrend: any, riskFactors: any, _config: ReminderScheduleConfig): boolean { return(riskFactors.riskLevel === 'high" ||"')""
-      riskFactors.riskLevel === "critical" ||'"'"'"'
-      moodTrend.volatility } 0.4
-    } }
-
-  private shouldTriggerCopingStrategyReminder(moodTrend: any, _riskFactors: any, _config: ReminderScheduleConfig): boolean { return(moodTrend.averageIntensity < 0.5 ||>)
-      moodTrend.consecutiveLowMoods )= 2
-    } }
-
-  private async createMoodCheckReminder(userId: string, moodTrend: any, riskFactors: any, userContext: any): Promise<SafetyPlanReminder> {;
-const config = this.userSchedules.get(userId)!,
-
-    return {
-  
-};
-
-id: `mood-check-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      userId,;
-
-${
-  2: "mood-check",""'""'
-      priority: this.determinePriority(riskFactors.riskLevel),
-      title: "Daily Mood Check-In',""""'
-      message: 'How are you feeling today? Your wellbeing matters to us.","'""
-      actionRequired: true,
-};
-
-scheduledTime: new Date(),
-};
-
-triggerReason: }`Mood trend: ${moodTrend.trend}, consecutive low moods: ${moodTrend.consecutiveLowMoods}`,
-      reminderContent: {
-  ,
-};
-
-checkInQuestions: config.content.moodCheckQuestions,
-};
-
-specificActions: ["Rate your mood", 'Note any triggers", "Use coping strategies if needed'] },"""
-      userContext: {
-  ,
-  riskLevel: riskFactors.riskLevel,
-        recentMoodTrend: moodTrend.trend,
-        previousEscalations: userContext.previousEscalations || 0,
-        languageCode: userContext.languageCode || "en','"""
-};
-
-timeZone: userContext.timeZone || "UTC','"""
-};
-
-preferredContactMethod: userContext.preferredContactMethod || "notification''"
-  },
-      metadata: {
-  ,
-  createdAt: new Date(),
-        missedCount: 0,
-};
-
-escalationLevel: 0,
-};
-
-automaticTrigger: true
-  };
-
-  private async createSafetyPlanReviewReminder(userId: string, moodTrend: any, riskFactors: any, userContext: any): Promise<SafetyPlanReminder> {;}
-const config = this.userSchedules.get(userId)!,
-
-    return {
-  
-};
-
-id: `safety-review-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      userId,;
-
-${
-  2: "safety-plan-review","'"'"'""'
-      priority: riskFactors.riskLevel === "critical" ? urgent: 'high","''""'
-      title: "Safety Plan Review",'""''"""'
-      message: "Let\'s review your safety plan to make sure it\"s up to date and helpful.",'""""'"'
-      actionRequired: true,
-};
-
-scheduledTime: new Date(),
-};
-
-triggerReason: }`Risk level: ${riskFactors.riskLevel}, mood volatility: ${moodTrend.volatility.toFixed(2)}`,
-      reminderContent: {
-  ,
-  safetyPlanSection: "triggers',""'""''
-};
-
-specificActions: config.content.safetyPlanPrompts,
-};
-
-checkInQuestions: [ "Are your warning signs still accurate?",'""'""'""'
-          'Do your coping strategies still work for you?","""'import 'Are your support contacts current and available?" } },"''"""'
-      userContext: {
-  ,
-  riskLevel: riskFactors.riskLevel,
-        recentMoodTrend: moodTrend.trend,
-        previousEscalations: userContext.previousEscalations || 0,
-        languageCode: userContext.languageCode || "en',""''"""'
-};
-
-timeZone: userContext.timeZone || "UTC',""'""""
-};
-
-preferredContactMethod: userContext.preferredContactMethod || 'notification""'"
-  },
-      metadata: {
-  ,
-  createdAt: new Date(),
-        missedCount: 0,
-};
-
-escalationLevel: 0,
-};
-
-automaticTrigger: true
-  };
-
-  private async createCopingStrategyReminder(userId: string, moodTrend: any, riskFactors: any, userContext: any): Promise<SafetyPlanReminder> {;
-const config = this.userSchedules.get(userId)!,
-
-    return {
-  
-};
-
-id: `coping-strategy-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      userId,;
-
-${
-  2: "coping-strategy","'"'"'"""'
-      priority: "medium',""''"""'
-      title: "Coping Strategy Reminder',""'""""
-      message: 'Remember your coping strategies can help you feel better. Which one will you try today?","'""""
-      actionRequired: false,
-};
-
-scheduledTime: new Date(),
-};
-
-triggerReason: }`Low mood intensity: ${moodTrend.averageIntensity.toFixed(2)}`,
-      reminderContent: {
-  ,
-  safetyPlanSection: 'copingStrategies","'""""'"'
-};
-
-specificActions: config.content.copingStrategyReminders,
-};
-
-checkInQuestions: [ "Which coping strategy will you try today?',""'""'"'
-          "What has helped you feel better recently?',""'import "Do you need help implementing a coping strategy?" ] },'"'"'"'
-      userContext: {
-  ,
-  riskLevel: riskFactors.riskLevel,
-        recentMoodTrend: moodTrend.trend,
-        previousEscalations: userContext.previousEscalations || 0,
-        languageCode: userContext.languageCode || "en",""''""'"'
-};
-
-timeZone: userContext.timeZone || "UTC","'"'"'""'
-};
-
-preferredContactMethod: userContext.preferredContactMethod || "notification"'""'
-  },
-      metadata: {
-  ,
-  createdAt: new Date(),
-        missedCount: 0,
-};
-
-escalationLevel: 0,
-};
-
-automaticTrigger: true
-  };
-
-  private async deliverReminder(reminder: SafetyPlanReminder): Promise<void> { try {
-      // Use notification service to deliver the reminder
-      notificationService.addToast(reminder.message, reminder.priority === 'urgent" ? error: "info");"''""'
-
-      reminder.metadata.deliveredAt = new Date();
-
-      // Set up timer for missed reminder handling
-const timeoutMs = this.getMissedReminderTimeout(reminder  );
-const timer = setTimeout(() =) {
-        this.handleMissedReminder(reminder.id) }, timeoutMs};
-
-      this.reminderTimers.set(reminder.id, timer);
-
-      console.log(`Delivered ${ reminder.type) reminder to user ${reminder.userId)`) } catch (error) { console.error("Failed to deliver reminder:', error );"""'"'""}'
-      throw error  };
-
-  private getMissedReminderTimeout(reminder: SafetyPlanReminder): number {
-    // Base timeout on priority and type
-    switch (reminder.priority) {
-  case urgent: return 30 * 60 * 1000; // 30 minutes'""'"""''
-      case high: return 2 * 60 * 60 * 1000; // 2 hours'"""'"'""'
-      case medium: return 8 * 60 * 60 * 1000; // 8 hours'"""'"'""'
-      case low: return 24 * 60 * 60 * 1000; // 24 hours'""'""'"'
-};
-
-default: return 4 * 60 * 60 * 1000; // 4 hours default
-private async scheduleNextReminders(userId: string, _userContext: any): Promise<void> {
-    // Implementation would schedule recurring reminders based on user"s config'""'""'"'
-    // This is a placeholder for the scheduling logic
-    console.log(`Scheduled next reminders for user ${userId)`);
-private async analyzeReminderResponse(_reminder: SafetyPlanReminder, response: ReminderResponse): Promise<{
-  ,
-  escalationNeeded: boolean
-};
-
-followUpNeeded: boolean
-};
-
-recommendedActions: string[]
-  }> {   }
-const escalationNeeded = response.responseType === "crisis' ||;""'
-                            response.responseType === "needs-help' ||"'""
-                            (response.moodRating !== undefined && response.moodRating <= 3>)
-const followUpNeeded = response.responseType === "needs-help' ||;"'
-                          (response.moodRating !== undefined && response.moodRating <= 5>)
-recommendedActions: string[] = []
-    if (escalationNeeded) {
-      recommendedActions.push("Trigger crisis support"  );""''""'"'
-      recommendedActions.push("Connect with professional help") }"''""'"'
-
-    if (followUpNeeded) { recommendedActions.push("Schedule follow-up check-in"  );"''""'"'
-      recommendedActions.push("Review safety plan") }"'""'
-
-    return { escalationNeeded, followUpNeeded, recommendedActions }
-
-  private async triggerEscalationForResponse(reminder: SafetyPlanReminder, response: ReminderResponse): Promise<void> {
-    try {
-      // Map mood trend to crisis detection service format
-const mapMoodTrend = (trend: MoodTrend): 'increasing" | "stable" | "decreasing' =} {""'"'
-        switch (trend) {
-  case improving: return "increasing";""'""'"
-          case stable: return "stable";"'""'
-          case declining:""""'""'
-          case critical: return 'decreasing";""'"'""'
-};
-
-default: return 'stable"""'"
-  };
-  };
-
-      // Map contact method to crisis detection service format
-const mapContactMethod = (method: ContactMethod): 'phone" | "text" | "chat' | "video" => {'""""
-        switch (method) {
-  case notification: return 'chat";"''""'
-          case email: return "chat";'"'"'"'
-          case sms: return "text";""'""'
-          case call: return 'phone";""'"'""'
-};
-
-default: return 'chat""""'
-  };
-  };
-
-      // Use crisis detection integration service for escalation
-const escalationContext = {}
-        userId: reminder.userId,
-        conversationId: `reminder-${reminder.id}`,
-        sessionData: {
-  ,
-  messagesSent: 1,
-          sessionDuration: 0,
-};
-
-previousEscalations: reminder.userContext.previousEscalations,
-};
-
-riskTrend: mapMoodTrend(reminder.userContext.recentMoodTrend)
-  },
-        userContext: {
-  ,
-  languageCode: reminder.userContext.languageCode,
-};
-
-preferredContactMethod: mapContactMethod(reminder.userContext.preferredContactMethod),
-};
-
-timeZone: reminder.userContext.timeZone
-  };
-  };
-const escalationText = response.responseType === "crisis";'"'
-        ? "User responded to safety plan reminder indicating crisis state""'"'"'""'
-        : `User needs help: mood rating ${response.moodRating}/10, notes: ${response.additionalNotes}`;
-
-      await crisisDetectionIntegrationService.analyzeTextForCrisis(escalationText, escalationContext);
-
-      console.log(`Triggered escalation for user ${ reminder.userId) based on reminder response`) } catch (error) { console.error("Failed to trigger escalation for reminder response:", error );'""'
-
-  private async scheduleFollowUpReminder(reminder: SafetyPlanReminder, _response: ReminderResponse): Promise<void> { // Schedule a follow-up reminder based on the response}
-const followUpTime = new Date(Date.now() + 4 * 60 * 60 * 1000 ); // 4 hours later
-    console.log(`Scheduled follow-up reminder for user ${reminder.userId) at ${followUpTime)`);
-private async adjustReminderSchedule(userId: string, response: ReminderResponse): Promise<void> { // Adjust reminder frequency based on user's response patterns"}"""'
-const config = this.userSchedules.get(userId );
-    if (!config) return;
-
-    if (response.responseType === "crisis" || (response.moodRating && response.moodRating <= 3>) {'""'"})"'"'
-      // Increase frequency for high-risk responses
-      await this.updateUserRiskLevel(userId, "high', "Low mood rating in reminder response" );"'
-
-  private shouldEscalateMissedReminder(reminder: SafetyPlanReminder, _config: ReminderScheduleConfig): boolean { return reminder.metadata.missedCount }= 2 &&
-           (reminder.userContext.riskLevel === "high' || reminder.userContext.riskLevel === "critical") }""''""'
-
-  private async escalateMissedReminder(reminder: SafetyPlanReminder): Promise<void> { console.log(`Escalating missed reminder for user ${reminder.userId)`);
-    // Would trigger crisis escalation workflow
-
-  private async scheduleFollowUpForMissed(reminder: SafetyPlanReminder): Promise<void> {
-    console.log(`Scheduling follow-up for missed reminder for user ${reminder.userId)`);
-    // Would schedule another reminder attempt
-
-  private clearUserTimers(userId: string): void { for (const [reminderId, timer] of this.reminderTimers.entries()) { }
-const reminder = this.activeReminders.get(reminderId);
-      if (reminder && reminder.userId === userId) {
-        clearTimeout(timer  );
-        this.reminderTimers.delete(reminderId)};
-  };
-
-// Export singleton instance
+  private initializeTemplates(): void {
+    this.templates = [
+      {
+        id: 'daily-checkin',
+        name: 'Daily Check-in',
+        type: 'check-in',
+        title: 'How are you today?',
+        message: 'Take a moment to check in with yourself',
+        riskLevel: 'low',
+        questions: [
+          {
+            id: 'mood',
+            text: 'How is your mood today?',
+            type: 'scale',
+            required: true,
+            weight: 0.4
+          }
+        ]
+      }
+    ];
+  }
+
+  private async createInitialReminders(safetyPlan: SafetyPlan): Promise<void> {
+    // Create daily check-in reminder
+    await this.scheduleCheckIn(safetyPlan.userId, safetyPlan.id, 'daily', '09:00');
+  }
+
+  private assessRiskFromHistory(moodHistory: MoodAnalysis[]): 'low' | 'moderate' | 'high' | 'critical' {
+    const highRiskCount = moodHistory.filter(m => 
+      m.riskLevel === 'high' || m.riskLevel === 'critical'
+    ).length;
+    
+    if (highRiskCount > moodHistory.length * 0.5) return 'high';
+    if (highRiskCount > moodHistory.length * 0.3) return 'moderate';
+    return 'low';
+  }
+
+  private generatePersonalizedStrategies(userData: any): string[] {
+    return ['Deep breathing exercises', 'Contact support person', 'Use grounding techniques'];
+  }
+
+  private generatePersonalizedWarningSigns(moodHistory: MoodAnalysis[]): string[] {
+    return ['Feeling hopeless', 'Social withdrawal', 'Sleep changes'];
+  }
+
+  private async setupAdaptiveReminders(safetyPlan: SafetyPlan, riskLevel: string): Promise<void> {
+    const frequency = riskLevel === 'high' ? 'twice-daily' : 'daily';
+    await this.scheduleCheckIn(safetyPlan.userId, safetyPlan.id, frequency, '09:00');
+  }
+
+  private calculateNextScheduledTime(frequency: SafetyPlanReminder['frequency'], preferredTime: string): string {
+    const now = new Date();
+    const [hours, minutes] = preferredTime.split(':').map(Number);
+    
+    const scheduledTime = new Date(now);
+    scheduledTime.setHours(hours, minutes, 0, 0);
+    
+    // If time has passed today, schedule for tomorrow
+    if (scheduledTime <= now) {
+      scheduledTime.setDate(scheduledTime.getDate() + 1);
+    }
+    
+    return scheduledTime.toISOString();
+  }
+
+  private scheduleReminderDelivery(reminder: SafetyPlanReminder): void {
+    // Implementation would schedule actual delivery
+    console.log('Scheduling reminder delivery:', reminder.id);
+  }
+
+  private calculateRiskFromResponses(responses: Record<string, any>): 'low' | 'moderate' | 'high' | 'critical' {
+    // Simple risk calculation based on responses
+    const moodScore = responses.mood || 5;
+    if (moodScore <= 2) return 'critical';
+    if (moodScore <= 3) return 'high';
+    if (moodScore <= 5) return 'moderate';
+    return 'low';
+  }
+
+  private generateResponseNotes(responses: Record<string, any>, riskLevel: string): string {
+    return `Risk level: ${riskLevel}. Mood score: ${responses.mood || 'N/A'}`;
+  }
+
+  private generateRecommendations(riskLevel: string, responses: Record<string, any>): string[] {
+    const base = ['Continue self-care practices', 'Stay connected with support'];
+    
+    if (riskLevel === 'high' || riskLevel === 'critical') {
+      base.push('Contact crisis support', 'Use safety plan strategies');
+    }
+    
+    return base;
+  }
+
+  private async scheduleNextReminder(reminder: SafetyPlanReminder, riskLevel: string): Promise<boolean> {
+    // Schedule next reminder based on frequency and risk level
+    return true;
+  }
+
+  private async handleHighRiskResponse(userId: string, riskLevel: string, actions: string[]): Promise<void> {
+    if (riskLevel === 'critical') {
+      await pushNotificationService.sendCrisisAlert(
+        'Crisis Support Available',
+        'We noticed you might need support. Help is available.',
+        { userId, timestamp: Date.now() }
+      );
+    }
+  }
+
+  private getRecentResponses(userId: string, days: number): ReminderResponse[] {
+    const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+    const responses: ReminderResponse[] = [];
+    
+    for (const reminder of this.reminders.values()) {
+      if (reminder.userId === userId) {
+        responses.push(...reminder.responses.filter(r => 
+          new Date(r.responseTime) > cutoff
+        ));
+      }
+    }
+    
+    return responses;
+  }
+
+  private async getMoodHistory(userId: string, days: number): Promise<MoodAnalysis[]> {
+    // Would fetch from mood service
+    return [];
+  }
+
+  private generateRiskRecommendations(level: string, factors: string[]): string[] {
+    const base = ['Continue regular check-ins', 'Maintain support connections'];
+    
+    if (level === 'high' || level === 'critical') {
+      base.push('Consider professional support', 'Increase check-in frequency');
+    }
+    
+    return base;
+  }
+
+  private getTimeAppropriateGreeting(preferredTime: string): string {
+    const hour = parseInt(preferredTime.split(':')[0]);
+    if (hour < 12) return 'Good morning';
+    if (hour < 17) return 'Good afternoon';
+    return 'Good evening';
+  }
+
+  private getPersonalizedCopingStrategies(userId: string): string[] {
+    return ['Try deep breathing', 'Take a short walk', 'Listen to calming music'];
+  }
+
+  private generateMotivationalMessage(culturalContext: string): string {
+    return 'You are doing great by taking care of your mental health.';
+  }
+
+  private getCulturalAdaptations(culturalContext: string): string[] {
+    return ['mindfulness-based'];
+  }
+
+  private async rescheduleUserReminders(userId: string, frequency: string): Promise<void> {
+    // Implementation would reschedule all user reminders
+  }
+
+  private calculateEscalationInterval(escalationLevel: number): number {
+    // Shorter intervals for higher escalations
+    const intervals = [3600000, 1800000, 900000]; // 1hr, 30min, 15min
+    return intervals[Math.min(escalationLevel - 1, intervals.length - 1)] || 900000;
+  }
+
+  private async notifyEmergencyContacts(userId: string): Promise<void> {
+    console.log('Notifying emergency contacts for user:', userId);
+  }
+
+  private async notifySupportTeam(userId: string, reason: string): Promise<void> {
+    console.log('Notifying support team:', userId, reason);
+  }
+
+  private async scheduleImmediateFollowUp(userId: string): Promise<void> {
+    console.log('Scheduling immediate follow-up for user:', userId);
+  }
+
+  private async temporarilyIncreaseReminderFrequency(userId: string): Promise<void> {
+    console.log('Temporarily increasing reminder frequency for user:', userId);
+  }
+
+  private async logCrisisEvent(crisisEvent: any): Promise<void> {
+    console.log('Logging crisis event:', crisisEvent);
+  }
+}
+
+// Create and export singleton instance
 export const safetyPlanRemindersService = new SafetyPlanRemindersService();
+
 export default safetyPlanRemindersService;
