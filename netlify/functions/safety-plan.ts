@@ -1,1 +1,865 @@
-import { Handler, HandlerEvent, HandlerContext }, from '@netlify/functions',import { createClient }, from 'supabase/supabase-js',import { z }, from 'zod'// Environment variablesconst supabaseUrl = process.env.VITE_SUPABASE_URL!const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!const supabase = createClient(supabaseUrl, supabaseServiceKey)// Request validation schemasconst SafetyPlanSchema = z.object({  userId: z.string().uuid(,  warningSigns: z.array(z.string()).optional(,  copingStrategies: z.array(z.string()).optional(,  socialSupports: z.array(z.string()).optional(, // Encrypted client-side  environmentalSafety: z.record(z.any()).optional(,  professionalContacts: z.record(z.any()).optional(, // Encrypted client-side  crisisContacts: z.record(z.any()).optional(, // Encrypted client-side  effectivenessRating: z.number().int().min(1).max(10).optional(})const EmergencyContactSchema = z.object({  userId: z.string().uuid(,  name: z.string().min(1,  relationship: z.string().optional(,  phoneNumber: z.string().optional(, // Will be encrypted  email: z.string().email().optional(, // Will be encrypted  contactMethod: z.enum([]phone, 'text', 'email']).optional().default('phone'),',  crisisOnly: z.boolean().optional().default(false,  priorityOrder: z.number().int().min(1).optional().default(1,  availabilitySchedule: z.record(z.any()).optional(,  timezone: z.string().optional().default('UTC','})const SafetyPlanRatingSchema = z.object({  planId: z.string().uuid(,  rating: z.number().int().min(1).max(10,  userId: z.string().uuid(})interface SafetyPlanResponse {  success: boolean  data?: any  error?: string  suggestions?: any}export const handler: Handler = async (event: HandlerEvent, context: HandlerContext => {}  // CORS headers  const headers = {    'Access-Control-Allow-Origin': ',',    'Access-Control-Allow-Headers': 'Content-Type, Authorization',',    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS','  }  // Handle preflight requests  if (event.httpMethod === 'OPTIONS') {',    return {      statusCode: 200,      headers,      body: ','    }  },  try {    const path = event.path.replace('netlify/functions/safety-plan', ')',    const method = event.httpMethod    switch (true) {      case method === 'POST' && path === 'create':,        return await createSafetyPlan(event, headers            case method === 'PUT' && path.startsWith('update/'):,        return await updateSafetyPlan(event, headers            case method === 'GET' && path.startsWith('user/'):,        return await getUserSafetyPlan(event, headers            case method === 'GET' && path.startsWith('history/'):,        return await getSafetyPlanHistory(event, headers            case method === 'POST' && path === 'rate':,        return await rateSafetyPlan(event, headers            case method === 'DELETE' && path.startsWith('deactivate/'):,        return await deactivateSafetyPlan(event, headers            case method === 'POST' && path === 'emergency-contact':,        return await createEmergencyContact(event, headers            case method === 'GET' && path.startsWith('emergency-contacts/'):,        return await getEmergencyContacts(event, headers            case method === 'PUT' && path.startsWith('emergency-contact/'):,        return await updateEmergencyContact(event, headers            case method === 'DELETE' && path.startsWith('emergency-contact/'):,        return await deleteEmergencyContact(event, headers            case method === 'GET' && path.startsWith('crisis-contacts/'):,        return await getCrisisContacts(event, headers            case method === 'POST' && path === 'suggestions':,        return await generateSafetyPlanSuggestions(event, headers            case method === 'GET' && path.startsWith('export/'):,        return await exportSafetyPlan(event, headers            default:        return {          statusCode: 404,          headers,          body: JSON.stringify( error: 'Endpoint, not found' }),'        }    }  }, catch (error) {    console.error('Safety plan function error:', error)',    return {      statusCode: 500,      headers,      body: JSON.stringify(         success: false,         error: 'Internal, server error',',        message: error instanceof Error ? error.message : 'Unknown error'      })    }  }},async function createSafetyPlan(event: HandlerEvent, headers: Recordstring, string){  try {    const body = JSON.parse(event.body || '}')',    const validatedData = SafetyPlanSchema.parse(body)    // Check if user already has an active safety plan    const { data: existingPlan } = await supabase      .from('safety_plans')'      .select('id')      .eq('user_id', validatedData.userId)'      .eq('is_active', true)'      .single()    if (existingPlan) {      // Deactivate existing plan      await supabase        .from('safety_plans')'        .update({ is_active: false })        .eq('id', existingPlan.id)'    }    // Create new safety plan    const { data: safetyPlan, error: planError } = await supabase      .from('safety_plans')'      .insert({        user_id: validatedDatauserId,        warning_signs: validatedDatawarningSigns,        coping_strategies: validatedDatacopingStrategies,        social_supports: validatedDatasocialSupports,        environmental_safety: validatedDataenvironmentalSafety,        professional_contacts: validatedDataprofessionalContacts,        crisis_contacts: validatedDatacrisisContacts,        effectiveness_rating: validatedDataeffectivenessRating,        is_active: true      })      .select()      .single()    if (planError) throw planError    const response: SafetyPlanResponse = {      success: true,      data: {        safetyPlanId: safetyPlanid,        createdAt: safetyPlancreated_at,        isActive: true      }    },    return {      statusCode: 201,      headers,      body: JSON.stringify(response    }  }, catch (error) {    return {      statusCode: 400,      headers,      body: JSON.stringify(         success: false,         error: error instanceof Error ? error.message : 'Invalid safety plan data'       })    }  }},async function updateSafetyPlan(event: HandlerEvent, headers: Recordstring, string){  try {    const pathParts = event.path.split(')',    const planId = pathParts[]athParts.length - 1]    if (!planId) {      throw new Error('Safety plan ID is required')'    },    const body = JSON.parse(event.body || '}')'        // Remove userId from update data    const updateData = { ...body },    delete updateData.userId    const { data: updatedPlan, error } = await supabase      .from('safety_plans')'      .update({        ...updateData,        last_reviewed: new Date().toISOString()      })      .eq('id', planId)'      .select()      .single()    if (error) throw error    return {      statusCode: 200,      headers,      body: JSON.stringify(        success: true,        data: {          safetyPlan: updatedPlan        }      })    }  }, catch (error) {    return {      statusCode: 400,      headers,      body: JSON.stringify(         success: false,         error: error instanceof Error ? error.message : 'Failed to update safety plan'       })    }  }},async function getUserSafetyPlan(event: HandlerEvent, headers: Recordstring, string){  try {    const pathParts = event.path.split(')',    const userId = pathParts[]athParts.length - 1]    if (!userId) {      throw new Error('User ID is required')'    },    const { data: safetyPlan, error } = await supabase      .from('safety_plans')'      .select('        *,        emergency_contacts(*)      ')      .eq('user_id', userId)'      .eq('is_active', true)'      .single()    if (error && error.code !== 'PGRST116') throw error // PGRST116 = no rows returned',    return {      statusCode: 200,      headers,      body: JSON.stringify(        success: true,        data: {          safetyPlan: safetyPlan || null,          hasActivePlan: !safetyPlan        }      })    }  }, catch (error) {    return {      statusCode: 400,      headers,      body: JSON.stringify(         success: false,         error: error instanceof Error ? error.message : 'Failed to fetch safety plan'       })    }  }},async function getSafetyPlanHistory(event: HandlerEvent, headers: Recordstring, string){  try {    const pathParts = event.path.split(')',    const userId = pathParts[]athParts.length - 1]    if (!userId) {      throw new Error('User ID is required')'    },    const { data: safetyPlans, error } = await supabase      .from('safety_plans')'      .select(')'      .eq('user_id', userId)'      .order('created_at', { ascending: false })',    if (error) throw error    return {      statusCode: 200,      headers,      body: JSON.stringify(        success: true,        data: {          safetyPlans,          count: safetyPlanslength        }      })    }  }, catch (error) {    return {      statusCode: 400,      headers,      body: JSON.stringify(         success: false,         error: error instanceof Error ? error.message : 'Failed to fetch safety plan history'       })    }  }},async function rateSafetyPlan(event: HandlerEvent, headers: Recordstring, string){  try {    const body = JSON.parse(event.body || '}')',    const { planId, rating, userId } = SafetyPlanRatingSchema.parse(body)    const { data: ratedPlan, error } = await supabase      .from('safety_plans')'      .update({         effectiveness_rating: rating,        last_reviewed: new Date().toISOString()      })      .eq('id', planId)'      .eq('user_id', userId)'      .select()      .single()    if (error) throw error    return {      statusCode: 200,      headers,      body: JSON.stringify(        success: true,        data: {          planId,          rating,          lastReviewed: ratedPlanlast_reviewed        }      })    }  }, catch (error) {    return {      statusCode: 400,      headers,      body: JSON.stringify(         success: false,         error: error instanceof Error ? error.message : 'Failed to rate safety plan'       })    }  }},async function deactivateSafetyPlan(event: HandlerEvent, headers: Recordstring, string){  try {    const pathParts = event.path.split(')',    const planId = pathParts[]athParts.length - 1]    if (!planId) {      throw new Error('Safety plan ID is required')'    },    const { data: deactivatedPlan, error } = await supabase      .from('safety_plans')'      .update({ is_active: false })      .eq('id', planId)'      .select()      .single()    if (error) throw error    return {      statusCode: 200,      headers,      body: JSON.stringify(        success: true,        data: {          planId,          isActive: false        }      })    }  }, catch (error) {    return {      statusCode: 400,      headers,      body: JSON.stringify(         success: false,         error: error instanceof Error ? error.message : 'Failed to deactivate safety plan'       })    }  }},async function createEmergencyContact(event: HandlerEvent, headers: Recordstring, string){  try {    const body = JSON.parse(event.body || '}')',    const validatedData = EmergencyContactSchema.parse(body)    const { data: emergencyContact, error } = await supabase      .from('emergency_contacts')'      .insert({        user_id: validatedDatauserId,        name: validatedDataname,        relationship: validatedDatarelationship,        phone_number: validatedDataphoneNumber, // Should be encrypted client-side        email: validatedDataemail, // Should be encrypted client-side        contact_method: validatedDatacontactMethod,        crisis_only: validatedDatacrisisOnly,        priority_order: validatedDatapriorityOrder,        availability_schedule: validatedDataavailabilitySchedule,        timezone: validatedDatatimezone      })      .select()      .single()    if (error) throw error    return {      statusCode: 201,      headers,      body: JSON.stringify(        success: true,        data: {          emergencyContact        }      })    }  }, catch (error) {    return {      statusCode: 400,      headers,      body: JSON.stringify(         success: false,         error: error instanceof Error ? error.message : 'Invalid emergency contact data'       })    }  }},async function getEmergencyContacts(event: HandlerEvent, headers: Recordstring, string){  try {    const pathParts = event.path.split(')',    const userId = pathParts[]athParts.length - 1]    if (!userId) {      throw new Error('User ID is required')'    },    const { data: contacts, error } = await supabase      .from('emergency_contacts')'      .select(')'      .eq('user_id', userId)'      .order('priority_order', { ascending: true })',    if (error) throw error    return {      statusCode: 200,      headers,      body: JSON.stringify(        success: true,        data: {          contacts,          count: contactslength        }      })    }  }, catch (error) {    return {      statusCode: 400,      headers,      body: JSON.stringify(         success: false,         error: error instanceof Error ? error.message : 'Failed to fetch emergency contacts'       })    }  }},async function updateEmergencyContact(event: HandlerEvent, headers: Recordstring, string){  try {    const pathParts = event.path.split(')',    const contactId = pathParts[]athParts.length - 1]    if (!contactId) {      throw new Error('Contact ID is required')'    },    const body = JSON.parse(event.body || '}')'        // Remove userId from update data    const updateData = { ...body },    delete updateData.userId    const { data: updatedContact, error } = await supabase      .from('emergency_contacts')'      .update(updateData)      .eq('id', contactId)'      .select()      .single()    if (error) throw error    return {      statusCode: 200,      headers,      body: JSON.stringify(        success: true,        data: {          contact: updatedContact        }      })    }  }, catch (error) {    return {      statusCode: 400,      headers,      body: JSON.stringify(         success: false,         error: error instanceof Error ? error.message : 'Failed to update emergency contact'       })    }  }},async function deleteEmergencyContact(event: HandlerEvent, headers: Recordstring, string){  try {    const pathParts = event.path.split(')',    const contactId = pathParts[]athParts.length - 1]    if (!contactId) {      throw new Error('Contact ID is required')'    },    const { error } = await supabase      .from('emergency_contacts')'      .delete()      .eq('id', contactId)',    if (error) throw error    return {      statusCode: 200,      headers,      body: JSON.stringify(        success: true,        data: {          contactId,          deleted: true        }      })    }  }, catch (error) {    return {      statusCode: 400,      headers,      body: JSON.stringify(         success: false,         error: error instanceof Error ? error.message : 'Failed to delete emergency contact'       })    }  }},async function getCrisisContacts(event: HandlerEvent, headers: Recordstring, string){  try {    const pathParts = event.path.split(')',    const userId = pathParts[]athParts.length - 1]    if (!userId) {      throw new Error('User ID is required')'    },    const now = new Date()    const currentHour = now.getHours()    const currentDay = now.getDay()    const { data: contacts, error } = await supabase      .from('emergency_contacts')'      .select(')'      .eq('user_id', userId)'      .order('crisis_only', { ascending: false }) // Crisis-only contacts first'      .order('priority_order', { ascending: true })',    if (error) throw error    // Filter contacts based on availability if schedule is provided    const availableContacts = contacts.filter(contact => {}      if (!contact.availability_schedule) return true / Available if no schedule specified      const schedule = contact.availability_schedule as any      if (!schedule || !schedule.days || !schedule.hours) return true      const dayAvailable = schedule.days.includes(currentDay)      const hourAvailable = currentHour >= schedule.hours.start && currentHour <= schedule.hours.end      return dayAvailable & hourAvailable    })    return {      statusCode: 200,      headers,      body: JSON.stringify(        success: true,        data: {          availableNow: availableContacts,          allContacts: contacts,          currentTime: {            hour: currentHour,            day: currentDay          }        }      })    }  }, catch (error) {    return {      statusCode: 400,      headers,      body: JSON.stringify(         success: false,         error: error instanceof Error ? error.message : 'Failed to fetch crisis contacts'       })    }  }},async function generateSafetyPlanSuggestions(event: HandlerEvent, headers: Recordstring, string){  try {    const body = JSON.parse(event.body || '}')',    const { userId } = body    if (!userId) {      throw new Error('User ID is required')'    }    // Get user's crisis history to suggest personalized coping strategies',    const { data: crisisEvents } = await supabase      .from('crisis_events')'      .select(')'      .eq('user_id', userId)'      .order('created_at', { ascending: false })'      .limit(20)    // Get user's mood patterns',    const { data: moodEntries } = await supabase      .from('mood_entries')'      .select('triggers, activities, mood_score')      .eq('user_id', userId)'      .order('created_at', { ascending: false })'      .limit(50)    const suggestions = {      warningSignSuggestions: generateWarningSignSuggestionscrisisEvents, moodEntries),      copingStrategySuggestions: generateCopingStrategySuggestionscrisisEvents, moodEntries),      environmentalSafetySuggestions: generateEnvironmentalSafetySuggestions(,      professionalContactSuggestions: generateProfessionalContactSuggestions(,      crisisContactSuggestions: generateCrisisContactSuggestions(    },    return {      statusCode: 200,      headers,      body: JSON.stringify(        success: true,        data: suggestions      })    }  }, catch (error) {    return {      statusCode: 400,      headers,      body: JSON.stringify(         success: false,         error: error instanceof Error ? error.message : 'Failed to generate suggestions'       })    }  }},async function exportSafetyPlan(event: HandlerEvent, headers: Recordstring, string){  try {    const pathParts = event.path.split(')',    const userId = pathParts[]athParts.length - 1]    if (!userId) {      throw new Error('User ID is required')'    },    const queryParams = event.queryStringParameters || {},    const format = queryParams.format || 'json',    const { data: safetyPlan, error } = await supabase      .from('safety_plans')'      .select(`        *,        emergency_contacts(*)      `)      .eq('user_id', userId)'      .eq('is_active', true)'      .single()    if (error) throw new Error('No active safety plan found')',    if (format === 'text') {',      const textPlan = formatSafetyPlanAsText(safetyPlan)      return {        statusCode: 200,        headers: {          ...headers,          'Content-Type': 'text/plain',',          'Content-Disposition': 'attachmen; filename='safety-plan.txt","        },        body: textPlan      }    },    return {      statusCode: 200,      headers,      body: JSON.stringify(        success: true,        data: {          safetyPlan,          exportedAt: new Date().toISOString(),          format        }      })    }  }, catch (error) {    return {      statusCode: 400,      headers,      body: JSON.stringify(         success: false,         error: error instanceof Error ? error.message : 'Failed to export safety plan'       })    }  }}// Helper functionsfunction generateWarningSignSuggestions(crisisEvents: any, ]oodEntries: any[])string[] {  const suggestions = []    'Feeling hopeless or worthless',',    'Loss of interest in activities I usually enjoy',',    'Changes in sleep patterns',',    'Increased anxiety or panic attacks',',    'Social isolation',',    'Difficulty concentrating',',    'Changes in appetite',',    'Thoughts of self-harm','  ]  // Add personalized suggestions based on mood triggers  if (moodEntries) {    const commonTriggers = analyzeFrequency(moodEntries.flatMap(e => e.triggers || []))    suggestions.push(...commonTriggers.slice(0, 3).map(trigger => ``xperiencing ${trigger.toLowerCase()}`))`  },  return []..new Set(suggestions)].slice(0, 10},function generateCopingStrategySuggestions(crisisEvents: any, ]oodEntries: any[])string[] {  const suggestions = []    'Deep breathing exercises (4-7-8 technique)',',    'Progressive muscle relaxation',',    'Call a trusted friend or family member',',    'Listen to calming music',',    'Take a warm shower or bath',',    'Go for a walk outside',',    'Practice mindfulness or meditation',',    'Write in a journal',',    'Use grounding techniques (5-4-3-2-1)',',    'Engage in creative activities',',    'Practice gratitude',',    'Use positive affirmations','  ]  // Add effective activities from mood tracking  if (moodEntries) {    const effectiveActivities = analyzeEffectiveActivities(moodEntries)    suggestions.push(...effectiveActivities.slice(0, 3))  },  return []..new Set(suggestions)].slice(0, 12},function generateEnvironmentalSafetySuggestions(): Record<string, any>  return {    removeItems: []      'Medications (store safely with trusted person)',',      'Sharp objects if having self-harm thoughts',',      'Alcohol or substances','    ],    createSafeSpaces: []      'Designate a calm, comfortable room',',      'Keep comfort items nearby (blanket, photos, etc.)',',      'Ensure good lighting',',      'Remove clutter to reduce stress','    ],    accessResources: []      'Keep crisis hotline numbers visible',',      'Have charger for phone available',',      'Keep emergency contact list handy',',      'Ensure transportation options are available','    ]  }},function generateProfessionalContactSuggestions(): Record<string, any>  return {    therapist: {      name: 'Your, Therapist',',      phone: 'Phone, number',',      email: 'Email, address',',      notes: 'Regular, therapy appointments','    },    psychiatrist: {      name: 'Your Psychiatrist',',      phone: 'Phone number',',      notes: 'Medication, management','    },    primaryCare: {      name: 'Primary, Care Doctor',',      phone: 'Phone number',',      notes: 'General, health concerns','    }  }},function generateCrisisContactSuggestions(): Record<string, any>  return {    emergency: '911,',    crisis_line: '988 (Suicide & Crisis Lifeline)',',    text_line: 'Text, HOME to 741741 (Crisis Text Line)',',    local_crisis: 'Your, local crisis center number','  }},function analyzeFrequency(items: string[)string[] {  const frequency = new Map<string, number>()    items.forEach(item => {}    frequency.set(item, (frequency.get(item) || 0) + 1)  })  return Array.from(frequency.entries()    .sort((a, b) => b[]] - a[]])    .map(([]tem]) => item)},function analyzeEffectiveActivities(moodEntries: any[)string[] {  const activityEffectiveness = new Map<string, { total: number moodSum: number }>()    moodEntries.forEach(entry => {}    if (entry.activities && entry.mood_score >= 6) { // Only count activities when mood was good      entry.activities.forEach((activity: string => {}        const current = activityEffectiveness.get(activity) || { total: 0, moodSum: 0 },        current.total++        current.moodSum += entry.mood_score        activityEffectiveness.set(activity, current)      })    }  })  return Array.from(activityEffectiveness.entries()    .map(([]ctivity, stats]) => ({      activity,      effectiveness: statstotal > 0 ? stats.moodSum / stats.total : 0    }))    .filter(item => item.effectiveness >= 6.5) // Only highly effective activities    .sort((a, b) => b.effectiveness - a.effectiveness)    .map(item => item.activity)},function formatSafetyPlanAsText(plan: any)string {  let text=', MY SAFETY PLAN 🛡️\n\n',  if (plan.warning_signs && plan.warning_signs.length > 0) {    text += ', WARNING SIGNS: \n,    plan.warning_signs.forEach((sign: string => {}      text += `` ${sign}\n`    })    text += 'n'  },  if (plan.coping_strategies && plan.coping_strategies.length > 0) {    text += ', COPING STRATEGIES: \n,    plan.coping_strategies.forEach((strategy: string => {}      text += `` ${strategy}\n`    })    text += 'n'  },  if (plan.emergency_contacts && plan.emergency_contacts.length > 0) {    text += ', EMERGENCY CONTACTS: \n,    plan.emergency_contacts      .sort((a: any, b: any => a.priority_order - b.priority_order)      .forEach((contact: any => {}        text += `` ${contact.name}`        if (contact.relationship) text += ` `${contact.relationship})`        if (contact.phone_number) text += ` ` ${contact.phone_number}`        text += 'n'      })    text += 'n'  },  text += ', CRISIS HOTLINES: \n,  text += ', 988 Suicide & Crisis Lifeline: 988\n,  text += ', Crisis Text Line: Text HOME to 741741\n',  text += ', Emergency Services: 911\n\n,  text += ``� Last Updated: $new Date(plan.updated_at).toLocaleDateString()}\n`  return text}
+import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
+import { createClient } from '@supabase/supabase-js';
+import { z } from 'zod';
+
+// Environment variables
+const supabaseUrl = process.env.VITE_SUPABASE_URL!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+// Request validation schemas
+const SafetyPlanSchema = z.object({
+  userId: z.string().uuid(),
+  warningSigns: z.array(z.string()).optional(),
+  copingStrategies: z.array(z.string()).optional(),
+  socialSupports: z.array(z.string()).optional(), // Encrypted client-side
+  environmentalSafety: z.record(z.any()).optional(),
+  professionalContacts: z.record(z.any()).optional(), // Encrypted client-side
+  crisisContacts: z.record(z.any()).optional(), // Encrypted client-side
+  effectivenessRating: z.number().int().min(1).max(10).optional()
+});
+
+const EmergencyContactSchema = z.object({
+  userId: z.string().uuid(),
+  name: z.string().min(1),
+  relationship: z.string().optional(),
+  phone: z.string().optional(), // Encrypted client-side
+  email: z.string().email().optional(), // Encrypted client-side
+  isPrimary: z.boolean().optional(),
+  isAvailable24h: z.boolean().optional()
+});
+
+const CrisisResourceSchema = z.object({
+  userId: z.string().uuid(),
+  resourceType: z.enum(['hotline', 'facility', 'professional', 'website', 'app']),
+  name: z.string().min(1),
+  contact: z.string().optional(), // Encrypted client-side
+  description: z.string().optional(),
+  availability: z.string().optional(),
+  isLocal: z.boolean().optional()
+});
+
+interface SafetyPlanResponse {
+  success: boolean;
+  data?: any;
+  error?: string;
+  recommendations?: string[];
+}
+
+export const handler: Handler = async (event: HandlerEvent, context: HandlerContext) => {
+  // CORS headers
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
+  };
+
+  // Handle preflight requests
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers,
+      body: ''
+    };
+  }
+
+  try {
+    const path = event.path.replace('/netlify/functions/safety-plan/', '');
+    const method = event.httpMethod;
+
+    switch (true) {
+      case method === 'POST' && path === 'plan':
+        return await createSafetyPlan(event, headers);
+      
+      case method === 'GET' && path.startsWith('plan/'):
+        return await getSafetyPlan(event, headers);
+      
+      case method === 'PUT' && path.startsWith('plan/'):
+        return await updateSafetyPlan(event, headers);
+      
+      case method === 'DELETE' && path.startsWith('plan/'):
+        return await deleteSafetyPlan(event, headers);
+      
+      case method === 'POST' && path === 'contact':
+        return await addEmergencyContact(event, headers);
+      
+      case method === 'GET' && path.startsWith('contacts/'):
+        return await getEmergencyContacts(event, headers);
+      
+      case method === 'PUT' && path.startsWith('contact/'):
+        return await updateEmergencyContact(event, headers);
+      
+      case method === 'DELETE' && path.startsWith('contact/'):
+        return await deleteEmergencyContact(event, headers);
+      
+      case method === 'POST' && path === 'resource':
+        return await addCrisisResource(event, headers);
+      
+      case method === 'GET' && path.startsWith('resources/'):
+        return await getCrisisResources(event, headers);
+      
+      case method === 'GET' && path.startsWith('assessment/'):
+        return await assessSafetyPlanEffectiveness(event, headers);
+      
+      case method === 'POST' && path === 'activate':
+        return await activateSafetyPlan(event, headers);
+      
+      default:
+        return {
+          statusCode: 404,
+          headers,
+          body: JSON.stringify({ error: 'Endpoint not found' })
+        };
+    }
+  } catch (error) {
+    console.error('Safety plan function error:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        success: false,
+        error: 'Internal server error',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      })
+    };
+  }
+};
+
+async function createSafetyPlan(event: HandlerEvent, headers: Record<string, string>) {
+  try {
+    const body = JSON.parse(event.body || '{}');
+    const validatedData = SafetyPlanSchema.parse(body);
+
+    // Check if user already has a safety plan
+    const { data: existingPlan } = await supabase
+      .from('safety_plans')
+      .select('id')
+      .eq('user_id', validatedData.userId)
+      .single();
+
+    if (existingPlan) {
+      return {
+        statusCode: 409,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          error: 'Safety plan already exists. Use PUT to update.'
+        })
+      };
+    }
+
+    // Create safety plan
+    const { data: safetyPlan, error: planError } = await supabase
+      .from('safety_plans')
+      .insert({
+        user_id: validatedData.userId,
+        warning_signs: validatedData.warningSigns,
+        coping_strategies: validatedData.copingStrategies,
+        social_supports: validatedData.socialSupports,
+        environmental_safety: validatedData.environmentalSafety,
+        professional_contacts: validatedData.professionalContacts,
+        crisis_contacts: validatedData.crisisContacts,
+        effectiveness_rating: validatedData.effectivenessRating,
+        last_reviewed: new Date().toISOString(),
+        is_active: true
+      })
+      .select()
+      .single();
+
+    if (planError) throw planError;
+
+    // Log safety plan creation for audit
+    await createSafetyPlanAuditLog(validatedData.userId, 'created', safetyPlan.id);
+
+    // Generate personalized recommendations
+    const recommendations = generateSafetyPlanRecommendations(validatedData);
+
+    const response: SafetyPlanResponse = {
+      success: true,
+      data: {
+        planId: safetyPlan.id,
+        userId: validatedData.userId,
+        createdAt: safetyPlan.created_at,
+        isActive: true
+      },
+      recommendations
+    };
+
+    return {
+      statusCode: 201,
+      headers,
+      body: JSON.stringify(response)
+    };
+  } catch (error) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        success: false,
+        error: error instanceof Error ? error.message : 'Invalid safety plan data'
+      })
+    };
+  }
+}
+
+async function getSafetyPlan(event: HandlerEvent, headers: Record<string, string>) {
+  try {
+    const pathParts = event.path.split('/');
+    const userId = pathParts[pathParts.length - 1];
+
+    if (!userId) {
+      throw new Error('User ID is required');
+    }
+
+    const { data: safetyPlan, error } = await supabase
+      .from('safety_plans')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('is_active', true)
+      .single();
+
+    if (error && error.code !== 'PGRST116') throw error; // PGRST116 = no rows returned
+
+    if (!safetyPlan) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          error: 'No active safety plan found'
+        })
+      };
+    }
+
+    // Check if plan needs review (older than 3 months)
+    const lastReviewed = new Date(safetyPlan.last_reviewed);
+    const threeMonthsAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
+    const needsReview = lastReviewed < threeMonthsAgo;
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        success: true,
+        data: {
+          ...safetyPlan,
+          needsReview,
+          daysSinceLastReview: Math.floor((Date.now() - lastReviewed.getTime()) / (24 * 60 * 60 * 1000))
+        }
+      })
+    };
+  } catch (error) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to fetch safety plan'
+      })
+    };
+  }
+}
+
+async function updateSafetyPlan(event: HandlerEvent, headers: Record<string, string>) {
+  try {
+    const pathParts = event.path.split('/');
+    const planId = pathParts[pathParts.length - 1];
+
+    if (!planId) {
+      throw new Error('Plan ID is required');
+    }
+
+    const body = JSON.parse(event.body || '{}');
+    const updateData = { ...body };
+    delete updateData.userId; // Don't allow userId changes
+
+    // Add review timestamp
+    updateData.last_reviewed = new Date().toISOString();
+
+    const { data: updatedPlan, error } = await supabase
+      .from('safety_plans')
+      .update(updateData)
+      .eq('id', planId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    // Log safety plan update for audit
+    await createSafetyPlanAuditLog(updatedPlan.user_id, 'updated', planId);
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        success: true,
+        data: {
+          plan: updatedPlan,
+          lastReviewed: updateData.last_reviewed
+        }
+      })
+    };
+  } catch (error) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to update safety plan'
+      })
+    };
+  }
+}
+
+async function deleteSafetyPlan(event: HandlerEvent, headers: Record<string, string>) {
+  try {
+    const pathParts = event.path.split('/');
+    const planId = pathParts[pathParts.length - 1];
+
+    if (!planId) {
+      throw new Error('Plan ID is required');
+    }
+
+    // Soft delete - mark as inactive instead of deleting
+    const { data: deletedPlan, error } = await supabase
+      .from('safety_plans')
+      .update({ is_active: false, deleted_at: new Date().toISOString() })
+      .eq('id', planId)
+      .select('user_id')
+      .single();
+
+    if (error) throw error;
+
+    // Log safety plan deletion for audit
+    await createSafetyPlanAuditLog(deletedPlan.user_id, 'deleted', planId);
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        success: true,
+        data: {
+          planId,
+          deleted: true,
+          deletedAt: new Date().toISOString()
+        }
+      })
+    };
+  } catch (error) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to delete safety plan'
+      })
+    };
+  }
+}
+
+async function addEmergencyContact(event: HandlerEvent, headers: Record<string, string>) {
+  try {
+    const body = JSON.parse(event.body || '{}');
+    const validatedData = EmergencyContactSchema.parse(body);
+
+    const { data: contact, error } = await supabase
+      .from('emergency_contacts')
+      .insert({
+        user_id: validatedData.userId,
+        name: validatedData.name,
+        relationship: validatedData.relationship,
+        phone: validatedData.phone,
+        email: validatedData.email,
+        is_primary: validatedData.isPrimary || false,
+        is_available_24h: validatedData.isAvailable24h || false
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return {
+      statusCode: 201,
+      headers,
+      body: JSON.stringify({
+        success: true,
+        data: {
+          contactId: contact.id,
+          name: validatedData.name,
+          relationship: validatedData.relationship,
+          isPrimary: validatedData.isPrimary
+        }
+      })
+    };
+  } catch (error) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to add emergency contact'
+      })
+    };
+  }
+}
+
+async function getEmergencyContacts(event: HandlerEvent, headers: Record<string, string>) {
+  try {
+    const pathParts = event.path.split('/');
+    const userId = pathParts[pathParts.length - 1];
+
+    if (!userId) {
+      throw new Error('User ID is required');
+    }
+
+    const { data: contacts, error } = await supabase
+      .from('emergency_contacts')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('is_active', true)
+      .order('is_primary', { ascending: false })
+      .order('created_at', { ascending: true });
+
+    if (error) throw error;
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        success: true,
+        data: {
+          contacts: contacts || [],
+          count: contacts?.length || 0
+        }
+      })
+    };
+  } catch (error) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to fetch emergency contacts'
+      })
+    };
+  }
+}
+
+async function updateEmergencyContact(event: HandlerEvent, headers: Record<string, string>) {
+  try {
+    const pathParts = event.path.split('/');
+    const contactId = pathParts[pathParts.length - 1];
+
+    if (!contactId) {
+      throw new Error('Contact ID is required');
+    }
+
+    const body = JSON.parse(event.body || '{}');
+    const updateData = { ...body };
+    delete updateData.userId;
+
+    const { data: updatedContact, error } = await supabase
+      .from('emergency_contacts')
+      .update(updateData)
+      .eq('id', contactId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        success: true,
+        data: {
+          contact: updatedContact
+        }
+      })
+    };
+  } catch (error) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to update emergency contact'
+      })
+    };
+  }
+}
+
+async function deleteEmergencyContact(event: HandlerEvent, headers: Record<string, string>) {
+  try {
+    const pathParts = event.path.split('/');
+    const contactId = pathParts[pathParts.length - 1];
+
+    if (!contactId) {
+      throw new Error('Contact ID is required');
+    }
+
+    const { error } = await supabase
+      .from('emergency_contacts')
+      .update({ is_active: false, deleted_at: new Date().toISOString() })
+      .eq('id', contactId);
+
+    if (error) throw error;
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        success: true,
+        data: {
+          contactId,
+          deleted: true
+        }
+      })
+    };
+  } catch (error) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to delete emergency contact'
+      })
+    };
+  }
+}
+
+async function addCrisisResource(event: HandlerEvent, headers: Record<string, string>) {
+  try {
+    const body = JSON.parse(event.body || '{}');
+    const validatedData = CrisisResourceSchema.parse(body);
+
+    const { data: resource, error } = await supabase
+      .from('crisis_resources')
+      .insert({
+        user_id: validatedData.userId,
+        resource_type: validatedData.resourceType,
+        name: validatedData.name,
+        contact: validatedData.contact,
+        description: validatedData.description,
+        availability: validatedData.availability,
+        is_local: validatedData.isLocal || false
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return {
+      statusCode: 201,
+      headers,
+      body: JSON.stringify({
+        success: true,
+        data: {
+          resourceId: resource.id,
+          name: validatedData.name,
+          type: validatedData.resourceType
+        }
+      })
+    };
+  } catch (error) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to add crisis resource'
+      })
+    };
+  }
+}
+
+async function getCrisisResources(event: HandlerEvent, headers: Record<string, string>) {
+  try {
+    const pathParts = event.path.split('/');
+    const userId = pathParts[pathParts.length - 1];
+
+    if (!userId) {
+      throw new Error('User ID is required');
+    }
+
+    const { data: resources, error } = await supabase
+      .from('crisis_resources')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('is_active', true)
+      .order('resource_type')
+      .order('name');
+
+    if (error) throw error;
+
+    // Group resources by type
+    const groupedResources = (resources || []).reduce((acc, resource) => {
+      const type = resource.resource_type;
+      if (!acc[type]) acc[type] = [];
+      acc[type].push(resource);
+      return acc;
+    }, {} as Record<string, any[]>);
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        success: true,
+        data: {
+          resources: groupedResources,
+          totalCount: resources?.length || 0
+        }
+      })
+    };
+  } catch (error) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to fetch crisis resources'
+      })
+    };
+  }
+}
+
+async function assessSafetyPlanEffectiveness(event: HandlerEvent, headers: Record<string, string>) {
+  try {
+    const pathParts = event.path.split('/');
+    const userId = pathParts[pathParts.length - 1];
+
+    if (!userId) {
+      throw new Error('User ID is required');
+    }
+
+    // Get safety plan usage data
+    const { data: usageData, error: usageError } = await supabase
+      .from('safety_plan_activations')
+      .select('*')
+      .eq('user_id', userId)
+      .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString())
+      .order('created_at', { ascending: false });
+
+    if (usageError) throw usageError;
+
+    // Get mood data for correlation
+    const { data: moodData, error: moodError } = await supabase
+      .from('mood_entries')
+      .select('mood_score, created_at')
+      .eq('user_id', userId)
+      .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString())
+      .order('created_at', { ascending: false });
+
+    if (moodError) throw moodError;
+
+    const assessment = {
+      activationCount: usageData?.length || 0,
+      averageEffectivenessRating: calculateAverageEffectiveness(usageData || []),
+      mostUsedStrategies: analyzeMostUsedStrategies(usageData || []),
+      moodCorrelation: analyzeMoodCorrelation(usageData || [], moodData || []),
+      recommendations: generateEffectivenessRecommendations(usageData || [], moodData || [])
+    };
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        success: true,
+        data: {
+          assessment,
+          timeframe: '30 days'
+        }
+      })
+    };
+  } catch (error) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to assess safety plan effectiveness'
+      })
+    };
+  }
+}
+
+async function activateSafetyPlan(event: HandlerEvent, headers: Record<string, string>) {
+  try {
+    const body = JSON.parse(event.body || '{}');
+    const { userId, strategyUsed, effectivenessRating, notes } = body;
+
+    if (!userId) {
+      throw new Error('User ID is required');
+    }
+
+    // Log safety plan activation
+    const { data: activation, error } = await supabase
+      .from('safety_plan_activations')
+      .insert({
+        user_id: userId,
+        strategy_used: strategyUsed,
+        effectiveness_rating: effectivenessRating,
+        notes: notes,
+        activated_at: new Date().toISOString()
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    // Create audit log
+    await createSafetyPlanAuditLog(userId, 'activated', null, {
+      strategy: strategyUsed,
+      effectiveness: effectivenessRating
+    });
+
+    // If effectiveness is low, suggest plan review
+    const suggestions = effectivenessRating && effectivenessRating <= 3 
+      ? ['Consider reviewing and updating your safety plan', 'Reach out to a mental health professional']
+      : ['Great job using your safety plan!', 'Continue practicing these strategies'];
+
+    return {
+      statusCode: 201,
+      headers,
+      body: JSON.stringify({
+        success: true,
+        data: {
+          activationId: activation.id,
+          activatedAt: activation.activated_at,
+          suggestions
+        }
+      })
+    };
+  } catch (error) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to log safety plan activation'
+      })
+    };
+  }
+}
+
+// Helper functions
+async function createSafetyPlanAuditLog(userId: string, action: string, planId?: string, metadata?: any) {
+  try {
+    await supabase
+      .from('audit_logs')
+      .insert({
+        user_id: userId,
+        action: `safety_plan_${action}`,
+        resource_type: 'safety_plan',
+        resource_id: planId,
+        metadata: metadata || {},
+        timestamp: new Date().toISOString()
+      });
+  } catch (error) {
+    console.error('Failed to create audit log:', error);
+  }
+}
+
+function generateSafetyPlanRecommendations(data: z.infer<typeof SafetyPlanSchema>): string[] {
+  const recommendations = [];
+
+  if (!data.warningSigns || data.warningSigns.length === 0) {
+    recommendations.push('Consider adding warning signs that indicate when you might need to use your safety plan');
+  }
+
+  if (!data.copingStrategies || data.copingStrategies.length < 3) {
+    recommendations.push('Try to include at least 3-5 coping strategies that work for you');
+  }
+
+  if (!data.socialSupports || data.socialSupports.length === 0) {
+    recommendations.push('Include trusted friends or family members you can reach out to');
+  }
+
+  if (!data.professionalContacts) {
+    recommendations.push('Add contact information for mental health professionals');
+  }
+
+  if (!data.crisisContacts) {
+    recommendations.push('Include crisis hotline numbers and emergency contacts');
+  }
+
+  recommendations.push('Review and update your safety plan regularly');
+  recommendations.push('Practice using your coping strategies when you\'re feeling well');
+
+  return recommendations;
+}
+
+function calculateAverageEffectiveness(usageData: any[]): number {
+  if (usageData.length === 0) return 0;
+  
+  const ratingsWithValues = usageData.filter(u => u.effectiveness_rating);
+  if (ratingsWithValues.length === 0) return 0;
+  
+  const sum = ratingsWithValues.reduce((acc, u) => acc + u.effectiveness_rating, 0);
+  return Math.round((sum / ratingsWithValues.length) * 10) / 10;
+}
+
+function analyzeMostUsedStrategies(usageData: any[]): string[] {
+  const strategyCount = new Map<string, number>();
+  
+  usageData.forEach(usage => {
+    if (usage.strategy_used) {
+      strategyCount.set(usage.strategy_used, (strategyCount.get(usage.strategy_used) || 0) + 1);
+    }
+  });
+
+  return Array.from(strategyCount.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([strategy]) => strategy);
+}
+
+function analyzeMoodCorrelation(usageData: any[], moodData: any[]): string {
+  // Simple correlation analysis
+  const activationDates = usageData.map(u => new Date(u.activated_at).toDateString());
+  const moodOnActivationDays = moodData.filter(m => 
+    activationDates.includes(new Date(m.created_at).toDateString())
+  );
+
+  if (moodOnActivationDays.length === 0) return 'insufficient_data';
+
+  const avgMoodOnActivationDays = moodOnActivationDays.reduce((sum, m) => sum + m.mood_score, 0) / moodOnActivationDays.length;
+  const allMoodsAvg = moodData.reduce((sum, m) => sum + m.mood_score, 0) / moodData.length;
+
+  if (avgMoodOnActivationDays > allMoodsAvg + 0.5) return 'positive';
+  if (avgMoodOnActivationDays < allMoodsAvg - 0.5) return 'negative';
+  return 'neutral';
+}
+
+function generateEffectivenessRecommendations(usageData: any[], moodData: any[]): string[] {
+  const recommendations = [];
+
+  if (usageData.length === 0) {
+    recommendations.push('Start using your safety plan when you notice warning signs');
+    return recommendations;
+  }
+
+  const avgEffectiveness = calculateAverageEffectiveness(usageData);
+  
+  if (avgEffectiveness < 5) {
+    recommendations.push('Consider reviewing and updating your coping strategies');
+    recommendations.push('Discuss your safety plan with a mental health professional');
+  } else if (avgEffectiveness >= 7) {
+    recommendations.push('Your safety plan is working well - keep using it!');
+    recommendations.push('Consider sharing successful strategies with others');
+  }
+
+  const mostUsed = analyzeMostUsedStrategies(usageData);
+  if (mostUsed.length > 0) {
+    recommendations.push(`Your most effective strategy appears to be: ${mostUsed[0]}`);
+  }
+
+  const correlation = analyzeMoodCorrelation(usageData, moodData);
+  if (correlation === 'positive') {
+    recommendations.push('Your safety plan usage correlates with improved mood');
+  } else if (correlation === 'negative') {
+    recommendations.push('Consider additional support during difficult periods');
+  }
+
+  return recommendations;
+}
