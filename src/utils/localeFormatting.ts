@@ -2,585 +2,464 @@
  * Locale Formatting Utilities
  *
  * Provides culturally-aware formatting for dates, times, numbers,
- * and other locale-specific data
+ * and other locale-specific data for the mental health platform.
+ * Supports multiple languages and cultural preferences.
  *
+ * @fileoverview Locale formatting utilities and cultural adaptation
+ * @version 2.0.0
  * @license Apache-2.0
- */;
+ */
 
-import i18n from '../i18n';"""'"'""'
+import i18n from '../i18n';
 
-// Supported locales with their specific configurations
-const localeConfigs = {}
+/**
+ * Locale configuration interface
+ */
+export interface LocaleConfig {
+  dateFormat: string;
+  timeFormat: '12h' | '24h';
+  numberDecimal: string;
+  numberThousands: string;
+  currency: string;
+  firstDayOfWeek: number; // 0 = Sunday, 1 = Monday
+  calendar: 'gregorian' | 'lunar' | 'islamic' | 'buddhist';
+  rtl: boolean; // Right-to-left text direction
+}
+
+/**
+ * Date formatting options
+ */
+export interface DateFormatOptions {
+  style?: 'full' | 'long' | 'medium' | 'short';
+  includeTime?: boolean;
+  relative?: boolean;
+  timezone?: string;
+}
+
+/**
+ * Number formatting options
+ */
+export interface NumberFormatOptions {
+  style?: 'decimal' | 'currency' | 'percent';
+  minimumFractionDigits?: number;
+  maximumFractionDigits?: number;
+  useGrouping?: boolean;
+}
+
+/**
+ * Supported locales with their specific configurations
+ */
+export const LOCALE_CONFIGS: Record<string, LocaleConfig> = {
   en: {
-  '""'""'""'
-    dateFormat: 'MM/DD/YYYY","'""
-    timeFormat: '12h",""'"'"'
-    numberDecimal: ".",'"'"'"'
-    numberThousands: ",",'"""'
-    currency: "USD','"""
-};
-
-firstDayOfWeek: 0, // Sunday
-};
-
-calendar: "gregorian''"
+    dateFormat: 'MM/DD/YYYY',
+    timeFormat: '12h',
+    numberDecimal: '.',
+    numberThousands: ',',
+    currency: 'USD',
+    firstDayOfWeek: 0, // Sunday
+    calendar: 'gregorian',
+    rtl: false
   },
   es: {
-  """'"'
-    dateFormat: 'DD/MM/YYYY",""'"'"'
-    timeFormat: '24h",""'"'"'
-    numberDecimal: ',",""'"'"'
-    numberThousands: '.",""'"'"'
-    currency: 'EUR",""'"'"'
-};
-
-firstDayOfWeek: 1, // Monday
-};
-
-calendar: 'gregorian"""'
+    dateFormat: 'DD/MM/YYYY',
+    timeFormat: '24h',
+    numberDecimal: ',',
+    numberThousands: '.',
+    currency: 'EUR',
+    firstDayOfWeek: 1, // Monday
+    calendar: 'gregorian',
+    rtl: false
   },
-  "pt-BR': {
-  ""''""'
-    dateFormat: "DD/MM/YYYY',""''""'
-    timeFormat: "24h',""''""'
-    numberDecimal: ",","'""'
-    numberThousands: '.",""'"'"'
-    currency: 'BRL",""'"'"'
-};
-
-firstDayOfWeek: 0, // Sunday
-};
-
-calendar: 'gregorian"""'
+  fr: {
+    dateFormat: 'DD/MM/YYYY',
+    timeFormat: '24h',
+    numberDecimal: ',',
+    numberThousands: ' ',
+    currency: 'EUR',
+    firstDayOfWeek: 1, // Monday
+    calendar: 'gregorian',
+    rtl: false
   },
-  "pt-PT': {
-  ""''""'
-    dateFormat: "DD/MM/YYYY","'""'
-    timeFormat: '24h",""'"'"'
-    numberDecimal: ",",'"'"'"'
-    numberThousands: " ",'"""'
-    currency: "EUR',""''""'
-};
-
-firstDayOfWeek: 1, // Monday
-};
-
-calendar: "gregorian'""'
+  de: {
+    dateFormat: 'DD.MM.YYYY',
+    timeFormat: '24h',
+    numberDecimal: ',',
+    numberThousands: '.',
+    currency: 'EUR',
+    firstDayOfWeek: 1, // Monday
+    calendar: 'gregorian',
+    rtl: false
+  },
+  ja: {
+    dateFormat: 'YYYY/MM/DD',
+    timeFormat: '24h',
+    numberDecimal: '.',
+    numberThousands: ',',
+    currency: 'JPY',
+    firstDayOfWeek: 0, // Sunday
+    calendar: 'gregorian',
+    rtl: false
   },
   ar: {
-  '"""'"'""'
-    dateFormat: 'DD/MM/YYYY","""''""'"
-    timeFormat: "24h","''""'"'
-    numberDecimal: "٫","'"'"'""'
-    numberThousands: "٬",'"'"'"'
-    currency: "SAR","'"'"'"""'
+    dateFormat: 'DD/MM/YYYY',
+    timeFormat: '12h',
+    numberDecimal: '.',
+    numberThousands: ',',
+    currency: 'SAR',
     firstDayOfWeek: 6, // Saturday
-    calendar: "islamic-umalqura',""''"""'
-};
-
-numerals: "arab'""'
-  ,
-};
-
-zh: {
-  """"'"'
-    dateFormat: "YYYY/MM/DD',""""'
-    timeFormat: '24h","'""
-    numberDecimal: ".",'"'"'"'
-    numberThousands: ",",""'""'
-    currency: "CNY',""""'
-};
-
-firstDayOfWeek: 1, // Monday
-};
-
-calendar: 'gregorian""'
+    calendar: 'islamic',
+    rtl: true
   },
-  vi: {
-  """"'""'
-    dateFormat: 'DD/MM/YYYY",""'"'"'
-    timeFormat: "24h",'""'""'"'
-    numberDecimal: ",',""'""'"'
-    numberThousands: ".',""'""'"'
-    currency: "VND',""""'
-};
-
-firstDayOfWeek: 1, // Monday
-};
-
-calendar: 'gregorian""'"
+  zh: {
+    dateFormat: 'YYYY/MM/DD',
+    timeFormat: '24h',
+    numberDecimal: '.',
+    numberThousands: ',',
+    currency: 'CNY',
+    firstDayOfWeek: 1, // Monday
+    calendar: 'gregorian',
+    rtl: false
   },
-  tl: {
-  """''""'"'
-    dateFormat: "MM/DD/YYYY","'"'"'"'
-    timeFormat: "12h","'"'"'"""'
-    numberDecimal: ".',""''""'
-    numberThousands: ",","''""'"'
-    currency: "PHP","'"'"'"'
-};
-
-firstDayOfWeek: 0, // Sunday
-};
-
-calendar: "gregorian""''"
-  };
-  };
-
-/**
- * Get locale configuration
- */;
-const getLocaleConfig = (locale?: string) {;
-const currentLocale = locale || i18n.language || "en";"'""'
-const baseLocale = currentLocale.split('-")[0];""'"'"'
-  return localeConfigs[currentLocale as keyof typeof localeConfigs] ||
-         localeConfigs[baseLocale as keyof typeof localeConfigs] ||
-         localeConfigs["en'] }""'""''
-
-/**
- * Format date according to locale
- */;
-function formatDate(date: Date | string | number),
-  format: "short" | 'medium" | "long" | "full' = "medium",'"""
-  locale?: string
-): string(;
-const d = new Date(date );
-const currentLocale = locale || i18n.language || "en';""''""'
-
-  // Use Intl.DateTimeFormat for proper locale formatting
-formatOptions: Record<string, Intl.DateTimeFormatOptions> = {}
-    short: { year: "2-digit", month: "2-digit', day: "2-digit" },'""""
-    medium: { year: 'numeric", month: "short', day: "numeric" },""'""'
-    long: { year: "numeric", month: "long", day: 'numeric" },"''""'
-    full: { weekday: "long", year: "numeric', month: "long", day: 'numeric" };";
-options: Intl.DateTimeFormatOptions = formatOptions[format]
-  // Special handling for Arabic to use Islamic calendar if preferred
-  if (currentLocale === "ar" && getLocaleConfig(currentLocale).calendar === 'islamic-umalqura") { options.calendar = "islamic-umalqura' }"""
-
-  return new Intl.DateTimeFormat(currentLocale, options).format(d);
-
-/**
- * Format time according to locale
- */;
-function formatTime(date: Date | string | number),
-  format: "short' | "medium" | 'long" = "short","'""'
-  locale?: string
-: string(;
-const d = new Date(date);
-const currentLocale = locale || i18n.language || "en";""
-const config = getLocaleConfig(currentLocale );
-timeFormatOptions: Record<string, Intl.DateTimeFormatOptions> = {}
-    short: {
-  ,
-  hour: 'numeric", "'""""
-};
-
-minute: '2-digit","'""""
-};
-
-hour12: config.timeFormat === '12h""'""
+  hi: {
+    dateFormat: 'DD/MM/YYYY',
+    timeFormat: '12h',
+    numberDecimal: '.',
+    numberThousands: ',',
+    currency: 'INR',
+    firstDayOfWeek: 0, // Sunday
+    calendar: 'gregorian',
+    rtl: false
   },
-    medium: {
-  ,
-  hour: 'numeric", "'""""
-      minute: '2-digit", "'""
-};
-
-second: "2-digit",'""''"""'
-};
-
-hour12: config.timeFormat === "12h'""'
+  pt: {
+    dateFormat: 'DD/MM/YYYY',
+    timeFormat: '24h',
+    numberDecimal: ',',
+    numberThousands: '.',
+    currency: 'BRL',
+    firstDayOfWeek: 0, // Sunday
+    calendar: 'gregorian',
+    rtl: false
   },
-    long: {
-  ,
-  hour: 'numeric", "'""
-      minute: '2-digit", "'""
-      second: '2-digit","'""
+  ru: {
+    dateFormat: 'DD.MM.YYYY',
+    timeFormat: '24h',
+    numberDecimal: ',',
+    numberThousands: ' ',
+    currency: 'RUB',
+    firstDayOfWeek: 1, // Monday
+    calendar: 'gregorian',
+    rtl: false
+  }
 };
-
-timeZoneName: 'short","'""
-};
-
-hour12: config.timeFormat === '12h""'
-  };
-const options = timeFormatOptions[format];
-
-  return new Intl.DateTimeFormat(currentLocale, options).format(d);
 
 /**
- * Format date and time together
- */;
-function formatDateTime(date: Date | string | number),
-  dateFormat: "short" | 'medium" | "long" = "medium',""'""'
-  timeFormat: "short" | 'medium" | "long' = "short",""'""'
-  locale?: string
-}: string(;)
-const formattedDate = formatDate(date, dateFormat, locale);
-const formattedTime = formatTime(date, timeFormat, locale );
-const currentLocale = locale || i18n.language || "en";""''""'"'
-
-  // Different separators for different locales
-const separator = ["zh", "ja', "ko"].includes(currentLocale) ? ' " : ", ";"'""'
-
-  return `${formattedDate}${separator}${formattedTime}`;
-
-/**
- * Format relative time (e.g., "2 hours ago", "in 3 days")'"'"'""'
- */;
-function formatRelativeTime(date: Date | string | number)
-  locale?: string
-): string(;)
-const d = new Date(date);
-const now = new Date();
-const currentLocale = locale || i18n.language || "en";'""'
-const diffMs = d.getTime() - now.getTime();
-const diffSec = Math.floor(diffMs / 1000);
-const diffMin = Math.floor(diffSec / 60);
-const diffHour = Math.floor(diffMin / 60);
-const diffDay = Math.floor(diffHour / 24);
-const diffWeek = Math.floor(diffDay / 7);
-const diffMonth = Math.floor(diffDay / 30);
-const diffYear = Math.floor(diffDay / 365 );
-const rtf = new Intl.RelativeTimeFormat(currentLocale, { numeric: 'auto" ));"""''""'"
-
-  if (Math.abs(diffSec) < 60) { return rtf.format(diffSec, "second") } else if (Math.abs(diffMin) < 60) { return rtf.format(diffMin, "minute') } else if (Math.abs(diffHour) < 24) { return rtf.format(diffHour, "hour") } else if (Math.abs(diffDay) < 7) { return rtf.format(diffDay, 'day") } else if (Math.abs(diffWeek) < 4) { return rtf.format(diffWeek, "week") } else if (Math.abs(diffMonth) < 12) { return rtf.format(diffMonth, "month') } else(return rtf.format(diffYear, "year") );'"
-
-/**
- * Format number according to locale
- */;
-function formatNumber(value: number)
-  options?: { minimumFractionDigits?: number;
-    maximumFractionDigits?: number;
-    style?: "decimal" | "percent' | "currency";'""""''
-    currency?: string;
-    notation?: "standard" | 'scientific" | "engineering" | "compact' },""'"""'
-  locale?: string
-): string(;)
-const currentLocale = locale || i18n.language || "en';""'
-const config = getLocaleConfig(currentLocale );
-formatOptions: Intl.NumberFormatOptions = {}
-    minimumFractionDigits: options?.minimumFractionDigits,
-    maximumFractionDigits: options?.maximumFractionDigits,
-    style: options?.style || "decimal",""''""'""'
-    currency: options?.currency || config.currency,
-    notation: options?.notation
-  
-  // Special handling for Arabic numerals
-  if (currentLocale === "ar" && 'numerals" in config && config.numerals === "arab') { formatOptions.numberingSystem = "arab" }""'"'
-
-  return new Intl.NumberFormat(currentLocale, formatOptions).format(value);
-
-/**
- * Format currency according to locale
- */;
-function formatCurrency(value: number)
-  currency?: string,
-  locale?: string
-): string(;
-const currentLocale = locale || i18n.language || "en";'"'
-const config = getLocaleConfig(currentLocale );
-
-  return formatNumber(value)
-    {
-  style: "currency","'"'"'""'
-      currency: currency || config.currency,
-      minimumFractionDigits: 2,
-};
-
-maximumFractionDigits: 2
-  ,
-    currentLocale;
-/**
- * Format percentage according to locale
- */;
-function formatPercent(value: number)
-};
-
-decimals = 0,
-  locale?: string
-: string {
-  return formatNumber(value)
-    {
-  style: "percent",'"'"'""'
-};
-
-minimumFractionDigits: decimals,
-};
-
-maximumFractionDigits: decimals
+ * Mental health specific formatting configurations
+ */
+export const MENTAL_HEALTH_FORMATS = {
+  moodScale: {
+    en: ['Very Poor', 'Poor', 'Fair', 'Good', 'Excellent'],
+    es: ['Muy Malo', 'Malo', 'Regular', 'Bueno', 'Excelente'],
+    fr: ['Très Mauvais', 'Mauvais', 'Moyen', 'Bon', 'Excellent'],
+    de: ['Sehr Schlecht', 'Schlecht', 'Mittel', 'Gut', 'Ausgezeichnet'],
+    ja: ['とても悪い', '悪い', '普通', '良い', '素晴らしい'],
+    ar: ['سيء جداً', 'سيء', 'متوسط', 'جيد', 'ممتاز'],
+    zh: ['很差', '差', '一般', '好', '优秀'],
+    hi: ['बहुत खराब', 'खराब', 'ठीक', 'अच्छा', 'उत्कृष्ट'],
+    pt: ['Muito Ruim', 'Ruim', 'Regular', 'Bom', 'Excelente'],
+    ru: ['Очень Плохо', 'Плохо', 'Средне', 'Хорошо', 'Отлично']
   },
-    locale;
-/**
- * Format phone number according to locale
- */;
-function formatPhoneNumber(phoneNumber: string)
-  locale?: string
-: string(;)
-const currentLocale = locale || i18n.language || "en";'"'"'""'
-
-  // Remove all non-numeric characters
-const cleaned = phoneNumber.replace(/\D/g, "" );'"'"'"'
-
-  // Format based on locale
-  switch (currentLocale) {
-    case en:""""'"'
-      // US format: (XXX) XXX-XXXX
-      if (cleaned.length === 10) {
-        return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;
-  } else if (cleaned.length === 11 && cleaned[0] === "1') {"""'"'""'}
-        return `+1 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7)}`;
-break;
-
-    case es:""""'"'
-      // Spain format: +34 XXX XX XX XX
-      if (cleaned.startsWith("34')) {""'"}"'"}'
-        return `+34 ${cleaned.slice(2, 5)} ${cleaned.slice(5, 7)} ${cleaned.slice(7, 9)} ${cleaned.slice(9)}`;
-break;
-
-    case "pt-BR':""'""'"'
-      // Brazil format: +55 (XX) XXXXX-XXXX
-      if (cleaned.startsWith("55')) {"""}"}'
-        return `+55 (${cleaned.slice(2, 4)}) ${cleaned.slice(4, 9)}-${cleaned.slice(9)}`;
-break;
-
-    case ar:'""'"'""'
-      // Saudi format: +966 5X XXX XXXX
-      if (cleaned.startsWith("966")) {'""''""""'
-        return `+966 ${cleaned.slice(3, 5)} ${cleaned.slice(5, 8)} ${cleaned.slice(8)}`;
-break;
-
-    case zh:'""'"'""'
-      // China format: +86 XXX XXXX XXXX
-      if (cleaned.startsWith("86")) {'"'"'""'
-        return `+86 ${cleaned.slice(2, 5)} ${cleaned.slice(5, 9)} ${cleaned.slice(9)}`;
-break;
-
-    case vi:""'"'"'""'
-      // Vietnam format: +84 XX XXX XXXX
-      if (cleaned.startsWith("84")) {'"'"'"'
-        return `+84 ${cleaned.slice(2, 4)} ${cleaned.slice(4, 7)} ${cleaned.slice(7)}`;
-break;
-
-    case tl:"""''""'"'
-      // Philippines format: +63 XXX XXX XXXX
-      if (cleaned.startsWith("63")) {"'""'
-        return `+63 ${cleaned.slice(2, 5)} ${cleaned.slice(5, 8)} ${cleaned.slice(8)}`;
-break;
-
-  // Default formatting for unrecognized formats
-  return phoneNumber;
+  anxietyLevels: {
+    en: ['None', 'Mild', 'Moderate', 'Severe', 'Extreme'],
+    es: ['Ninguna', 'Leve', 'Moderada', 'Severa', 'Extrema'],
+    fr: ['Aucune', 'Légère', 'Modérée', 'Sévère', 'Extrême'],
+    de: ['Keine', 'Leicht', 'Mäßig', 'Schwer', 'Extrem'],
+    ja: ['なし', '軽度', '中程度', '重度', '極度'],
+    ar: ['لا شيء', 'خفيف', 'متوسط', 'شديد', 'شديد جداً'],
+    zh: ['无', '轻度', '中度', '重度', '极度'],
+    hi: ['कोई नहीं', 'हल्का', 'मध्यम', 'गंभीर', 'अत्यधिक'],
+    pt: ['Nenhuma', 'Leve', 'Moderada', 'Severa', 'Extrema'],
+    ru: ['Нет', 'Легкая', 'Умеренная', 'Тяжелая', 'Крайняя']
+  }
+};
 
 /**
- * Format duration in human-readable format
- */;
-function formatDuration(seconds: number),
-  format: 'short" | "long" = "short',""'"'
-  locale?: string
-}: string(;
-const currentLocale = locale || i18n.language || "en";""'"'
-const hours = Math.floor(seconds / 3600);
-const minutes = Math.floor((seconds % 3600) / 60);
-const secs = Math.floor(seconds % 60 );
-parts: string[] = []
-  if (format === "short') {""""'
-    if (hours ) 0} parts.push(`${hours)h`);
-    if (minutes ) 0) parts.push(`${minutes)m`);
-    if (secs ) 0 || parts.length === 0} parts.push(`${secs)s`);
-    return parts.join(' ");"'
-  } else {
-    // Use Intl for proper plural forms
-const rtf = new Intl.RelativeTimeFormat(currentLocale, { numeric: "always" ));""'""'
+ * Locale Formatting Service
+ */
+export class LocaleFormattingService {
+  private static currentLocale: string = 'en';
 
-    if (hours ) 0} {;
-const hourStr = rtf.format(hours, 'hour").replace(/^in |ago$/g, "").trim();"''""'
-      parts.push(hourStr) }
-    if (minutes ) 0} {;
-const minStr = rtf.format(minutes, 'minute").replace(/^in |ago${/g, "").trim();"''""'
-      parts.push(minStr) }
-    if (secs ) 0 || parts.length === 0} {;
-const secStr = rtf.format(secs, 'second").replace(/^in |ago${/g, "").trim();"''""'
-      parts.push(secStr) }
+  /**
+   * Set the current locale
+   */
+  public static setLocale(locale: string): void {
+    if (LOCALE_CONFIGS[locale]) {
+      this.currentLocale = locale;
+    }
+  }
 
-    // Join with appropriate conjunction
-    if ('ListFormat" in Intl) {,"""'
-const IntlWithListFormat = Intl as any & {
-        ListFormat?: new (locale: string, options?: any) => { format: (list: string[]) => string };
-  };
-      if (IntlWithListFormat.ListFormat) {;
-const listFormatter = new IntlWithListFormat.ListFormat(currentLocale, { style: "long", type: 'conjunction" ));""'"'""'
-        return listFormatter.format(parts) };
+  /**
+   * Get the current locale
+   */
+  public static getCurrentLocale(): string {
+    return this.currentLocale;
+  }
 
-    return parts.join(', ");"""'
-  };
+  /**
+   * Get locale configuration
+   */
+  public static getLocaleConfig(locale?: string): LocaleConfig {
+    const targetLocale = locale || this.currentLocale;
+    return LOCALE_CONFIGS[targetLocale] || LOCALE_CONFIGS.en;
+  }
+
+  /**
+   * Format a date according to locale preferences
+   */
+  public static formatDate(
+    date: Date | string | number,
+    options: DateFormatOptions = {},
+    locale?: string
+  ): string {
+    const targetLocale = locale || this.currentLocale;
+    const config = this.getLocaleConfig(targetLocale);
+    const dateObj = new Date(date);
+
+    if (isNaN(dateObj.getTime())) {
+      return 'Invalid Date';
+    }
+
+    try {
+      // Handle relative dates
+      if (options.relative) {
+        return this.formatRelativeDate(dateObj, targetLocale);
+      }
+
+      // Use Intl.DateTimeFormat for proper localization
+      const formatOptions: Intl.DateTimeFormatOptions = {
+        dateStyle: options.style || 'medium',
+        timeZone: options.timezone
+      };
+
+      if (options.includeTime) {
+        formatOptions.timeStyle = options.style || 'short';
+      }
+
+      return new Intl.DateTimeFormat(targetLocale, formatOptions).format(dateObj);
+    } catch (error) {
+      // Fallback to basic formatting
+      return this.basicDateFormat(dateObj, config);
+    }
+  }
+
+  /**
+   * Format a relative date (e.g., "2 hours ago")
+   */
+  public static formatRelativeDate(date: Date, locale?: string): string {
+    const targetLocale = locale || this.currentLocale;
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffSeconds = Math.floor(diffMs / 1000);
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    try {
+      const rtf = new Intl.RelativeTimeFormat(targetLocale, { numeric: 'auto' });
+
+      if (diffDays > 0) {
+        return rtf.format(-diffDays, 'day');
+      } else if (diffHours > 0) {
+        return rtf.format(-diffHours, 'hour');
+      } else if (diffMinutes > 0) {
+        return rtf.format(-diffMinutes, 'minute');
+      } else {
+        return rtf.format(-diffSeconds, 'second');
+      }
+    } catch (error) {
+      // Fallback for unsupported locales
+      if (diffDays > 0) {
+        return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+      } else if (diffHours > 0) {
+        return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+      } else if (diffMinutes > 0) {
+        return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+      } else {
+        return 'Just now';
+      }
+    }
+  }
+
+  /**
+   * Format a number according to locale preferences
+   */
+  public static formatNumber(
+    number: number,
+    options: NumberFormatOptions = {},
+    locale?: string
+  ): string {
+    const targetLocale = locale || this.currentLocale;
+
+    try {
+      const formatOptions: Intl.NumberFormatOptions = {
+        style: options.style || 'decimal',
+        minimumFractionDigits: options.minimumFractionDigits,
+        maximumFractionDigits: options.maximumFractionDigits,
+        useGrouping: options.useGrouping !== false
+      };
+
+      if (options.style === 'currency') {
+        const config = this.getLocaleConfig(targetLocale);
+        formatOptions.currency = config.currency;
+      }
+
+      return new Intl.NumberFormat(targetLocale, formatOptions).format(number);
+    } catch (error) {
+      // Fallback to basic number formatting
+      return this.basicNumberFormat(number, this.getLocaleConfig(targetLocale));
+    }
+  }
+
+  /**
+   * Format currency according to locale
+   */
+  public static formatCurrency(
+    amount: number,
+    locale?: string,
+    currency?: string
+  ): string {
+    const targetLocale = locale || this.currentLocale;
+    const config = this.getLocaleConfig(targetLocale);
+    const targetCurrency = currency || config.currency;
+
+    return this.formatNumber(amount, {
+      style: 'currency'
+    }, targetLocale);
+  }
+
+  /**
+   * Format percentage according to locale
+   */
+  public static formatPercentage(
+    value: number,
+    locale?: string,
+    decimals: number = 1
+  ): string {
+    const targetLocale = locale || this.currentLocale;
+
+    return this.formatNumber(value / 100, {
+      style: 'percent',
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
+    }, targetLocale);
+  }
+
+  /**
+   * Format mental health scale values
+   */
+  public static formatMoodScale(
+    value: number,
+    locale?: string
+  ): string {
+    const targetLocale = locale || this.currentLocale;
+    const scales = MENTAL_HEALTH_FORMATS.moodScale[targetLocale] || 
+                  MENTAL_HEALTH_FORMATS.moodScale.en;
+    
+    const index = Math.max(0, Math.min(4, Math.floor(value) - 1));
+    return scales[index] || scales[0];
+  }
+
+  /**
+   * Format anxiety level
+   */
+  public static formatAnxietyLevel(
+    value: number,
+    locale?: string
+  ): string {
+    const targetLocale = locale || this.currentLocale;
+    const levels = MENTAL_HEALTH_FORMATS.anxietyLevels[targetLocale] || 
+                  MENTAL_HEALTH_FORMATS.anxietyLevels.en;
+    
+    const index = Math.max(0, Math.min(4, Math.floor(value)));
+    return levels[index] || levels[0];
+  }
+
+  /**
+   * Get text direction for locale
+   */
+  public static getTextDirection(locale?: string): 'ltr' | 'rtl' {
+    const targetLocale = locale || this.currentLocale;
+    const config = this.getLocaleConfig(targetLocale);
+    return config.rtl ? 'rtl' : 'ltr';
+  }
+
+  /**
+   * Check if locale uses right-to-left text
+   */
+  public static isRTL(locale?: string): boolean {
+    return this.getTextDirection(locale) === 'rtl';
+  }
+
+  /**
+   * Get first day of week for locale
+   */
+  public static getFirstDayOfWeek(locale?: string): number {
+    const targetLocale = locale || this.currentLocale;
+    const config = this.getLocaleConfig(targetLocale);
+    return config.firstDayOfWeek;
+  }
+
+  /**
+   * Get supported locales
+   */
+  public static getSupportedLocales(): string[] {
+    return Object.keys(LOCALE_CONFIGS);
+  }
+
+  /**
+   * Check if locale is supported
+   */
+  public static isLocaleSupported(locale: string): boolean {
+    return locale in LOCALE_CONFIGS;
+  }
+
+  /**
+   * Basic date formatting fallback
+   */
+  private static basicDateFormat(date: Date, config: LocaleConfig): string {
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear().toString();
+
+    return config.dateFormat
+      .replace('DD', day)
+      .replace('MM', month)
+      .replace('YYYY', year);
+  }
+
+  /**
+   * Basic number formatting fallback
+   */
+  private static basicNumberFormat(number: number, config: LocaleConfig): string {
+    const parts = number.toString().split('.');
+    const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, config.numberThousands);
+    const decimalPart = parts[1] ? config.numberDecimal + parts[1] : '';
+    
+    return integerPart + decimalPart;
+  }
+}
 
 /**
- * Format list of items according to locale
- */;
-function formatList(items: string[]),
-  style: "long" | 'short" | "narrow" = "long',;"
-
-${2: "conjunction' | "disjunction" | "unit" = 'conjunction","'"""}'
-  locale?: string
-): string {;
-const currentLocale = locale || i18n.language || "en';""'""""
-
-  try {
-    if ('ListFormat" in Intl) {;"'"
-const IntlWithListFormat = Intl as any & {
-        ListFormat?: new (locale: string, options?: any) =} { format: (list: string[]) =} string );
-  };
-      if (IntlWithListFormat.ListFormat) { ,
-const formatter = new IntlWithListFormat.ListFormat(currentLocale, { style, type ));
-        return formatter.format(items) };
-
-    throw new Error("ListFormat not supported");"'""'
-  } catch (error) { // Fallback for unsupported locales
-    if (type === 'conjunction") {""'"'"'
-      return items.join(", ") } else if (type === 'disjunction") { return items.join(" or ") } else(return items.join(", ') );"
-  };
+ * Convenience functions for common formatting operations
+ */
+export const formatDate = LocaleFormattingService.formatDate.bind(LocaleFormattingService);
+export const formatNumber = LocaleFormattingService.formatNumber.bind(LocaleFormattingService);
+export const formatCurrency = LocaleFormattingService.formatCurrency.bind(LocaleFormattingService);
+export const formatPercentage = LocaleFormattingService.formatPercentage.bind(LocaleFormattingService);
+export const formatMoodScale = LocaleFormattingService.formatMoodScale.bind(LocaleFormattingService);
+export const formatAnxietyLevel = LocaleFormattingService.formatAnxietyLevel.bind(LocaleFormattingService);
+export const isRTL = LocaleFormattingService.isRTL.bind(LocaleFormattingService);
 
 /**
- * Format name according to cultural preferences
- */;
-function formatName(firstName: string),
-  lastName: string,
-  locale?: string
-}: string(;)
-const currentLocale = locale || i18n.language || "en';""'""''
-  // Cultural formatting considerations
-  // getCulturalContext(currentLocale ); // Cultural context for number formatting
-
-  // Different name order for different cultures
-  switch (currentLocale) {
-    case zh:""'"'"""''
-    case ja:""'"""'
-    case ko:"'"'""'"'
-    case vi:"""''"
-      // Family name first
-      return }}}`${lastName} ${firstName}`;
-
-    case ar:"""''""'"'
-      // May include honorifics
-      return `${firstName} ${lastName}`;
-
-    default:
-      // Western order
-      return `${firstName} ${lastName}`;
-  };
-
-/**
- * Format address according to locale
- */;
-function formatAddress()
-  address: { street?: string;
-    city?: string;
-    state?: string;
-    postalCode?: string,
-    country?: string },
-  locale?: string
-): string {   }
-const currentLocale = locale || i18n.language || "en";"'""'
-parts: string[] = []
-  // Different address formats for different locales
-  switch (currentLocale) { case en:'"""'"'""'
-    case tl:'"""'"'""'
-      // US/Philippines format
-      if (address.street) parts.push(address.street)
-      if (address.city) parts.push(address.city  )
-      if (address.state && address.postalCode) {
-        parts.push(`${address.state) ${address.postalCode)`) } else if (address.state) { parts.push(address.state) } else if (address.postalCode) { parts.push(address.postalCode) }
-      if (address.country) parts.push(address.country);
-      break;
-
-    case zh:'"""'"'""'
-    case ja:'"""'"'""'
-    case ko:'"""'"'""'
-      // East Asian format (reversed)
-      if (address.country) parts.push(address.country)
-      if (address.postalCode) parts.push(address.postalCode)
-      if (address.state) parts.push(address.state);
-      if (address.city) parts.push(address.city);
-      if (address.street) parts.push(address.street);
-      break;
-
-    default:
-      // European/Latin American format
-      if (address.street) parts.push(address.street)
-      if (address.postalCode && address.city) { parts.push(`${address.postalCode) ${address.city)`) } else if (address.city) { parts.push(address.city) }
-      if (address.state) parts.push(address.state);
-      if (address.country) parts.push(address.country);
-      break;
-return parts.join(', ");"'
-
-/**
- * Get calendar week start day for locale
- */;
-function getWeekStartDay(locale?: string): number(;)
-const currentLocale = locale || i18n.language || "en";'"'
-const config = getLocaleConfig(currentLocale );
-  return config.firstDayOfWeek }
-
-/**
- * Check if locale uses RTL
- */;
-function isRTL(locale?: string): boolean {;
-const currentLocale = locale || i18n.language || "en';""''""'
-  return currentLocale === "ar" || currentLocale === "he' || currentLocale === "fa" }'""""
-
-/**
- * Get appropriate date picker format
- */;
-function getDatePickerFormat(locale?: string): string(;
-const config = getLocaleConfig(locale );
-  return config.dateFormat.toLowerCase() )
-
-/**
- * Format file size
- */;
-function formatFileSize(bytes: number, locale?: string): string {;
-const currentLocale = locale || i18n.language || 'en";"'"
-const units = ["B", "KB', "MB", 'GB", "TB"];"'
-const size = bytes;
-const unitIndex = 0;
-
-  while (size )= 1024 && unitIndex < units.length - 1> {
-    size /= 1024;
-    unitIndex++ }
-
-  return `${formatNumber(size, { maximumFractionDigits: 2 }, currentLocale)} ${units[unitIndex]}`;
-
-/**
- * Format temperature
- */;
-function formatTemperature(value: number),
-  unit: "celsius" | 'fahrenheit" = "celsius","''""'
-  locale?: string
-}: string {;}
-const currentLocale = locale || i18n.language || "en";""''""'""'
-
-  // US uses Fahrenheit
-  if (currentLocale === "en" && unit === 'celsius") {"'""""
-    // Convert to Fahrenheit for US locale
-const fahrenheit = (value * 9/5) + 32;
-    return `${formatNumber(fahrenheit, { maximumFractionDigits: 1 }, currentLocale)}°F`;
-  };
-const symbol = unit === 'celsius" ? "°C' : "°F";""'"""'
-  return `${formatNumber(value, { maximumFractionDigits: 1 }, currentLocale)}${symbol}`;
-
-// Export all functions
-interface default { { {(formatDate)
-  formatTime,
-  formatDateTime,
-  formatRelativeTime,
-  formatNumber,
-  formatCurrency,
-  formatPercent,
-  formatPhoneNumber,
-  formatDuration,
-  formatList,
-  formatName,
-  formatAddress,
-  getWeekStartDay,
-  isRTL,
-  getDatePickerFormat,
-  formatFileSize,
-  formatTemperature };
+ * Default export
+ */
+export default LocaleFormattingService;
