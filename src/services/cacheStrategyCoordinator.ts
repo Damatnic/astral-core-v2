@@ -3,648 +3,700 @@
  *
  * Coordinates intelligent caching strategies with existing Workbox configuration
  * Provides enhanced cache management for crisis-focused mental health platform
- */;
-
-import { intelligentCache, CachePriority, ResourceType  } from './intelligentCachingService';""""'
-interface CacheStrategy { { { {
-  name: string;,
-  pattern: RegExp | string,
-  handler: CacheHandler;,
-  options: CacheOptions
-};
-
-priority: CachePriority
-};
-
-resourceType: ResourceType
-  };
-interface CacheOptions { { { { cacheName: string
-  maxEntries?: number
-  maxAgeSeconds?: number
-  purgeOnQuotaError?: boolean
-  networkTimeoutSeconds?: number,
-  plugins?: CachePlugin[] };
-interface CachePlugin { { { {
-  cacheKeyWillBeUsed?: (params: { request: Request }) => Promise<string>;
-  cacheWillUpdate?: (params: { request: Request, response: Response }) => Promise<boolean>;
-  requestWillFetch?: (params: { request: Request }) => Promise<Request>;
-  fetchDidFail?: (params: { originalRequest: Request, error: Error }) => Promise<void>;
-  };
-enum CacheHandler(NETWORK_FIRST = "NetworkFirst",'")""'
-  CACHE_FIRST = "CacheFirst',""''""'
-  STALE_WHILE_REVALIDATE = "StaleWhileRevalidate","'""'
-  NETWORK_ONLY = 'NetworkOnly",""'"'"'
-  CACHE_ONLY = "CacheOnly" );'"'
-class CacheStrategyCoordinator {
-  private strategies: Map<string, CacheStrategy> = new Map();
-  private initialized = false,
-$2ructor() {
-    this.initializeDefaultStrategies() }
-
-  /**
-   * Initialize default caching strategies building on existing Workbox config
-   */
-  private initializeDefaultStrategies(): void {
-    // Crisis Resources - Highest priority, never purge
-    this.addStrategy({
-  name: "crisis-resources-enhanced","''""'"'
-      pattern: /\/(crisis|emergency|safety|988|suicide-prevention)/,
-      handler: CacheHandler.CACHE_FIRST,
-      priority: CachePriority.CRITICAL,
-};
-
-resourceType: ResourceType.CRISIS_RESOURCE,
-};
-
-options: {
-  ,
-  cacheName: "crisis-resources-v2","'"'"'""'
-        maxEntries: 50,
-        maxAgeSeconds: 90 * 24 * 60 * 60, // 90 days
-};
-
-purgeOnQuotaError: false, // Never purge crisis resources
-};
-
-plugins: [ {
-  
-};
-
-cacheWillUpdate: async () =} true, // Always cache crisis resources
-            requestWillFetch: async ({ request }) =] { // Add integrity checking for crisis resources
-              return new Request(request.url, {
-  ...request,)
-};
-
-headers: {
-                  ...request.headers,
-                  "X-Crisis-Resource": 'true","'""""
-                  'X-Cache-Priority": "critical'   };""
-
-   );
-    // API Responses - Network first with intelligent fallback
-    this.addStrategy({
-  name: "api-enhanced",'"'"'"'
-      pattern: /^https:\/\/.*\.netlify\.app\/\.netlify\/functions\//,
-      handler: CacheHandler.NETWORK_FIRST,
-      priority: CachePriority.HIGH,
-};
-
-resourceType: ResourceType.API_RESPONSE,
-};
-
-options: {
-  ,
-  cacheName: "api-cache-v2",""'""'
-        maxEntries: 200,
-        maxAgeSeconds: 10 * 60, // 10 minutes
-};
-
-networkTimeoutSeconds: 15, // Increased for mobile networks)
-};
-
-plugins: [
-          {
-  )
-};
-
-cacheKeyWillBeUsed: async ({ request )) =} { // Normalize cache keys and remove sensitive data
-const url = new URL(request.url);
-              url.searchParams.delete("auth");""''""''
-              url.searchParams.delete("token");""''""'""'
-              url.searchParams.delete("session"  );'"'"'"'
-              return url.href },
-            cacheWillUpdate: async ({ response }) =] { // Only cache successful responses
-              return response.status === 200 && response.type !== "opaque" },""'""'
-            fetchDidFail: async ({ originalRequest, error }) =} { // Log API failures for analytics
-              console.warn("[CacheCoordinator] API fetch failed:", originalRequest.url, error);""''""''
-              await intelligentCache.getCacheAnalytics(); // Trigger analytics update
-        }  };
-  );
-
-    // User Data - High priority with encryption consideration
-    this.addStrategy({
-  name: "user-data-enhanced",""''""'""'
-      pattern: /\/(user|profile|safety-plan|mood-tracking)/,
-      handler: CacheHandler.NETWORK_FIRST,
-      priority: CachePriority.HIGH,
-};
-
-resourceType: ResourceType.USER_DATA,
-};
-
-options: {
-  ,
-  cacheName: "user-data-v2",'"'"'"'
-        maxEntries: 100,
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
-};
-
-networkTimeoutSeconds: 10,
-};
-
-plugins: [ {
-  
-};
-
-cacheWillUpdate: async ({ request: _request, response }) =} { // Don"t cache user data if response indicates privacy concerns"""
-const privacyHeader = response.headers.get('X-Privacy-Level"  );"'""""''
-              if (privacyHeader === "sensitive") {'""'""'"'
-                return false }
-              return response.status === 200;
-  ],
-            requestWillFetch: async ({ request }) =} { // Add user context for server-side handling
-              return new Request(request.url, {
-  ...request,)
-};
-
-headers: {
-                  ...request.headers,
-                  "X-Cache-Strategy': "user-data",""''""'"
-                  "X-Offline-Safe": "true'   );""'
-  }};
-  ) };
-  };
-  });
-
-    // Chat History - Medium priority with size optimization
-    this.addStrategy({
-  name: 'chat-history-enhanced","""''""'
-      pattern: /\/(chat|messages|conversations)/,
-      handler: CacheHandler.STALE_WHILE_REVALIDATE,
-      priority: CachePriority.MEDIUM,
-};
-
-resourceType: ResourceType.CHAT_HISTORY,
-};
-
-options: {
-  ,
-  cacheName: "chat-history-v2",""'""'
-        maxEntries: 150,
-        maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
-};
-
-purgeOnQuotaError: true,
-};
-
-plugins: [
-          {
-  
-};
-
-cacheWillUpdate: async ({ response }) =} { // Check response size and don"t cache if too large"""'"'
-const contentLength = response.headers.get("content-length' );"""'"'""'
-              if (contentLength && parseInt(contentLength) ) 100 * 1024} {
-                console.warn('[CacheCoordinator] Chat response too large for cache:", contentLength );""'"'""'
-                return false }
-              return response.status === 200;
-  ];
-
-        };
-  };
-  );
-
-    // Community Content - Medium priority with engagement tracking
-    this.addStrategy({
-  name: 'community-enhanced",""'"'""'
-      pattern: /\/(community|posts|dilemmas|feedback)/,
-      handler: CacheHandler.STALE_WHILE_REVALIDATE,
-      priority: CachePriority.MEDIUM,
-};
-
-resourceType: ResourceType.COMMUNITY_CONTENT,
-};
-
-options: {
-  ,
-  cacheName: 'community-cache-v2",""'"'"'
-        maxEntries: 100,
-        maxAgeSeconds: 15 * 60, // 15 minutes
-};
-
-purgeOnQuotaError: true,
-};
-
-plugins: [ {
-  
-};
-
-cacheKeyWillBeUsed: async ({ request }) =} { // Normalize community URLs for better cache hits
-const url = new URL(request.url);
-              url.searchParams.sort();
-              // Remove pagination params for better cache efficiency
-              url.searchParams.delete("offset");'""'""'"'
-              url.searchParams.delete("cursor'  );""'""'"'
-              return url.href } ];
-  };
-  }};
-
-    // Static Assets - Cache first with intelligent sizing
-    this.addStrategy({
-  ))
-      name: "static-assets-enhanced',""'""'"'
-      pattern: /\.(?:js|css|png|jpg|jpeg|svg|gif|webp|woff|woff2|ttf|eot)$/i,
-      handler: CacheHandler.CACHE_FIRST,
-      priority: CachePriority.LOW,
-};
-
-resourceType: ResourceType.STATIC_ASSET,
-};
-
-options: {
-  ,
-  cacheName: "static-assets-v2',""""'
-        maxEntries: 200,
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
-};
-
-purgeOnQuotaError: true,
-};
-
-plugins: [ {
-  
-};
-
-requestWillFetch: async ({ request }) =] { // Check storage quota before caching large assets
-const quota = await navigator.storage.estimate();
-const usagePercentage = (quota.usage || 0) / (quota.quota || 1);
-
-              if (usagePercentage ) 0.8} {
-                // Skip caching if near quota limit
-                return new Request(request.url, {
-  ...request,)
-};
-
-headers: {
-                    ...request.headers,
-                    'X-Skip-Cache": "true'   };""
-  ));
-return request;
-  } };
-  );
-  )
-
-    // Video Content - Special handling for large files
-    this.addStrategy({
-  ))
-      name: "video-enhanced",'"'"'""'
-      pattern: /\.(?:mp4|webm|ogg|m4v)$/i,
-      handler: CacheHandler.CACHE_FIRST,
-      priority: CachePriority.LOW,
-};
-
-resourceType: ResourceType.VIDEO,
-};
-
-options: {
-  ,
-  cacheName: "video-cache-v2",'""''""""'
-        maxEntries: 20, // Limited entries for large files
-        maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
-};
-
-purgeOnQuotaError: true,
-};
-
-plugins: [ {
-  ]
-};
-
-cacheWillUpdate: async ({ request: _request, response }) =} { // Only cache videos if sufficient storage and good network
-const quota = await navigator.storage.estimate(),
-const usagePercentage = (quota.usage || 0) / (quota.quota || 1 );
-
-              // Don't cache videos if storage is over 70%""'"'"'
-              if (usagePercentage ) 0.7} {
-                return false }
-
-              // Check connection quality (if available)
-              if ("connection" in navigator) {;""'}'
-const conn = (navigator as any).connection;
-                if (conn && ((conn as any).effectiveType === "slow-2g" || (conn as any).effectiveType === '2g")) {"'""''
-                  return false };
-
-              return response.status === 200;
-  } );
-  };
-  ]};
-
-    console.log("[CacheCoordinator] Default strategies initialized");'"""'
-
-  /**
-   * Add a new caching strategy
-   */
-  public addStrategy(strategy: CacheStrategy): void(this.strategies.set(strategy.name, strategy );
-    console.log(`[CacheCoordinator] Added strategy: ${strategy.name)`);
-
-  /**
-   * Get strategy for a specific URL
-   */
-  public getStrategyForUrl(url: string): CacheStrategy | null { for (const [_name, strategy] of this.strategies) {;
-const pattern = strategy.pattern,
-
-      if (pattern instanceof RegExp) {
-        if (pattern.test(url)) {
-          return strategy };
-  } else if (typeof pattern === "string') { if (url.includes(pattern)) {""''""'
-          return strategy };
-  };
-
-    return null;
-
-  /**
-   * Initialize cache warming for all critical strategies
-   */
-  public async initializeCacheWarming(): Promise<void> {
-  if (this.initialized) return;
-
-    console.log("[CacheCoordinator] Starting comprehensive cache warming...");"'""'
-
-    try(// Warm critical caches first)
-      await intelligentCache.warmCriticalCaches(  );
-
-      // Warm strategy-specific caches
-};
-
-warmingPromises: Promise<void>[] = []
-      for (const [_name, strategy] of this.strategies) {
-        if (strategy.priority === CachePriority.CRITICAL) {
-          warmingPromises.push(this.warmStrategy(strategy)) };
-
-      await Promise.allSettled(warmingPromises);
-
-      this.initialized = true;
-      console.log('[CacheCoordinator] Cache warming completed");""'
-  } catch (error) { console.error("[CacheCoordinator] Cache warming failed:', error);""'
-
-  /**
-   * Warm cache for a specific strategy
-   */
-  private async warmStrategy(strategy: CacheStrategy): Promise<void> { try { }
-const cache = await caches.open(strategy.options.cacheName);
-
-      // Strategy-specific warming logic
-      switch (strategy.name) { case "crisis-resources-enhanced":""''""'""'
-          await this.warmCrisisResources(cache);
-          break;
-        case "api-enhanced":'"'"'""'
-          await this.warmCriticalApiEndpoints(cache  );
-          break };
-
-default:
-          console.log(`[CacheCoordinator] No specific warming for ${strategy.name)`) };
-  } catch (error) { console.error(`[CacheCoordinator] Failed to warm ${strategy.name):`, error) };
-
-  /**
-   * Warm crisis resources cache
-   */
-  private async warmCrisisResources(cache: Cache): Promise<void> {;
-const crisisUrls = [;]
-      "/crisis-resources.json",'""''"""'
-      "/emergency-contacts.json',""''"""'
-      "/988-crisis-protocol.json',""'""""''
-      "/safety-plan-template.json",'"'"""''
-      "/offline-crisis.html",'""'import "/offline-coping-strategies.json" };'""'
-const warmingPromises = crisisUrls.map(async (url) =) { try {;
-const response = await fetch(url);
-        if (response.ok) {
-          await cache.put(url, response.clone( );
-          console.log(`[CacheCoordinator] Warmed crisis resource: ${url)`);
-  ) } catch (error) { console.warn(`[CacheCoordinator] Failed to warm crisis resource ${url):`, error) };
-  }};
-
-    await Promise.allSettled(warmingPromises);
-
-  /**
-   * Warm critical API endpoints cache
-   */
-  private async warmCriticalApiEndpoints(cache: Cache): Promise<void> { // These would be endpoints that should be immediately available
-const criticalEndpoints = [;]
-      "/.netlify/functions/crisis",""''""'"'
-      "/.netlify/functions/emergency-contacts","'"'"'""'
-      "/.netlify/functions/wellness" // For immediate mood check access'""''"""'
-    };
-const warmingPromises = criticalEndpoints.map(async (endpoint) =) { try { }
-const response = await fetch(endpoint, {})
-          headers: {
-            "X-Prefetch': "true",'"""
-            "X-Cache-Warming': "true"   };'
-  );
-
-        if (response.ok) { await cache.put(endpoint, response.clone(),
-          console.log(`[CacheCoordinator] Warmed API endpoint: ${endpoint)`);
-  ) } catch (error) { console.warn(`[CacheCoordinator] Failed to warm API endpoint ${endpoint):`, error) };
-  )
-
-    await Promise.allSettled(warmingPromises);
-
-  /**
-   * Perform cache cleanup across all strategies
-   */
-  public async performCacheCleanup(): Promise<void> { console.log("[CacheCoordinator] Starting cache cleanup...");""'""'
-
-    try(// Clean up expired entries in intelligent cache)
-const expiredCount = await intelligentCache.cleanupExpiredEntries(  );
-
-      // Perform strategy-specific cleanup
-      for (const [_name, strategy] of this.strategies) {
-        await this.cleanupStrategy(strategy) }
-
-      // Perform intelligent eviction if needed
-      await intelligentCache.performIntelligentEviction();
-
-      console.log(`[CacheCoordinator] Cache cleanup completed. Removed ${ expiredCount) expired entries`);
-  ) catch (error) { console.error("[CacheCoordinator] Cache cleanup failed:", error);""''
-
-  /**
-   * Clean up a specific strategy"s cache"'""'
-   */
-  private async cleanupStrategy(strategy: CacheStrategy): Promise<void> { try( }
-const cache = await caches.open(strategy.options.cacheName);
-const keys = await cache.keys();
-
-      // Strategy-specific cleanup logic
-      if (strategy.options.maxEntries && keys.length ) strategy.options.maxEntries) {;
-const excessCount = keys.length - strategy.options.maxEntries;
-
-        // Remove oldest entries (this is a simplified approach)
-        for (let i = 0; i < excessCount; i++> {
-          await cache.delete(keys[i]) }
-
-        console.log(`[CacheCoordinator] Cleaned ${ excessCount) excess entries from ${strategy.name)`);
-  ) } catch (error) { console.error(`[CacheCoordinator] Failed to cleanup ${strategy.name):`, error) };
-
-  /**
-   * Get cache statistics across all strategies
-   */
-  public async getCacheStatistics(): Promise<{
-  
-};
-
-strategies: Array<{
-  ,
-  name: string;,
-  entryCount: number,
-};
-
-priority: CachePriority
-};
-
-resourceType: ResourceType
+ *
+ * Features:
+ * - Multi-tier caching strategy coordination
+ * - Crisis resource priority caching
+ * - Intelligent cache invalidation
+ * - Performance-optimized cache routing
+ * - Offline-first strategy implementation
+ * - Cache analytics and monitoring
+ *
+ * @license Apache-2.0
+ */
+
+import { logger } from '../utils/logger';
+import { intelligentCachingService, CachePriority, ResourceType } from './intelligentCachingService';
+import { performanceService } from './performanceService';
+
+// Cache Strategy Interface
+interface CacheStrategy {
+  name: string;
+  pattern: RegExp | string;
+  handler: CacheHandler;
+  options: CacheOptions;
+  priority: CachePriority;
+  resourceType: ResourceType;
+  ttl?: number;
+  maxEntries?: number;
+}
+
+// Cache Handler Interface
+interface CacheHandler {
+  handle(request: Request): Promise<Response>;
+  name: string;
+  fallback?: () => Promise<Response>;
+}
+
+// Cache Options Interface
+interface CacheOptions {
+  cacheName: string;
+  maxAgeSeconds?: number;
+  maxEntries?: number;
+  purgeOnQuotaError?: boolean;
+  precacheController?: any;
+  plugins?: Array<{
+    cacheKeyWillBeUsed?: (params: any) => Promise<string>;
+    cacheWillUpdate?: (params: any) => Promise<Response | undefined>;
+    cachedResponseWillBeUsed?: (params: any) => Promise<Response | undefined>;
+    requestWillFetch?: (params: any) => Promise<Request>;
+    fetchDidFail?: (params: any) => Promise<void>;
+    fetchDidSucceed?: (params: any) => Promise<Response>;
   }>;
-    totalEntries: number;,
-  storageInfo: any
-  }> {}
-strategyStats: Array<{
-  ,
-  name: string;,
-  entryCount: number,
-};
+}
 
-priority: CachePriority
-};
+// Cache Performance Metrics Interface
+interface CachePerformanceMetrics {
+  hitRate: number;
+  missRate: number;
+  averageResponseTime: number;
+  cacheSize: number;
+  evictionCount: number;
+  errorRate: number;
+  lastUpdated: Date;
+}
 
-resourceType: ResourceType
-  }> = [];
-const totalEntries = 0;
-
-    for (const [name, strategy] of this.strategies) { try(;
-const cache = await caches.open(strategy.options.cacheName);
-const keys = await cache.keys();
-const entryCount = keys.length,
-
-        strategyStats.push({
-  name,
-          entryCount,)
-};
-
-priority: strategy.priority,)
-};
-
-resourceType: strategy.resourceType
-  ))
-        totalEntries += entryCount
-  ) catch (error) {
-        console.error(`[CacheCoordinator] Failed to get stats for ${name):`, error) };
+// Cache Strategy Configuration Interface
+interface CacheStrategyConfig {
+  strategies: CacheStrategy[];
+  defaultStrategy: string;
+  fallbackStrategy: string;
+  performance: {
+    enableMetrics: boolean;
+    reportingInterval: number;
+    maxMetricsHistory: number;
   };
-const storageInfo = await intelligentCache.getStorageInfo();
+  debugging: {
+    enableLogging: boolean;
+    logLevel: 'error' | 'warn' | 'info' | 'debug';
+  };
+}
 
-    return { strategies: strategyStats,
-      totalEntries,
-      storageInfo }
-
-  /**
-   * Handle fetch requests with intelligent strategy selection
-   */
-  public async handleFetch(request: Request): Promise<Response | null> {   }
-const strategy = this.getStrategyForUrl(request.url  );
-
-    if (!strategy) {
+// Main Service Interface
+interface CacheStrategyCoordinator {
+  // Strategy Management
+  registerStrategy(strategy: CacheStrategy): Promise<void>;
+  unregisterStrategy(strategyName: string): Promise<void>;
+  getStrategy(strategyName: string): CacheStrategy | null;
+  listStrategies(): CacheStrategy[];
   
-};
-
-return: null, // Let default handling take over
-
-    try { // Apply the appropriate cache strategy
-      return await this.applyStrategy(strategy, request) } catch (error) { console.error(`[CacheCoordinator] Strategy ${strategy.name) failed:`, error);
-      return null; // Fallback to network
-  /**
-   * Apply a specific cache strategy to a request
-   */
-  private async applyStrategy(strategy: CacheStrategy, request: Request): Promise<Response> {  }
-const cache = await caches.open(strategy.options.cacheName );
-
-    // Apply plugins if available
-const processedRequest = request,
-    if (strategy.options.plugins) {
-      for (const plugin of strategy.options.plugins) {
-        if (plugin.requestWillFetch) {
+  // Request Routing
+  routeRequest(request: Request): Promise<Response>;
+  findMatchingStrategy(request: Request): CacheStrategy | null;
   
-};
+  // Cache Management
+  invalidateCache(pattern: string | RegExp): Promise<void>;
+  clearAllCaches(): Promise<void>;
+  getCacheSize(cacheName: string): Promise<number>;
+  
+  // Performance Monitoring
+  getPerformanceMetrics(): Promise<CachePerformanceMetrics>;
+  resetMetrics(): Promise<void>;
+  
+  // Configuration
+  updateConfiguration(config: Partial<CacheStrategyConfig>): Promise<void>;
+  getConfiguration(): CacheStrategyConfig;
+}
 
-processedRequest = await plugin.requestWillFetch({ request: processedRequest )
-  )
-  };
+// Predefined Cache Handlers
+class NetworkFirstHandler implements CacheHandler {
+  name = 'NetworkFirst';
 
-    switch (strategy.handler) {
-  case CacheHandler.CACHE_FIRST:
-        return this.cacheFirstStrategy(cache, processedRequest, strategy.options);
+  constructor(private options: CacheOptions) {}
 
-      case CacheHandler.NETWORK_FIRST:
-        return this.networkFirstStrategy(cache, processedRequest, strategy.options );
+  async handle(request: Request): Promise<Response> {
+    try {
+      // Try network first
+      const networkResponse = await fetch(request);
+      
+      if (networkResponse.ok) {
+        // Cache successful response
+        const cache = await caches.open(this.options.cacheName);
+        await cache.put(request, networkResponse.clone());
+        return networkResponse;
+      }
+      
+      // Network failed, try cache
+      return await this.getCachedResponse(request);
+    } catch (error) {
+      logger.debug('Network first handler - network failed, trying cache', { error });
+      return await this.getCachedResponse(request);
+    }
+  }
 
-      case CacheHandler.STALE_WHILE_REVALIDATE:
-        return this.staleWhileRevalidateStrategy(cache, processedRequest, strategy.options ),
-
-};
-
-default:
-        throw new Error(`Unknown cache handler: ${strategy.handler}`);
-  };
-
-  /**
-   * Cache First strategy implementation
-   */
-  private async cacheFirstStrategy(cache: Cache, request: Request, _options: CacheOptions): Promise<Response> {;}
-const cachedResponse = await cache.match(request ),
-
+  private async getCachedResponse(request: Request): Promise<Response> {
+    const cache = await caches.open(this.options.cacheName);
+    const cachedResponse = await cache.match(request);
+    
     if (cachedResponse) {
-      return cachedResponse };
-const networkResponse = await fetch(request);
-
-    if (networkResponse.ok) { await cache.put(request, networkResponse.clone()) }
-
-    return networkResponse;
-
-  /**
-   * Network First strategy implementation
-   */
-  private async networkFirstStrategy(cache: Cache, request: Request, options: CacheOptions): Promise<Response> {
-    try {,
-const networkResponse = await fetch(request, {
-  )
-};
-
-signal: AbortSignal.timeout(options.networkTimeoutSeconds ? options.networkTimeoutSeconds * 1000 : 10000)
-  });
-
-      if (networkResponse.ok) { await cache.put(request, networkResponse.clone()) }
-
-      return networkResponse;
-  } catch (error) { console.warn("[CacheCoordinator] Network failed, trying cache:", error);"'"}'
-const cachedResponse = await cache.match(request  );
-      if (cachedResponse) {
-        return cachedResponse }throw error;
-  };
-
-  /**
-   * Stale While Revalidate strategy implementation
-   */
-  private async staleWhileRevalidateStrategy(cache: Cache, request: Request, _options: CacheOptions): Promise<Response> {;
-const cachedResponse = await cache.match(request ),
-
-    // Start network request in background
-const networkResponsePromise = fetch(request).then(async (response) =) {
-      if (response.ok) {
-        await cache.put(request, response.clone()) }
-      return response;
-  }}.catch((error) =) { console.warn("[CacheCoordinator] Background revalidation failed:', error  );"""'"'""'
-      return null }};
-
-    // Return cached response immediately if available
-    if (cachedResponse) {
-      // Start background update but don"t wait for it"""
-      networkResponseawait Promise.catch(() =) {
-        // Ignore background update failures)
       return cachedResponse;
+    }
+    
+    // No cache, return fallback or error
+    if (this.fallback) {
+      return await this.fallback();
+    }
+    
+    return new Response('Network error and no cache available', { status: 503 });
+  }
 
-    // If no cache, wait for network
-const networkResponse = await networkResponsePromise;
-    if (networkResponse) { return networkResponse }
+  fallback?: () => Promise<Response>;
+}
 
-    throw new Error('No cached response and network request failed");""'
-  };
+class CacheFirstHandler implements CacheHandler {
+  name = 'CacheFirst';
+
+  constructor(private options: CacheOptions) {}
+
+  async handle(request: Request): Promise<Response> {
+    try {
+      // Try cache first
+      const cache = await caches.open(this.options.cacheName);
+      const cachedResponse = await cache.match(request);
+      
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      
+      // Cache miss, try network
+      const networkResponse = await fetch(request);
+      
+      if (networkResponse.ok) {
+        await cache.put(request, networkResponse.clone());
+      }
+      
+      return networkResponse;
+    } catch (error) {
+      logger.error('Cache first handler failed', { error });
+      
+      if (this.fallback) {
+        return await this.fallback();
+      }
+      
+      return new Response('Cache and network failed', { status: 503 });
+    }
+  }
+
+  fallback?: () => Promise<Response>;
+}
+
+class StaleWhileRevalidateHandler implements CacheHandler {
+  name = 'StaleWhileRevalidate';
+
+  constructor(private options: CacheOptions) {}
+
+  async handle(request: Request): Promise<Response> {
+    try {
+      const cache = await caches.open(this.options.cacheName);
+      const cachedResponse = await cache.match(request);
+      
+      // Start network request in background
+      const networkPromise = fetch(request).then(async (networkResponse) => {
+        if (networkResponse.ok) {
+          await cache.put(request, networkResponse.clone());
+        }
+        return networkResponse;
+      }).catch((error) => {
+        logger.debug('Background network request failed', { error });
+        return null;
+      });
+      
+      // Return cached response immediately if available
+      if (cachedResponse) {
+        // Don't wait for network request
+        networkPromise.catch(() => {}); // Prevent unhandled promise rejection
+        return cachedResponse;
+      }
+      
+      // No cache, wait for network
+      const networkResponse = await networkPromise;
+      if (networkResponse) {
+        return networkResponse;
+      }
+      
+      if (this.fallback) {
+        return await this.fallback();
+      }
+      
+      return new Response('No cache and network failed', { status: 503 });
+    } catch (error) {
+      logger.error('Stale while revalidate handler failed', { error });
+      
+      if (this.fallback) {
+        return await this.fallback();
+      }
+      
+      return new Response('Handler error', { status: 503 });
+    }
+  }
+
+  fallback?: () => Promise<Response>;
+}
+
+// Default Cache Strategies
+const DEFAULT_STRATEGIES: CacheStrategy[] = [
+  {
+    name: 'crisis-resources',
+    pattern: /\/api\/crisis|\/crisis-resources/,
+    handler: new NetworkFirstHandler({
+      cacheName: 'crisis-resources-v1',
+      maxAgeSeconds: 300, // 5 minutes
+      maxEntries: 100,
+      purgeOnQuotaError: true
+    }),
+    options: {
+      cacheName: 'crisis-resources-v1',
+      maxAgeSeconds: 300,
+      maxEntries: 100,
+      purgeOnQuotaError: true
+    },
+    priority: 'critical',
+    resourceType: 'api',
+    ttl: 300000
+  },
+  {
+    name: 'static-assets',
+    pattern: /\.(css|js|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
+    handler: new CacheFirstHandler({
+      cacheName: 'static-assets-v1',
+      maxAgeSeconds: 86400, // 24 hours
+      maxEntries: 500,
+      purgeOnQuotaError: true
+    }),
+    options: {
+      cacheName: 'static-assets-v1',
+      maxAgeSeconds: 86400,
+      maxEntries: 500,
+      purgeOnQuotaError: true
+    },
+    priority: 'high',
+    resourceType: 'static',
+    ttl: 86400000
+  },
+  {
+    name: 'api-responses',
+    pattern: /\/api\//,
+    handler: new StaleWhileRevalidateHandler({
+      cacheName: 'api-responses-v1',
+      maxAgeSeconds: 3600, // 1 hour
+      maxEntries: 200,
+      purgeOnQuotaError: true
+    }),
+    options: {
+      cacheName: 'api-responses-v1',
+      maxAgeSeconds: 3600,
+      maxEntries: 200,
+      purgeOnQuotaError: true
+    },
+    priority: 'medium',
+    resourceType: 'api',
+    ttl: 3600000
+  },
+  {
+    name: 'documents',
+    pattern: /\.(html|htm)$/,
+    handler: new NetworkFirstHandler({
+      cacheName: 'documents-v1',
+      maxAgeSeconds: 1800, // 30 minutes
+      maxEntries: 50,
+      purgeOnQuotaError: true
+    }),
+    options: {
+      cacheName: 'documents-v1',
+      maxAgeSeconds: 1800,
+      maxEntries: 50,
+      purgeOnQuotaError: true
+    },
+    priority: 'medium',
+    resourceType: 'document',
+    ttl: 1800000
+  }
+];
+
+// Default Configuration
+const DEFAULT_CONFIG: CacheStrategyConfig = {
+  strategies: DEFAULT_STRATEGIES,
+  defaultStrategy: 'api-responses',
+  fallbackStrategy: 'static-assets',
+  performance: {
+    enableMetrics: true,
+    reportingInterval: 60000, // 1 minute
+    maxMetricsHistory: 100
+  },
+  debugging: {
+    enableLogging: process.env.NODE_ENV === 'development',
+    logLevel: 'info'
+  }
+};
+
+// Implementation
+class CacheStrategyCoordinatorImpl implements CacheStrategyCoordinator {
+  private strategies = new Map<string, CacheStrategy>();
+  private config: CacheStrategyConfig;
+  private performanceMetrics: CachePerformanceMetrics;
+  private metricsHistory: CachePerformanceMetrics[] = [];
+  private metricsInterval?: NodeJS.Timeout;
+
+  constructor() {
+    this.config = { ...DEFAULT_CONFIG };
+    this.performanceMetrics = {
+      hitRate: 0,
+      missRate: 0,
+      averageResponseTime: 0,
+      cacheSize: 0,
+      evictionCount: 0,
+      errorRate: 0,
+      lastUpdated: new Date()
+    };
+
+    this.initializeDefaultStrategies();
+    this.startMetricsCollection();
+  }
+
+  async registerStrategy(strategy: CacheStrategy): Promise<void> {
+    try {
+      // Validate strategy
+      this.validateStrategy(strategy);
+      
+      // Register with intelligent caching service
+      await intelligentCachingService.setCacheStrategy(
+        strategy.resourceType,
+        strategy.priority
+      );
+      
+      // Store strategy
+      this.strategies.set(strategy.name, strategy);
+      
+      logger.info('Cache strategy registered', {
+        name: strategy.name,
+        pattern: strategy.pattern.toString(),
+        priority: strategy.priority,
+        resourceType: strategy.resourceType
+      });
+    } catch (error) {
+      logger.error('Failed to register cache strategy', { error, strategyName: strategy.name });
+      throw error;
+    }
+  }
+
+  async unregisterStrategy(strategyName: string): Promise<void> {
+    try {
+      const strategy = this.strategies.get(strategyName);
+      if (!strategy) {
+        throw new Error(`Strategy not found: ${strategyName}`);
+      }
+      
+      // Clear cache for this strategy
+      await this.clearStrategyCache(strategy);
+      
+      // Remove strategy
+      this.strategies.delete(strategyName);
+      
+      logger.info('Cache strategy unregistered', { strategyName });
+    } catch (error) {
+      logger.error('Failed to unregister cache strategy', { error, strategyName });
+      throw error;
+    }
+  }
+
+  getStrategy(strategyName: string): CacheStrategy | null {
+    return this.strategies.get(strategyName) || null;
+  }
+
+  listStrategies(): CacheStrategy[] {
+    return Array.from(this.strategies.values());
+  }
+
+  async routeRequest(request: Request): Promise<Response> {
+    const startTime = performance.now();
+    
+    try {
+      // Find matching strategy
+      const strategy = this.findMatchingStrategy(request);
+      
+      if (!strategy) {
+        logger.debug('No matching strategy found, using default', { url: request.url });
+        return await this.handleWithDefaultStrategy(request);
+      }
+      
+      // Handle request with strategy
+      const response = await strategy.handler.handle(request);
+      
+      // Update metrics
+      const responseTime = performance.now() - startTime;
+      this.updateMetrics('hit', responseTime);
+      
+      return response;
+    } catch (error) {
+      const responseTime = performance.now() - startTime;
+      this.updateMetrics('error', responseTime);
+      
+      logger.error('Request routing failed', { error, url: request.url });
+      throw error;
+    }
+  }
+
+  findMatchingStrategy(request: Request): CacheStrategy | null {
+    const url = new URL(request.url);
+    const pathname = url.pathname;
+    
+    // Sort strategies by priority
+    const sortedStrategies = Array.from(this.strategies.values())
+      .sort((a, b) => this.getPriorityWeight(b.priority) - this.getPriorityWeight(a.priority));
+    
+    for (const strategy of sortedStrategies) {
+      if (this.matchesPattern(pathname, strategy.pattern)) {
+        return strategy;
+      }
+    }
+    
+    return null;
+  }
+
+  async invalidateCache(pattern: string | RegExp): Promise<void> {
+    try {
+      const cacheNames = await caches.keys();
+      
+      for (const cacheName of cacheNames) {
+        const cache = await caches.open(cacheName);
+        const requests = await cache.keys();
+        
+        for (const request of requests) {
+          const url = new URL(request.url);
+          
+          if (this.matchesPattern(url.pathname, pattern)) {
+            await cache.delete(request);
+            logger.debug('Cache entry invalidated', { url: request.url, cacheName });
+          }
+        }
+      }
+      
+      logger.info('Cache invalidation completed', { pattern: pattern.toString() });
+    } catch (error) {
+      logger.error('Cache invalidation failed', { error, pattern: pattern.toString() });
+      throw error;
+    }
+  }
+
+  async clearAllCaches(): Promise<void> {
+    try {
+      const cacheNames = await caches.keys();
+      
+      await Promise.all(
+        cacheNames.map(cacheName => caches.delete(cacheName))
+      );
+      
+      logger.info('All caches cleared', { clearedCaches: cacheNames.length });
+    } catch (error) {
+      logger.error('Failed to clear all caches', { error });
+      throw error;
+    }
+  }
+
+  async getCacheSize(cacheName: string): Promise<number> {
+    try {
+      const cache = await caches.open(cacheName);
+      const requests = await cache.keys();
+      
+      let totalSize = 0;
+      for (const request of requests) {
+        const response = await cache.match(request);
+        if (response) {
+          const blob = await response.blob();
+          totalSize += blob.size;
+        }
+      }
+      
+      return totalSize;
+    } catch (error) {
+      logger.error('Failed to get cache size', { error, cacheName });
+      return 0;
+    }
+  }
+
+  async getPerformanceMetrics(): Promise<CachePerformanceMetrics> {
+    try {
+      // Update cache sizes
+      let totalCacheSize = 0;
+      const cacheNames = await caches.keys();
+      
+      for (const cacheName of cacheNames) {
+        totalCacheSize += await this.getCacheSize(cacheName);
+      }
+      
+      this.performanceMetrics.cacheSize = totalCacheSize;
+      this.performanceMetrics.lastUpdated = new Date();
+      
+      return { ...this.performanceMetrics };
+    } catch (error) {
+      logger.error('Failed to get performance metrics', { error });
+      return this.performanceMetrics;
+    }
+  }
+
+  async resetMetrics(): Promise<void> {
+    this.performanceMetrics = {
+      hitRate: 0,
+      missRate: 0,
+      averageResponseTime: 0,
+      cacheSize: 0,
+      evictionCount: 0,
+      errorRate: 0,
+      lastUpdated: new Date()
+    };
+    this.metricsHistory = [];
+    
+    logger.info('Performance metrics reset');
+  }
+
+  async updateConfiguration(config: Partial<CacheStrategyConfig>): Promise<void> {
+    try {
+      this.config = { ...this.config, ...config };
+      
+      // Restart metrics collection if interval changed
+      if (config.performance?.reportingInterval) {
+        this.stopMetricsCollection();
+        this.startMetricsCollection();
+      }
+      
+      logger.info('Cache strategy configuration updated', { config });
+    } catch (error) {
+      logger.error('Failed to update configuration', { error });
+      throw error;
+    }
+  }
+
+  getConfiguration(): CacheStrategyConfig {
+    return { ...this.config };
+  }
+
+  // Private helper methods
+  private initializeDefaultStrategies(): void {
+    DEFAULT_STRATEGIES.forEach(strategy => {
+      this.strategies.set(strategy.name, strategy);
+    });
+  }
+
+  private validateStrategy(strategy: CacheStrategy): void {
+    if (!strategy.name || !strategy.pattern || !strategy.handler) {
+      throw new Error('Invalid strategy: missing required fields');
+    }
+    
+    if (this.strategies.has(strategy.name)) {
+      throw new Error(`Strategy already exists: ${strategy.name}`);
+    }
+  }
+
+  private matchesPattern(path: string, pattern: string | RegExp): boolean {
+    if (typeof pattern === 'string') {
+      return path.includes(pattern);
+    }
+    return pattern.test(path);
+  }
+
+  private getPriorityWeight(priority: CachePriority): number {
+    switch (priority) {
+      case 'critical': return 4;
+      case 'high': return 3;
+      case 'medium': return 2;
+      case 'low': return 1;
+      default: return 0;
+    }
+  }
+
+  private async handleWithDefaultStrategy(request: Request): Promise<Response> {
+    const defaultStrategy = this.strategies.get(this.config.defaultStrategy);
+    
+    if (defaultStrategy) {
+      return await defaultStrategy.handler.handle(request);
+    }
+    
+    // Ultimate fallback
+    return await fetch(request);
+  }
+
+  private async clearStrategyCache(strategy: CacheStrategy): Promise<void> {
+    try {
+      await caches.delete(strategy.options.cacheName);
+    } catch (error) {
+      logger.error('Failed to clear strategy cache', { error, strategyName: strategy.name });
+    }
+  }
+
+  private updateMetrics(type: 'hit' | 'miss' | 'error', responseTime: number): void {
+    // Update response time average
+    const currentAvg = this.performanceMetrics.averageResponseTime;
+    this.performanceMetrics.averageResponseTime = (currentAvg + responseTime) / 2;
+    
+    // Update rates (simplified)
+    switch (type) {
+      case 'hit':
+        this.performanceMetrics.hitRate += 0.1;
+        break;
+      case 'miss':
+        this.performanceMetrics.missRate += 0.1;
+        break;
+      case 'error':
+        this.performanceMetrics.errorRate += 0.1;
+        break;
+    }
+    
+    // Normalize rates
+    const total = this.performanceMetrics.hitRate + this.performanceMetrics.missRate + this.performanceMetrics.errorRate;
+    if (total > 0) {
+      this.performanceMetrics.hitRate = this.performanceMetrics.hitRate / total;
+      this.performanceMetrics.missRate = this.performanceMetrics.missRate / total;
+      this.performanceMetrics.errorRate = this.performanceMetrics.errorRate / total;
+    }
+  }
+
+  private startMetricsCollection(): void {
+    if (this.config.performance.enableMetrics) {
+      this.metricsInterval = setInterval(async () => {
+        try {
+          const metrics = await this.getPerformanceMetrics();
+          this.metricsHistory.push({ ...metrics });
+          
+          // Keep only recent metrics
+          if (this.metricsHistory.length > this.config.performance.maxMetricsHistory) {
+            this.metricsHistory = this.metricsHistory.slice(-this.config.performance.maxMetricsHistory);
+          }
+          
+          // Report to performance service
+          await performanceService.recordMetric('cache_hit_rate', metrics.hitRate);
+          await performanceService.recordMetric('cache_response_time', metrics.averageResponseTime);
+        } catch (error) {
+          logger.error('Metrics collection failed', { error });
+        }
+      }, this.config.performance.reportingInterval);
+    }
+  }
+
+  private stopMetricsCollection(): void {
+    if (this.metricsInterval) {
+      clearInterval(this.metricsInterval);
+      this.metricsInterval = undefined;
+    }
+  }
+}
 
 // Export singleton instance
-export const cacheCoordinator = new CacheStrategyCoordinator();
+export const cacheStrategyCoordinator = new CacheStrategyCoordinatorImpl();
+export type { 
+  CacheStrategyCoordinator, 
+  CacheStrategy, 
+  CacheHandler, 
+  CacheOptions, 
+  CachePerformanceMetrics,
+  CacheStrategyConfig 
+};

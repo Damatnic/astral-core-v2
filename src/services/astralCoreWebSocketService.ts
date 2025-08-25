@@ -1,709 +1,636 @@
 /**
  * WebSocket Service for Astral Core
+ * 
  * Handles real-time communication for chat, crisis alerts, and live features
- */;
+ * with automatic reconnection, message queuing, and connection health monitoring
+ *
+ * Features:
+ * - Automatic reconnection with exponential backoff
+ * - Message queuing for offline scenarios
+ * - Connection health monitoring
+ * - Event-driven architecture
+ * - Crisis alert priority handling
+ * - Heartbeat mechanism
+ * - Message acknowledgment system
+ *
+ * @license Apache-2.0
+ */
 
-import { auth0Service  } from './auth0Service';"""'"'""'
-import { astralCoreNotificationService, NotificationType, NotificationPriority  } from './astralCoreNotificationService';""'"'""'
-import { getEnv, isProduction  } from '../utils/envValidator';""'"'"'
+import { logger } from '../utils/logger';
+import { simpleAuthService } from './simpleAuthService';
+import { astralCoreNotificationService, NotificationType, NotificationPriority } from './astralCoreNotificationService';
+import { getEnv, isProduction } from '../utils/envValidator';
 
 // WebSocket Configuration
-const WS_BASE_URL = getEnv("VITE_WEBSOCKET_URL') || "ws://localhost:3000"""'
-
- RECONNECT_DELAY = 3000; // 3 seconds
+const WS_BASE_URL = getEnv('VITE_WEBSOCKET_URL') || 'ws://localhost:3000';
+const RECONNECT_DELAY = 3000; // 3 seconds
 const MAX_RECONNECT_ATTEMPTS = 10;
 const HEARTBEAT_INTERVAL = 30000; // 30 seconds
 const MESSAGE_QUEUE_SIZE = 100;
+const CONNECTION_TIMEOUT = 10000; // 10 seconds
 
-// WebSocket Events
-enum WSEventType(// Connection Events)
-  CONNECT = 'connect","'""""'"'
-  DISCONNECT = "disconnect',""""'
-  ERROR = 'error","'""""
-  RECONNECT = 'reconnect","'""""
+// WebSocket Message Interface
+interface WebSocketMessage {
+  id: string;
+  type: MessageType;
+  payload: any;
+  timestamp: Date;
+  priority: MessagePriority;
+  requiresAck?: boolean;
+  retryCount?: number;
+}
 
-  // Authentication
-  AUTH_SUCCESS = 'auth_success","'""""'"'
-  AUTH_FAILURE = "auth_failure',""""'
+// Message Types
+enum MessageType {
+  CHAT_MESSAGE = 'chat_message',
+  CRISIS_ALERT = 'crisis_alert',
+  TYPING_INDICATOR = 'typing_indicator',
+  USER_STATUS = 'user_status',
+  SYSTEM_NOTIFICATION = 'system_notification',
+  HEARTBEAT = 'heartbeat',
+  ACK = 'ack',
+  ERROR = 'error'
+}
 
-  // Chat Events
-  MESSAGE_NEW = 'message_new","'""""
-  MESSAGE_EDIT = 'message_edit","'""""
-  MESSAGE_DELETE = 'message_delete","'""""'"'
-  TYPING_START = "typing_start',""""'
-  TYPING_STOP = 'typing_stop","'""""
+// Message Priority
+enum MessagePriority {
+  CRITICAL = 'critical',
+  HIGH = 'high',
+  MEDIUM = 'medium',
+  LOW = 'low'
+}
 
-  // Presence Events
-  USER_ONLINE = 'user_online","'""""
-  USER_OFFLINE = 'user_offline","'""""'"'
-  USER_AWAY = "user_away',""""'
-  USER_BUSY = 'user_busy","'""""
+// Connection State
+enum ConnectionState {
+  CONNECTING = 'connecting',
+  CONNECTED = 'connected',
+  DISCONNECTED = 'disconnected',
+  RECONNECTING = 'reconnecting',
+  FAILED = 'failed'
+}
 
-  // Crisis Events
-  CRISIS_ALERT = 'crisis_alert","'""""
-  CRISIS_RESOLVED = 'crisis_resolved","'""""'"'
-  SOS_TRIGGERED = "sos_triggered',""""'
-  HELPER_ASSIGNED = 'helper_assigned","'""""
+// Event Handlers Interface
+interface WebSocketEventHandlers {
+  onMessage: (message: WebSocketMessage) => void;
+  onConnect: () => void;
+  onDisconnect: (reason: string) => void;
+  onError: (error: Error) => void;
+  onReconnect: (attempt: number) => void;
+}
 
-  // Peer Support Events
-  PEER_REQUEST = 'peer_request","'""""
-  PEER_MATCH = 'peer_match","'""""'"'
-  PEER_DISCONNECT = "peer_disconnect',""""'
+// Connection Statistics
+interface ConnectionStatistics {
+  connectedAt: Date | null;
+  disconnectedAt: Date | null;
+  reconnectAttempts: number;
+  messagesSent: number;
+  messagesReceived: number;
+  lastHeartbeat: Date | null;
+  latency: number;
+  uptime: number;
+}
 
-  // Live Updates
-  MOOD_UPDATE = 'mood_update","'""""
-  ASSESSMENT_UPDATE = 'assessment_update","'""""
-  SAFETY_PLAN_UPDATE = 'safety_plan_update","'""""'"'
+// Main Service Interface
+interface AstralCoreWebSocketService {
+  // Connection Management
+  connect(): Promise<void>;
+  disconnect(): Promise<void>;
+  reconnect(): Promise<void>;
+  isConnected(): boolean;
+  getConnectionState(): ConnectionState;
+  
+  // Message Handling
+  sendMessage(type: MessageType, payload: any, priority?: MessagePriority): Promise<string>;
+  sendCrisisAlert(alert: any): Promise<string>;
+  sendChatMessage(message: any): Promise<string>;
+  
+  // Event Handling
+  on(event: keyof WebSocketEventHandlers, handler: Function): void;
+  off(event: keyof WebSocketEventHandlers, handler: Function): void;
+  
+  // Health Monitoring
+  getStatistics(): ConnectionStatistics;
+  getLatency(): Promise<number>;
+  
+  // Queue Management
+  getQueueSize(): number;
+  clearQueue(): void;
+  
+  // Configuration
+  setHeartbeatInterval(interval: number): void;
+  setReconnectDelay(delay: number): void;
+}
 
-  // System Events
-  HEARTBEAT = "heartbeat',""""'
-  BROADCAST = 'broadcast","'""""
-  NOTIFICATION = 'notification","'""""
-  MAINTENANCE = 'maintenance");"'""
-interface WSMessage { { { { id: string}
-$2: WSEventType;,
-  data: any;,
-  timestamp: string
-  from?: string
-  to?: string
-  room?: string
-  metadata?: Record<string, any> };
-interface WSConnectionState { { { {
-  connected: boolean;,
-  reconnecting: boolean;,
-  authenticated: boolean;,
-  reconnectAttempts: number
-};
-
-lastActivity: Date
-};
-
-latency: number
+// Implementation
+class AstralCoreWebSocketServiceImpl implements AstralCoreWebSocketService {
+  private ws: WebSocket | null = null;
+  private connectionState: ConnectionState = ConnectionState.DISCONNECTED;
+  private reconnectAttempts = 0;
+  private reconnectTimer?: NodeJS.Timeout;
+  private heartbeatTimer?: NodeJS.Timeout;
+  private messageQueue: WebSocketMessage[] = [];
+  private pendingAcks = new Map<string, { resolve: Function; reject: Function; timestamp: Date }>();
+  private eventHandlers = new Map<keyof WebSocketEventHandlers, Function[]>();
+  private statistics: ConnectionStatistics = {
+    connectedAt: null,
+    disconnectedAt: null,
+    reconnectAttempts: 0,
+    messagesSent: 0,
+    messagesReceived: 0,
+    lastHeartbeat: null,
+    latency: 0,
+    uptime: 0
   };
-interface WSSubscription { { { {
-  id: string;,
-};
+  private config = {
+    heartbeatInterval: HEARTBEAT_INTERVAL,
+    reconnectDelay: RECONNECT_DELAY,
+    maxReconnectAttempts: MAX_RECONNECT_ATTEMPTS,
+    messageQueueSize: MESSAGE_QUEUE_SIZE,
+    connectionTimeout: CONNECTION_TIMEOUT
+  };
 
-event: WSEventType | string
-};
+  async connect(): Promise<void> {
+    if (this.connectionState === ConnectionState.CONNECTED || 
+        this.connectionState === ConnectionState.CONNECTING) {
+      return;
+    }
 
-callback: (data: unknown) =} void
-  once?: boolean
+    return new Promise((resolve, reject) => {
+      try {
+        this.connectionState = ConnectionState.CONNECTING;
+        
+        // Get authentication token
+        const token = simpleAuthService.getToken();
+        const wsUrl = `${WS_BASE_URL}${token ? `?token=${token}` : ''}`;
+        
+        logger.info('Attempting WebSocket connection', { url: wsUrl.replace(/token=[^&]*/, 'token=***') });
+        
+        this.ws = new WebSocket(wsUrl);
+        
+        // Connection timeout
+        const timeout = setTimeout(() => {
+          if (this.connectionState === ConnectionState.CONNECTING) {
+            this.ws?.close();
+            reject(new Error('Connection timeout'));
+          }
+        }, this.config.connectionTimeout);
+        
+        this.ws.onopen = () => {
+          clearTimeout(timeout);
+          this.handleConnection();
+          resolve();
+        };
+        
+        this.ws.onmessage = (event) => {
+          this.handleMessage(event);
+        };
+        
+        this.ws.onclose = (event) => {
+          clearTimeout(timeout);
+          this.handleDisconnection(event.reason || 'Connection closed');
+        };
+        
+        this.ws.onerror = (event) => {
+          clearTimeout(timeout);
+          const error = new Error('WebSocket error');
+          this.handleError(error);
+          if (this.connectionState === ConnectionState.CONNECTING) {
+            reject(error);
+          }
+        };
+        
+      } catch (error) {
+        this.connectionState = ConnectionState.FAILED;
+        reject(error);
+      }
+    });
+  }
 
-/**
- * Astral Core WebSocket Service
- */
-interface AstralCoreWebSocketService { { { { private ws: WebSocket | null = null}
-  private readonly connectionState: WSConnectionState
-  private readonly subscriptions: Map<string, WSSubscription[]>;
-  private readonly messageQueue: WSMessage[]
-  private reconnectTimer: NodeJS.Timeout | null = null
-  private heartbeatTimer: NodeJS.Timeout | null = null
-  private readonly wsUrl: string
-  private userId: string | null = null
-  private readonly sessionId: string
-  private readonly rooms: Set<string>
-  private readonly typingTimers: Map<string, NodeJS.Timeout>;
-$2ructor() {
-    this.wsUrl = WS_BASE_URL,
-    this.connectionState = {}
-      connected: false,
-      reconnecting: false,
-      authenticated: false,
-      reconnectAttempts: 0,
-      lastActivity: new Date(),
-      latency: 0};
-    this.subscriptions = new Map();
+  async disconnect(): Promise<void> {
+    if (this.ws && this.connectionState !== ConnectionState.DISCONNECTED) {
+      this.connectionState = ConnectionState.DISCONNECTED;
+      
+      // Clear timers
+      if (this.reconnectTimer) {
+        clearTimeout(this.reconnectTimer);
+        this.reconnectTimer = undefined;
+      }
+      
+      if (this.heartbeatTimer) {
+        clearInterval(this.heartbeatTimer);
+        this.heartbeatTimer = undefined;
+      }
+      
+      // Close connection
+      this.ws.close(1000, 'Normal closure');
+      this.ws = null;
+      
+      this.statistics.disconnectedAt = new Date();
+      
+      logger.info('WebSocket disconnected');
+    }
+  }
+
+  async reconnect(): Promise<void> {
+    await this.disconnect();
+    await this.connect();
+  }
+
+  isConnected(): boolean {
+    return this.connectionState === ConnectionState.CONNECTED && 
+           this.ws?.readyState === WebSocket.OPEN;
+  }
+
+  getConnectionState(): ConnectionState {
+    return this.connectionState;
+  }
+
+  async sendMessage(
+    type: MessageType, 
+    payload: any, 
+    priority: MessagePriority = MessagePriority.MEDIUM
+  ): Promise<string> {
+    const message: WebSocketMessage = {
+      id: this.generateMessageId(),
+      type,
+      payload,
+      timestamp: new Date(),
+      priority,
+      requiresAck: priority === MessagePriority.CRITICAL || priority === MessagePriority.HIGH,
+      retryCount: 0
+    };
+
+    return this.queueAndSendMessage(message);
+  }
+
+  async sendCrisisAlert(alert: any): Promise<string> {
+    const message = await this.sendMessage(MessageType.CRISIS_ALERT, alert, MessagePriority.CRITICAL);
+    
+    // Also send local notification
+    await astralCoreNotificationService.sendNotification({
+      type: NotificationType.CRISIS_ALERT,
+      title: 'Crisis Alert Sent',
+      message: 'Your crisis alert has been sent to support team',
+      priority: NotificationPriority.HIGH,
+      data: { alertId: message }
+    });
+    
+    return message;
+  }
+
+  async sendChatMessage(message: any): Promise<string> {
+    return this.sendMessage(MessageType.CHAT_MESSAGE, message, MessagePriority.MEDIUM);
+  }
+
+  on(event: keyof WebSocketEventHandlers, handler: Function): void {
+    if (!this.eventHandlers.has(event)) {
+      this.eventHandlers.set(event, []);
+    }
+    this.eventHandlers.get(event)!.push(handler);
+  }
+
+  off(event: keyof WebSocketEventHandlers, handler: Function): void {
+    const handlers = this.eventHandlers.get(event);
+    if (handlers) {
+      const index = handlers.indexOf(handler);
+      if (index !== -1) {
+        handlers.splice(index, 1);
+      }
+    }
+  }
+
+  getStatistics(): ConnectionStatistics {
+    if (this.statistics.connectedAt && this.connectionState === ConnectionState.CONNECTED) {
+      this.statistics.uptime = Date.now() - this.statistics.connectedAt.getTime();
+    }
+    
+    return { ...this.statistics };
+  }
+
+  async getLatency(): Promise<number> {
+    return new Promise((resolve) => {
+      if (!this.isConnected()) {
+        resolve(-1);
+        return;
+      }
+      
+      const startTime = performance.now();
+      const messageId = this.generateMessageId();
+      
+      // Set up one-time handler for pong response
+      const handlePong = (message: WebSocketMessage) => {
+        if (message.type === MessageType.HEARTBEAT && message.payload.pong && message.id === messageId) {
+          const latency = performance.now() - startTime;
+          this.statistics.latency = latency;
+          resolve(latency);
+          this.off('onMessage', handlePong);
+        }
+      };
+      
+      this.on('onMessage', handlePong);
+      
+      // Send ping
+      this.sendMessage(MessageType.HEARTBEAT, { ping: true, id: messageId }, MessagePriority.LOW);
+      
+      // Timeout after 5 seconds
+      setTimeout(() => {
+        this.off('onMessage', handlePong);
+        resolve(-1);
+      }, 5000);
+    });
+  }
+
+  getQueueSize(): number {
+    return this.messageQueue.length;
+  }
+
+  clearQueue(): void {
     this.messageQueue = [];
-    this.sessionId = this.generateSessionId();
-    this.rooms = new Set();
-    this.typingTimers = new Map();
+    logger.info('Message queue cleared');
+  }
 
-  /**
-   * Connect to WebSocket server
-   */
-  async connect(): Promise<void> { if (this.ws && this.connectionState.connected) {
-      console.log('Astral Core WS: Already connected")"'""
-      return
+  setHeartbeatInterval(interval: number): void {
+    this.config.heartbeatInterval = interval;
+    
+    if (this.heartbeatTimer) {
+      clearInterval(this.heartbeatTimer);
+      this.startHeartbeat();
+    }
+  }
 
-    try(// Get authentication token)
-const token = await auth0Service.getAccessToken(  )
-      if (!token) {
-        throw new Error("No authentication token available") }'"'"'"'
+  setReconnectDelay(delay: number): void {
+    this.config.reconnectDelay = delay;
+  }
 
-      // Get user ID
-const user = await auth0Service.getCurrentUser();
-      this.userId = user?.id || null;
-
-      // Build WebSocket URL with auth
-const url = new URL(this.wsUrl);
-      url.searchParams.append("token", token);"''""''
-      url.searchParams.append("sessionId", this.sessionId);""'""'
-
-      // Use wss:// in production
-      if (isProduction() && url.protocol === 'ws:") { url.protocol = "wss: ""'
-
-      // Create WebSocket connection
-      this.ws = new WebSocket(url.toString())
-      // Set up event handlers
-      this.setupEventHandlers()
-      console.log("Astral Core WS: Connecting to", url.hostname) } catch (error) { console.error('Astral Core WS: Connection failed", error );""'")'""'
-      this.handleConnectionError(error );
-
-  /**
-   * Disconnect from WebSocket server
-   */
-  disconnect(): void { if (!this.ws) {
-      return }
-
-    // Clear timers
-    if (this.reconnectTimer) { clearTimeout(this.reconnectTimer ),
-      this.reconnectTimer = null }
-
-    if (this.heartbeatTimer) { clearInterval(this.heartbeatTimer ),
-      this.heartbeatTimer = null }
-
-    // Clear typing timers
-    this.typingTimers.forEach(timer =) clearTimeout(timer)};
-    this.typingTimers.clear();
-
-    // Close connection
-    this.ws.close(1000, 'Client disconnect");"""''""'
-    this.ws = null;
-
-    // Update state
-    this.connectionState.connected = false;
-    this.connectionState.authenticated = false;
-    this.connectionState.reconnecting = false;
-
-    // Clear rooms
-    this.rooms.clear();
-
-    // Emit disconnect event
-    this.emit(WSEventType.DISCONNECT, { reason: "Client disconnect" ));""'""'
-
-    console.log('Astral Core WS: Disconnected")"""'
-
-  /**
-   * Send message through WebSocket
-   */
-  send(type: WSEventType | string, data: any, options?: { to?: string;
-    room?: string,
-    metadata?: Record<string, any> }): void {   };
-
-message: WSMessage = {}
-      id: this.generateMessageId(),,
-
-$2: type as WSEventType,
-      data,
-      timestamp: new Date().toISOString(),
-      from: this.userId || undefined,
-      to: options?.to,
-      room: options?.room,
-      metadata: options?.metadata};
-
-    if (this.connectionState.connected && this.connectionState.authenticated) { this.sendMessage(message) } else(// Queue message if not connected)
-      this.queueMessage(message );
-
-      // Try to reconnect
-      if (!this.connectionState.reconnecting) {
-        this.reconnect()};
-
-  /**
-   * Subscribe to WebSocket events
-   */
-  on(event: WSEventType | string, callback: (data: unknown) => void): string(
-const subscriptionId = this.generateSubscriptionId( )
-subscription: WSSubscription = {}
-      id: subscriptionId,
-      event,
-      callback,
-      once: false};
-const eventSubscriptions = this.subscriptions.get(event) || [];
-    eventSubscriptions.push(subscription);
-    this.subscriptions.set(event, eventSubscriptions);
-
-    return subscriptionId;
-
-  /**
-   * Subscribe to event once
-   */
-  once(event: WSEventType | string, callback: (data: unknown) => void): string(
-const subscriptionId = this.generateSubscriptionId( )
-subscription: WSSubscription = {}
-      id: subscriptionId,
-      event,
-      callback,
-      once: true};
-const eventSubscriptions = this.subscriptions.get(event) || [];
-    eventSubscriptions.push(subscription);
-    this.subscriptions.set(event, eventSubscriptions);
-
-    return subscriptionId;
-
-  /**
-   * Unsubscribe from event
-   */
-  off(subscriptionId: string): void { this.subscriptions.forEach((subs, event) => {;
-const filtered = subs.filter(sub => sub.id !== subscriptionId  );
-      if (filtered.length < subs.length) {
-        this.subscriptions.set(event, filtered)});
-
-  /**
-   * Join a room for group communication
-   */
-  joinRoom(roomId: string): void { if (this.rooms.has(roomId)) {
-      return }
-
-    this.send("join_room", { roomId ));'"'"""''
-    this.rooms.add(roomId);
-    console.log(`Astral Core WS: Joined room ${roomId)`);
-
-  /**
-   * Leave a room
-   */
-  leaveRoom(roomId: string): void { if (!this.rooms.has(roomId)) {
-      return }
-
-    this.send("leave_room", { roomId ));'""'""'""'
-    this.rooms.delete(roomId);
-    console.log(`Astral Core WS: Left room ${roomId)`);
-
-  /**
-   * Send chat message
-   */
-  sendChatMessage(content: string, roomId?: string, recipientId?: string): void {
-    this.send(WSEventType.MESSAGE_NEW)
-      { content },
-      { room: roomId, to: recipientId }
-    );
-
-  /**
-   * Send typing indicator
-   */
-  sendTypingIndicator(roomId: string, isTyping: boolean): void {;
-const event = isTyping ? WSEventType.TYPING_START : WSEventType.TYPING_STOP,
-    this.send(event, { roomId ));
-
-    // Auto-stop typing after 5 seconds
-    if (isTyping) {;
-const existingTimer = this.typingTimers.get(roomId ),
-      if (existingTimer) {
-        clearTimeout(existingTimer) };
-const timer = setTimeout(() => { this.sendTypingIndicator(roomId, false ),
-        this.typingTimers.delete(roomId) }, 5000);
-
-      this.typingTimers.set(roomId, timer);
-  } else {;
-const timer = this.typingTimers.get(roomId);
-      if (timer) {
-        clearTimeout(timer  );
-        this.typingTimers.delete(roomId)};
-
-  /**
-   * Trigger crisis alert
-   */
-  triggerCrisisAlert(severity: 'high" | "critical", message?: string): void { this.send(WSEventType.CRISIS_ALERT, {
-  "''""'
-      severity,
-      message,)
-};
-
-location: this.getUserLocation(),
-};
-
-timestamp: new Date().toISOString()}};
-
-    // Also show local notification
-    astralCoreNotificationService.showCrisisAlert("Crisis Alert Sent',"")'""''
-      "Help is on the way. A crisis responder will contact you shortly.",'""""'
-      [
-        { action: 'call-988", title: "Call 988 Now' },""""'"'
-        { action: "safety-plan', title: "Open Safety Plan" }]""''""'"
-    ];
-
-  /**
-   * Request peer support
-   */
-  requestPeerSupport(topic?: string, anonymous?: boolean): void { this.send(WSEventType.PEER_REQUEST, {
-  topic,
-      anonymous,)
-};
-
-preferredLanguage: navigator.language))
-  /**
-   * Update presence status
-   */
-  updatePresence(status: "online" | "away' | "busy" | 'offline"): void {,"
-const eventMap = {}
-      online: WSEventType.USER_ONLINE,
-      away: WSEventType.USER_AWAY,
-      busy: WSEventType.USER_BUSY,
-      offline: WSEventType.USER_OFFLINE};
-
-    this.send(eventMap[status], {
-  userId: this.userId,)
-};
-
-timestamp: new Date().toISOString()});
-
-  /**
-   * Get connection state
-   */
-  getConnectionState(): WSConnectionState {
-    return { ...this.connectionState  }
-
-  /**
-   * Check if connected
-   */
-  isConnected(): boolean { return this.connectionState.connected && this.connectionState.authenticated }
-
-  /**
-   * Get active rooms
-   */
-  getActiveRooms(): string[] { return Array.from(this.rooms) }
-
-  /**
-   * Setup WebSocket event handlers
-   */
-  private setupEventHandlers(): void(if (!this.ws) return;
-
-    this.ws.onopen = this.handleOpen.bind(this);
-    this.ws.onclose = this.handleClose.bind(this);
-    this.ws.onerror = this.handleError.bind(this );
-    this.ws.onmessage = this.handleMessage.bind(this) )
-
-  /**
-   * Handle WebSocket open
-   */
-  private handleOpen(): void { console.log("Astral Core WS: Connection opened")''""}
-    this.connectionState.connected = true
-    this.connectionState.reconnecting = false
-    this.connectionState.reconnectAttempts = 0
-    this.connectionState.lastActivity = new Date();
-
-    // Authenticate
-    this.authenticate();
-
+  // Private helper methods
+  private handleConnection(): void {
+    this.connectionState = ConnectionState.CONNECTED;
+    this.reconnectAttempts = 0;
+    this.statistics.connectedAt = new Date();
+    this.statistics.reconnectAttempts = 0;
+    
     // Start heartbeat
     this.startHeartbeat();
-
-    // Emit connect event
-    this.emit(WSEventType.CONNECT, {
-  )
-};
-
-sessionId: this.sessionId,
-};
-
-timestamp: new Date().toISOString()};
-
-  /**
-   * Handle WebSocket close
-   */
-  private handleClose(event: CloseEvent): void { console.log("Astral Core WS: Connection closed", event.code, event.reason);'""''"""}'
-
-    this.connectionState.connected = false;
-    this.connectionState.authenticated = false;
-
-    // Stop heartbeat
-    this.stopHeartbeat();
-
-    // Emit disconnect event
-    this.emit(WSEventType.DISCONNECT, {
-  code: event.code,)
-};
-
-reason: event.reason,)
-};
-
-wasClean: event.wasClean))
-    // Attempt reconnect if not intentional disconnect
-    if (event.code !== 1000 && event.code !== 1001) { this.reconnect();
-
-  /**
-   * Handle WebSocket error
-   */
-  private handleError(error: Event): void { console.error("Astral Core WS: Connection error', error  );""'""""
-
-    // Emit error event
-    this.emit(WSEventType.ERROR, {
-  ))
-};
-
-message: 'WebSocket connection error","'""""''
-      error));
-
-    this.handleConnectionError(error);
-
-  /**
-   * Handle incoming message
-   */
-  private handleMessage(event: MessageEvent): void { try {
-  ,
-};
-
-message: WSMessage = JSON.parse(event.data)
-      // Update last activity
-      this.connectionState.lastActivity = new Date()
-      // Handle special messages
-      switch (message.type) {
-        case WSEventType.AUTH_SUCCESS:
-          this.handleAuthSuccess(message.data)
-          break
-        case WSEventType.AUTH_FAILURE:
-          this.handleAuthFailure(message.data)
-          break
-        case WSEventType.HEARTBEAT:
-          this.handleHeartbeat(message.data)
-          break
-        case WSEventType.CRISIS_ALERT:
-          this.handleCrisisAlert(message.data)
-          break
-        case WSEventType.MAINTENANCE:
-          this.handleMaintenance(message.data)
-          break
-
-      // Emit to subscribers
-      this.emit(message.type, message.data) } catch (error) { console.error("Astral Core WS: Failed to parse message", error);'""'
-
-  /**
-   * Authenticate connection
-   */
-  private async authenticate(): Promise<void> { try(;)}
-const token = await auth0Service.getAccessToken();
-const user = await auth0Service.getCurrentUser();
-
-      this.send("authenticate", {
-  '""''"""")'
-        token,
-        userId: user?.id,
-        sessionId: this.sessionId,
-        clientVersion: '2.0.0","'""""
-};
-
-platform: 'web","'""""''
-};
-
-userAgent: navigator.userAgent))
-  ) catch (error) { console.error("Astral Core WS: Authentication failed", error  );'""""'
-      this.handleAuthFailure({ error: error instanceof Error ? error.message : 'Unknown error" ));"'""
-  };
-
-  /**
-   * Handle authentication success
-   */
-  private handleAuthSuccess(data: unknown): void { console.log("Astral Core WS: Authenticated successfully")'"'
-    this.connectionState.authenticated = true }
-
- authData = data as any;
-    this.userId = authData?.userId;
-
+    
     // Process queued messages
     this.processMessageQueue();
+    
+    // Notify handlers
+    this.emitEvent('onConnect');
+    
+    logger.info('WebSocket connected successfully');
+  }
 
-    // Rejoin rooms
-    this.rooms.forEach(roomId =) {
-      this.send("join_room', { roomId ));"""'
-  });
+  private handleMessage(event: MessageEvent): void {
+    try {
+      const data = JSON.parse(event.data);
+      const message: WebSocketMessage = {
+        ...data,
+        timestamp: new Date(data.timestamp)
+      };
+      
+      this.statistics.messagesReceived++;
+      
+      // Handle acknowledgments
+      if (message.type === MessageType.ACK) {
+        this.handleAcknowledgment(message);
+        return;
+      }
+      
+      // Handle heartbeat responses
+      if (message.type === MessageType.HEARTBEAT) {
+        this.handleHeartbeatResponse(message);
+        return;
+      }
+      
+      // Handle crisis alerts with priority
+      if (message.type === MessageType.CRISIS_ALERT) {
+        this.handleCrisisAlert(message);
+      }
+      
+      // Emit to handlers
+      this.emitEvent('onMessage', message);
+      
+      // Send acknowledgment if required
+      if (message.requiresAck) {
+        this.sendAcknowledgment(message.id);
+      }
+      
+    } catch (error) {
+      logger.error('Failed to parse WebSocket message', { error, data: event.data });
+    }
+  }
 
-    // Update presence
-    this.updatePresence("online');""'"
+  private handleDisconnection(reason: string): void {
+    this.connectionState = ConnectionState.DISCONNECTED;
+    this.statistics.disconnectedAt = new Date();
+    
+    // Clear heartbeat
+    if (this.heartbeatTimer) {
+      clearInterval(this.heartbeatTimer);
+      this.heartbeatTimer = undefined;
+    }
+    
+    // Emit event
+    this.emitEvent('onDisconnect', reason);
+    
+    // Attempt reconnection if not intentionally disconnected
+    if (reason !== 'Normal closure' && this.reconnectAttempts < this.config.maxReconnectAttempts) {
+      this.scheduleReconnection();
+    }
+    
+    logger.warn('WebSocket disconnected', { reason, reconnectAttempts: this.reconnectAttempts });
+  }
 
-  /**
-   * Handle authentication failure
-   */
-  private handleAuthFailure(data: unknown): void {;
-const errorData = data as any;
-    console.error("Astral Core WS: Authentication failed", errorData?.error  );"'"'"'""'
+  private handleError(error: Error): void {
+    logger.error('WebSocket error', { error });
+    this.emitEvent('onError', error);
+  }
 
-    this.connectionState.authenticated = false;
+  private handleAcknowledgment(message: WebSocketMessage): void {
+    const pending = this.pendingAcks.get(message.payload.messageId);
+    
+    if (pending) {
+      pending.resolve(message.payload.messageId);
+      this.pendingAcks.delete(message.payload.messageId);
+    }
+  }
 
-    // Try to refresh token and reconnect
-    auth0Service.refreshToken().then(() =) {
-      this.reconnect() }}.catch(error =) { console.error("Astral Core WS: Token refresh failed", error  );'"'"'"}'
-      this.disconnect() }};
+  private handleHeartbeatResponse(message: WebSocketMessage): void {
+    this.statistics.lastHeartbeat = new Date();
+    
+    if (message.payload.pong) {
+      // This is handled by getLatency method
+      this.emitEvent('onMessage', message);
+    }
+  }
 
-  /**
-   * Handle crisis alert
-   */
-  private handleCrisisAlert(data: unknown): void {
-    // Show notification
-const alertData = data as any;
-    astralCoreNotificationService.showCrisisAlert("Crisis Alert","')"'"'"""'
-      alertData?.message || "Someone needs immediate help',""''"""'
-      [
-        { action: "respond', title: "Respond" },'""""''
-        { action: "forward", title: 'Forward to 988" }]""'"'""'
+  private async handleCrisisAlert(message: WebSocketMessage): Promise<void> {
+    // Send high-priority local notification
+    await astralCoreNotificationService.sendNotification({
+      type: NotificationType.CRISIS_ALERT,
+      title: 'Crisis Alert Received',
+      message: message.payload.message || 'A crisis alert has been received',
+      priority: NotificationPriority.CRITICAL,
+      data: message.payload
+    });
+  }
+
+  private scheduleReconnection(): void {
+    this.connectionState = ConnectionState.RECONNECTING;
+    this.reconnectAttempts++;
+    this.statistics.reconnectAttempts = this.reconnectAttempts;
+    
+    const delay = Math.min(
+      this.config.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1),
+      30000 // Max 30 seconds
     );
-
-    // Log for monitoring
-    console.warn('Astral Core WS: Crisis alert received", data);"""'
-
-  /**
-   * Handle maintenance notification
-   */
-  private handleMaintenance(data: unknown): void { console.warn('Astral Core WS: Maintenance scheduled", data  );"'""""}
-
-    // Show notification
-    astralCoreNotificationService.show({))
-${2: NotificationType.SYSTEM_ALERT}
-      priority: NotificationPriority.HIGH,
-      title: 'Scheduled Maintenance","'""""''
-      body: (data as any)?.message || "The service will undergo maintenance soon",'"'"""''
-      requireInteraction: true});
-
-  /**
-   * Start heartbeat
-   */
-  private startHeartbeat(): void { this.stopHeartbeat();
-
-    this.heartbeatTimer = setInterval(() => {
-      if (this.connectionState.connected) {;
-const startTime = Date.now(),
-        this.send(WSEventType.HEARTBEAT, {
-  )
-};
-
-timestamp: new Date().toISOString()});
-
-        // Calculate latency when pong received
-        this.once("pong", () => { this.connectionState.latency = Date.now() - startTime });'""'
-  };
-  }, HEARTBEAT_INTERVAL};
-
-  /**
-   * Stop heartbeat
-   */
-  private stopHeartbeat(): void { if (this.heartbeatTimer) {
-      clearInterval(this.heartbeatTimer );
-      this.heartbeatTimer = null  };
-
-  /**
-   * Handle heartbeat response
-   */
-  private handleHeartbeat(data: unknown): void { this.emit("pong", data) }'""'""'"'
-
-  /**
-   * Reconnect to WebSocket
-   */
-  private reconnect(): void { if (this.connectionState.reconnecting) {
-      return }
-
-    if (this.connectionState.reconnectAttempts )= MAX_RECONNECT_ATTEMPTS} { console.error("Astral Core WS: Max reconnection attempts reached')"""}'
-      this.emit(WSEventType.ERROR, {
-  )
-};
-
-message: "Failed to reconnect after maximum attempts'));""'""""''
-      return;
-this.connectionState.reconnecting = true;
-    this.connectionState.reconnectAttempts++;
-const delay = Math.min(;
-      RECONNECT_DELAY * Math.pow(2, this.connectionState.reconnectAttempts - 1),
-      30000
-    );
-
-    console.log()`Astral Core WS: Reconnecting in ${delay)ms (attempt ${this.connectionState.reconnectAttempts))`);
-
-    this.reconnectTimer = setTimeout(() => { this.connect() }, delay);
-
-  /**
-   * Handle connection error
-   */
-  private handleConnectionError(error: unknown): void { // Log error
-    console.error("Astral Core WS: Connection error", error );'""'""'""'
-
-    // Update state
-    this.connectionState.connected = false;
-    this.connectionState.authenticated = false;
-
-    // Attempt reconnect
-    if (!this.connectionState.reconnecting) {
-      this.reconnect();
-
-  /**
-   * Send message through WebSocket
-   */
-  private sendMessage(message: WSMessage): void { if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
-      this.queueMessage(message  );
-      return }
-
-    try(this.ws.send(JSON.stringify(message) );
-      this.connectionState.lastActivity = new Date() } catch (error) { console.error('Astral Core WS: Failed to send message", error );"""''""'"
-      this.queueMessage(message);
-
-  /**
-   * Queue message for later sending
-   */
-  private queueMessage(message: WSMessage): void(this.messageQueue.push(message )
-    // Limit queue size
-    if (this.messageQueue.length > MESSAGE_QUEUE_SIZE) {
-      this.messageQueue.shift();
-
-  /**
-   * Process queued messages
-   */
-  private processMessageQueue(): void { while (this.messageQueue.length > 0) {;
-const message = this.messageQueue.shift();
-      if (message) {
-        this.sendMessage(message );
-  );
-
-  /**
-   * Emit event to subscribers
-   */
-  private emit(event: WSEventType | string, data: any): void {;
-const subscriptions = this.subscriptions.get(event) || [];
-
-    subscriptions.forEach(sub => {
+    
+    logger.info('Scheduling reconnection', { 
+      attempt: this.reconnectAttempts, 
+      delay,
+      maxAttempts: this.config.maxReconnectAttempts 
+    });
+    
+    this.reconnectTimer = setTimeout(async () => {
       try {
-        sub.callback(data  );
+        await this.connect();
+        this.emitEvent('onReconnect', this.reconnectAttempts);
+      } catch (error) {
+        logger.error('Reconnection failed', { error, attempt: this.reconnectAttempts });
+        
+        if (this.reconnectAttempts < this.config.maxReconnectAttempts) {
+          this.scheduleReconnection();
+        } else {
+          this.connectionState = ConnectionState.FAILED;
+          logger.error('Max reconnection attempts reached');
+        }
+      }
+    }, delay);
+  }
 
-        if (sub.once) {
-          this.off(sub.id)} catch (error) { console.error(`Astral Core WS: Error in event handler for ${event)`, error) };
-  });
+  private async queueAndSendMessage(message: WebSocketMessage): Promise<string> {
+    // Add to queue
+    this.messageQueue.push(message);
+    
+    // Limit queue size
+    if (this.messageQueue.length > this.config.messageQueueSize) {
+      // Remove lowest priority messages first
+      this.messageQueue.sort((a, b) => this.getPriorityWeight(b.priority) - this.getPriorityWeight(a.priority));
+      this.messageQueue = this.messageQueue.slice(0, this.config.messageQueueSize);
+    }
+    
+    // Try to send immediately if connected
+    if (this.isConnected()) {
+      await this.sendQueuedMessage(message);
+    }
+    
+    return message.id;
+  }
 
-  /**
-   * Get user location for crisis alerts
-   */
-  private getUserLocation(): { lat?: number, lon?: number } | null { // This would integrate with the geolocation service
-    // For now, return null (location not available)
-    return null }
+  private async sendQueuedMessage(message: WebSocketMessage): Promise<void> {
+    if (!this.isConnected()) {
+      return;
+    }
+    
+    try {
+      // Send message
+      this.ws!.send(JSON.stringify(message));
+      this.statistics.messagesSent++;
+      
+      // Remove from queue
+      const index = this.messageQueue.findIndex(m => m.id === message.id);
+      if (index !== -1) {
+        this.messageQueue.splice(index, 1);
+      }
+      
+      // Handle acknowledgment if required
+      if (message.requiresAck) {
+        return new Promise((resolve, reject) => {
+          this.pendingAcks.set(message.id, {
+            resolve,
+            reject,
+            timestamp: new Date()
+          });
+          
+          // Timeout after 30 seconds
+          setTimeout(() => {
+            if (this.pendingAcks.has(message.id)) {
+              this.pendingAcks.delete(message.id);
+              reject(new Error('Message acknowledgment timeout'));
+            }
+          }, 30000);
+        });
+      }
+      
+    } catch (error) {
+      logger.error('Failed to send message', { error, messageId: message.id });
+      throw error;
+    }
+  }
 
-  /**
-   * Generate unique message ID
-   */
+  private async processMessageQueue(): Promise<void> {
+    // Sort by priority
+    this.messageQueue.sort((a, b) => this.getPriorityWeight(b.priority) - this.getPriorityWeight(a.priority));
+    
+    // Send all queued messages
+    const promises = this.messageQueue.map(message => this.sendQueuedMessage(message));
+    
+    try {
+      await Promise.allSettled(promises);
+    } catch (error) {
+      logger.error('Failed to process message queue', { error });
+    }
+  }
+
+  private startHeartbeat(): void {
+    this.heartbeatTimer = setInterval(() => {
+      if (this.isConnected()) {
+        this.sendMessage(MessageType.HEARTBEAT, { ping: true }, MessagePriority.LOW);
+      }
+    }, this.config.heartbeatInterval);
+  }
+
+  private sendAcknowledgment(messageId: string): void {
+    if (this.isConnected()) {
+      this.sendMessage(MessageType.ACK, { messageId }, MessagePriority.HIGH);
+    }
+  }
+
+  private getPriorityWeight(priority: MessagePriority): number {
+    switch (priority) {
+      case MessagePriority.CRITICAL: return 4;
+      case MessagePriority.HIGH: return 3;
+      case MessagePriority.MEDIUM: return 2;
+      case MessagePriority.LOW: return 1;
+      default: return 0;
+    }
+  }
+
   private generateMessageId(): string {
-    return `msg_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+    return `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
 
-  /**
-   * Generate unique subscription ID
-   */
-  private generateSubscriptionId(): string {
-    return `sub_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-
-  /**
-   * Generate session ID
-   */
-  private generateSessionId(): string {
-    return `session_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-  };
+  private emitEvent(eventName: keyof WebSocketEventHandlers, ...args: any[]): void {
+    const handlers = this.eventHandlers.get(eventName);
+    if (handlers) {
+      handlers.forEach(handler => {
+        try {
+          handler(...args);
+        } catch (error) {
+          logger.error('Event handler error', { error, eventName });
+        }
+      });
+    }
+  }
+}
 
 // Export singleton instance
-export const astralCoreWebSocketService = new AstralCoreWebSocketService();
-
-// Auto-connect when authenticated
-window.addEventListener("auth:authenticated", () => { astralCoreWebSocketService.connect() });"'"'"'"""'
-
-// Auto-disconnect when logged out
-window.addEventListener("auth:logout', () => { astralCoreWebSocketService.disconnect() });""'""""''
-
-// Handle page visibility changes
-document.addEventListener("visibilitychange", () => { if (document.hidden) {'""'""'""'
-    astralCoreWebSocketService.updatePresence('away") } else(astralCoreWebSocketService.updatePresence("online") );""'
-  }};
-
-// Cleanup on page unload
-window.addEventListener("beforeunload', () =) { astralCoreWebSocketService.disconnect() }};'"
-export default astralCoreWebSocketService;
+export const astralCoreWebSocketService = new AstralCoreWebSocketServiceImpl();
+export type { 
+  AstralCoreWebSocketService, 
+  WebSocketMessage, 
+  WebSocketEventHandlers,
+  ConnectionStatistics 
+};
+export { MessageType, MessagePriority, ConnectionState };
