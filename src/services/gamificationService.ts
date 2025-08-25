@@ -1,514 +1,756 @@
-// Gamification service for achievements and progress tracking
-import React from 'react';"""'"'""'
+/**
+ * Gamification Service
+ *
+ * Comprehensive gamification system for mental health engagement with
+ * achievements, progress tracking, rewards, and motivational features.
+ * Designed to encourage consistent engagement with therapeutic activities.
+ *
+ * @fileoverview Gamification system with achievements, progress tracking, and rewards
+ * @version 2.0.0
+ */
 
-// Extend Window interface to { { {include custom showToast function
-declare global { }
-interface Window { { { {
-    showToast?: (options: {
-  )
-$2: 'success" | "error" | "info' | "warning"',
-};
+import { logger } from '../utils/logger';
+import { secureStorage } from './secureStorageService';
 
-title: string
-};
+export type AchievementType = 
+  | 'milestone'
+  | 'streak'
+  | 'challenge'
+  | 'social'
+  | 'wellness'
+  | 'learning'
+  | 'crisis-recovery'
+  | 'self-care';
 
-message: string
-      duration?: number
-  =>oid
-interface Achievement { { { {
-  id: string;,
-  title: string;,
-  description: string;,
-  icon: string;,
-  category: "wellness" | "community" | 'progress" | "milestone'",
-  points: number
-};
+export type RewardType = 
+  | 'badge'
+  | 'points'
+  | 'unlock'
+  | 'customization'
+  | 'certificate'
+  | 'milestone-reward';
 
-rarity: "common" | "rare' | "epic" | 'legendary""
-};
+export type ActivityType = 
+  | 'mood-check'
+  | 'journal-entry'
+  | 'breathing-exercise'
+  | 'meditation'
+  | 'therapy-session'
+  | 'peer-support'
+  | 'safety-plan-update'
+  | 'crisis-resource-access'
+  | 'goal-completion'
+  | 'reflection'
+  | 'assessment'
+  | 'learning-module';
 
-unlocked: boolean
-  unlockedAt?: Date
-  progress?: {
-  current: number
-};
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  type: AchievementType;
+  icon: string;
+  points: number;
+  rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+  requirements: AchievementRequirement[];
+  unlockedAt?: Date;
+  progress?: number;
+  maxProgress?: number;
+  category: string;
+  isSecret?: boolean;
+  prerequisites?: string[];
+}
 
-target: number
-  };
-interface UserStats { { { {
-  totalPoints: number;,
-  level: number;,
-  nextLevelPoints: number;,
-};
+export interface AchievementRequirement {
+  type: 'count' | 'streak' | 'time' | 'score' | 'completion';
+  activity: ActivityType;
+  target: number;
+  timeframe?: 'daily' | 'weekly' | 'monthly' | 'all-time';
+  conditions?: Record<string, any>;
+}
 
-currentLevelPoints: number
-};
+export interface UserProgress {
+  userId: string;
+  level: number;
+  totalPoints: number;
+  currentLevelPoints: number;
+  pointsToNextLevel: number;
+  unlockedAchievements: string[];
+  currentStreaks: Record<ActivityType, StreakData>;
+  activityStats: Record<ActivityType, ActivityStats>;
+  badges: Badge[];
+  customizations: UserCustomizations;
+  weeklyGoals: WeeklyGoal[];
+  lastActivity: Date;
+  joinDate: Date;
+}
 
-streak: {
-  ,
-  current: number
-};
+export interface StreakData {
+  current: number;
+  longest: number;
+  lastActivity: Date;
+  isActive: boolean;
+}
 
-longest: number
-};
+export interface ActivityStats {
+  totalCount: number;
+  thisWeek: number;
+  thisMonth: number;
+  averagePerWeek: number;
+  bestStreak: number;
+  lastActivity?: Date;
+  qualityScore?: number;
+}
 
-$2: "daily_checkin" | 'wellness_activity" | "community_support'""
-  };
-  achievements: Achievement[],
-  badges: string[],
-  activities: { postsShared: number}
-    supportGiven: number;,
-  wellnessActivities: number;,
-  daysActive: number;,
-  aiChatSessions: number;,
-  reflectionsWritten: number
+export interface Badge {
+  id: string;
+  achievementId: string;
+  earnedAt: Date;
+  level?: number;
+  metadata?: Record<string, any>;
+}
 
- interface LevelInfo { { { {
-  level: number;,
-  title: string;,
-  pointsRequired: number;,
-};
+export interface UserCustomizations {
+  theme: string;
+  avatarParts: string[];
+  unlockedThemes: string[];
+  unlockedAvatarParts: string[];
+  preferredRewardTypes: RewardType[];
+}
 
-perks: string[]
-};
+export interface WeeklyGoal {
+  id: string;
+  activity: ActivityType;
+  target: number;
+  current: number;
+  startDate: Date;
+  endDate: Date;
+  completed: boolean;
+  pointsReward: number;
+}
 
-color: string
-  };
-LEVEL_TITLES: LevelInfo[] = []
-  { level: 1, title: "New Journey", pointsRequired: 0, perks: ['Basic features"], color: "#94a3b8' },""""''
-  { level: 2, title: "First Steps", pointsRequired: 100, perks: ['Custom themes"], color: "#60a5fa" },"'""'"'
-  { level: 3, title: "Finding Balance", pointsRequired: 300, perks: ["Priority support'], color: "#34d399" },'""
-  { level: 4, title: "Growing Strong", pointsRequired: 600, perks: ['Advanced AI features"], color: "#fbbf24' },"""
-  { level: 5, title: "Wellness Warrior', pointsRequired: 1000, perks: ["Exclusive content"], color: '#f472b6" },"""
-  { level: 6, title: 'Community Champion", pointsRequired: 1500, perks: ["Mentor badge'], color: "#a78bfa" },""'""'
-  { level: 7, title: 'Healing Guide", pointsRequired: 2200, perks: ["Special recognition"], color: "#fb7185' },""'"""'
-  { level: 8, title: "Mindful Master', pointsRequired: 3000, perks: ["Beta features"], color: '#06b6d4" },"""
-  { level: 9, title: 'Serenity Sage", pointsRequired: 4000, perks: ["Custom achievements'], color: "#84cc16" },""'""'
-  { level: 10, title: 'Astral Guardian", pointsRequired: 5500, perks: ["All features unlocked"], color: "#eab308' }""'"""'
-];
-DEFAULT_ACHIEVEMENTS: Omit<Achievement, "unlocked' | "unlockedAt">[] = ['}"]"""'"'
-  // Welcome achievements
-  {
-  id: "first_post',""'""'"'
-    title: "First Share',"""'"'""'
-    description: 'Share your first thought with the community",""'"'"'
-    icon: "✨',"""'"'""'
-    category: "milestone",""'""'
-};
+export interface Challenge {
+  id: string;
+  name: string;
+  description: string;
+  type: 'individual' | 'community';
+  activity: ActivityType;
+  target: number;
+  duration: number; // in days
+  pointsReward: number;
+  startDate: Date;
+  endDate: Date;
+  participants?: string[];
+  leaderboard?: ChallengeEntry[];
+  isActive: boolean;
+}
 
-points: 50,
-};
+export interface ChallengeEntry {
+  userId: string;
+  username: string;
+  progress: number;
+  points: number;
+  rank: number;
+}
 
-rarity: "common"""''
-  },
-  {
-  id: "welcome_aboard",'"""'
-    title: "Welcome Aboard',""''""'
-    description: "Complete your profile setup","'""'
-    icon: '🎉",""'"'"'
-    category: "milestone",'"""'
-};
+export interface GamificationEvent {
+  type: 'achievement-unlocked' | 'level-up' | 'streak-milestone' | 'challenge-completed' | 'badge-earned';
+  data: any;
+  timestamp: Date;
+  userId: string;
+}
 
-points: 25,
-};
+class GamificationService {
+  private achievements: Map<string, Achievement> = new Map();
+  private userProgress: UserProgress | null = null;
+  private activeChallenges: Map<string, Challenge> = new Map();
+  private eventListeners: ((event: GamificationEvent) => void)[] = [];
+  private initialized = false;
 
-rarity: "common'""'
-  },
+  constructor() {
+    this.initializeAchievements();
+  }
 
-  // Community achievements
-  {
-  id: 'first_support",""'"'""'
-    title: 'Helping Hand","""''""'
-    description: "Give your first support to someone",""'""'
-    icon: '🤝","""''""'"
-    category: "community","''""'"'
-};
+  public async initialize(userId: string): Promise<void> {
+    try {
+      await this.loadUserProgress(userId);
+      await this.loadActiveChallenges();
+      this.initialized = true;
+      logger.info('GamificationService initialized for user:', userId);
+    } catch (error) {
+      logger.error('Failed to initialize GamificationService:', error);
+      throw error;
+    }
+  }
 
-points: 30,
-};
+  private initializeAchievements() {
+    const defaultAchievements: Achievement[] = [
+      // Milestone Achievements
+      {
+        id: 'first-mood-check',
+        name: 'First Steps',
+        description: 'Complete your first mood check-in',
+        type: 'milestone',
+        icon: '🌱',
+        points: 10,
+        rarity: 'common',
+        requirements: [{ type: 'count', activity: 'mood-check', target: 1 }],
+        category: 'Getting Started'
+      },
+      {
+        id: 'journal-writer',
+        name: 'Journal Writer',
+        description: 'Write 10 journal entries',
+        type: 'milestone',
+        icon: '📝',
+        points: 50,
+        rarity: 'uncommon',
+        requirements: [{ type: 'count', activity: 'journal-entry', target: 10 }],
+        category: 'Self-Reflection'
+      },
+      {
+        id: 'mindful-moment',
+        name: 'Mindful Moment',
+        description: 'Complete 5 breathing exercises',
+        type: 'wellness',
+        icon: '🧘',
+        points: 30,
+        rarity: 'common',
+        requirements: [{ type: 'count', activity: 'breathing-exercise', target: 5 }],
+        category: 'Mindfulness'
+      },
 
-rarity: "common""'"'
-  },
-  {
-  id: "support_streak_7',""'""'"'
-    title: "Weekly Supporter',"""'"'""'
-    description: 'Support others for 7 days in a row",""'"'""'
-    icon: '💪","""''""'"
-    category: "community","''""'"'
-    points: 100,
-};
+      // Streak Achievements
+      {
+        id: 'daily-warrior',
+        name: 'Daily Warrior',
+        description: 'Maintain a 7-day mood check streak',
+        type: 'streak',
+        icon: '🔥',
+        points: 100,
+        rarity: 'rare',
+        requirements: [{ type: 'streak', activity: 'mood-check', target: 7 }],
+        category: 'Consistency'
+      },
+      {
+        id: 'meditation-master',
+        name: 'Meditation Master',
+        description: 'Meditate for 30 consecutive days',
+        type: 'streak',
+        icon: '🕉️',
+        points: 300,
+        rarity: 'epic',
+        requirements: [{ type: 'streak', activity: 'meditation', target: 30 }],
+        category: 'Mindfulness'
+      },
 
-rarity: "rare","'"'"'""'
-};
+      // Crisis Recovery Achievements
+      {
+        id: 'crisis-survivor',
+        name: 'Crisis Survivor',
+        description: 'Successfully use crisis resources during a difficult time',
+        type: 'crisis-recovery',
+        icon: '🛡️',
+        points: 200,
+        rarity: 'rare',
+        requirements: [{ type: 'count', activity: 'crisis-resource-access', target: 1 }],
+        category: 'Crisis Support'
+      },
+      {
+        id: 'safety-planner',
+        name: 'Safety Planner',
+        description: 'Update your safety plan 3 times',
+        type: 'crisis-recovery',
+        icon: '🗂️',
+        points: 75,
+        rarity: 'uncommon',
+        requirements: [{ type: 'count', activity: 'safety-plan-update', target: 3 }],
+        category: 'Crisis Support'
+      },
 
-progress: { current: 0, target: 7 };
-  },
-  {
-  id: "community_hero",'"'"'""'
-    title: "Community Hero",'""''""""'
-    description: 'Receive 100 appreciations from others","'""""
-    icon: '🦸","'""""''
-    category: "community",'"'"""''
-    points: 500,
-};
+      // Social Achievements
+      {
+        id: 'peer-supporter',
+        name: 'Peer Supporter',
+        description: 'Participate in 5 peer support sessions',
+        type: 'social',
+        icon: '🤝',
+        points: 150,
+        rarity: 'rare',
+        requirements: [{ type: 'count', activity: 'peer-support', target: 5 }],
+        category: 'Community'
+      },
 
-rarity: "epic",'""'""'""'
-};
+      // Learning Achievements
+      {
+        id: 'knowledge-seeker',
+        name: 'Knowledge Seeker',
+        description: 'Complete 3 learning modules',
+        type: 'learning',
+        icon: '📚',
+        points: 120,
+        rarity: 'uncommon',
+        requirements: [{ type: 'count', activity: 'learning-module', target: 3 }],
+        category: 'Education'
+      }
+    ];
 
-progress: { current: 0, target: 100 };
-  },
+    defaultAchievements.forEach(achievement => {
+      this.achievements.set(achievement.id, achievement);
+    });
+  }
 
-  // Wellness achievements
-  {
-  id: 'first_reflection",""'"'""'
-    title: 'Inner Voice","""''""'
-    description: "Write your first reflection",""'""'
-    icon: "📝",""''""'""'
-    category: "wellness",'"'"'""'
-};
+  public async recordActivity(
+    activity: ActivityType,
+    metadata: Record<string, any> = {}
+  ): Promise<void> {
+    if (!this.initialized || !this.userProgress) {
+      logger.warn('GamificationService not initialized');
+      return;
+    }
 
-points: 40,
-};
+    try {
+      // Update activity stats
+      if (!this.userProgress.activityStats[activity]) {
+        this.userProgress.activityStats[activity] = {
+          totalCount: 0,
+          thisWeek: 0,
+          thisMonth: 0,
+          averagePerWeek: 0,
+          bestStreak: 0
+        };
+      }
 
-rarity: "common"'""'
-  },
-  {
-  id: 'meditation_master","""''""'"
-    title: "Meditation Master","''""'"'
-    description: "Complete 30 meditation sessions","'"'"'""'
-    icon: "🧘",'"'"'"'
-    category: "wellness","'"'"'"""'
-    points: 300,
-};
+      const stats = this.userProgress.activityStats[activity];
+      stats.totalCount++;
+      stats.lastActivity = new Date();
+      
+      // Update weekly/monthly counts
+      this.updateTimeBasedStats(activity);
 
-rarity: "rare',""''"""'
-};
+      // Update streaks
+      this.updateStreaks(activity);
 
-progress: { current: 0, target: 30 };
-  },
-  {
-  id: "wellness_streak_30',""'""""
-    title: 'Wellness Warrior","'"""
-    description: "Complete wellness activities for 30 days',""'""""''
-    icon: "🌟",'"'"""''
-    category: "wellness",'""'""'"'
-    points: 400,
-};
+      // Check for achievements
+      await this.checkAchievements(activity, metadata);
 
-rarity: "epic',""'""''
-};
+      // Update weekly goals
+      this.updateWeeklyGoals(activity);
 
-progress: { current: 0, target: 30 };
-  },
+      // Save progress
+      await this.saveUserProgress();
 
-  // Progress achievements
-  {
-  id: "level_up_5",'""'""'""'
-    title: 'Rising Star",""'"'""'
-    description: 'Reach level 5","""''""'
-    icon: "⭐",""'""'
-    category: 'progress","""''""'"
-};
+      logger.debug(`Recorded activity: ${activity}`, metadata);
+    } catch (error) {
+      logger.error('Failed to record activity:', error);
+    }
+  }
 
-points: 200,
-};
+  private updateTimeBasedStats(activity: ActivityType) {
+    if (!this.userProgress) return;
 
-rarity: "rare""''"
-  },
-  {
-  id: "point_collector","'"'"'""'
-    title: "Point Collector",'""''"""'
-    description: "Earn 1000 total points',""'""""
-    icon: '💎","'""""''
-    category: "progress",'""'""'"'
-    points: 100,
-};
+    const stats = this.userProgress.activityStats[activity];
+    const now = new Date();
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - now.getDay());
+    weekStart.setHours(0, 0, 0, 0);
 
-rarity: "rare',"""'"'""'
-};
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
-progress: { current: 0, target: 1000 };
-  },
-  {
-  id: 'legendary_status","""''""'
-    title: "Legendary Status",""''""'"'
-    description: "Reach the maximum level","'"'"'""'
-    icon: "👑",'""''"""'
-    category: "progress',""'""""
-};
+    // Reset weekly count if new week
+    if (stats.lastActivity && stats.lastActivity < weekStart) {
+      stats.thisWeek = 0;
+    }
 
-points: 1000,
-};
+    // Reset monthly count if new month
+    if (stats.lastActivity && stats.lastActivity < monthStart) {
+      stats.thisMonth = 0;
+    }
 
-rarity: 'legendary""'"
+    stats.thisWeek++;
+    stats.thisMonth++;
 
-interface GamificationService { { { { private userStats: UserStats
-  private achievements: Achievement[]
-  private readonly listeners = new Set<(stats: UserStats) => void}()
-$2ructor() {
-    this.userStats = this.loadUserStats();
-    this.achievements = this.initializeAchievements() }
+    // Calculate average per week
+    const weeksActive = Math.max(1, Math.floor(
+      (now.getTime() - this.userProgress.joinDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
+    ));
+    stats.averagePerWeek = stats.totalCount / weeksActive;
+  }
 
-  private loadUserStats(): UserStats(;
-const saved = localStorage.getItem("userStats" );"'"'"'"""'
-    if (saved) {
-      return JSON.parse(saved) }
+  private updateStreaks(activity: ActivityType) {
+    if (!this.userProgress) return;
 
-    return {
-  totalPoints: 0,
-      level: 1,
-      nextLevelPoints: 100,
-};
+    if (!this.userProgress.currentStreaks[activity]) {
+      this.userProgress.currentStreaks[activity] = {
+        current: 0,
+        longest: 0,
+        lastActivity: new Date(),
+        isActive: true
+      };
+    }
 
-currentLevelPoints: 0,
-};
+    const streak = this.userProgress.currentStreaks[activity];
+    const now = new Date();
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+    yesterday.setHours(23, 59, 59, 999);
 
-streak: {
-  ,
-  current: 0,
-};
+    // Check if streak continues
+    if (streak.lastActivity && streak.lastActivity >= yesterday) {
+      // Same day or consecutive day
+      if (streak.lastActivity.toDateString() !== now.toDateString()) {
+        streak.current++;
+      }
+    } else {
+      // Streak broken, start new
+      streak.current = 1;
+      streak.isActive = true;
+    }
 
-longest: 0, };
+    streak.lastActivity = now;
+    
+    // Update longest streak
+    if (streak.current > streak.longest) {
+      streak.longest = streak.current;
+      this.userProgress.activityStats[activity].bestStreak = streak.current;
+    }
 
-$2: "daily_checkin'"'""
-  },
-      achievements: [],
-      badges: [],
-      activities: {
-  ,
-  postsShared: 0,
-        supportGiven: 0,
-        wellnessActivities: 0,
-        daysActive: 0,
-};
+    // Check for streak milestones
+    if ([3, 7, 14, 30, 60, 100].includes(streak.current)) {
+      this.emitEvent({
+        type: 'streak-milestone',
+        data: { activity, streak: streak.current },
+        timestamp: now,
+        userId: this.userProgress.userId
+      });
+    }
+  }
 
-aiChatSessions: 0,
-};
+  private async checkAchievements(activity: ActivityType, metadata: Record<string, any>) {
+    if (!this.userProgress) return;
 
-reflectionsWritten: 0
-  };
+    for (const [id, achievement] of this.achievements) {
+      if (this.userProgress.unlockedAchievements.includes(id)) {
+        continue; // Already unlocked
+      }
 
-  private saveUserStats() { localStorage.setItem("userStats', JSON.stringify(this.userStats );""'""""
-    this.notifyListeners() }
+      // Check prerequisites
+      if (achievement.prerequisites) {
+        const hasPrereqs = achievement.prerequisites.every(prereqId =>
+          this.userProgress!.unlockedAchievements.includes(prereqId)
+        );
+        if (!hasPrereqs) continue;
+      }
 
-  private initializeAchievements(): Achievement[] {
-    return DEFAULT_ACHIEVEMENTS.map(achievement =) ({
-  ...achievement,
-};
+      // Check requirements
+      const meetsRequirements = achievement.requirements.every(req => 
+        this.checkRequirement(req, activity, metadata)
+      );
 
-unlocked: false,
-};
+      if (meetsRequirements) {
+        await this.unlockAchievement(id);
+      }
+    }
+  }
 
-unlockedAt: undefined
-  });
-private notifyListeners() { this.listeners.forEach(listener =) {
-      try {
-        listener(this.userStats) } catch (error) { console.error('Error in gamification listener:", error );"'
-  }};
-private calculateLevel(points: number): { level: number; currentLevelPoints: number, nextLevelPoints: number } {;
-const level = 1;
-const currentLevelPoints = points;
+  private checkRequirement(
+    requirement: AchievementRequirement,
+    activity: ActivityType,
+    metadata: Record<string, any>
+  ): boolean {
+    if (!this.userProgress) return false;
 
-    for (const levelInfo of LEVEL_TITLES) {
-      if (points )= levelInfo.pointsRequired} {
-  level = levelInfo.level,
-};
+    // Must be the right activity type
+    if (requirement.activity !== activity) return false;
 
-currentLevelPoints = points - levelInfo.pointsRequired } else {;
-const nextLevelPoints = levelInfo.pointsRequired - points,
-        return { level, currentLevelPoints, nextLevelPoints };
+    const stats = this.userProgress.activityStats[activity];
+    const streaks = this.userProgress.currentStreaks[activity];
 
-    return { level, currentLevelPoints, nextLevelPoints: 0 }
+    switch (requirement.type) {
+      case 'count':
+        return stats?.totalCount >= requirement.target;
+      
+      case 'streak':
+        return streaks?.current >= requirement.target;
+      
+      case 'time':
+        // Check if activity duration meets requirement
+        return metadata.duration >= requirement.target;
+      
+      case 'score':
+        // Check if activity score meets requirement
+        return metadata.score >= requirement.target;
+      
+      case 'completion':
+        // Check if activity was completed successfully
+        return metadata.completed === true;
+      
+      default:
+        return false;
+    }
+  }
 
-  private checkAchievements() {   };
+  private async unlockAchievement(achievementId: string) {
+    if (!this.userProgress) return;
 
-newlyUnlocked: Achievement[] = []
-    this.achievements.forEach(achievement =) {
-      if (achievement.unlocked) return;
-const shouldUnlock = false;
+    const achievement = this.achievements.get(achievementId);
+    if (!achievement) return;
 
-      switch (achievement.id) {
-  case first_post:""""'""'
-};
+    // Add to unlocked achievements
+    this.userProgress.unlockedAchievements.push(achievementId);
+    
+    // Award points
+    this.awardPoints(achievement.points);
 
-shouldUnlock = this.userStats.activities.postsShared }= 1;
-          break;
-        case first_support:""""'"'
-          shouldUnlock = this.userStats.activities.supportGiven }= 1;
-          break;
-        case first_reflection:"'"'"""'"'
-          shouldUnlock = this.userStats.activities.reflectionsWritten }= 1;
-          break;
-        case level_up_5:"'"""""'
-          shouldUnlock = this.userStats.level }= 5;
-          break;
-        case legendary_status:'""''""""'
-          shouldUnlock = this.userStats.level }= 10;
-          break;
-        case point_collector:'""'"'""'
-          shouldUnlock = this.userStats.totalPoints }= 1000;
-          if (achievement.progress) {
-            achievement.progress.current = this.userStats.totalPoints }
-          break;
-        case community_hero:""''""'""'
-          // This would be updated from external events
-          break
-        case meditation_master:""'""'
-          // This would be updated from wellness activities
-          break
-        case wellness_streak_30:""""'""'
-          // This would be updated from daily activities
-          break
-if (shouldUnlock) { achievement.unlocked = true;
-        achievement.unlockedAt = new Date();
-        newlyUnlocked.push(achievement ),
-        this.awardPoints(achievement.points, `Achievement: ${achievement.title)`) };
+    // Create badge
+    const badge: Badge = {
+      id: `badge-${achievementId}-${Date.now()}`,
+      achievementId,
+      earnedAt: new Date()
+    };
+    this.userProgress.badges.push(badge);
 
-    return newlyUnlocked;
+    // Mark achievement as unlocked
+    achievement.unlockedAt = new Date();
 
-  // Public API
-  awardPoints(points: number, reason: string) { this.userStats.totalPoints += points;
-const levelInfo = this.calculateLevel(this.userStats.totalPoints  );
-const oldLevel = this.userStats.level;
+    // Emit event
+    this.emitEvent({
+      type: 'achievement-unlocked',
+      data: { achievement, badge },
+      timestamp: new Date(),
+      userId: this.userProgress.userId
+    });
 
-    this.userStats.level = levelInfo.level;
-    this.userStats.currentLevelPoints = levelInfo.currentLevelPoints;
-    this.userStats.nextLevelPoints = levelInfo.nextLevelPoints,
+    logger.info(`Achievement unlocked: ${achievement.name}`, { userId: this.userProgress.userId });
+  }
+
+  private awardPoints(points: number) {
+    if (!this.userProgress) return;
+
+    this.userProgress.totalPoints += points;
+    this.userProgress.currentLevelPoints += points;
 
     // Check for level up
-    if (levelInfo.level ) oldLevel} {
-      this.onLevelUp(levelInfo.level) }
+    const pointsForNextLevel = this.getPointsForLevel(this.userProgress.level + 1);
+    if (this.userProgress.currentLevelPoints >= pointsForNextLevel) {
+      this.levelUp();
+    } else {
+      this.userProgress.pointsToNextLevel = pointsForNextLevel - this.userProgress.currentLevelPoints;
+    }
+  }
 
-    // Check achievements after awarding points
-const newAchievements = this.checkAchievements();
+  private levelUp() {
+    if (!this.userProgress) return;
 
-    this.saveUserStats();
+    this.userProgress.level++;
+    const pointsUsed = this.getPointsForLevel(this.userProgress.level);
+    this.userProgress.currentLevelPoints -= pointsUsed;
+    this.userProgress.pointsToNextLevel = this.getPointsForLevel(this.userProgress.level + 1) - this.userProgress.currentLevelPoints;
 
-    // Show notifications for new achievements
-    newAchievements.forEach(achievement =) { this.showAchievementNotification(achievement) }};
+    // Emit event
+    this.emitEvent({
+      type: 'level-up',
+      data: { newLevel: this.userProgress.level },
+      timestamp: new Date(),
+      userId: this.userProgress.userId
+    });
 
-    console.log(`Awarded ${points) points for: ${reason)`);
-private onLevelUp(newLevel: number) {;
-const levelInfo = LEVEL_TITLES.find(l =) l.level === newLevel  };
-    if (levelInfo) {
-      this.showLevelUpNotification(levelInfo),
+    logger.info(`Level up! New level: ${this.userProgress.level}`, { userId: this.userProgress.userId });
+  }
 
-  private showAchievementNotification(achievement: Achievement) {
-    // This would integrate with your notification system
-    console.log(`🎉 Achievement Unlocked: ${achievement.title)`);
+  private getPointsForLevel(level: number): number {
+    // Exponential point requirements: 100 * level^1.5
+    return Math.floor(100 * Math.pow(level, 1.5));
+  }
 
-    // Show toast notification
-    if (window.showToast) {
-      window.showToast({;
-${
-  2: "success",'"'"'"')
-};
+  private updateWeeklyGoals(activity: ActivityType) {
+    if (!this.userProgress) return;
 
-title: "Achievement Unlocked!",""'""')
-};
+    const now = new Date();
+    this.userProgress.weeklyGoals.forEach(goal => {
+      if (goal.activity === activity && !goal.completed && now <= goal.endDate) {
+        goal.current++;
+        if (goal.current >= goal.target) {
+          goal.completed = true;
+          this.awardPoints(goal.pointsReward);
+          
+          this.emitEvent({
+            type: 'challenge-completed',
+            data: { goal },
+            timestamp: now,
+            userId: this.userProgress!.userId
+          });
+        }
+      }
+    });
+  }
 
-message: }`${achievement.icon) ${
-  achievement.title)`,
-};
+  public async createWeeklyGoals(): Promise<WeeklyGoal[]> {
+    if (!this.userProgress) return [];
 
-duration: 5000
-  });
-  };
+    const now = new Date();
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - now.getDay());
+    weekStart.setHours(0, 0, 0, 0);
 
-  private showLevelUpNotification(levelInfo: LevelInfo) {
-    console.log(`🎊 Level Up! You"re now ${levelInfo.title)`);'"'"""''
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6);
+    weekEnd.setHours(23, 59, 59, 999);
 
-    if (window.showToast) {
-      window.showToast({;
-${
-  2: "success",'"'"'"')
-};
+    // Create personalized goals based on user's activity history
+    const goals: WeeklyGoal[] = [
+      {
+        id: `goal-mood-${now.getTime()}`,
+        activity: 'mood-check',
+        target: 5,
+        current: 0,
+        startDate: weekStart,
+        endDate: weekEnd,
+        completed: false,
+        pointsReward: 50
+      },
+      {
+        id: `goal-journal-${now.getTime()}`,
+        activity: 'journal-entry',
+        target: 3,
+        current: 0,
+        startDate: weekStart,
+        endDate: weekEnd,
+        completed: false,
+        pointsReward: 75
+      }
+    ];
 
-title: "Level Up!",'"'"'"')
-};
+    this.userProgress.weeklyGoals = goals;
+    await this.saveUserProgress();
 
-message: )`You"re now ${
-  levelInfo.title)!`,"'""'"
-};
+    return goals;
+  }
 
-duration: 5000
-  });
-  };
+  public getUserProgress(): UserProgress | null {
+    return this.userProgress;
+  }
 
-  // Activity tracking methods
-  trackPostShared() { this.userStats.activities.postsShared++;
-    this.awardPoints(10, "Shared a post') }"""'"'""'
+  public getAchievements(): Achievement[] {
+    return Array.from(this.achievements.values());
+  }
 
-  trackSupportGiven() { this.userStats.activities.supportGiven++;
-    this.awardPoints(15, 'Gave support to someone") }""'"'"'
+  public getUnlockedAchievements(): Achievement[] {
+    if (!this.userProgress) return [];
+    
+    return this.userProgress.unlockedAchievements
+      .map(id => this.achievements.get(id))
+      .filter((achievement): achievement is Achievement => achievement !== undefined);
+  }
 
-  trackReflectionWritten() { this.userStats.activities.reflectionsWritten++;
-    this.awardPoints(20, "Wrote a reflection') }"""'"'""'
+  public addEventListener(listener: (event: GamificationEvent) => void) {
+    this.eventListeners.push(listener);
+  }
 
-  trackWellnessActivity() { this.userStats.activities.wellnessActivities++;
-    this.awardPoints(25, "Completed wellness activity") }""'""'
+  public removeEventListener(listener: (event: GamificationEvent) => void) {
+    const index = this.eventListeners.indexOf(listener);
+    if (index > -1) {
+      this.eventListeners.splice(index, 1);
+    }
+  }
 
-  trackAIChatSession() { this.userStats.activities.aiChatSessions++;
-    this.awardPoints(5, "AI chat session") }""''""'"'
+  private emitEvent(event: GamificationEvent) {
+    this.eventListeners.forEach(listener => {
+      try {
+        listener(event);
+      } catch (error) {
+        logger.error('Error in gamification event listener:', error);
+      }
+    });
+  }
 
-  trackDailyLogin() { this.userStats.activities.daysActive++;
-    this.awardPoints(5, "Daily login") }"''""''
+  private async loadUserProgress(userId: string): Promise<void> {
+    try {
+      const saved = await secureStorage.getItem(`gamification-progress-${userId}`);
+      if (saved) {
+        this.userProgress = JSON.parse(saved);
+        // Convert date strings back to Date objects
+        if (this.userProgress) {
+          this.userProgress.lastActivity = new Date(this.userProgress.lastActivity);
+          this.userProgress.joinDate = new Date(this.userProgress.joinDate);
+          
+          // Convert streak dates
+          Object.values(this.userProgress.currentStreaks).forEach(streak => {
+            streak.lastActivity = new Date(streak.lastActivity);
+          });
+        }
+      } else {
+        // Create new user progress
+        this.userProgress = {
+          userId,
+          level: 1,
+          totalPoints: 0,
+          currentLevelPoints: 0,
+          pointsToNextLevel: this.getPointsForLevel(2),
+          unlockedAchievements: [],
+          currentStreaks: {},
+          activityStats: {},
+          badges: [],
+          customizations: {
+            theme: 'default',
+            avatarParts: [],
+            unlockedThemes: ['default'],
+            unlockedAvatarParts: [],
+            preferredRewardTypes: ['badge', 'points']
+          },
+          weeklyGoals: [],
+          lastActivity: new Date(),
+          joinDate: new Date()
+        };
+        
+        await this.saveUserProgress();
+      }
+    } catch (error) {
+      logger.error('Failed to load user progress:', error);
+      throw error;
+    }
+  }
 
-  // Getters
-  getUserStats(): UserStats {
-    return { ...this.userStats }
+  private async saveUserProgress(): Promise<void> {
+    if (!this.userProgress) return;
 
-  getAchievements(): Achievement[] { return [...this.achievements] }
+    try {
+      await secureStorage.setItem(
+        `gamification-progress-${this.userProgress.userId}`,
+        JSON.stringify(this.userProgress)
+      );
+    } catch (error) {
+      logger.error('Failed to save user progress:', error);
+    }
+  }
 
-  getLevelInfo(level?: number): LevelInfo | undefined {;
-const targetLevel = level || this.userStats.level,
-    return LEVEL_TITLES.find(l =) l.level === targetLevel} }
+  private async loadActiveChallenges(): Promise<void> {
+    try {
+      const saved = await secureStorage.getItem('gamification-challenges');
+      if (saved) {
+        const challenges: Challenge[] = JSON.parse(saved);
+        challenges.forEach(challenge => {
+          this.activeChallenges.set(challenge.id, challenge);
+        });
+      }
+    } catch (error) {
+      logger.error('Failed to load active challenges:', error);
+    }
+  }
 
-  getProgressToNextLevel(): number { if (this.userStats.nextLevelPoints === 0) return: 100, // Max level
-    return (this.userStats.currentLevelPoints / (this.userStats.currentLevelPoints + this.userStats.nextLevelPoints)) * 100 }
+  public async reset(): Promise<void> {
+    if (!this.userProgress) return;
 
-  // Event subscription
-  subscribe(callback: (stats: UserStats) =) void} { this.listeners.add(callback );
+    try {
+      await secureStorage.removeItem(`gamification-progress-${this.userProgress.userId}`);
+      this.userProgress = null;
+      this.activeChallenges.clear();
+      logger.info('Gamification data reset');
+    } catch (error) {
+      logger.error('Failed to reset gamification data:', error);
+    }
+  }
+}
 
-    // Send current stats immediately
-    callback(this.userStats ),
-
-    // Return unsubscribe function
-    return () =} {
-      this.listeners.delete(callback) }
-
-  // Reset for testing
-  reset() { localStorage.removeItem("userStats");""'"""'
-    this.userStats = this.loadUserStats();
-    this.achievements = this.initializeAchievements();
-    this.saveUserStats();
-
-// React hooks
-export const useGamification = () =} { const [service] = React.useState(() =) new GamificationService()};
-[stats, setStats] = React.useState<UserStats>(service.getUserStats());
-
-  React.useEffect(() =) {;
-const unsubscribe = service.subscribe(setStats  );
-    return unsubscribe }, [service]};
-
-  return {
-  stats,
-    awardPoints: service.awardPoints.bind(service),
-    trackPostShared: service.trackPostShared.bind(service),
-    trackSupportGiven: service.trackSupportGiven.bind(service),
-    trackReflectionWritten: service.trackReflectionWritten.bind(service),
-    trackWellnessActivity: service.trackWellnessActivity.bind(service),
-    trackAIChatSession: service.trackAIChatSession.bind(service),
-    trackDailyLogin: service.trackDailyLogin.bind(service),
-    getAchievements: service.getAchievements.bind(service),
-    getLevelInfo: service.getLevelInfo.bind(service),
-    getProgressToNextLevel: service.getProgressToNextLevel.bind(service)
-// Singleton instance
-};
-
-gamificationServiceInstance: GamificationService | null = null,
-};
-
-getGamificationService = () =} { gamificationServiceInstance ??= new GamificationService();
-  return gamificationServiceInstance  };
-export default GamificationService;
+export const gamificationService = new GamificationService();
+export default gamificationService;

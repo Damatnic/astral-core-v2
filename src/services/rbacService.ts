@@ -1,389 +1,579 @@
 /**
  * Role-Based Access Control (RBAC) Service
- * Manages permissions and access control for CoreV2
- */;
+ *
+ * Provides comprehensive role-based access control for the mental health platform
+ * with hierarchical permissions, resource-based access control, and audit logging.
+ * Supports fine-grained permissions for crisis intervention, therapy sessions,
+ * and administrative functions while maintaining HIPAA compliance.
+ *
+ * @fileoverview RBAC service with hierarchical permissions and audit logging
+ * @version 2.0.0
+ */
 
-import { UserRole  } from './auth0Service';"""'"'""'
+import { logger } from '../utils/logger';
+import { secureLocalStorage } from './secureStorageService';
 
-// Permission types
-enum Permission {
-  // User permissions
-  VIEW_PROFILE = 'view_profile",""'"'"'
-  EDIT_PROFILE = "edit_profile',"""'"'""'
-  DELETE_ACCOUNT = "delete_account",""'""'
+export type UserRole = 
+  | 'patient'
+  | 'helper'
+  | 'therapist'
+  | 'crisis-counselor'
+  | 'supervisor'
+  | 'admin'
+  | 'system-admin';
 
+export type Permission = 
+  // Profile permissions
+  | 'profile:view'
+  | 'profile:edit'
+  | 'profile:delete'
+  
   // Content permissions
-  VIEW_CONTENT = "view_content",""''""'"'
-  CREATE_CONTENT = "create_content","''""''
-  EDIT_CONTENT = "edit_content",""''""'""'
-  DELETE_CONTENT = "delete_content",'"'"'""'
-  PUBLISH_CONTENT = "publish_content",'""''"""'
-
+  | 'content:view'
+  | 'content:create'
+  | 'content:edit'
+  | 'content:delete'
+  | 'content:publish'
+  
   // Chat permissions
-  VIEW_CHAT = "view_chat',""''""'
-  SEND_MESSAGE = "send_message",'""''""""'
-  DELETE_MESSAGE = 'delete_message","'""""
-  MODERATE_CHAT = 'moderate_chat","'""""''
-
+  | 'chat:view'
+  | 'chat:send'
+  | 'chat:moderate'
+  | 'chat:delete-message'
+  
   // Assessment permissions
-  VIEW_ASSESSMENT = "view_assessment",'""""'
-  TAKE_ASSESSMENT = 'take_assessment","'""""'"'
-  CREATE_ASSESSMENT = "create_assessment',""'""'"'
-  VIEW_ALL_ASSESSMENTS = "view_all_assessments',"""'"'""'
-
+  | 'assessment:view'
+  | 'assessment:take'
+  | 'assessment:create'
+  | 'assessment:view-all'
+  | 'assessment:manage'
+  
   // Crisis permissions
-  VIEW_CRISIS_RESOURCES = 'view_crisis_resources",""'"'"'
-  TRIGGER_CRISIS_ALERT = "trigger_crisis_alert',"""'"'""'
-  RESPOND_TO_CRISIS = "respond_to_crisis",""'""'
-  MANAGE_CRISIS_RESOURCES = "manage_crisis_resources",""''""'"'
-  OVERRIDE_CRISIS_LIMITS = "override_crisis_limits","''""''
-
+  | 'crisis:view'
+  | 'crisis:respond'
+  | 'crisis:escalate'
+  | 'crisis:manage'
+  
   // Helper permissions
-  VIEW_HELPER_DASHBOARD = "view_helper_dashboard",""''""'""'
-  ACCEPT_HELP_REQUESTS = "accept_help_requests",'"'"'""'
-  PROVIDE_SUPPORT = "provide_support",'""''"""'
-  ACCESS_HELPER_TOOLS = "access_helper_tools',""''""'
-
-  // Moderation permissions
-  VIEW_REPORTS = "view_reports",'""''""""'
-  MODERATE_USERS = 'moderate_users","'""""
-  BAN_USERS = 'ban_users","'""""''
-  REVIEW_CONTENT = "review_content",'""""'
-
+  | 'helper:view-requests'
+  | 'helper:accept-requests'
+  | 'helper:view-profile'
+  
+  // Therapy permissions
+  | 'therapy:schedule'
+  | 'therapy:conduct'
+  | 'therapy:view-sessions'
+  | 'therapy:manage'
+  
   // Admin permissions
-  VIEW_ADMIN_DASHBOARD = 'view_admin_dashboard","'""""'"'
-  MANAGE_USERS = "manage_users',""'""'"'
-  MANAGE_ROLES = "manage_roles',"""'"'""'
-  MANAGE_PERMISSIONS = 'manage_permissions",""'"'"'
-  VIEW_ANALYTICS = "view_analytics',"""'"'""'
-  VIEW_AUDIT_LOGS = "view_audit_logs",""'""'
-  MANAGE_SYSTEM_SETTINGS = "manage_system_settings",""''""'"'
-  ACCESS_DEBUG_TOOLS = "access_debug_tools","''""''
+  | 'admin:users'
+  | 'admin:content'
+  | 'admin:reports'
+  | 'admin:system'
+  | 'admin:audit';
 
-  // Data permissions
-  EXPORT_DATA = "export_data",""''""'""'
-  IMPORT_DATA = "import_data",'"'"'""'
-  DELETE_DATA = "delete_data",'""''"""'
-  VIEW_SENSITIVE_DATA = "view_sensitive_data',""''""'
+export type Resource = 
+  | 'profile'
+  | 'content'
+  | 'chat'
+  | 'assessment'
+  | 'crisis'
+  | 'therapy'
+  | 'user-management'
+  | 'system';
 
-  // API permissions
-  ACCESS_API = "access_api",'""''""""'
-};
+export interface RoleDefinition {
+  role: UserRole;
+  name: string;
+  description: string;
+  permissions: Permission[];
+  inherits?: UserRole[];
+  level: number; // Hierarchy level (0 = lowest, 5 = highest)
+}
 
-MANAGE_API_KEYS = 'manage_api_keys","'""""
-};
+export interface AccessContext {
+  userId: string;
+  resourceId?: string;
+  resourceType: Resource;
+  action: Permission;
+  metadata?: Record<string, any>;
+}
 
-VIEW_API_LOGS = 'view_api_logs""'""""''
+export interface AccessResult {
+  granted: boolean;
+  reason?: string;
+  requiredRole?: UserRole;
+  requiredPermission?: Permission;
+}
 
-// Resource types
-enum Resource {
-  PROFILE = "profile",'""""'
-  CONTENT = 'content","'""""'"'
-  CHAT = "chat',""'""'"'
-  ASSESSMENT = "assessment',"""'"'""'
-  CRISIS = 'crisis",""'"'"'
-  HELPER = "helper',"""'"'""'
-  ADMIN = "admin",""'""'
-};
+export interface AuditLogEntry {
+  id: string;
+  userId: string;
+  userRole: UserRole;
+  action: Permission;
+  resource: Resource;
+  resourceId?: string;
+  granted: boolean;
+  timestamp: number;
+  ipAddress?: string;
+  userAgent?: string;
+  metadata?: Record<string, any>;
+}
 
-SYSTEM = "system",""''""'"'
-};
+class RBACService {
+  private roleDefinitions: Map<UserRole, RoleDefinition> = new Map();
+  private userRoles: Map<string, UserRole> = new Map();
+  private auditLog: AuditLogEntry[] = [];
+  private readonly AUDIT_STORAGE_KEY = 'rbac_audit_log';
+  private readonly USER_ROLES_STORAGE_KEY = 'rbac_user_roles';
 
-API = "api"}"''""''
+  constructor() {
+    this.initializeRoleDefinitions();
+    this.loadPersistedData();
+    logger.info('RBACService initialized with role-based access control');
+  }
 
-// Action types
-enum Action {
-  CREATE = "create",""''""'""'
-  READ = "read",'"'"'""'
-  UPDATE = "update",'""''"""'
-  DELETE = "delete',""''""'
-};
+  private initializeRoleDefinitions() {
+    // Patient role - basic access
+    this.roleDefinitions.set('patient', {
+      role: 'patient',
+      name: 'Patient',
+      description: 'Standard patient with access to personal mental health resources',
+      level: 0,
+      permissions: [
+        'profile:view',
+        'profile:edit',
+        'content:view',
+        'chat:view',
+        'chat:send',
+        'assessment:view',
+        'assessment:take',
+        'crisis:view',
+      ]
+    });
 
-EXECUTE = "execute",'""''""""'
-};
+    // Helper role - peer support
+    this.roleDefinitions.set('helper', {
+      role: 'helper',
+      name: 'Peer Helper',
+      description: 'Trained peer supporter who can assist other patients',
+      level: 1,
+      inherits: ['patient'],
+      permissions: [
+        'helper:view-requests',
+        'helper:accept-requests',
+        'helper:view-profile',
+        'chat:moderate',
+        'content:create',
+      ]
+    });
 
-MANAGE = 'manage"}"'""""
+    // Therapist role - professional therapy
+    this.roleDefinitions.set('therapist', {
+      role: 'therapist',
+      name: 'Licensed Therapist',
+      description: 'Licensed mental health professional',
+      level: 2,
+      inherits: ['helper'],
+      permissions: [
+        'therapy:schedule',
+        'therapy:conduct',
+        'therapy:view-sessions',
+        'assessment:create',
+        'assessment:view-all',
+        'crisis:respond',
+      ]
+    });
 
-// Role-Permission mapping
-const userPermissions = [;]
-  Permission.VIEW_PROFILE,
-  Permission.EDIT_PROFILE,
-  Permission.VIEW_CONTENT,
-  Permission.VIEW_CHAT,
-  Permission.SEND_MESSAGE,
-  Permission.VIEW_ASSESSMENT,
-  Permission.TAKE_ASSESSMENT,
-  Permission.VIEW_CRISIS_RESOURCES,
-  Permission.TRIGGER_CRISIS_ALERT,
-  Permission.ACCESS_API;
-const helperPermissions = [;]
-  ...userPermissions,
-  Permission.VIEW_HELPER_DASHBOARD,
-  Permission.ACCEPT_HELP_REQUESTS,
-  Permission.PROVIDE_SUPPORT,
-  Permission.ACCESS_HELPER_TOOLS,
-  Permission.CREATE_CONTENT,
-  Permission.EDIT_CONTENT;
-const moderatorPermissions = [;]
-  ...helperPermissions,
-  Permission.VIEW_REPORTS,
-  Permission.MODERATE_USERS,
-  Permission.REVIEW_CONTENT,
-  Permission.DELETE_MESSAGE,
-  Permission.MODERATE_CHAT,
-  Permission.DELETE_CONTENT;
-const crisisResponderPermissions = [;]
-  ...userPermissions,
-  Permission.RESPOND_TO_CRISIS,
-  Permission.MANAGE_CRISIS_RESOURCES,
-  Permission.OVERRIDE_CRISIS_LIMITS,
-  Permission.VIEW_HELPER_DASHBOARD,
-  Permission.PROVIDE_SUPPORT;
-rolePermissions: Record<UserRole, Permission[]> = { [UserRole.USER]: userPermissions}
+    // Crisis counselor role - emergency response
+    this.roleDefinitions.set('crisis-counselor', {
+      role: 'crisis-counselor',
+      name: 'Crisis Counselor',
+      description: 'Specialized crisis intervention specialist',
+      level: 2,
+      inherits: ['therapist'],
+      permissions: [
+        'crisis:respond',
+        'crisis:escalate',
+        'crisis:manage',
+        'chat:delete-message',
+      ]
+    });
 
-  [UserRole.HELPER]: helperPermissions,
+    // Supervisor role - oversight
+    this.roleDefinitions.set('supervisor', {
+      role: 'supervisor',
+      name: 'Clinical Supervisor',
+      description: 'Supervises therapists and crisis counselors',
+      level: 3,
+      inherits: ['crisis-counselor'],
+      permissions: [
+        'therapy:manage',
+        'assessment:manage',
+        'admin:reports',
+      ]
+    });
 
-  [UserRole.MODERATOR]: moderatorPermissions,
+    // Admin role - platform administration
+    this.roleDefinitions.set('admin', {
+      role: 'admin',
+      name: 'Platform Administrator',
+      description: 'Manages platform users and content',
+      level: 4,
+      inherits: ['supervisor'],
+      permissions: [
+        'admin:users',
+        'admin:content',
+        'admin:reports',
+        'content:publish',
+        'content:delete',
+        'profile:delete',
+      ]
+    });
 
-  [UserRole.CRISIS_RESPONDER]: crisisResponderPermissions,
+    // System admin role - full access
+    this.roleDefinitions.set('system-admin', {
+      role: 'system-admin',
+      name: 'System Administrator',
+      description: 'Full system access for technical administration',
+      level: 5,
+      inherits: ['admin'],
+      permissions: [
+        'admin:system',
+        'admin:audit',
+      ]
+    });
 
-  [UserRole.ADMIN]: [
-    // Has all permissions
-    ...Object.values(Permission)];
-interface RBACService { { {(private readonly permissionCache = new Map<string, boolean>( );)
+    logger.debug('Role definitions initialized with hierarchical permissions');
+  }
 
-  /**
-   * Check if role has permission
-   */
-  roleHasPermission(role: UserRole, permission: Permission): boolean {,
-const cacheKey = `${role}:${permission}`;
+  private async loadPersistedData() {
+    try {
+      // Load user roles
+      const userRoles = await secureLocalStorage.getItem<Record<string, UserRole>>(this.USER_ROLES_STORAGE_KEY);
+      if (userRoles) {
+        Object.entries(userRoles).forEach(([userId, role]) => {
+          this.userRoles.set(userId, role);
+        });
+      }
 
-    if (this.permissionCache.has(cacheKey)) { return this.permissionCache.get(cacheKey)! };
-const hasPermission = rolePermissions[role]?.includes(permission) || false;
-    this.permissionCache.set(cacheKey, hasPermission);
+      // Load audit log
+      const auditLog = await secureLocalStorage.getItem<AuditLogEntry[]>(this.AUDIT_STORAGE_KEY);
+      if (auditLog && Array.isArray(auditLog)) {
+        this.auditLog = auditLog.slice(-1000); // Keep last 1000 entries
+      }
 
-    return hasPermission;
+      logger.debug(`Loaded ${this.userRoles.size} user roles and ${this.auditLog.length} audit entries`);
+    } catch (error) {
+      logger.error('Failed to load RBAC persisted data:', error);
+    }
+  }
 
-  /**
-   * Check if user has permission
-   */
-  userHasPermission(userRoles: UserRole[], permission: Permission): boolean { return userRoles.some(role =) this.roleHasPermission(role, permission)} }
+  public async assignRole(userId: string, role: UserRole): Promise<boolean> {
+    if (!this.roleDefinitions.has(role)) {
+      logger.warn(`Attempted to assign invalid role: ${role}`);
+      return false;
+    }
 
-  /**
-   * Check if user can perform action on resource
-   */
-  canPerformAction(userRoles: UserRole[]),
-  resource: Resource,
-    action: Action,
-    resourceData?: any
-  }: boolean { // Admin can do anything
-    if (userRoles.includes(UserRole.ADMIN)) {
-      return true }
+    this.userRoles.set(userId, role);
+    await this.persistUserRoles();
+    
+    await this.logAccess({
+      userId: 'system',
+      userRole: 'system-admin',
+      action: 'admin:users',
+      resource: 'user-management',
+      resourceId: userId,
+      granted: true,
+      timestamp: Date.now(),
+      metadata: { assignedRole: role }
+    });
 
-    // Map resource-action to permissions
-const requiredPermission = this.getRequiredPermission(resource, action);
-    if (!requiredPermission) { return false }
-
-    // Check if user has the required permission
-const hasPermission = this.userHasPermission(userRoles, requiredPermission);
-
-    // Apply resource-specific conditions
-    if (hasPermission && resourceData) { return this.checkResourceConditions(userRoles, resource, action, resourceData) }
-
-    return hasPermission;
-
-  /**
-   * Get required permission for resource-action combination
-   */
-  private getRequiredPermission(resource: Resource, action: Action): Permission | null {}
-permissionMap: Record<string, Permission> = {}
-      [`${Resource.PROFILE}:${Action.READ}`]: Permission.VIEW_PROFILE,
-      [`${Resource.PROFILE}:${Action.UPDATE}`]: Permission.EDIT_PROFILE,
-      [`${Resource.PROFILE}:${Action.DELETE}`]: Permission.DELETE_ACCOUNT,
-
-      [`${Resource.CONTENT}:${Action.READ}`]: Permission.VIEW_CONTENT,
-      [`${Resource.CONTENT}:${Action.CREATE}`]: Permission.CREATE_CONTENT,
-      [`${Resource.CONTENT}:${Action.UPDATE}`]: Permission.EDIT_CONTENT,
-      [`${Resource.CONTENT}:${Action.DELETE}`]: Permission.DELETE_CONTENT,
-
-      [`${Resource.CHAT}:${Action.READ}`]: Permission.VIEW_CHAT,
-      [`${Resource.CHAT}:${Action.CREATE}`]: Permission.SEND_MESSAGE,
-      [`${Resource.CHAT}:${Action.DELETE}`]: Permission.DELETE_MESSAGE,
-      [`${Resource.CHAT}:${Action.MANAGE}`]: Permission.MODERATE_CHAT,
-
-      [`${Resource.ASSESSMENT}:${Action.READ}`]: Permission.VIEW_ASSESSMENT,
-      [`${Resource.ASSESSMENT}:${Action.CREATE}`]: Permission.TAKE_ASSESSMENT,
-      [`${Resource.ASSESSMENT}:${Action.MANAGE}`]: Permission.CREATE_ASSESSMENT,
-
-      [`${Resource.CRISIS}:${Action.READ}`]: Permission.VIEW_CRISIS_RESOURCES,
-      [`${Resource.CRISIS}:${Action.CREATE}`]: Permission.TRIGGER_CRISIS_ALERT,
-      [`${Resource.CRISIS}:${Action.MANAGE}`]: Permission.MANAGE_CRISIS_RESOURCES,
-      [`${Resource.CRISIS}:${Action.EXECUTE}`]: Permission.RESPOND_TO_CRISIS,
-
-      [`${Resource.HELPER}:${Action.READ}`]: Permission.VIEW_HELPER_DASHBOARD,
-      [`${Resource.HELPER}:${Action.EXECUTE}`]: Permission.PROVIDE_SUPPORT,
-
-      [`${Resource.ADMIN}:${Action.READ}`]: Permission.VIEW_ADMIN_DASHBOARD,
-      [`${Resource.ADMIN}:${Action.MANAGE}`]: Permission.MANAGE_USERS,
-
-      [`${Resource.SYSTEM}:${Action.MANAGE}`]: Permission.MANAGE_SYSTEM_SETTINGS,
-      [`${Resource.SYSTEM}:${Action.READ}`]: Permission.VIEW_AUDIT_LOGS,
-
-      [`${Resource.API}:${Action.READ}`]: Permission.ACCESS_API,
-      [`${Resource.API}:${Action.MANAGE}`]: Permission.MANAGE_API_KEYS,;
-  };
-const key = `${resource}:${action}`;
-    return permissionMap[key] || null;
-
-  /**
-   * Check resource-specific conditions
-   */
-  private checkResourceConditions(userRoles: UserRole[]),
-  resource: Resource,
-    action: Action,
-    resourceData: any
-  }: boolean { // Users can only edit their own profile
-    if (resource === Resource.PROFILE && action === Action.UPDATE) {
-      return resourceData.userId === resourceData.currentUserId }
-
-    // Users can only delete their own content
-    if (resource === Resource.CONTENT && action === Action.DELETE) { if (userRoles.includes(UserRole.MODERATOR)) {
-        return true; // Moderators can delete any content
-      return resourceData.authorId === resourceData.currentUserId;
-
-    // Users can only delete their own messages
-    if (resource === Resource.CHAT && action === Action.DELETE) {
-      if (userRoles.includes(UserRole.MODERATOR)) {
-        return true; // Moderators can delete any message
-      return resourceData.senderId === resourceData.currentUserId;
-
-    // Default to permission check
+    logger.info(`Assigned role ${role} to user ${userId}`);
     return true;
+  }
 
-  /**
-   * Get all permissions for roles
-   */
-  getPermissionsForRoles(roles: UserRole[]): Permission[] {,
-const permissions = new Set<Permission>( );
+  public getUserRole(userId: string): UserRole | null {
+    return this.userRoles.get(userId) || null;
+  }
 
-    roles.forEach(role =) {
-      rolePermissions[role]?.forEach(permission =) {
-        permissions.add(permission) }};
-  }};
+  public getAllPermissions(role: UserRole): Permission[] {
+    const roleDefinition = this.roleDefinitions.get(role);
+    if (!roleDefinition) {
+      return [];
+    }
+
+    const permissions = new Set<Permission>(roleDefinition.permissions);
+
+    // Add inherited permissions
+    if (roleDefinition.inherits) {
+      for (const inheritedRole of roleDefinition.inherits) {
+        const inheritedPermissions = this.getAllPermissions(inheritedRole);
+        inheritedPermissions.forEach(permission => permissions.add(permission));
+      }
+    }
 
     return Array.from(permissions);
+  }
 
-  /**
-   * Check if user is owner of resource
-   */
-  isResourceOwner(userId: string, resource: any): boolean { return resource.userId === userId ||
-           resource.ownerId === userId ||
-           resource.authorId === userId ||
-           resource.createdBy === userId }
+  public hasPermission(userId: string, permission: Permission): boolean {
+    const userRole = this.getUserRole(userId);
+    if (!userRole) {
+      return false;
+    }
 
-  /**
-   * Apply data filtering based on permissions
-   */
-  filterDataByPermissions<T extends object>(
-    data: T[],
-    userRoles: UserRole[],
-    filterFn?: (item: T) =) boolean
-  }: T[] { // Admin sees everything
-    if (userRoles.includes(UserRole.ADMIN)) {
-      return data }
+    const userPermissions = this.getAllPermissions(userRole);
+    return userPermissions.includes(permission);
+  }
 
-    // Apply custom filter if provided
-    if (filterFn) { return data.filter(filterFn) }
+  public async checkAccess(context: AccessContext): Promise<AccessResult> {
+    const { userId, action, resourceType } = context;
+    const userRole = this.getUserRole(userId);
 
-    // Default filtering based on common patterns
-    return data.filter(item =) { // Type-safe property checks
-const itemWithProps = item as any & {
-        isPrivate?: boolean;
-        currentUserId?: string;
-        isFlagged?: boolean;
-        isDeleted?: boolean   };
+    if (!userRole) {
+      await this.logAccess({
+        userId,
+        userRole: 'patient', // Default for logging
+        action,
+        resource: resourceType,
+        resourceId: context.resourceId,
+        granted: false,
+        timestamp: Date.now(),
+        metadata: { reason: 'No role assigned' }
+      });
 
-      // Check if item has privacy settings
-      if ('isPrivate" in itemWithProps && itemWithProps.isPrivate) { // Only owner or admin can see private items"'""""''
-        return this.isResourceOwner(itemWithProps.currentUserId, item) }
+      return {
+        granted: false,
+        reason: 'User has no assigned role',
+      };
+    }
 
-      // Check if item is flagged
-      if ("isFlagged" in itemWithProps && itemWithProps.isFlagged) { // Only moderators and above can see flagged items'""""'
-        return userRoles.includes(UserRole.MODERATOR) }
+    const hasPermission = this.hasPermission(userId, action);
+    
+    // Additional resource-specific checks
+    const resourceCheck = await this.checkResourceAccess(context, userRole);
+    const granted = hasPermission && resourceCheck.granted;
 
-      // Check if item is deleted
-      if ('isDeleted" in itemWithProps && itemWithProps.isDeleted) { // Only admins can see deleted items"'""""
-        return false }
+    await this.logAccess({
+      userId,
+      userRole,
+      action,
+      resource: resourceType,
+      resourceId: context.resourceId,
+      granted,
+      timestamp: Date.now(),
+      metadata: context.metadata
+    });
 
+    return {
+      granted,
+      reason: granted ? undefined : (resourceCheck.reason || 'Insufficient permissions'),
+      requiredPermission: hasPermission ? undefined : action,
+      requiredRole: this.getMinimumRoleForPermission(action),
+    };
+  }
+
+  private async checkResourceAccess(context: AccessContext, userRole: UserRole): Promise<AccessResult> {
+    const { resourceType, resourceId, userId } = context;
+
+    // Resource-specific access logic
+    switch (resourceType) {
+      case 'profile':
+        // Users can only access their own profile unless they're admin+
+        if (resourceId && resourceId !== userId) {
+          const roleLevel = this.roleDefinitions.get(userRole)?.level || 0;
+          if (roleLevel < 4) { // Less than admin
+            return { granted: false, reason: 'Can only access own profile' };
+          }
+        }
+        break;
+
+      case 'therapy':
+        // Only therapists and above can conduct therapy
+        if (context.action === 'therapy:conduct') {
+          const roleLevel = this.roleDefinitions.get(userRole)?.level || 0;
+          if (roleLevel < 2) {
+            return { granted: false, reason: 'Requires therapist role or higher' };
+          }
+        }
+        break;
+
+      case 'crisis':
+        // Crisis actions require appropriate training level
+        if (context.action === 'crisis:manage') {
+          const roleLevel = this.roleDefinitions.get(userRole)?.level || 0;
+          if (roleLevel < 2) {
+            return { granted: false, reason: 'Requires crisis counselor role or higher' };
+          }
+        }
+        break;
+    }
+
+    return { granted: true };
+  }
+
+  private getMinimumRoleForPermission(permission: Permission): UserRole | undefined {
+    for (const [role, definition] of this.roleDefinitions) {
+      const allPermissions = this.getAllPermissions(role);
+      if (allPermissions.includes(permission)) {
+        return role;
+      }
+    }
+    return undefined;
+  }
+
+  private async logAccess(entry: Omit<AuditLogEntry, 'id'>): Promise<void> {
+    const auditEntry: AuditLogEntry = {
+      ...entry,
+      id: this.generateAuditId(),
+    };
+
+    this.auditLog.push(auditEntry);
+    
+    // Keep only last 1000 entries to prevent unlimited growth
+    if (this.auditLog.length > 1000) {
+      this.auditLog = this.auditLog.slice(-1000);
+    }
+
+    await this.persistAuditLog();
+  }
+
+  public getAuditLog(userId?: string, limit: number = 100): AuditLogEntry[] {
+    let logs = [...this.auditLog];
+    
+    if (userId) {
+      logs = logs.filter(entry => entry.userId === userId);
+    }
+    
+    return logs
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .slice(0, limit);
+  }
+
+  public getRoleDefinition(role: UserRole): RoleDefinition | undefined {
+    return this.roleDefinitions.get(role);
+  }
+
+  public getAllRoles(): RoleDefinition[] {
+    return Array.from(this.roleDefinitions.values())
+      .sort((a, b) => a.level - b.level);
+  }
+
+  public isHigherRole(role1: UserRole, role2: UserRole): boolean {
+    const level1 = this.roleDefinitions.get(role1)?.level || 0;
+    const level2 = this.roleDefinitions.get(role2)?.level || 0;
+    return level1 > level2;
+  }
+
+  public canManageUser(managerId: string, targetUserId: string): boolean {
+    const managerRole = this.getUserRole(managerId);
+    const targetRole = this.getUserRole(targetUserId);
+    
+    if (!managerRole || !targetRole) {
+      return false;
+    }
+
+    // System admins can manage anyone
+    if (managerRole === 'system-admin') {
       return true;
-  }};
+    }
 
-  /**
-   * Create permission string for caching
-   */
-  createPermissionKey(roles: UserRole[], permission: Permission): string {
-    return `${roles.sort().join(",')}:${permission}`;'"
+    // Admins can manage non-admins
+    if (managerRole === 'admin' && targetRole !== 'system-admin' && targetRole !== 'admin') {
+      return true;
+    }
 
-  /**
-   * Clear permission cache
-   */
-  clearCache(): void { this.permissionCache.clear() }
+    // Supervisors can manage therapists and below
+    if (managerRole === 'supervisor') {
+      const targetLevel = this.roleDefinitions.get(targetRole)?.level || 0;
+      return targetLevel <= 2;
+    }
 
-  /**
-   * Validate permission configuration
-   */
-  validatePermissions(): { valid: boolean, errors: string[] } {
-  ,
-};
+    return false;
+  }
 
-errors: string[] = []
-    // Check for orphaned permissions }
+  private async persistUserRoles(): Promise<void> {
+    const userRolesObject = Object.fromEntries(this.userRoles.entries());
+    await secureLocalStorage.setItem(this.USER_ROLES_STORAGE_KEY, userRolesObject);
+  }
 
- allDefinedPermissions = new Set(Object.values(Permission)) }
+  private async persistAuditLog(): Promise<void> {
+    await secureLocalStorage.setItem(this.AUDIT_STORAGE_KEY, this.auditLog);
+  }
 
- allAssignedPermissions = new Set<Permission>();
+  private generateAuditId(): string {
+    return `audit_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
 
-    Object.values(rolePermissions).forEach(permissions => {
-      permissions.forEach(p => allAssignedPermissions.add(p)) });
+  public async exportAuditLog(): Promise<AuditLogEntry[]> {
+    return [...this.auditLog];
+  }
 
-    allDefinedPermissions.forEach(permission => { if (!allAssignedPermissions.has(permission)) {
-        errors.push(`Permission ${permission) is not assigned to any role`) };
-  });
+  public async clearAuditLog(): Promise<void> {
+    this.auditLog = [];
+    await this.persistAuditLog();
+    logger.info('Audit log cleared');
+  }
 
-    // Check for role hierarchy violations
-const roleHierarchy = [;]
-      UserRole.USER,
-      UserRole.HELPER,
-      UserRole.MODERATOR,
-      UserRole.ADMIN];
+  public getSecurityMetrics(): {
+    totalUsers: number;
+    roleDistribution: Record<UserRole, number>;
+    recentAccessAttempts: number;
+    deniedAccessAttempts: number;
+    lastAuditEntry?: AuditLogEntry;
+  } {
+    const roleDistribution = {} as Record<UserRole, number>;
+    
+    // Initialize all roles with 0
+    for (const role of this.roleDefinitions.keys()) {
+      roleDistribution[role] = 0;
+    }
+    
+    // Count actual role assignments
+    for (const role of this.userRoles.values()) {
+      roleDistribution[role] = (roleDistribution[role] || 0) + 1;
+    }
 
-    for (let i = 0; i < roleHierarchy.length - 1; i++) {;
-const lowerRole = roleHierarchy[i];
-const higherRole = roleHierarchy[i + 1];
-const lowerPerms = new Set(rolePermissions[lowerRole] || [] );
-const higherPerms = new Set(rolePermissions[higherRole] || [] ),
+    const recentHour = Date.now() - (60 * 60 * 1000);
+    const recentAttempts = this.auditLog.filter(entry => entry.timestamp > recentHour);
+    const deniedAttempts = recentAttempts.filter(entry => !entry.granted);
 
-      lowerPerms.forEach(perm => {
-        if (!higherPerms.has(perm) && higherRole !== UserRole.ADMIN) {
-          errors.push(`Role ${higherRole) is missing permission ${perm) from ${lowerRole)`) };
-  });
-return { valid: errors.length === 0,
-      errors};
+    return {
+      totalUsers: this.userRoles.size,
+      roleDistribution,
+      recentAccessAttempts: recentAttempts.length,
+      deniedAccessAttempts: deniedAttempts.length,
+      lastAuditEntry: this.auditLog[this.auditLog.length - 1],
+    };
+  }
+}
 
-// Export singleton instance
 export const rbacService = new RBACService();
 
-// Export helper functions
-export const hasPermission = (userRoles: UserRole[], permission: Permission): boolean => {
-  return rbacService.userHasPermission(userRoles, permission);
-export const canAccess = (
-  userRoles: UserRole[],
+// React Hook for RBAC
+export const useRBAC = (userId: string) => {
+  const userRole = React.useMemo(() => rbacService.getUserRole(userId), [userId]);
+  
+  const hasPermission = React.useCallback((permission: Permission) => {
+    return rbacService.hasPermission(userId, permission);
+  }, [userId]);
+
+  const checkAccess = React.useCallback((context: Omit<AccessContext, 'userId'>) => {
+    return rbacService.checkAccess({ ...context, userId });
+  }, [userId]);
+
+  const canManage = React.useCallback((targetUserId: string) => {
+    return rbacService.canManageUser(userId, targetUserId);
+  }, [userId]);
+
+  return {
+    userRole,
+    hasPermission,
+    checkAccess,
+    canManage,
+    getAllPermissions: userRole ? rbacService.getAllPermissions(userRole) : [],
+    roleDefinition: userRole ? rbacService.getRoleDefinition(userRole) : undefined,
+  };
 };
 
-resource: Resource,
-};
-
-action: Action,
-  resourceData?: any
-): boolean => { return rbacService.canPerformAction(userRoles, resource, action, resourceData );
 export default rbacService;
