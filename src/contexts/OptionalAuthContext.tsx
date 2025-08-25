@@ -1,295 +1,640 @@
-import { createContext, useState(, useContext, ReactNode, useEffect, useCallback, useMemo  ) from 'react';"""}"'
-import { WebAuthSession  } from '../services/webAuthService';""'
-import { ApiClient  } from '../utils/ApiClient';""""'
-import { Helper  } from '../types';"'""
-import { AuthUser, JWTPayload, DemoUser  } from '../types/auth.types';'""
-import { useNotification  } from './NotificationContext';'""
-import { localStorageService  } from '../services/localStorageService';"'"
-import { logger  } from '../utils/logger';// Auth0 Configuration (Optional)"'""'
-const AUTH0_DOMAIN = import { meta }.env.VITE_AUTH0_DOMAIN || '";"'
-const AUTH0_CLIENT_ID = import { meta }.env.VITE_AUTH0_CLIENT_ID || "";'""'
-const AUTH0_AUDIENCE = import { meta }.env.VITE_AUTH0_AUDIENCE || "";""
-const REDIRECT_URI = AUTH0_DOMAIN ? WebAuthSession.makeRedirectUri() : '";'"
-export interface OptionalAuthContextType { { { {
-  isAuthenticated: boolean;,
-  isAnonymous: boolean;,
-  user: AuthUser | null,
-  helperProfile: Helper | null,
-  isNewUser: boolean;,
-  isLoading: boolean;,
-  login: () => Promise<void>,
-  logout: () => Promise<void>,
-  register: (email?: string, password?: string, name?: string) => Promise<void>
-  reloadProfile: () => Promise<void>,
-  updateHelperProfile: (updatedProfile: Helper) => void,
-};
+import { createContext, useState, useContext, ReactNode, useEffect, useCallback, useMemo } from 'react';
+import { WebAuthSession } from '../services/webAuthService';
+import { ApiClient } from '../utils/ApiClient';
+import { Helper } from '../types';
+import { AuthUser, JWTPayload, DemoUser } from '../types/auth.types';
+import { useNotification } from './NotificationContext';
+import { localStorageService } from '../services/localStorageService';
+import { logger } from '../utils/logger';
 
-userToken: string | null
-};
+// Auth0 Configuration (Optional)
+const AUTH0_DOMAIN = import.meta.env.VITE_AUTH0_DOMAIN || '';
+const AUTH0_CLIENT_ID = import.meta.env.VITE_AUTH0_CLIENT_ID || '';
 
-anonymousId: string | null
-  authState?: {
-  isAuthenticated: boolean;,
-  isAnonymous: boolean;,
-  user: AuthUser | null,
-  helperProfile: Helper | null
-};
+// Demo users for development/testing
+const DEMO_USERS: DemoUser[] = [
+  {
+    id: 'demo-seeker-1',
+    email: 'demo@seeker.com',
+    name: 'Demo Seeker',
+    role: 'seeker',
+    isDemo: true
+  },
+  {
+    id: 'demo-helper-1',
+    email: 'demo@helper.com',
+    name: 'Demo Helper',
+    role: 'helper',
+    isDemo: true
+  }
+];
 
-userToken: string | null
-};
+interface OptionalAuthContextType {
+  // Auth state
+  isAuthenticated: boolean;
+  isAnonymous: boolean;
+  user: AuthUser | null;
+  userToken: string | null;
+  anonymousId: string | null;
+  
+  // Helper-specific state
+  helperProfile: Helper | null;
+  isHelper: boolean;
+  
+  // Loading states
+  isLoading: boolean;
+  isInitializing: boolean;
+  
+  // Auth methods
+  login: (email?: string, password?: string) => Promise<void>;
+  logout: () => Promise<void>;
+  register: (userData: RegisterData) => Promise<void>;
+  
+  // Anonymous methods
+  enableAnonymousMode: () => void;
+  convertAnonymousToUser: (userData: RegisterData) => Promise<void>;
+  
+  // Helper methods
+  applyAsHelper: (helperData: HelperApplicationData) => Promise<void>;
+  updateHelperProfile: (updates: Partial<Helper>) => Promise<void>;
+  
+  // Demo methods
+  loginAsDemo: (userType: 'seeker' | 'helper') => Promise<void>;
+  
+  // Utility methods
+  refreshAuth: () => Promise<void>;
+  validateSession: () => Promise<boolean>;
+}
 
-anonymousId: string | null
-}// Global state object
-export const authState: {
-  ,
-  isAuthenticated: boolean;,
-  isAnonymous: boolean,
-  user: AuthUser | null,
-  helperProfile: Helper | null,
-};
+interface RegisterData {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth?: string;
+  acceptedTerms: boolean;
+}
 
-userToken: string | null
-};
+interface HelperApplicationData {
+  qualifications: string;
+  experience: string;
+  specializations: string[];
+  availability: string;
+  motivation: string;
+}
 
-anonymousId: string | null
-  }= {}
-  isAuthenticated: false,
-  isAnonymous: true,
-  user: null,
-  helperProfile: null,
-  userToken: null,
-  anonymousId: null
-  };
-const OptionalAuthContext = createContext<OptionalAuthContextType | undefined>(undefined);
-{ OptionalAuthContext }
+const OptionalAuthContext = createContext<OptionalAuthContextType | null>(null);
 
-// Helper to decode JWT payload
-const jwtDecode = (token: string): JWTPayload | null => { try {
-    const base64Url = token.split(".")[1];'""'
-    if(!base64Url) {
-      logger.error('Invalid JWT: Missing payload part.", undefined, "OptionalAuthContext"  );"'
-      return null 
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, '/");""'
-    const jsonPayload = decodeURIComponent(atob(base64).split("').map(function(c) { return "%" + ('00" + c.charCodeAt(0).toString(16)).slice(-2) }).join(""));"
-    return JSON.parse(jsonPayload);
-  } catch(e) { logger.error('Failed to decode JWT", e, "OptionalAuthContext' );""
-    return null  };
-export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => { const [user, setUser] = useState<AuthUser | null>(null);
-  const [helperProfile, setHelperProfile] = useState<Helper | null>(null);
-  const [isNewUser, setIsNewUser] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+export const OptionalAuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  // Core auth state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAnonymous, setIsAnonymous] = useState(false);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [userToken, setUserToken] = useState<string | null>(null);
   const [anonymousId, setAnonymousId] = useState<string | null>(null);
-  const [isAnonymous, setIsAnonymous] = useState(true  );
-  const.addToast = useNotification()
-
-  // Initialize Auth0 discovery only if configured
-  const discovery = WebAuthSession.useAutoDiscovery(`https://${AUTH0_DOMAIN || "example.com")`)'""'
-  const [request, response, promptAsync] = WebAuthSession.useAuthRequest()
-    {
-  clientId: AUTH0_CLIENT_ID,
-      redirectUri: REDIRECT_URI,
-      responseType: WebAuthSession.ResponseType.Token,
-};
-
-scopes: ['openid", "profile", "email'],""
-};
-
-extraParams: {
-  ,
-};
-
-audience: AUTH0_AUDIENCE
-},
-    !!AUTH0_DOMAIN
-  );
-const fetchHelperProfile = useCallback(async (auth0UserId: string) => { if (!auth0UserId) return
-    try(const profile = await ApiClient.helpers.getProfile(auth0UserId ),
-      if(profile) {
-        setHelperProfile(profile)
-        setIsNewUser(false) } else { setHelperProfile(null)
-        setIsNewUser(true) }catch(error) { logger.error('Failed to fetch helper profile", error, "OptionalAuthContext")"'
-      setHelperProfile(null)
-      setIsNewUser(true) }, []);
-const setAuthData = useCallback(async (accessToken: string | null) =) { if(accessToken) {
-      sessionStorage.setItem("accessToken", accessToken);'""'
-      const decodedToken = jwtDecode(accessToken  );
-      if (decodedToken) {
-        setUser({
-  ...decodedToken,
-};
-
-id: decodedToken.sub,)
-};
-
-email: decodedToken.email || ""'"""')
-} as AuthUser);
-setIsAnonymous(false);
-      if(decodedToken?.sub) { await fetchHelperProfile(decodedToken.sub) }else(sessionStorage.removeItem("accessToken');'"
-      setUser(null);
-      setHelperProfile(null);
-      setIsNewUser(false );
-      setIsAnonymous(true) }, [fetchHelperProfile]};
-
-  // Initialize anonymous user on mount
-  useEffect(() =) { // Generate or retrieve anonymous ID
-    let anonId = localStorageService.getAnonymousId();
-    if(!anonId) {
-      anonId = crypto.randomUUID(),
-      localStorageService.setAnonymousId(anonId) }
-    setAnonymousId(anonId);
-
-    // Generate or retrieve user token for anonymous users
-    let token = localStorage.getItem("userToken");"''
-    if(!token) { token = crypto.randomUUID();
-      localStorage.setItem("userToken", token) }'"'
-    setUserToken(token);
-  }, [];
-const logout = useCallback(async () =) { setIsLoading(true)
-    // Check if this is a demo user logout
-    const demoUser = localStorage.getItem("demo_user");"'"'
-    if(demoUser) {
-      localStorage.removeItem("demo_user'  );""'
-      localStorage.removeItem("demo_token") }'"'
-
-    // Clear auth state but maintain anonymous access
-    await setAuthData(null)
-
-    // Reset to anonymous state
-    setIsAnonymous(true)
-
-    // Update global auth state
-    authState.isAuthenticated = false
-    authState.isAnonymous = true
-    authState.user = null
-    authState.helperProfile = null
-    setIsLoading(false)
-
-    // If Auth0 is configured and user was authenticated, perform Auth0 logout
-    if(discovery?.endSessionEndpoint && !isAnonymous) {
-      const logoutUrl = `${discovery.endSessionEndpoint}?client_id="${AUTH0_CLIENT_ID}&returnTo=${encodeURIComponent(window.location.origin)}`;'"""'
-      window.location.assign(logoutUrl);
-
-  }, [discovery, setAuthData, isAnonymous])
-
-  // Load existing session on mount
-  useEffect(() => { const loadToken = async () => {
-      logger.debug("Starting token load', undefined, "OptionalAuthContext");'"
-      setIsLoading(true)
-      try {
-        // Check for demo user first
-        const demoUser = localStorage.getItem("demo_user');""'
-        const demoToken = localStorage.getItem("demo_token");""
-        if(demoUser && demoToken) {
-          logger.debug('Loading demo user", undefined, "OptionalAuthContext'  );"
-          const userData = JSON.parse(demoUser) as DemoUser;
-          setUser({
-  ...userData,
-            sub: userData.id,)
-};
-
-exp: Math.floor(Date.now() / 1000) + 86400, // 24 hours from now
-};
-
-email: userData.email
-  } as AuthUser)
-          setUserToken(demoToken)
+  
+  // Helper state
+  const [helperProfile, setHelperProfile] = useState<Helper | null>(null);
+  
+  // Loading states
+  const [isLoading, setIsLoading] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
+  
+  // Hooks
+  const { showNotification } = useNotification();
+  
+  // Computed values
+  const isHelper = useMemo(() => {
+    return helperProfile !== null && user?.role === 'helper';
+  }, [helperProfile, user]);
+  
+  // Initialize auth state on mount
+  useEffect(() => {
+    initializeAuth();
+  }, []);
+  
+  const initializeAuth = useCallback(async () => {
+    try {
+      setIsInitializing(true);
+      
+      // Check for existing session
+      const storedToken = localStorageService.getItem('auth_token');
+      const storedUser = localStorageService.getItem('user_data');
+      const storedAnonymousId = localStorageService.getItem('anonymous_id');
+      
+      if (storedToken && storedUser) {
+        // Validate stored session
+        const isValid = await validateStoredSession(storedToken, storedUser);
+        if (isValid) {
+          setUserToken(storedToken);
+          setUser(storedUser);
+          setIsAuthenticated(true);
           setIsAnonymous(false);
-
-          if(userData.helperProfile) { setHelperProfile(userData.helperProfile)
-            setIsNewUser(false) } else { setHelperProfile(null)
-            setIsNewUser(userData.userType === "helper") }"''
-          authState.isAuthenticated = true
-          authState.isAnonymous = false
-          authState.user = {}
-            ...userData,
-            sub: userData.id,
-            exp: Math.floor(Date.now() / 1000) + 86400,
-            email: userData.email
-  } as AuthUser
-          authState.helperProfile = userData.helperProfile || null
-          authState.userToken = demoToken
-          setIsLoading(false);
-          return;
-
-        // Check for existing auth token
-        const storedToken = sessionStorage.getItem("accessToken");'"'
-        if(storedToken) { const decodedToken = jwtDecode(storedToken ),
-          if (decodedToken && decodedToken.exp * 1000 > Date.now()) {
-            await setAuthData(storedToken)
-            setIsAnonymous(false) } else { // Token expired, clear it
-            await setAuthData(null) }// If no auth, remain anonymous
-        logger.debug("No authentication found, using anonymous mode', undefined, "OptionalAuthContext");'"
-  } catch(error) { logger.error("Error during token loading:", error, "OptionalAuthContext'  );"'
-        // Default to anonymous mode on error
-        await setAuthData(null) } finally(logger.debug("Token load complete', undefined, "OptionalAuthContext" );"'
-        setIsLoading(false) }loadToken();
-  }, [setAuthData])
-
-  // Handle Auth0 response
-  useEffect(() => { if(response?.type === "success') {'"
-      setAuthData(response.params.access_token) } else if (response?.type === "error") { addToast("Authentication error: ' + (response.params.error_description || response.error?.message), "error" };'"
-      logger.error("Authentication error', response.error, "OptionalAuthContext") }, [response, setAuthData, addToast]);'
-const login = useCallback(async () => { // If Auth0 is not configured, show a message
-    if(!AUTH0_DOMAIN || !AUTH0_CLIENT_ID) {
-      addToast("Login is optional. You can use all features without signing in!", "info"  };''
-      return }
-
-    if(!request) { const errorMessage = "Authentication service is not configured correctly.";"
-      logger.error(errorMessage, undefined, "OptionalAuthContext');"'""
-      addToast(errorMessage, "error'  );""'
-      return }
-
-    await promptAsync?.();
-  }, [request, promptAsync, addToast]);
-const register = useCallback(async () => { // For anonymous mode, registration is optional
-    if(!AUTH0_DOMAIN) {
-      addToast('Registration is optional. You can use all features without an account!", "info"  );"'
-      return }
-
-    // If Auth0 is configured, redirect to Auth0 signup
-    await login();
-  }, [login, addToast]);
-const reloadProfile = useCallback(async () => { if(user && typeof user === "object" && 'sub" in user && user.sub) {"'
-      await fetchHelperProfile(user.sub as string) , [user, fetchHelperProfile])
-const updateHelperProfile = useCallback((updatedProfile: Helper) =) { setHelperProfile(updatedProfile) }, [];
-const value = useMemo(() =) ({
-  isAuthenticated: !!user && !isAnonymous,
+          
+          // Load helper profile if user is a helper
+          if (storedUser.role === 'helper') {
+            await loadHelperProfile(storedUser.id);
+          }
+          
+          logger.info('Auth session restored from storage');
+        } else {
+          // Clear invalid session
+          await clearAuthState();
+        }
+      } else if (storedAnonymousId) {
+        // Restore anonymous session
+        setAnonymousId(storedAnonymousId);
+        setIsAnonymous(true);
+        setIsAuthenticated(false);
+        logger.info('Anonymous session restored');
+      } else {
+        // No existing session - start fresh
+        logger.info('No existing auth session found');
+      }
+    } catch (error) {
+      logger.error('Failed to initialize auth:', error);
+      await clearAuthState();
+    } finally {
+      setIsInitializing(false);
+    }
+  }, []);
+  
+  const validateStoredSession = async (token: string, userData: AuthUser): Promise<boolean> => {
+    try {
+      // Decode JWT to check expiration
+      const payload = decodeJWT(token);
+      if (!payload || payload.exp * 1000 < Date.now()) {
+        logger.info('Stored token is expired');
+        return false;
+      }
+      
+      // Optionally validate with server
+      const apiClient = new ApiClient();
+      const response = await apiClient.get('/auth/validate', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      return response.success;
+    } catch (error) {
+      logger.error('Session validation failed:', error);
+      return false;
+    }
+  };
+  
+  const decodeJWT = (token: string): JWTPayload | null => {
+    try {
+      const payload = token.split('.')[1];
+      const decoded = JSON.parse(atob(payload));
+      return decoded;
+    } catch (error) {
+      logger.error('Failed to decode JWT:', error);
+      return null;
+    }
+  };
+  
+  const login = useCallback(async (email?: string, password?: string) => {
+    if (!email || !password) {
+      throw new Error('Email and password are required');
+    }
+    
+    try {
+      setIsLoading(true);
+      
+      const apiClient = new ApiClient();
+      const response = await apiClient.post('/auth/login', {
+        email,
+        password
+      });
+      
+      if (!response.success) {
+        throw new Error(response.error || 'Login failed');
+      }
+      
+      const { user: userData, token, helper } = response.data;
+      
+      // Update state
+      setUser(userData);
+      setUserToken(token);
+      setIsAuthenticated(true);
+      setIsAnonymous(false);
+      
+      if (helper) {
+        setHelperProfile(helper);
+      }
+      
+      // Persist to storage
+      localStorageService.setItem('auth_token', token);
+      localStorageService.setItem('user_data', userData);
+      localStorageService.removeItem('anonymous_id');
+      
+      showNotification('Welcome back!', 'success');
+      logger.info('User logged in successfully');
+      
+    } catch (error) {
+      logger.error('Login failed:', error);
+      showNotification(error instanceof Error ? error.message : 'Login failed', 'error');
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [showNotification]);
+  
+  const register = useCallback(async (userData: RegisterData) => {
+    try {
+      setIsLoading(true);
+      
+      const apiClient = new ApiClient();
+      const response = await apiClient.post('/auth/register', userData);
+      
+      if (!response.success) {
+        throw new Error(response.error || 'Registration failed');
+      }
+      
+      const { user: newUser, token } = response.data;
+      
+      // Update state
+      setUser(newUser);
+      setUserToken(token);
+      setIsAuthenticated(true);
+      setIsAnonymous(false);
+      
+      // Persist to storage
+      localStorageService.setItem('auth_token', token);
+      localStorageService.setItem('user_data', newUser);
+      localStorageService.removeItem('anonymous_id');
+      
+      showNotification('Account created successfully!', 'success');
+      logger.info('User registered successfully');
+      
+    } catch (error) {
+      logger.error('Registration failed:', error);
+      showNotification(error instanceof Error ? error.message : 'Registration failed', 'error');
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [showNotification]);
+  
+  const logout = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      
+      // Call logout endpoint if authenticated
+      if (isAuthenticated && userToken) {
+        try {
+          const apiClient = new ApiClient();
+          await apiClient.post('/auth/logout', {}, {
+            headers: { Authorization: `Bearer ${userToken}` }
+          });
+        } catch (error) {
+          // Continue with logout even if API call fails
+          logger.error('Logout API call failed:', error);
+        }
+      }
+      
+      await clearAuthState();
+      showNotification('Logged out successfully', 'info');
+      logger.info('User logged out');
+      
+    } catch (error) {
+      logger.error('Logout failed:', error);
+      showNotification('Logout failed', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isAuthenticated, userToken, showNotification]);
+  
+  const enableAnonymousMode = useCallback(() => {
+    const newAnonymousId = `anon_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    setAnonymousId(newAnonymousId);
+    setIsAnonymous(true);
+    setIsAuthenticated(false);
+    setUser(null);
+    setUserToken(null);
+    setHelperProfile(null);
+    
+    localStorageService.setItem('anonymous_id', newAnonymousId);
+    localStorageService.removeItem('auth_token');
+    localStorageService.removeItem('user_data');
+    
+    logger.info('Anonymous mode enabled:', newAnonymousId);
+    showNotification('Browsing anonymously', 'info');
+  }, [showNotification]);
+  
+  const convertAnonymousToUser = useCallback(async (userData: RegisterData) => {
+    if (!isAnonymous || !anonymousId) {
+      throw new Error('Not in anonymous mode');
+    }
+    
+    try {
+      setIsLoading(true);
+      
+      const apiClient = new ApiClient();
+      const response = await apiClient.post('/auth/convert-anonymous', {
+        ...userData,
+        anonymousId
+      });
+      
+      if (!response.success) {
+        throw new Error(response.error || 'Account conversion failed');
+      }
+      
+      const { user: newUser, token } = response.data;
+      
+      // Update state
+      setUser(newUser);
+      setUserToken(token);
+      setIsAuthenticated(true);
+      setIsAnonymous(false);
+      setAnonymousId(null);
+      
+      // Persist to storage
+      localStorageService.setItem('auth_token', token);
+      localStorageService.setItem('user_data', newUser);
+      localStorageService.removeItem('anonymous_id');
+      
+      showNotification('Account created successfully!', 'success');
+      logger.info('Anonymous user converted to registered user');
+      
+    } catch (error) {
+      logger.error('Anonymous conversion failed:', error);
+      showNotification(error instanceof Error ? error.message : 'Account conversion failed', 'error');
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isAnonymous, anonymousId, showNotification]);
+  
+  const applyAsHelper = useCallback(async (helperData: HelperApplicationData) => {
+    if (!isAuthenticated || !user) {
+      throw new Error('Must be logged in to apply as helper');
+    }
+    
+    try {
+      setIsLoading(true);
+      
+      const apiClient = new ApiClient();
+      const response = await apiClient.post('/helpers/apply', helperData, {
+        headers: { Authorization: `Bearer ${userToken}` }
+      });
+      
+      if (!response.success) {
+        throw new Error(response.error || 'Helper application failed');
+      }
+      
+      showNotification('Helper application submitted successfully!', 'success');
+      logger.info('Helper application submitted');
+      
+    } catch (error) {
+      logger.error('Helper application failed:', error);
+      showNotification(error instanceof Error ? error.message : 'Helper application failed', 'error');
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isAuthenticated, user, userToken, showNotification]);
+  
+  const updateHelperProfile = useCallback(async (updates: Partial<Helper>) => {
+    if (!isHelper || !helperProfile) {
+      throw new Error('Must be a helper to update profile');
+    }
+    
+    try {
+      setIsLoading(true);
+      
+      const apiClient = new ApiClient();
+      const response = await apiClient.put(`/helpers/${helperProfile.id}`, updates, {
+        headers: { Authorization: `Bearer ${userToken}` }
+      });
+      
+      if (!response.success) {
+        throw new Error(response.error || 'Profile update failed');
+      }
+      
+      const updatedProfile = { ...helperProfile, ...updates };
+      setHelperProfile(updatedProfile);
+      
+      showNotification('Profile updated successfully!', 'success');
+      logger.info('Helper profile updated');
+      
+    } catch (error) {
+      logger.error('Helper profile update failed:', error);
+      showNotification(error instanceof Error ? error.message : 'Profile update failed', 'error');
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isHelper, helperProfile, userToken, showNotification]);
+  
+  const loginAsDemo = useCallback(async (userType: 'seeker' | 'helper') => {
+    try {
+      setIsLoading(true);
+      
+      const demoUser = DEMO_USERS.find(u => u.role === userType);
+      if (!demoUser) {
+        throw new Error('Demo user not found');
+      }
+      
+      // Create demo auth user
+      const authUser: AuthUser = {
+        id: demoUser.id,
+        email: demoUser.email,
+        name: demoUser.name,
+        role: demoUser.role,
+        isDemo: true,
+        createdAt: new Date().toISOString(),
+        lastLoginAt: new Date().toISOString()
+      };
+      
+      // Create demo token (not a real JWT, just for demo)
+      const demoToken = `demo_token_${demoUser.id}_${Date.now()}`;
+      
+      setUser(authUser);
+      setUserToken(demoToken);
+      setIsAuthenticated(true);
+      setIsAnonymous(false);
+      
+      // If helper demo, create demo helper profile
+      if (userType === 'helper') {
+        const demoHelperProfile: Helper = {
+          id: demoUser.id,
+          userId: demoUser.id,
+          name: demoUser.name,
+          email: demoUser.email,
+          specializations: ['General Support', 'Crisis Intervention'],
+          bio: 'Demo helper profile for testing purposes',
+          isVerified: true,
+          rating: 4.8,
+          totalSessions: 150,
+          availability: 'available',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        setHelperProfile(demoHelperProfile);
+      }
+      
+      // Store demo session (but mark as demo)
+      localStorageService.setItem('auth_token', demoToken);
+      localStorageService.setItem('user_data', { ...authUser, isDemo: true });
+      localStorageService.removeItem('anonymous_id');
+      
+      showNotification(`Logged in as demo ${userType}`, 'success');
+      logger.info(`Demo login: ${userType}`);
+      
+    } catch (error) {
+      logger.error('Demo login failed:', error);
+      showNotification('Demo login failed', 'error');
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [showNotification]);
+  
+  const refreshAuth = useCallback(async () => {
+    if (!userToken) return;
+    
+    try {
+      const apiClient = new ApiClient();
+      const response = await apiClient.post('/auth/refresh', {}, {
+        headers: { Authorization: `Bearer ${userToken}` }
+      });
+      
+      if (response.success && response.data.token) {
+        setUserToken(response.data.token);
+        localStorageService.setItem('auth_token', response.data.token);
+        logger.info('Auth token refreshed');
+      }
+    } catch (error) {
+      logger.error('Token refresh failed:', error);
+      // Don't throw - let the app continue with existing token
+    }
+  }, [userToken]);
+  
+  const validateSession = useCallback(async (): Promise<boolean> => {
+    if (!userToken || !user) return false;
+    
+    try {
+      return await validateStoredSession(userToken, user);
+    } catch (error) {
+      logger.error('Session validation failed:', error);
+      return false;
+    }
+  }, [userToken, user]);
+  
+  const loadHelperProfile = useCallback(async (userId: string) => {
+    try {
+      const apiClient = new ApiClient();
+      const response = await apiClient.get(`/helpers/profile/${userId}`, {
+        headers: { Authorization: `Bearer ${userToken}` }
+      });
+      
+      if (response.success && response.data) {
+        setHelperProfile(response.data);
+        logger.info('Helper profile loaded');
+      }
+    } catch (error) {
+      logger.error('Failed to load helper profile:', error);
+      // Don't throw - helper profile is optional
+    }
+  }, [userToken]);
+  
+  const clearAuthState = useCallback(async () => {
+    setIsAuthenticated(false);
+    setIsAnonymous(false);
+    setUser(null);
+    setUserToken(null);
+    setAnonymousId(null);
+    setHelperProfile(null);
+    
+    localStorageService.removeItem('auth_token');
+    localStorageService.removeItem('user_data');
+    localStorageService.removeItem('anonymous_id');
+    
+    logger.info('Auth state cleared');
+  }, []);
+  
+  // Auto-refresh token before expiration
+  useEffect(() => {
+    if (!userToken || !isAuthenticated) return;
+    
+    const refreshInterval = setInterval(() => {
+      refreshAuth();
+    }, 15 * 60 * 1000); // Refresh every 15 minutes
+    
+    return () => clearInterval(refreshInterval);
+  }, [userToken, isAuthenticated, refreshAuth]);
+  
+  const contextValue = useMemo<OptionalAuthContextType>(() => ({
+    // Auth state
+    isAuthenticated,
     isAnonymous,
     user,
+    userToken,
+    anonymousId,
+    
+    // Helper state
     helperProfile,
-    isNewUser,
+    isHelper,
+    
+    // Loading states
     isLoading,
+    isInitializing,
+    
+    // Auth methods
     login,
     logout,
     register,
-    reloadProfile,
+    
+    // Anonymous methods
+    enableAnonymousMode,
+    convertAnonymousToUser,
+    
+    // Helper methods
+    applyAsHelper,
     updateHelperProfile,
+    
+    // Demo methods
+    loginAsDemo,
+    
+    // Utility methods
+    refreshAuth,
+    validateSession
+  }), [
+    isAuthenticated,
+    isAnonymous,
+    user,
     userToken,
     anonymousId,
+    helperProfile,
+    isHelper,
+    isLoading,
+    isInitializing,
+    login,
+    logout,
+    register,
+    enableAnonymousMode,
+    convertAnonymousToUser,
+    applyAsHelper,
+    updateHelperProfile,
+    loginAsDemo,
+    refreshAuth,
+    validateSession
+  ]);
+  
+  return (
+    <OptionalAuthContext.Provider value={contextValue}>
+      {children}
+    </OptionalAuthContext.Provider>
+  );
 };
 
-authState: {
-  ,
-};
-
-isAuthenticated: !!user && !isAnonymous,
-      isAnonymous,
-      user,
-      helperProfile,
-      userToken,
-      anonymousId }}, [user, isAnonymous, helperProfile, isNewUser, isLoading, login, logout, register, reloadProfile, updateHelperProfile, userToken, anonymousId])
-
-  // Sync with global state object
-  useEffect(() =) { authState.isAuthenticated = value.isAuthenticated;
-    authState.isAnonymous = value.isAnonymous;
-    authState.user = value.user;
-    authState.helperProfile = value.helperProfile;
-    authState.userToken = value.userToken,
-    authState.anonymousId = value.anonymousId }, [value]
-
-  return <OptionalAuthContext.Provider value={value}>{children}</OptionalAuthContext.Provider;
-export const useOptionalAuth = (): OptionalAuthContextType = { const context = useContext(OptionalAuthContext  ) }
-  if(context === undefined) {
-    throw new Error('useOptionalAuth must be used within an OptionalAuthProvider') }""
+export const useOptionalAuth = (): OptionalAuthContextType => {
+  const context = useContext(OptionalAuthContext);
+  if (!context) {
+    throw new Error('useOptionalAuth must be used within an OptionalAuthProvider');
+  }
   return context;
+};
+
+export default OptionalAuthContext;
