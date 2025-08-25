@@ -127,7 +127,7 @@ const moderateContent = (text: string): { safe: boolean; reason?: string } => {
 };
 
 // Crisis detection wrapper
-const detectCrisis = (text: string): boolean => {
+const detectCrisis = async (text: string): Promise<boolean> => {
   try {
     const analysis = await crisisDetectionService.analyzeForCrisis(text);
     return analysis.hasCrisisIndicators && 
@@ -268,7 +268,7 @@ export const handler: Handler = async (
         }
         
         // Crisis detection
-        const inCrisis = detectCrisis(latestUserMessage.text);
+        const inCrisis = await detectCrisis(latestUserMessage.text);
         const systemPrompt = inCrisis ? 
           `${SYSTEM_PROMPTS.base}\n\n${SYSTEM_PROMPTS.crisis}` : 
           `${SYSTEM_PROMPTS.base}\n\n${SYSTEM_PROMPTS.supportive}`;
