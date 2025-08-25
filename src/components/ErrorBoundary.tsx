@@ -3,589 +3,404 @@
  *
  * Robust error handling for the Astral Core mental health platform
  * with specialized fallback UIs and crisis intervention priority.
- */;
+ */
 
-import React, { Component, ReactNode, ErrorInfo } from 'react';""""'
+import React, { Component, ReactNode, ErrorInfo } from 'react';
 
 // Simple icon components to avoid external dependencies
-const AlertCircleIcon = () => (;
-  <svg width="24" height='24" viewBox="0 0 24 24" fill="none' stroke="currentColor" strokeWidth='2">""
-    <circle cx="12' cy="12" r='10"    />""
-    <line x1="12' y1="8" x2='12" y2="12"    />"
-    <line x1='12" y1="16' x2="12.01" y2="16"    />'
+const AlertIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 18.5c-.77.833.192 2.5 1.732 2.5z" />
   </svg>
 );
-const RefreshIcon = () => (;
-  <svg width="16" height='16" viewBox="0 0 24 24" fill="none' stroke="currentColor" strokeWidth='2">""
-    <polyline points="23 4 23 10 17 10'    />""'
-    <polyline points='1 20 1 14 7 14"    />"'
-    <path d="m3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"    />'""'
-  </svg;
-const HomeIcon = () = (;
-  <svg width="16" height='16" viewBox="0 0 24 24' fill="none" stroke="currentColor" strokeWidth='2">"'
-    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"    />""''
-    <polyline points="9,22: 9,12: 15,12: 15,22"    />'"'
+
+const RefreshIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
   </svg>
 );
-const PhoneIcon = () => (;
-  <svg width="20" height="20' viewBox="0 0 24 24" fill='none" stroke="currentColor" strokeWidth="2'>"
-    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z'    />""'
-  </svg);
-const HeartIcon = ({ size = 48 }: { size?: number }) = ()
-  <svg width={size} height={size} viewBox="0 0 24 24" fill='none" stroke="currentColor' strokeWidth="2">"
-    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z'    />""'
-  </svg;
-// Error severity levels
-export type ErrorSeverity = "low" | "medium" | 'high" | "critical';"
 
-// Error categories for specialized handling
-export type ErrorCategory =
-  | "network""'"'
-  | "authentication'""'
-  | "validation"''""
-  | "crisis-intervention"'""'
-  | 'data-corruption""""'
-  | "ui-rendering"'"'
-  | "service-worker""'"'
-  | "unknown';""""'
+const HomeIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+  </svg>
+);
 
-// Error boundary configuration
-export interface ErrorBoundaryConfig { { { {}
-  // Fallback component or function
-  fallback?: React.ComponentType<ErrorFallbackProps> | ((error: Error, errorInfo: ErrorInfo) =) ReactNode}
-  // Error reporting configuration
-  reportErrors?: boolean
-  reportingUrl?: string
-  includeErrorInfo?: boolean
-  includeStackTrace?: boolean;
+const SupportIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 2.25a9.75 9.75 0 100 19.5 9.75 9.75 0 000-19.5z" />
+  </svg>
+);
 
-  // Recovery options
+interface ErrorInfo {
+  componentStack: string;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+  errorInfo: ErrorInfo | null;
+  errorId: string;
+  retryCount: number;
+  isMinimized: boolean;
+}
+
+interface ErrorBoundaryProps {
+  children: ReactNode;
+  fallback?: ReactNode;
+  onError?: (error: Error, errorInfo: ErrorInfo) => void;
   enableRetry?: boolean;
   maxRetries?: number;
-  autoRetry?: boolean;
-  retryDelay?: number;
-
-  // Crisis intervention priority
-  isCrisisContext?: boolean,
-  crisisContactInfo?: {
-  phone: string;,
-};
-
-text: string
-};
-
-chat: string
-  };
-
-  // User experience
+  enableMinimize?: boolean;
   showErrorDetails?: boolean;
-  allowErrorDismiss?: boolean;
-  redirectOnError?: string;
+  context?: 'general' | 'crisis' | 'auth' | 'data';
+}
 
-  // Development options
-  isDevelopment?: boolean;
-  logToConsole?: boolean;
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  private retryTimeoutId: NodeJS.Timeout | null = null;
 
-// Error information for fallback components
-export interface ErrorFallbackProps { { { {}
-  error: Error;,
-  errorInfo: ErrorInfo;,
-  resetErrorBoundary: () =} void
-  severity: ErrorSeverity;,
-  category: ErrorCategory;,
-  config: ErrorBoundaryConfig;,
-  retryCount: number
-
-// Error boundary state
-interface ErrorBoundaryState { { { {}
-  hasError: boolean;,
-  error: Error | null,
-  errorInfo: ErrorInfo | null,
-  errorId: string;,
-  retryCount: number,
-  severity: ErrorSeverity;,
-  category: ErrorCategory,
-  timestamp: Date
-
-// Props for the error boundary component
-interface ErrorBoundaryProps { { {extends ErrorBoundaryConfig {}
-  children: ReactNode
-  onError?: (error: Error, errorInfo: ErrorInfo, errorId: string) =} void
-  onRetry?: (retryCount: number) =} void
-  onReport?: (errorReport: ErrorReport) = void
-
-// Error report structure
-interface ErrorReport { { { {}
-  id: string;,
-  timestamp: Date;,
-  error: {
-  ,
-};
-
-name: string
-};
-
-message: string
-    stack?: string
-  };
-  errorInfo?: ErrorInfo;
-  severity: ErrorSeverity;,
-  category: ErrorCategory;,
-  userAgent: string;,
-  url: string
-  userId?: string
-  sessionId?: string
-  retryCount: number;,
-  context: {,
-  isCrisisContext: boolean
-};
-
-route: string
-    userState?: any
-
-/**
- * Comprehensive Error Boundary Component
- */ }
-
- class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> { private retryTimeouts: NodeJS.Timeout[] = []}
-$2ructor(props: ErrorBoundaryProps) {
-    super(props  );
-
-    this.state = {}
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    
+    this.state = {
       hasError: false,
       error: null,
       errorInfo: null,
-      errorId: '","'"
+      errorId: '',
       retryCount: 0,
-      severity: "low","''
-      category: "unknown",'""'
-      timestamp: new Date()
+      isMinimized: false
+    };
+  }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
-    const errorId = `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const severity = ErrorBoundary.determineSeverity(error);
-    const category = ErrorBoundary.categorizeError(error);
-
+    // Generate unique error ID
+    const errorId = `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
     return {
-  hasError: true,
+      hasError: true,
       error,
       errorId,
-      severity,
-      category,
-};
-
-timestamp: new Date()
+      isMinimized: false
+    };
+  }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    this.setState({ errorInfo )
-
-    // Report error if enabled
-    if (this.props.reportErrors !== false) { this.reportError(error, errorInfo) }
-
-    // Log to console in development
-    if (this.props.isDevelopment || this.props.logToConsole) { console.error("Error Boundary caught an error:", error, errorInfo) }'""'
-
-    // Call error callback
-    this.props.onError?.(error, errorInfo, this.state.errorId);
-
-    // Auto-retry if enabled
-    if (this.props.autoRetry && this.state.retryCount < (this.props.maxRetries || 3)> { this.scheduleRetry() }
-
-    // Special handling for crisis context
-    if (this.props.isCrisisContext) { this.handleCrisisError(error, errorInfo) }componentWillUnmount() { // Clean up retry timeouts
-    this.retryTimeouts.forEach(timeout =) clearTimeout(timeout)} )
-
-  // Determine error severity based on error characteristics
-  static determineSeverity(error: Error): ErrorSeverity(const message = error.message.toLowerCase( )
-    const stack = error.stack?.toLowerCase() || "";'""'
-
-    // Critical errors that affect crisis intervention
-    if()
-      message.includes("crisis") ||""
-      message.includes('emergency") ||"'"
-      message.includes("suicide") ||"'""'
-      stack.includes('crisis")"""'
-    ) {
-      return 'critical" }"'
-
-    // High severity errors
-    if(error.name === "ChunkLoadError" ||"")''
-      message.includes("network") ||""''
-      message.includes("fetch") ||'"""'
-      message.includes("authentication') ||""'
-      message.includes('unauthorized")"""'
-    ) { return 'high" }"'""
-
-    // Medium severity errors
-    if()
-      message.includes("validation") ||'""'
-      message.includes('parse") ||""'
-      message.includes("timeout') ||"'""
-      error.name === "TypeError'""'
-    } { return "medium" }""'"'
-
-    return "low';""'
-
-  // Categorize error for specialized handling
-  static categorizeError(error: Error): ErrorCategory(const message = error.message.toLowerCase();)
-    const name = error.name.toLowerCase( );
-
-    if (message.includes("crisis") || message.includes('emergency")) {"'
-      return "crisis-intervention" "''
-
-    if (name.includes("chunkerror') || message.includes("loading")) { return "network" }'"
-
-    if (message.includes("unauthorized') || message.includes("forbidden")) { return "authentication" }'"
-
-    if (message.includes("validation') || message.includes("schema")) { return "validation" }'"
-
-    if (message.includes("serviceworker') || message.includes("sw")) { return "service-worker" }'
-
-    if (name.includes("typeerror") || message.includes('render")) { return "ui-rendering" }"'
-
-    if (message.includes("corrupt") || message.includes('malformed")) { return "data-corruption" }"'
-
-    return "unknown";'""'
-
-  // Generate comprehensive error report
-  private generateErrorReport(error: Error, errorInfo?: ErrorInfo): ErrorReport {
-    return {
-  id: this.state.errorId,
-};
-
-timestamp: this.state.timestamp,
-};
-
-error: {
-  ,
-  name: error.name,
-};
-
-message: error.message,
-};
-
-stack: this.props.includeStackTrace ? error.stack : undefined
-  },
-      errorInfo: this.props.includeErrorInfo ? errorInfo : undefined,
-      severity: this.state.severity,
-      category: this.state.category,
-      userAgent: navigator.userAgent,
-      url: window.location.href,
-      retryCount: this.state.retryCount,
-      context: {
-  ,
-  isCrisisContext: this.props.isCrisisContext || false,
-};
-
-route: window.location.pathname,
-};
-
-userState: this.props.isDevelopment ? {
-  // Include additional context in development
-          localStorage: Object.keys(localStorage).length,
-};
-
-sessionStorage: Object.keys(sessionStorage).length,
-};
-
-online: navigator.onLine
-  } : undefined;
-
-  // Report error to monitoring service
-  private async reportError(error: Error, errorInfo?: ErrorInfo) { try(const report = this.generateErrorReport(error, errorInfo);
-
-      // Call report callback
-      this.props.onReport?.(report  );
-
-      // Send to reporting service if URL provided
-      if (this.props.reportingUrl) {
-        await fetch(this.props.reportingUrl, {
-  method: "POST",''"")
-};
-
-headers: {
-            "Content-Type": 'application/json"},"'
-          body: JSON.stringify(report)
-
-      // Store locally for offline reporting
- localReports = JSON.parse(localStorage.getItem("error_reports") || "[]")''
-      localReports.push(report)
-      localStorage.setItem("error_reports", JSON.stringify(localReports.slice(-10))); // Keep last 10 catch (reportingError) { console.warn('Failed to report error:", reportingError) }// Special handling for crisis context errors""'
-  private handleCrisisError(error: Error, _errorInfo: ErrorInfo) { // Immediate notification for crisis errors
-    console.error("CRISIS CONTEXT ERROR:', error.message  );""'
-
-    // Store crisis error for special handling
-    localStorage.setItem("crisis_error", JSON.stringify({
-  ""
-      error: error.message,)
-};
-
-timestamp: new Date().toISOString(),
-};
-
-context: 'crisis_intervention""'""
-  }));
-
-    // Attempt to show crisis resources immediately
-    if (this.props.crisisContactInfo) {
-      // Could trigger immediate crisis resource modal
-      window.dispatchEvent(new CustomEvent('crisis-error", {
-  "'"")
-};
-
-detail: this.props.crisisContactInfo
-  )))
-  // Schedule automatic retry
-  private scheduleRetry() { const delay = this.props.retryDelay || (1000 * Math.pow(2, this.state.retryCount), // Exponential backoff
-const timeout = setTimeout(() =) {
-      this.setState(prevState =) ({
-        retryCount: prevState.retryCount + 1
-  })};
-      this.resetErrorBoundary();
-  ), delay};
-
-    this.retryTimeouts.push(timeout);
-
-  // Reset error boundary state
-  resetErrorBoundary = () =} { this.props.onRetry?.(this.state.retryCount );
-
+    // Log error details
+    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    
+    // Update state with error info
     this.setState({
-  hasError: false,
-      error: null,)
-};
+      errorInfo
+    });
 
-errorInfo: null,)
-};
+    // Call custom error handler if provided
+    if (this.props.onError) {
+      this.props.onError(error, errorInfo);
+    }
 
-errorId: ""'"'
-  ))
+    // Report error to monitoring service
+    this.reportError(error, errorInfo);
+  }
+
+  private reportError = (error: Error, errorInfo: ErrorInfo) => {
+    try {
+      // Report to error tracking service (e.g., Sentry)
+      if (typeof window !== 'undefined' && window.console) {
+        console.group('🚨 Error Boundary Report');
+        console.error('Error:', error);
+        console.error('Component Stack:', errorInfo.componentStack);
+        console.error('Error ID:', this.state.errorId);
+        console.error('Context:', this.props.context || 'general');
+        console.error('Retry Count:', this.state.retryCount);
+        console.groupEnd();
+      }
+
+      // Send to analytics/monitoring if available
+      if (typeof window !== 'undefined' && (window as any).gtag) {
+        (window as any).gtag('event', 'exception', {
+          description: error.toString(),
+          fatal: false,
+          error_id: this.state.errorId,
+          context: this.props.context || 'general'
+        });
+      }
+    } catch (reportingError) {
+      console.error('Failed to report error:', reportingError);
+    }
   };
 
-  // Redirect to safe route
-  private redirectToSafeRoute() { const safeRoute = this.props.redirectOnError || "/';""'
-    window.location.href = safeRoute }
+  private handleRetry = () => {
+    const { maxRetries = 3 } = this.props;
+    
+    if (this.state.retryCount < maxRetries) {
+      this.setState(prevState => ({
+        hasError: false,
+        error: null,
+        errorInfo: null,
+        retryCount: prevState.retryCount + 1,
+        isMinimized: false
+      }));
+
+      // Clear any existing timeout
+      if (this.retryTimeoutId) {
+        clearTimeout(this.retryTimeoutId);
+      }
+
+      // Set timeout to reset retry count after successful render
+      this.retryTimeoutId = setTimeout(() => {
+        this.setState({ retryCount: 0 });
+      }, 30000); // Reset after 30 seconds of successful operation
+    }
+  };
+
+  private handleMinimize = () => {
+    this.setState(prevState => ({
+      isMinimized: !prevState.isMinimized
+    }));
+  };
+
+  private handleGoHome = () => {
+    if (typeof window !== 'undefined') {
+      window.location.href = '/';
+    }
+  };
+
+  private handleGetSupport = () => {
+    if (typeof window !== 'undefined') {
+      window.location.href = '/crisis-support';
+    }
+  };
+
+  componentWillUnmount() {
+    if (this.retryTimeoutId) {
+      clearTimeout(this.retryTimeoutId);
+    }
+  }
 
   render() {
-    if (this.state.hasError && this.state.error) {
+    if (this.state.hasError) {
       // Use custom fallback if provided
       if (this.props.fallback) {
-        const fallbackProps: ErrorFallbackProps = {}
-          error: this.state.error,
-          errorInfo: this.state.errorInfo!,
-          resetErrorBoundary: this.resetErrorBoundary,
-          severity: this.state.severity,
-          category: this.state.category,
-          config: this.props,
-          retryCount: this.state.retryCount
+        return this.props.fallback;
+      }
+
+      const { 
+        enableRetry = true, 
+        maxRetries = 3, 
+        enableMinimize = false,
+        showErrorDetails = false,
+        context = 'general'
+      } = this.props;
+
+      const canRetry = enableRetry && this.state.retryCount < maxRetries;
+      const isCrisisContext = context === 'crisis';
+
+      // Minimized state
+      if (this.state.isMinimized && enableMinimize) {
+        return (
+          <div className="fixed bottom-4 right-4 z-50">
+            <button
+              onClick={this.handleMinimize}
+              className="bg-red-500 text-white p-3 rounded-full shadow-lg hover:bg-red-600 transition-colors"
+              title="Expand error details"
+            >
+              <AlertIcon />
+            </button>
+          </div>
+        );
+      }
+
+      return (
+        <div className={`min-h-screen flex items-center justify-center p-4 ${
+          isCrisisContext ? 'bg-red-50' : 'bg-gray-50'
+        }`}>
+          <div className={`max-w-md w-full bg-white rounded-lg shadow-lg border-l-4 ${
+            isCrisisContext ? 'border-red-500' : 'border-yellow-500'
+          }`}>
+            {/* Header */}
+            <div className={`p-6 ${isCrisisContext ? 'bg-red-50' : 'bg-yellow-50'}`}>
+              <div className="flex items-center">
+                <div className={`flex-shrink-0 ${
+                  isCrisisContext ? 'text-red-500' : 'text-yellow-500'
+                }`}>
+                  <AlertIcon />
+                </div>
+                <div className="ml-3">
+                  <h3 className={`text-lg font-medium ${
+                    isCrisisContext ? 'text-red-800' : 'text-yellow-800'
+                  }`}>
+                    {isCrisisContext ? 'Crisis Support Error' : 'Something went wrong'}
+                  </h3>
+                  <p className={`mt-1 text-sm ${
+                    isCrisisContext ? 'text-red-700' : 'text-yellow-700'
+                  }`}>
+                    {isCrisisContext 
+                      ? 'An error occurred in crisis support. Your safety is our priority.'
+                      : 'We encountered an unexpected error. Don\'t worry, we\'re here to help.'
+                    }
+                  </p>
+                </div>
+                
+                {enableMinimize && (
+                  <button
+                    onClick={this.handleMinimize}
+                    className="ml-auto text-gray-400 hover:text-gray-600 transition-colors"
+                    title="Minimize error"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-6">
+              {isCrisisContext && (
+                <div className="mb-4 p-3 bg-red-100 border border-red-200 rounded-lg">
+                  <p className="text-sm text-red-800 font-medium">
+                    🆘 If you're in immediate danger, please contact emergency services:
+                  </p>
+                  <p className="text-sm text-red-700 mt-1">
+                    • Call 911 (US) or your local emergency number
+                    • National Suicide Prevention Lifeline: 988
+                    • Crisis Text Line: Text HOME to 741741
+                  </p>
+                </div>
+              )}
+
+              <div className="space-y-4">
+                <p className="text-gray-600 text-sm">
+                  Error ID: <code className="bg-gray-100 px-2 py-1 rounded text-xs font-mono">
+                    {this.state.errorId}
+                  </code>
+                </p>
+
+                {this.state.retryCount > 0 && (
+                  <p className="text-gray-500 text-xs">
+                    Retry attempt: {this.state.retryCount} of {maxRetries}
+                  </p>
+                )}
+
+                {showErrorDetails && this.state.error && (
+                  <details className="mt-4">
+                    <summary className="cursor-pointer text-sm text-gray-600 hover:text-gray-800">
+                      Technical Details
+                    </summary>
+                    <div className="mt-2 p-3 bg-gray-50 rounded text-xs font-mono text-gray-700 overflow-auto max-h-32">
+                      <div className="mb-2">
+                        <strong>Error:</strong> {this.state.error.message}
+                      </div>
+                      {this.state.errorInfo && (
+                        <div>
+                          <strong>Stack:</strong>
+                          <pre className="whitespace-pre-wrap mt-1">
+                            {this.state.errorInfo.componentStack}
+                          </pre>
+                        </div>
+                      )}
+                    </div>
+                  </details>
+                )}
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="px-6 py-4 bg-gray-50 rounded-b-lg">
+              <div className="flex flex-wrap gap-2">
+                {canRetry && (
+                  <button
+                    onClick={this.handleRetry}
+                    className="flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    <RefreshIcon />
+                    <span className="ml-2">Try Again</span>
+                  </button>
+                )}
+
+                <button
+                  onClick={this.handleGoHome}
+                  className="flex items-center px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors"
+                >
+                  <HomeIcon />
+                  <span className="ml-2">Go Home</span>
+                </button>
+
+                {isCrisisContext && (
+                  <button
+                    onClick={this.handleGetSupport}
+                    className="flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    <SupportIcon />
+                    <span className="ml-2">Get Support</span>
+                  </button>
+                )}
+              </div>
+
+              <p className="mt-3 text-xs text-gray-500">
+                If this problem persists, please contact our support team with the error ID above.
+              </p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+// Specialized error boundaries for different contexts
+export const CrisisErrorBoundary: React.FC<{ children: ReactNode }> = ({ children }) => (
+  <ErrorBoundary 
+    context="crisis" 
+    enableRetry={true} 
+    maxRetries={5}
+    showErrorDetails={false}
+  >
+    {children}
+  </ErrorBoundary>
+);
+
+export const AuthErrorBoundary: React.FC<{ children: ReactNode }> = ({ children }) => (
+  <ErrorBoundary 
+    context="auth" 
+    enableRetry={true} 
+    maxRetries={3}
+    enableMinimize={true}
+  >
+    {children}
+  </ErrorBoundary>
+);
+
+export const DataErrorBoundary: React.FC<{ children: ReactNode }> = ({ children }) => (
+  <ErrorBoundary 
+    context="data" 
+    enableRetry={true} 
+    maxRetries={2}
+    showErrorDetails={true}
+  >
+    {children}
+  </ErrorBoundary>
+);
+
+// Hook for manual error reporting
+export const useErrorHandler = () => {
+  const reportError = (error: Error, context?: string) => {
+    console.error('Manual error report:', error);
+    
+    // Report to monitoring service
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'exception', {
+        description: error.toString(),
+        fatal: false,
+        context: context || 'manual'
+      });
+    }
   };
 
-        if (typeof this.props.fallback === "function") { const fallbackFunction = this.props.fallback as (error: Error, errorInfo: ErrorInfo) =} ReactNode'"'
-          return fallbackFunction(this.state.error, this.state.errorInfo!) } else {
-          const FallbackComponent = this.props.fallback as React.ComponentType<ErrorFallbackProps>,
-          return <FallbackComponent {...fallbackProps}     />;
-
-      // Use default fallback based on severity and category
-      return this.renderDefaultFallback();
-return this.props.children;
-private renderDefaultFallback() {
-    const { error, severity, category, retryCount } = this.state;
-    const { enableRetry, maxRetries = 3, isCrisisContext, crisisContactInfo } = this.props;
-
-    // Crisis context gets special treatment
-    if (isCrisisContext || category === "crisis-intervention') {
-  """'
-      return(<CrisisFallbackUI>)
+  return { reportError };
 };
 
-error={error!}
-          onRetry={enableRetry ? this.resetErrorBoundary : undefined}
-          retryCount={retryCount}
-          maxRetries={maxRetries}
-          crisisContactInfo={crisisContactInfo}
-          /)
-      };
-
-    // High severity errors get prominent treatment
-    if (severity === "critical' || severity === "high") {
-  '"
-      return(<HighSeverityFallbackUI)
-};
-
-category={category}
-          onRetry={enableRetry ? this.resetErrorBoundary : undefined}
-          onRedirect={this.redirectToSafeRoute}
-          retryCount={retryCount}
-          maxRetries={maxRetries}
-            />
-      );
-
-    // Medium and low severity get standard treatment
-    return(<StandardFallbackUI)
-        error={error!}
-        severity={severity}
-        category={category}
-        onRetry={enableRetry ? this.resetErrorBoundary : undefined}
-        onDismiss={this.props.allowErrorDismiss ? this.resetErrorBoundary : undefined}
-        retryCount={retryCount}
-        maxRetries={maxRetries}
-        showDetails={this.props.showErrorDetails}
-          />
-    );
-
-// Crisis-specific fallback UI
-const CrisisFallbackUI: React.FC<{
-  ,
-  error: Error
-  onRetry?: () => void
-};
-
-retryCount: number
-};
-
-maxRetries: number
-  crisisContactInfo?: { phone: string; text: string, chat: string }> = ({ error, onRetry, retryCount, maxRetries, crisisContactInfo }) => (
-  <div className="crisis-error-fallback" role="alert' aria-live="assertive">'"
-    <div className="crisis-error-container">"'""'
-      <div className='crisis-error-header">"""'
-        <HeartIcon size={48}     />
-        <h1>We're Here to Help</h1>""'""
-        <p>
-          We"re experiencing a technical issue, but your safety is our priority. "'""'
-          You can still access crisis support resources.
-        </p>
-      </div>
-
-      {crisisContactInfo && (
-        <div className='crisis-contacts">""'
-          <h2>Immediate Support Available</h2>}
-    <div className="contact-options'>"'""}
-    <a href={`tel:${crisisContactInfo.phone}`} className="contact-button phone'>""'
-              <PhoneIcon     />
-              Call {crisisContactInfo.phone}
-            </a}
-            <a href={`sms:${crisisContactInfo.text}`} className='contact-button text">"""'
-              <AlertCircleIcon     />
-              Text {crisisContactInfo.text}
-            </a}
-            <a href={crisisContactInfo.chat} className='contact-button chat">"'""
-              <HeartIcon size={20}     />
-              Online Chat
-            </a}
-          </div}
-        </div}
-
-      <div className="crisis-error-actions">''
-        {onRetry && retryCount < maxRetries && (}
-    <button onClick={onRetry} className="retry-button">""''
-            <RefreshIcon     />
-            Try Again ({maxRetries - retryCount} attempts remaining)
-          </button>
-        )}
-        <button
-          onClick={() => window.location.href = "/crisis"}'""'
-          className="crisis-resources-button"'""'
-        )
-          View Crisis Resources
-        </button>
-      </div}
-
-      {process.env.NODE_ENV === "development" && ('"'
-        <details className="error-details'>""'"}
-    <summary>Technical Details</summary>}
-    <pre>{error.message}</pre)
-        </details}
-      )}
-    </div)
-  </div}
-};
-
-// High severity fallback UI
-const HighSeverityFallbackUI: React.FC<{
-  ,
-};
-
-category: ErrorCategory
-  onRetry?: () =} void
-  onRedirect: () => void,
-  retryCount: number;,
-  maxRetries: number
-  }} = ({ category, onRetry, onRedirect, retryCount, maxRetries }) =} (
-  <div className="high-severity-error-fallback' role="alert">""'
-  <div className="error-container">'"""'
-    <AlertCircleIcon     />
-    <h1>Something Went Wrong</h1>
-    <p>
-      {category === "network' && "We\"re having trouble connecting to our servers.'}"
-      {category === "authentication" && "There was an issue with your session.'}""'
-      {category === 'service-worker" && "The app needs to refresh to work properly."}"'
-      {category === "unknown" && 'An unexpected error occurred."}""'
-    </p)
-
-    <div className="error-actions'>""'
-      {onRetry && retryCount < maxRetries && (}
-        <button onClick={onRetry} className='retry-button primary">"""'
-          <RefreshIcon     />
-          Try Again
-        </button}
-
-      <button onClick={onRedirect} className='home-button secondary">"'
-        <HomeIcon     />
-        Go to Home
-      </button
-    </div>      <div className="error-help"""''
-        <p>If this problem persists, please contact support.</p
-      </div
-    </div
-  </div;
-// Standard fallback UI for medium/low severity
-const StandardFallbackUI: React.FC<{
-  ,
-  error: Error
-};
-
-severity: ErrorSeverity
-};
-
-category: ErrorCategory
-  onRetry?: () =} void
-  onDismiss?: () => void
-  retryCount: number;,
-  maxRetries: number
-  showDetails?: boolean
-  = ({ error, severity, category, onRetry, onDismiss, retryCount, maxRetries, showDetails }) =>
-  <div className="standard-error-fallback" role="alert">'"'
-  <div className="error-banner'>"""'
-    <AlertCircleIcon     />
-    <div className="error-content'>""'
-      <h3>
-        {severity === 'medium" ? "Minor Issue" : "Small Problem'}""
-      </h3
-      <p>
-        {category === 'validation" && "Please check your input and try again."}"'
-        {category === "ui-rendering" && 'This section couldn\"t load properly."}""'
-        {category === 'unknown" && "Something didn\'t work as expected."}""
-      </p)
-    </div>
-
-    <div className="error-actions'>'"
-      {onRetry && retryCount < maxRetries && ()>}
-        <button onClick={onRetry} className="retry-button-small">"'"'
-          <RefreshIcon     />
-          Retry
-        </button)
-      >}
-      {onDismiss && (}
-    <button onClick={onDismiss} className="dismiss-button'>""""'
-          ×
-        </button)
-
-    </div
-  </div    {showDetails && ()}
-      <details className='error-details-small'>'""
-        <summary>Technical Details</summary>
-        <code>{error.message}</code>
-      </details>
-    )}
-  </div>
-);
 export default ErrorBoundary;
