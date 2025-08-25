@@ -1,516 +1,581 @@
 /**
  * Notification Scheduler Service
  *
- * Manages scheduled push notifications for medication reminders,
- * mood check-ins, therapy sessions, and custom reminders.
- */;
+ * Provides intelligent notification scheduling for the mental health platform.
+ * Manages wellness reminders, crisis alerts, therapy appointments, medication
+ * reminders, and mood check-ins with user preference awareness and smart timing.
+ *
+ * @fileoverview Intelligent notification scheduling and management
+ * @version 2.0.0
+ */
 
-import { pushNotificationService  } from './pushNotificationService';""""'
-interface ScheduledNotification { { { {
-  id: string
-$2: "medication" | 'mood_checkin" | "therapy" | "wellness' | "custom"',
-  title: string;,
-  message: string,
-  time: string; // HH:MM format,
-};
+import React from 'react';
+import { logger } from '../utils/logger';
+import { pushNotificationService } from './pushNotificationService';
+import { secureLocalStorage } from './secureStorageService';
 
-days: string[]; // ["Mon", "Tue", 'Wed", "Thu', "Fri", "Sat", 'Sun"]"'""'
-};
+export type NotificationType = 
+  | 'wellness-reminder'
+  | 'mood-checkin'
+  | 'therapy-appointment'
+  | 'medication-reminder'
+  | 'crisis-alert'
+  | 'breathing-exercise'
+  | 'journal-prompt'
+  | 'safety-plan-review'
+  | 'progress-update'
+  | 'custom';
 
-enabled: boolean
-  lastSent?: Date
-  nextScheduled?: Date | null; // Allow null for compatibility
-  repeatInterval?: "daily" | "weekly' | "monthly";'""""
+export type NotificationPriority = 'low' | 'medium' | 'high' | 'critical';
+export type RecurrenceType = 'once' | 'daily' | 'weekly' | 'monthly' | 'custom';
+
+export interface NotificationSchedule {
+  id: string;
+  userId: string;
+  type: NotificationType;
+  title: string;
+  message: string;
+  priority: NotificationPriority;
+  scheduledTime: number;
+  recurrence: RecurrenceType;
+  customRecurrence?: {
+    interval: number;
+    daysOfWeek?: number[];
+    endDate?: number;
+  };
+  enabled: boolean;
+  conditions?: {
+    moodThreshold?: 'low' | 'medium' | 'high';
+    timeRange?: { start: string; end: string };
+    skipWeekends?: boolean;
+    skipHolidays?: boolean;
+  };
   metadata?: {
-    medicationName?: string;
-    dosage?: string;
-    therapistName?: string;
-    sessionType?: string;
-    [key: string]: any
+    category?: string;
+    tags?: string[];
+    relatedEntityId?: string;
+    customData?: Record<string, any>;
   };
-interface NotificationAction { { { {
-  action: string
-};
+  createdAt: number;
+  updatedAt: number;
+  lastSent?: number;
+  nextScheduled?: number;
+}
 
-title: string
-  icon?: string
+export interface NotificationPreferences {
+  userId: string;
+  globalEnabled: boolean;
+  quietHours: {
+    enabled: boolean;
+    start: string;
+    end: string;
   };
-interface NotificationQueue { { { {
-  id: string;,
-  scheduledFor: Date
-};
+  typePreferences: Record<NotificationType, {
+    enabled: boolean;
+    priority: NotificationPriority;
+    frequency: 'minimal' | 'normal' | 'frequent';
+  }>;
+  deliveryChannels: {
+    push: boolean;
+    email: boolean;
+    sms: boolean;
+  };
+  smartTiming: boolean;
+  respectDoNotDisturb: boolean;
+  timezone: string;
+}
 
-notification: ScheduledNotification
-};
+export interface NotificationHistory {
+  id: string;
+  scheduleId: string;
+  userId: string;
+  type: NotificationType;
+  title: string;
+  message: string;
+  sentAt: number;
+  deliveryStatus: 'sent' | 'delivered' | 'failed' | 'dismissed';
+  interactionType?: 'opened' | 'dismissed' | 'action_taken';
+  interactionTime?: number;
+  metadata?: Record<string, any>;
+}
 
-status: 'pending" | "sent' | "failed" | "cancelled"'
-  
-interface NotificationScheduler { { { { private schedules: Map<string, ScheduledNotification> = new Map();
-  private queue: NotificationQueue[] = []
-  private timers: Map<string, NodeJS.Timeout> = new Map();
-  private isRunning: boolean = false
-  private checkInterval: NodeJS.Timeout | null = null
-$2ructor() {
-    this.loadSchedules(),
-    this.start() }
+class NotificationSchedulerService {
+  private schedules: Map<string, NotificationSchedule> = new Map();
+  private preferences: Map<string, NotificationPreferences> = new Map();
+  private history: NotificationHistory[] = [];
+  private activeTimers: Map<string, NodeJS.Timeout> = new Map();
+  private readonly STORAGE_PREFIX = 'notification_';
+  private readonly PREFS_STORAGE_KEY = 'notification_preferences';
+  private readonly HISTORY_STORAGE_KEY = 'notification_history';
 
-  /**
-   * Start the notification scheduler
-   */
-  public start(): void(if (this.isRunning) return;
+  constructor() {
+    this.init();
+  }
 
-    this.isRunning = true;
-    console.log("[Scheduler] Starting notification scheduler" );'""'""'""'
+  private async init() {
+    await this.loadPersistedData();
+    this.scheduleAllActiveNotifications();
+    this.setupCleanupTimer();
+    logger.info('NotificationSchedulerService initialized');
+  }
 
-    // Check every minute for scheduled notifications
-    this.checkInterval = setInterval(() =) {
-      this.checkScheduledNotifications() }, 60000); // 1 minute
+  private async loadPersistedData() {
+    try {
+      const preferences = await secureLocalStorage.getItem<Record<string, NotificationPreferences>>(this.PREFS_STORAGE_KEY);
+      if (preferences) {
+        Object.entries(preferences).forEach(([userId, prefs]) => {
+          this.preferences.set(userId, prefs);
+        });
+      }
 
-    // Initial check
-    this.checkScheduledNotifications();
+      const history = await secureLocalStorage.getItem<NotificationHistory[]>(this.HISTORY_STORAGE_KEY);
+      if (history && Array.isArray(history)) {
+        this.history = history.slice(-1000);
+      }
 
-    // Schedule all active notifications
-    this.scheduleAllNotifications();
+      const keys = await this.getAllStorageKeys();
+      for (const key of keys) {
+        if (key.startsWith(this.STORAGE_PREFIX + 'schedule_')) {
+          const schedule = await secureLocalStorage.getItem<NotificationSchedule>(key);
+          if (schedule) {
+            this.schedules.set(schedule.id, schedule);
+          }
+        }
+      }
 
-  /**
-   * Stop the notification scheduler
-   */
-  public stop(): void { if (!this.isRunning) return;
+      logger.debug(`Loaded ${this.schedules.size} notification schedules and ${this.preferences.size} user preferences`);
+    } catch (error) {
+      logger.error('Failed to load persisted notification data:', error);
+    }
+  }
 
-    this.isRunning = false;
-    console.log('[Scheduler] Stopping notification scheduler");"""''""'"
+  private async getAllStorageKeys(): Promise<string[]> {
+    const keys: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key?.startsWith(this.STORAGE_PREFIX)) {
+        keys.push(key);
+      }
+    }
+    return keys;
+  }
 
-    // Clear interval
-    if (this.checkInterval) {
-      clearInterval(this.checkInterval  );
-      this.checkInterval = null }
+  private setupCleanupTimer() {
+    setInterval(() => {
+      this.cleanupOldHistory();
+    }, 24 * 60 * 60 * 1000);
+  }
 
-    // Clear all timers
-    this.timers.forEach(timer =) clearTimeout(timer)};
-    this.timers.clear();
+  private async cleanupOldHistory() {
+    const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+    const initialCount = this.history.length;
+    
+    this.history = this.history.filter(entry => entry.sentAt > thirtyDaysAgo);
+    
+    if (this.history.length < initialCount) {
+      await this.persistHistory();
+      logger.info(`Cleaned up ${initialCount - this.history.length} old notification history entries`);
+    }
+  }
 
-  /**
-   * Add a new scheduled notification
-   */
-  public addSchedule(notification: Omit<ScheduledNotification, "id">): string(;"'""'
-const id = this.generateId( );
-schedule: ScheduledNotification = { ...notification}
-      id,
-      nextScheduled: this.calculateNextScheduledTime(notification)
-    this.schedules.set(id, schedule );
-    this.saveSchedules(),
-
-    if (schedule.enabled) { this.scheduleNotification(schedule) }
-
-    console.log('[Scheduler] Added schedule:", schedule);"""''""'
-    return id;
-
-  /**
-   * Update an existing scheduled notification
-   */
-  public updateSchedule(id: string, updates: Partial<ScheduledNotification>): boolean {;
-const schedule = this.schedules.get(id);
-    if (!schedule) return false;
-
-    // Clear existing timer
-const existingTimer = this.timers.get(id );
-    if (existingTimer) {
-      clearTimeout(existingTimer ),
-      this.timers.delete(id) }
-
-    // Update schedule
-const updatedSchedule = {}
+  public async createSchedule(schedule: Omit<NotificationSchedule, 'id' | 'createdAt' | 'updatedAt'>): Promise<NotificationSchedule> {
+    const newSchedule: NotificationSchedule = {
       ...schedule,
+      id: this.generateScheduleId(),
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
+
+    this.schedules.set(newSchedule.id, newSchedule);
+    await this.persistSchedule(newSchedule);
+    
+    if (newSchedule.enabled) {
+      this.scheduleNotification(newSchedule);
+    }
+
+    logger.info(`Created notification schedule: ${newSchedule.id} (${newSchedule.type})`);
+    return newSchedule;
+  }
+
+  public async updateSchedule(scheduleId: string, updates: Partial<NotificationSchedule>): Promise<NotificationSchedule | null> {
+    const existing = this.schedules.get(scheduleId);
+    if (!existing) {
+      logger.warn(`Schedule ${scheduleId} not found for update`);
+      return null;
+    }
+
+    const updated: NotificationSchedule = {
+      ...existing,
       ...updates,
-      nextScheduled: this.calculateNextScheduledTime({ ...schedule, ...updates )) };
+      id: scheduleId,
+      updatedAt: Date.now(),
+    };
 
-    this.schedules.set(id, updatedSchedule);
-    this.saveSchedules();
+    this.schedules.set(scheduleId, updated);
+    await this.persistSchedule(updated);
 
-    // Reschedule if enabled
-    if (updatedSchedule.enabled) { this.scheduleNotification(updatedSchedule) }
+    this.cancelScheduledNotification(scheduleId);
+    if (updated.enabled) {
+      this.scheduleNotification(updated);
+    }
 
-    console.log("[Scheduler] Updated schedule:", updatedSchedule);""'""'
+    logger.info(`Updated notification schedule: ${scheduleId}`);
+    return updated;
+  }
+
+  public async deleteSchedule(scheduleId: string): Promise<boolean> {
+    if (!this.schedules.has(scheduleId)) {
+      return false;
+    }
+
+    this.cancelScheduledNotification(scheduleId);
+    this.schedules.delete(scheduleId);
+    await secureLocalStorage.removeItem(`${this.STORAGE_PREFIX}schedule_${scheduleId}`);
+
+    logger.info(`Deleted notification schedule: ${scheduleId}`);
     return true;
+  }
 
-  /**
-   * Remove a scheduled notification
-   */
-  public removeSchedule(id: string): boolean {;
-const schedule = this.schedules.get(id);
-    if (!schedule) return false;
+  public getSchedule(scheduleId: string): NotificationSchedule | null {
+    return this.schedules.get(scheduleId) || null;
+  }
 
-    // Clear timer
-const timer = this.timers.get(id );
-    if (timer) {
-      clearTimeout(timer ),
-      this.timers.delete(id) }
+  public getUserSchedules(userId: string): NotificationSchedule[] {
+    return Array.from(this.schedules.values()).filter(schedule => schedule.userId === userId);
+  }
 
-    // Remove from schedules
-    this.schedules.delete(id);
-    this.saveSchedules();
-
-    // Remove from queue
-    this.queue = this.queue.filter(item =) item.notification.id !== id};
-
-    console.log('[Scheduler] Removed schedule:", id);"""''""'"
-    return true;
-
-  /**
-   * Get all scheduled notifications
-   */
-  public getSchedules(): ScheduledNotification[] { return Array.from(this.schedules.values()) }
-
-  /**
-   * Get scheduled notifications by type
-   */
-  public getSchedulesByType(type: ScheduledNotification["type"]): ScheduledNotification[] { return Array.from(this.schedules.values()).filter(s =) s.type === type} )"''""'"'
-
-  /**
-   * Get upcoming notifications
-   */
-  public getUpcomingNotifications(hours: number = 24): NotificationQueue[] {;
-const now = new Date(),
-const futureTime = new Date(now.getTime() + hours * 60 * 60 * 1000 );
-
-    return this.queue.filter(item =)
-      item.status === "pending" &&"'"'"'""'
-      item.scheduledFor }= now &&
-      item.scheduledFor <= futureTime
-    >.sort((a, b) =) a.scheduledFor.getTime() - b.scheduledFor.getTime()} }
-
-  /**
-   * Add medication reminder
-   */
-  public addMedicationReminder(medicationName: string),
-  dosage: string,
-    time: string,
-    days: string[] = ["Mon", 'Tue", "Wed', "Thu", "Fri", 'Sat", "Sun']""""''
-  }: string {
-    return this.addSchedule({
-  )
-$2: "medication",'"'"""''
-};
-
-title: "Medication Reminder",'"""'
-};
-
-message: `Time to take ${medicationName) (${
-  dosage))`,
-      time,
-      days,
-      enabled: true,
-};
-
-repeatInterval: "daily',""'""""
-};
-
-metadata: { medicationName,
-        dosage };
-  });
-
-  /**
-   * Add mood check-in reminder
-   */
-  public addMoodCheckIn(time: string),
-  days: string[] = ['Mon", "Tue', "Wed", "Thu", 'Fri", "Sat', "Sun"],""'""'
-    message: string = 'How are you feeling today?"""'"'""'
-  : string {
-    return this.addSchedule({))
-${
-  2: 'mood_checkin","""''""'
-      title: "Mood Check-In",""'""'
-      message,
-      time,
-      days,
-      enabled: true,
-      repeatInterval: 'daily""""'
-
-  /**
-   * Add therapy session reminder
-   */
-  public addTherapyReminder(therapistName: string),
-  sessionType: string,
-};
-
-time: string,
-};
-
-days: string[]
-  : string {
-    return this.addSchedule({;
-${
-  2: "therapy",'"'"""'')
-};
-
-title: "Therapy Session Reminder",'""'""'""')
-};
-
-message: })`Upcoming ${sessionType) session with ${
-  therapistName)`,
-      time,
-      days,
-      enabled: true,
-};
-
-repeatInterval: 'weekly",""'"'""'
-};
-
-metadata: { therapistName,
-        sessionType  })};
-
-  /**
-   * Schedule a notification
-   */
-  private scheduleNotification(schedule: ScheduledNotification): void { if (!schedule.enabled) return }
-const nextTime = this.calculateNextScheduledTime(schedule);
+  private scheduleNotification(schedule: NotificationSchedule) {
+    const nextTime = this.calculateNextScheduleTime(schedule);
     if (!nextTime) return;
-const now = new Date();
-const delay = nextTime.getTime() - now.getTime();
 
-    if (delay <= 0> {
-      // Should have been sent already, schedule for next occurrence
-      this.sendNotification(schedule ),
-      return }
+    const delay = nextTime - Date.now();
+    if (delay <= 0) {
+      setTimeout(() => this.executeNotification(schedule), 100);
+      return;
+    }
 
-    // Clear existing timer
-const existingTimer = this.timers.get(schedule.id);
-    if (existingTimer) { clearTimeout(existingTimer) }
+    const timer = setTimeout(() => {
+      this.executeNotification(schedule);
+    }, delay);
 
-    // Set new timer
-const timer = setTimeout(() =) { this.sendNotification(schedule) }, delay);
+    this.activeTimers.set(schedule.id, timer);
+    
+    schedule.nextScheduled = nextTime;
+    this.persistSchedule(schedule);
 
-    this.timers.set(schedule.id, timer);
+    logger.debug(`Scheduled notification ${schedule.id} for ${new Date(nextTime).toLocaleString()}`);
+  }
 
-    // Add to queue
-    this.addToQueue(schedule, nextTime);
+  private calculateNextScheduleTime(schedule: NotificationSchedule): number | null {
+    const now = Date.now();
+    let nextTime = schedule.scheduledTime;
 
-  /**
-   * Schedule all active notifications
-   */
-  private scheduleAllNotifications(): void { this.schedules.forEach(schedule =) {
+    if (schedule.recurrence === 'once' && nextTime <= now) {
+      return null;
+    }
+
+    switch (schedule.recurrence) {
+      case 'once':
+        return nextTime > now ? nextTime : null;
+
+      case 'daily':
+        while (nextTime <= now) {
+          nextTime += 24 * 60 * 60 * 1000;
+        }
+        break;
+
+      case 'weekly':
+        while (nextTime <= now) {
+          nextTime += 7 * 24 * 60 * 60 * 1000;
+        }
+        break;
+
+      case 'monthly':
+        const date = new Date(nextTime);
+        while (nextTime <= now) {
+          date.setMonth(date.getMonth() + 1);
+          nextTime = date.getTime();
+        }
+        break;
+
+      case 'custom':
+        if (schedule.customRecurrence) {
+          const interval = schedule.customRecurrence.interval * 60 * 1000;
+          while (nextTime <= now) {
+            nextTime += interval;
+          }
+          
+          if (schedule.customRecurrence.endDate && nextTime > schedule.customRecurrence.endDate) {
+            return null;
+          }
+        }
+        break;
+    }
+
+    return this.applySchedulingConditions(nextTime, schedule);
+  }
+
+  private applySchedulingConditions(scheduledTime: number, schedule: NotificationSchedule): number {
+    const prefs = this.preferences.get(schedule.userId);
+    if (!prefs) return scheduledTime;
+
+    const date = new Date(scheduledTime);
+    
+    if (prefs.quietHours.enabled) {
+      const hour = date.getHours();
+      const minute = date.getMinutes();
+      const currentTime = hour * 60 + minute;
+      
+      const [startHour, startMin] = prefs.quietHours.start.split(':').map(Number);
+      const [endHour, endMin] = prefs.quietHours.end.split(':').map(Number);
+      const quietStart = startHour * 60 + startMin;
+      const quietEnd = endHour * 60 + endMin;
+      
+      if (currentTime >= quietStart && currentTime <= quietEnd) {
+        date.setHours(endHour, endMin, 0, 0);
+        scheduledTime = date.getTime();
+      }
+    }
+
+    if (schedule.conditions?.skipWeekends) {
+      const dayOfWeek = date.getDay();
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+        const daysToAdd = dayOfWeek === 0 ? 1 : 2;
+        date.setDate(date.getDate() + daysToAdd);
+        scheduledTime = date.getTime();
+      }
+    }
+
+    return scheduledTime;
+  }
+
+  private async executeNotification(schedule: NotificationSchedule) {
+    try {
+      const prefs = this.preferences.get(schedule.userId);
+      
+      if (prefs && !prefs.globalEnabled) {
+        logger.debug(`Skipping notification for user ${schedule.userId} - globally disabled`);
+        return;
+      }
+
+      if (prefs && !prefs.typePreferences[schedule.type]?.enabled) {
+        logger.debug(`Skipping ${schedule.type} notification for user ${schedule.userId} - type disabled`);
+        return;
+      }
+
+      const success = await pushNotificationService.sendNotification(
+        schedule.userId,
+        schedule.message,
+        schedule.title,
+        schedule.metadata?.customData
+      );
+
+      const historyEntry: NotificationHistory = {
+        id: this.generateHistoryId(),
+        scheduleId: schedule.id,
+        userId: schedule.userId,
+        type: schedule.type,
+        title: schedule.title,
+        message: schedule.message,
+        sentAt: Date.now(),
+        deliveryStatus: success ? 'sent' : 'failed',
+        metadata: schedule.metadata?.customData,
+      };
+
+      this.history.push(historyEntry);
+      await this.persistHistory();
+
+      schedule.lastSent = Date.now();
+      await this.persistSchedule(schedule);
+
+      if (schedule.recurrence !== 'once') {
+        this.scheduleNotification(schedule);
+      }
+
+      logger.info(`Executed notification: ${schedule.id} (${schedule.type}) for user ${schedule.userId}`);
+    } catch (error) {
+      logger.error(`Failed to execute notification ${schedule.id}:`, error);
+    }
+  }
+
+  private cancelScheduledNotification(scheduleId: string) {
+    const timer = this.activeTimers.get(scheduleId);
+    if (timer) {
+      clearTimeout(timer);
+      this.activeTimers.delete(scheduleId);
+      logger.debug(`Cancelled scheduled notification: ${scheduleId}`);
+    }
+  }
+
+  private scheduleAllActiveNotifications() {
+    let scheduledCount = 0;
+    for (const schedule of this.schedules.values()) {
       if (schedule.enabled) {
-        this.scheduleNotification(schedule)}};
+        this.scheduleNotification(schedule);
+        scheduledCount++;
+      }
+    }
+    logger.info(`Scheduled ${scheduledCount} active notifications`);
+  }
 
-  /**
-   * Check for scheduled notifications that should be sent
-   */
-  private checkScheduledNotifications(): void(;)
-const now = new Date( );
-const currentTime = `${now.getHours().toString().padStart(2, '0")}:${now.getMinutes().toString().padStart(2, "0")}`;"'"
-const currentDay = ["Sun', "Mon", "Tue", 'Wed", "Thu', "Fri", "Sat"][now.getDay()];'""
+  public async setUserPreferences(userId: string, preferences: Partial<NotificationPreferences>): Promise<void> {
+    const existing = this.preferences.get(userId) || this.getDefaultPreferences(userId);
+    const updated = { ...existing, ...preferences };
+    
+    this.preferences.set(userId, updated);
+    await this.persistPreferences();
+    
+    logger.info(`Updated notification preferences for user: ${userId}`);
+  }
 
-    this.schedules.forEach(schedule =) { if (!schedule.enabled) return;
-      if (!schedule.days.includes(currentDay)) return;
-      if (schedule.time !== currentTime) return;
+  public getUserPreferences(userId: string): NotificationPreferences {
+    return this.preferences.get(userId) || this.getDefaultPreferences(userId);
+  }
 
-      // Check if already sent recently (within last 5 minutes)
-      if (schedule.lastSent) {;
-const timeSinceLastSent = now.getTime() - schedule.lastSent.getTime(),
-        if (timeSinceLastSent < 5 * 60 * 1000> return )
+  private getDefaultPreferences(userId: string): NotificationPreferences {
+    return {
+      userId,
+      globalEnabled: true,
+      quietHours: {
+        enabled: true,
+        start: '22:00',
+        end: '08:00',
+      },
+      typePreferences: {
+        'wellness-reminder': { enabled: true, priority: 'medium', frequency: 'normal' },
+        'mood-checkin': { enabled: true, priority: 'medium', frequency: 'normal' },
+        'therapy-appointment': { enabled: true, priority: 'high', frequency: 'normal' },
+        'medication-reminder': { enabled: true, priority: 'high', frequency: 'normal' },
+        'crisis-alert': { enabled: true, priority: 'critical', frequency: 'normal' },
+        'breathing-exercise': { enabled: true, priority: 'low', frequency: 'normal' },
+        'journal-prompt': { enabled: true, priority: 'low', frequency: 'normal' },
+        'safety-plan-review': { enabled: true, priority: 'medium', frequency: 'normal' },
+        'progress-update': { enabled: true, priority: 'low', frequency: 'normal' },
+        'custom': { enabled: true, priority: 'medium', frequency: 'normal' },
+      },
+      deliveryChannels: {
+        push: true,
+        email: false,
+        sms: false,
+      },
+      smartTiming: true,
+      respectDoNotDisturb: true,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    };
+  }
 
-      this.sendNotification(schedule) }};
+  public getNotificationHistory(userId: string, limit: number = 50): NotificationHistory[] {
+    return this.history
+      .filter(entry => entry.userId === userId)
+      .slice(-limit)
+      .reverse();
+  }
 
-  /**
-   * Send a scheduled notification
-   */
-  private async sendNotification(schedule: ScheduledNotification): Promise<void> { try {
-      // Check if notifications are enabled and user has permission
-const status = pushNotificationService.getStatus();
-      if (!status.hasPermission || !status.isSubscribed) {
-        console.log('[Scheduler] Cannot send notification - no permission or not subscribed");"""''""'"
-        this.updateQueueStatus(schedule.id, "cancelled"  );"''""'"'
-        return }
+  public async markNotificationInteraction(
+    historyId: string,
+    interactionType: 'opened' | 'dismissed' | 'action_taken',
+    metadata?: Record<string, any>
+  ): Promise<void> {
+    const entry = this.history.find(h => h.id === historyId);
+    if (entry) {
+      entry.interactionType = interactionType;
+      entry.interactionTime = Date.now();
+      if (metadata) {
+        entry.metadata = { ...entry.metadata, ...metadata };
+      }
+      await this.persistHistory();
+      logger.debug(`Marked notification interaction: ${historyId} - ${interactionType}`);
+    }
+  }
 
-      // Check quiet hours
-const userId = localStorage.getItem("userId") || "default';""'
-const shouldSend = await pushNotificationService.shouldSendNotification(;
-        userId,
-        schedule.type === 'medication" ? urgent: "non_urgent""''""'
-      )
-      if (!shouldSend) { console.log('[Scheduler] Notification blocked by quiet hours:", schedule.id);""'"'"'
-        this.updateQueueStatus(schedule.id, "cancelled");'"""'
+  private async persistSchedule(schedule: NotificationSchedule): Promise<void> {
+    await secureLocalStorage.setItem(`${this.STORAGE_PREFIX}schedule_${schedule.id}`, schedule);
+  }
 
-        // Reschedule for next occurrence
-        this.rescheduleNotification(schedule  );
-        return }
+  private async persistPreferences(): Promise<void> {
+    const prefsObject = Object.fromEntries(this.preferences.entries());
+    await secureLocalStorage.setItem(this.PREFS_STORAGE_KEY, prefsObject);
+  }
 
-      // Send the notification
-const registration = await navigator.serviceWorker.getRegistration();
-      if (!registration) { console.warn("[Scheduler] No service worker registration');""''""'
-        this.updateQueueStatus(schedule.id, "failed"  );"'""'
-        return }
+  private async persistHistory(): Promise<void> {
+    await secureLocalStorage.setItem(this.HISTORY_STORAGE_KEY, this.history);
+  }
 
-      await registration.showNotification(schedule.title, {
-  ))
-        body: schedule.message,
-        icon: '/icon-192.png",""'"'"'
-};
+  private generateScheduleId(): string {
+    return `schedule_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
 
-badge: "/icon-192.png",'"""'
-};
+  private generateHistoryId(): string {
+    return `history_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
 
-tag: `scheduled-${
-  schedule.id)`,
-};
+  public destroy(): void {
+    for (const timer of this.activeTimers.values()) {
+      clearTimeout(timer);
+    }
+    this.activeTimers.clear();
+    
+    logger.info('NotificationSchedulerService destroyed');
+  }
+}
 
-data: {,
-${
-  2: schedule.type,
-          scheduleId: schedule.id,
-};
+export const notificationSchedulerService = new NotificationSchedulerService();
 
-metadata: schedule.metadata,
-};
+export const useNotificationScheduler = (userId: string) => {
+  const [schedules, setSchedules] = React.useState<NotificationSchedule[]>([]);
+  const [preferences, setPreferences] = React.useState<NotificationPreferences | null>(null);
+  const [history, setHistory] = React.useState<NotificationHistory[]>([]);
 
-timestamp: Date.now()
-  },
-        requireInteraction: schedule.type === "medication'""''""'
-        // Note: actions property not supported in NotificationOptions
-        // Actions would be handled via service worker in production)
-      // Update last sent time
-      schedule.lastSent = new Date()
-      this.schedules.set(schedule.id, schedule);
-      this.saveSchedules();
+  React.useEffect(() => {
+    if (userId) {
+      const userSchedules = notificationSchedulerService.getUserSchedules(userId);
+      const userPrefs = notificationSchedulerService.getUserPreferences(userId);
+      const userHistory = notificationSchedulerService.getNotificationHistory(userId);
+      
+      setSchedules(userSchedules);
+      setPreferences(userPrefs);
+      setHistory(userHistory);
+    }
+  }, [userId]);
 
-      // Update queue status
-      this.updateQueueStatus(schedule.id, "sent");"'""'
+  const createSchedule = React.useCallback(async (schedule: Omit<NotificationSchedule, 'id' | 'createdAt' | 'updatedAt'>) => {
+    const newSchedule = await notificationSchedulerService.createSchedule(schedule);
+    setSchedules(prev => [...prev, newSchedule]);
+    return newSchedule;
+  }, []);
 
-      // Schedule next occurrence
-      this.rescheduleNotification(schedule);
+  const updateSchedule = React.useCallback(async (scheduleId: string, updates: Partial<NotificationSchedule>) => {
+    const updated = await notificationSchedulerService.updateSchedule(scheduleId, updates);
+    if (updated) {
+      setSchedules(prev => prev.map(s => s.id === scheduleId ? updated : s));
+    }
+    return updated;
+  }, []);
 
-      console.log('[Scheduler] Notification sent:", schedule.id);""'
-  } catch (error) { console.error("[Scheduler] Failed to send notification:', error );""''}"}"'
-      this.updateQueueStatus(schedule.id, "failed");'""'
+  const deleteSchedule = React.useCallback(async (scheduleId: string) => {
+    const success = await notificationSchedulerService.deleteSchedule(scheduleId);
+    if (success) {
+      setSchedules(prev => prev.filter(s => s.id !== scheduleId));
+    }
+    return success;
+  }, []);
 
-  /**
-   * Reschedule notification for next occurrence
-   */
-  private rescheduleNotification(schedule: ScheduledNotification): void {;}
-const nextTime = this.calculateNextScheduledTime(schedule);
-    if (nextTime) {
-      schedule.nextScheduled = nextTime;
-      this.schedules.set(schedule.id, schedule);
-      this.saveSchedules();
-      this.scheduleNotification(schedule );
+  const updatePreferences = React.useCallback(async (newPrefs: Partial<NotificationPreferences>) => {
+    await notificationSchedulerService.setUserPreferences(userId, newPrefs);
+    const updated = notificationSchedulerService.getUserPreferences(userId);
+    setPreferences(updated);
+  }, [userId]);
 
-  /**
-   * Calculate next scheduled time for a notification
-   */
-  private calculateNextScheduledTime(schedule: Partial<ScheduledNotification>): Date | null { if (!schedule.time || !schedule.days || schedule.days.length === 0) {
-      return null };
-[hours, minutes] = schedule.time.split(":").map(Number);""
-const now = new Date();
-const dayNames = ['Sun", "Mon', "Tue", "Wed", 'Thu", "Fri', "Sat"];""'""'
-
-    // Find next occurrence
-    for (let i = 0; i <= 7; i++> {   })
-const checkDate = new Date(now);
-      checkDate.setDate(checkDate.getDate() + i);
-      checkDate.setHours(hours, minutes, 0, 0  );
-const dayName = dayNames[checkDate.getDay()];
-
-      if (schedule.days.includes(dayName)) {
-        // Skip if it's today but the time has passed""'""''
-        if (i === 0 && checkDate.getTime() <= now.getTime()) {
-          continue }
-        return checkDate;
+  return {
+    schedules,
+    preferences,
+    history,
+    createSchedule,
+    updateSchedule,
+    deleteSchedule,
+    updatePreferences,
+    markInteraction: notificationSchedulerService.markNotificationInteraction.bind(notificationSchedulerService),
   };
-
-    return null;
-
-  /**
-   * Get notification actions based on type
-   * Note: Currently not used as actions aren"t supported in NotificationOptions"'"""'
-   * Keeping for future service worker implementation
-   */
-  // @ts-ignore - Method preserved for future use
-  private getNotificationActions(type: string): NotificationAction[] {
-    switch (type) {
-      case medication:"'""''"""'
-        return [
-          { action: "taken', title: "Mark as Taken" },'""""''
-          { action: "snooze", title: 'Remind in 15 min" }""'"'""'
-        ];
-      case mood_checkin:'"""'"'""'
-        return [
-          { action: 'checkin", title: "Check In Now" },"'""'""'
-          { action: "later", title: 'Later" }"'""""''
-        ];
-      case therapy:""'"'"""''
-        return [
-          { action: "confirm", title: 'Confirm" },""'"'""'
-          { action: 'reschedule", title: "Reschedule" }"'""'"'
-        ];
-      default:
-        return [
-          { action: "view", title: "View' },""''"""'
-          { action: "dismiss', title: "Dismiss" }'""""''
-        ];
-  };
-
-  /**
-   * Add notification to queue
-   */
-  private addToQueue(schedule: ScheduledNotification, scheduledFor: Date): void(// Remove existing queue item for this schedule)
-    this.queue = this.queue.filter(item =) item.notification.id !== schedule.id )
-    // Add new queue item
-    this.queue.push({
-  )
-      id: this.generateId(),
-      scheduledFor,
 };
 
-notification: schedule,
-};
-
-status: "pending"'""'
-  });
-
-    // Keep queue size manageable (last 100 items)
-    if (this.queue.length > 100) { this.queue = this.queue.slice(-100);
-
-  /**
-   * Update queue status
-   */
-  private updateQueueStatus(scheduleId: string, status: NotificationQueue["status"]): void(;'"'
-const queueItem = this.queue.find(item =) item.notification.id === scheduleId  };
-    if (queueItem) {
-      queueItem.status = status };
-
-  /**
-   * Load schedules from storage
-   */
-  private loadSchedules(): void { try {;
-const saved = localStorage.getItem("notification_schedules');""'""'"'
-      if (saved) {;
-const schedules = JSON.parse(saved  );
-        schedules.forEach((schedule: ScheduledNotification) =) {
-          // Restore dates
-          if (schedule.lastSent) {
-            schedule.lastSent = new Date(schedule.lastSent) }
-          if (schedule.nextScheduled) { schedule.nextScheduled = new Date(schedule.nextScheduled) }
-          this.schedules.set(schedule.id, schedule);
-  }};
-  };
-  } catch (error) { console.error("[Scheduler] Failed to load schedules:', error);")""'
-
-  /**
-   * Save schedules to storage
-   */
-  private saveSchedules(): void { try { }
-const schedules = Array.from(this.schedules.values( );
-      localStorage.setItem("notification_schedules", JSON.stringify(schedules)) ) catch (error) { console.error("[Scheduler] Failed to save schedules:', error );'}
-
-  /**
-   * Generate unique ID
-   */
-  private generateId(): string {
-    return }`${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  };
-
-// Create singleton instance
-export const notificationScheduler = new NotificationScheduler();
-
-// Export types
-interface type { { {(ScheduledNotification, NotificationQueue ) }
+export default notificationSchedulerService;

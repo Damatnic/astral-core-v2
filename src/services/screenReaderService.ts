@@ -1,1052 +1,472 @@
 /**
- * @fileoverview Advanced Screen Reader Service
- * Enhanced screen reader support with mental health-specific features
- * Provides live regions, descriptive announcements, and crisis-aware messaging
+ * Screen Reader Service
  *
- * @license Apache-2.0
- */;
-interface ScreenReaderAnnouncement { { { { message: string}
-  priority: "low' | "medium" | "high" | 'emergency""
-$2: 'navigation" | "status" | "error' | "crisis" | 'success" | "warning""'
-  context?: string; // Additional context for the announcement
-  persistent?: boolean; // Keep the announcement in the live region
-  delay?: number; // Delay before announcement (ms)
-interface ElementDescription { { { {
-  element: HTMLElement;,
-};
+ * Provides comprehensive screen reader support and accessibility features
+ * for the mental health platform. Includes ARIA live regions, semantic
+ * announcements, crisis-specific accessibility features, and real-time
+ * communication with assistive technologies.
+ *
+ * @fileoverview Screen reader integration and accessibility support
+ * @version 2.0.0
+ */
 
-role: string
-};
+import React, { useEffect, useRef, useCallback } from 'react';
+import { logger } from '../utils/logger';
 
-name: string
-  description?: string
-  state?: string
-  position?: string; // "1 of 5" style position info'"'"""''
-  shortcuts?: string[]; // Available keyboard shortcuts
-interface ScreenReaderService { { { {
-  private isInitialized = false;
-  private liveRegions: Map<string, HTMLElement> = new Map();
-  private announcementQueue: ScreenReaderAnnouncement[] = []
-  private isProcessingQueue = false
-  private lastAnnouncement = ""'""'
-  private announcementHistory: string[] = []
-  // Mental health specific contexts
-  private crisisContext = {}
-    isActive: false,
-    severity: "low" as 'low" | "medium' | "high",""'""'
-    interventionType: "none" as "none" | 'helper" | "ai' | "emergency""
+export type AnnouncementPriority = 'polite' | 'assertive' | 'off';
+export type AnnouncementType = 'status' | 'alert' | 'log' | 'marquee' | 'timer';
+
+export interface AccessibilityAnnouncement {
+  id: string;
+  message: string;
+  priority: AnnouncementPriority;
+  type: AnnouncementType;
+  timestamp: number;
+  delay?: number;
+  interrupt?: boolean;
+  repeat?: number;
+}
+
+export interface ScreenReaderCapabilities {
+  supportsAriaLive: boolean;
+  supportsAriaAtomic: boolean;
+  supportsAriaRelevant: boolean;
+  supportsRoleAlert: boolean;
+  supportsRoleStatus: boolean;
+  supportsRoleLog: boolean;
+  screenReaderDetected: boolean;
+  screenReaderName?: string;
+}
+
+export interface CrisisAccessibilityConfig {
+  enableCrisisAnnouncements: boolean;
+  crisisAnnouncementDelay: number;
+  enableEmergencyShortcuts: boolean;
+  emergencyShortcutKey: string;
+  enableHighContrastMode: boolean;
+  enableReducedMotion: boolean;
+  enableLargeText: boolean;
+}
+
+class ScreenReaderService {
+  private liveRegions: Map<AnnouncementPriority, HTMLElement> = new Map();
+  private announcementQueue: AccessibilityAnnouncement[] = [];
+  private isProcessingQueue = false;
+  private capabilities: ScreenReaderCapabilities;
+  private crisisConfig: CrisisAccessibilityConfig;
+  private listeners: Set<(announcement: AccessibilityAnnouncement) => void> = new Set();
+
+  constructor() {
+    this.capabilities = this.detectScreenReaderCapabilities();
+    this.crisisConfig = {
+      enableCrisisAnnouncements: true,
+      crisisAnnouncementDelay: 500,
+      enableEmergencyShortcuts: true,
+      emergencyShortcutKey: 'F1',
+      enableHighContrastMode: false,
+      enableReducedMotion: false,
+      enableLargeText: false,
+    };
+    this.init();
+  }
+
+  private init() {
+    if (typeof document !== 'undefined') {
+      this.createLiveRegions();
+      this.setupEventListeners();
+      this.setupCrisisAccessibilityFeatures();
+    }
+    logger.info('ScreenReaderService initialized with capabilities:', this.capabilities);
+  }
+
+  private detectScreenReaderCapabilities(): ScreenReaderCapabilities {
+    if (typeof window === 'undefined') {
+      return {
+        supportsAriaLive: false,
+        supportsAriaAtomic: false,
+        supportsAriaRelevant: false,
+        supportsRoleAlert: false,
+        supportsRoleStatus: false,
+        supportsRoleLog: false,
+        screenReaderDetected: false,
+      };
+    }
+
+    const userAgent = navigator.userAgent.toLowerCase();
+    const screenReaderDetected = 
+      'speechSynthesis' in window ||
+      userAgent.includes('nvda') ||
+      userAgent.includes('jaws') ||
+      userAgent.includes('voiceover') ||
+      userAgent.includes('talkback') ||
+      window.navigator.maxTouchPoints > 0;
+
+    let screenReaderName: string | undefined;
+    if (userAgent.includes('nvda')) screenReaderName = 'NVDA';
+    else if (userAgent.includes('jaws')) screenReaderName = 'JAWS';
+    else if (userAgent.includes('voiceover')) screenReaderName = 'VoiceOver';
+    else if (userAgent.includes('talkback')) screenReaderName = 'TalkBack';
+
+    return {
+      supportsAriaLive: true,
+      supportsAriaAtomic: true,
+      supportsAriaRelevant: true,
+      supportsRoleAlert: true,
+      supportsRoleStatus: true,
+      supportsRoleLog: true,
+      screenReaderDetected,
+      screenReaderName,
+    };
+  }
+
+  private createLiveRegions() {
+    const priorities: AnnouncementPriority[] = ['polite', 'assertive'];
+    
+    priorities.forEach(priority => {
+      const region = document.createElement('div');
+      region.id = `sr-live-region-${priority}`;
+      region.setAttribute('aria-live', priority);
+      region.setAttribute('aria-atomic', 'true');
+      region.setAttribute('aria-relevant', 'additions text');
+      region.style.position = 'absolute';
+      region.style.left = '-10000px';
+      region.style.width = '1px';
+      region.style.height = '1px';
+      region.style.overflow = 'hidden';
+      region.style.clipPath = 'inset(50%)';
+      
+      document.body.appendChild(region);
+      this.liveRegions.set(priority, region);
+    });
+
+    logger.debug('Screen reader live regions created');
+  }
+
+  private setupEventListeners() {
+    if ('matchMedia' in window) {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const prefersHighContrast = window.matchMedia('(prefers-contrast: high)');
+      
+      prefersReducedMotion.addEventListener('change', (e) => {
+        this.crisisConfig.enableReducedMotion = e.matches;
+        this.announceConfigChange('Reduced motion preference updated');
+      });
+
+      prefersHighContrast.addEventListener('change', (e) => {
+        this.crisisConfig.enableHighContrastMode = e.matches;
+        this.announceConfigChange('High contrast preference updated');
+      });
+    }
+
+    if (this.crisisConfig.enableEmergencyShortcuts) {
+      document.addEventListener('keydown', this.handleEmergencyShortcuts);
+    }
+  }
+
+  private setupCrisisAccessibilityFeatures() {
+    if (this.crisisConfig.enableHighContrastMode) {
+      document.documentElement.classList.add('high-contrast-mode');
+    }
+    
+    if (this.crisisConfig.enableReducedMotion) {
+      document.documentElement.classList.add('reduced-motion');
+    }
+
+    if (this.crisisConfig.enableLargeText) {
+      document.documentElement.classList.add('large-text-mode');
+    }
+  }
+
+  private handleEmergencyShortcuts = (event: KeyboardEvent) => {
+    if (event.key === this.crisisConfig.emergencyShortcutKey) {
+      event.preventDefault();
+      this.announceCrisisShortcut();
+    }
+    
+    if (event.ctrlKey && event.altKey) {
+      switch (event.key) {
+        case 'h':
+          this.announceHelp();
+          break;
+        case 'c':
+          this.announceCrisisResources();
+          break;
+        case 's':
+          this.announceSkipToMain();
+          break;
+      }
+    }
   };
 
-  /**
-   * Initialize screen reader service
-   */
-  public async initialize(): Promise<void> { if (this.isInitialized) return;
-    try(this.setupLiveRegions();)
-      this.setupElementDescriptions();
-      this.setupNavigationAnnouncements();
-      this.setupCrisisAnnouncements();
+  public announce(message: string, priority: AnnouncementPriority = 'polite', options?: Partial<AccessibilityAnnouncement>): string {
+    const announcement: AccessibilityAnnouncement = {
+      id: `announcement-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      message,
+      priority,
+      type: 'status',
+      timestamp: Date.now(),
+      delay: 0,
+      interrupt: false,
+      repeat: 1,
+      ...options,
+    };
+
+    this.announcementQueue.push(announcement);
+    this.processAnnouncementQueue();
+    
+    this.listeners.forEach(listener => listener(announcement));
+    
+    logger.debug(`Screen reader announcement queued: "${message}" (${priority})`);
+    return announcement.id;
+  }
+
+  public announceCrisis(message: string, emergencyContact?: string): string {
+    const fullMessage = emergencyContact 
+      ? `CRISIS ALERT: ${message}. Emergency contact available: ${emergencyContact}`
+      : `CRISIS ALERT: ${message}`;
+
+    return this.announce(fullMessage, 'assertive', {
+      type: 'alert',
+      delay: this.crisisConfig.crisisAnnouncementDelay,
+      interrupt: true,
+      repeat: 2,
+    });
+  }
+
+  public announceNavigation(destination: string, context?: string): string {
+    const message = context 
+      ? `Navigating to ${destination}. ${context}`
+      : `Navigating to ${destination}`;
+    
+    return this.announce(message, 'polite', { type: 'status' });
+  }
+
+  public announceFormValidation(fieldName: string, error: string): string {
+    const message = `${fieldName}: ${error}`;
+    return this.announce(message, 'assertive', { type: 'alert' });
+  }
+
+  public announceProgress(operation: string, percentage: number): string {
+    const message = `${operation} progress: ${percentage}% complete`;
+    return this.announce(message, 'polite', { type: 'status' });
+  }
+
+  public announceConnectionStatus(isOnline: boolean): string {
+    const message = isOnline 
+      ? 'Connection restored. All features are now available.'
+      : 'Connection lost. Some features may be limited. Crisis resources remain available offline.';
+    
+    return this.announce(message, 'assertive', { type: 'alert' });
+  }
+
+  private async processAnnouncementQueue() {
+    if (this.isProcessingQueue || this.announcementQueue.length === 0) {
+      return;
+    }
+
+    this.isProcessingQueue = true;
+
+    while (this.announcementQueue.length > 0) {
+      const announcement = this.announcementQueue.shift()!;
+      
+      if (announcement.interrupt) {
+        this.clearLiveRegions();
+      }
+
+      if (announcement.delay && announcement.delay > 0) {
+        await this.delay(announcement.delay);
+      }
+
+      for (let i = 0; i < (announcement.repeat || 1); i++) {
+        await this.performAnnouncement(announcement);
+        if (i < (announcement.repeat || 1) - 1) {
+          await this.delay(1000);
+        }
+      }
+    }
 
-      this.isInitialized = true;
-      console.log("[ScreenReader] Service initialized'  );""''""'
-
-      // Welcome announcement
-      this.announce({
-  )
-        message: "Screen reader enhanced. Mental health support features are active.","'"'"'""'
-        priority: "medium",;'"'
-
-};
-
-$2: 'status",""''""'
-};
-
-delay: 1000
-  }};
-   catch (error) { console.error('[ScreenReader] Initialization failed:", error );""''""'
-      throw error  };
-
-  /**
-   * Setup enhanced live regions for different announcement types
-   */
-  private setupLiveRegions(): void {;}
-const regions = [;]
-      {
-  id: 'sr-navigation",""''""'
-        politeness: 'polite",""''""'
-};
-
-label: 'Navigation announcements",""''""'
-};
-
-description: 'Page navigation and location updates"""'
-  },
-      {
-  id: 'sr-status","'""""''
-        politeness: "polite",'"'"""''
-};
-
-label: "Status updates",'"'"""''
-};
-
-description: "General status and progress information"'"'
-  },
-      {
-  id: "sr-alerts","'"'"'"""'
-        politeness: "assertive',""''""'
-};
-
-label: "Important alerts","''""'"'
-};
-
-description: "Important notifications and warnings""'""'
-  },
-      {
-  id: 'sr-crisis",""'"'"'
-        politeness: "assertive",'""'""'"'
-};
-
-label: "Crisis notifications',""'""'"'
-};
-
-description: "Emergency and crisis-related announcements'""""'
-  },
-      { id: 'sr-forms","'"""}
-        politeness: "polite',""''""'
-        label: "Form assistance",'"'"'"'
-        description: "Form validation and input assistance""''
-
-    regions.forEach(region =) {;}
-const element = document.getElementById(region.id);
-      if (!element) {
-  element = document.createElement("div");'"'"""''
-        element.id = region.id;
-        element.setAttribute("aria-live", region.politeness);'"'"""''
-        element.setAttribute("aria-label", region.label);'"""'
-        element.setAttribute("aria-description', region.description);""'""""
-        element.setAttribute('aria-relevant", "additions text');""""'"'
-        element.setAttribute("aria-atomic', "false");""''""'
-        element.style.cssText = ``
-          position: absolute;,
-  left: -10000px,
-  width: 1px;,
-  height: 1px;,
-  overflow: hidden;,
-};
-
-clip: rect(0, 0, 0, 0  );
-          white-space: nowrap
-};
-
-border: 0
-        `
-        document.body.appendChild(element) }
-      this.liveRegions.set(region.id, element);
-  });
-
-  /**
-   * Enhanced element descriptions with mental health context
-   */
-  private setupElementDescriptions(): void(// Add aria-descriptions to critical elements)
-    this.enhanceElementsWithDescriptions( );
-
-    // Monitor DOM changes for new elements
-const observer = new MutationObserver((mutations) => { mutations.forEach((mutation) => {
-        if (mutation.type === "childList") {""'""'
-          mutation.addedNodes.forEach((node) => {
-            if (node.nodeType === Node.ELEMENT_NODE) {
-              this.enhanceElementWithDescription(node as HTMLElement ) });
-  };
-  });
-  });
-
-    observer.observe(document.body, {
-  childList: true,)
-};
-
-subtree: true
-  ))
-  /**
-   * Enhance elements with descriptive aria labels
-   */
-  private enhanceElementsWithDescriptions(): void(// Crisis buttons)
-const crisisButtons = document.querySelectorAll("[data-crisis], .crisis-button, .emergency-button" );""'""'
-    crisisButtons.forEach((button) => {
-      this.enhanceElementWithDescription(button as HTMLElement, {
-  role: "button",""'""')
-};
-
-context: "crisis',"""'"'""')
-};
-
-urgency: 'high"""'
-  ))
-  });
-
-    // Helper chat elements
-const chatElements = document.querySelectorAll("[data-chat], .chat-message, .helper-message');""''"""'
-    chatElements.forEach((element) => {
-      this.enhanceElementWithDescription(element as HTMLElement, {
-  role: "chat',""'""")
-};
-
-context: "support',""'""""'')
-};
-
-dynamic: true
-  ))
-  });
-
-    // Navigation elements
-const navElements = document.querySelectorAll("nav, [role="navigation'], .sidebar, .menu");""'"'""'
-    navElements.forEach((element) => {
-      this.enhanceElementWithDescription(element as HTMLElement, {
-  role: 'navigation",""'"'"')
-};
-
-context: "main"'""'
-  ))
-  });
-
-    // Form elements
-const formElements = document.querySelectorAll("input, textarea, select, button[type="submit']");"'""""''
-    formElements.forEach((element) => { this.enhanceFormElement(element as HTMLElement) });
-
-  /**
-   * Enhance individual element with appropriate description
-   */
-  private enhanceElementWithDescription(element: HTMLElement),
-  options: { role?: string;
-      context?: string;
-      urgency?: "low" | 'medium" | "high";"'""'"'
-      dynamic?: boolean } = {}
-  ): void {
-    if (!element || element.hasAttribute("aria-description")) return;"'""'
-{ role, context, urgency, dynamic } = options;
-const description = '";""'"'"'
-
-    // Generate context-aware descriptions
-    switch (context) {
-  case crisis:'""""'
-        description = this.generateCrisisDescription(element, urgency);
-        break;
-      case support:"'"''""'
-        description = this.generateSupportDescription(element)
-        break
-      case main:"'"""'
-        description = this.generateNavigationDescription(element  )
-        break
-};
-
-default:
-};
-
-description = this.generateGeneralDescription(element, role) }
-
-    if (description) { element.setAttribute('aria-description", description  );""'"'""'
-
-      // Add role if not present
-      if (role && !element.getAttribute('role")) {"""''""'
-        element.setAttribute('role", role) }"""''""'"
-
-      // Mark dynamic content
-      if (dynamic) { element.setAttribute("aria-live", "polite' );""'
-  );
-
-  /**
-   * Generate crisis-specific descriptions
-   */
-  private generateCrisisDescription(element: HTMLElement, urgency = 'medium"): string {;"""'
-const baseText = element.textContent?.trim() || '";"'
-const urgencyText = urgency === "high" ? "Emergency action: " : 'Crisis support: ""'
-    if (element.classList.contains("crisis-button") || element.dataset.crisis) {""''""'""'
-      return `${urgencyText}${baseText}. Provides immediate access to crisis resources and emergency support.`;
-if (element.classList.contains("emergency-button")) {'""''""""'
-      return `Emergency action: ${baseText}. Connects you directly to emergency services and crisis counselors.`;
-return `${urgencyText}${baseText}. Part of the crisis support system.`;
-
-  /**
-   * Generate support-specific descriptions
-   */
-  private generateSupportDescription(element: HTMLElement): string {;
-const baseText = element.textContent?.trim() || '";"'""""'"'
-
-    if (element.classList.contains("helper-message')) {"""'"'""'
-      return `Helper message: ${baseText}. From a trained peer support specialist.`;
-if (element.classList.contains("ai-message")) {""''""'""'
-      return `AI assistant: ${baseText}. Supportive guidance from our mental health AI.`;
-if (element.classList.contains("chat-message")) {'""''""""'
-      return `Support message: ${baseText}. Part of your ongoing conversation.`;
-return `Support element: ${baseText}. Provides mental health assistance.`;
-
-  /**
-   * Generate navigation descriptions
-   */
-  private generateNavigationDescription(element: HTMLElement): string { if (element.tagName === 'NAV" || element.getAttribute("role') === "navigation") {""'"'
-      return "Main navigation menu. Use arrow keys to navigate between options." }'""""'
-
-    if (element.classList.contains('sidebar")) { return "Sidebar navigation. Contains main application features and crisis resources.' }""""'"'
-
-    return "Navigation element. Use Tab and arrow keys to navigate.';""'"
-
-  /**
-   * Generate general element descriptions
-   */
-  private generateGeneralDescription(element: HTMLElement, role?: string): string(;
-const tag = element.tagName.toLowerCase( );
-const actualRole = role || element.getAttribute("role') || tag;"""'
-const text = element.textContent?.trim() || "';""''""'
-
-    switch (actualRole) {
-      case button:"""'""'
-        return `Button: ${text}. Press Enter or Space to activate.`;
-      case link:'""'""''
-        return `Link: ${text}. Press Enter to follow.`;
-      case tab:""'"""'
-        return `Tab: ${text}. Use arrow keys to navigate between tabs.`;
-      case dialog:"'"'"'"'
-        return `Dialog window: ${text}. Press Escape to close.`;
-      case alert:"""'""'
-        return `Alert: ${text}. Important information.`;
-      default:
-        return text ? `${actualRole}: ${text}` : '";""'
-  };
-
-  /**
-   * Enhance form elements with helpful descriptions
-   */
-  private enhanceFormElement(element: HTMLElement): void(
-const input = element as HTMLInputElement
-const type = input.type || element.tagName.toLowerCase( );
-const description = "';""'
-const instructions = "";""''""'""'
-
-    switch (type) {
-  case email:""'"'"'""'
-        instructions = "Enter a valid email address.";'"'"'""'
-        break;
-      case password:""'"'"'""'
-        instructions = "Enter your password. Characters will be hidden for security.";'""''"""'
-        break;
-      case tel:"'""''"""'
-        instructions = "Enter a phone number for emergency contact.';""''"""'
-        break;
-      case textarea:"'""''"""'
-        instructions = "Enter detailed information. Use Ctrl+Enter to submit.';""'""""''
-        break;
-      case select:""'"'"""''
-        instructions = "Use arrow keys to browse options, Enter to select.";'"'"""''
-        break;
-      case checkbox:""'"'"""''
-        instructions = "Press Space to toggle. Current state will be announced.";'""'""'"'
-        break;
-      case radio:"'""'""'"'
-};
-
-instructions = "Use arrow keys to select from options in this group.';""'""'"'
-        break;
-      case submit:"'""'""'"'
-};
-
-instructions = "Press Enter or Space to submit the form.';"""'"'""'
-        break }
-
-    // Add crisis-specific form guidance
-    if (element.closest(".crisis-form, .emergency-form")) { description = "Crisis support form. ";'""'
-      instructions += ' This information helps us provide appropriate support." } else if (element.closest(".safety-plan")) { description = "Safety plan form. ';""'"'
-      instructions += " This creates your personal crisis management plan." };""
-const fullDescription = description + instructions;
-    if (fullDescription.trim()) { element.setAttribute('aria-description", fullDescription) }"'""""
-
-    // Add form validation announcements
-    this.setupFormValidation(input);
-
-  /**
-   * Setup form validation announcements
-   */
-  private setupFormValidation(input: HTMLInputElement): void { input.addEventListener('invalid", (event)  => {;"'"
-const element = event.target as HTMLInputElement;
-const message = element.validationMessage || "Invalid input";"''
-const fieldName = this.getFieldName(element)
-});
-
-      this.announce({
-  )
-};
-
-message: `${fieldName}: ${
-  message)`,
-};
-
-priority: "medium",;'""'
-
-${
-  2: "error",'""'""'"'
-};
-
-context: "form_validation'"""'
-  ))
-  });
-
-    input.addEventListener("input', (event)  => { ;""'"
-const element = event.target as HTMLInputElement;
-      if (element.checkValidity() && element.hasAttribute("aria-invalid")) {"''""'"'
-        element.removeAttribute("aria-invalid" );"''"
-const fieldName = this.getFieldName(element)
-});
-
-        this.announce({
-  )
-};
-
-message: }`${
-  fieldName): Input is now valid`,
-};
-
-priority: "low",;"'"'
-
-${
-  2: "success',""""'
-};
-
-context: 'form_validation""'
-  ))
-  };
-  });
-
-  /**
-   * Get human-readable field name
-   */
-  private getFieldName(element: HTMLElement): string { return()
-      element.getAttribute("aria-label") ||""'""'
-      element.getAttribute("placeholder") ||""''""'"'
-      (element.previousElementSibling as HTMLElement)?.textContent ||
-      (element as HTMLInputElement).name ||import "Field";"'"'
-    ).trim() }
-
-  /**
-   * Setup navigation announcements
-   */
-  private setupNavigationAnnouncements(): void { // Monitor page/view changes
-const lastUrl = location.href;
-const lastTitle = document.title;
-const announcePageChange = () => {
-      if (location.href !== lastUrl || document.title !== lastTitle) {;
-};
-
-const pageName = this.getPageName() };
-
-const pageDescription = this.getPageDescription(),
-
-        this.announce({
-  )
-};
-
-message: }`Navigated to ${pageName}. ${
-  pageDescription)`,
-};
-
-priority: "medium',;""'"
-
-${
-  2: "navigation',"""'"'""'
-          context: 'page_change""""'
-  ))
-};
-
-lastUrl = location.href
-};
-
-lastTitle = document.title };
-  };
-
-    // Monitor for programmatic navigation
-const originalPushState = history.pushState;
-const originalReplaceState = history.replaceState;
-
-    history.pushState = function(...args) { originalPushState.apply(history, args );
-      setTimeout(announcePageChange, 100);
-
-    history.replaceState = function(...args) { originalReplaceState.apply(history, args );
-      setTimeout(announcePageChange, 100 );
-
-    window.addEventListener('popstate", () => { setTimeout(announcePageChange, 100) });"'""""'"'
-
-    // Monitor focus changes for navigation feedback
-    document.addEventListener("focusin', (event)  => {;""""'
-const target = event.target as HTMLElement,
-      if (target && this.shouldAnnounceElement(target)) {
-        this.announceFocusedElement(target)
-});
-  });
-
-  /**
-   * Get user-friendly page name
-   */
-  private getPageName(): string(// Try to extract from main heading)
-const mainHeading = document.querySelector('h1, [role="heading"][aria-level='1"]" );""'""'
-    if (mainHeading?.textContent) {
-      return mainHeading.textContent.trim() }
-
-    // Try document title
-    if (document.title && document.title !== 'Astral Core") { return document.title }""'"'""'
-
-    // Extract from URL or view state
-const path = location.pathname;
-const pathSegments = path.split('/").filter(Boolean);""'"'""'
-
-    if (pathSegments.length > 0) { return pathSegments[pathSegments.length - 1]
-        .replace(/-/g, ' ")""'"'"'
-        .replace(/\b\w/g, l => l.toUpperCase()) }
-
-    return "Main Page";'""'
-
-  /**
-   * Get page description with mental health context
-   */
-  private getPageDescription(): string {;
-const path = location.pathname };
-
-descriptions: Record<string, string> = {}
-      "/crisis": 'Emergency crisis resources and immediate support options.","'""""''
-      "/safety-plan": 'Personal safety plan creation and management.","'""''
-      "/chat": 'Live chat with trained peer support helpers.","""'
-      '/ai-chat": "AI-powered mental health assistance and guidance.',"""
-      "/helpers': "Connect with trained peer support specialists.",'""""''
-      "/resources": 'Mental health resources and educational materials.",""'"'""'
-      "/settings": "Application settings and accessibility options.",''""''
-      "/wellness": "Wellness tracking and mood monitoring tools.",'"'"'""'
-      "/": 'Main feed with community support and resources." };"'""""''
-
-    return descriptions[path] || "Mental health support platform page.";'""'
-
-  /**
-   * Determine if element focus should be announced
-   */
-  private shouldAnnounceElement(element: HTMLElement): boolean { // Always announce crisis elements
-    if (element.dataset.crisis || element.classList.contains("crisis-button") || element.classList.contains('emergency-button")) {"''""'
-      return true }
-
-    // Announce interactive elements
-const interactiveTags = ["button", 'a", "input', "select", "textarea"];'"
-const hasInteractiveRole = ["button', "link", "tab", 'menuitem"].includes(;"
-      element.getAttribute('role") || """'""'"'
-    );
-
-    return interactiveTags.includes(element.tagName.toLowerCase()) || hasInteractiveRole;
-
-  /**
-   * Announce focused element with context
-   */
-  private announceFocusedElement(element: HTMLElement): void(
-const description = this.generateElementAnnouncement(element )
-    if (description) {
-      this.announce({
-  message: description,)
-};
-
-priority: "low",;"''
-
-${
-  2: "navigation",'"'"""'')
-};
-
-context: "focus_change"'"""'
-  ))
-  };
-
-  /**
-   * Generate comprehensive element announcement
-   */
-  private generateElementAnnouncement(element: HTMLElement): string {
-  ,
-};
-
-parts: string[] = []
-    // Element name/text }
-
- name = this.getElementName(element)
-    if (name) parts.push(name);
-
-    // Element role
-const role = this.getElementRole(element);
-    if (role) parts.push(role);
-
-    // Element state
-const state = this.getElementState(element);
-    if (state) parts.push(state);
-
-    // Position information
-const position = this.getElementPosition(element);
-    if (position) parts.push(position);
-
-    // Available shortcuts
-const shortcuts = this.getElementShortcuts(element);
-    if (shortcuts.length > 0) {
-      parts.push()}`Shortcut: ${shortcuts.join(", ')}`);""'
-return parts.join(", ");""'"'
-
-  /**
-   * Get element name/label
-   */
-  private getElementName(element: HTMLElement): string { return()
-      element.getAttribute("aria-label') ||"""'"'""'
-      element.getAttribute('aria-labelledby") ||""'"'"'
-      element.getAttribute("title') ||"""'"'""'
-      (element as HTMLInputElement).placeholder ||
-      element.textContent?.trim() ||
-      """"'""'
-    ) }
-
-  /**
-   * Get element role
-   */
-  private getElementRole(element: HTMLElement): string(
-const explicitRole = element.getAttribute("role");""''""'"'
-    if (explicitRole) return explicitRole;
-const tagName = element.tagName.toLowerCase( );
-const typeAttribute = (element as HTMLInputElement).type;
-
-    if (tagName === "input" && typeAttribute) {"''""''
-      return `${typeAttribute} input`;
-return tagName;
-
-  /**
-   * Get element state information
-   */
-  private getElementState(element: HTMLElement): string {   };
-
-states: string[] = []
-    // Checked state
-    if (element.hasAttribute("aria-checked")) {""''""'""'
-      states.push(element.getAttribute("aria-checked") === 'true" ? checked: "unchecked') } else if ((element as HTMLInputElement).checked !== undefined) { states.push((element as HTMLInputElement).checked ? checked: "unchecked") }""'"'
-
-    // Selected state
-    if (element.getAttribute("aria-selected") === 'true") { states.push("selected") }"''""'
-
-    // Expanded state
-    if (element.hasAttribute("aria-expanded")) { states.push(element.getAttribute("aria-expanded") === 'true" ? expanded: "collapsed') }""""''
-
-    // Disabled state
-    if (element.hasAttribute("disabled") || element.getAttribute('aria-disabled") === "true") { states.push("disabled') }""'"'
-
-    // Required state
-    if (element.hasAttribute("required") || element.getAttribute("aria-required') === "true") { states.push('required") }"""'"'
-
-    return states.join(", ');""'
-
-  /**
-   * Get element position information
-   */
-  private getElementPosition(element: HTMLElement): string(// Try aria-setsize and aria-posinset first)
-const posInSet = element.getAttribute("aria-posinset');"'
-const setSize = element.getAttribute("aria-setsize" );""''""'"'
-
-    if (posInSet && setSize) {
-      return `${posInSet} of ${setSize}`;
-
-    // Calculate position in parent container
-const parent = element.parentElement;
-    if (parent) {;
-const siblings = Array.from(parent.children).filter(;)
-};
-
-child => child.tagName === element.tagName
-       );
-const index = siblings.indexOf(element ),
-
-      if (index >= 0 && siblings.length > 1) {
-        return `${index + 1} of ${siblings.length}`;
-  };
-
-    return "";"''
-
-  /**
-   * Get available keyboard shortcuts for element
-   */
-  private getElementShortcuts(element: HTMLElement): string[] {
-  ,
-};
-
-shortcuts: string[] = []
-    // Check for accesskey }
-
- accessKey = element.getAttribute("accesskey")'"'
-    if (accessKey) {
-      shortcuts.push(`Alt+${accessKey)`);
-
-    // Crisis-specific shortcuts
-    if (element.dataset.crisis || element.classList.contains("crisis-button")) { shortcuts.push("Alt+C') }""''"""'
-
-    if (element.classList.contains("emergency-button')) { shortcuts.push("Alt+E") }'""""''
-
-    // Tab-specific shortcuts
-    if (element.getAttribute("role") === 'tab") { shortcuts.push("Arrow keys to navigate tabs") }"''""'
-
-    return shortcuts;
-
-  /**
-   * Setup crisis-specific announcements
-   */
-  private setupCrisisAnnouncements(): void {
-    // Monitor crisis state changes
-    document.addEventListener("crisis-state-change', ((event: CustomEvent) => {;""""'
-{ isActive, severity, interventionType } = event.detail;
-
-      this.crisisContext = { isActive, severity, interventionType };
-
-      if (isActive) { this.announceCrisisActivation(severity, interventionType) } else(this.announceCrisisResolution() );
-  }) as EventListener);
-
-    // Monitor for crisis buttons
-    document.addEventListener('click", (event)  => {;"'
-const target = event.target as HTMLElement;
-      if (target.dataset.crisis || target.classList.contains("crisis-button") || target.classList.contains("emergency-button")) {'"'"'""'
-        this.announceCrisisAction(target)
-});
-  });
-
-  /**
-   * Announce crisis activation
-   */
-  private announceCrisisActivation(severity: string, interventionType: string): void {;
-const message = "Crisis support activated. ";'"'"'"'
-
-    switch (severity) {
-  case high:"""''""'"'
-        message += "High priority crisis detected. Emergency resources are being prepared.";"'""'
-        break;
-      case medium:'""'"""''
-        message += "Crisis support is ready. Trained helpers are available.";'"'"""''
-        break };
-
-default: message += "Support resources are now active."'""'
-
-    if (interventionType !== "none") {'"'"'"'
-      message += ` ${interventionType} support is being connected.`;
-this.announce({
-  message,)
-};
-
-priority: "emergency",;""
-
-${
-  2: 'crisis","'"""")
-};
-
-persistent: true
-  ))
-  /**
-   * Announce crisis resolution
-   */
-  private announceCrisisResolution(): void {
-    this.announce({
-  message: 'Crisis support session ended. Regular support resources remain available.","'""""'')
-};
-
-priority: "medium",;'""'
-
-${2: "status"''""
-  ))
-  /**
-   * Announce crisis action taken
-   */
-  private announceCrisisAction(element: HTMLElement): void(
-const action = element.textContent?.trim() || "Crisis action";'""'
-const isEmergency = element.classList.contains('emergency-button" );""'
-const message = }}`${action} activated. `;
-
-    if (isEmergency) { message += "Emergency services are being contacted. Stay on the line.' } else { message += "Crisis resources are loading. Help is on the way." }'""""'"'
-
-    this.announce({
-  message,)
-};
-
-priority: "emergency',;""'"
-
-${
-  2: "crisis',"""'"'""')
-};
-
-persistent: true
-  ))
-  /**
-   * Queue and process announcements
-   */
-  public announce(announcement: ScreenReaderAnnouncement): void(// Add to queue)
-    this.announcementQueue.push(announcement )
-    // Start processing if not already processing
-    if (!this.isProcessingQueue) { this.processAnnouncementQueue();
-
-  /**
-   * Process announcement queue
-   */
-  private async processAnnouncementQueue(): Promise<void> { this.isProcessingQueue = true;
-
-    while (this.announcementQueue.length > 0) {;
-const announcement = this.announcementQueue.shift()!,
-
-      // Skip duplicate announcements
-      if (this.lastAnnouncement === announcement.message) {
-        continue }
-
-      // Apply delay if specified
-      if (announcement.delay) { await new Promise(resolve => setTimeout(resolve, announcement.delay)) }
-
-      await this.deliverAnnouncement(announcement);
-      this.lastAnnouncement = announcement.message;
-      this.announcementHistory.push(announcement.message);
-
-      // Keep history manageable
-      if (this.announcementHistory.length > 50) { this.announcementHistory.shift() }
-
-      // Brief pause between announcements
-      await new Promise(resolve => setTimeout(resolve, 100));
-this.isProcessingQueue = false;
-
-  /**
-   * Deliver announcement to appropriate live region
-   */
-  private async deliverAnnouncement(announcement: ScreenReaderAnnouncement): Promise<void> {   };
-
-regionId: string
-    switch (announcement.type) {
-  case crisis:'""'"""''
-        regionId = "sr-crisis";'""'""'""'
-        break;
-      case navigation:'""'"""''
-        regionId = "sr-navigation";'""'""'"'
-        break;
-      case error:"'"""""'
-      case warning:'""'"'""'
-};
-
-regionId = "sr-alerts";'""''"""'
-        break;
-      case status:"'"'""'"'
-      case success:"""'""'
-};
-
-default: regionId = announcement.priority === 'high" ? "sr-alerts" : "sr-status'""
-  };
-const region = this.liveRegions.get(regionId);
-    if (!region) return;
-
-    // Clear previous content if not persistent
-    if (!announcement.persistent) { region.textContent = '" }""'"'"'
-
-    // Add new announcement
-    setTimeout(() => {
-      if (announcement.persistent) {
-        region.textContent += }` ${announcement.message}`;
-  } else(region.textContent = announcement.message );
-  }, 50);
-
-    // Clear non-persistent announcements after delay
-    if (!announcement.persistent) { setTimeout(() => {
-        if (region.textContent === announcement.message) {
-          region.textContent = "" };'""'
-  }, 8000);
-console.log(`[ScreenReader] Announced: ${announcement.message)`);
-
-  /**
-   * Get announcement history
-   */
-  public getAnnouncementHistory(): string[] { return [...this.announcementHistory] }
-
-  /**
-   * Clear announcement history
-   */
-  public clearAnnouncementHistory(): void { this.announcementHistory.length = 0 }
-
-  /**
-   * Set crisis context
-   */
-  public setCrisisContext(context: Partial<typeof this.crisisContext>): void {
-    this.crisisContext = { ...this.crisisContext, ...context }
-
-  /**
-   * Get crisis context
-   */
-  public getCrisisContext(): typeof this.crisisContext {
-    return { ...this.crisisContext  }
-
-  /**
-   * Announce form validation errors
-   */
-  public announceFormValidation(field: string, error: string | null): void {
-    if (error) {
-      this.announce({
-  )
-};
-
-message: `Validation error for ${field}: ${
-  error)`,
-};
-
-priority: "medium",;'""'
-
-${
-  2: "error",""'""'
-};
-
-context: "form-validation'"""'
-  )
-  } else {
-      this.announce({
-  )
-};
-
-message: }`${
-  field) is valid`,
-};
-
-priority: "low',;""'
-
-${
-  2: "success",""'""'
-};
-
-context: "form-validation'"""'
-  ))
-  };
-
-  /**
-   * Announce focus change
-   */
-  public announceFocusChange(element: HTMLElement, context?: string): void(;
-const role = element.getAttribute("role') || element.tagName.toLowerCase( );""'"
-const label = element.getAttribute("aria-label") || element.textContent || "Unnamed element';"'"'"'
-
-    this.announce({
-  )
-};
-
-message: }`Focus moved to ${role}: ${
-  label)`,
-      priority: "low",;"''
-
-};
-
-$2: "navigation",'""'""'""'
-};
-
-context: context || 'focus-change""'
-  ))
-  /**
-   * Announce loading state
-   */
-  public announceLoadingState(isLoading: boolean, context?: string): void {
-    this.announce({
-  message: isLoading ? "Loading content, please wait" : 'Content loaded",""'"'""')
-};
-
-priority: 'medium",;""'
-
-${
-  2: "status',""''"""')
-};
-
-context: context || "loading'""'"
-  ))
-  /**
-   * Announce success message
-   */
-  public announceSuccess(message: string, context?: string): void {
-    this.announce({
-  message,)
-};
-
-priority: "medium",;"''
-
-${
-  2: "success",'""'""'"')
-};
-
-context: context || "success'"""'
-  ))
-  /**
-   * Announce error message
-   */
-  public announceError(message: string, context?: string): void {
-    this.announce({
-  message,)
-};
-
-priority: "high',;""'"
-
-${
-  2: "error","'""')
-};
-
-context: context || 'error"""'
-  ))
-  /**
-   * Announce page change
-   */
-  public announcePageChange(pageName: string, context?: string): void {
-    this.announce({
-  )
-};
-
-message: }}}`Navigated to ${
-  pageName)`,
-};
-
-priority: "medium',;""'
-
-${
-  2: "navigation",""''""'"'
-};
-
-context: context || "page-change""'"'
-  ))
-  /**
-   * Announce keyboard shortcuts
-   */
-  public announceKeyboardShortcuts(shortcuts: string[]): void {;
-const message = }`Available keyboard shortcuts: ${shortcuts.join(", ')}`;""'""''
-    this.announce({
-  message,)
-};
-
-priority: "low",;'"""'
-
-${
-  2: "status',""''"""')
-};
-
-context: "keyboard-shortcuts'"'""
-  ))
-  /**
-   * Announce crisis escalation
-   */
-  public announceCrisisEscalation(level: string, action: string): void {
-    this.announce({
-  )
-};
-
-message: }`Crisis support activated. Level: ${level}. Action: ${
-  action)`,
-      priority: "emergency',;""'
-
-$2: "crisis",""'""'
-};
-
-context: "crisis-escalation',""""'
-};
-
-persistent: true
-  ))
-  /**
-   * Destroy service and clean up
-   */
-  public destroy(): void(this.liveRegions.clear( )
-    this.announcementQueue.length = 0;
-    this.announcementHistory.length = 0;
     this.isProcessingQueue = false;
+  }
 
-    console.log('[ScreenReader] Service destroyed");""'
+  private async performAnnouncement(announcement: AccessibilityAnnouncement) {
+    const liveRegion = this.liveRegions.get(announcement.priority);
+    if (!liveRegion) {
+      logger.warn(`Live region not found for priority: ${announcement.priority}`);
+      return;
+    }
 
-// Export singleton instance
-export default ScreenReaderService;
+    liveRegion.textContent = '';
+    await this.delay(50);
+
+    liveRegion.textContent = announcement.message;
+    
+    logger.debug(`Screen reader announcement made: "${announcement.message}" (${announcement.priority})`);
+
+    setTimeout(() => {
+      if (liveRegion.textContent === announcement.message) {
+        liveRegion.textContent = '';
+      }
+    }, 10000);
+  }
+
+  private clearLiveRegions() {
+    this.liveRegions.forEach(region => {
+      region.textContent = '';
+    });
+  }
+
+  private announceConfigChange(message: string) {
+    this.announce(`Accessibility setting changed: ${message}`, 'polite');
+  }
+
+  private announceCrisisShortcut() {
+    this.announce(
+      'Emergency shortcut activated. Press Ctrl+Alt+C for crisis resources, Ctrl+Alt+H for help, or contact emergency services if in immediate danger.',
+      'assertive',
+      { type: 'alert', interrupt: true }
+    );
+  }
+
+  private announceHelp() {
+    this.announce(
+      'Help available. Use Tab to navigate, Enter to activate, Escape to close dialogs. Press F1 for emergency shortcuts.',
+      'polite',
+      { type: 'status' }
+    );
+  }
+
+  private announceCrisisResources() {
+    this.announce(
+      'Crisis resources available. Safety plan, emergency contacts, and coping strategies accessible in main menu.',
+      'assertive',
+      { type: 'alert' }
+    );
+  }
+
+  private announceSkipToMain() {
+    const mainContent = document.querySelector('main') || document.querySelector('#main-content');
+    if (mainContent) {
+      (mainContent as HTMLElement).focus();
+      this.announce('Skipped to main content', 'polite');
+    }
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  public updateCrisisConfig(config: Partial<CrisisAccessibilityConfig>) {
+    this.crisisConfig = { ...this.crisisConfig, ...config };
+    this.setupCrisisAccessibilityFeatures();
+    logger.info('Crisis accessibility config updated:', config);
+  }
+
+  public getCapabilities(): ScreenReaderCapabilities {
+    return { ...this.capabilities };
+  }
+
+  public getCrisisConfig(): CrisisAccessibilityConfig {
+    return { ...this.crisisConfig };
+  }
+
+  public subscribe(listener: (announcement: AccessibilityAnnouncement) => void): () => void {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
+  }
+
+  public clearQueue(): void {
+    this.announcementQueue.length = 0;
+    this.clearLiveRegions();
+    logger.debug('Screen reader announcement queue cleared');
+  }
+
+  public destroy() {
+    document.removeEventListener('keydown', this.handleEmergencyShortcuts);
+    
+    this.liveRegions.forEach(region => {
+      if (region.parentNode) {
+        region.parentNode.removeChild(region);
+      }
+    });
+    
+    this.liveRegions.clear();
+    this.listeners.clear();
+    this.clearQueue();
+    
+    logger.info('ScreenReaderService destroyed');
+  }
+}
+
 export const screenReaderService = new ScreenReaderService();
+
+export const useScreenReader = () => {
+  const [announcements, setAnnouncements] = React.useState<AccessibilityAnnouncement[]>([]);
+
+  useEffect(() => {
+    const unsubscribe = screenReaderService.subscribe((announcement) => {
+      setAnnouncements(prev => [...prev.slice(-9), announcement]);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  const announce = useCallback((message: string, priority: AnnouncementPriority = 'polite', options?: Partial<AccessibilityAnnouncement>) => {
+    return screenReaderService.announce(message, priority, options);
+  }, []);
+
+  const announceCrisis = useCallback((message: string, emergencyContact?: string) => {
+    return screenReaderService.announceCrisis(message, emergencyContact);
+  }, []);
+
+  const announceNavigation = useCallback((destination: string, context?: string) => {
+    return screenReaderService.announceNavigation(destination, context);
+  }, []);
+
+  return {
+    announce,
+    announceCrisis,
+    announceNavigation,
+    announcements,
+    capabilities: screenReaderService.getCapabilities(),
+    crisisConfig: screenReaderService.getCrisisConfig(),
+    updateCrisisConfig: screenReaderService.updateCrisisConfig.bind(screenReaderService),
+    clearQueue: screenReaderService.clearQueue.bind(screenReaderService),
+  };
+};
+
+export const ScreenReaderLiveRegion: React.FC<{
+  priority: AnnouncementPriority;
+  children?: React.ReactNode;
+}> = ({ priority, children }) => {
+  const regionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (regionRef.current && children) {
+      const text = regionRef.current.textContent || '';
+      if (text.trim()) {
+        screenReaderService.announce(text, priority);
+      }
+    }
+  }, [children, priority]);
+
+  return (
+    <div
+      ref={regionRef}
+      aria-live={priority}
+      aria-atomic="true"
+      aria-relevant="additions text"
+      style={{
+        position: 'absolute',
+        left: '-10000px',
+        width: '1px',
+        height: '1px',
+        overflow: 'hidden',
+        clipPath: 'inset(50%)',
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
+export default screenReaderService;

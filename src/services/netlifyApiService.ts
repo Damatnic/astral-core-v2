@@ -1,294 +1,551 @@
 /**
- * Netlify API Service for CoreV2
- * Handles communication with Netlify Functions backend
- */;
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/.netlify/functions';""""'
-interface AuthResponse { { { { token: string}
-  user: {
-  ,
-};
+ * Netlify API Service
+ *
+ * Provides integration with Netlify's deployment and hosting APIs for the mental health platform.
+ * Handles deployment status, form submissions, edge functions, and environment management
+ * with proper error handling and monitoring.
+ *
+ * @fileoverview Netlify API integration and deployment management
+ * @version 2.0.0
+ */
 
-id: string
-};
+import { logger } from '../utils/logger';
+import { ENV } from '../utils/envConfig';
 
-email: string
-    name?: string
-    locale?: string
-    timezone?: string };
-interface MoodEntry { { { {
-  id: string;,
-  user_id: string;,
-  mood_value: number;,
-};
+export interface NetlifyDeployment {
+  id: string;
+  url: string;
+  deploy_url: string;
+  admin_url: string;
+  state: 'building' | 'ready' | 'error' | 'processing';
+  created_at: string;
+  updated_at: string;
+  commit_ref: string;
+  branch: string;
+  context: 'production' | 'deploy-preview' | 'branch-deploy';
+  error_message?: string;
+  deploy_time?: number;
+  published_at?: string;
+}
 
-mood_label: string
-  notes?: string
-  activities?: string[]
-  location?: any
-  weather?: any
-  encrypted_data?: string,
-};
+export interface NetlifyFormSubmission {
+  id: string;
+  form_id: string;
+  form_name: string;
+  data: Record<string, any>;
+  created_at: string;
+  ip: string;
+  user_agent: string;
+  referrer?: string;
+  site_url: string;
+}
 
-created_at: string
+export interface NetlifyFunction {
+  name: string;
+  sha: string;
+  runtime: string;
+  size: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface NetlifySiteInfo {
+  id: string;
+  name: string;
+  url: string;
+  admin_url: string;
+  deploy_url: string;
+  state: 'current' | 'processing' | 'error';
+  created_at: string;
+  updated_at: string;
+  plan: string;
+  account_name: string;
+  account_slug: string;
+  git_provider: string;
+  build_settings: {
+    repo_url: string;
+    branch: string;
+    cmd: string;
+    dir: string;
+    env: Record<string, string>;
   };
-interface WellnessAssessment { { { {
-  id: string;,
-  user_id: string;,
-  assessment_type: string;,
-  responses: Record<string, number>,
-  score: number;,
-  risk_level: string
-};
+}
 
-recommendations: string[]
-};
+export interface NetlifyConfig {
+  apiToken: string;
+  siteId: string;
+  baseUrl: string;
+  enableFormHandling: boolean;
+  enableFunctionMonitoring: boolean;
+  enableDeploymentWebhooks: boolean;
+}
 
-created_at: string
-  };
-interface CrisisLog { { { {
-  id: string
-  user_id?: string
-};
+class NetlifyApiService {
+  private config: NetlifyConfig;
+  private readonly API_BASE_URL = 'https://api.netlify.com/api/v1';
 
-action_type: string
-  resource_accessed?: string
-  severity_level?: string
-  location?: any
-  session_id?: string,
-};
+  constructor() {
+    this.config = {
+      apiToken: ENV.NETLIFY_API_TOKEN || '',
+      siteId: ENV.NETLIFY_SITE_ID || '',
+      baseUrl: ENV.NETLIFY_BASE_URL || 'https://astral-core-mental-health.netlify.app',
+      enableFormHandling: true,
+      enableFunctionMonitoring: true,
+      enableDeploymentWebhooks: true,
+    };
 
-created_at: string
-  };
-interface NetlifyApiService { { { { private token: string | null = null}
-$2ructor() {
-    // Initialize token from localStorage if available
-    if (typeof window !== 'undefined") {"'""}"
-      this.token = localStorage.getItem("auth_token');""'
+    if (!this.config.apiToken || !this.config.siteId) {
+      logger.warn('Netlify API credentials not configured. Some features will be disabled.');
+    } else {
+      logger.info('NetlifyApiService initialized with site:', this.config.siteId);
+    }
+  }
 
-  setToken(token: string) { this.token = token;
-    if (typeof window !== 'undefined") {""'"}'}""'
-      localStorage.setItem('auth_token", token );"""'
+  private async makeRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+    if (!this.config.apiToken) {
+      throw new Error('Netlify API token not configured');
+    }
 
-  getToken(): string | null { if (!this.token && typeof window !== "undefined") {'"""}'
-      this.token = localStorage.getItem("auth_token') }""''"""'
-    return this.token;
-clearToken() { this.token = null;
-    if (typeof window !== "undefined') {""'"""
-      localStorage.removeItem("auth_token' );""'""""''
-      localStorage.removeItem("user_data" );'"'
+    const url = `${this.API_BASE_URL}${endpoint}`;
+    const headers = {
+      'Authorization': `Bearer ${this.config.apiToken}`,
+      'Content-Type': 'application/json',
+      ...options.headers,
+    };
 
-  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {   }
-const token = this.getToken();
-headers: HeadersInit = {}
-      "Content-Type': "application/json",'""""''
-      ...(options.headers || {}),;
-  };
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers,
+      });
 
-    if (token && !endpoint.includes("api-auth")) {'"'""}"''
-      (headers as any)["Authorization"] = `Bearer ${token}`;'"""'
-try {}
-const response = await fetch(`${API_BASE}/${endpoint}`, { ...options,
-        headers});
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Netlify API error (${response.status}): ${errorText}`);
+      }
 
-      // Handle 401 Unauthorized
-      if (response.status === 401 && !endpoint.includes("api-auth')) { this.clearToken();""''""'
-        if (typeof window !== "undefined") {"''""'"'
-          window.location.href = "/login" }"'"'"'"'
-        throw new Error("Unauthorized");"''"
+      return await response.json();
+    } catch (error) {
+      logger.error(`Netlify API request failed for ${endpoint}:`, error);
+      throw error;
+    }
+  }
 
-      // Handle other errors
-      if (!response.ok) {,
-const errorData = await response.json().catch(() =) ({})};
-        throw new Error(errorData.error || `API Error: ${response.statusText}`);
-return response.json();
-  } catch (error) { console.error(`API request failed for ${endpoint):`, error);
-      throw error };
+  // Deployment Management
+  public async getCurrentDeployment(): Promise<NetlifyDeployment | null> {
+    try {
+      const deployments = await this.makeRequest<NetlifyDeployment[]>(
+        `/sites/${this.config.siteId}/deploys?per_page=1`
+      );
+      return deployments[0] || null;
+    } catch (error) {
+      logger.error('Failed to get current deployment:', error);
+      return null;
+    }
+  }
 
-  // ============= Auth Methods =============
-  async login(auth0Data: { auth0_id: string; email: string, name?: string }): Promise<AuthResponse> {;}
-const result = await this.request<AuthResponse>("api-auth", {
-  "''""'"'
-};
+  public async getDeploymentHistory(limit: number = 10): Promise<NetlifyDeployment[]> {
+    try {
+      return await this.makeRequest<NetlifyDeployment[]>(
+        `/sites/${this.config.siteId}/deploys?per_page=${limit}`
+      );
+    } catch (error) {
+      logger.error('Failed to get deployment history:', error);
+      return [];
+    }
+  }
 
-method: "POST","'""'
-};
+  public async getDeploymentById(deployId: string): Promise<NetlifyDeployment | null> {
+    try {
+      return await this.makeRequest<NetlifyDeployment>(`/deploys/${deployId}`);
+    } catch (error) {
+      logger.error(`Failed to get deployment ${deployId}:`, error);
+      return null;
+    }
+  }
 
-body: JSON.stringify(auth0Data)});
+  public async triggerDeployment(branch: string = 'main'): Promise<NetlifyDeployment | null> {
+    try {
+      return await this.makeRequest<NetlifyDeployment>(
+        `/sites/${this.config.siteId}/deploys`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            branch,
+            title: `Manual deployment from ${branch}`,
+          }),
+        }
+      );
+    } catch (error) {
+      logger.error('Failed to trigger deployment:', error);
+      return null;
+    }
+  }
 
-    this.setToken(result.token);
+  public async cancelDeployment(deployId: string): Promise<boolean> {
+    try {
+      await this.makeRequest(`/deploys/${deployId}/cancel`, { method: 'POST' });
+      logger.info(`Deployment ${deployId} cancelled successfully`);
+      return true;
+    } catch (error) {
+      logger.error(`Failed to cancel deployment ${deployId}:`, error);
+      return false;
+    }
+  }
 
-    // Store user data
-    if (typeof window !== 'undefined") { localStorage.setItem("user_data", JSON.stringify(result.user)) }"'""'"'
+  // Site Information
+  public async getSiteInfo(): Promise<NetlifySiteInfo | null> {
+    try {
+      return await this.makeRequest<NetlifySiteInfo>(`/sites/${this.config.siteId}`);
+    } catch (error) {
+      logger.error('Failed to get site info:', error);
+      return null;
+    }
+  }
 
-    return result;
-async logout() { this.clearToken() }
+  public async updateSiteSettings(settings: Partial<NetlifySiteInfo>): Promise<NetlifySiteInfo | null> {
+    try {
+      return await this.makeRequest<NetlifySiteInfo>(
+        `/sites/${this.config.siteId}`,
+        {
+          method: 'PATCH',
+          body: JSON.stringify(settings),
+        }
+      );
+    } catch (error) {
+      logger.error('Failed to update site settings:', error);
+      return null;
+    }
+  }
 
-  getCurrentUser() { if (typeof window === "undefined") return null;"}'}"'
-const userData = localStorage.getItem("user_data'  );"""'"'"'
-    if (userData) {
-      try {
-        return JSON.parse(userData) } catch(return null );
+  // Form Handling
+  public async getFormSubmissions(formName: string, limit: number = 50): Promise<NetlifyFormSubmission[]> {
+    if (!this.config.enableFormHandling) {
+      logger.warn('Form handling is disabled');
+      return [];
+    }
 
-    return null;
+    try {
+      return await this.makeRequest<NetlifyFormSubmission[]>(
+        `/sites/${this.config.siteId}/forms/${formName}/submissions?per_page=${limit}`
+      );
+    } catch (error) {
+      logger.error(`Failed to get form submissions for ${formName}:`, error);
+      return [];
+    }
+  }
 
-  // ============= Mood Tracking =============
-  async getMoodEntries(limit = 30): Promise<MoodEntry[]> {
-    return this.request<MoodEntry[]>(`api-mood?limit="${limit}`);'"'
-async createMoodEntry(data: {
-  ,)
-};
+  public async getAllForms(): Promise<Array<{ id: string; name: string; paths: string[]; submission_count: number }>> {
+    if (!this.config.enableFormHandling) {
+      logger.warn('Form handling is disabled');
+      return [];
+    }
 
-mood_value: number)
-};
+    try {
+      return await this.makeRequest<Array<{ id: string; name: string; paths: string[]; submission_count: number }>>(
+        `/sites/${this.config.siteId}/forms`
+      );
+    } catch (error) {
+      logger.error('Failed to get forms:', error);
+      return [];
+    }
+  }
 
-mood_label: string
-    notes?: string
-    activities?: string[]
-    encrypted_data?: string }): Promise<MoodEntry> { return this.request<MoodEntry>("api-mood", {"'""}'
-      method: 'POST",""'"'"'
-      body: JSON.stringify(data))};
-async updateMoodEntry(id: string, data: Partial<MoodEntry>): Promise<MoodEntry> {
-    return this.request<MoodEntry>(`api-mood/${id}`, {
-  method: "PUT",'"""'
-};
+  public async deleteFormSubmission(submissionId: string): Promise<boolean> {
+    if (!this.config.enableFormHandling) {
+      logger.warn('Form handling is disabled');
+      return false;
+    }
 
-body: JSON.stringify(data)});
-async deleteMoodEntry(id: string): Promise<void> {
-    return this.request<void>(`api-mood/${id}`, { method: "DELETE'});""'
+    try {
+      await this.makeRequest(`/submissions/${submissionId}`, { method: 'DELETE' });
+      logger.info(`Form submission ${submissionId} deleted successfully`);
+      return true;
+    } catch (error) {
+      logger.error(`Failed to delete form submission ${submissionId}:`, error);
+      return false;
+    }
+  }
 
-  // ============= Wellness Assessments =============
-  async getWellnessAssessments(type?: string, limit = 10): Promise<WellnessAssessment[]> {   }
-const params = new URLSearchParams();
-    if (type) params.append('type", type);""'"'""'
-    params.append('limit", limit.toString( );"""'')")"'
-    return this.request<WellnessAssessment[]>(`api-wellness?${params}`);
-async submitWellnessAssessment(data: {
-  ,)
-};
+  // Edge Functions
+  public async getFunctions(): Promise<NetlifyFunction[]> {
+    if (!this.config.enableFunctionMonitoring) {
+      logger.warn('Function monitoring is disabled');
+      return [];
+    }
 
-assessment_type: string)
-};
+    try {
+      return await this.makeRequest<NetlifyFunction[]>(`/sites/${this.config.siteId}/functions`);
+    } catch (error) {
+      logger.error('Failed to get functions:', error);
+      return [];
+    }
+  }
 
-responses: Record<string, number> }): Promise<WellnessAssessment> { return this.request<WellnessAssessment>("api-wellness", {""'}"}"'
-      method: 'POST","""''""'"
-      body: JSON.stringify(data)}};
-async getAssessmentHistory(type: string): Promise<WellnessAssessment[]> {
-    return this.request<WellnessAssessment[]>(`api-wellness/history?type="${type}`);""
+  public async invokeFunctionTest(functionName: string, payload?: Record<string, any>): Promise<any> {
+    if (!this.config.enableFunctionMonitoring) {
+      logger.warn('Function monitoring is disabled');
+      return null;
+    }
 
-  // ============= Crisis Support =============
-  async logCrisisAction(data: { action_type: string
-    resource_accessed?: string
-    severity_level?: string
-    location?: any }): Promise<CrisisLog> { return this.request<CrisisLog>('api-crisis', {"""}"}
-      method: 'POST',""""
-      body: JSON.stringify({
-  ...data,)
-};
+    try {
+      const response = await fetch(`${this.config.baseUrl}/.netlify/functions/${functionName}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: payload ? JSON.stringify(payload) : undefined,
+      });
 
-session_id: this.getSessionId()}),;
-  )};
-async getCrisisHistory(limit = 10): Promise<CrisisLog[]> {
-    return this.request<CrisisLog[]>(`api-crisis?limit='${limit}`);""'
+      if (!response.ok) {
+        throw new Error(`Function invocation failed: ${response.statusText}`);
+      }
 
-  // ============= Analytics =============
-  async trackEvent(eventName: string, properties: Record<string, any> = {}) { try {
-      await this.request("api-analytics", {
-  ""'""'
-};
+      return await response.json();
+    } catch (error) {
+      logger.error(`Failed to invoke function ${functionName}:`, error);
+      throw error;
+    }
+  }
 
-method: "POST",""'""'
-};
+  // Environment Variables
+  public async getEnvironmentVariables(): Promise<Record<string, string>> {
+    try {
+      const envVars = await this.makeRequest<Array<{ key: string; values: Array<{ value: string; context: string }> }>>(
+        `/accounts/${this.config.siteId}/env`
+      );
 
-body: JSON.stringify({
-  ,
-  event_name: eventName,)
-};
+      const result: Record<string, string> = {};
+      envVars.forEach(envVar => {
+        const productionValue = envVar.values.find(v => v.context === 'production');
+        if (productionValue) {
+          result[envVar.key] = productionValue.value;
+        }
+      });
 
-event_properties: properties,)
-};
+      return result;
+    } catch (error) {
+      logger.error('Failed to get environment variables:', error);
+      return {};
+    }
+  }
 
-session_id: this.getSessionId()}),;
-  });
-  } catch (error) { // Don"t throw on analytics errors"""}'""'
-      console.error("Failed to track event:", error );""
+  public async setEnvironmentVariable(key: string, value: string, contexts: string[] = ['production']): Promise<boolean> {
+    try {
+      await this.makeRequest(
+        `/accounts/${this.config.siteId}/env/${key}`,
+        {
+          method: 'PUT',
+          body: JSON.stringify({
+            values: contexts.map(context => ({ value, context })),
+          }),
+        }
+      );
+      logger.info(`Environment variable ${key} set successfully`);
+      return true;
+    } catch (error) {
+      logger.error(`Failed to set environment variable ${key}:`, error);
+      return false;
+    }
+  }
 
-  async getAnalyticsSummary(days = 30): Promise<unknown> {
-    return this.request(`api-analytics/summary?days='${days)`);""'
+  public async deleteEnvironmentVariable(key: string): Promise<boolean> {
+    try {
+      await this.makeRequest(`/accounts/${this.config.siteId}/env/${key}`, { method: 'DELETE' });
+      logger.info(`Environment variable ${key} deleted successfully`);
+      return true;
+    } catch (error) {
+      logger.error(`Failed to delete environment variable ${key}:`, error);
+      return false;
+    }
+  }
 
-  // ============= User Preferences =============
-  async getUserPreferences(): Promise<unknown> { return this.request("api-preferences") }""'""'
+  // Webhooks
+  public async createWebhook(url: string, event: string): Promise<{ id: string; url: string; event: string } | null> {
+    if (!this.config.enableDeploymentWebhooks) {
+      logger.warn('Deployment webhooks are disabled');
+      return null;
+    }
 
-  async updateUserPreferences(preferences: any): Promise<unknown> { return this.request("api-preferences', {
-  """"')
-};
+    try {
+      return await this.makeRequest<{ id: string; url: string; event: string }>(
+        `/hooks`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            site_id: this.config.siteId,
+            type: 'url',
+            event,
+            data: { url },
+          }),
+        }
+      );
+    } catch (error) {
+      logger.error('Failed to create webhook:', error);
+      return null;
+    }
+  }
 
-method: 'PUT","'"")
-};
+  public async deleteWebhook(hookId: string): Promise<boolean> {
+    if (!this.config.enableDeploymentWebhooks) {
+      logger.warn('Deployment webhooks are disabled');
+      return false;
+    }
 
-body: JSON.stringify(preferences)});
+    try {
+      await this.makeRequest(`/hooks/${hookId}`, { method: 'DELETE' });
+      logger.info(`Webhook ${hookId} deleted successfully`);
+      return true;
+    } catch (error) {
+      logger.error(`Failed to delete webhook ${hookId}:`, error);
+      return false;
+    }
+  }
 
-  // ============= Resources =============
-  async getResources(type?: string, locale?: string): Promise<any[]> {;
-const params = new URLSearchParams();
-    if (type) params.append("type", type);'"'"'"'
-    if (locale) params.append("locale", locale  );""'""'
-    return this.request(`api-resources?${params)`);
-async trackResourceAccess(resourceId: string, duration?: number) { try {
-      await this.request("api-resources/track', {
-  """"'
-};
+  // Monitoring and Analytics
+  public async getDeploymentMetrics(deployId: string): Promise<{
+    buildTime: number;
+    deployTime: number;
+    totalTime: number;
+    fileCount: number;
+    totalSize: number;
+  } | null> {
+    try {
+      const deployment = await this.getDeploymentById(deployId);
+      if (!deployment) return null;
 
-method: 'POST","'""
-};
+      // Calculate metrics from deployment data
+      const buildTime = deployment.deploy_time || 0;
+      const deployTime = deployment.published_at && deployment.created_at 
+        ? new Date(deployment.published_at).getTime() - new Date(deployment.created_at).getTime()
+        : 0;
 
-body: JSON.stringify({
-  ,
-  resource_id: resourceId,)
-};
+      return {
+        buildTime,
+        deployTime,
+        totalTime: buildTime + deployTime,
+        fileCount: 0, // This would require additional API calls to get file details
+        totalSize: 0,  // This would require additional API calls to get size details
+      };
+    } catch (error) {
+      logger.error(`Failed to get deployment metrics for ${deployId}:`, error);
+      return null;
+    }
+  }
 
-duration_seconds: duration,)
-};
+  public async getBandwidthUsage(): Promise<{ used: number; included: number; additional: number } | null> {
+    try {
+      const siteInfo = await this.getSiteInfo();
+      if (!siteInfo) return null;
 
-session_id: this.getSessionId()}),;
-  });
-  } catch (error) { console.error("Failed to track resource access:", error );'"'
+      // This is a simplified version - actual bandwidth data would require account-level API access
+      return {
+        used: 0,
+        included: 100 * 1024 * 1024 * 1024, // 100GB default for most plans
+        additional: 0,
+      };
+    } catch (error) {
+      logger.error('Failed to get bandwidth usage:', error);
+      return null;
+    }
+  }
 
-  // ============= AI Support =============
-  async sendAIMessage(message: string, context?: any): Promise<unknown> { return this.request("api-ai/chat', {
-  ""'")"''
-};
+  // Health Check
+  public async healthCheck(): Promise<{
+    status: 'healthy' | 'degraded' | 'unhealthy';
+    deployment: NetlifyDeployment | null;
+    site: NetlifySiteInfo | null;
+    lastCheck: string;
+  }> {
+    const lastCheck = new Date().toISOString();
+    
+    try {
+      const [deployment, site] = await Promise.all([
+        this.getCurrentDeployment(),
+        this.getSiteInfo(),
+      ]);
 
-method: "POST",'""'""'""'
-};
+      let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
+      
+      if (!deployment || !site) {
+        status = 'unhealthy';
+      } else if (deployment.state === 'error' || site.state === 'error') {
+        status = 'degraded';
+      } else if (deployment.state !== 'ready' || site.state !== 'current') {
+        status = 'degraded';
+      }
 
-body: JSON.stringify({
-  message,
-        context,)
-};
+      return {
+        status,
+        deployment,
+        site,
+        lastCheck,
+      };
+    } catch (error) {
+      logger.error('Health check failed:', error);
+      return {
+        status: 'unhealthy',
+        deployment: null,
+        site: null,
+        lastCheck,
+      };
+    }
+  }
 
-session_id: this.getSessionId()}),;
-  });
-async getAIConversationHistory(): Promise<any[]> { return this.request('api-ai/history") }""'"'""'
+  public getConfig(): NetlifyConfig {
+    return { ...this.config };
+  }
 
-  // ============= Helper Methods =============
-  private getSessionId(): string(if (typeof window === 'undefined") return "";")'
-const sessionId = sessionStorage.getItem("session_id" );'""'""'"'
-    if (!sessionId) {
-  
-};
+  public updateConfig(newConfig: Partial<NetlifyConfig>): void {
+    this.config = { ...this.config, ...newConfig };
+    logger.info('Netlify API config updated:', newConfig);
+  }
+}
 
-sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      sessionStorage.setItem("session_id', sessionId);"""'
-return sessionId;
-
-  // Check if user is authenticated
-  isAuthenticated(): boolean { return !!this.getToken() }
-
-  // Get auth headers for external requests
-  getAuthHeaders(): HeadersInit(;)
-const token = this.getToken( );
-    return token ? { Authorization: `Bearer ${token}` } : {};"""''
-
-// Export singleton instance
 export const netlifyApiService = new NetlifyApiService();
+
+// React Hook for Netlify Integration
+export const useNetlifyApi = () => {
+  const [deploymentStatus, setDeploymentStatus] = React.useState<NetlifyDeployment | null>(null);
+  const [siteInfo, setSiteInfo] = React.useState<NetlifySiteInfo | null>(null);
+
+  React.useEffect(() => {
+    const loadInitialData = async () => {
+      const [deployment, site] = await Promise.all([
+        netlifyApiService.getCurrentDeployment(),
+        netlifyApiService.getSiteInfo(),
+      ]);
+      setDeploymentStatus(deployment);
+      setSiteInfo(site);
+    };
+
+    loadInitialData();
+  }, []);
+
+  const triggerDeploy = React.useCallback(async (branch: string = 'main') => {
+    const deployment = await netlifyApiService.triggerDeployment(branch);
+    if (deployment) {
+      setDeploymentStatus(deployment);
+    }
+    return deployment;
+  }, []);
+
+  const refreshStatus = React.useCallback(async () => {
+    const deployment = await netlifyApiService.getCurrentDeployment();
+    setDeploymentStatus(deployment);
+    return deployment;
+  }, []);
+
+  return {
+    deploymentStatus,
+    siteInfo,
+    triggerDeploy,
+    refreshStatus,
+    healthCheck: netlifyApiService.healthCheck.bind(netlifyApiService),
+    getDeploymentHistory: netlifyApiService.getDeploymentHistory.bind(netlifyApiService),
+    getFormSubmissions: netlifyApiService.getFormSubmissions.bind(netlifyApiService),
+    getFunctions: netlifyApiService.getFunctions.bind(netlifyApiService),
+  };
+};
+
 export default netlifyApiService;
