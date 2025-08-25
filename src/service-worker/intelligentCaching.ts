@@ -7,683 +7,639 @@
  * - Adaptive cache strategies
  * - Performance-aware resource loading
  */
-interface CacheStrategy { { { {
-  name: string;,
-  pattern: RegExp
-};
 
-strategy: "CacheFirst' | "NetworkFirst" | "StaleWhileRevalidate" | 'NetworkOnly" | "CacheOnly'""
-};
+interface CacheStrategy {
+  name: string;
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  maxAge: number;
+  maxEntries: number;
+  networkFirst?: boolean;
+  staleWhileRevalidate?: boolean;
+}
 
-options: {
-  
-};
-
-cacheName: string
-    expiration?: {
-  maxEntries: number;,
-};
-
-maxAgeSeconds: number
-};
-
-purgeOnQuotaError: boolean
-  };
-    networkTimeoutSeconds?: number;
-    plugins?: unknown[];
-  };
-  priority: "crisis" | 'high" | "medium' | "low""
-  };
-interface UserBehaviorMetrics { { { { visitedRoutes: string[]}
+interface UserBehaviorPattern {
+  frequentRoutes: string[];
   timeSpentOnRoutes: Record<string, number>;
-  crisisInteractions: number;,
-  helperRequests: number;,
-  lastActiveTime: number;,
-  preferredFeatures: string[],
-  networkCondition: "fast' | "slow" | 'offline""",
-  deviceCapabilities: {,
-  memory: number;,
-};
+  crisisIndicators: string[];
+  lastActive: number;
+  sessionDuration: number;
+}
 
-connection: string
-};
+interface CacheMetrics {
+  hitRate: number;
+  missRate: number;
+  averageResponseTime: number;
+  storageUsage: number;
+  lastUpdated: number;
+}
 
-isLowEnd: boolean
+interface PrefetchPrediction {
+  url: string;
+  probability: number;
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  estimatedLoadTime: number;
+  userContext: string;
+}
 
- class IntelligentCachingManager {
-  private userMetrics: UserBehaviorMetrics
-  private prefetchQueue: string[] = []
-  private cacheStrategies: CacheStrategy[] = []
-  private analyticsCache: Map<string, any> = new Map();
-$2ructor() {
-    this.userMetrics = this.initializeUserMetrics();
-    this.setupCacheStrategies();
-    this.setupEventListeners() }
+class IntelligentCachingStrategy {
+  private cache: Cache | null = null;
+  private userBehavior: UserBehaviorPattern;
+  private cacheMetrics: CacheMetrics;
+  private strategies: Map<string, CacheStrategy>;
+  private prefetchQueue: PrefetchPrediction[] = [];
 
-  /**
-   * Initialize user behavior tracking
-   */
-  private initializeUserMetrics(): UserBehaviorMetrics(;
-const stored = localStorage.getItem("astral-cache-metrics' );""'
-defaults: UserBehaviorMetrics = {}
-      visitedRoutes: [],
+  constructor() {
+    this.userBehavior = {
+      frequentRoutes: [],
       timeSpentOnRoutes: {},
-      crisisInteractions: 0,
-      helperRequests: 0,
-      lastActiveTime: Date.now(),
-      preferredFeatures: [],
-      networkCondition: 'fast",""'"'""'
-      deviceCapabilities: {
-  ,
-  memory: (navigator as any).deviceMemory || 4,
-};
+      crisisIndicators: [],
+      lastActive: Date.now(),
+      sessionDuration: 0
+    };
 
-connection: (navigator as any).connection?.effectiveType || '4g","""''""'
-};
+    this.cacheMetrics = {
+      hitRate: 0,
+      missRate: 0,
+      averageResponseTime: 0,
+      storageUsage: 0,
+      lastUpdated: Date.now()
+    };
 
-isLowEnd: (navigator as any).deviceMemory < 2
-  >
-  };
-
-    return stored ? { ...defaults, ...JSON.parse(stored) } : defaults;
+    this.strategies = new Map();
+    this.initializeStrategies();
+  }
 
   /**
-   * Setup advanced cache strategies with crisis prioritization
+   * Initialize caching strategies for different resource types
    */
-  private setupCacheStrategies(): void {
-    this.cacheStrategies = []
-      // CRISIS TIER - Highest Priority (Never purge, immediate access)
-      {
-  name: "Crisis Resources",""'""'
-        pattern: /\/(crisis|emergency|suicide-prevention|hotline).*\.(json|html|js|css)$/,
-};
+  private initializeStrategies(): void {
+    // Crisis resources - highest priority
+    this.strategies.set('crisis', {
+      name: 'crisis-resources',
+      priority: 'critical',
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      maxEntries: 100,
+      networkFirst: false,
+      staleWhileRevalidate: true
+    });
 
-strategy: 'CacheFirst","""''""'"
-};
+    // Core app shell
+    this.strategies.set('app-shell', {
+      name: 'app-shell',
+      priority: 'critical',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxEntries: 50,
+      networkFirst: false,
+      staleWhileRevalidate: false
+    });
 
-options: {
-  ,
-};
+    // User data and preferences
+    this.strategies.set('user-data', {
+      name: 'user-data',
+      priority: 'high',
+      maxAge: 60 * 60 * 1000, // 1 hour
+      maxEntries: 200,
+      networkFirst: true,
+      staleWhileRevalidate: true
+    });
 
-cacheName: "crisis-resources-v3","''""'"'
-};
+    // Static assets
+    this.strategies.set('static', {
+      name: 'static-assets',
+      priority: 'medium',
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      maxEntries: 500,
+      networkFirst: false,
+      staleWhileRevalidate: false
+    });
 
-expiration: {
-  ,
-  maxEntries: 50,
-};
+    // API responses
+    this.strategies.set('api', {
+      name: 'api-responses',
+      priority: 'high',
+      maxAge: 15 * 60 * 1000, // 15 minutes
+      maxEntries: 300,
+      networkFirst: true,
+      staleWhileRevalidate: true
+    });
+  }
 
-maxAgeSeconds: 60 * 60 * 24 * 180, // 6 months
-};
+  /**
+   * Initialize the cache
+   */
+  async initialize(): Promise<void> {
+    try {
+      this.cache = await caches.open('intelligent-cache-v1');
+      await this.loadUserBehavior();
+      await this.updateCacheMetrics();
+      this.startBehaviorTracking();
+    } catch (error) {
+      console.error('Failed to initialize intelligent caching:', error);
+    }
+  }
 
-purgeOnQuotaError: false
-  },
-          plugins: [this.createCrisisPlugin()]
-  },
-        priority: "crisis""'"'
-  },
-
-      // MENTAL HEALTH CORE - High Priority
-      {
-  name: "Core Mental Health Features',""'""'"'
-        pattern: /\/(mood-tracker|journal|coping-strategies|meditation).*\.(json|js|css)$/,
-};
-
-strategy: "StaleWhileRevalidate',"""'"'""'
-};
-
-options: {
-  ,
-};
-
-cacheName: 'mental-health-core-v3",""'"'""'
-};
-
-expiration: {
-  ,
-  maxEntries: 100,
-};
-
-maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-};
-
-purgeOnQuotaError: false
-  },
-          plugins: [this.createPerformancePlugin()]
-  },
-        priority: 'high"""'"
-  },
-
-      // API RESPONSES - Intelligent caching based on content type
-      {
-  name: 'API Responses","""''""'
-        pattern: /^https:\/\/.*\.netlify\.app\/\.netlify\/functions\/.*/,
-};
-
-strategy: "NetworkFirst",""'""'
-};
-
-options: {
-  ,
-};
-
-cacheName: 'api-responses-v3","""''""'"
-};
-
-expiration: {
-  ,
-  maxEntries: 200,
-};
-
-maxAgeSeconds: 60 * 60 * 6, // 6 hours
-};
-
-purgeOnQuotaError: true
-  },
-          networkTimeoutSeconds: this.getAdaptiveTimeout(),
-          plugins: [this.createAPIPlugin()]
-  },
-        priority: "high""''"
-  },
-
-      // USER-SPECIFIC DATA - Based on behavior patterns
-      {
-  name: "User Data","'"'"'""'
-        pattern: /\/(profile|preferences|history|sessions).*\.json$/,
-};
-
-strategy: "NetworkFirst",'""''"""'
-};
-
-options: {
-  ,
-};
-
-cacheName: "user-data-v3',""'""""
-};
-
-expiration: {
-  ,
-  maxEntries: 50,
-};
-
-maxAgeSeconds: 60 * 60 * 24, // 24 hours
-};
-
-purgeOnQuotaError: true
-  },
-          plugins: [this.createUserDataPlugin()]
-  },
-        priority: 'high""'"
-  },
-
-      // STATIC ASSETS - Optimized for device capabilities
-      {
-  name: "Static Assets","'"'"'"""'
-        pattern: /\.(?:js|css|woff2|ttf)$/,
-};
-
-strategy: "CacheFirst',""''"""'
-};
-
-options: {
-  ,
-};
-
-cacheName: "static-assets-v3',""'""""
-};
-
-expiration: {
-  ,
-  maxEntries: this.userMetrics.deviceCapabilities.isLowEnd ? 50 : 150,
-};
-
-maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-};
-
-purgeOnQuotaError: true
-  },
-          plugins: [this.createAssetPlugin()]
-  },
-        priority: 'medium""'"
-  },
-
-      // IMAGES - Progressive loading with format optimization
-      {
-  name: "Images","'"'"'"""'
-        pattern: /\.(?:png|jpg|jpeg|svg|gif|webp|avif)$/,
-};
-
-strategy: "StaleWhileRevalidate',""''"""'
-};
-
-options: {
-  ,
-};
-
-cacheName: "images-v3',""'""""
-};
-
-expiration: {
-  ,
-  maxEntries: this.userMetrics.deviceCapabilities.isLowEnd ? 75 : 200,
-};
-
-maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-};
-
-purgeOnQuotaError: true
-  },
-          plugins: [this.createImagePlugin()]
-  ,
-        priority: 'medium""'
-  ,
-
-      // PREFETCHED CONTENT - Based on user behavior
-      {
-  name: "Prefetched Content",""'""'
-        pattern: /\/prefetch\/.*/,
-};
-
-strategy: 'CacheFirst","""''""'"
-};
-
-options: {
-  ,
-};
-
-cacheName: "prefetched-content-v3","''""'"'
-};
-
-expiration: {
-  ,
-  maxEntries: 30,
-};
-
-maxAgeSeconds: 60 * 60 * 2, // 2 hours
-};
-
-purgeOnQuotaError: true
-  };
-  },
-        priority: "low""'"'
-
+  /**
+   * Handle fetch requests with intelligent caching
+   */
+  async handleRequest(request: Request): Promise<Response> {
+    const url = new URL(request.url);
+    const strategy = this.determineStrategy(url);
     
-  /**
-   * Get adaptive timeout based on network conditions
-   */
-  private getAdaptiveTimeout(): number {}
-{ networkCondition, deviceCapabilities } = this.userMetrics;
-
-    if (networkCondition === "slow' || deviceCapabilities.isLowEnd) {""""'
-      return 30; // 30 seconds for slow networks/devices else if (networkCondition === 'fast") {"'""
-      return 8; // 8 seconds for fast networks
-    return 15; // 15 seconds default
-
-  /**
-   * Crisis-specific cache plugin with priority handling
-   */
-  private createCrisisPlugin() {
-    return {
-  
-};
-
-cacheKeyWillBeUsed: async ({ request }: { request: Request }) =} {
-        // Add crisis priority marker to cache key
-        return `crisis-priority-${request.url}`;
-  },
-
-      requestWillFetch: async ({ request }: { request: Request }) =} { // Log crisis resource access for analytics
-        this.userMetrics.crisisInteractions++;
-        this.saveUserMetrics(),
-        return request },
-
-      cacheWillUpdate: async ({ response }: { response: Response }) =} { // Always cache crisis resources, even with errors
-        return response.status < 500 ? response : null >;
+    this.trackUserBehavior(url.pathname);
+    
+    try {
+      if (strategy.networkFirst) {
+        return await this.networkFirstStrategy(request, strategy);
+      } else if (strategy.staleWhileRevalidate) {
+        return await this.staleWhileRevalidateStrategy(request, strategy);
+      } else {
+        return await this.cacheFirstStrategy(request, strategy);
+      }
+    } catch (error) {
+      console.error('Cache strategy failed:', error);
+      return fetch(request);
+    }
+  }
 
   /**
-   * Performance monitoring plugin
+   * Determine the appropriate caching strategy for a URL
    */
-  private createPerformancePlugin() {
-    return {
-  
-};
+  private determineStrategy(url: URL): CacheStrategy {
+    const pathname = url.pathname;
 
-requestWillFetch: async ({ request }: { request: Request }) =} {;
-const startTime = performance.now(),
-        this.analyticsCache.set(request.url, {
-  startTime )
-        return request;
-  ),
+    // Crisis-related resources
+    if (pathname.includes('/crisis') || 
+        pathname.includes('/emergency') || 
+        pathname.includes('/safety')) {
+      return this.strategies.get('crisis')!;
+    }
 
-};
+    // App shell resources
+    if (pathname === '/' || 
+        pathname.includes('/app-shell') || 
+        pathname.endsWith('.js') || 
+        pathname.endsWith('.css')) {
+      return this.strategies.get('app-shell')!;
+    }
 
-requestDidSucceed: async ({ request, response }: { request: Request, response: Response }) =} {;
-const data = this.analyticsCache.get(request.url  );
-        if (data) {;
-const loadTime = performance.now() - data.startTime,
-          this.updatePerformanceMetrics(request.url, loadTime) }
-        return response;
-  };
+    // User data
+    if (pathname.includes('/user') || 
+        pathname.includes('/profile') || 
+        pathname.includes('/preferences')) {
+      return this.strategies.get('user-data')!;
+    }
+
+    // API endpoints
+    if (pathname.startsWith('/api/') || 
+        pathname.startsWith('/netlify/functions/')) {
+      return this.strategies.get('api')!;
+    }
+
+    // Default to static assets
+    return this.strategies.get('static')!;
+  }
 
   /**
-   * API-specific caching plugin with intelligent strategies
+   * Network-first caching strategy
    */
-  private createAPIPlugin() {
-    return {
-  
-};
+  private async networkFirstStrategy(request: Request, strategy: CacheStrategy): Promise<Response> {
+    const startTime = Date.now();
 
-cacheWillUpdate: async ({ response }: { response: Response }) =} { // Cache API responses based on content type and status
-        if (response.status === 200) { }
-const contentType = response.headers.get("content-type"  );'"'"'"'
+    try {
+      const networkResponse = await fetch(request);
+      const responseTime = Date.now() - startTime;
 
-          // Always cache crisis-related API responses
-          if (response.url.includes("/crisis") || response.url.includes("/emergency")) {'""'
-            return response }
+      if (networkResponse.ok) {
+        // Cache the successful response
+        await this.cacheResponse(request, networkResponse.clone(), strategy);
+        this.updateMetrics(true, responseTime);
+        return networkResponse;
+      }
+    } catch (error) {
+      console.log('Network failed, trying cache:', error);
+    }
 
-          // Cache JSON responses for longer
-          if (contentType?.includes('application/json")) { return response }""'"'"'
+    // Fallback to cache
+    const cachedResponse = await this.getCachedResponse(request);
+    if (cachedResponse) {
+      this.updateMetrics(true, Date.now() - startTime);
+      return cachedResponse;
+    }
 
-          // Don"t cache large payloads on low-end devices"'"'
-const contentLength = response.headers.get("content-length");"'"'"'""'
-          if(this.userMetrics.deviceCapabilities.isLowEnd &&)
-              contentLength && parseInt(contentLength) } 100000 { return null }
-
-          return response;
-return null;
-  /**
-   * User data plugin with privacy considerations
-   */
-  private createUserDataPlugin() {
-    return {
-  
-};
-
-cacheWillUpdate: async ({ response }: { response: Response }) =} {
-  // Only cache user data if user is active
-const timeSinceActive = Date.now() - this.userMetrics.lastActiveTime;
-const isRecentlyActive = timeSinceActive < 60 * 60 * 1000, // 1 hour
-
-        return isRecentlyActive && response.status === 200 ? response : null >,
-
-};
-
-requestWillFetch: async ({ request }: { request: Request }) =} { // Update last active time on user data requests
-        this.userMetrics.lastActiveTime = Date.now(),
-        this.saveUserMetrics();
-        return request  };
+    this.updateMetrics(false, Date.now() - startTime);
+    throw new Error('No network or cached response available');
+  }
 
   /**
-   * Asset optimization plugin
+   * Cache-first strategy
    */
-  private createAssetPlugin() {
-    return {
-  
-};
+  private async cacheFirstStrategy(request: Request, strategy: CacheStrategy): Promise<Response> {
+    const startTime = Date.now();
+    
+    const cachedResponse = await this.getCachedResponse(request);
+    if (cachedResponse && !this.isCacheExpired(cachedResponse, strategy)) {
+      this.updateMetrics(true, Date.now() - startTime);
+      return cachedResponse;
+    }
 
-cacheWillUpdate: async ({ response }: { request: Request, response: Response }) =} { // Skip caching large assets on low-end devices
-        if (this.userMetrics.deviceCapabilities.isLowEnd) {;
-const contentLength = response.headers.get("content-length"  );'""''"""'
-          if (contentLength && parseInt(contentLength) ) 500000} { // 500KB limit
-            return null };
+    try {
+      const networkResponse = await fetch(request);
+      const responseTime = Date.now() - startTime;
 
-        return response.status === 200 ? response : null;
-  };
+      if (networkResponse.ok) {
+        await this.cacheResponse(request, networkResponse.clone(), strategy);
+        this.updateMetrics(true, responseTime);
+        return networkResponse;
+      }
+    } catch (error) {
+      console.error('Network request failed:', error);
+    }
+
+    if (cachedResponse) {
+      this.updateMetrics(true, Date.now() - startTime);
+      return cachedResponse;
+    }
+
+    this.updateMetrics(false, Date.now() - startTime);
+    throw new Error('No cached response available');
+  }
 
   /**
-   * Image optimization plugin with format preference
+   * Stale-while-revalidate strategy
    */
-  private createImagePlugin() {
-    return {
-  
-};
+  private async staleWhileRevalidateStrategy(request: Request, strategy: CacheStrategy): Promise<Response> {
+    const startTime = Date.now();
+    
+    const cachedResponse = await this.getCachedResponse(request);
+    
+    // Always try to update in the background
+    this.updateInBackground(request, strategy);
+    
+    if (cachedResponse) {
+      this.updateMetrics(true, Date.now() - startTime);
+      return cachedResponse;
+    }
 
-requestWillFetch: async ({ request }: { request: Request }) =} { // Prefer modern formats on capable devices
-        if (request.destination === "image') {;""}'
-const url = new URL(request.url  );
+    // No cache available, wait for network
+    try {
+      const networkResponse = await fetch(request);
+      const responseTime = Date.now() - startTime;
 
-          // Add format hints for better caching
-          if (this.supportsWebP() && !url.pathname.includes(".webp")) {""'""'
-            url.searchParams.set("format', "webp") }""''""'
+      if (networkResponse.ok) {
+        await this.cacheResponse(request, networkResponse.clone(), strategy);
+        this.updateMetrics(true, responseTime);
+        return networkResponse;
+      }
+    } catch (error) {
+      console.error('Network request failed:', error);
+    }
 
-          if (this.userMetrics.deviceCapabilities.isLowEnd) { url.searchParams.set("quality", "75"  ); // Lower quality for low-end devices'"'"}'""'
-
-          return new Request(url.toString(), {
-  method: request.method,
-            headers: request.headers,
-            body: request.body,
-            mode: request.mode,
-            credentials: request.credentials,
-            cache: request.cache,
-};
-
-redirect: request.redirect,
-};
-
-referrer: request.referrer
-  };
-
-        return request;
-  );
+    this.updateMetrics(false, Date.now() - startTime);
+    throw new Error('No response available');
+  }
 
   /**
-   * Intelligent prefetching based on user behavior
+   * Cache a response with the given strategy
    */
-  public async intelligentPreawait fetch(): Promise<void> {;
-const predictions = this.predictNextResources();
+  private async cacheResponse(request: Request, response: Response, strategy: CacheStrategy): Promise<void> {
+    if (!this.cache) return;
 
-    for (const resource of predictions) {
-      if (this.shouldPreawait fetch(resource)) {
-        await this.prefetchResource(resource)};
+    try {
+      // Add cache metadata
+      const headers = new Headers(response.headers);
+      headers.set('sw-cached-at', Date.now().toString());
+      headers.set('sw-strategy', strategy.name);
+
+      const modifiedResponse = new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers
+      });
+
+      await this.cache.put(request, modifiedResponse);
+      await this.enforceQuota(strategy);
+    } catch (error) {
+      console.error('Failed to cache response:', error);
+    }
+  }
 
   /**
-   * Predict next resources based on user behavior patterns
+   * Get cached response
    */
-  private predictNextResources(): string[] {,
-{ timeSpentOnRoutes, preferredFeatures, crisisInteractions } = this.userMetrics;
-predictions: string[] = []
-    // Crisis prediction - highest priority
-    if (crisisInteractions ) 0} { predictions.push("/crisis-resources.json",'")"''"""'
-        "/emergency-contacts.json',""'import '/offline-crisis.html";""'
-      } }
+  private async getCachedResponse(request: Request): Promise<Response | undefined> {
+    if (!this.cache) return undefined;
 
-    // Route-based predictions
-const frequentRoutes = Object.entries(timeSpentOnRoutes);
-      .sort(([,a], [,b]) =) b - a}
-      .slice(0, 3)
-      .map(([route]) =) route};
-
-    for (const route of frequentRoutes) { if (route.includes("mood-tracker')) {""''}"}""'
-        predictions.push("/mood-data.json', "/mood-insights.json") } else if (route.includes('journal")) { predictions.push("/journal-prompts.json", "/reflection-templates.json') } else if (route.includes("helpers")) { predictions.push('/helper-availability.json", "/chat-templates.json");"}'}"
-
-    // Feature-based predictions
-    for (const feature of preferredFeatures) { switch (feature) {
-        case meditation:"'"""'
-          predictions.push('/meditation-sessions.json", "/breathing-exercises.json');""""
-          break;
-        case community:'""''""'
-          predictions.push("/community-posts.json", '/support-groups.json");"''""'
-          break;
-        case wellness:"""''""'"'
-          predictions.push("/wellness-tips.json", "/self-care-activities.json' );""''"""'
-          break  };
-
-    return [...new Set(predictions)]; // Remove duplicates
+    try {
+      return await this.cache.match(request);
+    } catch (error) {
+      console.error('Failed to get cached response:', error);
+      return undefined;
+    }
+  }
 
   /**
-   * Determine if a resource should be prefetched
+   * Check if cache entry is expired
    */
-  private shouldPreawait fetch(resourceUrl: string): boolean { // Don"t prefetch on slow networks or low-end devices'"""'
-    if(this.userMetrics.networkCondition === 'slow" || "")"''""'
-        this.userMetrics.deviceCapabilities.isLowEnd} {
-      // Only prefetch crisis resources
-      return resourceUrl.includes("crisis") || resourceUrl.includes("emergency") }'"'"'""'
+  private isCacheExpired(response: Response, strategy: CacheStrategy): boolean {
+    const cachedAt = response.headers.get('sw-cached-at');
+    if (!cachedAt) return true;
 
-    // Don"t prefetch if already in queue"'""'
-    if (this.prefetchQueue.includes(resourceUrl)) { return false }
-
-    // Limit prefetch queue size
-    return this.prefetchQueue.length < 10;>
+    const cacheTime = parseInt(cachedAt);
+    const now = Date.now();
+    return (now - cacheTime) > strategy.maxAge;
+  }
 
   /**
-   * Prefetch a resource with intelligent caching
+   * Update cache in background
    */
-  private async prefetchResource(resourceUrl: string): Promise<void> { try(this.prefetchQueue.push(resourceUrl);
-const cache = await caches.open("prefetched-content-v3' );""'
-const response = await fetch(resourceUrl, {})
-        headers: {
-  'X-Prefetch": "true',""""'"'
-};
-
-Priority: this.getPrefetchPriority(resourceUrl );"'""'
-  )};
-
-      if (response.ok) { await cache.put(resourceUrl, response.clone())
-        // Prefetch successful catch (error) {
-      console.warn(`[Intelligent Cache] Prefetch failed for ${resourceUrl):`, error) } finally(// Remove from queue)
-const index = this.prefetchQueue.indexOf(resourceUrl );
-      if (index ) -1) {
-        this.prefetchQueue.splice(index, 1)};
+  private async updateInBackground(request: Request, strategy: CacheStrategy): Promise<void> {
+    try {
+      const networkResponse = await fetch(request);
+      if (networkResponse.ok) {
+        await this.cacheResponse(request, networkResponse, strategy);
+      }
+    } catch (error) {
+      // Silently fail background updates
+      console.log('Background update failed:', error);
+    }
+  }
 
   /**
-   * Get prefetch priority for resource scheduling
+   * Enforce cache quota limits
    */
-  private getPrefetchPriority(resourceUrl: string): string { if (resourceUrl.includes('crisis") || resourceUrl.includes("emergency')) {"""}"
-      return 'high" } else if (resourceUrl.includes("mood') || resourceUrl.includes("journal")) { return "medium" }'""''
-    return "low";""
+  private async enforceQuota(strategy: CacheStrategy): Promise<void> {
+    if (!this.cache) return;
+
+    try {
+      const keys = await this.cache.keys();
+      const strategyKeys = keys.filter(request => {
+        const url = new URL(request.url);
+        return this.determineStrategy(url).name === strategy.name;
+      });
+
+      if (strategyKeys.length > strategy.maxEntries) {
+        // Remove oldest entries
+        const sortedKeys = strategyKeys.sort((a, b) => {
+          // Sort by cache time (oldest first)
+          return parseInt(a.headers.get('sw-cached-at') || '0') - 
+                 parseInt(b.headers.get('sw-cached-at') || '0');
+        });
+
+        const keysToDelete = sortedKeys.slice(0, strategyKeys.length - strategy.maxEntries);
+        await Promise.all(keysToDelete.map(key => this.cache!.delete(key)));
+      }
+    } catch (error) {
+      console.error('Failed to enforce quota:', error);
+    }
+  }
 
   /**
-   * Update user behavior metrics
+   * Track user behavior for predictive caching
    */
-  public updateUserBehavior(route: string, timeSpent: number): void(this.userMetrics.visitedRoutes.push(route)
-    this.userMetrics.timeSpentOnRoutes[route] =
-      (this.userMetrics.timeSpentOnRoutes[route] || 0) + timeSpent
-    this.userMetrics.lastActiveTime = Date.now();
+  private trackUserBehavior(pathname: string): void {
+    const now = Date.now();
+    
+    // Update frequent routes
+    if (!this.userBehavior.frequentRoutes.includes(pathname)) {
+      this.userBehavior.frequentRoutes.push(pathname);
+    }
 
-    // Update preferred features based on usage patterns
-    this.updatePreferredFeatures(route);
+    // Track time spent
+    if (!this.userBehavior.timeSpentOnRoutes[pathname]) {
+      this.userBehavior.timeSpentOnRoutes[pathname] = 0;
+    }
+    this.userBehavior.timeSpentOnRoutes[pathname] += now - this.userBehavior.lastActive;
 
-    this.saveUserMetrics( );
+    // Update session data
+    this.userBehavior.lastActive = now;
+    this.userBehavior.sessionDuration = now - (this.userBehavior.lastActive - this.userBehavior.sessionDuration);
 
-    // Trigger intelligent prefetching
-    this.intelligentPreawait fetch() )
+    // Check for crisis indicators
+    if (pathname.includes('crisis') || pathname.includes('emergency')) {
+      if (!this.userBehavior.crisisIndicators.includes(pathname)) {
+        this.userBehavior.crisisIndicators.push(pathname);
+      }
+    }
+
+    this.saveUserBehavior();
+  }
 
   /**
-   * Update preferred features based on usage patterns
+   * Start behavior tracking
    */
-  private updatePreferredFeatures(route: string): void {;}
-featureMap: Record<string, string> = {}
-      'mood-tracker": "mood-tracking',""""'"'
-      journal: "journaling',""""'
-      meditation: 'meditation","''""'
-      helpers: "peer-support",''""''
-      community: "community",""'""'
-      wellness: "wellness",""'""'
-      crisis: "crisis-support" };""'"'
+  private startBehaviorTracking(): void {
+    // Generate prefetch predictions every 30 seconds
+    setInterval(() => {
+      this.generatePrefetchPredictions();
+    }, 30000);
 
-    for (const [routePart, feature] of Object.entries(featureMap)) { if (route.includes(routePart) && !this.userMetrics.preferredFeatures.includes(feature)) {
-        this.userMetrics.preferredFeatures.push(feature);
-
-    // Keep only top 5 preferred features
-    if (this.userMetrics.preferredFeatures.length ) 5} { this.userMetrics.preferredFeatures = this.userMetrics.preferredFeatures.slice(-5 ) }
+    // Clean up old behavior data every hour
+    setInterval(() => {
+      this.cleanupBehaviorData();
+    }, 3600000);
+  }
 
   /**
-   * Update performance metrics for optimization
+   * Generate prefetch predictions based on user behavior
    */
-  private updatePerformanceMetrics(url: string, loadTime: number): void {,
-const perfData = {}
-      url,
-      loadTime,
-      timestamp: Date.now(),
-      networkCondition: this.userMetrics.networkCondition
-  };
+  private generatePrefetchPredictions(): void {
+    const predictions: PrefetchPrediction[] = [];
+    
+    // Predict based on frequent routes
+    this.userBehavior.frequentRoutes.forEach(route => {
+      const timeSpent = this.userBehavior.timeSpentOnRoutes[route] || 0;
+      const probability = Math.min(timeSpent / 10000, 1); // Normalize to 0-1
 
-    // Store performance data for analysis
-const perfHistory = JSON.parse(localStorage.getItem("astral-performance') || "[]");"'"'"'
-    perfHistory.push(perfData);
+      if (probability > 0.3) { // Only prefetch if probability > 30%
+        predictions.push({
+          url: route,
+          probability,
+          priority: this.determinePrefetchPriority(route, probability),
+          estimatedLoadTime: this.estimateLoadTime(route),
+          userContext: 'frequent-route'
+        });
+      }
+    });
 
-    // Keep only last 100 entries
-    if (perfHistory.length ) 100} { perfHistory.splice(0, perfHistory.length - 100) }
+    // Predict crisis-related resources if indicators present
+    if (this.userBehavior.crisisIndicators.length > 0) {
+      const crisisRoutes = ['/crisis-resources', '/emergency-contacts', '/safety-plan'];
+      crisisRoutes.forEach(route => {
+        predictions.push({
+          url: route,
+          probability: 0.8,
+          priority: 'critical',
+          estimatedLoadTime: this.estimateLoadTime(route),
+          userContext: 'crisis-indicator'
+        });
+      });
+    }
 
-    localStorage.setItem("astral-performance', JSON.stringify(perfHistory));""""'
+    this.prefetchQueue = predictions.sort((a, b) => b.probability - a.probability);
+    this.executePrefetching();
+  }
 
   /**
-   * Check WebP support
+   * Determine prefetch priority
    */
-  private supportsWebP(): boolean(;
-const canvas = document.createElement('canvas" );"'""
-    return canvas.toDataURL("image/webp").indexOf('data: image/webp") === 0"'
+  private determinePrefetchPriority(route: string, probability: number): 'critical' | 'high' | 'medium' | 'low' {
+    if (route.includes('crisis') || route.includes('emergency')) {
+      return 'critical';
+    }
+    if (probability > 0.7) return 'high';
+    if (probability > 0.5) return 'medium';
+    return 'low';
+  }
 
   /**
-   * Save user metrics to localStorage
+   * Estimate load time for a route
    */
-  private saveUserMetrics(): void { localStorage.setItem("astral-cache-metrics", JSON.stringify(this.userMetrics)) }""'""'
+  private estimateLoadTime(route: string): number {
+    // Simple estimation based on route complexity
+    if (route.includes('api')) return 500;
+    if (route.includes('crisis')) return 300;
+    return 200;
+  }
 
   /**
-   * Setup event listeners for behavior tracking
+   * Execute prefetching for predicted resources
    */
-  private setupEventListeners(): void { // Track visibility changes
-    document.addEventListener("visibilitychange', ()  =) {")""'
-  if (document.visibilityState === "visible') {""'""""
-        this.userMetrics.lastActiveTime = Date.now()
-}};
-        this.saveUserMetrics();
-  )};
+  private async executePrefetching(): Promise<void> {
+    const highPriorityPredictions = this.prefetchQueue.filter(p => 
+      p.priority === 'critical' || p.priority === 'high'
+    );
 
-    // Track network changes
-    if ('connection" in navigator) { (navigator as any).connection.addEventListener("change', () =) {
-  ;""
-const connection = (navigator as any).connection;
-const effectiveType = connection.effectiveType };
-
-networkCondition: "fast" | 'slow" | "offline'""
-        if (effectiveType === "4g") {
-  '"'"'"'
-};
-
-networkCondition = "fast" } else if (effectiveType === "slow-2g") { networkCondition = 'slow" } else { networkCondition = "fast' }""""'"'
-
-        this.userMetrics.networkCondition = networkCondition;
-        this.saveUserMetrics();
-  }};
-  };
+    for (const prediction of highPriorityPredictions.slice(0, 5)) {
+      try {
+        const request = new Request(prediction.url);
+        const response = await fetch(request);
+        
+        if (response.ok) {
+          const strategy = this.determineStrategy(new URL(prediction.url));
+          await this.cacheResponse(request, response, strategy);
+        }
+      } catch (error) {
+        console.log('Prefetch failed for:', prediction.url, error);
+      }
+    }
+  }
 
   /**
-   * Get cache strategies for workbox configuration
+   * Update cache metrics
    */
-  public getCacheStrategies(): CacheStrategy[] { return this.cacheStrategies }
+  private updateMetrics(hit: boolean, responseTime: number): void {
+    const totalRequests = this.cacheMetrics.hitRate + this.cacheMetrics.missRate;
+    
+    if (hit) {
+      this.cacheMetrics.hitRate = (this.cacheMetrics.hitRate * totalRequests + 1) / (totalRequests + 1);
+    } else {
+      this.cacheMetrics.missRate = (this.cacheMetrics.missRate * totalRequests + 1) / (totalRequests + 1);
+    }
+
+    this.cacheMetrics.averageResponseTime = (this.cacheMetrics.averageResponseTime * totalRequests + responseTime) / (totalRequests + 1);
+    this.cacheMetrics.lastUpdated = Date.now();
+  }
 
   /**
-   * Get user metrics for analytics
+   * Update cache metrics with storage usage
    */
-  public getUserMetrics(): UserBehaviorMetrics {
-    return { ...this.userMetrics  }
+  private async updateCacheMetrics(): Promise<void> {
+    try {
+      if ('storage' in navigator && 'estimate' in navigator.storage) {
+        const estimate = await navigator.storage.estimate();
+        this.cacheMetrics.storageUsage = estimate.usage || 0;
+      }
+    } catch (error) {
+      console.error('Failed to update storage metrics:', error);
+    }
+  }
 
   /**
-   * Clean up old caches and optimize storage
+   * Load user behavior from storage
    */
-  public async optimizeStorage(): Promise<void> {;
-const cacheNames = await caches.keys();
-const currentCaches = this.cacheStrategies.map(s =) s.options.cacheName};
+  private async loadUserBehavior(): Promise<void> {
+    try {
+      const stored = localStorage.getItem('sw-user-behavior');
+      if (stored) {
+        this.userBehavior = { ...this.userBehavior, ...JSON.parse(stored) };
+      }
+    } catch (error) {
+      console.error('Failed to load user behavior:', error);
+    }
+  }
 
-    // Delete old cache versions
-    for (const cacheName of cacheNames) {
-      if (!currentCaches.includes(cacheName) && cacheName.includes("astral')) {"""'"'"'
-        await caches.delete(cacheName);
-        // Cache cleanup completed
-    // Clear prefetch queue if device is low on storage
-    if (this.userMetrics.deviceCapabilities.isLowEnd) { this.prefetchQueue = [];
-const prefetchCache = await caches.open("prefetched-content-v3'  );""'''""
-      await prefetchCache.keys().then(keys =) {
-        if (keys.length ) 10} {
-          // Keep only the 10 most recent prefetched items
-          return Promise.all()
-            keys.slice(10).map(request =) prefetchCache.delete(request)}
-          } };
-  };
-  };
-  };
+  /**
+   * Save user behavior to storage
+   */
+  private saveUserBehavior(): void {
+    try {
+      localStorage.setItem('sw-user-behavior', JSON.stringify(this.userBehavior));
+    } catch (error) {
+      console.error('Failed to save user behavior:', error);
+    }
+  }
+
+  /**
+   * Clean up old behavior data
+   */
+  private cleanupBehaviorData(): void {
+    const oneWeekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+    
+    // Remove old crisis indicators
+    this.userBehavior.crisisIndicators = this.userBehavior.crisisIndicators.filter(indicator => {
+      // Keep recent crisis indicators
+      return Date.now() - this.userBehavior.lastActive < oneWeekAgo;
+    });
+
+    // Limit frequent routes to top 20
+    const sortedRoutes = Object.entries(this.userBehavior.timeSpentOnRoutes)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 20);
+
+    this.userBehavior.frequentRoutes = sortedRoutes.map(([route]) => route);
+    this.userBehavior.timeSpentOnRoutes = Object.fromEntries(sortedRoutes);
+
+    this.saveUserBehavior();
+  }
+
+  /**
+   * Get cache metrics
+   */
+  getCacheMetrics(): CacheMetrics {
+    return { ...this.cacheMetrics };
+  }
+
+  /**
+   * Get user behavior patterns
+   */
+  getUserBehavior(): UserBehaviorPattern {
+    return { ...this.userBehavior };
+  }
+
+  /**
+   * Clear all caches
+   */
+  async clearAllCaches(): Promise<void> {
+    if (!this.cache) return;
+
+    try {
+      const keys = await this.cache.keys();
+      await Promise.all(keys.map(key => this.cache!.delete(key)));
+      
+      // Reset metrics
+      this.cacheMetrics = {
+        hitRate: 0,
+        missRate: 0,
+        averageResponseTime: 0,
+        storageUsage: 0,
+        lastUpdated: Date.now()
+      };
+    } catch (error) {
+      console.error('Failed to clear caches:', error);
+    }
+  }
+}
 
 // Export singleton instance
-export const intelligentCaching = new IntelligentCachingManager();
+export const intelligentCachingStrategy = new IntelligentCachingStrategy();
+export default intelligentCachingStrategy;
