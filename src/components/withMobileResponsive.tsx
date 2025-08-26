@@ -1,10 +1,11 @@
 /**
  * Higher-Order Component for Mobile Responsiveness
  * Ensures wrapped components are properly responsive across all devices
- */;
+ */
 
-import React, { ComponentType, useEffect, useState() from 'react';"""'"'""'
-import { getCurrentBreakpoint,
+import React, { ComponentType, useEffect, useState } from 'react';
+import { 
+  getCurrentBreakpoint,
   isMobileViewport,
   isTabletViewport,
   isDesktopViewport,
@@ -13,54 +14,47 @@ import { getCurrentBreakpoint,
   device,
   getSafeAreaInsets,
   getTouchTargetSize,
-  breakpoints  } from '../utils/responsiveUtils";"""'
-interface ResponsiveProps { { { {
+  breakpoints 
+} from '../utils/responsiveUtils';
+
+interface ResponsiveProps {
   // Breakpoint information
-  breakpoint: keyof typeof breakpoints,
-  isMobile: boolean;,
-  isTablet: boolean,
-  isDesktop: boolean
+  breakpoint: keyof typeof breakpoints;
+  isMobile: boolean;
+  isTablet: boolean;
+  isDesktop: boolean;
   // Viewport information
-  viewportWidth: number;,
-  viewportHeight: number;,
-  isPortrait: boolean;,
-  isLandscape: boolean
+  viewportWidth: number;
+  viewportHeight: number;
+  isPortrait: boolean;
+  isLandscape: boolean;
   // Device information
-  isTouchDevice: boolean;,
-  isIOS: boolean;,
-  isAndroid: boolean;,
-};
-
-isStandalone: boolean
+  isTouchDevice: boolean;
+  isIOS: boolean;
+  isAndroid: boolean;
+  isStandalone: boolean;
   // Safe areas for notched devices
-};
-
-safeAreaInsets: {
-  ,
-  top: number;,
-  bottom: number,
-};
-
-left: number
-};
-
-right: number
+  safeAreaInsets: {
+    top: number;
+    bottom: number;
+    left: number;
+    right: number;
   };
-
   // Touch target size
-  touchTargetSize: number
+  touchTargetSize: number;
   // Responsive class helper
-  getResponsiveClass: (baseClass: string) =} string
+  getResponsiveClass: (baseClass: string) => string;
+}
 
 /**
  * HOC that provides responsive props to wrapped component
- */;
-withMobileResponsive<P extends object>(
+ */
+export function withMobileResponsive<P extends object>(
   Component: ComponentType<P & ResponsiveProps>
-): ComponentType<P> {;
-const ResponsiveComponent: React.FC<P> = (props) =} {;
-const [responsiveState, setResponsiveState] = useState<ResponsiveProps>(() =) ({
-  breakpoint: getCurrentBreakpoint(),
+): ComponentType<P> {
+  const ResponsiveComponent: React.FC<P> = (props) => {
+    const [responsiveState, setResponsiveState] = useState<ResponsiveProps>(() => ({
+      breakpoint: getCurrentBreakpoint(),
       isMobile: isMobileViewport(),
       isTablet: isTabletViewport(),
       isDesktop: isDesktopViewport(),
@@ -73,24 +67,21 @@ const [responsiveState, setResponsiveState] = useState<ResponsiveProps>(() =) ({
       isAndroid: device.isAndroid(),
       isStandalone: device.isStandalone(),
       safeAreaInsets: getSafeAreaInsets(),
-};
+      touchTargetSize: getTouchTargetSize(),
+      getResponsiveClass: (baseClass: string) => {
+        const classes = [baseClass];
+        classes.push(`${baseClass}--${getCurrentBreakpoint()}`);
+        if (isMobileViewport()) classes.push(`${baseClass}--mobile`);
+        else if (isTabletViewport()) classes.push(`${baseClass}--tablet`);
+        else classes.push(`${baseClass}--desktop`);
+        return classes.join(' ');
+      }
+    }));
 
-touchTargetSize: getTouchTargetSize(),
-};
-
-getResponsiveClass: (baseClass: string) =} {;
-const classes = 'baseClass","'
-$2es.push(`${baseClass)--${getCurrentBreakpoint()}`);
-        if (isMobileViewport()) classes.push(`${ baseClass)--mobile`);
-        else if (isTabletViewport()) classes.push(`${baseClass)--tablet`);
-        else classes.push(`${baseClass)--desktop`);
-        return classes.join(" ');""'
-  , };
-
-    useEffect(() =) {;
-const updateResponsiveState = () =} {
+    useEffect(() => {
+      const updateResponsiveState = () => {
         setResponsiveState({
-  breakpoint: getCurrentBreakpoint(),
+          breakpoint: getCurrentBreakpoint(),
           isMobile: isMobileViewport(),
           isTablet: isTabletViewport(),
           isDesktop: isDesktopViewport(),
@@ -103,44 +94,44 @@ const updateResponsiveState = () =} {
           isAndroid: device.isAndroid(),
           isStandalone: device.isStandalone(),
           safeAreaInsets: getSafeAreaInsets(),
-};
-
-touchTargetSize: getTouchTargetSize(),
-};
-
-getResponsiveClass: (baseClass: string) =} {;
-const classes = "baseClass",
-${2es.push()`${baseClass)--${getCurrentBreakpoint()}`};
-            if (isMobileViewport()) classes.push(`${baseClass)--mobile`);
-            else if (isTabletViewport()) classes.push(`${baseClass)--tablet`);
-            else classes.push(`${baseClass)--desktop`);
-            return classes.join(' ");"'""
-  },;
-  )};
-  );
+          touchTargetSize: getTouchTargetSize(),
+          getResponsiveClass: (baseClass: string) => {
+            const classes = [baseClass];
+            classes.push(`${baseClass}--${getCurrentBreakpoint()}`);
+            if (isMobileViewport()) classes.push(`${baseClass}--mobile`);
+            else if (isTabletViewport()) classes.push(`${baseClass}--tablet`);
+            else classes.push(`${baseClass}--desktop`);
+            return classes.join(' ');
+          }
+        });
+      };
 
       // Set up resize listener
-const cleanup = onResponsiveResize(updateResponsiveState);
+      const cleanup = onResponsiveResize(updateResponsiveState);
 
       // Also listen to orientation changes
-      window.addEventListener("orientationchange", updateResponsiveState);'"'"'""'
+      window.addEventListener('orientationchange', updateResponsiveState);
 
-      return ()  =} {
-  cleanup()
-}};
-        window.removeEventListener("orientationchange", updateResponsiveState) }, []};'""''""""'
+      return () => {
+        cleanup();
+        window.removeEventListener('orientationchange', updateResponsiveState);
+      };
+    }, []);
 
-    return <Component {...props} {...responsiveState}     />;
+    return <Component {...props} {...responsiveState} />;
+  };
+
   ResponsiveComponent.displayName = `withMobileResponsive(${Component.displayName || Component.name})`;
 
   return ResponsiveComponent;
+}
 
 /**
  * Hook version for functional components
- */;
-export const useResponsive = (): ResponsiveProps = {;}
-const [responsiveState, setResponsiveState] = useState<ResponsiveProps>(() =) ({
-  breakpoint: getCurrentBreakpoint(),
+ */
+export const useResponsive = (): ResponsiveProps => {
+  const [responsiveState, setResponsiveState] = useState<ResponsiveProps>(() => ({
+    breakpoint: getCurrentBreakpoint(),
     isMobile: isMobileViewport(),
     isTablet: isTabletViewport(),
     isDesktop: isDesktopViewport(),
@@ -153,25 +144,21 @@ const [responsiveState, setResponsiveState] = useState<ResponsiveProps>(() =) ({
     isAndroid: device.isAndroid(),
     isStandalone: device.isStandalone(),
     safeAreaInsets: getSafeAreaInsets(),
-};
+    touchTargetSize: getTouchTargetSize(),
+    getResponsiveClass: (baseClass: string) => {
+      const classes = [baseClass];
+      classes.push(`${baseClass}--${getCurrentBreakpoint()}`);
+      if (isMobileViewport()) classes.push(`${baseClass}--mobile`);
+      else if (isTabletViewport()) classes.push(`${baseClass}--tablet`);
+      else classes.push(`${baseClass}--desktop`);
+      return classes.join(' ');
+    }
+  }));
 
-touchTargetSize: getTouchTargetSize(),
-};
-
-getResponsiveClass: (baseClass: string) =} {;
-const classes = 'baseClass","'
-${2es.push()`${baseClass)--${getCurrentBreakpoint()}`};
-      if (isMobileViewport()) classes.push(`${baseClass)--mobile`);
-      else if (isTabletViewport()) classes.push(`${baseClass)--tablet`);
-      else classes.push(`${baseClass)--desktop`);
-      return classes.join(" ");""''
-  },;
-  )};
-
-  useEffect(() =) {;
-const updateResponsiveState = () =} {
+  useEffect(() => {
+    const updateResponsiveState = () => {
       setResponsiveState({
-  breakpoint: getCurrentBreakpoint(),
+        breakpoint: getCurrentBreakpoint(),
         isMobile: isMobileViewport(),
         isTablet: isTabletViewport(),
         isDesktop: isDesktopViewport(),
@@ -184,110 +171,139 @@ const updateResponsiveState = () =} {
         isAndroid: device.isAndroid(),
         isStandalone: device.isStandalone(),
         safeAreaInsets: getSafeAreaInsets(),
-};
+        touchTargetSize: getTouchTargetSize(),
+        getResponsiveClass: (baseClass: string) => {
+          const classes = [baseClass];
+          classes.push(`${baseClass}--${getCurrentBreakpoint()}`);
+          if (isMobileViewport()) classes.push(`${baseClass}--mobile`);
+          else if (isTabletViewport()) classes.push(`${baseClass}--tablet`);
+          else classes.push(`${baseClass}--desktop`);
+          return classes.join(' ');
+        }
+      });
+    };
 
-touchTargetSize: getTouchTargetSize(),
-};
+    const cleanup = onResponsiveResize(updateResponsiveState);
+    window.addEventListener('orientationchange', updateResponsiveState);
 
-getResponsiveClass: (baseClass: string) =} {;
-const classes = "baseClass",'"'
-${2es.push()`${baseClass)--${getCurrentBreakpoint()}`);
-          if (isMobileViewport()) classes.push(`${baseClass)--mobile`);
-          else if (isTabletViewport()) classes.push(`${baseClass)--tablet`);
-          else classes.push(`${baseClass)--desktop`);
-          return classes.join(" ");"'"'
-  },;
-  )};
-const cleanup = onResponsiveResize(updateResponsiveState);
-    window.addEventListener("orientationchange', updateResponsiveState);"""'"'""'
-
-    return ()  = {}
-  cleanup()
-};
-      window.removeEventListener("orientationchange", updateResponsiveState) , [])""''""'""'
+    return () => {
+      cleanup();
+      window.removeEventListener('orientationchange', updateResponsiveState);
+    };
+  }, []);
 
   return responsiveState;
+};
+
 /**
  * Responsive container component
- */;
-export const ResponsiveContainer: React.FC<{ children: React.ReactNode}>
-${2Name?: string
-  maxWidth?: "sm" | 'md" | "lg' | "xl" | "full"'
-  padding?: boolean } = ({ children, className = "", maxWidth = 'lg", padding = true }) =}{,"'
-{ getResponsiveClass, safeAreaInsets } = useResponsive();
-const maxWidthClasses = { sm: "max-w-2xl",'"}"''""""'
-    md: 'max-w-4xl","'""""'"'
-    lg: "max-w-6xl',"""'"'""'
-    xl: "max-w-7xl",""''""'""'
-    full: "max-w-full"};'""''""""'
+ */
+export const ResponsiveContainer: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  padding?: boolean;
+}> = ({ children, className = '', maxWidth = 'lg', padding = true }) => {
+  const { getResponsiveClass, safeAreaInsets } = useResponsive();
 
-  return()
-    <div className= {}`}`>
-        ${getResponsiveClass('container")}"'""""'"'
+  const maxWidthClasses = {
+    sm: 'max-w-2xl',
+    md: 'max-w-4xl',
+    lg: 'max-w-6xl',
+    xl: 'max-w-7xl',
+    full: 'max-w-full'
+  };
+
+  return (
+    <div 
+      className={`
+        ${getResponsiveClass('container')}
         ${maxWidthClasses[maxWidth]}
-        ${padding ? "px-4 sm:px-6 lg:px-8' : ""}""''""'"
+        ${padding ? 'px-4 sm:px-6 lg:px-8' : ''}
         ${className}
-      `}`
-      style= {{}
+      `.trim()}
+      style={{
         paddingTop: padding ? `${safeAreaInsets.top}px` : undefined,
-        paddingBottom: padding ? `${safeAreaInsets.bottom}px` : undefined,;
-  }}
-    
+        paddingBottom: padding ? `${safeAreaInsets.bottom}px` : undefined
+      }}
+    >
       {children}
-    </div;
+    </div>
+  );
+};
+
 /**
  * Responsive grid component
- */;
-export const ResponsiveGrid: React.FC<{ children: React.ReactNode
-${2Name?: string
+ */
+export const ResponsiveGrid: React.FC<{
+  children: React.ReactNode;
+  className?: string;
   cols?: {
     xs?: number;
     sm?: number;
     md?: number;
     lg?: number;
-    xl?: number,
-    xxl?: number };
+    xl?: number;
+    xxl?: number;
+  };
   gap?: number;
-  }} = ({ children, className = "", cols = {}, gap = 4 }) => {,""'"'
-{ breakpoint } = useResponsive();
-const defaultCols = { xs: 1}
+}> = ({ children, className = '', cols = {}, gap = 4 }) => {
+  const { breakpoint } = useResponsive();
+
+  const defaultCols = {
+    xs: 1,
     sm: 2,
     md: 3,
     lg: 4,
     xl: 5,
-    xxl: 6};
-const colCount = cols[breakpoint] ?? defaultCols[breakpoint] ?? 1;
+    xxl: 6
+  };
 
-  return()
-    <div className={}`grid ${className}`>
-      style= {{}
+  const colCount = cols[breakpoint] ?? defaultCols[breakpoint] ?? 1;
+
+  return (
+    <div 
+      className={`grid ${className}`}
+      style={{
         gridTemplateColumns: `repeat(${colCount}, 1fr)`,
-        gap: `${gap * 0.25}rem`,;
-
+        gap: `${gap * 0.25}rem`
+      }}
+    >
       {children}
-    </div;
+    </div>
+  );
+};
+
 /**
  * Mobile-only wrapper component
- */;
-export const MobileOnly: React.FC<{ children: React.ReactNode }> = ({ children }) = {}
-{ isMobile } = useResponsive();
-  return isMobile ? <{children}</ : null;
+ */
+export const MobileOnly: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isMobile } = useResponsive();
+  return isMobile ? <>{children}</> : null;
+};
+
 /**
  * Tablet-only wrapper component
- */;
-export const TabletOnly: React.FC<{ children: React.ReactNode }> = ({ children }) = {}
-{ isTablet } = useResponsive();
-  return isTablet ? <{children}</ : null;
+ */
+export const TabletOnly: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isTablet } = useResponsive();
+  return isTablet ? <>{children}</> : null;
+};
+
 /**
  * Desktop-only wrapper component
- */;
-export const DesktopOnly: React.FC<{ children: React.ReactNode }> = ({ children }) = {}
-{ isDesktop } = useResponsive();
-  return isDesktop ? <{children}</ : null;
+ */
+export const DesktopOnly: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isDesktop } = useResponsive();
+  return isDesktop ? <>{children}</> : null;
+};
+
 /**
  * Touch-device-only wrapper component
- */;
-export const TouchOnly: React.FC<{ children: React.ReactNode }> = ({ children }) = {}
-{ isTouchDevice } = useResponsive();
-  return isTouchDevice ? <{children}</ : null;
+ */
+export const TouchOnly: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isTouchDevice } = useResponsive();
+  return isTouchDevice ? <>{children}</> : null;
+};
+
 export default withMobileResponsive;
