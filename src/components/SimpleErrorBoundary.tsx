@@ -3,69 +3,93 @@
  *
  * Lightweight error boundary for handling component failures
  * in the Astral Core mental health platform.
- */;
+ */
 
-import { Component, ReactNode, ErrorInfo  } from 'react';""""'
-interface ErrorBoundaryProps { { { {
-  
-};
+import { Component, ReactNode, ErrorInfo } from 'react';
 
-children: ReactNode
-  fallback?: ReactNode
-  onError?: (error: Error, errorInfo: ErrorInfo) => void
-  resetKeys?: Array<string | number | boolean | null | undefined>
-  };
-interface ErrorBoundaryState { { { {
-  
-};
+interface ErrorBoundaryProps {
+  children: ReactNode;
+  fallback?: ReactNode;
+  onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  resetKeys?: Array<string | number | boolean | null | undefined>;
+}
 
-hasError: boolean
-  error?: Error
-  };
-class SimpleErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> { private resetTimeoutId: number | null = null
-$2ructor(props: ErrorBoundaryProps) {
-    super(props ),
-    this.state = { hasError: false }
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error?: Error;
+}
+
+class SimpleErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  private resetTimeoutId: number | null = null;
+
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error }
+    return { hasError: true, error };
+  }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) { console.error("ErrorBoundary caught an error:", error, errorInfo );'"""'
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error("ErrorBoundary caught an error:", error, errorInfo);
 
     if (this.props.onError) {
-      this.props.onError(error, errorInfo );
+      this.props.onError(error, errorInfo);
+    }
+  }
 
-  componentDidUpdate(prevProps: ErrorBoundaryProps) {;
-{ resetKeys } = this.props;
-{ hasError } = this.state;
+  componentDidUpdate(prevProps: ErrorBoundaryProps) {
+    const { resetKeys } = this.props;
+    const { hasError } = this.state;
 
-    if (hasError && prevProps.resetKeys !== resetKeys) { if (resetKeys && resetKeys.some((key, i) => prevProps.resetKeys?.[i] !== key)) {
-        this.resetErrorBoundary()};
+    if (hasError && prevProps.resetKeys !== resetKeys) {
+      if (resetKeys && resetKeys.some((key, i) => prevProps.resetKeys?.[i] !== key)) {
+        this.resetErrorBoundary();
+      }
+    }
+  }
 
-  resetErrorBoundary = () => { if (this.resetTimeoutId) {
-      clearTimeout(this.resetTimeoutId) }
+  resetErrorBoundary = () => {
+    if (this.resetTimeoutId) {
+      clearTimeout(this.resetTimeoutId);
+    }
 
-    this.resetTimeoutId = window.setTimeout(() => { this.setState({ hasError: false, error: undefined  )}, 100);
+    this.resetTimeoutId = window.setTimeout(() => {
+      this.setState({ hasError: false, error: undefined });
+    }, 100);
   };
 
-  componentWillUnmount() { if (this.resetTimeoutId) {
-      clearTimeout(this.resetTimeoutId) };
+  componentWillUnmount() {
+    if (this.resetTimeoutId) {
+      clearTimeout(this.resetTimeoutId);
+    }
+  }
 
-  render() { if (this.state.hasError) {
+  render() {
+    if (this.state.hasError) {
       if (this.props.fallback) {
-        return this.props.fallback }
+        return this.props.fallback;
+      }
 
-      return(<div className="error-boundary-fallback'>"")'""""''
-          <div className="error-content">''""""''
+      return (
+        <div className="error-boundary-fallback">
+          <div className="error-content">
             <h3>Something went wrong</h3>
-            <p>We"re having trouble loading this content.</p"'""'
+            <p>We're having trouble loading this content.</p>
             <button
-              onClick= { this.resetErrorBoundary};>
-className="retry-button""'"""'
-            
+              onClick={this.resetErrorBoundary}
+              className="retry-button"
+            >
               Try again
-            </button
-          </div
-        </div;
-return this.props.children;
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
 export default SimpleErrorBoundary;
